@@ -1,0 +1,36 @@
+<!--
+	Problematic subdomains:
+
+		- ^	(no https)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- customer
+		- securevpn
+
+-->
+<ruleset name="Teachers Assurance">
+
+	<target host="teachersassurance.co.uk" />
+	<target host="*.teachersassurance.co.uk" />
+
+
+	<!--	Observed cookie subdomains:
+
+			- customer
+			- securevpn
+					-->
+	<securecookie host=".+\.teachersassurance\.co\.uk$" name=".+" />
+
+
+	<!--	Server drops path like so:
+						-->
+	<rule from="^http://teachersassurance\.co\.uk/.*"
+		to="https://www.teachersassurance.co.uk/" />
+
+	<rule from="^http://(customer|securevpn|www)\.teachersassurance\.co\.uk/"
+		to="https://$1.teachersassurance.co.uk/" />
+
+</ruleset>

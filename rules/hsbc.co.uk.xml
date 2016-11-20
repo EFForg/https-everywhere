@@ -1,0 +1,134 @@
+<!--
+	For other HSBC Holdings coverage, see HSBC.xml.
+
+
+	Nonfunctional hosts in *hsbc.co.uk:
+
+		- www.about *
+
+	* Unrecognized name / internal error
+
+
+	Problematic hosts in *hsbc.co.uk:
+
+		- www.financialplanning ᵐ
+		- www.mychoice.staff ᵐ
+		- bursarycompetition.students ᵉ
+
+	ᵉ Expired
+	ᵐ Mismatched
+
+
+	These altnames do not exist:
+
+		- www.personalisedloanquote.hsbc.co.uk
+
+
+	STS header includes includeSubdomains
+	for apply.business
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- creditindication.business.hsbc.co.uk
+		- www.business.hsbc.co.uk
+		- hsss.hsbc.co.uk
+		- www.invoicefinance.hsbc.co.uk
+		- mortgages.hsbc.co.uk
+		- www.mortgages.hsbc.co.uk
+		- saas.hsbc.co.uk
+		- www.saas.hsbc.co.uk
+		- bursarycompetition.students.hsbc.co.uk
+		- www.hsbc.co.uk
+		- www1.hsbc.co.uk
+		- www2.hsbc.co.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bug on www.invoicefinance from www1.member-hsbc-group.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="HSBC.co.uk (partial)" default_off="testing">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="hsbc.co.uk" />
+	<target host="services.assetmanagement.hsbc.co.uk" />
+	<target host="apply.business.hsbc.co.uk" />
+	<target host="*.apply.business.hsbc.co.uk" />
+	<target host="creditindication.business.hsbc.co.uk" />
+	<target host="www.business.hsbc.co.uk" />
+	<target host="online.email.hsbc.co.uk" />
+	<target host="financialplanning.hsbc.co.uk" />
+	<target host="hsss.hsbc.co.uk" />
+	<target host="homequote.insurance.hsbc.co.uk" />
+	<target host="investments.hsbc.co.uk" />
+	<target host="www.invoicefinance.hsbc.co.uk" />
+	<target host="knowledge.hsbc.co.uk" />
+	<target host="www.knowledge.hsbc.co.uk" />
+	<target host="mortgages.hsbc.co.uk" />
+	<target host="www.mortgages.hsbc.co.uk" />
+	<target host="personalisedloanquote.hsbc.co.uk" />
+	<target host="saas.hsbc.co.uk" />
+	<target host="www.saas.hsbc.co.uk" />
+	<target host="www.tmo.hsbc.co.uk" />
+	<target host="www.hsbc.co.uk" />
+	<target host="www1.hsbc.co.uk" />
+	<target host="www2.hsbc.co.uk" />
+
+		<!--	includeSubdomains applies to one level only, so:
+										-->
+		<exclusion pattern="^http://(?:[^./]+\.){2,}apply\.business\.hsbc\.co\.uk/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.apply.business.hsbc.co.uk/" />
+			<test url="http://exists.not.apply.business.hsbc.co.uk/" />
+
+		<test url="http://www.apply.business.hsbc.co.uk/" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://online.email.hsbc.co.uk/tt/trckparams.php?id=5644c05b886be1694919832&amp;WT.mc_id=&amp;WT.z_deliveryID=&amp;nid=" />
+
+		<!--	$ 404s, so:
+					-->
+		<test url="http://hsss.hsbc.co.uk/technicalsupp.jsp" />
+		<test url="http://homequote.insurance.hsbc.co.uk/Insurance/site/HSBC/household/home?initialStep=retrieve" />
+
+	<!--	Complications:
+				-->
+	<target host="www.financialplanning.hsbc.co.uk" />
+	<target host="www.mychoice.staff.hsbc.co.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^creditindication\.business\.hsbc\.co\.uk$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^www\.business\.hsbc\.co\.uk$" name="^UK[A-Z]+-EVRGRN-WDC$" /-->
+	<!--securecookie host="^hsss\.hsbc\.co\.uk$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^(?:www\.invoicefinance|mortgages|www\.mortgages|saas|www\.saas|www[12]?)\.hsbc\.co\.uk$" name="^(?:JSESSIONID|UK[A-Z]+-SY)$" /-->
+	<!--securecookie host="^bursarycompetition\.students\.hsbc\.co\.uk$" name="^hsbc_fb_student$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://www\.financialplanning\.hsbc\.co\.uk/"
+		to="https://financialplanning.hsbc.co.uk/" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://www\.mychoice\.staff\.hsbc\.co\.uk/.*"
+		to="https://hsbc.tbs.aon.com/" />
+
+		<test url="http://www.mychoice.staff.hsbc.co.uk/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

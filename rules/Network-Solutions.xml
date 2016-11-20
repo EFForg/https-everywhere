@@ -1,0 +1,68 @@
+<!--
+	Other Network Solutions rulesets:
+
+		- MyComputer.com.xml
+		- SuperStats.com.xml
+
+
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+		- amp *
+		- cms *
+
+	* Refused
+
+
+	Partially covered subdomains:
+
+		- amp	(→ www)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- about
+		- cms		(→ www)
+		- seal
+
+
+	Mixed content:
+
+		- css www from cms *
+
+		- Web bugs, on www from:
+
+			- www *
+			- netsolglobal.112.2o7.net *
+
+	* Secured by us
+
+-->
+<ruleset name="Network Solutions (false MCB)" platform="mixedcontent">
+
+	<target host="networksolutions.com" />
+	<target host="*.networksolutions.com" />
+
+
+	<securecookie host="^\.networksolutions\.com$" name="^s_\w+$" />
+	<securecookie host="^www\.networksolutions\.com$" name=".*" />
+
+
+	<rule from="^http://(?:cms\.|www\.)?networksolutions\.com(:443)?/"
+		to="https://www.networksolutions.com$1/" />
+
+	<rule from="^http://(about|seal)\.networksolutions\.com/"
+		to="https://$1.networksolutions.com/" />
+
+	<!--	Redirects as so, sans-https:
+						-->
+	<rule from="^http://amp\.networksolutions\.com/$"
+		to="https://www.networksolutions.com/" />
+
+	<!--	Ditto:
+			-->
+	<rule from="^http://amp\.networksolutions\.com/landing\?code=(\w+)$"
+		to="https://www.networksolutions.com/affiliates/select-unknown.jsp?siteid=100&amp;channelid=$1" />
+
+</ruleset>

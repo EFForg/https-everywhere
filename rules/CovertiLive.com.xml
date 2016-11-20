@@ -1,0 +1,68 @@
+<!--
+	For other Demand Media coverage, see Demand-Media.xml.
+
+
+	CDN buckets:
+
+		- cdnsl.coveritlive.com.edgesuite.net
+		- mobile.coveritlive.com.edgesuite.net
+		- www.coveritlive.com.edgesuite.net
+
+
+	Nonfunctional hosts in *coveritlive.com:
+
+		- blog *
+
+	* Dropped
+
+
+	Some pages redirect to http://www
+
+
+	Insecure cookies are set for these domains:
+
+		- .coveritlive.com
+
+-->
+<ruleset name="CoveritLive.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="coveritlive.com" />
+	<target host="cdnsl.coveritlive.com" />
+	<target host="cdnslssl.coveritlive.com" />
+	<target host="media.coveritlive.com" />
+	<target host="secure4.coveritlive.com" />
+	<target host="www.coveritlive.com" />
+	<target host="wwwssl.coveritlive.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.coveritlive\.com/(?:customers$|index\.php\?option=|resources/supportcenter$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.coveritlive\.com/+(?!favicon\.ico|images/|templates/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.coveritlive.com/cilProducts" />
+			<test url="http://www.coveritlive.com/customers" />
+			<test url="http://www.coveritlive.com/index.php?option=" />
+			<test url="http://www.coveritlive.com/resources/supportcenter" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.coveritlive.com/favicon.ico" />
+			<test url="http://www.coveritlive.com/images/marketing/customers/transparent.gif" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.coveritlive\.com$" name="^[\da-f]{32}$" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

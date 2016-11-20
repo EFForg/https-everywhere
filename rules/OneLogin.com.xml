@@ -1,0 +1,60 @@
+<!--
+		- onelogin.zendesk.com
+
+			- support
+
+
+	Problematic subdomains:
+
+		- staging.www *
+		- support	(zendesk)
+
+	* Mismatched
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- app
+		- assets
+		- mindtouch
+		- support	(→ onelogin.zendesk.com)
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.onelogin.com
+
+-->
+<ruleset name="OneLogin.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="onelogin.com" />
+	<target host="app.onelogin.com" />
+	<target host="assets.onelogin.com" />
+	<target host="mindtouch.onelogin.com" />
+	<target host="www.onelogin.com" />
+
+	<!--	Complications:
+				-->
+	<target host="support.onelogin.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.onelogin\.com$" name="^(AWSELB|PHPSESSID|onelogin_check_cookie|stat_auth_cookie)$" /-->
+
+	<!--securecookie host="^\.onelogin\.com$" name="^(__atuvc|_ga|mp_\w{32}_mixpanel|_mkto_trk|onelogin_referrer|__utm\w)$" /-->
+	<securecookie host="^(?:www)?\.onelogin\.com$" name=".+" />
+
+
+	<rule from="^http://support\.onelogin\.com/.*"
+		to="https://onelogin.zendesk.com/hc" />
+
+		<test url="http://support.onelogin.com//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

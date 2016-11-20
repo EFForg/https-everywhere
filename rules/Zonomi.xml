@@ -1,0 +1,56 @@
+<!--
+	^: Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- zonomi.com
+
+
+	Mixed content:
+
+		- favicon from $self
+
+-->
+<ruleset name="Zonomi.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+  <target host="zonomi.com" />
+
+	<!--	Complications:
+				-->
+  <target host="www.zonomi.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://zonomi\.com/$" /-->
+
+		<!--	Exceptions:
+					-->
+		<exclusion pattern="^http://zonomi\.com/+(?!css/|favicon\.ico|images/|r/css$|type-face/)" />
+
+			<test url="http://zonomi.com/?foo" />
+			<test url="http://zonomi.com//" />
+			<test url="http://zonomi.com/foo" />
+			<test url="http://zonomi.com/foo?bar" />
+			<test url="http://zonomi.com/howto/vanity-name-servers" />
+			<test url="http://zonomi.com/zoneinfo.jsp" />
+
+			<!--	-ve:
+					-->
+			<test url="http://zonomi.com/favicon.ico" />
+			<test url="http://zonomi.com/r/css" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^zonomi\.com$" name="^uv$" /-->
+
+  <!--securecookie host="^zonomi.com$" name=".*" /-->
+
+  <rule from="^http://www\.zonomi\.com/" to="https://zonomi.com/"/>
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

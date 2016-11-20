@@ -39,12 +39,12 @@ echo "Building chrome version" $VERSION
 [ -e pkg/crx ] && rm -rf pkg/crx
 
 # Clean up obsolete ruleset databases, just in case they still exist.
-rm -f src/chrome/content/rules/default.rulesets src/defaults/rulesets.sqlite
+rm -f rules/default.rulesets src/defaults/rulesets.sqlite
 
 # Only generate the ruleset database if any rulesets have changed. Tried
 # implementing this with make, but make is very slow with 15k+ input files.
 needs_update() {
-  find src/chrome/content/rules/ -newer $RULESETS_JSON |\
+  find rules/ -newer $RULESETS_JSON |\
     grep -q .
 }
 if [ ! -f "$RULESETS_JSON" ] || needs_update ; then
@@ -129,8 +129,8 @@ sig_len_hex=$(byte_swap $(printf '%08x\n' $(ls -l "$sig" | awk '{print $5}')))
 #git push
 #git push --tags
 
-echo >&2 "Total included rules: `find src/chrome/content/rules -name "*.xml" | wc -l`"
-echo >&2 "Rules disabled by default: `find src/chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
+echo >&2 "Total included rules: `find rules -name "*.xml" | wc -l`"
+echo >&2 "Rules disabled by default: `find rules -name "*.xml" | xargs grep -F default_off | wc -l`"
 echo >&2 "Created $crx"
 if [ -n "$BRANCH" ]; then
   cd ..

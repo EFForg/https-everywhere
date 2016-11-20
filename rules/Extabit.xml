@@ -1,0 +1,43 @@
+<!--
+	Nonfunctional subdomains:
+
+		- guest\d\d	(from which files are retrieved)
+
+
+	Problematic domains:
+
+		- (www.)	(expired)
+		- st *
+		- webmaster *
+
+	* Mismatched, appears identical to www
+
+-->
+<ruleset name="Extabit (partial)" default_off="expired">
+
+	<target host="extabit.com" />
+	<target host="*.extabit.com" />
+
+
+	<!--	info, extau, and vs are sent to guest\d\d
+		ToDo: Find out if they're all necessary.
+
+		Other cross-domain cookies observed:
+
+			- b
+			- fdl
+			- einfo
+			- extabit_f
+			- PHPSESSID
+			- iua
+
+	This matches all of those listed, and
+	not those sent to guest\d\d.
+					-->
+	<securecookie host="^\.extabit\.com$" name="^(?:\w|\w{3}|\w{6,}|einfo)$" />
+
+
+	<rule from="^http://(?:st\.|webmaster\.|www\.)?extabit\.com/"
+		to="https://extabit.com/" />
+
+</ruleset>

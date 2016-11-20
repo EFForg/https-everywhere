@@ -1,0 +1,39 @@
+<!--
+	For other Condé Nast coverage, see Conde-Nast.xml.
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/img.condenast.co.uk/	| dvcpqzrjfwvhx.cloudfront.net	
+			- aws permanently redirects.
+
+		- dg9g3lm9lsog5.cloudfront.net
+
+			- cnda.condenast.co.uk
+
+		- dvcpqzrjfwvhx.cloudfront.net
+
+			- cdni.condenast.co.uk
+
+
+	Problematic subdomains:
+
+		- cdni.condenast.co.uk		(mismatched, 403 when rewritten to dvcpqzrjfwvhx.cloudfront.net)
+		- cnda.condenast.co.uk		(mismatched, CN: *.cloudfront.net)
+
+-->
+<ruleset name="Conde Nast.co.uk (partial)">
+
+	<!--	Complications:
+				-->
+	<target host="cdni.condenast.co.uk" />
+	<target host="cnda.condenast.co.uk" />
+
+
+	<rule from="^http://cdni\.condenast\.co\.uk/"
+		to="https://s3-eu-west-1.amazonaws.com/img.condenast.co.uk/" />
+
+	<rule from="^http://cnda\.condenast\.co\.uk/"
+		to="https://dg9g3lm9lsog5.cloudfront.net/" />
+
+</ruleset>

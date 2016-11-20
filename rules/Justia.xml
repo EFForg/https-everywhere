@@ -1,0 +1,33 @@
+<!--
+	Nonfunctional subdomains:
+
+		- company	(redirects to www)
+		- docketsupport	(ditto)
+		- forms
+		- verdict
+
+
+	Problematic subdomains:
+
+		- (www.)blogs	(times out)
+
+-->
+<ruleset name="Justia (partial)" platform="mixedcontent">
+
+	<target host="justia.com" />
+	<target host="*.justia.com" />
+
+
+	<securecookie host="^.*\.justia\.com$" name=".*" />
+
+
+	<rule from="^http://((?:accounts|answers|blawgsearch|blawgsfm|daily|dockets|docs|law|lawyers|marketing|supreme|www)\.)?justia\.com/"
+		to="https://$1justia.com/" />
+
+	<rule from="^http://(?:www\.)?blogs\.justia\.com/"
+		to="https://marketing.justia.com/content-lawyer-blogs.html" />
+
+	<rule from="^http://(clientvideos|profile-images|statecasefiles|static)\.justia\.com/"
+		to="https://s3.amazonaws.com/$1.justia.com/" />
+
+</ruleset>

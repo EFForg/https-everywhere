@@ -1,0 +1,32 @@
+<!--
+	CDN buckets:
+
+		- d13uygpm1enfng.cloudfront.net
+
+
+	Nonfunctional domains:
+
+		- www.asahi.com *
+		- www.asahicom.jp	(403; mismatched, CN: jpssl.cdngc.net)
+
+	* Redirects to http, akamai
+
+
+	Partially covered domains:
+
+		- digital.asahi.com	(some pages redirect to http, others 404)
+
+-->
+<ruleset name="Asahi Shimbun (partial)">
+
+	<target host="*.asahi.com" />
+		<exclusion pattern="^http://digital\.asahi\.com/(?!css/|img/|login)" />
+
+
+	<securecookie host="^ajw\.asahi\.com$" name=".+" />
+
+
+	<rule from="^http://(ajw|digital)\.asahi\.com/"
+		to="https://$1.asahi.com/" />
+
+</ruleset>

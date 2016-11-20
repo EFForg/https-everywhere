@@ -1,0 +1,38 @@
+<!--
+	CDN buckets:
+
+		- d1ai9qtk9p41kl.cloudfront.net
+
+			- cloudfront-assets
+
+-->
+<ruleset name="Reason.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="reason.com" />
+	<target host="www.reason.com" />
+
+	<!--	Complications:
+				-->
+	<target host="cloudfront-assets.reason.com" />
+
+		<test url="http://reason.com/blog" />
+		<test url="http://reason.com/subscribe" />
+		<test url="http://www.reason.com/widgets" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.reason\.com$" name="^(__qca|ng_session)$" /-->
+
+	<securecookie host="^\.reason\.com$" name=".+" />
+
+
+	<rule from="^http://cloudfront-assets\.reason\.com/"
+		to="https://d1ai9qtk9p41kl.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,42 @@
+<!--
+	Problematic subdomains:
+
+		- ^	(cert only matches *.uc.edu)
+
+
+	Partially covered subdomains:
+
+		- (www.)med *
+		- intmed *
+		- (www.)researchcompliance *
+
+	* At least some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- admissions
+		- (www.)health
+		- (www.)medcenter
+		- (www.)pharmacy
+		- ucdirectory
+
+-->
+<ruleset name="University of Cincinatti (partial)">
+
+	<target host="uc.edu" />
+	<target host="*.uc.edu" />
+		<exclusion pattern="^http://(?:www\.)?(?:intmed|med|researchcompliance)\.uc\.edu/(?!App_(?:Master|Themes)/|Libraries/|[sS]itefinity/|WebResource\.axd)" />
+
+
+	<securecookie host="^(?!(?:www\.)?(?:intmed|med|researchcompliance)\.).+\.uc\.edu$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?uc\.edu/"
+		to="https://www.uc.edu/" />
+
+	<rule from="^http://(admissions|(?:www\.)?(?:health|med|medcenter|pharmacy|researchcompliance)|intmed|ucdirectory)\.uc\.edu/"
+		to="https://$1.uc.edu/" />
+
+</ruleset>

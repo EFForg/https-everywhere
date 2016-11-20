@@ -1,0 +1,212 @@
+<!--
+	Other Hewlett Packard rulesets:
+
+		- Compaq.com.xml
+		- HP_Cloud.com.xml
+		- Optimost.xml
+		- Palm.com.xml
+
+
+	Nonfunctional domains:
+
+		- (www.)arcsight.com
+
+		- hp.com subdomains:
+
+			- h22166.austin *
+			- h22207.austin *
+			- h30499.austin *
+			- h30507.austin *
+			- h50146.austin *
+			- h71000.austin *
+			- (www.)hpl ¹
+			- h10060.www1 ²
+			- h17007.www1 ³
+			- h18004.www1 ⁴
+
+		- hpwebos.com ⁵
+		- www.hpwebos.com ⁶
+		- welcome.hp-ww.com ⁷
+
+	* Refused
+	¹ Plaintext reply
+	² 404, mismatched
+	³ Reset
+	⁴ Shows h18000.www1, mismatched
+	⁵ Mismatched, CN: palm.com
+	⁶ Redirects to http, Akamai
+	⁷ Dropped
+
+
+	Problematic domains:
+
+		- reimagine.hp.com ¹
+		- h30261.www3.hp.com ²
+
+	¹ Mismatched, CN: z2z-hpcom-static-prd-30.external.hp.com
+	² corporate-ir.net
+
+
+	Partially covered domains:
+
+		- store.hp.com *
+
+	* Some pages redirect to http
+
+
+	Fully covered domains:
+
+		- protect724.arcsight.com
+
+		- (www.)?eds.com
+		- www-mo.eds.com
+
+		- [^.]*.hp.com:
+
+			- protect724
+			- register
+			- shopping1
+			- sprout
+			- www8		(→ ssl.www8)
+
+		- community.dev.hp.com
+		- v4nzproa.houston.hp.com
+		- apps.protect724.hp.com
+		- uat.protect724.hp.com
+		- apps.uat.protect724.hp.com
+
+		- *.www1.hp.com:
+
+			- h10120
+
+		- *.www2.hp.com:
+
+			- h20435
+			- h20497
+			- h22166
+
+		- *.www3.hp.com:
+
+			- h30434
+			- h30499
+			- h30507
+
+		- *.www4.hp.com:
+
+			- h41183
+
+		- ssl.www8.hp.com
+
+		- ssl-product-images.www8-hp.com
+
+
+	Insecure cookies are set for these domains:
+
+		- protect724.arcsight.com
+
+		- .hp.com
+		- community.dev.hp.com
+
+		- protect724.hp.com
+		- apps.protect724.hp.com
+		- uat.protect724.hp.com
+		- apps.uat.protect724.hp.com
+
+		- .www2.hp.com
+		- h20435.www2.hp.com
+		- h20497.www2.hp.com
+		- h22166.www2.hp.com
+		- .www3.hp.com
+		- h30499.www3.hp.com
+		- h30507.www3.hp.com
+		- h71016.www7.hp.com
+		- ssl.www8.hp.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- shopping1.hp.com from welcome.hp-ww.com
+			- h30261.www3.hp.com from phx.corporate-ir.net *
+			- h71016.www7.hp.com from $self *
+
+		- Image on h30499.www3.hp.com from $self *
+
+		- favicon on shopping1.hp.com and h30499.www3.hp.com from welcome.hp-ww.com *
+
+	* Secured by us
+
+
+-->
+<ruleset name="HP (buggy?)" default_off="testing">
+
+	<target host="protect724.arcsight.com" />
+	<target host="eds.com" />
+	<target host="*.eds.com" />
+	<target host="hp.com" />
+	<target host="*.hp.com" />
+		<exclusion pattern="^http://(?:h(?:22166|22207|30499|30507|50146|71000)\.austin|(?:www\.)?hpl|m|reimagine|welcome|h1(?:0060|7007|8004)\.www1|h30(?:261|434)\.www3)\.hp\.com" />
+		<!--
+			At least some redirects 404:
+							-->
+		<exclusion pattern="^http://shopping1\.hp\.com/(?!is-bin/)" />
+		<exclusion pattern="^http://store\.hp\.com/webapp/wcs/stores/servlet(?:$|[?/])" />
+		<!--
+			404 over https:
+					-->
+		<!--exclusion pattern="^http://www\.hp\.com/hpinfo/images/" /-->
+		<exclusion pattern="^http://www\.hp\.com/(?!img/)" />
+		<exclusion pattern="^http://h18000\.www1\.hp\.com/products/servers/linux/documentation\.html" />
+	<target host="*.hp-ww.com" />
+		<exclusion pattern="^http://welcome\.hp-ww\.com/+(?!(?:img/+)?favicon\.ico)" />
+	<target host="ssl-product-images.www8-hp.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^protect724\.arcsight\.com$" name="^BIGipServerpool_arcsightprotect724-v7\.hosted\.jivesoftware\.com$" /-->
+	<!--securecookie host="^\.hp\.com$" name="^(cc|lang)$" /-->
+	<!--securecookie host="^community\.dev\.hp\.com$" name="^LithiumVisitor$" /-->
+	<!--securecookie host="^(apps\.)?protect724\.hp\.com$" name="^BIGipServerpool_arcsightprotect724-v7\.hosted\.jivesoftware\.com$" /-->
+	<!--securecookie host="^(uat\.)?protect724\.hp\.com$" name="^(jive\.login\.ts|jive\.security\.context)$" /-->
+	<!--securecookie host="^shopping1\.hp\.com$" name="^(pgid|sid)$" /-->
+	<!--securecookie host="^(apps\.)?uat\.protect724\.hp\.com$" name="^BIGipServerm\w+-\d+-pool$" /-->
+	<!--securecookie host="^\.www[23]\.hp\.com$" name="^VISITORID$" /-->
+	<!--securecookie host="^(h20435\.www2|h30(434|499|507)\.www3)\.hp\.com$" name="^(LiSESSIONID|LithiumVisitor)$" /-->
+	<!--securecookie host="^h20497\.www2\.hp\.com$" name="^session$" /-->
+	<!--securecookie host="^h22166\.www2\.hp\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^h30507\.www3\.hp\.com$" name="^lia\.anon\.profile\.language$" /-->
+	<!--securecookie host="^h71016\.www7\.hp.com$" name="^(ASPSESSIONID[A-Z]{8}|DCCPRO%5FDPLUS%5F[\w%]+)$" /-->
+	<!--securecookie host="^ssl\.www8\.hp\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^protect724\.arcsight\.com$" name=".+" />
+	<!--
+		Stats cookie set by met1.hp.com
+						-->
+	<securecookie host="^\.hp\.com$" name="^s_vi$" />
+	<securecookie host="^(?:esca(?:2\.americas|5\.asiapac|3\.europe)|community\.dev|(?:uat\.)?protect724|(?:www\.)?register|shopping|h2(?:0141|2166)\.www2|h30(?:434|499|507)\.www3|h41183\.www4|h71016\.www7|ssl\.www8)\.hp\.com$" name=".+" />
+
+
+	<rule from="^http://protect724\.arcsight\.com/"
+		to="https://protect724.arcsight.com/" />
+
+	<rule from="^http://(www(?:-mo)?\.)?eds\.com/"
+		to="https://$1eds.com/" />
+
+	<rule from="^http://([^/:@]+)\.(americas|asiapac|austin|europe|www[1-7])\.hp\.com/"
+		to="https://$1.austin.hp.com/" />
+
+	<rule from="^http://(?:ssl\.)?www8\.hp\.com/"
+		to="https://ssl.www8.hp.com/" />
+		
+	<rule from="^http://([^/:@.]+|community\.dev|v4nzproa\.houston|(?:apps|uat|apps\.uat)\.protect724)\.hp\.com/"
+		to="https://$1.hp.com/" />
+
+	<rule from="^http://(?:secur|welcom)e\.hp-ww\.com/"
+		to="https://secure.hp-ww.com/" />
+
+	<rule from="^http://ssl-product-images\.www8-hp\.com/"
+		to="https://ssl-product-images.www8-hp.com/" />
+
+</ruleset>

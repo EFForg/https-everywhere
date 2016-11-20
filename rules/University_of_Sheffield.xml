@@ -1,0 +1,48 @@
+<!--
+	Nonfunctional subdomains:
+
+		- (www.)dcs	(shows Scientific Linux test page, valid cert)
+
+
+	Problematic domains:
+
+		- portal.sheffield.co.uk	(mismatched, CN: *.shef.ac.uk)
+
+
+	Fully covered domains:
+
+		- shef.ac.uk subdomains:
+
+			- (www.)
+			- guide.dcs
+			- onlineshop
+			- portal
+
+		- sheffield.co.uk subdomains:
+
+			- (www.)
+			- portal	(→ portal.shef.co.uk)
+
+-->
+<ruleset name="University of Sheffield (partial)">
+
+	<target host="shef.ac.uk" />
+	<target host="*.shef.ac.uk" />
+	<target host="sheffield.ac.uk" />
+	<target host="*.sheffield.ac.uk" />
+
+
+	<!--securecookie host="^\.shef\.ac\.uk$" name="^(?:fos\.web\.secure|fos\.web\.server|runId)$" /-->
+	<securecookie host="^(?:onlineshop|portal)\.shef\.ac\.uk$" name=".+" />
+
+
+	<rule from="^http://((?:guide\.dcs|onlineshop|portal|www)\.)?shef\.ac\.uk/"
+		to="https://$1shef.ac.uk/" />
+
+	<rule from="^http://(www\.)?sheffield\.ac\.uk/"
+		to="https://$1sheffield.ac.uk/" />
+
+	<rule from="^http://portal\.sheffield\.ac\.uk/"
+		to="https://portal.shef.ac.uk/" />
+
+</ruleset>

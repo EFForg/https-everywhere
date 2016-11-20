@@ -1,0 +1,53 @@
+<!--
+	CDN buckets:
+
+		- blogs.zappos.com.edgesuite.net/.../
+			- a1130.b.akamai.net/.../
+
+		- www.zappos.com.edgesuite.net
+
+		- zassets.zappos.com.akadns.net/.../
+
+			- a.zassets.com.edgesuite.net/.../
+			- a1037.b.akamai.net/.../
+
+		- l3.zassets.com.c.footprint.net	(no https)
+			- l4.zassets.com
+
+
+	Nonfunctional subdomains:
+
+		- blogs		(Akamai; 504)
+
+-->
+<ruleset name="Zappos (partial)">
+
+	<target host="zappos.com" />
+	<target host="*.zappos.com" />
+	<target host="*.zassets.com" />
+
+
+	<!--	Akamai.
+
+		These paths don't work when rewritten:
+
+			- download/
+			- sites/
+					-->
+	<rule from="^http://(?:www\.)?zappos\.com/(account(?:$|\?|/)|(?:assets|boutiques|css|images|imgs?|styles)/)"
+		to="https://secure-www.zappos.com/$1" />
+
+	<rule from="^http://(?:www\.)?zappos\.com/[\w\-]+/imgs/"
+		to="https://secure-www.zappos.com/imgs/" />
+
+	<rule from="^http://secure-www\.zappos\.com/"
+		to="https://secure-www.zappos.com/" />
+
+	<!--	- a[123]?: Akamai
+		- a[123]? 301s like so over https
+		- l3 & l4 time out
+						-->
+	<rule from="^http://(?:a[123]?|l[34])\.zassets\.com/"
+		to="https://secure-www.zappos.com/" />
+
+</ruleset>

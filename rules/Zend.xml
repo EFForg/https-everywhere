@@ -1,0 +1,87 @@
+<!--
+	Other Zend rulesets:
+
+		- Apigility.org.xml
+
+
+	CDN buckets:
+
+		- shop-zend.pantherssl.com
+		- static-zend.pantherssl.com
+
+
+	Nonfunctional hosts in *zend.com:
+
+		- blog *
+		- forums *
+
+	* 403
+
+
+	Problematic hosts in *zend.com:
+
+		- ^ *
+		- framework *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .zend.com
+		- pages.zend.com
+		- shop.zend.com *
+		- .shop.zend.com
+		- www.zend.com
+
+	* Tracking cookies only
+
+
+	These altnames don't exist:
+
+		- www.pages.zend.com
+
+-->
+<ruleset name="Zend.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="pages.zend.com" />
+	<target host="shop.zend.com" />
+	<target host="support.zend.com" />
+	<target host="www.zend.com" />
+
+	<!--	Complications:
+				-->
+	<target host="zend.com" />
+	<target host="static.zend.com" />
+
+		<test url="http://static.zend.com/shop/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.zend\.com$" name="^iep$" /-->
+	<!--securecookie host="^pages\.zend\.com$" name="^BIGipServer.*" /-->
+	<!--securecookie host="^shop\.zend\.com$" name="^(?:\d{8}-SKEY|\d{8}-VID|HumanClickSiteContainerID_\d{8}|lpFPCtest|VIEWED_PRODUCTS)$" /-->
+	<!--securecookie host="^\.shop\.zend\.com$" name="^frontend$" /-->
+	<!--securecookie host="^www\.zend\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\.zend\.com$" name="^__utm\w$" />
+	<securecookie host="^\.shop\.zend\.com$" name="." />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://zend\.com/"
+		to="https://www.zend.com/" />
+
+	<!--	NB: Must catch this before the next rule.	-->
+	<rule from="^http://static\.zend\.com/shop/"
+		to="https://shop-zend.pantherssl.com/" />
+
+	<rule from="^http://static\.zend\.com/"
+		to="https://static-zend.pantherssl.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+</ruleset>

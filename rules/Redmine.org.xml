@@ -1,0 +1,39 @@
+<!--
+	Problematic hosts in *redmine.org:
+
+		- svn *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	These altnames don't exist:
+
+		- www.svn.redmine.org
+
+
+	Insecure cookies are set for these hosts:
+
+		- redmine.org
+		- www.redmine.org
+
+-->
+<ruleset name="Redmine.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="redmine.org" />
+	<!--target host="svn.redmine.org" /-->
+	<target host="www.redmine.org" />
+
+
+	<!--	Not secured by server_
+					-->
+	<!--securecookie host="^(www\.)?redmine\.org$" name="^_redmine_session$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

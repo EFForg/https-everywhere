@@ -1,0 +1,56 @@
+<!--
+	For problematic rules, Tribune-mismatches.xml.
+
+
+	Other Tribune rulesets:
+
+		- Chicago_Tribune.xml
+		- courant.com.xml
+		- Los_Angeles_Times.xml
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/MG2_Tribune/
+
+		-  trb.edgesuite.net 
+
+			- www.trbimg.com
+
+		- tribcmsprod.blob.core.windows.net
+
+
+	Nonfunctional domains:
+
+		- connect2maryland.baltimoresun.com	(times out)
+		- data.baltimoresun.com			(ssl_error_rx_record_too_long)
+		- www.chicagotribune.com		(Akamai; 301s to http)
+
+		- www.sun-sentinel.com			(Akamai; 301s to http)
+		- media.trb.com				(Akamai; 503)
+		- mv2.trb.com				(refused)
+		- www.trbimg.com			(Akamai; 503)
+		- privacy.tribune.com *
+		- snsimages.tribune.com			(Akamai; 503)
+
+	* Times out
+
+-->
+<ruleset name="Tribune (partial)">
+
+	<target host="*.signon.trb.com" />
+
+		<exclusion pattern="^http://(?:[^./]+\.){2,}signon\.trb\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.signon.trb.com/" />
+			<test url="http://exists.not.signon.trb.com/" />
+
+		<test url="http://latimes.signon.trb.com/" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

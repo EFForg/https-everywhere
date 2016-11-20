@@ -1,0 +1,58 @@
+<!--
+	CDN buckets:
+
+		- media1.gameinformer.edgesuite.net
+
+		- optimizedresources.gamestop.com.edgesuite.net ← media-2.gameinformer.com
+
+
+	Nonfunctional subdomains:
+
+		- media1	(504, akamai)
+
+
+	Problematic subdomains:
+
+		- media-2	(works, akamai)
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .gameinformer.com
+		- www.gameinformer.com
+
+
+	Mixed content:
+
+		- Images on www from media1.gameinformer.com ¹
+
+		- Bugs, on:
+
+			- www from www.facebook.com ²
+			- www from b.scorecardresearch.com ²
+
+
+	¹ Unsecurable <= 504
+	² Secured by us
+
+-->
+<ruleset name="GameInformer.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="gameinformer.com" />
+	<target host="www.gameinformer.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.gameinformer\.com$" name="^(?:AuthorizationCookie|CommunityServer-UserCookie\d+|SCC|SMC|SRC|SSPIDER)$" /-->
+	<!--securecookie host="^www\.gameinformer\.com$" name="^(?:CommunityServer-LastVisitUpdated-\d+|akamai-cookie)$" /-->
+
+	<securecookie host="^(?:www)?\.gameinformer\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

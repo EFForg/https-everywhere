@@ -1,0 +1,103 @@
+<!--
+	For rules causing false/broken MCB, see Ofcom.org.uk-falsemixed.xml.
+
+
+	Nonfunctional hosts in *ofcom.org.uk:
+
+		- (www.)? ¹
+		- consumers ²
+		- images
+		- media ²
+
+	¹ Redirects to http
+	² Dropped
+
+
+	Problematic hosts in *ofcom.org.uk:
+
+		- ask ¹
+		- licensing ²
+		- styles ²
+
+	¹ Mismatched, CN: *.metafaq.com
+	² Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- licensing.ofcom.org.uk
+		- stakeholders.ofcom.org.uk
+		- styles.ofcom.org.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on licensing, styles from $self *
+		- Images on licensing, styles from $self *
+
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Ofcom.org.uk (partial)">
+
+	<target host="licensing.ofcom.org.uk" />
+	<target host="stakeholders.ofcom.org.uk" />
+	<target host="styles.ofcom.org.uk" />
+
+		<!--	Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?ofcom\.org\.uk/($|email-updates/$|favicon\.ico|widgets/defaultpagewidgets/ttgifpng)" /-->
+
+		<!--	Redirect to http:
+						-->
+		<!--exclusion pattern="^http://stakeholders\.ofcom\.org\.uk/($|favicon\.ico|tell-us/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://stakeholders\.ofcom\.org\.uk/(?!tell-us/contact-the-webmaster(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://stakeholders.ofcom.org.uk//tell-us/contact-the-webmaster" />
+			<test url="http://stakeholders.ofcom.org.uk/favicon.ico" />
+			<test url="http://stakeholders.ofcom.org.uk/tell-us/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://stakeholders.ofcom.org.uk/tell-us/contact-the-webmaster" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:licensing|styles)\.ofcom\.org\.uk/(?!/*(?:acm/css/|favicon\.ico|html5/|images/|styles/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://licensing.ofcom.org.uk/radio-broadcast-licensing/" />
+			<test url="http://licensing.ofcom.org.uk/radiocommunication-licences/satellite-earth/" />
+			<test url="http://licensing.ofcom.org.uk/tv-broadcast-licences/" />
+			<test url="http://styles.ofcom.org.uk/default.aspx" />
+			<test url="http://styles.ofcom.org.uk/index.htm" />
+			<test url="http://styles.ofcom.org.uk/index.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://styles.ofcom.org.uk/acm/css/img/grey-arrow.png" />
+			<test url="http://styles.ofcom.org.uk/favicon.ico" />
+			<test url="http://styles.ofcom.org.uk/images/ofcom.gif" />
+			<test url="http://styles.ofcom.org.uk/styles/long.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:licensing|stakeholders)\.ofcom\.org\.uk$" name="^(?:JSESSIONID|Stakeholders)$" /-->
+	<!--securecookie host="^styles\.ofcom\.org\.uk$" name="^ofclb$" /-->
+
+	<!--securecookie host="^(licensing|styles)\.ofcom\.org\.uk$" name="." /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

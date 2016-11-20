@@ -1,0 +1,45 @@
+<!--
+	(www.): refused
+
+
+	Fully covered subdomains:
+
+		- help
+		- mijn
+		- assets.www
+
+
+	These altnames don't exist:
+
+		- www.assets.www.npo.nl
+		- www.help.npo.nl
+		- www.mijn.npo.nl
+
+
+	Insecure cookies are set for these domains:
+
+		- .
+		- help
+		- .help
+		- mijn
+		- .mijn
+
+-->
+<ruleset name="NPO.nl (partial)">
+
+	<target host="assets.www.npo.nl" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.npo\.nl$" name="^_npo_portal_session$" /-->
+	<!--securecookie host="^(help|mijn)\.npo\.nl$" name="^balancer://\w+cluster$" /-->
+	<!--securecookie host="^\.(help|mijn)\.npo\.nl$" name="^npo_cc$" /-->
+
+	<securecookie host="^(?:help|mijn)\.npo\.nl$" name=".+" />
+
+
+	<rule from="^http://(help|mijn|assets\.www)\.npo\.nl/"
+		to="https://$1.npo.nl/" />
+
+</ruleset>

@@ -1,0 +1,42 @@
+<!--
+	Nonfunctional subdomains:
+
+		- blogs *
+
+	* Shows ^; mismatched, CN: tokamak.amd.co.at
+
+
+	Problematic subdomains:
+
+		- mail ¹
+		- www ²
+
+	¹ $ differs from http, valid cert
+	² Works; mismatched, CN: tokamak.amd.co.at
+
+
+	These altnames don't exist:
+
+		- tokamak.amd.co.at
+
+-->
+<ruleset name="amd.co.at (partial)">
+
+	<target host="amd.co.at" />
+	<target host="*.amd.co.at" />
+		<!--
+			^ differs:
+					-->
+		<exclusion pattern="^http://mail\.amd\.co\.at/+(?!(?:phpmyadmin|roundcube)(?:$|[?/]))" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^diebold\.amd\.co\.at$" name="^PIWIK_SESSID$" /-->
+	<!--securecookie host="^mail\.amd\.co\.at$" name="^(phpMyAdmin|pma_collation_connection|pma_lang|pma_mcrypt_iv|roundcube_sessid)$" /-->
+
+
+	<rule from="^http://(?:(diebold\.|mail\.)|www\.)?amd\.co\.at/"
+		to="https://$1amd.co.at/" />
+
+</ruleset>

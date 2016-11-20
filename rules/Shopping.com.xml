@@ -1,0 +1,53 @@
+<!--
+	For other eBay coverage, see EBay.xml.
+
+
+	CDN buckets:
+
+		- img.shopping.com.edgesuite.net
+
+			- di105.shopping.com
+			- img.shopping.com
+			- img.shoppingshadow.com
+
+
+	Nonfunctional subdomains:
+
+		- cheapestpricessearchengine *
+
+	* Redirects to www
+
+
+	Problematic subdomains:
+
+		- di ¹
+		- di105 ¹
+		- formation ²
+		- img ¹
+		- merchantsupport ³
+
+	¹ Works, akamai
+	² Works, mismatched, CN: ssl5.ovh.net
+	³ Mismatched, CN: *.mashery.com
+
+
+	Partially covered subdomains:
+
+		- developer *
+
+	* Some (most?) pages redirect to http
+
+-->
+<ruleset name="Shopping.com (partial)">
+
+	<target host="*.shopping.com" />
+		<exclusion pattern="^http://developer\.shopping\.com/(?!files/|login/|member/|public/)" />
+
+
+	<securecookie host="^(?!developer).+\.shopping\.com$" name=".+" />
+
+
+	<rule from="^http://(developer|haendler|marchand|(?:uk)?merchant|partners)\.shopping\.com/"
+		to="https://$1.shopping.com/" />
+
+</ruleset>

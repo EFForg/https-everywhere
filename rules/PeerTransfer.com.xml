@@ -1,0 +1,60 @@
+<!--
+	Nonfunctional hosts in *peertransfer.com:
+	
+		- info *
+
+	* Marketo
+
+
+	Problematic hosts in *peertransfer.com:
+
+		- blog *
+		- engineering *
+
+	* Mismatched
+
+
+	Mixed content:
+
+		- css on engineering from fonts.googleapis.com *
+		- favicon on engineering from $self
+
+	* Secured by us
+
+-->
+<ruleset name="peerTransfer.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="peertransfer.com" />
+	<target host="www.peertransfer.com" />
+
+	<!--	Complications:
+				-->
+	<target host="info.peertransfer.com" />
+
+		<exclusion pattern="^http://info\.peertransfer\.com/+(?!css/|images/|rs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://info.peertransfer.com/Case-Studies.html" />
+			<test url="http://info.peertransfer.com/Clients.html" />
+			<test url="http://info.peertransfer.com/b2b-Videos.html" />
+			<test url="http://info.peertransfer.com/student_videos.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://info.peertransfer.com/css/mktLPSupport.css" />
+			<test url="http://info.peertransfer.com/rs/857-SYJ-051/images/ptflywirelogo.png" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://info\.peertransfer\.com/"
+		to="https://na-abm.marketo.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,40 @@
+<!--
+	^: 404, valid cert
+
+
+	Nonfunctional subdomains:
+
+		- blog ¹
+		- search ²
+
+	¹ Dropped
+	² 403; mismatched, CN: www.musicnotes.com
+
+
+	These altnames don't exist:
+
+		- checkout.musicnotes.com
+		- www.help.musicnotes.com
+
+-->
+<ruleset name="Musicnotes.com (partial)">
+
+	<target host="musicnotes.com" />
+	<target host="*.musicnotes.com" />
+		<!--exclusion pattern="^http://(blog|search)\.musicnotes\.com/" /-->
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^help\.musicnotes\.com$" name="^(_help_center_session|_zendesk_session|_zendesk_shared_session)$" /-->
+
+	<securecookie host="^(?:origin-www|stage|www)?\.musicnotes\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?musicnotes\.com/"
+		to="https://www.musicnotes.com/" />
+
+	<rule from="^http://(help|origin-www|sheetmusic|stage|tx)\.musicnotes\.com/"
+		to="https://$1.musicnotes.com/" />
+
+</ruleset>

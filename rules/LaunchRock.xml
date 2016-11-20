@@ -1,0 +1,56 @@
+<!--
+	support is handled in Uservoice-clients.xml.
+
+
+	CDN buckets:
+
+		- launchrock-assetmanager.s3.amazonaws.com
+		- launchrock-assets.s3.amazonaws.com
+		- launchrock-ignition.s3.amazonaws.com
+		- launchrock.uservoice.com
+		- launchrock.wpengine.com
+
+
+	Nonfunctional subdomains:
+
+		- (www.)
+		- app
+		- hbtrk *
+		- hummingbird *
+
+	* Times out
+
+
+	Problematic subdomains:
+
+		- blog		(redirects to http, CN: *.wpengine.com)
+		- support	(works, CN: *.uservoice.com)
+
+
+	Fully covered subdomains:
+
+		- api
+		- blog		(→ launchrock.wpengine.com)
+		- discover
+		- platform
+		- use
+		- \w+		(client subdomains)
+
+
+-->
+<ruleset name="LaunchRock (partial)">
+
+	<target host="*.launchrock.com" />
+		<exclusion pattern="^http://(?:app|hbtrk|hummingbird|support|www)\." />
+
+
+	<securecookie host="^app\.launchrock\.com$" name=".+" />
+
+
+	<rule from="^http://blog\.launchrock\.com/"
+		to="https://launchrock.wpengine.com/" />
+
+	<rule from="^http://(\w+)\.launchrock\.com/"
+		to="https://$1.launchrock.com/" />
+
+</ruleset>

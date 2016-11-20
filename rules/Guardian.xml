@@ -1,0 +1,93 @@
+<!--
+	For other Guardian rulesets, see Guardian.xml.
+
+
+	CDN buckets:
+
+		- oase00824.247realmedia.com	← oas
+		- guardian.co.uk.112.2o7.net
+		- m.guardian.co.uk.global.prod.fastly.net
+		- syndication.guardian.co.uk.global.prod.fastly.net
+		- syndweb.guardian.co.uk.global.prod.fastly.net
+		- www.guardian.co.uk.global.prod.fastly.net
+		- ghs.googlehosted.com	← discussion.guardian.co.uk
+		- guardian.co.uk.d1.sc.omtrdc.net	← hits.guardian.co.uk
+
+
+	Nonfunctional hosts in *guardian.co.uk:
+
+		- discussion *
+
+	* Handshake fails
+
+
+	Problematic hosts in *guardian.co.uk:
+
+		- ^ ¹
+		- download ²
+		- hits ²
+		- image ²
+		- m ²
+		- oas ²
+		- register ²
+		- soulmates ²
+		- syndication ³
+		- www ²
+
+	² Mismatched
+	¹ Dropped
+	³ Refused
+
+
+	These altnames don't exist:
+
+		- www.id.guardian.co.uk
+		- www.witness.guardian.co.uk
+
+
+	Insecure cookies are set for these domains:
+
+		- .guardian.co.uk
+
+-->
+<ruleset name="Guardian.co.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="id.guardian.co.uk" />
+	<target host="witness.guardian.co.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="download.guardian.co.uk" />
+	<target host="hits.guardian.co.uk" />
+	<target host="image.guardian.co.uk" />
+	<target host="oas.guardian.co.uk" />
+	<target host="register.guardian.co.uk" />
+	<target host="soulmates.guardian.co.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.guardian\.co\.uk$" name="^OAX$" /-->
+
+	<securecookie host="^\." name="^(?:NXCLICK2|OAX|s_.+s)$" />
+	<securecookie host="^(?:\w|\.witness\.)" name="." />
+
+
+	<rule from="^http://(?:download|image)\.guardian\.co\.uk/"
+		to="https://image.guim.co.uk/" />
+
+	<rule from="^http://hits\.guardian\.co\.uk/"
+		to="https://guardian.d1.sc.omtrdc.net/" />
+
+	<rule from="^http://oas\.guardian\.co\.uk/"
+		to="https://oase00824.247realmedia.com/" />
+
+	<rule from="^http://(register|soulmates)\.guardian\.co\.uk/"
+		to="https://$1.theguardian.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,62 @@
+<!--
+	CDN buckets:
+
+		- cdn.apps.shopify.com.cdngc.net
+
+
+	Problematic subdomains:
+
+		- cdn.apps	(403; mismatched, CN: ssl2.cdngc.net)
+
+
+	Fully covered domains:
+
+		- *.myshopify.com	(stores/clients)
+
+		- shopify.com subdomains:
+
+			- (www.)
+			- apps
+			- cdn.apps	(→ apps)
+			- cdn
+			- checkout
+			- static
+			- themes
+
+
+	Mixed content:
+
+		- Images on $client from cdn via cdn *
+
+		- Ads/web bugs, on $client from:
+
+			- cdn.api.twitter.com *
+			- staticwww.yopto.com *
+			- widgets.yopto.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Shopify (partial)">
+
+	<target host="*.myshopify.com" />
+	<target host="shopify.com" />
+	<target host="*.shopify.com" />
+
+
+	<!--	Cautiously avoiding cross-domain cookies for now.
+								-->
+	<securecookie host="^\w.*\.myshopify\.com$" name=".+" />
+	<securecookie host="^themes\.shopify\.com$" name=".+" />
+
+
+	<rule from="^http://([\w-]+)\.myshopify\.com/"
+		to="https://$1.myshopify.com/" />
+
+	<rule from="^http://((?:apps|cdn|checkout|static|themes|www)\.)?shopify\.com/"
+		to="https://$1shopify.com/" />
+
+	<rule from="^http://cdn\.apps\.shopify\.com/"
+		to="https://apps.shopify.com/" />
+
+</ruleset>

@@ -1,0 +1,33 @@
+<!--
+	For other Hearst Corporation coverage, see Hearst-Corporation.xml.
+
+
+	Nonfunctional domains:
+
+		- internetmarketing.localedge.com	(times out)
+		- (www.)localedgereviews.com		(times out)
+
+-->
+<ruleset name="LocalEdge (partial)" platform="mixedcontent">
+
+	<target host="localedge.com" />
+	<target host="*.localedge.com" />
+	<target host="talkingphonebook.com" />
+	<target host="*.talkingphonebook.com" />
+
+
+	<securecookie host="^.*\.localedge\.com$" name=".*" />
+
+
+	<rule from="^http://((?:extranet|sso|static|www)\.)?localedge\.com/"
+		to="https://$1localedge.com/" />
+
+	<!--	www times out over https, redirects to localedge over http.
+
+		images presents cert for localedge,
+		doesn't redirect, but data are identical.
+					-->
+	<rule from="^http://(?:images\.|www\.)?talkingphonebook\.com/"
+		to="https://www.localedge.com/" />
+
+</ruleset>

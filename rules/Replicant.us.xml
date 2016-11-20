@@ -1,0 +1,50 @@
+<!--
+	Problematic hosts in *replicant.us:
+
+		- (www.)? ¹
+		- blog ¹
+		- redmine ¹ ²
+
+	¹ CAcert
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- blog
+		- redmine
+
+
+	Insecure cookies are set by these domains:
+
+		- redmine.replicant.us
+
+
+	Mixed content:
+
+		- iframe on www from ftp-osl.osuosl.org
+		- Image on www from $self
+
+-->
+<ruleset name="Replicant.us" platform="cacert" default_off="missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="replicant.us" />
+	<target host="blog.replicant.us" />
+	<target host="redmine.replicant.us" />
+	<target host="www.replicant.us" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^redmine\.replicant\.us$" name="^_redmine_session$" /-->
+
+	<securecookie host="^redmine\.replicant\.us$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

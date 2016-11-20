@@ -1,0 +1,50 @@
+<!--
+	For other Gemius coverage, see Gemius.xml.
+
+
+	^: 404
+
+
+	Fully covered subdomains:
+
+		- (www.)?	(^ → www)
+		- heatmap
+		- traffic
+
+
+	Insecure cookies are set for these hosts:
+
+		- gemius.com
+		- heatmap.gemius.com
+		- www.gemius.com
+
+-->
+<ruleset name="Gemius.com (partial)">
+
+	<target host="gemius.com" />
+	<target host="heatmap.gemius.com" />
+	<target host="traffic.gemius.com" />
+	<target host="www.gemius.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^gemius\.com$" name="^[BF]E_USER_AUTH$" /-->
+	<!--securecookie host="^(www\.)?gemius\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^heatmap\.gemius\.com$" name="^ghm_productpage$" /-->
+
+	<securecookie host="^(?:heatmap\.|www\.)?gemius\.com$" name=".+" />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://gemius\.com/+"
+		to="https://www.gemius.com/" />
+
+		<test url="http://gemius.com//homepage.html" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

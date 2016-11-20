@@ -1,0 +1,96 @@
+<!--
+	^: cert only matches www
+
+
+	Partially covered domains:
+
+		- \w\w.usenet.nl: *
+
+			- de
+			- en
+			- fr
+			- es
+			- it
+			- nl
+
+	* Some pages redirect to http.
+
+-->
+<ruleset name="Usenet.nl (partial)">
+
+	<target host="*.usenet.nl" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(de|en|es|fr|it|nl)\.usenet\.nl/+($|\?)" /-->
+		<!--exclusion pattern="^http://(de|en|fr|nl)\.usenet\.nl/+service/+($|\?)" /-->
+		<!--exclusion pattern="^http://en\.usenet\.nl/+forgot-password/+($|\?)" /-->
+		<!--exclusion pattern="^http://de\.usenet\.nl/+passwort-vergessen/+($|\?)" /-->
+		<!--exclusion pattern="^http://es\.usenet\.nl/+contrasena-olvidad/+($|\?)" /-->
+		<!--exclusion pattern="^http://es\.usenet\.nl/+servicio/+($|\?)" /-->
+		<!--exclusion pattern="^http://fr\.usenet\.nl/+resiliation-effective/+($|\?)" /-->
+		<!--exclusion pattern="^http://it\.usenet\.nl/+password-dimenticata/+($|\?)" /-->
+		<!--exclusion pattern="^http://it\.usenet\.nl/+assistenza/+($|\?)" /-->
+		<!--exclusion pattern="^http://nl\.usenet\.nl/+succesvol-afgemeld/+($|\?)" /-->
+		<!--
+			In sum:
+				-->
+		<!--exclusion pattern="^http://\w\w\.usenet\.nl/+($|\?|(forgot-password|password-dimenticata|passwort-vergessen|resiliation-effective|service|servicio|succesvol-afgemeld)/+($|\?))" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(de|en|es|fr|it|nl)\.usenet\.nl/+(?!UNF/resource/|unf/resource/)" /-->
+		<!--exclusion pattern="^http://de\.usenet\.nl/+(?!anmeldung($|[?/]))" /-->
+		<!--exclusion pattern="^http://de\.usenet\.nl/+(?!service/support-formular/*($|\?))" /-->
+		<!--exclusion pattern="^http://en\.usenet\.nl/+(?!registration($|[?/]))" /-->
+		<!--exclusion pattern="^http://en\.usenet\.nl/+(?!service/support-form/*($|\?))" /-->
+		<!--exclusion pattern="^http://es\.usenet\.nl/+(?!registro($|[?/]))" /-->
+		<!--exclusion pattern="^http://es\.usenet\.nl/+(?!servicio/formulario-de-soporte/*($|\?))" /-->
+		<!--exclusion pattern="^http://fr\.usenet\.nl/+(?!inscription($|[?/]))" /-->
+		<!--exclusion pattern="^http://fr\.usenet\.nl/+(?!service/formulaire-assistance/*($|\?))" /-->
+		<!--exclusion pattern="^http://it\.usenet\.nl/+(?!registrazione($|[?/]))" /-->
+		<!--exclusion pattern="^http://it\.usenet\.nl/+(?!assistenza/modulo-di-assistenza/*($|\?))" /-->
+		<!--exclusion pattern="^http://nl\.usenet\.nl/+(?!aanmelding($|[?/]))" /-->
+		<!--exclusion pattern="^http://nl\.usenet\.nl/+(?!service/support-formulier/*($|\?))" /-->
+		<!--
+			Handled specially:
+						-->
+		<!--exclusion pattern="^http://en\.usenet\.nl/+(?!register-now/*($|\?))" /-->
+		<!--exclusion pattern="^http://de\.usenet\.nl/+(?!jetzt-anmelden/*($\?))" /-->
+		<!--exclusion pattern="^http://es\.usenet\.nl/+(?!registrese-ahora/*($\?))" /-->
+		<!--exclusion pattern="^http://fr\.usenet\.nl/+(?!inscription-maintenant/*($|\?))" /-->
+		<!--exclusion pattern="^http://it\.usenet\.nl/+(?!registratevi-ora/*($|\?))" /-->
+		<!--exclusion pattern="^http://nl\.usenet\.nl/+(?!nu-aanmelden/*($|\?))" /-->
+		<!--
+			In sum:
+				-->
+		<!--exclusion pattern="^http://\w\w\.usenet\.nl/+(?!(aanmelding|anmeldung|inscription|registration|registrazione|registro)($|[?/])|(assistenza/modulo-di-assistenza|inscription-maintenant|jetzt-anmelden|nu-aanmelden|register-now|registratevi-ora|registrese-ahora|service/formulaire-assistance|service/support-form|service/support-formular|service/support-formulier|servicio/formulario-de-soporte)/*($|\?)|UNF/|unf/)" /-->
+
+
+	<rule from="^http://(?:www\.)?usenet\.nl/"
+		to="https://www.usenet.nl/" />
+
+	<!--	Redirects to http first:
+					-->
+	<rule from="^http://en\.usenet\.nl/+register-now/*(?:$|\?.*)"
+		to="https://en.usenet.nl/registration/" />
+
+	<rule from="^http://de\.usenet\.nl/+jetzt-anmelden/*(?:$|\?.*)"
+		to="https://de.usenet.nl/anmeldung/" />
+
+	<rule from="^http://es\.usenet\.nl/+registrese-ahora/*(?:$|\?.*)"
+		to="https://es.usenet.nl/registro/" />
+
+	<rule from="^http://fr\.usenet\.nl/+inscription-maintenant/*(?:$|\?.*)"
+		to="https://fr.usenet.nl/inscription/" />
+
+	<rule from="^http://it\.usenet\.nl/+registratevi-ora/*(?:$|\?.*)"
+		to="https://it.usenet.nl/registrazione/" />
+
+	<rule from="^http://nl\.usenet\.nl/+nu-aanmelden/*(?:$|\?.*)"
+		to="https://nl.usenet.nl/aanmelding/" />
+
+	<rule from="^http://(\w\w)\.usenet\.nl/(?=(?:aanmelding|anmeldung|inscription|registration|registrazione|registro)(?:$|[?/])|(?:assistenza/modulo-di-assistenza|service/formulaire-assistance|service/support-form|service/support-formular|service/support-formulier|servicio/formulario-de-soporte)/*(?:$|\?)|UNF/|unf/)"
+		to="https://$1.usenet.nl/" />
+
+</ruleset>

@@ -1,0 +1,60 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://olb2.nationet.com/ => https://olb2.nationet.com/: (35, 'Unknown SSL protocol error in connection to olb2.nationet.com:443 ')
+Fetch error: http://olb.nationwideinternational.com/ => https://olb.nationwideinternational.com/: (28, 'Connection timed out after 10001 milliseconds')
+Fetch error: http://olb.nationwideuk.ie/ => https://olb.nationwideuk.ie/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	Nonfunctional domains:
+
+		- nationwide.co.uk subdomains:
+
+			- (www.) *
+			- m *
+			- your		(redirects to http)
+
+		- (www.)nationwideinternational.com *
+		- (www.)nationwideuk.ie *
+
+	* Times out
+
+
+	Problematic domains:
+
+		- metrics.nationwide.co.uk	(mismatched, CN: *.d2.sc.omtrdc.net)
+		- nationwide-jobs.co.uk		(cert only matches www)
+
+-->
+<ruleset name="Nationwide Building Society (partial)" default_off='failed ruleset test'>
+
+	<target host="olb2.nationet.com" />
+	<target host="*.nationwide.co.uk" />
+	<target host="olb.nationwideinternational.com" />
+	<target host="nationwide-jobs.co.uk" />
+	<target host="www.nationwide-jobs.co.uk" />
+	<target host="olb.nationwideuk.ie" />
+
+
+	<securecookie host="^olb2\.nationet\.com$" name=".+" />
+	<!--
+		Tracking cookies.
+					-->
+	<securecookie host="^\.nationwide\.co\.uk$" name="^s_\w\w$" />
+	<securecookie host="^(?:\.?onlinebanking|savings|securemail)\.nationwide\.co\.uk$" name=".+" />
+	<securecookie host="^www\.nationwide-jobs\.co\.uk$" name=".+" />
+
+
+	<rule from="^http://olb2\.nationet\.com/"
+		to="https://olb2.nationet.com/" />
+
+	<rule from="^http://metrics\.nationwide\.co\.uk/"
+		to="https://nationwide-co-uk.d2.sc.omtrdc.net/" />
+
+	<rule from="^http://(onlinebanking|savings|securemail)\.nationwide\.co\.uk/"
+		to="https://$1.nationwide.co.uk/" />
+
+	<rule from="^http://(?:www\.)?nationwide-jobs\.co\.uk/"
+		to="https://www.nationwide-jobs.co.uk/" />
+
+	<rule from="^http://olb\.nationwide(international\.com|uk\.ie)/"
+		to="https://olb.nationwide$1/" />
+
+</ruleset>

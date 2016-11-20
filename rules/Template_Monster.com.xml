@@ -1,0 +1,91 @@
+<!--
+	CDN buckets:
+
+		- imagestm.templatemonster.netdna-cdn.com
+
+			- -ssl does not exist
+			- i.tmimgcdn.com
+
+		- jstm.templatemonster.netdna-cdn.com
+
+			- -ssl does not exist
+			- j.tmimgcdn.com
+
+		- scrtm.templatemonster.netdna-cdn.com
+
+			- ssl exists
+			- scr.templatemonster.com
+
+		- themestm.templatemonster.netdna-cdn.com
+
+			- -ssl exists
+			- t.tmimgcdn.com
+
+		- wactm-templatemonster.netdna-ssl.com
+
+
+	Problematic subdomains:
+
+		- (www.)	(redirects to http.../$; mismatched, CN: secure.templatemonster.com)
+		- scr		(works; mismatched, CN; *.netdna-ssl.com)
+
+		- tmimgcdn.com subdomains:
+
+			- i *
+			- j *
+			- t	(works; mismatched, CN: *.netdna-ssl.com)
+
+	* 400; mismatched, CN: *.netdna-ssl.com
+
+
+	Fully covered domains:
+
+		- templatemonster.com subdomains:
+
+			- scr	(→ scrtm-templatemonster.netdna-ssl.com)
+			- secure
+			- wac
+
+		- tmimgcdn.com subdomains:
+
+			- i *
+			- j *
+			- t	(→ themestm-templatemonster.netdna-ssl.com)
+
+	* → secure.templatemonster.com
+
+-->
+<ruleset name="Template Monster.com (partial)">
+
+	<target host="templatemonster.com" />
+	<target host="*.templatemonster.com" />
+		<!--exclusion pattern="^http://(www\.)?templatemonster\.com/($|\?|main\.js)" /-->
+		<exclusion pattern="^http://(?:www\.)?templatemonster\.com/(?!cart\.php|favicon\.ico|images/|js/|themes/)" />
+	<target host="*.tmimgcdn.com" />
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.templatemonster\.com$" name="(?:affT?|^__utm\w)$" />
+	<securecookie host="^\.?(?:secure|wac)\.templatemonster\.com$" name=".+" />
+
+
+	<rule from="^http://(?:secure\.|www\.)?templatemonster\.com/"
+		to="https://secure.templatemonster.com/" />
+
+	<rule from="^http://scr\.templatemonster\.com/"
+		to="https://scrtm-templatemonster.netdna-ssl.com/" />
+
+	<rule from="^http://wac\.templatemonster\.com/"
+		to="https://wac.templatemonster.com/" />
+
+	<rule from="^http://i\.tmimgcdn\.com/"
+		to="https://secure.templatemonster.com/images/" />
+
+	<rule from="^http://j\.tmimgcdn\.com/"
+		to="https://secure.templatemonster.com/js/" />
+
+	<rule from="^http://t\.tmimgcdn\.com/"
+		to="https://themestm-templatemonster.netdna-ssl.com/" />
+
+</ruleset>

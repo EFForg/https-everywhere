@@ -1,0 +1,112 @@
+<!--
+	For problematic rules, see Cardiff-University-mismatches.xml.
+
+
+	Nonfunctional domains:
+
+		- (www.)caerdydd.ac.uk	(401)
+
+		- cardiff.ac.uk subdomains:
+
+			- ^
+			- courses	(times out)
+			- events	(ssl_error_rx_record_too_long)
+			- librarysearch	(http & https data differ)
+			- www		(401)
+
+		- cf.ac.uk subdomains:
+
+			- cymraeg.cs		(cert: www.cs; redirects there)
+			- docs.cs		(redirects to http, valid cert)
+			- dogfennaeth.cs	(cert: www.cs; redirects there)
+			- (www.)engineering
+			- innovation.engineering
+			- news.engineering
+			- (www.)e-shop
+			- www.mec		(!www doesn't exist)
+			- www		401
+
+
+	Problematic domains:
+
+		- in *cardiff.ac.uk:
+
+			- www.astro ¹
+			- learningcentral ¹
+			- surveys ¹
+
+		- in *cf.ac.uk:
+
+			- cardiffnetwork ¹
+			- cs ¹
+			- docs.cs ¹
+			- engin
+			- www.law ³
+
+	¹ Mismatched
+	³ Self-signed
+
+
+	Mixed content:
+
+		- Images on sites from $self
+		- Bugs on sites from www.google.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Cardiff University (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="intranet.cardiff.ac.uk" />
+	<target host="library.cardiff.ac.uk" />
+	<target host="sites.cardiff.ac.uk" />
+	<target host="www.surveys.cardiff.ac.uk" />
+
+	<target host="www.astro.cf.ac.uk" />
+	<target host="cardiffmail.cf.ac.uk" />
+	<target host="www.cardiffnetwork.cf.ac.uk" />
+	<target host="claws.cf.ac.uk" />
+	<target host="webmail.cs.cf.ac.uk" />
+	<target host="www.cs.cf.ac.uk" />
+	<target host="www.engin.cf.ac.uk" />
+	<target host="lawstudent.cf.ac.uk" />
+	<target host="learningcentral.cf.ac.uk" />
+	<target host="portal.cf.ac.uk" />
+	<target host="pwm-mwe.cf.ac.uk" />
+	<target host="static.cf.ac.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="www.astro.cardiff.ac.uk" />
+	<target host="learningcentral.cardiff.ac.uk" />
+	<target host="surveys.cardiff.ac.uk" />
+
+	<target host="cardiffnetwork.cf.ac.uk" />
+	<target host="cs.cf.ac.uk" />
+	<target host="engin.cf.ac.uk" />
+
+		<!--	Mixed images:
+					-->
+		<test url="http://sites.cardiff.ac.uk/events/" />
+
+
+	<!---	Avoiding wildcard cookies:
+						-->
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://(www\.astro|learningcentral)\.cardiff\.ac\.uk/"
+		to="https://$1.cf.ac.uk/" />
+
+	<rule from="^http://surveys\.cardiff\.ac\.uk/"
+		to="https://www.surveys.cardiff.ac.uk/" />
+
+	<rule from="^http://(cardiffnetwork|cs|engin)\.cf\.ac\.uk/"
+		to="https://www.$1.cf.ac.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,51 @@
+<!--
+	CDN buckets:
+
+		- www1.networkforgood.org.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- www1 *
+
+	* 404, akamai
+
+
+	Fully covered domains:
+
+		- networkforgood.org
+
+		- (?!www1\.)*.networkforgood.org:
+
+			- assets
+			- donatenow
+			- npo
+			- npo1
+			- www
+
+-->
+<ruleset name="Network for Good.org">
+
+	<target host="networkforgood.org" />
+	<target host="*.networkforgood.org" />
+
+		<exclusion pattern="^http://www1\." />
+
+			<test url="http://www1.networkforgood.org/" />
+
+		<test url="http://account.networkforgood.org/" />
+		<test url="http://npo.networkforgood.org/" />
+		<test url="http://www.networkforgood.org/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^donatenow\.networkforgood\.org$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\w+\.networkforgood\.org$" name=".+" />
+
+
+	<rule from="^http://(\w+\.)?networkforgood\.org/"
+		to="https://$1networkforgood.org/" />
+
+</ruleset>

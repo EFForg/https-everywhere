@@ -1,0 +1,55 @@
+<!--
+	For other Sony coverage, see Sony.xml.
+
+
+	Nonfunctional domains:
+
+		- blogs.sonymobile.com		(401)
+		- developer.sonymobile.com *
+		- talk.sonymobile.com		(404, CN: gp1.wac.edgecastcdn.net)
+
+	* 401, valid cert
+
+
+	Problematic domains:
+
+		- changepassword.extranet.sonyericsson.com	(expired)
+		- sonymobile.com				(times out)
+
+
+	Partially covered domains:
+
+		- (www.)sonymobile.com		(at least some pages 401, global.css 403s)
+
+
+	Fully covered sonymobile.com subdomains:
+
+		- foris.extranet
+		- foris
+		- shop
+		- thesourceplus
+		- assets.thesourceplus
+
+-->
+<ruleset name="Sony Mobile (buggy)" default_off="https://lists.eff.org/pipermail/https-everywhere-rules/2013-November/001737.html">
+
+	<target host="*.se-mc.com" />
+	<target host="sonymobile.com" />
+	<target host="*.sonymobile.com" />
+		<exclusion pattern="^http://(?:www\.)?sonymobile\.com/wp-content/themes/semc-main/css/global\.css" />
+	<target host="foris.extranet.sonymobile.com" />
+
+
+	<securecookie host="^(?:shop|\.?thesourceplus)\.sonymobile\.com$" name=".+" />
+
+
+	<rule from="^http://(developer|www)-static\.se-mc\.com/"
+		to="https://$1-static.se-mc.com/" />
+
+	<rule from="^http://(?:www\.)?sonymobile\.com/(cws|wp-content)/"
+		to="https://www.sonymobile.com/$1/" />
+
+	<rule from="^http://(foris(?:\.extranet)?|shop|(?:assets\.)?thesourceplus)\.sonymobile\.com/"
+		to="https://$1.sonymobile.com/" />
+
+</ruleset>

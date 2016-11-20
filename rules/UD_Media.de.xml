@@ -1,0 +1,52 @@
+<!--
+	UD Media GmbH
+
+
+	Problematic domains:
+
+		- hilfe.udmedia.de *
+		- livechat.udmedia.de *
+		- (www.)ud-media.de *
+
+	* Shows www.udmedia.de; mismatched, CN: www.udmedia.de
+
+
+	Fully covered domains:
+
+		- udmedia.de subdomains:
+
+			- (www.)
+			- hilfe		(→ www)
+			- livechat	(→ messenger.providesupport.com)
+			- (www.)root	(www → ^)
+
+		- (www.)ud-media.de	(→ udmedia.de)
+
+-->
+<ruleset name="UD Media.de">
+
+	<target host="udmedia.de" />
+	<target host="*.udmedia.de" />
+	<target host="ud-media.de" />
+	<target host="www.ud-media.de" />
+
+
+	<securecookie host="^(?:root|\.www)\.udmedia\.de$" name=".+" />
+
+
+	<rule from="^http://(www\.)?ud-?media\.de/"
+		to="https://$1udmedia.de/" />
+
+	<rule from="^http://hilfe\.udmedia\.de/[^?]*"
+		to="https://www.udmedia.de/faq/" />
+
+	<rule from="^http://livechat\.udmedia\.de/[^?]*"
+		to="https://messenger.providesupport.com/messenger/udmedia.html" />
+
+	<!--	www redirects to ^ over http,
+		so copy that behavior:
+					-->
+	<rule from="^http://(?:www\.)?root\.udmedia\.de/"
+		to="https://root.udmedia.de/" />
+
+</ruleset>

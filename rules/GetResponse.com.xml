@@ -1,0 +1,71 @@
+<!--
+	Problematic subdomains:
+
+		- apidocs *
+		- blog *
+		- br *
+		- connect *
+		- dev *
+
+	* Works, mismatched
+
+
+	Partially covered subdomains:
+
+		- support *
+
+	* Avoiding false/broken MCB
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- api
+		- api2
+		- app
+		- cdn
+		- multimedia
+		- secure
+		- static
+		- support-panel
+
+
+	Mixed content:
+
+		- css, on:
+
+			- apidocs from $self ¹
+			- blog from $self ¹
+			- connect from $self ¹
+			- support from $self ²
+
+		- Images, on:
+
+			- apidocs from $self ¹
+			- blog from $self ¹
+			- support from $self ²
+
+		- favicon, on:
+
+			- blog from $self ¹
+			- support from $self ²
+
+	¹ Not secured by us <= mismatched
+	² Secured by us
+
+-->
+<ruleset name="GetResponse.com (partial)">
+
+	<target host="getresponse.com" />
+	<target host="*.getresponse.com" />
+		<!--exclusion pattern="^http://(apidocs|blog|br|connect|dev)\.getresponse\.com/" /-->
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://support\.getresponse\.com/+(?!uploads/|wp-content/|wp-includes/)" />
+
+
+	<rule from="^http://((?:api2?|app|cdn|multimedia|secure|static|support|support-panel|www)\.)?getresponse\.com/"
+		to="https://$1getresponse.com/" />
+
+</ruleset>

@@ -1,0 +1,46 @@
+<!--
+	CDN buckets:
+
+		- d1tu8ib6d01hwk.cloudfront.net
+			- cdn.ivn.us
+
+
+	Partially covered subdomains:
+
+		- (www.)	(many paths 404, pages redirect to http)
+
+-->
+<ruleset name="Independent Voter Network">
+
+	<target host="ivn.us" />
+	<target host="*.ivn.us" />
+		<!--
+			400 when rewritten:
+
+				- ca-election-center/files/
+				- ca-election-center/wp-content/plugins/buddypress/bp-core/css/
+				- ca-election-center/wp-content/plugins/jquery-colorbox/themes/
+				- ca-election-center/wp-includes/css/
+				- wp-content/themes/ivn/.+\.css
+
+
+			These work:
+
+				- ca-election-center/wp-content/plugins/lazy-load/
+				- ca-election-center/wp-content/plugins/wordpress-social-login/
+				- ca-election-center/wp-content/themes/ivn/images/
+				- ca-election-center/wp-includes/images/
+				- .+/files/
+				- wp-content/themes/ivn/images/
+				- wp-content/uploads/
+													-->
+		<exclusion pattern="^http://(?:www\.)?ivn\.us/(?:ca-election-center/wp-(?:content/plugins/(?:buddypress/bp-core/css|jquery-colorbox/themes)|includes/css)|wp-content/themes/ivn)/" />
+
+
+	<rule from="^http://(?:www\.)?ivn\.us/([\w\-]+/)?(files|wp-content|wp-includes)/"
+		to="https://i0.wp.com/ivn.us/$1$2/" />
+
+	<rule from="^http://cdn\.ivn\.us/"
+		to="https://d1tu8ib6d01hwk.cloudfront.net/" />
+
+</ruleset>

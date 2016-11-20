@@ -1,0 +1,48 @@
+<!--
+	Problematic hosts in *lithium.com:
+
+		- (client_id) ᵐ
+		- spark ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- (client_id).lithium.com
+		- www.lithium.com
+
+-->
+<ruleset name="Lithium.com (partial)">
+
+	<target host="lithium.com" />
+	<target host="*.lithium.com" />
+
+		<test url="http://community.lithium.com/" />
+		<test url="http://lithosphere.lithium.com/" />
+		<test url="http://www.lithium.com/" />
+
+		<!--	Clients:
+				-->
+		<test url="http://canonusa.i.lithium.com/" />
+
+
+	<!--securecookie host="^(client_id)\.lithium\.com$" name="^(?:LiSESSIONID|LithiumUserInfo|LithiumUserSecure|LithiumVisitor)$" /-->
+	<!--securecookie host="^www\.lithium\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<!--	Redirect drops forward slash
+		and path, but not args:
+					-->
+	<rule from="^http://spark\.lithium\.com/[^?]*"
+		to="https://www.lithium.com/lithium-social-media-monitoring" />
+
+		<test url="http://spark.lithium.com/" />
+		<test url="http://spark.lithium.com/index.php" />
+
+	<rule from="^http://((?:community|\w+\.i|lithosphere|www)\.)?lithium\.com/"
+		to="https://$1lithium.com/" />
+
+</ruleset>

@@ -1,0 +1,39 @@
+<!--
+	Nonfunctional domains:
+
+		- m.ciao.co.uk
+
+
+	Partially covered domains:
+
+		- (www.)ciao.co.uk *
+		- (www.)ciao.de *
+
+	* Some (most?) pages redirect to http.
+
+
+	Fully covered domains:
+
+		- ciao.com subdomains:
+
+			- de-img[12]
+			- uk-img[12]
+
+-->
+<ruleset name="Ciao (partial)">
+
+	<target host="*.ciao.com" />
+	<target host="ciao.de" />
+	<target host="www.ciao.de" />
+
+
+	<rule from="^http://(de|uk)-img([12])\.ciao\.com/"
+		to="https://$1-img$2.ciao.com/" />
+
+	<rule from="^http://(www\.)?ciao\.co\.uk/(captcha/|efb_[\d_]+/|login\.php|reg\.php)"
+		to="https://$1ciao.co.uk/$2" />
+
+	<rule from="^http://(www\.)?ciao\.de/([\w/]+/css/|favicon\.ico)"
+		to="https://$1ciao.de/$1" />
+
+</ruleset>

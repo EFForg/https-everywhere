@@ -1,0 +1,83 @@
+<!--
+	Problematic hosts in *gamigo.com:
+
+		- ^ ¹
+		- client.cdn *
+		- en.start ² ³
+		- us ¹
+
+	¹ Dropped
+	* Akamai
+	² Expired
+	³ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .gamigo.com
+		- fiesta.gamigo.com
+		- support.gamigo.com
+
+
+	Mixed content:
+
+		- css on dev-lounge from fonts.googleapis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="gamigo.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="assets.cdn.gamigo.com" />
+	<target host="de.gamigo.com" />
+	<target host="dev-lounge.gamigo.com" />
+	<target host="en.gamigo.com" />
+	<target host="es.gamigo.com" />
+	<target host="fiesta.gamigo.com" />
+	<target host="fr.gamigo.com" />
+	<target host="nl.gamigo.com" />
+	<target host="pl.gamigo.com" />
+	<target host="pt.gamigo.com" />
+	<target host="ru.gamigo.com" />
+	<!--target host="en.start.gamigo.com" /-->
+	<target host="support.gamigo.com" />
+	<target host="tr.gamigo.com" />
+	<target host="www.gamigo.com" />
+
+	<!--	Complications:
+				-->
+	<target host="gamigo.com" />
+	<!--target host="client.cdn.gamigo.com" /-->
+	<target host="us.gamigo.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.gamigo\.com$" name="^BIGipServer[\w.]+$"  /-->
+	<!--securecookie host="^fiesta\.gamigo\.com$" name="^fo_(?:session|vo_security)$" /-->
+	<!--securecookie host="^support\.gamigo\.com$" name="^(?:PHPSESSID|SWIFT_client|SWIFT_sessionid40)$"  /-->
+
+	<securecookie host="^\.gamigo\.com$" name="^BIGipServer[\w.]+$" />
+	<securecookie host="^\w.*\.gamigo\.com$" name="." />
+
+
+	<rule from="^http://gamigo\.com/"
+		to="https://www.gamigo.com/" />
+
+	<!--rule from="^http://client\.cdn\.gamigo\.com/"
+		to="https://???.akamaihd.net/" /-->
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://us\.gamigo\.com/[^?]*"
+		to="https://en.gamigo.com/" />
+
+		<test url="http://us.gamigo.com//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

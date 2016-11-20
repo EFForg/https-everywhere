@@ -1,0 +1,87 @@
+<!--
+	Pennsylvania State University
+
+
+	d39tyngrchxzcn.cloudfront.net
+		- Equivalent to www.worldcampus.psu.edu
+
+
+	Nonfunctional domains:
+
+		- psu.edu subdomains:
+
+			- //
+			- agsci			(redirects to login page)
+			- app			(cert: app.outreach.psu.edu)
+			- pa4h.cas		(cert: agsci.psu.edu; shows that domain's data)
+			- ceup
+			- www.cfs		(times out)
+			- www.dept		(redirects to login page over https, to www.psu.edu/dept/ over http)
+			- (www.)events
+			- extension		(cert: agsci.psu.edu; shows that domain's data)
+			- citeseerx.ist		(redirects to http)
+			- alumni.libraries	(cert: www.libraries.psu.edu; shows that domain's data)
+			- ask.libraries		(ditto)
+			- live			(Akamai; "Service Unavailable")
+			- www.marcellus		(times out)
+			- eliondemo.oas
+			- origin-live
+			- gcc.outreach		(cert: appnew.outreach.psu.edu; shows that domain's data)
+			- jasi.outreach
+			- penntap		(cert: appnew.outreach.psu.edu; shows that domain's data)
+			- (www.)personal	(times out)
+			- www.psupress
+			- sbdc			(cert: appnew.outreach.psu.edu; shows that domain's data)
+			- search		(no https)
+			- science		(redirects to webaccess)
+			- siteindex		(cert: localhost.localdomain, expired; "THIS NICE DOCUMENT ROOT")
+			- storyboard		(cert: www.dept.psu.edu; shows that domain's data)
+			- openness
+			- www			(times out)
+
+		- (www.)psu.jobs
+
+		- (www.)wpsu.org	(times out)
+
+
+	Problematic subdomains:
+
+		- blogs		(http & https data differ)
+		- www.cse	(personal spaces 404)
+		- e-education ³
+
+	³ Cert only matches www.e-education
+
+-->
+<ruleset name="PSU.edu (partial)">
+
+	<target host="*.psu.edu" />
+		<exclusion pattern="^http://blogs\.psu\.edu/(?!mt4/)" />
+		<exclusion pattern="^http://www\.cse\.psu\.edu/~" />
+	<!--	At least some paths redirect to http.	-->
+		<exclusion pattern="^http://citeseerx\.ist\.psu\.edu/(?!mcsutils/newAccount|myciteseer/login)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.e-education\.psu\.edu$" name="^SESS[\da-f]{32}$" /-->
+
+	<securecookie host="^(?:cms|\.e-education|elion(?:facadv\.oas)?|secureapps\.libraries|appnew\.outreach|webaccess)\.psu\.edu$" name=".*" />
+
+
+	<!--	- Certs don't match !www.
+		- //libraries redirects to www.libraries
+					-->
+	<rule from="^http://(?:www\.)?(e-education|libraries|worldcampus)\.psu\.edu/"
+		to="https://www.$1.psu.edu/" />
+
+	<!--	- Cert only matches secureapps
+		- apps redirects to secureapps
+					-->
+	<rule from="^http://(?:secure)?apps\.libraries\.psu\.edu/"
+		to="https://secureapps.libraries.psu/" />
+
+	<rule from="^http://(alumni|blogs|cms|www\.cse|elion|citeseerx\.ist|(?:cat|ill)\.libraries|elionfacadv\.oas|(?:(?:appnew|www)\.)?outreach|portal|webaccess|webmail)\.psu\.edu/"
+		to="https://$1.psu.edu/" />
+
+</ruleset>

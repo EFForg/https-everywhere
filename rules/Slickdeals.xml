@@ -1,0 +1,58 @@
+<!--
+	Problematic domains:
+
+		- static.slickdealscdn.com *
+		- static.slickdealz.net *
+
+	* Mismatched, CN: *.slickdeals.net
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- slickdeals.net from $self ¹
+			- slickdeals.net from www.google.com ¹
+
+		- Ads/Bugs, on:
+
+			- slickdeals.net, from:
+
+				- ad.doubleclick.net ²
+				- tags.bkrtx.com ¹
+				- pixel.quantserve.com ¹
+
+			- m.slickdeals.net from tapestry.tapad.com ¹
+
+	¹ Secured by us
+	² Rule disabled by default
+
+-->
+<ruleset name="Slickdeals">
+
+	<target host="slickdeals.net" />
+	<target host="*.slickdeals.net" />
+	<target host="static.slickdealscdn.com" />
+	<target host="static.slickdealz.net" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^\.slickdeals\.net$" name="^(bblastactivity|bbnps_auuid|bbnps_tracking)$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^(m\.)?slickdeals\.net$" name="^(abgroup|bbvisitday|fp_style)$" /-->
+	<!--securecookie host="^\.slickdeals\.net$" name="^(abt_new|abt_uuid|auuid|bbsessionhash|sdref)$" /-->
+
+
+	<securecookie host="^(?:.*\.)?slickdeals\.net$" name=".+" />
+
+
+	<rule from="^http://((?:archive|beta|blog|i|img|m|www)\.)?slickdeals\.net/"
+		to="https://$1slickdeals.net/" />
+
+	<rule from="^http://static\.slickdeal(?:z\.net|scdn\.com)/"
+		to="https://slickdeals.net/" />
+
+</ruleset>

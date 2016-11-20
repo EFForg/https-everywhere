@@ -1,0 +1,55 @@
+<!--
+	CDN buckets:
+
+		- wildcard.compete.com.edgekey.net
+		- media.compete.com.edgesuite.net
+
+
+	Problematic domains:
+
+		- media.compete.com	(akamai)
+
+
+	*.c-col.com: Bugs
+
+
+	*.col.com sets these tracking cookies:
+
+		- i00
+		- srp
+
+-->
+<ruleset name="Compete (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="*.c-col.com" />
+
+	<target host="compete.com" />
+	<target host="app.compete.com" />
+	<target host="blog.compete.com" />
+	<target host="c.compete.com" />
+	<target host="grapher.compete.com" />
+	<target host="securemedia.compete.com" />
+	<target host="www.compete.com" />
+
+	<!--	Complications:
+				-->
+	<target host="media.compete.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.c-col\.com$" name="^i00$" /-->
+	<!--securecookie host="ssl-[\w-]+-[\da-f]+\.c-col\.com$" name="^srp$" /-->
+
+	<securecookie host=".*\.c-col\.com$" name=".*" />
+
+
+	<rule from="^http://media\.compete\.com/"
+		to="https://securemedia.compete.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

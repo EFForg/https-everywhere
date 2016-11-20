@@ -1,0 +1,55 @@
+<!--
+	Fetch test note: p://lists.../$ redirects
+	to s://lists.../$ 404 ?=> test failure
+
+	For other BalaBit coverage, see BalaBit.com.xml.
+
+
+	Problematic hosts in *balabit.hu:
+
+		- (www.)? ᵐ
+		- support ᵐ
+
+	ᵐ Mismatched
+
+-->
+<ruleset name="Balabit.hu">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="lists.balabit.hu" />
+
+	<!--	Complications:
+				-->
+	<target host="balabit.hu" />
+	<target host="support.balabit.hu" />
+	<target host="www.balabit.hu" />
+
+		<!--	$ 404s, so:
+					-->
+		<test url="http://lists.balabit.hu/mailman/listinfo" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://(?:www\.)?balabit\.hu/+"
+		to="https://www.balabit.com/hu/" />
+
+		<test url="http://www.balabit.hu/privacy-policy" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://support\.balabit\.hu/+"
+		to="https://support.balabit.com/" />
+
+		<test url="http://support.balabit.hu/default.aspx" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

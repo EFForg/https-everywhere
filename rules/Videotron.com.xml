@@ -1,0 +1,80 @@
+<!--
+	Other Videotron rulesets:
+
+		- Videotron.ca.xml
+
+
+	CDN buckets:
+
+		- static-illicoweb.videotron.com.edgesuite.net
+
+
+	Nonfunctional hosts in *videotron.com:
+
+		- boutiquemobile	(refused)
+		- corpo			(some pages redirect to http, others 404; mismatched, CN: www.videotron.com)
+		- soutien		Handshake fails
+		- static-illicoweb	(redirects to illicoweb, akamai)
+
+
+	^videotron.com: Cert only matches www
+
+
+	Insecure cookies are set for these hosts:
+
+		- courrielweb.videotron.com
+
+
+	Mixed content:
+
+		- Bug on courrielweb from videotronres.112.2o7.net *
+
+	* Secured by us
+
+-->
+<ruleset name="Videotron.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="clavardage.videotron.com" />
+	<target host="clubillico.videotron.com" />
+	<target host="courrielweb.videotron.com" />
+	<target host="illicoweb.videotron.com" />
+	<target host="www.videotron.com" />
+
+	<!--	Complications:
+				-->
+	<target host="videotron.com" />
+
+		<!--	Some pages redirect to http.
+							-->
+		<exclusion pattern="^http://www\.videotron\.com/+(?!client/|resources/|vcom/)" />
+
+			<!--	+ve:
+					-->
+
+			<test url="http://www.videotron.com/optimization" />
+			<test url="http://www.videotron.com/residential" />
+			<test url="http://www.videotron.com/residentiel" />
+			<test url="http://www.videotron.com/service/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.videotron.com/client/residentiel/courrielweb.do" />
+			<test url="http://www.videotron.com/vcom/static/img/logo/videotron-logo-yellow.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^courrielweb\.videotron\.com$" name="^(?:JROUTE|JSESSIONID)$" /-->
+
+	<securecookie host="^(?:clavardage|courrielweb|illicoweb)\.videotron\.com$" name=".+" />
+
+
+	<rule from="^http://videotron\.com/"
+		to="https://www.videotron.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

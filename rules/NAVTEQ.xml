@@ -1,0 +1,53 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://navteqmedia.com/ => https://primeplace.nokia.com/: (51, "SSL: no alternative certificate subject name matches target host name 'primeplace.nokia.com'")
+Fetch error: http://www.navteqmedia.com/ => https://primeplace.nokia.com/: (51, "SSL: no alternative certificate subject name matches target host name 'primeplace.nokia.com'")
+	For problematic rules, see NAVTEQ-problematic.xml.
+
+
+	For other Nokia coverage, see Nokia.xml.
+
+
+	Nonfunctional domains:
+
+		- press.navteq.com		(times out)
+		- sampledata.navteq.com		(ditto)
+		- (www.)navteqmedia.com		(ditto)
+
+
+	Problematic domains:
+
+		- www.mapreporter.navteq.com *
+
+	* Mismatched, CN: mapreporter.navteq.com
+
+-->
+<ruleset name="NAVTEQ (partial)" default_off='failed ruleset test'>
+
+	<target host="navteq.com" />
+	<target host="*.navteq.com" />
+	<target host="css.mapreporter.navteq.com" />
+	<target host="navteqmedia.com" />
+	<target host="www.navteqmedia.com" />
+
+
+	<securecookie host="^mapreporter\.navteq\.com$" name=".+" />
+
+
+	<!--	- !www: cert only matches www
+		- www2-test: ditto
+					-->
+	<rule from="^http://(?:www(?:2-test)?\.)?navteq\.com/"
+		to="https://www.navteq.com/" />
+
+	<!--	Cert only matches ^mapreporter.
+						-->
+	<rule from="^http://(?:css\.)?mapreporter\.navteq\.com/"
+		to="https://mapreporter.navteq.com/" />
+
+	<!--	Redirects like so.
+					-->
+	<rule from="^http://(?:www\.)?navteqmedia\.com/"
+		to="https://primeplace.nokia.com/" />
+
+</ruleset>

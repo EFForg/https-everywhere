@@ -1,0 +1,46 @@
+<!--
+	For rules that cause mixed content, see Look.co.uk-mixed.xml.
+
+
+	CDN buckets:
+
+		- www.look.co.uk.edgesuite.net
+
+			- a286.g.akamai.net
+
+
+	Nonfunctional subdomains:
+
+		- ^	(redirects to http; mismatched, CN: *.ipcmediasecure.com)
+		- www	(redirects to www, akamai)
+
+
+	Mixed content:
+
+		- css on shop from www
+		- css on shop from cdn.inskinmedia.com
+		- images on shop from cdnimages.lynku.com
+
+-->
+<ruleset name="Look.co.uk (partial)">
+
+	<target host="*.look.co.uk" />
+		<!--
+			$ redirects to http:
+						-->
+		<exclusion pattern="^http://comps\.look\.co\.uk/(?!css/|login/embedded/https/)" />
+		<!--
+			Pages have mixed content:
+							-->
+		<exclusion pattern="^http://shop\.look\.co\.uk/(?![\w-]+\.css|favicon\.ico|images/|javascript/)" />
+
+
+	<!--	Tracking cookies set by google-analytics.com:
+								-->
+	<securecookie host="^\.(?:comps\.)?look\.co\.uk$" name="^__utm\w$" />
+
+
+	<rule from="^http://(comps|shop)\.look\.co\.uk/"
+		to="https://$1.look.co.uk/" />
+
+</ruleset>

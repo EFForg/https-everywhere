@@ -1,0 +1,44 @@
+<!--
+	Problematic hosts in *doctorswithoutborders.org:
+
+		- cdn *
+
+	* Fastly
+
+
+	Insecure cookies are set for these hosts:
+
+		- donate.doctorswithoutborders.org
+
+-->
+<ruleset name="DoctorsWithoutBorders.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="doctorswithoutborders.org" />
+	<target host="donate.doctorswithoutborders.org" />
+	<!--target host="www.doctorswithoutborders.org" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.doctorswithoutborders\.org/(?:article/[\w-]+$|home$)" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://www.doctorswithoutborders.org/article/greece-home-we-had-war-least-we-had-dignity" /-->
+			<!--test url="http://www.doctorswithoutborders.org/home" /-->
+
+		<test url="http://donate.doctorswithoutborders.org/onetime.cfm" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^donate\.doctorswithoutborders\.org$" name="^(?:CFID|CFTOKEN)$" /-->
+
+	<securecookie host="^donate\.doctorswithoutborders\.org$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+</ruleset>
+

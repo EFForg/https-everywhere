@@ -1,0 +1,79 @@
+<!--
+	For problematic rules, see XMission.com-problematic.xml.
+
+
+	Nonfunctional subdomains:
+
+		- anon		(dropped)
+		- maddox *
+		- speedtest	(Refused)
+
+	* http reply
+
+
+	Problematic hosts:
+
+		- accounting *
+		- asset *
+		- my *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Fully covered hosts:
+
+		- (www.)?
+		- livesupport
+		- mail
+		- postmaster
+		- stats
+		- transmission
+		- webmail
+		- mirrors
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- xmission.com
+		- accounting.xmission.com
+		- .mail.xmission.com
+		- .webmail.xmission.com
+		- wiki.xmission.com
+
+-->
+<ruleset name="XMission.com (partial)">
+
+	<target host="xmission.com" />
+	<!--target host="accounting.xmission.com" /-->
+	<!--target host="asset.xmission.com" /-->
+	<target host="livesupport.xmission.com" />
+	<target host="mail.xmission.com" />
+	<!--target host="my.xmission.com" /-->
+	<target host="postmaster.xmission.com" />
+	<target host="stats.xmission.com" />
+	<target host="transmission.xmission.com" />
+	<target host="webmail.xmission.com" />
+	<target host="www.xmission.com" />
+	<target host="mirrors.xmission.com" />
+
+		<!--exclusion pattern="^http://(?:accounting|anon|asset|maddox|my|speedtest)\.xmission\.com/" /-->
+
+			<!--test url="http://accounting.xmission.com" /-->
+			<!--test url="http://asset.xmission.com/" /-->
+			<!--test url="http://my.xmission.com/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^xmission\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^accounting\.xmission\.com$" name="^SESSION_ID$" /-->
+	<!--securecookie host="^\.(mail|webmail)\.comxmission\.com$" name="^Horde$" /-->
+	<!--securecookie host="^wiki\.xmission\.com$" name="^pubwiki2_session$" /-->
+
+	<securecookie host="^(?:.*\.)?xmission\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

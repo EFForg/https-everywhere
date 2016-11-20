@@ -1,0 +1,60 @@
+<!--
+	CDN buckets:
+
+		- bcassets.starbucks.com.edgesuite.net
+
+			- a259.g.akamai.net
+			- bcassets.starbucks.com
+
+		- globalassets.starbucks.com.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- globalassets	(503, akamai)
+		- news		(interrupted)
+
+
+	Problematic subdomains:
+
+		- ^		(mismatched, CN: *.starbucks.com)
+		- bcassets *
+		- investor *
+
+	* Works, akamai
+
+
+	Fully covered subdomains:
+
+		- sgsmsupplier
+		- sgsmsuppliertest
+
+
+	Observed cookie domains:
+
+		- . ¹
+		- sgsmsupplier ²
+		- sgsmsuppliertest ²
+
+	¹ Partially secured by us <= accounting for possible use on uncovered subdomains
+	² Secured by us
+
+-->
+<ruleset name="Starbucks.com (partial)">
+
+	<target host="starbucks.com" />
+	<target host="*.starbucks.com" />
+		<!--exclusion pattern="^http://(www\.)?starbucks\.com/([aA]ccounts($|[?/])|favicon\.ico|resources/|static/|sysiplocation/)" /-->
+
+
+	<securecookie host="^\.starbucks\.com$" name="^(?:visid_)?incap_\w+$" />
+	<securecookie host="^sgsmsupplier(?:test)?\.starbucks\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?starbucks\.com/(?=[aA]ccounts(?:$|[?/])|favicon\.ico|resources/|static/|sysiplocation/)"
+		to="https://www.starbucks.com/" />
+
+	<rule from="^http://sgsmsupplier(test)?\.starbucks\.com/"
+		to="https://sgsmsupplier$1.starbucks.com/" />
+
+</ruleset>

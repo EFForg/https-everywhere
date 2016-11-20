@@ -1,0 +1,47 @@
+<!--
+	Nonfunctional subdomains:
+
+		- blogs		(times out)
+		- www.blogs	(shows everydayfirstaid; mismatched, CN: everydayfirstaid.redcross.org.uk)
+
+
+	Problematic subdomains:
+
+		- ^		(cert only matches www)
+		- www.giftshop	(mismatched, CN: support.welfordmedia.co.uk)
+
+
+	Partially covered subdomains:
+
+		- (www.) *	(^ → www)
+		- m *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- (www.)everydayfirstaid
+		- (www.)giftshop	(www → ^)
+
+-->
+<ruleset name="British Red Cross (partial)">
+
+	<target host="redcross.org.uk" />
+	<target host="*.redcross.org.uk" />
+		<exclusion pattern="^http://(?:m\.|www\.)?redcross\.org\.uk/(?!(?:[\w/-]+/)?~/media/|css/|images/)" />
+
+
+	<securecookie host="^\.?giftshop\.redcross\.org\.uk$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?redcross\.org\.uk/"
+		to="https://www.redcross.org.uk/" />
+
+	<rule from="^http://(?:www\.)?giftshop\.redcross\.org\.uk/"
+		to="https://giftshop.redcross.org.uk/" />
+
+	<rule from="^http://((?:www\.)?everydayfirstaid|m)\.redcross\.org\.uk/"
+		to="https://$1.redcross.org.uk/" />
+
+</ruleset>

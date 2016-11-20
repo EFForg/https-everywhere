@@ -1,0 +1,51 @@
+<!--
+	Nonfunctional hosts in *xfire.com:
+
+		- blog ¹
+		- business ²
+		- media ³
+		- secure ²
+		- social ²
+		- support ²
+
+	¹ Shows gravity.tinyrocketserver.com
+	² Refused
+	³ 404
+
+
+	(www.)?: Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- xfire.com
+		- www.xfire.com
+
+
+	Mixed content:
+
+		- css on ^ from fonts.googleapis.com *
+		- Fonts on ^ from fonts.gstatic.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Xfire.com (partial)" default_off="missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="xfire.com" />
+	<target host="www.xfire.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?xfire\.com$" name="^(AWSELB|PHPSESSID)$" /-->
+
+	<securecookie host="^(?:www\.)?xfire\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

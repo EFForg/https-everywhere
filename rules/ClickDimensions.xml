@@ -1,0 +1,52 @@
+<!--
+	For rules causing false/broken MCB, see clickdimensions.com-falsemixed.xml.
+
+
+	CDN buckets:
+
+		- az551914.vo.msecnd.net	← files-eu
+
+
+	Problematic hosts in *clickdimensions.com:
+
+		- (www.)? ˣ
+		- files-eu ᵐ
+
+	ᵐ msecnd.net / mismatched
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Mixed content:
+
+		- css, on:
+
+			- ^ from $self ˢ
+			- ^ from fonts.googleapis.com ˢ
+
+		- Images on ^ from $self ˢ
+		- Ad on ^ from www.googleadservices.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="ClickDimensions.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="clickdimensions.com" /-->
+	<target host="analytics.clickdimensions.com" />
+	<!--target host="www.clickdimensions.com" /-->
+
+	<!--	Complications:
+				-->
+	<target host="files-eu.clickdimensions.com" />
+
+
+	<rule from="^http://files-eu\.clickdimensions\.com/"
+		to="https://az551914.vo.msecnd.net/" />
+
+		<test url="http://files-eu.clickdimensions.com/hscicgovuk-amnje/images/hscic.png" />
+
+	<rule from="^http:"
+		to="https:" />
+</ruleset>

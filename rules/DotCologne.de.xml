@@ -1,0 +1,62 @@
+<!--
+	For other NetCologne coverage, see NetCologne.xml.
+
+
+	Problematic hosts in *dotcologne.de:
+
+		- ^ ¹
+		- www ¹ ²
+
+	¹ Dropped
+	² Loops over http
+
+
+	These altnames don't exist:
+
+		- www.domainstore.dotcologne.de
+
+
+	Insecure cookies are set for these hosts:
+
+		- domainstore.dotcologne.de
+
+
+	Mixed content:
+
+		- Bug on domainstore.dotcologne.de from tracking.netcologne.de *
+
+	* Secured by us
+
+-->
+<ruleset name="DotCologne.de">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="domainstore.dotcologne.de" />
+
+	<!--	Complications:
+				-->
+	<target host="dotcologne.de" />
+	<target host="www.dotcologne.de" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^domainstore\.dotcologne\.de$" name="^BIGipServer[\w-]+$" /-->
+
+	<securecookie host="^domainstore\.dotcologne\.de$" name=".+" />
+
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://(?:www\.)?dotcologne\.de/[^?]*"
+		to="https://domainstore.dotcologne.de/" />
+
+		<test url="http://dotcologne.de/?" />
+		<test url="http://dotcologne.de//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

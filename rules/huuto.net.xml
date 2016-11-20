@@ -1,0 +1,121 @@
+<!--
+	For rules covering resources which do not secure
+	mixed content, see huuto.net-resources.xml.
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .huuto.net
+		- salattu.huuto.net
+		- www.huuto.net
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bug on www from analytics.sanoma.fi ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Huuto.net (partial)">
+
+	<target host="huuto.net" />
+	<!--target host="kuvat.huuto.net" /-->
+	<!--target host="kuvat2.huuto.net" /-->
+	<target host="salattu.huuto.net" />
+	<target host="www.huuto.net" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.huuto\.net/(?:$|hakutulos$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(?:www\.)?huuto\.net/(?!/*(?:favicon\.ico|(?:keskustelu|kirjaudu|ohjeet|osasto|palaute|rekisteroidy|uusi-ilmoitus)(?:$|[?/]|module/|[\d.]+/module/)))" /-->
+		<!--
+			Reduce non-Tor distinguishability:
+								-->
+		<exclusion pattern="^http://(?:www\.)?huuto\.net/(?!/*(?:keskustelu|kirjaudu|ohjeet|osasto|palaute|rekisteroidy|uusi-ilmoitus)(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.huuto.net/hakutulos" />
+			<test url="http://www.huuto.net/hakutulos/category/519/words/partner" />
+			<test url="http://www.huuto.net/hakutulos/category/546/sellstyle/all" />
+			<test url="http://www.huuto.net/hakutulos/page/1/category/162" />
+			<test url="http://www.huuto.net/hakutulos/page/2" />
+			<test url="http://www.huuto.net/hakutulos/sellernro/667154" />
+			<test url="http://www.huuto.net/hakutulos/sort/hits" />
+			<test url="http://www.huuto.net/hakutulos/sort/newest" />
+			<test url="http://www.huuto.net/hakutulos/words/huawei/category/51" />
+			<test url="http://www.huuto.net/hakutulos/words/jopo/category/1" />
+			<test url="http://www.huuto.net/hakutulos/words/remu/category/403" />
+
+			<!--	-ve:
+					-->
+			<!--
+			<test url="http://www.huuto.net/13.6/module/hoot/css/huuto.css" />
+			-->
+			<test url="http://www.huuto.net/keskustelu" />
+			<test url="http://www.huuto.net/keskustelu/list/category/kera" />
+			<test url="http://www.huuto.net/kirjaudu" />
+			<!--
+			<test url="http://www.huuto.net/module/fresco/images/OBA_symbol.png" />
+			<test url="http://www.huuto.net/module/hoot/images/oikotie_logo_small.svg" />
+			-->
+			<test url="http://www.huuto.net/ohjeet" />
+			<test url="http://www.huuto.net/palaute" />
+			<test url="http://www.huuto.net/rekisteroidy" />
+			<test url="http://www.huuto.net/uusi-ilmoitus" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://salattu\.huuto\.net/(?:$|hakutulos$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://salattu\.huuto\.net/(?!/*(?:favicon\.ico|module/|osasto(?:$|[?/]|[\d.]+/module/)))" /-->
+		<!--
+			Reduce non-Tor distinguishability:
+								-->
+		<exclusion pattern="^http://salattu\.huuto\.net/(?!/*osasto(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://salattu.huuto.net/hakutulos" />
+			<test url="http://salattu.huuto.net/hakutulos/page/2" />
+			<test url="http://salattu.huuto.net/hakutulos/page/3/category/49" />
+			<test url="http://salattu.huuto.net/hakutulos/sort/newest" />
+			<test url="http://salattu.huuto.net/hakutulos/words/emali/category/528" />
+			<test url="http://salattu.huuto.net/hakutulos/words/kultaraha/category/203" />
+			<test url="http://salattu.huuto.net/hakutulos/words/louis+vuitton/category/929" />
+
+			<!--	-ve:
+					-->
+			<!--
+			<test url="http://salattu.huuto.net/13.5/module/fresco/css/styles.css" />
+			<test url="http://salattu.huuto.net/favicon.ico" />
+			<test url="http://salattu.huuto.net/module/hoot/images/oikotie_logo_small.svg" />
+			-->
+			<test url="http://salattu.huuto.net/osasto" />
+			<test url="http://salattu.huuto.net/osasto/tietotekniikka/51" />
+
+		<!--
+		<test url="http://kuvat.huuto.net/a/0b/4d19d3427906f485bd969e465ac71-s.jpg" />
+		-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.huuto\.net$" name="^HUUTOSESSION$" /-->
+	<!--securecookie host="^(?:salattu\.|www\.)?huuto\.net$" name="^AWSELB$" /-->
+
+	<securecookie host="^\." name="^_ga" />
+
+  
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

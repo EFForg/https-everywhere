@@ -1,0 +1,154 @@
+<!--
+	For problematic rules, see Carnegie-Mellon-University-mismatches.xml
+
+
+	Nonfunctional subdomains:
+
+		- sensor.andrew ¹
+		- lane.compbio
+		- bic.cs
+		- www.csd.cs
+		- erulemaking.cs
+		- speechseminar.is.cs *
+		- www.link.cs **
+		- srs.lti.cs *
+		- www.radar.cs		(times out)
+		- (www.)hcii
+		- www.isri		(times out)
+		- guides.library	(CN: libguides.com; $ redirects to http)
+		- search.library
+		- people		(CN: antman.srv.cs.cmu.edu; shows antman)
+		- (www.)frc.ri
+		- blog.sei ¹
+
+	¹ Refused
+	* Interrupted, hosted on Google
+	** different from ^link.cs.
+
+
+	Problematic subdomains:
+
+		- athletics		(CN: *.prestosports.com; works)
+		- portal.etc		(CN: www.etc.cmu.edu; works)
+		- repository		(CN: *.bepress.com; works)
+		- webuild-web2.srv.cs	(504)
+
+
+	Partially covered subdomains:
+
+		- (www.)heinz		(some [most?] pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- ^
+		- andrew
+		- directory.andrew
+		- webiso.andrew
+		- www.andrew
+		- sparrow.ece
+		- www.ece
+		- users.ece
+		- cs
+		- calendar.cs
+		- ccc12.cs
+		- www.cleese.cs
+		- (www.)csadmins.cs
+		- www-dev.csd.cs
+		- cups.cs
+		- www.fac.cs
+		- innovation.cs
+		- link.cs
+		- www.lti.cs
+		- news.cs
+		- olympus.cs
+		- dev.olympus.cs
+		- wonderwoman.olympus.cs
+		- www.olympus.cs
+		- origami.qolt.cs
+		- (www.)scs.cs
+		- sites.cs
+		- antman.srv.cs
+		- (www.)gambit.srv.cs
+		- mailman.srv.cs
+		- webuild-web1.srv.cs
+		- (www.)trust.cs
+		- ptest[1-4]-userpool.web.cs
+		- webuild.web.cs
+		- webapps.cs
+		- www.wiki.cs
+		- (www.)women.cs
+		- www.cs
+		- www-2.cs
+		- www-dev.cs
+		- (www.)xia.cs
+		- www.cylab
+		- (www.)etc
+		- www.lunchdelivery.hcii
+		- libwebspace.library
+		- ath-live.mts
+		- my
+		- www.ri
+		- (www.)sei
+		- resources.sei
+		- www.studentaffairs
+		- www
+
+
+	These altnames don't exist:
+
+		- www.sparrow.ece.cmu.edu
+		- www.resources.sei.cmu.edu
+
+
+	The following targets are present solely for cross-domain cookies:
+
+		- *.calendar.cs.cmu.edu
+		- *.www.cleese.cs.cmu.edu
+		- *.csadmins.cs.cmu.edu
+		- *.www-dev.csd.cs.cmu.edu
+		- *.www.fac.cs.cmu.edu
+		- *.innovation.cs.cmu.edu
+		- *.link.cs.cmu.edu
+		- *.www.lti.cs.cmu.edu
+		- *.news.cs.cmu.edu
+		- *.origami.qolt.cs.cmu.edu
+		- *.webuild-web1.srv.cs.cmu.edu
+		- *.www.trust.cs.cmu.edu
+		- *.ptest[1-4]-userpool.web.cs.cmu.edu
+		- *.webapps.cs.cmu.edu
+		- *.www.wiki.cs.cmu.edu
+		- *..www-dev.cs.cmu.edu
+		- *.www.xia.cs.cmu.edu
+		- *.www.lunchdelivery.hcii.cmu.edu
+
+-->
+<ruleset name="Carnegie Mellon University (partial)">
+
+	<target host="cmu.edu" />
+	<target host="*.cmu.edu" />
+		<!--exclusion pattern="^http://(?:www\.)?heinz\.cmu\.edu/(?!~\w+/|image\.aspx|images/|js/|res/|social\.html)" /-->
+		<exclusion pattern="^http://(?:www\.)?heinz\.cmu\.edu/(?!image).+\.aspx(?:$|\?)" />
+
+
+	<securecookie host="^.*\.cmu\.edu$" name=".*" />
+
+
+	<rule from="^http://(www\.)?cmu\.edu/"
+		to="https://$1cmu.edu/" />
+
+	<rule 
+from="^http://(www\.)?((?:directory\.|webiso\.)?andrew|cylab|ece|(?:sparrow|users)\.ece|(?:(?:calendar|ccc12|csadmins|cleese|www-dev\.csd|cups|fac|heinz|link|lti|ath-live\.mts|news|(?:dev\.|wonderwoman\.)?olympus|origami\.qolt|sites|(?:antman|gambit|innovation|mailman|webbuild-web1)\.srv|trust|(?:ptest[1-4]-userpool|webbuild)\.web|webapps|wiki|women|www-2|www-dev|xia)\.)?cs|lunchdelivery\.hcii|libwebspace\.library|my|ri|(?:resources\.|www\.)?sei|studentaffairs)\.cmu\.edu/"
+		to="https://$1$2.cmu.edu/" />
+
+	<!--	Appears identical.
+					-->
+	<rule from="^http://webuild-web2\.srv\.cs\.cmu\.edu/"
+		to="https://webuild-web1.srv.cs.cmu.edu/" />
+
+	<!--	Cert only matches www.
+					-->
+	<rule from="^http://(?:www\.)?etc\.cmu\.edu/"
+		to="https://www.etc.cmu.edu/" />
+
+</ruleset>

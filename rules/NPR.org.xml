@@ -1,0 +1,69 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://kunk.org/ => https://kunc.drupal.publicbroadcasting.net/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	CDN buckets:
+
+		- docj27ko03fnu.cloudfront.net
+			- Used on login.npr.org
+
+		- images.npr.org.edgesuite.net
+		- s.npr.org.edgesuite.net
+
+		- npr.vo.llnwd.net
+
+			- .hs. doesn't exist
+			- pd.npr.org
+
+
+	Nonfunctional domains:
+
+		- pd *
+
+	* 400; mismatched, CN: *.hs.llnwd.net
+
+-->
+<ruleset name="NPR.org (partial)" default_off='failed ruleset test'>
+
+	<target host="kunk.org" />
+	<target host="*.kunk.org" />
+	<target host="npr.org" />
+	<target host="*.npr.org" />
+
+
+	<securecookie host="^support\.kunc\.org$" name=".+" />
+	<!--	Observed cookies:
+
+			^login:
+				- _accelerator_session_id
+			^shop:
+				- ShoppingCartSession
+			^www:
+				- rosi
+						-->
+
+
+	<!--	Cert doesn't match.  Luckily...
+						-->
+	<rule from="^http://(?:www\.)?kunk\.org/"
+		to="https://kunc.drupal.publicbroadcasting.net/" />
+
+	<rule from="^http://support\.kunc\.org/"
+		to="https://support.kunc.org/" />
+
+	<rule from="^http://help\.npr\.org/$"
+		to="https://www.fuzeqna.com/npr/consumer/search.asp" />
+
+	<rule from="^http://help\.npr\.org/npr/"
+		to="https://www.fuzeqna.com/npr/"/>
+
+  <!-- Moved to Akamai, broke
+	<securecookie host="^.*\.npr\.org$" name=".+" />
+	<rule from="^http://(?:media\.|s\.|www\.)?npr\.org/"
+		to="https://www.npr.org/" />
+    -->
+
+	<rule from="^http://shop\.npr\.org/"
+		to="https://shop.npr.org/" />
+
+</ruleset>
+

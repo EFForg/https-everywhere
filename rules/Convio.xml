@@ -1,0 +1,56 @@
+<!--
+	For problematic rules, see Convio-mismatches.xml.
+
+
+	CDN buckets:
+
+		- convio.mktoweb.com
+
+			- resources
+
+
+	Nonfunctional hosts in *convio.net:
+
+		- service *
+		
+	* 503
+
+
+	Problematic domains:
+
+		- resources.convio.com *
+		
+	* Redirects to www.blackbaud.com; mismatched, CN: *.marketo.com
+
+-->
+<ruleset name="Convio">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="secure.commonground.convio.com" />
+
+	<target host="secure2.convio.net" />
+	<target host="secure3.convio.net" />
+
+	<!--	Complications:
+				-->
+	<target host="customer.convio.net" />
+
+		<exclusion pattern="^http://customer\.convio\.net/(?!$)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://customer.convio.net/home" />
+			<test url="http://customer.convio.net/home.htm" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://customer\.convio\.net/"
+		to="https://secure2.convio.net/customer/site/SPageServer" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

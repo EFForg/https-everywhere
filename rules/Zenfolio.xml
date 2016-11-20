@@ -1,0 +1,42 @@
+<ruleset name="Zenfolio (partial)" default_off="Needs ruleset tests">
+
+	<target host="zenfolio.com" />
+	<target host="*.zenfolio.com" />
+	<target host="cdn.zenfolio.net" />
+		<!--
+			Implicated in breaking flash slideshows:
+
+				- https://trac.torproject.org/projects/tor/ticket/9129
+				- https://mail1.eff.org/pipermail/https-everywhere-rules/2013-July/001640.html
+											-->
+		<exclusion pattern="^http://cdn\.zenfolio\.net/crossdomain\.xml" />
+
+
+	<!--	Akamai; "An error occurred"	-->
+	<rule from="^http://cdn\.zenfolio\.net/"
+		to="https://secure.zenfolio.com/" />
+
+	
+	<rule from="^http://(?:www\.)?zenfolio\.com/zf/(?=css/|img/|login\.aspx)"
+		to="https://secure.zenfolio.com/zf/" />
+
+	<rule from="^http://(?:www\.)?zenfolio\.com/zf/transfer/s/"
+		to="https://secure.zenfolio.com/zf/" />
+
+	<rule from="^http://secure\.zenfolio\.com/"
+		to="https://secure.zenfolio.com/" />
+
+	<!--	- Clients have unique subdomains
+		- Akamai
+		- At least some pages redirect to http.
+		- Data are on www too
+		- secure has an EV cert
+				-->
+	<rule from="^http://\w+\.zenfolio\.com/img/"
+		to="https://secure.zenfolio.com/img/" />
+
+	<!--	This throws 401 when rewritten to secure.	-->
+	<rule from="^http://\w+\.zenfolio\.com/cdn/"
+		to="https://www.zenfolio.com/cdn/" />
+
+</ruleset>

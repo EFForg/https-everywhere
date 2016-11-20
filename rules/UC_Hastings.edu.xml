@@ -1,0 +1,66 @@
+<!--
+	For rules causing false/broken MCB, see UC_Hastings.edu-falsemixed.xml.
+	For problematic rules, see UC_Hastings.edu-problematic.xml.
+
+
+	Problematic subdomains:
+
+		- (www.)? ¹
+		- events ²
+		- journals ¹ ²
+		- library ¹ ²
+
+	¹ Server sends no certificate chain, see https://whatsmychaincert.com
+	² Mixed css
+
+
+	These altnames don't exist:
+
+		- www.events.uchastings.edu
+
+
+	Insecure cookies are set for these hosts:
+
+		- events.uchastings.edu
+
+
+	Mixed content:
+
+		- css, on:
+
+			- events, journals from fonts.googleapis.com ¹
+			- events from hws.uchastings.edu ¹
+			- journals, library from (www.)?uchastings.edu ²
+
+		- Images, on (www.)?, hws, journals, library from (www.)?uchastings.edu ²
+		- favicon on journals, library from (www.)?uchastings.edu ²
+
+	¹ Secured by us
+	² Rule disabled by default <= missing certificate chain
+
+-->
+<ruleset name="UC Hastings.edu (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="uchastings.edu" /-->
+	<target host="cio2.uchastings.edu" />
+	<!--target host="events.uchastings.edu" /-->
+	<target host="hws.uchastings.edu" />
+	<!--target host="journals.uchastings.edu" /-->
+	<!--target host="library.uchastings.edu" /-->
+	<target host="webadvisor.uchastings.edu" />
+	<!--target host="www.uchastings.edu" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^events\.uchastings\.edu$" name="^ASP\.NET_SessionId$" /-->
+
+	<!--securecookie host="^events\.uchastings\.edu$" name=".+" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

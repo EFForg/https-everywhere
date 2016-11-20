@@ -1,0 +1,38 @@
+<!--
+	For other Radgost coverage, see Fakturownia.xml.
+
+
+	CDN buckets:
+
+		- s3-eu-west-1.amazonaws.com/assets.siteor.com/
+		- fs.siteor.com.s3.amazonaws.com	(requires fetching from foo.s3...com)
+
+
+	Problematic domains:
+
+		- fs *
+		- lavina *
+		- nowybip *
+		- shoptrix *	(works)
+		- www *
+
+	* Mismatched, CN: firmlet.pl
+
+-->
+<ruleset name="Siteor (partial)">
+
+	<target host="*.siteor.com" />
+	<target host="siteor.pl" />
+	<target host="*.siteor.pl" />
+
+
+	<securecookie host="^(?:.*\.)?siteor\.pl$" name=".+" />
+
+
+	<rule from="^http://(?:lavina\.|(secure\.)|www\.)?siteor\.pl/"
+		to="https://$1siteor.pl/" />
+
+	<rule from="^http://(asset|f)s\.siteor\.com/"
+		to="https://s3-eu-west-1.amazonaws.com/$1s.siteor.com/" />
+
+</ruleset>

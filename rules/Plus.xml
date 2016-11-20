@@ -1,0 +1,52 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://plus.net/ => https://www.plus.net/: Redirect for 'http://www.plus.net/' missing Location
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- community
+		- portal
+		- webmail
+		- webstats
+
+
+	Observed cookie domains:
+
+		- .
+		- community
+		- portal
+		- webmail
+		- webstats
+
+
+	Mixed content:
+
+		- Images, on community from:
+
+			- community *
+			- www.feedburner.com *
+			- www.gravitar.com *
+			- farm\d.staticflickr.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Plus.net" default_off='failed ruleset test'>
+
+	<target host="plus.net" />
+	<target host="*.plus.net" />
+
+
+	<securecookie host="^(?:.+\.)?plus\.net$" name=".+" />
+
+
+	<!--	^ redirects to www over http,
+		so copy that behavior:
+					-->
+	<rule from="^http://(?:www\.)?plus\.net/"
+		to="https://www.plus.net/" />
+
+	<rule from="^http://(portal|webmail|community|webstats)\.plus\.net/"
+		to="https://$1.plus.net/" />
+
+</ruleset>

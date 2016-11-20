@@ -1,0 +1,67 @@
+<!--
+	For other Dice Holdings coverage, see Dice.com.xml.
+
+
+	CDN buckets:
+
+		- d7iot6i6t25i6.cloudfront.net
+
+
+	Nonfunctional hosts:
+
+		- news.efinancialcareers.cn *
+
+	* Dropped
+
+
+	^efinancialcareers.cn: Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.efinancialcareers.cn
+
+-->
+<ruleset name="eFinancialCareers.cn (partial)">
+
+	<target host="efinancialcareers.cn" />
+	<target host="www.efinancialcareers.cn" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.efinancialcareers\.cn/($|favicon\.ico)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?efinancialcareers\.cn/+(?!login|myefc/profile|resources/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.efinancialcareers.cn/jobs-Information_Technology.s019" />
+			<test url="http://efinancialcareers.cn/search" />
+			<test url="http://www.efinancialcareers.cn/search" />
+			<test url="http://www.efinancialcareers.cn/sitemap/html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.efinancialcareers.cn/myefc/profile" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.efinancialcareers\.cn$" name="^(JSESSIONID|SID|matchingCompaniesAlertShown)$" /-->
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://efinancialcareers\.cn/+"
+		to="https://www.efinancialcareers.cn/" />
+
+		<test url="http://efinancialcareers.cn/login" />
+		<test url="http://efinancialcareers.cn/myefc/profile" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

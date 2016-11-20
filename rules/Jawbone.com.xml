@@ -1,0 +1,64 @@
+<!--
+	CDN buckets:
+
+		- content.jawbone.com.s3.amazonaws.com | d3osil7svxrrgt.cloudfront.net
+		- dyzup8v06s4q5.cloudfront.net
+		- store.jawbone.com.digitalrivercontent.net
+
+		- jawbone.lithium.com
+
+			- forums
+
+
+	Partially covered subdomains:
+
+		- store		(some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- content	(→ d3osil7svxrrgt.cloudfront.net)
+		- eu
+		- forums
+		- mytalk
+		- thoughts
+		- up
+
+
+	Observed cookie domains:
+
+		- .
+		- forums
+		- mytalk
+		- store
+		- thoughts
+
+
+	Mixed content:
+
+		- Images on forums from content *
+
+	* Secured by us, doesn't trip MCB anyway.
+
+
+	Partial due to incomplete store coverage.
+
+-->
+<ruleset name="Jawbone.com (partial)">
+
+	<target host="jawbone.com" />
+	<target host="*.jawbone.com" />
+		<exclusion pattern="^http://store\.jawbone\.com/(?!Admin/|DRHM/)" />
+
+
+	<securecookie host="^(?!store\.).*\.jawbone\.com$" name=".+" />
+
+
+	<rule from="^http://((?:eu|forums|mytalk|store|thoughts|up|www)\.)?jawbone\.com/"
+		to="https://$1jawbone.com/" />
+
+	<rule from="^http://content\.jawbone\.com/"
+		to="https://d3osil7svxrrgt.cloudfront.net/" />
+
+</ruleset>

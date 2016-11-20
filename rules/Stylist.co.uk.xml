@@ -1,0 +1,56 @@
+<!--
+	Stylist Magazine
+
+
+	Nonfunctional hosts in *stylist.co.uk:
+
+		- [1-6].darkroom ³
+		- www ʰ
+
+	³ 403
+	ʰ Redirects to http
+
+
+	^stylist.co.uk: Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Mixed content:
+
+		- Ads/web bugs, from:
+
+			- b.scorecardresearch.com ¹
+			- widgets.io.shortlistmedia.co.uk ²
+
+	¹ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+	² Unsecurable
+
+-->
+<ruleset name="Stylist.co.uk" default_off="redirects to http">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.stylist.co.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://www\.stylist\.co\.uk/(?:$|assets/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.stylist.co.uk/assets/img/stylist/82d1a7dd15d5bcd697f50fe348b0ec72/stylist-logo-nav.png" />
+
+	<!--	Complications:
+				-->
+	<target host="stylist.co.uk" />
+
+
+	<securecookie host="^\." name="^_(?:_cfduid$|gat?$|gat_)" />
+
+
+	<rule from="^http://stylist\.co\.uk/"
+		to="https://www.stylist.co.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

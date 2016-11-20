@@ -1,0 +1,56 @@
+<!--
+	Problematic subdomains:
+
+		- archives	(times out)
+		- mysqlbackup ²
+
+	² Redirect differs
+
+
+	Insecure cookies are set for these hosts:
+
+		- forums.zmanda.com
+		- mysqlbackup.zmanda.com
+		- wiki.zmanda.com
+
+-->
+<ruleset name="Zmanda.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="zmanda.com" />
+	<target host="amanda.zmanda.com" />
+	<target host="forums.zmanda.com" />
+	<target host="network.zmanda.com" />
+	<target host="wiki.zmanda.com" />
+	<target host="www.zmanda.com" />
+
+	<!--	Complications:
+				-->
+	<target host="mysqlbackup.zmanda.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(mysqlbackup|wiki)\.zmanda\.com$" name="^bb2_screener$" /-->
+	<!--securecookie host="^forums\.zmanda\.com$" name="^bb_sessionhash$" /-->
+
+	<securecookie host="^(?:(?:forums|mysqlbackup|\.?network|wiki))\.zmanda\.com$" name=".+" />
+
+
+	<!--	Redirects as so over http:
+						-->
+	<rule from="^http://mysqlbackup\.zmanda\.com/+(?:\??$|(index\.php(?:$|[?/])))"
+		to="https://wiki.zmanda.com/$1" />
+
+		<test url="http://mysqlbackup.zmanda.com/?" />
+		<test url="http://mysqlbackup.zmanda.com//" />
+		<test url="http://mysqlbackup.zmanda.com/index.php" />
+		<test url="http://mysqlbackup.zmanda.com/index.php?" />
+		<test url="http://mysqlbackup.zmanda.com//index.php" />
+		<test url="http://mysqlbackup.zmanda.com//index.php?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

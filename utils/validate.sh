@@ -28,7 +28,7 @@ GRAMMAR="relaxng.xml"
 # xmllint spams stderr with "<FILENAME> validates, even with the --noout flag,
 # so we capture only the results that do not contain 'validates'
 validate_grammar() {
-  find ../src/chrome/content/rules -name "*.xml" | \
+  find ../rules -name "*.xml" | \
    xargs xmllint --noout --relaxng $GRAMMAR
 }
 grammar_errors=$(validate_grammar 2>&1 | grep -v "validates" || true)

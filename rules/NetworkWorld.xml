@@ -1,0 +1,79 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://networkworld.com/ => https://www.networkworld.com/: (28, 'Connection timed out after 10001 milliseconds')
+Fetch error: http://subscribenww.com/ => https://subscribenww.com/: (60, 'SSL certificate problem: self signed certificate')
+	For problematic rules, see NetworkWorld-mismatches.xml.
+
+
+	For other IDG coverage, see IDG.se.xml.
+
+
+	CDN buckets:
+
+		- computerworld.com.edgesuite.net
+		- edge.networkworld.com.edgekey.net
+		- networkworld.mobify.me
+
+
+	Nonfunctional domains:
+
+		- networkworld.com subdomains:
+
+			- resources
+			- newsletters
+
+		- optouts.nww.com
+
+
+	Problematic subdomains:
+
+		- edge ¹
+		- events	(works, mismatched, CN: *.eiseverywhere.com)
+		- m		(redirects to www; mismatched, CN: *.mobify.com)
+
+	¹ 403; mismatched, CN: www.networkworld.com
+
+
+	Mixed content:
+
+		- Images, on www from:
+
+			- $self *
+			- computerworld.com.edgesuite.net *
+
+		- Ads/web bugs, on www from:
+
+			- tags.bkrtx.com *
+			- admin.brightcove.com *
+			- api.demandbase.com *
+			- content.dl-rms.com *
+			- ad.doubleclick.net *
+			- pubads.g.doubleclick.net *
+			- apis.google.com *
+			- ai.hitbox.com *
+			- b.scorecardresearch.com *
+
+	* Secured by us
+
+-->
+<ruleset name="NetworkWorld (partial)" default_off='failed ruleset test'>
+
+	<target host="networkworld.com" />
+	<target host="*.networkworld.com" />
+	<target host="subscribenww.com" />
+	<target host="*.subscribenww.com" />
+
+
+	<securecookie host="^(?:.*\.)?(?:networkworld|subscribenww)\.com$" name=".+" />
+
+
+	<rule from="^http://(?:edge\.|www\.)?networkworld\.com/"
+		to="https://www.networkworld.com/" />
+
+	<rule from="^http://m\.networkworld\.com/(mobify|static)/"
+		to="https://networkworld.mobify.com/$1/" />
+
+	<rule from="^http://(www\.)?subscribenww\.com/"
+		to="https://$1subscribenww.com/" />
+
+</ruleset>

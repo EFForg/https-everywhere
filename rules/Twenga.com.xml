@@ -1,0 +1,73 @@
+<!--
+	For rules causing false/broken MCB, see Twenga.com-falsemixed.xml.
+
+	For other Twenga Solutions coverage, see Twenga-Solutions.com.xml.
+
+
+	(www.)?twenga.com: redirects to http (including login)
+
+
+	Problematic hosts in *twenga.com:
+
+		- blog ᵀ ˣ
+
+	ᵀ Tor users blocked
+	ˣ Mixed css from $self
+
+
+	Fully covered hosts in *twenga.com:
+
+		- dynstatic
+
+		- i\d+:
+
+			- i00
+			- i10
+			- i2[01]
+			- i7[01]
+
+		- r
+
+
+	Mixed content:
+
+		- css on blog from $self *
+		- Images on blog from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Twenga.com (partial)">
+
+	<target host="*.twenga.com" />
+
+		<!--	Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://blog\.twenga\.com/+(?!wp-content/|wp-includes/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://blog.twenga.com/" />
+			<test url="http://blog.twenga.com/css.php" />
+			<test url="http://blog.twenga.com/wp-login.php" />
+			<test url="http://blog.twenga.com/wp-login.php" />
+
+		<test url="http://dynstatic.twenga.com/ressource/url/image/?k=424_0_0&amp;e=&amp;d=http%3A%2F%2Fwww.twenga.com" />
+		<test url="http://i00.twenga.com/cms/img_75577.jpg" />
+		<test url="http://i20.twenga.com/jewelry/earrings/detachable-10-components-earrings-tp_2387598266290741051b.jpg" />
+		<test url="http://i21.twenga.com/jewelry/earrings/george-kovacs-earring-mini-tp_8713335219619646942b.jpg" />
+		<test url="http://i70.twenga.com/7/tp/46/78/7434967728580144678b.png" />
+		<test url="http://i71.twenga.com/7/tp/48/87/442124624375444887b.png" />
+		<test url="http://i71.twenga.com/7/tp/89/21/3800848892073818921b.png" />
+		<test url="http://r.twenga.com/" />
+
+
+	<!--	Tracking cookies set by r, not secured by server:
+									-->
+	<securecookie host="^\." name="^(?:TW_VISITOR_ID|WSID|twr)" />
+
+
+	<rule from="^http://(blog|dynstatic|i\d+|r)\.twenga\.com/"
+		to="https://$1.twenga.com/" />
+
+</ruleset>

@@ -1,0 +1,87 @@
+<!--
+	Other Blocket rulesets:
+
+		- Blocket.com.xml
+		- Blockets_Annonswebb.se.xml
+
+
+	^blocket.se:	Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .blocket.se
+		- jobb.blocket.se
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- www from cdn.blocket.com ¹
+			- www, www2 from www.blocket.com ²
+			- www2 from gfx.aftonbladet-cdn.se
+			- www2 from data.klart.se.s3.amazonaws.com ²
+			- www2 from quiz.svd.se
+
+	¹ Unsecurable <= dropped
+	² Secured by us
+
+-->
+<ruleset name="Blocket.se (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="jobb.blocket.se" />
+	<target host="www.blocket.se" />
+	<target host="www2.blocket.se" />
+
+	<!--	Special cases:
+				-->
+	<target host="blocket.se" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.blocket\.se/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.blocket\.se/+(?!(?:bostad|konto|support)(?:$|[?/])|css/|img/|static/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.blocket.se/gavleborg" />
+			<test url="http://www.blocket.se/nbl.htm" />
+			<test url="http://www.blocket.se/orebro" />
+			<test url="http://www.blocket.se/ostergotland" />
+			<test url="http://www.blocket.se/prhusbilar" />
+			<test url="http://www.blocket.se/sefina" />
+			<test url="http://www.blocket.se/skl.htm" />
+			<test url="http://www.blocket.se/sodermanland" />
+			<test url="http://www.blocket.se/uppsala" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.blocket.se/img/transparent.gif" />
+			<test url="http://www.blocket.se/konto" />
+			<test url="http://www.blocket.se/support" />
+
+			<!--	(Mixed images):
+						-->
+			<test url="http://www.blocket.se/bostad/saljes" />
+
+		<test url="http://www2.blocket.se/mobil.htm" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.blocket\.se$" name="^(ab_ratio|ab_redis|mxy|nojs|s|session_http|sli|sq)$" /-->
+	<!--securecookie host="^jobb\.blocket\.se$" name="^layout$" /-->
+
+	<securecookie host="^jobb\.blocket\.se$" name=".+" />
+
+
+	<rule from="^http://blocket\.se/" to="https://www.blocket.se/"/>
+	<rule from="^http:" to="https:"/>
+</ruleset>
+

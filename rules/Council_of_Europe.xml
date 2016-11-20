@@ -1,0 +1,40 @@
+<!--
+	Nonfunctional subdomains:
+
+		- echr		(redirects to http, valid cert)
+		- hudoc.echr	(redirects to http, depth mismatched)
+
+
+	Problematic subdomains:
+
+		- ^	(recursive redirect)
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- piwik from piwik *
+			- www from www *
+
+		- Web bugs on www from piwik *
+
+	* Secured by us
+
+-->
+<ruleset name="Council of Europe (partial)">
+
+	<target host="coe.int" />
+	<target host="*.coe.int" />
+
+
+	<securecookie host="^(?:hub|piwik|www)\.coe\.int$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?coe\.int/"
+		to="https://www.coe.int/" />
+
+	<rule from="^http://(hub|piwik)\.coe\.int/"
+		to="https://$1.coe.int/" />
+
+</ruleset>

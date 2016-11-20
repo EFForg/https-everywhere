@@ -1,0 +1,63 @@
+<!--
+	For problematic rules, see EuroDNS.com-problematic.xml.
+
+
+	Nonfunctional subdomains:
+
+		- help		(desk.com)
+
+
+	Problematic subdomains:
+
+		- blog		(works, CN: Parallels Panel)
+		- cdn3		(dropped)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- affiliate
+		- cdn3		(→ static)
+		- static
+
+
+	Insecure cookies are set for these hosts:
+
+		- affiliate.eurodns.com
+
+
+	Mixed content:
+
+		- Images on blog from blog *
+
+	* Secured by us
+
+-->
+<ruleset name="EuroDNS.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="eurodns.com" />
+	<target host="affiliate.eurodns.com" />
+	<target host="static.eurodns.com" />
+	<target host="www.eurodns.com" />
+
+	<!--	Complications:
+				-->
+	<target host="cdn3.eurodns.com" />
+
+
+	<!--	Not secured by server:
+				-->
+	<securecookie host="^affiliate\.eurodns\.com$" name="^CAKEPHP$" />
+
+	<securecookie host="^(?:affiliate|www)\.eurodns\.com$" name=".+" />
+
+
+	<rule from="^http://cdn3\.eurodns\.com/"
+		to="https://static.eurodns.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,52 @@
+<!--
+	CDN buckets:
+
+		- media.mongodb.org.s3.amazonaws.com | dg3s276bkct46.cloudfront.net
+
+			- media
+
+
+	Nonfunctional subdomains:
+
+		- blog	(dropped - tumblr)
+		- docs	(redirects to http)
+
+
+	Insecure cookies are set for these hosts:
+
+		- jira.mongodb.org
+		- www.mongodb.org
+
+
+	Mixed content:
+
+		Images on www, from:
+
+			- media.mongodb.org
+			- media.mongodb.org.s3.amazonaws.com *
+
+	* Secured by us
+
+-->
+<ruleset name="mongoDB.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="mongodb.org" />
+	<target host="jira.mongodb.org" />
+	<target host="try.mongodb.org" />
+	<target host="www.mongodb.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^jira\.mongodb\.org$" name="^(JSESSIONID|atlassian\.xsrf\.token)" /-->
+	<!--securecookie host="^www\.mongodb\.org$" name="^__sid$" /-->
+
+	<securecookie host="^(?:jira|www)\.mongodb\.org$" name=".*" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,100 @@
+<!--
+	For other Google coverage, see GoogleServices.xml.
+
+
+	If we are going to include ads and tracking info, let's at least do it by https.
+
+
+	Problematic hosts in doubleclick.net:
+
+		- *.es *
+		- *.nl *
+		- *.no *
+
+	* Mismatched
+
+
+	Fully covered hosts in *doubleclick.net:
+
+		- ad
+		- ad-ace
+		- ad-apac
+		- ad-emea
+		- *.au
+		- *.de
+		- *.es		(→ *)
+		- fls
+
+		- *.fls:
+
+			- \d+
+
+		- *.fr
+
+		- *.g:
+
+			- cm
+			- feedads
+			- googleads
+			- securepubads
+			- stats
+			- survey
+
+		- *.jp
+		- *.mo
+		- *.nl		(→ *)
+		- *.no		(→ *)
+		- s[01]
+		- *.uk
+
+		- static
+
+
+	Insecure cookies are set for these domains:
+
+		- .doubleclick.net
+	
+
+	This ruleset needs someone brave enough to figure out what exclusions
+	are needed in order not to break flash video streaming.
+
+	Since installing flash for torbrowser is the epitome of foolishness,
+	this ruleset is enabled for torbrowser through platform=mixedcontent.
+
+-->
+<ruleset name="Doubleclick.net (needs exclusions)" platform="mixedcontent">
+
+	<target host="doubleclick.net" />
+	<target host="*.doubleclick.net" />
+
+		<test url="http://pubads.g.doubleclick.net/activity;xsp=;ord=1;num=1?gtmcb=" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<test url="http://ad.doubleclick.net/jump/ns.liliputing/general;ppos=;kw=;tile=;sz=;ord=?" />
+		<test url="http://cm.g.doubleclick.net/pixel?google_nid=&amp;google_cm=&amp;&amp;bid=&amp;newuser=&amp;google_tc=" />
+		<!--
+		<test url="http://googleads.g.doubleclick.net/pagead/viewthroughconversion/1/?value=&amp;guid=&amp;script=" />
+		-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.doubleclick\.net$" name="^(CheckForPermission|IDE|id|test_cookie)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://([^/:@.]+)\.(?!au|de|fr|jp|uk)[a-z]{2}\.doubleclick\.net/"
+		to="https://$1.doubleclick.net/" />
+
+		<test url="http://ad.es.doubleclick.net/adj/dqa.ndrd" />
+		<test url="http://ad.kr.doubleclick.net/adj/dqa.ndrd" />
+		<test url="http://ad.nl.doubleclick.net/adj/dqa.ndrd" />
+		<test url="http://ad.ph.doubleclick.net/adj/dqa.ndrd" />
+		<test url="http://ad.se.doubleclick.net/adj/dqa.ndrd" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

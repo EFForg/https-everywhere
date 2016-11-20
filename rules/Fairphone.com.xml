@@ -1,0 +1,66 @@
+<!--
+	Partially covered hosts in *fairphone.com:
+
+		- shop ʰ
+
+	ʰ Some pages redirect to http
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- fairphone.com
+		- forum.fairphone.com
+		- shop.fairphone.com
+		- .shop.fairphone.com
+		- www.fairphone.com
+
+-->
+<ruleset name="Fairphone.com (partial)">
+
+	<target host="fairphone.com" />
+	<target host="forum.fairphone.com" />
+	<target host="shop.fairphone.com" />
+	<target host="www.fairphone.com" />
+	<target host="code.fairphone.com" />
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://shop\.fairphone\.com/($|customer/$|fairphone\.html$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://shop\.fairphone\.com/(?!/*(?:(?:checkout/cart|customer/account)(?:$|[?/])|favicon\.ico|media/|skin/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://shop.fairphone.com/accessories.html" />
+			<test url="http://shop.fairphone.com/blacktranslucent-1.html" />
+			<test url="http://shop.fairphone.com/bluematte-1.html" />
+			<test url="http://shop.fairphone.com/fairphone.html" />
+			<test url="http://shop.fairphone.com/payment-page.html" />
+			<test url="http://shop.fairphone.com/spareparts.html" />
+			<test url="http://shop.fairphone.com/spareparts/display.html" />
+			<test url="http://shop.fairphone.com/transparent-1.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://shop.fairphone.com/checkout/cart" />
+			<test url="http://shop.fairphone.com/customer/account" /><!--	sets cookie without Secure -->
+			<test url="http://shop.fairphone.com/favicon.ico" />
+			<test url="http://shop.fairphone.com/media/catalog/product/cache/2/small_image/140x/9df78eab33525d08d6e5fb8d27136e95/b/a/battery445.jpg" />
+			<test url="http://shop.fairphone.com/skin/frontend/fairphone/fairphone/images/logo.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?fairphone\.com$" name="^GHCLSERVID$" /-->
+	<!--securecookie host="^forum\.fairphone\.com$" name="^_forum_session$" /-->
+	<!--securecookie host="^shop\.fairphone\.com$" name="^VISITED$" /-->
+	<!--securecookie host="^\.shop\.fairphone\.com$" name="^frontend$" /-->
+
+	<securecookie host="^(?!shop\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,29 @@
+<!--
+Automatically by https-everywhere-checker because:
+Fetch error: http://brenet.de/ => https://brenet.de/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	For problematic rules, see BreNet-mismatches.xml.
+
+
+	Nonfunctional subdomains:
+
+		- piwik	(cert: vz46.brenet.de; shows that domain's data)
+
+-->
+<ruleset name="BreNet (partial)" default_off='failed ruleset test'>
+
+	<target host="brenet.de" />
+	<target host="*.brenet.de" />
+	<!--	* for cross-domain cookies.  This won't break
+		webmail if it's used over http, and in the case
+		that https is used and that ruleset is off, it'll
+		encrypt cookies anyway, which would be a good thing.	-->
+	<target host="*.webmail.brenet.de" />
+
+
+	<securecookie host="^(?:.*\.)?brenet\.de$" name=".*" />
+
+
+	<rule from="^http://(www\.)?brenet\.de(:8443)?/"
+		to="https://$1brenet.de$2/" />
+
+</ruleset>

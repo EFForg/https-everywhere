@@ -1,0 +1,81 @@
+<!--
+	For other Markit coverage, see Markit.xml.
+
+
+	CDN buckets:
+
+		- openf2.github.com
+
+			- docs.openf2.org
+
+
+	Nonfunctional domains:
+
+		- blog.openf2.org	(blogger)
+		- docs.openf2.org	(404; mismatched, CN: *.github.com)
+
+
+	Problematic domains:
+
+		- www.openf2.com	(works; mismatched, CN: *.wallst.com)
+
+
+	Fully covered domains:
+
+		- www.openf2.com	(→ www.openf2.org)
+		- developer.openf2.com
+
+		- openf2.org subdomains:
+
+			- (www.)
+			- developer.bdc.openf2.org
+			- developer
+			- cdn
+			- services
+
+
+	Observed cookie domains:
+
+		- developer.openf2.com
+
+		- openf2.org subdomains:
+
+			- ^
+			- developer.bdc
+			- cdn
+			- developer
+			- developer.ldc
+			- www
+
+
+	Mixed content:
+
+		- Web bugs, on:
+
+			- developer from www *
+			- www from www *
+
+	* Secured by us
+
+-->
+<ruleset name="OpenF2.org (partial)">
+
+	<target host="*.openf2.com" />
+	<target host="openf2.org" />
+	<target host="*.openf2.org" />
+
+
+	<securecookie host="^developer\.openf2\.com$" name=".+" />
+	<securecookie host="^(?:.*\.)?openf2\.org$" name=".+" />
+
+
+	<rule from="^http://www\.openf2\.com/"
+		to="https://www.openf2.org/" />
+
+	<rule from="^http://developer\.openf2\.com/"
+		to="https://developer.openf2.com/" />
+
+	<rule from="^http://((?:cdn|developer(?:\.[bl]tc)?|services|www)\.)?openf2\.org/"
+		to="https://$1openf2.org/" />
+
+</ruleset>

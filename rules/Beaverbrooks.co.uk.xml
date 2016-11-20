@@ -1,0 +1,61 @@
+<!--
+	Beaverbrooks the Jewellers Ltd
+
+
+	CDN buckets:
+
+		- global.prod.fastly.net
+
+			- content
+
+		- beaverbrooks.peerius.com
+
+
+	Problematic subdomains:
+
+		- ^	(works; mismatched, CN: www.beaverbrooks.co.uk)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(^ → www)
+
+			$ redirects to http, but only *after* loading successfully.
+			It's a pity that we don't have means to prevent that....
+
+
+	Fully covered subdomains:
+
+		- content
+
+
+	Mixed content:
+
+		- Image on www from www *
+
+	* Secured by us
+
+-->
+<ruleset name="Beaverbrooks.co.uk (partial)">
+
+	<target host="beaverbrooks.co.uk" />
+	<target host="*.beaverbrooks.co.uk" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.beaverbrooks\.co\.uk/+($|\?)" /-->
+		<!--exclusion pattern="^http://www\.beaverbrooks\.co\.uk/+(?!_client/|favicon\.ico|images/|myaccount($|[?/])|_uploads/)" /-->
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.beaverbrooks\.co\.uk$" name="^__utm\w$" />
+
+
+	<rule from="^http://(?:www\.)?beaverbrooks\.co\.uk/(?=_client/|favicon\.ico|images/|myaccount(?:$|[?/])|_uploads/)"
+		to="https://www.beaverbrooks.co.uk/" />
+
+	<rule from="^http://content\.beaverbrooks\.co\.uk/"
+		to="https://content.beaverbrooks.co.uk/" />
+
+</ruleset>

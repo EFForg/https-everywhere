@@ -1,0 +1,75 @@
+<!--
+	Valuation Office Agency
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *voa.gov.uk:
+
+		- www.2010 ᵈ
+		- app ³
+		- cti ⁵
+		- manuals ³
+
+	³ 403
+	⁵ 503
+	ᵈ Dropped
+
+
+	(www.)?voa.gov.uk: Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- batransandbareports.voa.gov.uk
+
+-->
+<ruleset name="VOA.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="batransandbareports.voa.gov.uk" />
+	<target host="ebusiness.voa.gov.uk" />
+	<target host="housing.voa.gov.uk" />
+	<target host="lha-direct.voa.gov.uk" />
+	<target host="open.voa.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="voa.gov.uk" />
+	<target host="www.voa.gov.uk" />
+
+		<!--	Sets cookie without Secure
+							-->
+		<!--test url="http://batransandbareports.voa.gov.uk/for6003_app_pres_ApplicationWeb/viewIdentityFORAction.do" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^batransandbareports\.voa\.gov\.uk$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://(?:www\.)?voa\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/valuation-office-agency" />
+
+		<!--	/*\w does not redirect:
+						-->
+		<exclusion pattern="^http://(?:www\.)?voa\.gov\.uk/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://voa.gov.uk/default.aspx" />
+			<test url="http://voa.gov.uk/index.htm" />
+			<test url="http://voa.gov.uk/index.html" />
+			<test url="http://www.voa.gov.uk/index.html" />
+			<test url="http://www.voa.gov.uk/index.jsp" />
+			<test url="http://www.voa.gov.uk/index.php" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

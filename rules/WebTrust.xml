@@ -1,0 +1,38 @@
+<!--
+	Nonfunctional subdomains:
+
+		- (www.) *
+
+	* Reset
+
+-->
+<ruleset name="WebTrust.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="cert.webtrust.org" />
+	<target host="entrust.webtrust.org" />
+
+		<!--	403:
+				-->
+		<exclusion pattern="^http://(?:cert|entrust)\.webtrust\.org/(?:$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://cert.webtrust.org/?" />
+			<test url="http://cert.webtrust.org//" />
+
+			<test url="http://entrust.webtrust.org/?" />
+			<test url="http://entrust.webtrust.org//" />
+
+			<!--	-ve:
+					-->
+			<test url="http://cert.webtrust.org/ViewSeal?id=1565" />
+
+			<test url="http://entrust.webtrust.org/SealFile?seal=328" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,52 @@
+<!--
+	Problematic subdomains:
+
+		- dashboard *
+
+	* Mismatched, CN: *.cloudtrax.com
+
+
+	Fully covered hosts in *open-mesh.com:
+
+		- (www.)?
+		- dashboard	(→ cloudtrax.com)
+
+
+	Insecure cookies are set for these domains:
+
+		- .www.open-mesh.com
+
+
+	Mixed content:
+
+		- Images on www from www *
+
+	* Secured by us
+
+-->
+<ruleset name="Open-Mesh.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="open-mesh.com" />
+	<target host="www.open-mesh.com" />
+
+	<!--	Complications:
+				-->
+	<target host="dashboard.open-mesh.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.www\.open-mesh\.com$" name="^frontend$" /-->
+
+	<securecookie host="^\.www\.open-mesh\.com$" name=".+" />
+
+
+	<rule from="^http://dashboard\.open-mesh\.com/"
+		to="https://cloudtrax.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

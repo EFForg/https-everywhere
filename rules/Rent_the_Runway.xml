@@ -1,0 +1,54 @@
+<!--
+	CDN buckets:
+
+		- wac.4EFC.edgecastcdn.net/??4EFC/"
+
+			- cdn.renttherunway.com
+			- grid-p.rtrcdn.com
+			- cdn.reviews.rtrcdn.com
+			- static-p.rtrcdn.com
+
+
+	Nonfunctional domains:
+
+		- blog.renttherunway.com	(times out)
+		- cdn.reviews.rtrcdn.com	(404; mismatched, CN: gp1.wac.edgecastcdn.net)
+
+
+	Problematic domains:
+
+		- cdn.renttherunway.com		(works; mismatched, CN: gp1.wac.edgecastcdn.net)
+		- grid-p.rtrcdn.com *
+		- static-p.rtrcdn.com *
+
+	* 404; mismatched, CN: gp1.wac.edgecastcdn.net
+
+
+	Some paths redirect to http
+
+-->
+<ruleset name="Rent the Runway (partial)">
+
+	<target host="renttherunway.com" />
+	<target host="*.renttherunway.com" />
+	<target host="*.rtrcdn.com" />
+
+
+	<!--	Redirects to http as-is:
+						-->
+	<rule from="^http://(?:www\.)?renttherunway\.com/(grid|rtr/images)/"
+		to="https://cdn.rtrcdn.com/$1/" />
+
+	<rule from="^http://(www\.)?renttherunway\.com/(ajax|pixel|sites)/"
+		to="https://$1renttherunway.com/$2/" />
+
+	<rule from="^http://cdn\.r(?:enttherunway|trcdn)\.com/"
+		to="https://cdn.rtrcdn.com/" />
+
+	<rule from="^http://grid-p\.rtrcdn\.com/grid/"
+		to="https://cdn.rtrcdn.com/grid/" />
+
+	<rule from="^http://(?:grid|static)-p\.rtrcdn\.com/"
+		to="https://cdn.rtrcdn.com/grid/" />
+
+</ruleset>

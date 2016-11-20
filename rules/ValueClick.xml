@@ -1,0 +1,96 @@
+<!--
+	For problematic rules, see ValueClick-mismatches.xml.
+
+
+	Other ValueClick rulesets:
+
+		- Commission_Junction.xml
+		- PriceRunner.xml
+
+
+	Nonfunctional domains:
+
+		- (www.)couponmountain.com
+		- files.couponmountain.com *
+		- (www.)idealhomegarden.com
+		- files.idealhomegarden.com *
+		- (www.)investopedia.com
+		- i.investopedia.com *
+		- blogs.smarter.com
+		- files.smarter.com *
+		- (www.)symptomfind.com
+		- files.symptomfind.com *
+		- ir.valueclick.com		(CN: shareholder.com)
+
+	* Akamai
+
+
+	Problematic subdomains:
+
+		- adrxmedia.com *
+		- www.adrxmedia.com **
+		- (www.)fastclick.com		(redirects to www.valueclickmedia.com; CN: cdn-origin.snv.vcmedia.com)
+		- cdn.fastclick.net **
+		- mediaplex.com *
+		- img-cdn.mediaplex.com **
+		- cdn.mplxtms.com **
+		- secure-cdn.mplxtms.com
+		- valueclick.com *
+		- valueclickmedia.com *
+		- cdn-origin.snv.vcmedia.com	(self-signed)
+
+	* Self-signed, CN: cdn-origin.snv.vcmedia.com
+	** Akamai
+
+-->
+<ruleset name="ValueClick (partial)">
+
+	<target host="*.apmebf.com" />
+	<target host="fastclick.com" />
+	<target host="www.fastclick.com" />
+	<target host="*.fastclick.net" />
+	<target host="mediaplex.com" />
+	<target host="*.mediaplex.com" />
+	<target host="*.mplxtms.com" />
+	<target host="valueclick.com" />
+	<target host="www.valueclick.com" />
+	<target host="valueclickmedia.com" />
+	<target host="*.valueclickmedia.com" />
+
+
+	<securecookie host="^\.apmebf\.com$" name=".+" />
+	<securecookie host="^.*\.(?:fastclick|mediaplex|valueclick(?:media)?)\.(?:com|net)$" name=".+" />
+	<securecookie host="^admin\.valueclickmedia\.com$" name=".+" />
+
+
+	<rule from="^http://(mp|rd)\.apmebf\.com/"
+		to="https://$1.apmebf.com/" />
+
+	<rule from="^http://(?:www\.)?(?:fast|value)click(media)?\.com/"
+		to="https://www.valueclick$1.com/" />
+
+	<rule from="^http://(?:secure\.)?cdn\.fastclick\.net/"
+		to="https://secure.cdn.fastclick.net/" />
+
+	<rule from="^http://(?:media|secure)\.fastclick\.net/"
+		to="https://secure.fastclick.net/" />
+
+	<rule from="^http://sp\.fastclick\.net/"
+		to="https://sp.fastclick.net/" />
+
+	<rule from="^http://(adfarm|altfarm|app|img|mojofarm)\.mediaplex\.com/"
+		to="https://$1.mediaplex.com/" />
+
+	<rule from="^http://(?:secure\.)?img-cdn\.mediaplex\.com/"
+		to="https://secure.img-cdn.mediaplex.com/" />
+
+	<rule from="^http://(?:www\.)?mediaplex\.com/"
+		to="https://www.mediaplex.com/" />
+
+	<rule from="^http://(?:secure-)?cdn\.mplxtms\.com/"
+		to="https://secure-cdn.mplxtms.com/" />
+
+	<rule from="^http://admin\.valueclickmedia\.com/"
+		to="https://admin.valueclickmedia.com/" />
+
+</ruleset>

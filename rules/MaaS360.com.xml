@@ -1,0 +1,86 @@
+<!--
+	Nonfunctional subdomains:
+
+		- hs		(shows www, valid cert)
+
+
+	Problematic subdomains:
+
+		- content	(mismatched, CN: content.fiberlink.com)
+		- links		(shows www, valid cert)
+
+
+	Partially covered subdomains:
+
+		- link		(→ trials)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- content	(→ content.fiberlink.com)
+		- de
+		- maasters
+		- portal
+		- trials
+		- www2
+
+
+	Mixed content:
+
+		- Images on de and www from content *
+
+	* Secured by us
+
+-->
+<ruleset name="MaaS360.com (partial)">
+
+	<target host="maas360.com" />
+	<target host="*.maas360.com" />
+
+
+	<securecookie host="^(?:de|portal|trials|www)?\.maas360\.com$" name=".+" />
+
+
+	<rule from="^http://((?:portal|maasters|trials|www2?)\.)?maas360\.com/"
+		to="https://$1maas360.com/" />
+
+	<rule from="^http://content\.maas360\.com/"
+		to="https://content.fiberlink.com/" />
+
+	<rule from="^http://links\.maas360\.com/demoRequest\?(?=.+=)"
+		to="https://trials.maas360.com/forms/register_service_m.php?I=INFO_REQUEST_DEMO&amp;" />
+
+	<rule from="^http://links\.maas360\.com/demoRequest/*$"
+		to="https://trials.maas360.com/forms/register_service_m.php?I=INFO_REQUEST_DEMO" />
+
+	<rule from="^http://links\.maas360\.com/getStartedNow\?(?=.+=)"
+		to="https://trials.maas360.com/forms/register_service_m.php?A=YouTube&amp;O=SM&amp;" />
+
+	<rule from="^http://links\.maas360\.com/getStartedNow/*$"
+		to="https://trials.maas360.com/forms/register_service_m.php?A=YouTube&amp;O=SM" />
+
+	<rule from="^http://links\.maas360\.com/legal\?(?=.+=)"
+		to="https://www.maas360.com/about/privacy-and-legal/?" />
+
+	<rule from="^http://links\.maas360\.com/legal/*$"
+		to="https://www.maas360.com/about/privacy-and-legal/" />
+
+	<rule from="^http://links\.maas360\.com/(?:mdm_glossary|trialGeneric)\?(?=.+=)"
+		to="https://trials.maas360.com/forms/register_service_m.php?" />
+
+	<rule from="^http://links\.maas360\.com/(?:mdm_glossary|trialGeneric)/*$"
+		to="https://trials.maas360.com/forms/register_service_m.php" />
+
+	<rule from="^http://links\.maas360\.com/mobileAppManagement\?(?=.+=)"
+		to="https://www.maas360.com/products/mobile-application-management?" />
+
+	<rule from="^http://links\.maas360\.com/mobileAppManagement/*$"
+		to="https://www.maas360.com/products/mobile-application-management" />
+
+	<!--	Server drops args:
+					-->
+	<rule from="^http://links\.maas360\.com/webinars(?:/+|\?.*)?$"
+		to="https://maasters.maas360.com/forum/?forum=all&amp;value=webinar&amp;type=1&amp;include=4&amp;search=1" />
+
+</ruleset>

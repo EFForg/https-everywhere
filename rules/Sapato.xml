@@ -1,0 +1,35 @@
+<ruleset name="Sapato (partial)">
+
+	<target host="sapato.ru" />
+	<target host="*.sapato.ru" />
+	<target host="*.zapato.ru" />
+
+
+	<!--	- Cert only matches *.sapato.com
+		- Some (most?) pages 301 to http
+						-->
+	<rule from="^http://(?:www\.)?sapato\.ru/(bitrix|css|images|personal|upload)/"
+		to="https://www.sapato.ru/$1/" />
+
+	<!--	- Client stores have unique subdomains
+		- At least some of their pages 301 to http
+						-->
+	<rule from="^http://([\w\-]+)\.sapato\.ru/(bitrix|css|images|upload)/"
+		to="https://$1.sapato.ru/$2/" />
+
+	<!--	Cert: *.sapato.ru
+					-->
+	<rule from="^http://cssjs\.zapato\.ru/"
+		to="https://cssjs.sapato.ru/" />
+
+	<!--	- Does not support https
+		- Neither does st.sapato.ru
+		- Most paths work with any subdomain
+		- An exception is \d+/upload, which 404s
+		  without requires \d+ stripped, but
+		  stssl doesn't require the stripping.
+					-->
+	<rule from="^http://st\.zapato\.ru/"
+		to="https://stssl.sapato.ru/" />
+
+</ruleset>

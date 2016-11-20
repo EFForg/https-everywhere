@@ -1,0 +1,49 @@
+<!--
+	Problematic hosts in *tns-cs.net:
+
+		- (account_name) ʳ
+
+	ʳ Refused, equivalent to another domain
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .tns-cs.net
+		- ssl-(account_name).tns-cs.net
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="tns-cs.net (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ssl-dagbladet.tns-cs.net" />
+	<target host="ssl-eniro.tns-cs.net" />
+	<target host="ssl-nrk.tns-cs.net" />
+
+	<!--	Complications:
+				-->
+	<target host="dagbladet.tns-cs.net" />
+	<target host="eniro.tns-cs.net" />
+	<target host="nrk.tns-cs.net" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.tns-cs\.net$" name="^i00$" /-->
+	<!--securecookie host="^ssl-(account_name)\.tns-cs\.net$" name="^srp$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://(\w+)\.tns-cs\.net/"
+		to="https://ssl-$1.tns-cs.net/" />
+
+		<test url="http://dagbladet.tns-cs.net/blank.gif" />
+		<test url="http://nrk.tns-cs.net/blank.gif" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,112 @@
+<!--
+	Bury Metropolitan Borough Council
+
+	For rules causing false/broken MCB, see bury.gov.uk-falsemixed.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *bury.gov.uk:
+
+		- archives ᵈ
+		- burychildrenincarecouncil ˡ
+		- maps ᵈ
+		- propertysearch ᵈ
+		- yourcareyourchoice ᵈ
+
+	ᵈ Dropped
+	ˡ Loops
+
+
+	Problematic hosts in *bury.gov.uk:
+
+		- moodle ˣ
+
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- bury.gov.uk
+		- .bury.gov.uk
+		- admissions.bury.gov.uk
+		- buryleisureonline.bury.gov.uk
+		- childcare.bury.gov.uk
+		- councildecisions.bury.gov.uk
+		- library.bury.gov.uk
+		- moodle.bury.gov.uk
+		- owa.bury.gov.uk
+		- www.bury.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on moddle from $self ˢ
+		- Images on moddle from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Bury.gov.uk (partial)">
+
+	<target host="bury.gov.uk" />
+	<target host="admissions.bury.gov.uk" />
+	<target host="buryleisureonline.bury.gov.uk" />
+	<target host="childcare.bury.gov.uk" />
+	<target host="councildecisions.bury.gov.uk" />
+	<target host="fisonline.bury.gov.uk" />
+	<target host="ilive.bury.gov.uk" />
+	<target host="library.bury.gov.uk" />
+	<target host="licensing.bury.gov.uk" />
+	<!--target host="moodle.bury.gov.uk" /-->
+	<target host="owa.bury.gov.uk" />
+	<target host="planning.bury.gov.uk" />
+	<target host="www.bury.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.bury\.gov\.uk/index\.aspx\?articleid=10298" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?bury\.gov\.uk/(?!/*(?:[Bb]ury/(?:css|[Ii]mages|template)/|favicon\.ico|media/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.bury.gov.uk/bincollections" />
+			<test url="http://www.bury.gov.uk/counciltax" />
+			<test url="http://www.bury.gov.uk/housing" />
+			<test url="http://www.bury.gov.uk/index.aspx?articleid=10298" />
+			<test url="http://www.bury.gov.uk/planning" />
+			<test url="http://www.bury.gov.uk/recycling" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.bury.gov.uk/Bury/css/styleprint.css" />
+			<test url="http://www.bury.gov.uk/Bury/images/facebook.png" />
+			<test url="http://www.bury.gov.uk/Bury/template/sys_Bury_Home/css/sys_Bury_Home.css" />
+			<test url="http://www.bury.gov.uk/favicon.ico" />
+			<test url="http://www.bury.gov.uk/media/image/8/k/utrr9djfvxxcxuptfizy.jpg" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?bury\.gov\.uk$" name="^(?:ASP\.NET_SessionId|clientvars)$" /-->
+	<!--securecookie host="^\.bury\.gov\.uk$" name="^(?:III_EXPT_FILE|III_SESSION_ID|SESSION_LANGUAGE)$" /-->
+	<!--securecookie host="^(?:admissions|councildecisions)\.bury\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^buryleisureonline\.bury\.gov\.uk$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^childcare\.bury\.gov\.uk$" name="^PE(?:Language|Test)Cookie$" /-->
+	<!--securecookie host="^library\.bury\.gov\.uk$" name="^SESSION_SCOPE$" /-->
+	<!--securecookie host="^moodle\.bury\.gov\.uk$" name="^M(?:OODLEID1_|Session|SessionTest)$" /-->
+	<!--securecookie host="^owa\.bury\.gov\.uk$" name="^cadata[\dA-F]{32}$" /-->
+
+	<securecookie host="^\." name="^(?:III_EXPT_FILE|III_SESSION_ID|SESSION_LANGUAGE)$" />
+	<securecookie host="^(?!www\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

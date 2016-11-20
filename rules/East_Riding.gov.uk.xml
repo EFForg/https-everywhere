@@ -1,0 +1,104 @@
+<!--
+	East Riding of Yorkshire Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *eastriding.gov.uk:
+
+		- admissions ³
+		- allerthorpeparishcouncil ᵈ
+		- barmbymoorparishcouncil ᵈ
+		- bins ³
+		- broadband ³
+		- broadbandmap ³
+		- burstwickparishcouncil ᵈ
+		- buswise ³
+		- data ³
+		- dataobs ³
+		- elloughtonparishcouncil ᵈ
+		- erpf ³
+		- ersab	³
+		- events ³
+		- fishwebsearch ³
+		- flamboroughparishcouncil ᵈ
+		- huggateparishcouncil ᵈ
+		- leisurecentres ³
+		- levenprimary ᵈ
+		- localoffer ³
+		- lockingtonparishcouncil ᵈ
+		- www.museums ³
+		- prestonparishcouncil ᵈ
+		- ruralprogrammes ³
+		- saferroadshumber ³
+		- sewerby ³
+		- shopandsave ³
+		- target45plus ³
+		- treasurehouse ᵈ
+		- walkingtheriding ³
+		- wilberfossparishcouncil ³
+		- www2 ³
+
+	³ 403
+	ᵈ Dropped
+
+
+	Problematic hosts in *eastriding.gov.uk:
+
+		- ^ ³
+		- consult ᵐ
+
+	³ 403
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- consult.eastriding.gov.uk
+		- insight.eastriding.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on library from fonts.googleapis.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="East Riding.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="emsonline.eastriding.gov.uk" />
+	<target host="insight.eastriding.gov.uk" />
+	<target host="library.eastriding.gov.uk" />
+	<target host="www.eastriding.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="eastriding.gov.uk" />
+	<target host="consult.eastriding.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^consult\.eastriding\.gov\.uk$" name="^(?:JSESSION|Server)ID$" /-->
+	<!--securecookie host="^insight\.eastriding\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://eastriding\.gov\.uk/"
+		to="https://www.eastriding.gov.uk/" />
+
+	<rule from="^http://consult\.eastriding\.gov\.uk/"
+		to="https://eastriding-consult.objective.co.uk/" />
+
+		<test url="http://consult.eastriding.gov.uk/portal/contact_us" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

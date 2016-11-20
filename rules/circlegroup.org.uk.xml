@@ -1,0 +1,56 @@
+<!--
+	Note: platform is so as not to increase non-Tor
+	distinguishability, given that no pages are covered
+	and no mixed content secured.
+
+
+	Problematic hosts in *circlegroup.org.uk:
+
+		- careers ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- careers.circlegroup.org.uk
+		- www.circlegroup.org.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Circle Group.org.uk (partial)" platform="mixedcontent">
+
+	<target host="www.circlegroup.org.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.circlegroup\.org\.uk/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.circlegroup\.org\.uk/(?!/*(?:css|img|~/media)/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.circlegroup.org.uk/inside-circle/development" />
+			<test url="http://www.circlegroup.org.uk/investing" />
+			<test url="http://www.circlegroup.org.uk/our-group/social-housing/Circle_Housing_Roddons" />
+			<test url="http://www.circlegroup.org.uk/our-passion/energy-and-fuel-poverty" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.circlegroup.org.uk/css/quiz.css" />
+			<test url="http://www.circlegroup.org.uk/img/icon-search.png" />
+			<test url="http://www.circlegroup.org.uk/~/media/50506DE4046F4ADFA67000CC25F3EDDE.png?w=25&amp;la=en" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:careers|www)\.circlegroup\.org\.uk$" name="^sc_expview$" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

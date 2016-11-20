@@ -1,0 +1,64 @@
+<!--
+	For other Yahoo coverage, see Yahoo.xml.
+
+
+	Nonfunctional hosts in *yahooapis.com:
+
+		- analyze
+		- bp *
+		- webplayer		(CN: s.yimg.com; 404)
+
+	* 404; mismatched, CN: s.yimg.com
+
+
+	Problematic hosts in *yahooapis.com:
+
+		- ^			(reset)
+		- search
+		- www			(works, mismatched, CN: developer.yahoo.com, differs from developer)
+		- yui ⁴
+
+	⁴ 404; mismatched, CN: *.yimg.com; rewriting to yui-s doesn't always seem to work
+
+-->
+<ruleset name="Yahoo APIs.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="csync.yahooapis.com" />
+	<target host="open.login.yahooapis.com" />
+	<target host="query.yahooapis.com" />
+	<target host="yui-s.yahooapis.com" />
+
+	<!--	Complications:
+				-->
+	<target host="yahooapis.com" />
+	<target host="yui.yahooapis.com" />
+
+		<exclusion pattern="^http://yui\.yahooapis\.com/+(?!2\.7\.0/build/fonts/|pure/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://yui.yahooapis.com/2.9.0/build/yahoo-dom-event/yahoo-dom-event.js" />
+			<test url="http://yui.yahooapis.com/3.18.1/build/yui/yui-min.js" />
+			<test url="http://yui.yahooapis.com/3.7.2/build/loader/loader-min.js" />
+			<test url="http://yui.yahooapis.com/combo" />
+
+			<!--	-ve:
+					-->
+			<test url="http://yui.yahooapis.com/2.7.0/build/fonts/fonts-min.css" />
+			<test url="http://yui.yahooapis.com/pure/0.6.0/pure-min.css" />
+
+
+	<rule from="^http://yahooapis\.com/.*"
+		to="https://developer.yahoo.com/" />
+
+		<test url="http://yahooapis.com//" />
+
+	<rule from="^http://yui\.yahooapis\.com/"
+		to="https://yui-s.yahooapis.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

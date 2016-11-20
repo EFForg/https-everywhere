@@ -1,0 +1,67 @@
+<!--
+	Problematic domains:
+
+		- geef.nl	(times out)
+
+
+	Some pages redirect to http (including registration - passwords, personal info, etc.)
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.geef.nl
+
+-->
+<ruleset name="Geef.nl (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.geef.nl" />
+
+	<!--	Complications:
+				-->
+	<target host="geef.nl" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.geef\.nl/($|account/nieuw2$|account/socialmedia$)" /-->
+
+		<!--	Exceptions:
+					-->
+		<exclusion pattern="^http://www\.geef\.nl/(?!assets/|commons/|css/|donatiemodule/|externalMod\.php|favicon\.ico|images/|js/|login|upload/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.geef.nl/account/nieuw" />
+			<test url="http://www.geef.nl/account/nieuw2" />
+			<test url="http://www.geef.nl/account/socialmedia" />
+			<test url="http://www.geef.nl/evenement/nieuw" />
+			<test url="http://www.geef.nl/faq" />
+			<test url="http://www.geef.nl/helpdesk" />
+			<test url="http://www.geef.nl/kaart" />
+			<test url="http://www.geef.nl/rss/acties" />
+			<test url="http://www.geef.nl/tip" />
+			<test url="http://www.geef.nl/wachtwoord/opvragen" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.geef.nl/donatiemodule/faq/en" />
+			<test url="http://www.geef.nl/donatiemodule/taal" />
+			<test url="http://www.geef.nl/favicon.ico" />
+			<test url="http://www.geef.nl/assets/css/style.css" />
+			<test url="http://www.geef.nl/login" />
+			<test url="http://www.geef.nl/upload/groep/image/thumb/1379097072_unilever-logo.jpg" />
+
+
+	<!--	Not secured by server;
+					-->
+	<!--securecookie host="^www\.geef\.nl$" name="^gef_session$" /-->
+
+
+	<rule from="^http://geef\.nl/"
+		to="https://www.geef.nl/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

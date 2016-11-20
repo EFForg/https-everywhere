@@ -1,0 +1,49 @@
+<!--
+	Problematic hosts in *kuix.de:
+
+		- sha2 *
+
+	* Differs from http
+
+
+	Insecure cookies are set for these hosts:
+
+		- kuix.de
+		- www.kuix.de
+
+-->
+<ruleset name="Kuix.de">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="kuix.de" />
+	<target host="www.kuix.de" />
+
+	<!--	Complications:
+				-->
+	<target host="sha2.kuix.de" />
+
+		<test url="http://kuix.de/securimage/securimage_show.php" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?kuix\.de$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^(?:www\.)?kuix\.de$" name=".+" />
+
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://sha2\.kuix\.de/+(?:\?.*)?$"
+		to="https://kuix.de/abi90/" />
+
+		<test url="http://sha2.kuix.de/?f" />
+		<test url="http://sha2.kuix.de/?o" />
+		<test url="http://sha2.kuix.de/??o" />
+		<test url="http://sha2.kuix.de/?b" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

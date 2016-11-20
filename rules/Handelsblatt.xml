@@ -1,0 +1,44 @@
+<!--
+	CDN buckets:
+
+		- euroforumlb1-1093815010.eu-west-1.elb.amazonaws.com
+
+			- veranstaltungen
+
+		- d21rxpf5vn0rru.cloudfront.net
+
+			- staticef[12].handelsblatt.com
+
+
+	Problematic subdomains:
+
+		- ^	(refused)
+
+
+	Problematic subdomains:
+
+		- veranstaltungen	(works; mismatched, CN: *.euroforum.com)
+
+
+	Some pages redirect to http
+
+-->
+<ruleset name="Handelsblatt (partial)">
+
+	<target host="handelsblatt.com" />
+	<target host="*.handelsblatt.com" />
+
+
+	<securecookie host="^abo\.handelsblatt\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?handelsblatt\.com/images/"
+		to="https://www.handelsblatt.com/images/" />
+
+	<rule from="^http://abo\.handelsblatt\.com/"
+		to="https://abo.handelsblatt.com/" />
+
+	<rule from="^http://staticef[12]\.handelsblatt\.com/"
+		to="https://d21rxpf5vn0rru.cloudfront.net/" />
+
+</ruleset>

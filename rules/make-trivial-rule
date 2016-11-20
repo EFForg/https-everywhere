@@ -1,0 +1,70 @@
+#!/bin/sh
+
+# THIS IS NOT A RULE, but a shell script to create simple rules for a
+# specified domain.
+#
+# Create $1.xml, mapping $1 and www.$1 to https://$2 (or simply http:
+# to https: by default).
+
+if [ -z "$1" ]
+then
+  echo "syntax: $0 example.com [secure.example.com]" >&2
+  exit 1
+fi
+
+capitalized=$(echo "$1" | cut -c 1 | tr a-z A-Z)$(echo "$1" | cut -c 2-)
+dest="$capitalized".xml
+if [ -f "$dest" ]
+then
+  echo "error: $dest already exists." >&2
+  exit 1
+fi
+
+if echo "$1" | grep -i '^www' >/dev/null
+then
+  echo "error: omit leading www" >&2
+  exit 1
+fi
+
+if echo "$1" | grep -v '\.' >/dev/null
+then
+  echo "error: domain should probably contain a dot" >&2
+  exit 1
+fi
+
+lower=$(echo "$1" | tr A-Z a-z)
+escaped=$(echo "$lower" | sed 's/\./\\./g' )
+
+duplicate=$(grep -EHin '<target\s+host="(w+\.)?'$escaped'"\s*/>' *.xml)
+if [ -n "$duplicate" ]
+then
+  echo "error: $lower already exists:" >&2
+  echo "$duplicate" >&2
+  exit 1
+fi
+
+if [ "$#" -gt 1 ] ; then
+    to="$2"
+else
+    to="www.$lower"
+fi
+
+cat > "$dest" <<END
+<!--
+	Nonfunctional hosts in *.$lower:
+
+	h: http redirect
+	m: certificate mismatch
+	r: connection refused
+	s: self-signed certificate
+	t: timeout on https
+-->
+<ruleset name="$capitalized">
+	<target host="$lower" />
+	<target host="www.$lower" />
+
+	<rule from="^http:" to="https:" />
+</ruleset>
+END
+
+echo "$0: created $dest; please examine it." >&2

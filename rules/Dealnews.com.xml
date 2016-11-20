@@ -1,0 +1,57 @@
+<!--
+    Other dealnews.com rulesets:
+
+        - Dlnws.com.xml
+
+    Most https://dealnews.com/ pages redirect to http
+
+    images, static, and content are all fronted by Fastly
+    and should use their domain and cert for SSL traffic
+
+-->
+<ruleset name="dealnews.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+    <target host="dealnews.com" />
+	<target host="www.dealnews.com" />
+
+	<!--	Complications:
+				-->
+    <target host="images.dealnews.com" />
+    <target host="static.dealnews.com" />
+    <target host="content.dealnews.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://dealnews\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://dealnews\.com/+(?!mydealnews(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://dealnews.com/c159/Electronics/TVs/" />
+			<test url="http://dealnews.com/categories/" />
+			<test url="http://dealnews.com/editors-choice/" />
+			<test url="http://dealnews.com/pages/about.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://dealnews.com/mydealnews/" />
+
+
+    <rule from="^http://content\.dealnews\.com/"
+        to="https://dealnews.a.ssl.fastly.net/" />
+
+    <rule from="^http://images\.dealnews\.com/"
+        to="https://dealnews.a.ssl.fastly.net/images/" />
+
+    <rule from="^http://static\.dealnews\.com/"
+        to="https://dealnews.a.ssl.fastly.net/static/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

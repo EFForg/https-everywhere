@@ -1,0 +1,80 @@
+<!--
+	Nonfunctional subdomains:
+
+		- grid		(redirects to http)
+
+
+	Problematic subdomains:
+
+		- ^		(mismatched, CN: fiorano.belnet.be)
+		- bnc *
+		- eduroam	(redirects to idpcustomer; mismatched, CN: register.eduroam.be)
+		- loba		(redirects to http)
+		- support *
+		- tcs *
+
+	* Data differ
+
+
+	Partially covered subdomains:
+
+		- bnc		($ → events, .+ 404s over http)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- bcg
+		- certificates
+		- changepass
+		- changepassword
+		- dcs
+		- event
+		- events
+		- fiorano
+		- idp
+		- idpcustomer
+		- loba		(→ dcs)
+		- scs
+
+
+	Observed cookie domains:
+
+		- dcs
+		- .dcs
+		- .eduroam
+		- .event
+		- .events
+		- grid
+		- idpcustomer
+		- support
+
+
+	https://fiorano differs from http, but
+	the latter displays test page only.
+
+-->
+<ruleset name="Belnet.be (partial)">
+
+	<target host="belnet.be" />
+	<target host="*.belnet.be" />
+
+
+	<securecookie host="^(?:\.?dcs|\.events?|idpcustomer)\.belnet\.be$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?belnet\.be/"
+		to="https://www.belnet.be/" />
+
+	<rule from="^http://(bcg|certificates|changepass(?:word)?|dcs|events?|fiorano|idp|idpcustomer|scs)\.belnet\.be/"
+		to="https://$1.belnet.be/" />
+
+	<rule from="^http://bnc\.belnet\.be/+(\?.*)?$"
+		to="https://events.belnet.be/nl/content/belnet-networking-conference-2012$1" />
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://loba\.belnet\.be/+[^?]*(\?.*)?"
+		to="https://dcs.belnet.be/$1" />
+
+</ruleset>

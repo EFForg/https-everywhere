@@ -1,0 +1,42 @@
+<!--
+	Problematic subdomains:
+
+		- ^	(works; self-signed, CN: m.moovdns.com)
+		- blog	(works; mismatched, CN: *.gridserver.com)
+
+
+	Fully covered domains:
+
+		- moovweb.com subdomains:
+
+			- (www.)	(^ → www)
+			- console
+			- help
+
+		- assets.moovweb.net
+		- cloud.moovweb.net
+
+
+	(www.)moovweb.net does not exist.
+
+-->
+<ruleset name="Moovweb (partial)">
+
+	<target host="moovweb.com" />
+	<target host="*.moovweb.com" />
+	<target host="*.moovweb.net" />
+
+
+	<securecookie host="^(?:help)?\.moovweb\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?moovweb\.com/"
+		to="https://www.moovweb.com/" />
+
+	<rule from="^http://(console|help)\.moovweb\.com/"
+		to="https://$1.moovweb.com/" />
+
+	<rule from="^http://(assets|cloud)\.moovweb\.net/"
+		to="https://$1.moovweb.net/" />
+
+</ruleset>

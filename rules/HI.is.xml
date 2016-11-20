@@ -1,0 +1,96 @@
+<!--
+	University of Iceland
+
+	For rules causing false/broken MCB, see HI.is-falsemixed.xml.
+
+
+	Nonfunctional hosts in *hi.is:
+
+		- (www.)? ¹
+		- english ¹
+		- (www.)?ged ²
+		- hpc ³
+		- midstodframhaldsnams ²
+		- (www.)?nshi ²
+
+		- (www.)?rhi ²
+		- icinga.rhi ²
+		- munin.rhi ⁴
+
+		- (www.)?sjodir ²
+		- starfsfolk ¹
+		- dev9.stofnanir ⁵
+		- vefsetur ¹
+
+	¹ Redirects to http
+	² Refused
+	³ Shows default page
+	⁴ Dropped
+	⁵ Shows trabant.rhi.hi.is	
+
+
+	Problematic hosts in *hi.is:
+
+		- ask ¹ ² ³
+		- trabant.rhi ¹ ⁴
+		- vefir ³
+
+	¹ Expired
+	² Mismatched
+	³ Mixed css
+	⁴ Self-signed
+
+
+	Insecure cookies are set for these hosts:
+
+		- kennslumidstod.hi.is
+		- nemendafelog.hi.is
+		- ugla.hi.is
+		- uni.hi.is
+		- vefir.hi.is
+		- webmail.hi.is
+
+
+	Mixed content:
+
+		- css on vefir from $self
+		- Images on vefir from $self
+
+-->
+<ruleset name="HI.is (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="kennslumidstod.hi.is" />
+	<target host="nemendafelog.hi.is" />
+	<target host="notendur.hi.is" />
+	<target host="ugla.hi.is" />
+	<target host="uni.hi.is" />
+	<!--target host="vefir.hi.is" /-->
+	<target host="visindavefur.hi.is" />
+	<target host="webmail.hi.is" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?hi\.is/(?:$|site/)" /-->
+		<!--exclusion pattern="^http://english\.hi\.is/(?:$|sites/)" /-->
+		<!--exclusion pattern="^http://starfsfolk\.hi.is/(?:$|faculty$|sites/)" /-->
+		<!--exclusion pattern="^http://vefsetur\.hi.is/(?:$|ritver/tenglar|sites/)" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^kennslumidstod\.hi\.is$" name="^(?:[\da-f]{32}|ja_university_tpl)$" /-->
+	<!--securecookie host="^nemendafelog\.hi\.is$" name="^bb2_screener$" /-->
+	<!--securecookie host="^ugla\.hi\.is$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^uni\.hi\.is$" name="^(?:bb2_screener|slimstat_tracking_code)$" /-->
+	<!--securecookie host="^vefir\.hi\.is$" name="^bb2_screener$" /-->
+	<!--securecookie host="^webmail\.hi\.is$" name="^SQMSESSID$" /-->
+
+	<securecookie host="^(?:kennslumidstod|nemendafelog|ugla|uni|webmail)\.hi\.is$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,143 @@
+<!--
+	CDN buckets:
+
+		- wac.1E82.edgecastcdn.net/??1E82/
+			- img.zorpia.com
+			- static.zorpia.com
+			- ec.h150.zpcdn.com
+			- img.zpcdn.com
+			- ec.nor.zpcdn.com
+			- static.zpcdn.com
+			- ec.static.zpcdn.com
+			- ec.ths.zpcdn.com
+			- ec.tns.zpcdn.com
+
+
+	Nonfunctional domains:
+
+		- zorpia.com subdomains:
+
+			- img *
+			- nor **
+			- uiteam	(http reply)
+
+		- zpcdn.com subdomains:
+
+			- img *
+			- nor **
+			- ec.nor *
+
+	* 504; mismatched, gp1.wac.edgecastcdn.net
+	** Dropped
+
+
+	Problematic domains:
+
+		- static.zorpia.com *
+
+		- zpcdn.com subdomains:
+
+			- h150 **
+			- ec.h150	(404; mismatched, CN: gp1.wac.edgecastcdn.net)
+			- lrg131	(dropped)
+			- static *
+			- ec.static *
+			- ths **
+			- ec.ths ***
+			- tns **
+			- ec.tns ***
+
+	* 504; mismatched, CN: gp1.wac.edgecastcdn.net
+	** Works; mismatched, CN: *.zorpia.com
+	*** Works; mismatched, CN: gp1.wac.edgecastcdn.net
+
+
+	Fully covered domains:
+
+		- zorpia.com subdomains:
+
+			- (www.)
+			- en
+			- h150
+			- lrg131
+			- me
+			- mini
+			- search
+			- static	(→ ^)
+			- ths
+			- tns
+
+		- zpcdn.com subdomains:
+
+			- h150		(→ h150.zorpia.com)
+			- ec.h150	(→ h150.zorpia.com)
+			- lrg131	(→ lrg131.zorpia.com)
+			- static	(→ zorpia.com)
+			- ec.static	(→ zorpia.com)
+			- ths		(→ ths.zorpia.com)
+			- ec.ths	(→ ths.zorpia.com)
+			- tns		(→ tns.zorpia.com)
+			- ec.tns	(→ tns.zorpia.com)
+
+
+	Mixed content:
+
+		- Scripts:
+
+			- On en from ajax.googleapis.com *
+			- On en from ec.static.zpcdn.com *
+
+		- css:
+
+			- On mini from ec.static.zpcdn.com *
+
+		- Images:
+
+			- On en from uiteam **
+			- On search from ec.h150.zpcdn.com  *
+			- On en from img.zpcdn.com **
+			- on en from lrg131.zpcdn.com *
+			- On mini from ec.nor.zpcdn.com **
+			- On mini from ec.ths.zpcdn.com *
+			- On mini from ec.tns.zpcdn.com *
+
+	* Secured by us
+	** Unsecurable, doesn't trip MCB anyway
+
+
+	NB: We secure all active resources, and thus
+	platform should be removed with Ffx 24.
+
+
+	Observed cookie domains:
+
+		- ^
+		- .
+		- en
+		- search
+
+-->
+<ruleset name="Zorpia (false MCB)" platform="mixedcontent">
+
+	<target host="zorpia.com" />
+	<target host="*.zorpia.com" />
+	<target host="*.zpcdn.com" />
+
+
+	<!--securecookie host="^\.zorpia\.com$" name="^(switch_to_en|timezone|zorpia_session)$" /-->
+	<securecookie host=".*\.zorpia\.com$" name=".+" />
+
+
+	<rule from="^http://((?:en|h150|lrg131|me|mini|search|t[hn]s|www)\.)?zorpia\.com/"
+		to="https://$1zorpia.com/" />
+
+	<rule from="^http://(?:static\.zorpia|(?:ec\.)?static\.zpcdn)\.com/"
+		to="https://zorpia.com/" />
+
+	<rule from="^http://(?:ec\.)?(h150|t[hn]s)\.zpcdn\.com/"
+		to="https://$1.zorpia.com/" />
+
+	<rule from="^http://lrg131\.zpcdn\.com/"
+		to="https://lrg131.zorpia.com/" />
+
+</ruleset>

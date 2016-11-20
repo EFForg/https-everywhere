@@ -1,0 +1,57 @@
+<!--
+	Nonfunctional subdomains:
+
+		- media.web *
+		- media-[123].web *
+
+	* Dropped
+
+
+	Problematic subdomains:
+
+		- ^	(works, cert only matches *.britannica.com)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- safe
+		- safe1
+
+
+	Observed cookie domains:
+
+		- .
+		- safe1
+		- www
+
+
+	Mixed content:
+
+		- Images, on www from:
+
+			- safe *
+			- media.web **
+			- media-[123].web **
+
+	* Secured by us, doesn't trip MCB
+	** Unsecurable, doesn't trip MCB
+
+-->
+<ruleset name="Britannica.com (partial)">
+
+	<target host="britannica.com" />
+	<target host="*.britannica.com" />
+
+
+	<!--securecookie host="^\.britannica\.com$" name="^bcomID$" /-->
+	<securecookie host="^(?:safe1|www)?\.britannica\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?britannica\.com/"
+		to="https://www.britannica.com/" />
+
+	<rule from="^http://safe(1)?\.britannica\.com/"
+		to="https://safe$1.britannica.com/" />
+
+</ruleset>

@@ -1,0 +1,75 @@
+<!--
+	For other Second Street Media coverage, see Second-Street-Media.xml.
+
+
+	Nonfunctional hosts in *upickem.net:
+
+		- share		(ssl_error_rx_record_too_long)
+
+
+	Problematic hosts in *upickem.net:
+
+		- (www.)? ¹
+		- affiliates ¹
+		- eblastengine ¹
+		- ssm ¹ ²
+		- todd ¹ ²
+
+	¹ Server sends no certificate chain, see https://whatsmychaincert.com
+	² Mixed css
+
+
+	Insecure cookies are set for these hosts:
+
+		- upickem.net
+		- affiliates.upickem.net
+		- eblastengine.upickem.net
+		- ssm.upickem.net
+		- todd.upickem.net
+		- www.upickem.net
+
+
+	Mixed content:
+
+		- css, on:
+
+			- ssm from media.cmgdigital.com *
+			- todd from $self *
+
+		- Images, on:
+
+			- ssm from media.cmgdigital.com *
+			- ssm from media.secondstreetapp.com *
+			- todd from placehold.it *
+
+		- favicon on ssm from media.cmgdigital.com *
+		- Bug on ssm from b.scorecardresearch.com *
+
+	* Secured by us
+
+-->
+<ruleset name="upickem.net (partial)" default_off="missing certificate chain" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="upickem.net" />
+	<target host="affiliates.upickem.net" />
+	<target host="eblastengine.upickem.net" />
+	<target host="ssm.upickem.net" />
+	<target host="todd.upickem.net" />
+	<target host="www.upickem.net" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^((eblastengine|todd|ssm|www)\.)?upickem\.net$" name="^BIGipServer[\w-]+$" /-->
+	<!--securecookie host="^affiliates\.upickem\.net$" name="^UsePromotionsPlatformStyling$" /-->
+	<!--securecookie host="^(ssm|todd)\.upickem\.net$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+
+	<securecookie host="^.*\.upickem\.net$" name=".*" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

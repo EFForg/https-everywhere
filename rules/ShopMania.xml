@@ -1,0 +1,57 @@
+<!--
+	Partially covered domains:
+
+		- biz.shopmania.com *
+		- partner.shopmania.com *
+		- www.shopmania.com *
+
+		- biz.shopmania.es *
+		- partner.shopmania.es *
+		- www.shopmania.es *
+
+	* At least some pages redirect to http.
+
+
+	Fully covered domains:
+
+		- cp.shopmania.com
+		- cp.shopmania.es
+
+		- fl\d+.shopmania.org:
+
+			- fl1
+			- fl22
+
+		- im\d+.shopmania.org
+
+			- im[14]
+
+-->
+<ruleset name="ShopMania (partial)">
+
+	<target host="shopmania.com" />
+	<target host="*.shopmania.com" />
+	<target host="shopmania.es" />
+	<target host="*.shopmania.es" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.shopmania\.(com|es)/+($|\?)" /-->
+		<exclusion pattern="^http://biz\.shopmania\.(?:com|es)/+(?:$|\?)" />
+		<!--exclusion pattern="^http://partner\.shopmania\.(com|es)/+($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.shopmania\.(?:com|es)/+(?!favicon\.ico|img/)" />
+		<!--exclusion pattern="^http://biz\.shopmania\.(com|es)/+(?!(cloud_ecommerce|cp-register_quick)($|[?/])|favicon\.ico)" /-->
+		<exclusion pattern="^http://partner\.shopmania\.(?:com|es)/+(?!dashboard(?:$|[?/])|favicon\.ico)" />
+	<target host="*.shopmania.org" />
+
+
+	<rule from="^http://((?:biz|cp|dashboard|www)\.)?shopmania\.(com|es)/"
+		to="https://$1shopmania.$2/" />
+
+	<rule from="^http://(fl\d+|im\d+)\.shopmania\.org/"
+		to="https://$1.shopmania.org/" />
+
+</ruleset>

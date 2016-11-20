@@ -1,0 +1,66 @@
+<!--
+	For other Envoy Media Group coverage, see Envoy_Media_Group.com.xml.
+
+
+	CDN buckets:
+
+		- d16b15zfg5s2bm.cloudfront.net
+
+			- cdn[1-9]
+			- cdn10
+
+
+	Problematic subdomains:
+
+		- ^		(mismatched, CN: www.envoymediagroup.com)
+		- cdn[1-9] *
+		- cdn10 *
+
+	* cloudfront
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.sure-assist.com
+
+-->
+<ruleset name="sure-assist.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.sure-assist.com" />
+
+	<!--	Complications:
+				-->
+	<target host="sure-assist.com" />
+	<target host="cdn1.sure-assist.com" />
+	<target host="cdn2.sure-assist.com" />
+	<target host="cdn3.sure-assist.com" />
+	<target host="cdn4.sure-assist.com" />
+	<target host="cdn5.sure-assist.com" />
+	<target host="cdn6.sure-assist.com" />
+	<target host="cdn7.sure-assist.com" />
+	<target host="cdn8.sure-assist.com" />
+	<target host="cdn9.sure-assist.com" />
+	<target host="cdn10.sure-assist.com" />
+
+		<test url="http://www.sure-assist.com/session.php?p_sit=" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.sure-assist\.com$" name="^(?:PHPSESSID|p_ls)$" /-->
+
+	<securecookie host="^(?:www)?\.sure-assist\.com$" name=".+" />
+
+
+	<rule from="^http://sure-assist\.com/"
+		to="https://www.sure-assist.com/" />
+
+	<rule from="^http://cdn\d+\.sure-assist\.com/"
+		to="https://d16b15zfg5s2bm.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,59 @@
+<!--
+	Harvard Business Review
+
+	For other Harvard University coverage, see Harvard-University.xml.
+
+
+	CDN buckets:
+
+		- harvardbp.vo.llnwd.net
+
+			- .hs. doesn't exist
+			- static
+
+
+	Problematic subdomains:
+
+		- static	(400; mismatched, CN: *.llnwd.net)
+		- web ²
+
+	² Refused
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- blogs
+		- ox-d
+		- static	(→ ^)
+		- web		(→ hbdm.hbsp.harvard.edu)
+
+
+	Insecure cookies are set for these domains:
+
+		- hbr.org
+		- blogs.hbr.org
+		- www.hbr.org
+
+-->
+<ruleset name="HBR.org">
+
+	<target host="hbr.org" />
+	<target host="*.hbr.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^hbr\.org$" name="^(AWSELB|JSESSIONID)$" /-->
+	<!--securecookie host="^(blogs|www).hbr\.org$" name="^HBRGSTICKY$" /-->
+
+	<securecookie host="^(?:\.|ox-d\.|www\.)?hbr\.org$" name=".+" />
+
+
+	<rule from="^http://(?:static\.|((?:blogs|ox-d|www)\.))?hbr\.org/"
+		to="https://$1hbr.org/" />
+
+	<rule from="^http://web\.hbr\.org/"
+		to="https://hbdm.hbsp.harvard.edu/" />
+
+</ruleset>

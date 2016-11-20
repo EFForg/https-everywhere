@@ -1,0 +1,77 @@
+<!--
+	Issuu Aps
+
+	Other Issuu Aps rulesets:
+
+		- Isu.pub.xml
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/feed.issuu.com/
+		- s3.amazonaws.com/sidebar.issuu.com/
+
+
+	Nonfunctional hosts in *issuu.com:
+
+		- help *
+
+	* Zendesk / redirects to http
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- issuu.com
+		- .issuu.com
+ 
+-->
+<ruleset name="Issuu.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="issuu.com" />
+	<target host="e.issuu.com" />
+	<target host="image.issuu.com" />
+	<target host="photo.issuu.com" />
+	<target host="skin.issuu.com" />
+	<target host="static.issuu.com" />
+	<target host="www.issuu.com" />
+
+	<!--	Complications:
+				-->
+	<target host="feed.issuu.com" />
+	<target host="help.issuu.com" />
+	<target host="sidebar.issuu.com" />
+
+		<exclusion pattern="^http://help\.issuu\.com/(?!/*(?:favicon\.ico|images/|system/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://help.issuu.com/hc" />
+			<test url="http://help.issuu.com/hc/communities/public/topics" />
+			<test url="http://help.issuu.com/hc/en-us" />
+			<test url="http://help.issuu.com/hc/en-us/signin" />
+
+			<!--	-ve:
+					-->
+			<test url="http://help.issuu.com/favicon.ico" />
+
+		<test url="http://issuu.com/cornellfieldcrops" />
+
+
+	<!--	not secured by server:
+					-->
+	<!--securecookie host="^issuu\.com$" name="^experiment$" /-->
+	<!--securecookie host="^\.issuu\.com$" name="^(?:i18next|iutk)$" /-->
+
+
+	<rule from="^http://(feed|sidebar)\.issuu\.com/"
+		to="https://s3.amazonaws.com/$1.issuu.com/" />
+
+	<rule from="^http://help\.issuu\.com/"
+		to="https://issuu.zendesk.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

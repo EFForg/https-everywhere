@@ -1,0 +1,55 @@
+<!--
+	CDN buckets:
+
+		- care2.simplyhired.com
+
+			- jobs
+
+
+	Problematic subdomains:
+
+		- ^		(cert only matches www)
+		- jobs		(mismatched, CN: *.jobamatic.com)
+		- passport *
+		- volunteer *
+
+	* Times out
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- dingo
+		- jobs		(→ care2.jobamatic.com)
+		- passport	(→ www)
+		- volunteer	(→ www)
+
+-->
+<ruleset name="Care2.com">
+
+	<target host="care2.com" />
+	<target host="*.care2.com" />
+
+
+	<securecookie host="^(?:www)?\.care2\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?care2\.com/"
+		to="https://www.care2.com/" />
+
+	<rule from="^http://dingo\.care2\.com/"
+		to="https://dingo.care2.com/" />
+
+	<rule from="^http://jobs\.care2\.com/"
+		to="https://care2.jobamatic.com/" />
+
+	<rule from="^http://passport\.care2\.com/login\.html"
+		to="https://www.care2.com/login.html" />
+
+	<rule from="^http://passport\.care2\.com/"
+		to="https://www.care2.com/accounts/" />
+
+	<rule from="^http://volunteer\.care2\.com/[^\?]*(\?.*)?"
+		to="https://www.care2.com/volunteer$1" />
+
+</ruleset>

@@ -1,0 +1,47 @@
+<!--
+	Problematic subdomains:
+
+		- blog *
+
+	* WordPress
+
+
+	Insecure cookies are set for these hosts:
+
+		- haproxy.com
+		- www.haproxy.com
+
+-->
+<ruleset name="HAProxy.com (partial)">
+
+	<target host="haproxy.com" />
+	<target host="blog.haproxy.com" />
+	<target host="www.haproxy.com" />
+
+		<exclusion pattern="^http://blog\.haproxy\.com/+(?!i/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://blog.haproxy.com/about/" />
+			<test url="http://blog.haproxy.com/haproxy/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://blog.haproxy.com/i/favicon.ico" />
+			<test url="http://blog.haproxy.com/i/rss/blue-small.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?haproxy\.com$" name="^(HALBID|csrftoken|sessionid)" /-->
+
+	<securecookie host="^(?:www\.)?haproxy\.com$" name=".+" />
+
+
+	<rule from="^http://blog\.haproxy\.com/"
+		to="https://alohalb.wordpress.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

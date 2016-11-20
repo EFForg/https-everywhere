@@ -1,0 +1,56 @@
+<!--
+	For problematic rules, see The_Next_Web-problematic.xml.
+
+
+	CDN buckets:
+
+		- thenextweb.accel.io
+		- tnextw.accel.io
+		- s3.amazonaws.com/static.tnw/
+		- nextwebblogs.thenextweb.netdna-cdn.com
+			- nextwebblogs-thenextweb.netdna-ssl.com doesn't exist
+
+
+	Nonfunctional subdomains:
+
+		- awards *
+		- now *
+		- hackbattle	(redirects to http, mismatched, CN: twittercounter.com)
+
+	* Redirects to http
+
+
+	Problematic subdomains:
+
+		- guides	(works, mismatched, CN: *.accel.io, tnextw redirects back)
+		- index		(works, mismatched, CN: www.silkapp.com)
+		- jobs		(works, mismatched, CN: my.zartis.com)
+
+-->
+<ruleset name="The Next Web.com (partial)">
+
+	<target host="thenextweb.com" />
+	<target host="*.thenextweb.com" />
+
+
+	<!--	At least some pages redirect to http.
+
+		files/ also redirects to http.
+						-->
+	<rule from="^http://((?:fr|nl|pl|ru|www)\.)?thenextweb\.com/(conference/(?:asset|header/image)s|wp-content)/"
+		to="https://$1thenextweb.com/$2/" />
+
+	<!--	Cert: *.netdna-ssl.com; 404	-->
+	<rule from="^http://cdn\.thenextweb\.com/"
+		to="https://thenextweb.com/" />
+
+	<rule from="^http://deals\.thenextweb\.com/"
+		to="https://deals.thenextweb.com/" />
+
+	<rule from="^http://guides\.thenextweb\.com/(av|cs|image)s/"
+		to="https://tnextw.accel.io/$1s/" />
+
+	<rule from="^http://jobs\.thenextweb\.com/(Areas|Content|i)/"
+		to="https://my.zartis.com/$1/" />
+
+</ruleset>

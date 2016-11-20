@@ -1,0 +1,97 @@
+<!--
+	For other Yahoo coverage, see Yahoo.xml.
+
+
+	CDN buckets:
+
+		- l.yieldmanager.net.edgesuite.net
+
+			- ads.yldmgrimg.net
+
+
+	Nonfunctional domains:
+
+		- e.yieldmanager.com	(cert: s.yimg.com; 404)
+
+
+	Problematic domains:
+
+		- ccpui.yieldmanager.com	(mixed content from yui.yahooapis.com)
+		- l.yieldmanager.net	(404; mismatched, CN: s.yimg.com)
+		- ads.yldmgrimg.net	(works, akamai)
+
+
+	Fully covered domains:
+
+		- yieldmanager.com subdomains:
+
+			- community
+
+		- yieldmanager.net subdomains:
+
+			- ci.beap.ad
+			- clicks.beap.ad
+			- csc.beap.ad
+			- open.ad
+
+
+	Mixed content:
+
+		- css on ccpui.yieldmanager.com from yui.yahooapis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Right Media">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ads.bluelithium.com" />
+
+	<target host="ad.rmxads.com" />
+	<target host="optimizedby.rmxads.com" />
+
+	<target host="ad.yieldmanager.com" />
+	<target host="ui.ad.yieldmanager.com" />
+	<target host="ycpi.ad.yieldmanager.com" />
+
+	<target host="community.yieldmanager.com" />
+	<target host="content-ssl.yieldmanager.com" />
+	<target host="my.yieldmanager.com" />
+	<target host="rm.yieldmanager.com" />
+	<target host="yahoo.yieldmanager.com" />
+
+	<target host="ci.beap.ad.yieldmanager.net" />
+	<target host="clicks.beap.ad.yieldmanager.net" />
+	<target host="csc.beap.ad.yieldmanager.net" />
+	<target host="open.ad.yieldmanager.net" />
+
+	<target host="*.dp.yieldmanager.net" />
+	<!--target host="*.eu.dp.yieldmanager.net" /-->
+	<!--target host="tm.*.dp.yieldmanager.net" /-->
+
+	<!--	Complications:
+				-->
+	<target host="ad.adorika.com" />
+	<target host="content.yieldmanager.com" />
+
+		<test url="http://ad.yieldmanager.com/pixel?id=&amp;id=&amp;id=&amp;id=&amp;t=" />
+
+
+	<securecookie host="^(?:.*\.)?yieldmanager\.(?:com|net)$" name="." />
+
+
+	<!--	Cert mismatch.
+				-->
+	<rule from="^http://ad\.adorika\.com/"
+		to="https://ad.rmxads.com/" />
+
+	<!--	content: Akamai
+						-->
+	<rule from="^http://content\.yieldmanager\.com/"
+		to="https://content-ssl.yieldmanager.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

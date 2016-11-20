@@ -1,0 +1,56 @@
+<!--
+	For other Valve coverage, see Valve.xml.
+
+
+	Problematic subdomains:
+
+		- cdn *
+		- www *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- steamcommunity.com
+		- .steamcommunity.com
+
+
+	Mixed content:
+
+		- Image, on ^ from:
+
+			- steamcommunity-a.akamaihd.net *
+			- cdn.akamai.steamstatic.com *
+			- cloud-[24].steampowered.com ²
+
+	* Secured by us
+	² Unsecurable <= refused
+
+-->
+<ruleset name="Steam Community.com (partial)">
+
+	<target host="steamcommunity.com" />
+	<target host="cdn.steamcommunity.com" />
+	<target host="www.steamcommunity.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^steamcommunity\.com$" name="^(rgTopicView_General_\d+_\d+|recentlyVisitedAppHubs|sessionid|steamCC_(\d+_){3}\d+|timezoneOffset)$" /-->
+	<!--securecookie host="^\.steamcommunity\.com$" name="^__utm\w$" /-->
+
+	<securecookie host="^steamcommunity\.com$" name=".+" />
+	<securecookie host="^\.steamcommunity\.com$" name="^__utm\w$" />
+	
+	<!-- Fix #2326 -->
+	<exclusion pattern="^http://steamcommunity\.com/broadcast/" />
+	
+	<test url="http://steamcommunity.com/broadcast/getbroadcastmpd/?steamid=76561197966726415" />
+
+	<!--	www: cert only matches ^streamcommunity.com.
+								-->
+	<rule from="^http://(?:cdn\.|www\.)?steamcommunity\.com/"
+		to="https://steamcommunity.com/" />
+
+</ruleset>

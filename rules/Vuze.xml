@@ -1,0 +1,105 @@
+<!--
+	For rules causing false/broken MCB, see Vuze.com-falsemixed.xml.
+
+
+	CDN buckets:
+
+		- web-www-1660276444.us-east-1.elb.amazonaws.com 
+		- d1ov8b9v5fwdrf.cloudfront.net
+
+		- d2ojrr2o5sghfq.cloudfront.net
+
+			- hwcdn01.vuze.com
+
+
+	Nonfunctional hosts in *vuze.com:
+
+		- blog *
+
+	* Handshake fails
+
+
+	Problematic hosts in *vuze.com:
+
+		- ^ ¹
+		- vote ² ³
+
+	¹ Dropped
+	² Mismatched
+	³ Blocks Tor users
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .vuze.com
+		- plugins.vuze.com
+		- psearch.vuze.com
+		- search.vuze.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- forum from $self *
+			- remote from www.vuze.com *
+
+		- Images, on:
+
+			- forum from cf1.vuze.com *
+			- forum from $self *
+			- remote from www.vuze.com *
+
+		- Ads/bugs, on:
+
+			- remote from pixel.quantserve.com *
+			- www from conversion.7search.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Vuze.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="cf1.vuze.com" />
+	<target host="cf2.vuze.com" />
+	<!--target host="forum.vuze.com" /-->
+	<target host="hwcdn01.vuze.com" />
+	<target host="plugins.vuze.com" />
+	<target host="psearch.vuze.com" />
+	<!--target host="remote.vuze.com" /-->
+	<target host="search.vuze.com" />
+	<target host="wiki.vuze.com" />
+	<target host="www.vuze.com" />
+
+	<!--	Complications:
+				-->
+	<target host="vuze.com" />
+
+		<test url="http://cf1.vuze.com/logo/full_logo_107x60.png" />
+
+		<!--	Mixed ads:
+					-->
+		<test url="http://www.vuze.com/download.php" />
+		<test url="http://www.vuze.com/vuze-leap/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.vuze\.com$" name="^(?:__cfduid|__qca|cf_clearance|mybb\[last(?:active|visit)\]|sid)$" /-->
+	<!--securecookie host="^plugins\.vuze\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^psearch\.vuze\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^search\.vuze\.com$" name="^(?:PHPSESSID|wid)$" /-->
+
+	<securecookie host="^\.vuze\.com$" name="^(?:__cfduid|__qca|cf_clearance)$" />
+	<securecookie host=".+\.vuze\.com$" name=".+" />
+
+
+	<rule from="^http://vuze\.com/"
+		to="https://www.vuze.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

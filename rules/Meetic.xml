@@ -1,0 +1,76 @@
+<!--
+	For problematic rules, see Meetic-problematic.xml.
+
+
+	CDN buckets:
+
+		- iliusstda-a.akamaihd.net <=> stda.ilius.net.edgesuite.net
+
+		- meetic.fr.edgesuite.net
+
+			- static.editor.meetic.com
+			- statics.meetic-affinity.com
+
+		- photos.meetic.fr.edgesuite.net
+
+			- pictures.meetic.com
+
+
+	Nonfunctional domains:
+
+		- (www.)meetic.fr *
+
+	* Dropped
+
+
+	Problematic domains:
+
+		- stda.ilius.net *
+		- static.editor.meetic.com *
+		- pictures.meetic.com *
+		- photos.meetic.fr *
+		- statics.meetic-affinity.com *
+
+	* Works, akamai
+
+-->
+<ruleset name="Meetic (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="k.ilius.net" />
+	<target host="tk.ilius.net" />
+	<target host="meetic.com" />
+	<target host="www.meetic.com" />
+
+	<!--	Complications:
+				-->
+	<target host="stda.ilius.net" />
+
+		<!--	References images relative to /:
+								-->
+			<!--exclusion pattern="^http://stda\.ilius\.net/css/(brands/match/uk/signup/2013/01/23/landing_hpv_default_yahoo_profiles|components/themes/abyss/buttons\.css|core/login/login_form|core/login/login_form_a1)\.css" /-->
+			<!--exclusion pattern="^http://stda\.ilius\.net/css/(?!components/core/forgot\.css)" /-->
+
+		<test url="http://k.ilius.net/?mtcmk=&amp;fsid=" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<test url="http://www.meetic.com/signup/smart_landing_v2.phsl?tpl=&amp;mtcmk=&amp;fsid=&amp;ktid=&amp;klid=&amp;tckka=&amp;tckvs=" />
+
+
+	<!--securecookie host="^meetic\.com$" name="^(?:ADRUM_BT|MeeticLTM)$" /-->
+	<!--securecookie host="^www\.meetic\.com$" name="^(?:ADRUM_BT|KY_OPTS|MeeticLTM|STACK_CMK|ky|meetic_cmk)$" /-->
+
+	<securecookie host="^tk\.ilius\.net$" name=".+" />
+
+
+	<rule from="^http://stda\.ilius\.net/"
+		to="https://iliusstda-a.akamaihd.net/" />
+
+		<test url="http://stda.ilius.net/css/core/common/maintenance.css" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

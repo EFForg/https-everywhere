@@ -1,0 +1,96 @@
+<!--
+	CDN buckets:
+
+		- dspages.huawei.com.edgesuite.net
+
+			- www
+
+		- webpages.huawei.com.edgesuite.net
+
+			- support
+
+
+	Nonfunctional subdomains:
+
+		- ^ *
+		- consumer *
+		- e-learning	(shows edoc-hk; mismatched, CN: edoc-hk.huawei.com)
+		- enterprise	(503, Akamai)
+		- learning *
+		- support **
+		- www **
+
+	* Refused
+	** 504, akamai
+
+
+	Fully covered subdomains:
+
+		- autodiscover
+		- edoc-hk
+		- imail\w\w:
+
+			- cn
+			- id
+			- uk
+			- pk
+			- bh
+			- ng
+			- br
+			- ru
+			- sa
+			- us
+			- za
+
+		- imailind
+		- uniportal
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .huawei.com
+		- uniportal.huawei.com
+
+-->
+<ruleset name="Huawei.com (partial)">
+
+	<target host="*.huawei.com" />
+
+		<test url="http://autodiscover.huawei.com/" />
+		<test url="http://edoc.huawei.com/" />
+		<test url="http://edoc-hk.huawei.com/" />
+		<test url="http://imailcn.huawei.com/" />
+		<test url="http://imailcn.huawei.com/OWA" />
+		<test url="http://imailid.huawei.com/" />
+		<test url="http://imailid.huawei.com/OWA" />
+		<test url="http://imailuk.huawei.com/" />
+		<test url="http://imailuk.huawei.com/OWA" />
+		<test url="http://imailpk.huawei.com/" />
+		<test url="http://imailbh.huawei.com/" />
+		<test url="http://imailng.huawei.com/" />
+		<test url="http://imailbr.huawei.com/" />
+		<test url="http://imailru.huawei.com/" />
+		<test url="http://imailsa.huawei.com/" />
+		<test url="http://imailus.huawei.com/" />
+		<test url="http://imailza.huawei.com/" />
+		<test url="http://imailind.huawei.com/" />
+		<test url="http://uniportal.huawei.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.huawei\.com$" name="^lang$" /-->
+	<!--securecookie host="^uniportal\.huawei\.com$" name="^(ssouniportalSID|testcookie)$" /-->
+
+	<securecookie host="^(?:edoc|imail\w\w|imailind|uniportal)\.huawei\.com$" name=".+" />
+
+
+	<!--	Fails to redirect over https:
+						-->
+	<rule from="^http://imail(\w\w|ind)\.huawei\.com/(?:\?.*)?$"
+		to="https://imail$1.huawei.com/OWA" />
+
+	<rule from="^http://(autodiscover|edoc|edoc-hk|imail\w\w|imailind|uniportal)\.huawei\.com/"
+		to="https://$1.huawei.com/" />
+
+</ruleset>

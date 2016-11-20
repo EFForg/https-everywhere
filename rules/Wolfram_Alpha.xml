@@ -1,0 +1,102 @@
+<!--
+	Disabled per https://trac.torproject.org/projects/tor/ticket/15583
+	For other Wolfram Research coverage, see Wolfram.com.xml.
+
+
+	CDN buckets:
+
+		- wac.36f4.edgecastcdn.net/0036F4/
+
+
+	Nonfunctional subdomains:
+
+		- blog *
+		- community	(refused)
+		- products *
+
+	* Dropped
+
+
+	Problematic subdomains:
+
+		- ^	(dropped)
+
+
+	Partially covered subdomains:
+
+		- www\d *
+		- www\d\w *
+
+	* Securing some scripts breaks search
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- volunteer
+
+
+	Insecure cookies are set for these domains:
+
+		- .wolphramalpha.com
+		- www.wolphramalpha.com
+		- www\w\d.wolphramalpha.com
+
+
+	Mixed content:
+
+		- Scripts, on www from:
+
+			- www\d *
+			- www\d\w *
+
+		- Images, on www from:
+
+			- www\d **
+			- www\d\w **
+
+		- Ads/web bugs, on www from:
+
+			- w.sharethis.com **
+			- www.wolframcdn.com **
+
+	* Securing these breaks search
+	** Secured by us
+
+-->
+
+<!-- this ruleset creates mixed content, but it doesn't seem to break anything anymore -->
+<ruleset name="Wolfram Alpha.com (experimental)" default_off="Breaks login">
+
+	<target host="wolframalpha.com" />
+	<target host="*.wolframalpha.com" />
+		<!--
+			These break search:
+								-->
+		<exclusion pattern="^http://www\d\w?\.wolframalpha\.com/input/(?:pod|recalculate)\.jsp" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www|www\d\w)\.wolframalpha\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="\.wolframalpha.com$" name="^(WR_SID|WolframAlphaNoProCallouts|WolframHomepageVisits|WolframResultsPageVisits|wa_pro_first|wa_pro_firstprovisit)$" /-->
+	<!--securecookie host="^www.wolframalpha.com$" name="^(CookieWarning|session_protocol|WolframAlphaChromeExtension)$" /-->
+	<!--securecookie host="^(.*\.)?wolframalpha\.com$" name=".+"/-->
+	<!--
+		Could we secure any of these safely?
+							-->
+	<!--securecookie host="^\.wolframalpha\.com$" name="^(wa_pro_first|wa_pro_firstprovisit|WolframAlphaSessionVisits|WolframResultsPageVisits|WR_SID)$" /-->
+	<!--
+		Tracking cookies:
+					-->
+	<securecookie host="^\.wolframalpha\.com$" name="^__utm\w$" />
+	<securecookie host="^(?:volunteer|www)\.wolframalpha\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?wolframalpha\.com/"
+		to="https://www.wolframalpha.com/" />
+
+	<rule from="^http://(volunteer|www\d\w?)\.wolframalpha\.com/"
+		to="https://$1.wolframalpha.com/" />
+
+</ruleset>

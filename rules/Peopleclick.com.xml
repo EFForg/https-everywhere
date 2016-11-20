@@ -1,0 +1,58 @@
+<!--
+	For rules causing false/broken MCB, see Peopleclick.com-falsemixed.xml.
+
+	For other PeopleFluent coverage, see PeopleFluent.com.xml.
+
+
+	Problematic subdomains:
+
+		- careers *
+
+	* Mixed css from $self
+
+
+	These altnames don't exist:
+
+		- www.saml.peopleclick.com
+
+
+	Mixed content:
+
+		- css on careers from $self *
+
+		- Images on careers from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Peopleclick.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="peopleclick.com" />
+	<target host="careers.peopleclick.com" />
+	<target host="saml.peopleclick.com" />
+	<target host="www.peopleclick.com" />
+
+		<!--	Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://careers\.peopleclick\.com/+(?!content/)" />
+
+			<test url="http://careers.peopleclick.com/careerscp/client_dowcorning/external/search.do" />
+			<test url="http://careers.peopleclick.com/careerscp/client_nxp/external/search.do" />
+
+			<!--	-ve:
+					-->
+			<test url="http://careers.peopleclick.com/content/live/default/images/nav_gradient.gif" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^careers\.peopleclick\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^saml\.peopleclick\.com$" name="^PF$" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

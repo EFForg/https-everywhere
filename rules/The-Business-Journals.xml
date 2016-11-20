@@ -1,0 +1,111 @@
+<!--
+	CDN buckets:
+
+		- bizjournals.com.102.112.2o7.net
+
+			- metrics.bizjournals.com
+
+		- bizjournals.com.112.2o7.net
+
+			- metric.bizjournals.com
+
+		- media.bizj.us.edgesuite.net
+
+			- a1867.g1.akamai.net
+
+		- assets.bizjournals.com.edgesuite.net
+
+			- a1484.g.akamai.net
+
+		- images.bizjournals.com.edgesuite.net
+
+		- assets.upstart.bizjournals.com.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- bizjournals.com subdomains:
+
+			- businessdirectory ¹
+			- images		(shows www, akamai)
+			- m ²
+			- upstart ²
+			- assets.upstart	(shows www, akamai)
+
+		- (www.)thebusinessjournals.com ¹
+
+	¹ Dropped
+	² Shows www; mismatched, CN: www.bizjournals.com
+
+
+	Problematic domains:
+
+		- media.bizj.us *
+
+		- bizjournals.com subdomains:
+
+			- ^		(cert only matches www)
+			- assets *
+			- metric	(2o7.net)	
+
+	* Works, akamai
+
+
+	Partially covered domains:
+
+		- (www.)bizjournals.com	(some paths redirect to http)
+
+
+	Fully covered domains:
+
+		- media.bizj.us		(→ akamai)
+
+		- bizjournals.com subdomains:
+
+			- assets	(→ akamai)
+			- mediaapi
+			- metric	(→ bizjournals-com.112.2o7.net)
+			- metrics
+			- secure
+
+
+	Mixed content:
+
+		- Images, on www.bizjournals.com from:
+
+			- media.bizj.us *
+			- assets.bizjournals.com *
+
+		- Web bugs, on www.bizjournals.com from:
+
+			- www.facebook.com *
+
+	* Secured by us
+
+-->
+<ruleset name="The Business Journals (partial)">
+
+	<target host="bizjournals.com" />
+	<target host="*.bizjournals.com" />
+	<target host="media.bizj.us" />
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.bizjournals\.com$" name="^s_\w+$" />
+	<securecookie host="^secure\.bizjournals\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?bizjournals\.com/(bizjournals/images|lib|login|register)/"
+		to="https://www.bizjournals.com/$1/" />
+
+	<rule from="^http://(mediaapi|metrics|secure)\.bizjournals\.com/"
+		to="https://$1.bizjournals.com/" />
+
+	<rule from="^http://metric\.bizjournals\.com/"
+		to="https://bizjournals-com.112.2o7.net/" />
+
+	<rule from="^http://metrics\.metric\.bizjournals\.combizjournals\.com/b/ss/bizjournalsglobal%2C(\w+)/"
+		to="https://bizjournalsglobal-$1.122.2o7.net/b/ss/bizjournalsglobal%2C$1/" />
+
+</ruleset>

@@ -1,0 +1,84 @@
+<!--
+	For other Hearst Corporation coverage, see Hearst-Corporation.xml.
+
+
+	CDN buckets:
+
+		- domain.chron.com.edgesuite.net
+
+			- extras.chron.com
+			- images.chron.com
+
+		- houstonc.findnsave.com
+
+			- findnsave.chron.com
+
+		- live.us-hearst-chron.foolhosting.com
+
+			- market.chron.com
+
+		- searchpartner.localedge.com
+
+			- local.chron.com
+
+		- chron.stats.com.edgesuite.net
+
+			- stats.chron.com
+
+
+	Nonfunctional chron.com subdomains:
+
+		- ^ *			(expired, self-signed, CN: 236135-pweb2.hearstnp.com)
+		- auto			(shows secure.blockshopper, mismatched, CN: secure.blockshopper.com)
+		- blog			(504, akamai)
+		- cars ****
+		- cmf *			(expired, self-signed, CN: 236134-pweb1.hearst.com)
+		- extras		(akamai, shows docuwiki)
+		- findnsave ***
+		- images **
+		- local ****
+		- markets ***
+		- mobile ****
+		- newsreleases		(shows secure.blockshopper, mismatched, CN: secure.blockshopper.com)
+		- realestate ****
+		- reg ***
+		- registration ***
+		- search ***
+		- smallbusiness **
+		- stats			(504, akamai)
+		- weather		(redirects to http, CN: www.wunderground.com)
+		- work **
+		- www *			(akamai)
+
+	* Shows RHEL test page
+	** 503, akamai
+	*** No https
+	**** Times out
+
+
+	Partially covered chron.com subdomains:
+
+		- fangear	(at least $ redirects to http)
+
+-->
+<ruleset name="Houston Chronicle (partial)">
+
+	<target host="*.chron.com" />
+		<exclusion pattern="^http://fangear\.chron\.com/(?!App_Themes|images)/" />
+	<target host="myaccount.houstonchronicle.com" />
+
+
+	<securecookie host="^dailydeal\.chron\.com$" name=".+" />
+	<securecookie host="^myaccount\.houstonchronicle\.com$" name=".+" />
+
+
+	<rule from="^http://(dailydeal|fangear|file)\.chron\.com/"
+		to="https://$1.chron.com/" />
+
+	<rule from="^http://local\.chron\.com/static/"
+		to="https://www.localedge.com/static/" />
+
+	<rule from="^http://myaccount\.houstonchronicle\.com/"
+		to="https://myaccount.houstonchronicle.com/" />
+
+</ruleset>

@@ -1,0 +1,30 @@
+<!--
+	Other PJ Media rulesets:
+
+		- PJTV.com.xml
+
+
+	Problematic subdomains:
+
+		- ^	(cert only matches ^pjmedia.com)
+		- cdn	(404, CN: *.netdna-ssl.com)
+
+-->
+<ruleset name="PJ Media" default_off="Webmaster request">
+
+	<target host="pjmedia.com" />
+	<target host="*.pjmedia.com" />
+
+	<!-- Causes mixed content issues -->
+	<exclusion pattern="^http://pjmedia\.com/instapundit/" />
+		<test url="http://pjmedia.com/instapundit/" />
+
+	<securecookie host="^\.?pjmedia\.com$" name=".+" />
+
+	<test url="http://www.pjmedia.com/" />
+	<test url="http://cdn.pjmedia.com/" />
+
+	<rule from="^http://(?:cdn\.|www\.)?pjmedia\.com/"
+		to="https://pjmedia.com/" />
+
+</ruleset>

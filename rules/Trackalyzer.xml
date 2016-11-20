@@ -1,0 +1,37 @@
+<!--
+	Problematic domains:
+
+		- formalyzer.com
+			- Cert only matches (www.)trackalyzer.com
+			- The two seem identical
+			- www prints "No web site is configured at this address."
+
+-->
+<ruleset name="Trackalyzer">
+
+	<target host="formalyzer.com" />
+	<target host="trackalyzer.com" />
+	<target host="*.trackalyzer.com" />
+
+
+	<securecookie host="^(?:.*\.)?trackalyzer\.com$" name=".*" />
+
+
+	<rule from="^http://formalyzer\.com/"
+		to="https://trackalyzer.com/" />
+
+	<rule from="^http://(www\.)?trackalyzer\.com/"
+		to="https://$1trackalyzer.com/" />
+
+	<!--	- //(www\.)?trackalyser.com/trackalyze.asp redirects to t1.../0.gif
+		- Cert only matches // & www
+		- t 2 & 3 time out
+				-->
+	<rule from="^http://t\d\.trackalyzer\.com/trackalyze(?:_secure)?\.(asp|js)"
+		to="https://trackalyzer.com/trackalyze_secure.$1" />
+
+	<!--	0.gif doesn't though.	-->
+	<rule from="^http://t\d\.trackalyzer\.com/0\.gif"
+		to="https://trackalyzer.com/0.gif" />
+
+</ruleset>

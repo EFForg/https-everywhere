@@ -1,0 +1,102 @@
+<!--
+	For other Dex Media coverage, see Dex_Media.com.xml.
+
+
+	Nonfunctional domains:
+
+		- advertising ¹
+		- cars ²
+		- mapserver ²
+		- people ²
+		- wp ³
+
+	¹ Redirects to http
+	² Refused
+	³ Dropped
+
+
+	Problematic subdomains:
+
+		- img ¹
+		- jscss ²
+
+	¹ Akamai
+	² Refused
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .superpages.com
+		- claimlisting.superpages.com
+		- yellowpages.superpages.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- yellowpages from jscss.superpages.com ¹
+			- yellowpages from www.superpages.com ²
+
+		- Images, on:
+
+			- claimlisting from www.dexmedia.com
+			- claimlisting, yellowpages from img.superpages.com ¹
+
+		- favicon on yellowpages from img.superpages.com ¹
+		- Bug on claimlisting from superpagesadvert.122.2o7.net ¹
+
+	¹ Secured by us
+	² Unsecurable <= redirects to http
+
+-->
+<ruleset name="Superpages.com (partial)">
+
+	<target host="claimlisting.superpages.com"/>
+	<target host="imgssl.superpages.com" />
+	<target host="m.superpages.com" />
+	<target host="yellowpages.superpages.com"/>
+
+	<!--	Complications:
+				-->
+	<target host="jscss.superpages.com"/>
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://advertising\.superpages\.com/$" /-->
+		<!--exclusion pattern="^http://www\.superpages\.com/($|css/)" /-->
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:jscss|yellowpages)\.superpages\.com/(?!common/css/|css/|images-yp/|profiler/css/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://yellowpages.superpages.com/categorybrowser.jsp" />
+			<test url="http://yellowpages.superpages.com/help/help.jsp" />
+			<test url="http://yellowpages.superpages.com/tips.jsp" />
+			<test url="http://yellowpages.superpages.com/yp.advanced.jsp" />
+
+			<!--	-ve:
+					-->
+			<test url="http://jscss.superpages.com/common/css/print.css" />
+			<test url="http://yellowpages.superpages.com/common/css/spflyouts.1.0.css" />
+			<test url="http://yellowpages.superpages.com/profiler/css/alert.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.superpages\.com$" name="^SPC$" /-->
+	<!--securecookie host="^claimlisting\.superpages\.com$" name="^(CstrStatus|JSESSIONID|trafficSource)$"/-->
+	<!--securecookie host="^yellowpages\.superpages\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^claimlisting\.superpages\.com$" name=".*"/>
+
+
+	<rule from="^http://jscss\.superpages\.com/"
+		to="https://yellowpages.superpages.com/"/>
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

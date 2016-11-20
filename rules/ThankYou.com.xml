@@ -1,0 +1,58 @@
+<!--
+	For other Citigroup coverage, see Citigroup.com.xml.
+
+
+	Problematic subdomains:
+
+		- ^ *
+		- shopping ² ³
+
+	* Cert only matches www
+	² Expired
+	³ Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- rewards
+		- travel
+
+
+	Observed cookie domains:
+
+		- ^
+		- .
+		- rewards
+		- shopping
+		- travel
+		- www
+
+
+	p://travel is different from s://travel, but appears unused.
+
+-->
+<ruleset name="ThankYou.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="rewards.thankyou.com" />
+	<!--target host="shopping.thankyou.com" /-->
+	<target host="travel.thankyou.com" />
+	<target host="www.thankyou.com" />
+
+	<!--	Complications:
+				-->
+	<target host="thankyou.com" />
+
+
+	<securecookie host="^(?:rewards|shopping|travel|www)?\.thankyou\.com$" name=".+" />
+
+
+	<rule from="^http://thankyou\.com/"
+		to="https://www.thankyou.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,74 @@
+<!--
+	Other LivePerson rulesets:
+
+		- LivePerson.net.xml
+
+
+	Problematic domains:
+
+		- liveperson.com	(cert only matches *.liveperson.com)
+
+
+	Fully covered domains:
+
+		- hc2.humanclick.com
+		- liveperson.hosted.jivesoftware.com	(→ community.liveperson.net)
+
+		- liveperson.com subdomains:
+
+			- (www.)	(^ → www)
+			- apps
+			- base
+			- community
+			- customercenter
+			- solutions
+			- sr2
+
+
+	Observed cookie domains:
+
+		- hc2.humanclick.com
+
+		- liveperson.com:
+
+			- .
+			- apps
+			- connect
+			- customercenter
+
+-->
+<ruleset name="LivePerson (partial)" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="hc2.humanclick.com" />
+
+	<target host="apps.liveperson.com" />
+	<target host="base.liveperson.com" />
+	<target host="community.liveperson.com" />
+	<target host="customercenter.liveperson.com" />
+	<target host="solutions.liveperson.com" />
+	<target host="sr2.liveperson.com" />
+	<target host="www.liveperson.com" />
+
+	<!--	Complications:
+				-->
+	<target host="liveperson.hosted.jivesoftware.com" />
+
+	<target host="liveperson.com" />
+
+
+	<securecookie host="^hc2\.humanclick\.com$" name=".+" />
+	<securecookie host=".*\.liveperson\.com$" name=".+" />
+
+
+	<rule from="^http://liveperson\.hosted\.jivesoftware\.com/"
+		to="https://community.liveperson.net/" />
+
+	<rule from="^http://liveperson\.com/"
+		to="https://www.liveperson.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

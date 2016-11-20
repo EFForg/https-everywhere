@@ -1,0 +1,169 @@
+<!--
+	For rules causing false/broken MCB, see halton.gov.uk-falsemixed.xml.
+
+
+	Nonfunctional hosts in *halton.gov.uk:
+
+		- inspire ᵈ
+		- www3 ᵈ
+		- www4 ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *halton.gov.uk:
+
+		- (www.)? ᶜ
+		- kohalibrary ˣ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ˣ Mixed css
+
+
+	Partially covered hosts in *halton.gov.uk:
+
+		- careandsupportforyou ʰ
+		- councillors ʰ
+		- moderngov ʰ
+
+	ʰ Some pages redirect to http
+
+
+	Insecure cookies are set for these hosts:
+
+		- halton.gov.uk
+		- careandsupportforyou.halton.gov.uk
+		- horizon.halton.gov.uk
+		- maps.halton.gov.uk
+		- webapp.halton.gov.uk
+		- www.halton.gov.uk
+		- www2.halton.gov.uk
+
+
+	Mixed content:
+
+		- iframe on careandsupportforyou from www.youtube.com
+		- css, on:
+		
+			- councillors, moderngov from www.halton.gov.uk
+			- kohalibrary from $self
+
+		- Images, on:
+
+			- councillors, moderngov, maps, webapp from www.halton.gov.uk
+			- kohalibrary from $self
+			- kohalibrary from newhalton.wordpress.ptfs-europe.co.uk
+			- maps from www3.halton.gov.uk * ᵈ
+
+		- Bug on careandsupportforyou from www.facebook.com
+
+	* 404 over http
+	ᵈ Unsecurable <= dropped
+
+-->
+<ruleset name="Halton.gov.uk (partial)">
+
+	<!--target host="halton.gov.uk" /-->
+	<target host="careandsupportforyou.halton.gov.uk" />
+	<target host="councillors.halton.gov.uk" />
+	<target host="cyp.halton.gov.uk" />
+	<target host="horizon.halton.gov.uk" />
+	<!--target host="kohalibrary.halton.gov.uk" /-->
+	<target host="maps.halton.gov.uk" />
+	<target host="moderngov.halton.gov.uk" />
+	<target host="webapp.halton.gov.uk" />
+	<!--target host="www.halton.gov.uk" /-->
+	<target host="www2.halton.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://careandsupportforyou\.halton\.gov\.uk/(?:communication/sitefeedback\.aspx|help/helprequest\.aspx|templates/Full-width-flexible-cols\.aspx\?pageid=15205)" /-->
+		<!--
+			Blank page:
+					-->
+		<!--exclusion pattern="^http://careandsupportforyou\.halton\.gov\.uk/WorkArea/FrameworkUI/css/ektron\.stylesheet\.ashx" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://careandsupportforyou\.halton\.gov\.uk/+(?![^/]+\.css|Account/(?:Login|PasswordRecovery)\.aspx|App_Themes/|[Cc]ontent/|common/images/|secure(?:$|[?/])|uploadedFiles/|uploaded[Ii]mages/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://careandsupportforyou.halton.gov.uk/Search/SearchResultsFeatured.aspx?tagcat=48" />
+			<test url="http://careandsupportforyou.halton.gov.uk/Search/SearchResultsFeatured.aspx?tagcat=53" />
+			<test url="http://careandsupportforyou.halton.gov.uk/Search/SearchResultsFeatured.aspx?tagcat=57" />
+			<test url="http://careandsupportforyou.halton.gov.uk/Search/SearchResultsFeatured.aspx?tagcat=58" />
+			<test url="http://careandsupportforyou.halton.gov.uk/WorkArea/FrameworkUI/css/ektron.stylesheet.ashx" />
+			<test url="http://careandsupportforyou.halton.gov.uk/communication/sitefeedback.aspx" />
+			<test url="http://careandsupportforyou.halton.gov.uk/equipment-adaptations/" />
+			<test url="http://careandsupportforyou.halton.gov.uk/guides/guides.aspx" />
+			<test url="http://careandsupportforyou.halton.gov.uk/help/helprequest.aspx" />
+			<test url="http://careandsupportforyou.halton.gov.uk/home.aspx" />
+			<test url="http://careandsupportforyou.halton.gov.uk/practical-help/" />
+			<test url="http://careandsupportforyou.halton.gov.uk/search/mypad.aspx" />
+			<test url="http://careandsupportforyou.halton.gov.uk/templates/Full-width-flexible-cols.aspx?pageid=15205" />
+
+			<!--	-ve:
+					-->
+			<test url="http://careandsupportforyou.halton.gov.uk/Account/Login.aspx" />
+			<test url="http://careandsupportforyou.halton.gov.uk/Account/PasswordRecovery.aspx" />
+			<test url="http://careandsupportforyou.halton.gov.uk/App_Themes/Halton_print.css" />
+			<test url="http://careandsupportforyou.halton.gov.uk/Content/print.css" />
+			<test url="http://careandsupportforyou.halton.gov.uk/common/images/bg-menu-inv.png" />
+			<test url="http://careandsupportforyou.halton.gov.uk/content/distribution_alt.aspx?id=3609" /><!--	mixed content	-->
+			<test url="http://careandsupportforyou.halton.gov.uk/opensans.css" />
+			<test url="http://careandsupportforyou.halton.gov.uk/secure/account/profile.aspx" />
+			<test url="http://careandsupportforyou.halton.gov.uk/uploadedImages/Halton/Halton_Homepage/Image_Library/logo_footer.gif" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:councillors|moderngov)\.halton\.gov\.uk/uuCoverPage\.aspx\?bcr=1" /-->
+		<!--
+			Mixed css:
+					-->
+		<!--exclusion pattern="^http://(?:councillors|moderngov)\.halton\.gov\.uk/ielogon\.aspx" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:councillors|moderngov)\.halton\.gov\.uk/+(?![Ss]ite[Ss]pecific/|jquery-ui/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://councillors.halton.gov.uk/ielogon.aspx" /><!--	Mixed css -->
+			<test url="http://councillors.halton.gov.uk/uuCoverPage.aspx?bcr=1" />
+			<test url="http://moderngov.halton.gov.uk/ielogon.aspx" /><!--		Mixed css -->
+			<test url="http://moderngov.halton.gov.uk/uuCoverPage.aspx?bcr=1" />
+
+			<!--	-ve:
+					-->
+			<test url="http://councillors.halton.gov.uk/SiteSpecific/ssWordStyles.css" />
+			<test url="http://councillors.halton.gov.uk/jquery-ui/css/Smoothness/jquery-ui-1.10.2.custom.min.css" />
+			<test url="http://moderngov.halton.gov.uk/SiteSpecific/ssWordStyles.css" />
+			<test url="http://moderngov.halton.gov.uk/jquery-ui/css/Smoothness/jquery-ui-1.10.2.custom.min.css" />
+
+		<!--	Mixed images:
+					-->
+		<!--test url="http://webapp.halton.gov.uk/HaltonHopper/" /-->
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://webapp.halton.gov.uk/PaymentPortal" /-->
+
+		<test url="http://cyp.halton.gov.uk/ENROL/Website_Live/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www2?\.)?halton\.gov\.uk$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+	<!--securecookie host="^careandsupportforyou\.halton\.gov\.uk$" name="^(?:\.ASPXANONYMOUS|ASP\.NET_SessionId|AktAnalytics|AktGUID|OlmSDSPortalSqlAuthCookie|ecm|ecmSecure)$" /-->
+	<!--securecookie host="^horizon\.halton\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^maps\.halton\.gov\.uk$" name="^(?:astun:currentLocation|atLocation|atMyCouncil)$" /-->
+	<!--securecookie host="^webapp\.halton\.gov\.uk$" name="^(?:ASP\.NET_SessionId|AspxAutoDetectCookieSupport)$" /-->
+
+	<securecookie host="^(?!(?:careandsupportforyou|councillors|moderngov)\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,86 @@
+<!--
+	For other Other Citigroup coverage, see Citigroup.com.xml.
+
+
+	Nonfunctional subdomains:
+
+		- icg		(404, valid cert)
+		- www.icg	(404)
+
+
+	Problematic domains:
+
+		- (www.)citicards.com	(differs from http)
+		- www.oncampus.citi.com *
+		- thankyoucard.citi.com *
+
+	* Works; mismatched, CN: www.citibank.com
+
+
+	Partially covered subdomains:
+
+		- thankyoucard	(^ → online)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- creditcards
+		- chat.online
+
+
+	Observed cookie domains:
+
+		- ^
+		- .
+		- creditcards
+		- icg
+		- www.icg
+		- oncampus
+		- chat.online
+		- thankyoucard
+		- www
+
+-->
+<ruleset name="Citi.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="citi.com" />
+	<target host="creditcards.citi.com" />
+	<target host="chat.online.citi.com" />
+	<target host="www.citi.com" />
+
+	<!--	Complications:
+				-->
+	<target host="thankyoucard.citi.com" />
+
+		<exclusion pattern="^http://thankyoucard\.citi\.com/(?!$|\?)" />
+
+			<test url="http://thankyoucard.citi.com//" />
+			<test url="http://thankyoucard.citi.com//?f" />
+			<test url="http://thankyoucard.citi.com//?fo" />
+			<test url="http://thankyoucard.citi.com//?foo" />
+
+
+	<securecookie host="^\.citi\.com$" name="^(?:mbox|ss_pers|ss_sess)$" />
+	<securecookie host="^(?:(?:chat\.online|creditcards|www)\.)?citi\.com$" name=".+" />
+
+
+	<!--	Redirects as so, sans trailing slash:
+							-->
+	<!--rule from="^http://(?:www\.)?oncampus\.citi\.com/(?=$|\?)$"
+		to="https://icg.citi.com//icg/sa/recruiting/index.jsp" /-->
+
+	<rule from="^http://thankyoucard\.citi\.com/"
+		to="https://online.citibank.com/US/JRS/portal/template.do?ID=ThankYouCards" />
+
+		<test url="http://thankyoucard.citi.com/f" />
+		<test url="http://thankyoucard.citi.com/o" />
+		<test url="http://thankyoucard.citi.com//o" />
+		<test url="http://thankyoucard.citi.com/b" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

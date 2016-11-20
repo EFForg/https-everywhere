@@ -1,0 +1,33 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://ufies.org/ => https://ufies.org/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	Problematic subdomains:
+
+		- mail	(shows www, valid cert)
+		- www	(mismatched, CN: mail.ufies.org)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(www → ^)
+		- mail		(→ www)
+
+-->
+<ruleset name="UFies.org" default_off='failed ruleset test'>
+
+	<target host="ufies.org" />
+	<target host="*.ufies.org" />
+
+
+	<securecookie host="^ufies\.org$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?ufies\.org/"
+		to="https://ufies.org/" />
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://mail\.ufies\.org/[^?]*(\?.*)?"
+		to="https://ufies.org/mail/$1" />
+
+</ruleset>

@@ -1,0 +1,52 @@
+<!--
+	For rules causing false/broken MCB, see Test-IPv6.cz-falsemixed.xml.
+
+
+	Partially covered subdomains:
+
+		- (www.) *
+
+	* Avoiding false/broken MCB, rest handled in Test-IPv6.cz-falsemixed.xml
+
+
+	Fully covered subdomains:
+
+		- ds
+		- ipv4
+		- ipv6
+
+
+	Mixed content:
+
+		- Scripts, on ^ from:
+
+			- ds *
+			- ipv4 *
+			- ipv6 *
+
+		- Images on ^ from ds *
+
+	* Secured by us
+
+
+	NB: We secure all resources, and thus
+	-falsemixed should be merged for Ffx 24.
+
+-->
+<ruleset name="Test-IPv6.cz (partial)">
+
+	<target host="test-ipv6.cz" />
+	<target host="*.test-ipv6.cz" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?test-ipv6\.cz/(?!\w+\.css|\w+\.js|images/|ipv6widget/|site/)" />
+
+
+	<securecookie host="^(?!www\.).+\.test-ipv6\.cz$" name=".+" />
+
+
+	<rule from="^http://((?:ds|ipv[46]|www)\.)?test-ipv6\.cz/"
+		to="https://$1test-ipv6.cz/" />
+
+</ruleset>

@@ -1,0 +1,93 @@
+<!--
+	For domains causing false/broken MCB, see Focus.de-mixedcontent.xml.
+
+
+	CDN buckets:
+
+		- prog.focus.de.edgesuite.net
+
+			- p[45]
+
+		- focus-online.webshopapp.com
+
+			- pdf
+
+
+	Nonfunctional subdomains:
+
+		- festgeld ¹
+		- images.fragen ¹
+		- gutscheine ¹
+		- medipreis ²
+		- onlinespiele ¹
+		- stellenangebote ¹
+		- tagesgeld ¹
+		- unternehmen ¹
+
+	¹ Refused
+	² Redirects to www.medipreis.de
+
+
+	Problematic subdomains:
+
+		- bausparen ¹
+		- p4 ²
+		- p5 ²
+		- pdf ³
+		- strompreise ⁴
+		- wetter ⁵
+
+	¹ Mismatched, CN: rechner.fmh.de
+	² Akamai
+	³ Mismatched, CN: *.webshopapp.com
+	⁴ Mismatched, CN: partner.vxcp.de
+	⁵ Mismatched, CN: *.wetter.com
+
+
+	Mixed content:
+
+		- css on m from $self *
+
+		- Ad on wetter from partnervermittlung.elitepartner.de *
+
+	* Secured by us
+
+-->
+<ruleset name="Focus.de (partial)">
+
+	<target host="focus.de" />
+	<target host="m.focus.de" />
+	<target host="www.focus.de" />
+	<target host="static.focus.de" />
+	<target host="p0.focus.de" />
+	<target host="p4.focus.de" />
+	<target host="i.focus.de" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://m\.focus\.de/+(?!favicon\.ico|resources/)" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.focus\.de/+($|\?|favicon\.ico)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.focus\.de/+(?!resources/)" />
+	<target host="*.tfag.de" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.pdf\.focus\.de$" name="^session_id$" /-->
+
+	<!--securecookie host="^(?:www)?\.focus\.de$" name=".+" /-->
+
+
+	<rule from="^http://p4\.focus\.de/"
+		to="https://p0.focus.de/" />
+
+	<rule from="^http:" 
+		to="https:"/>
+		
+</ruleset>

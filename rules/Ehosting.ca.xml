@@ -1,0 +1,49 @@
+<!--
+	Problematic domains:
+
+		- ehosting.ca subdomains:
+
+			- (www.) ¹
+			- cpanel ²
+			- renewals ²
+			- webmail ²
+
+		- (www.)mecca.ca ³
+
+	¹ Works; mismatched, CN: ssl.mecca.ca
+	² Shows www
+	³ Works; expired, mismatched, CN: *.ehosting.ca
+
+-->
+<ruleset name="ehosting.ca (partial)">
+
+	<target host="ehosting.ca" />
+	<target host="*.ehosting.ca" />
+	<target host="mecca.ca" />
+	<target host="*.mecca.ca" />
+
+
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^\.?ssl\.mecca\.ca$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?(?:ehosting|mecca)\.ca/"
+		to="https://ssl.mecca.ca/" />
+
+	<!--	Redirects drops args:
+					-->
+	<rule from="^http://cpanel\.ehosting\.ca/+(?:$|\?.*)"
+		to="https://ssl.mecca.ca/service/" />
+
+	<!--	Redirects drops args:
+					-->
+	<rule from="^http://renewals\.ehosting\.ca/+(?:$|\?.*)"
+		to="https://ssl.mecca.ca/apps/payment.php" />
+
+	<!--	Redirects drops args:
+					-->
+	<rule from="^http://webmail\.ehosting\.ca/+(?:$|\?.*)"
+		to="https://ssl.mecca.ca/horde/imp/" />
+
+</ruleset>

@@ -1,0 +1,66 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/dailydot/
+
+		- wac.88d4.edgecastcdn.net/??88D4/
+
+			- cdn0
+
+
+	Nonfunctional subdomains:
+
+		- cdn0		(404; mismatched, CN: gp1.wac.edgecastcdn.net)
+		- media ²
+
+	² wpengine
+
+
+	Problematic subdomains:
+
+		- ^		(times out)
+		- bidness	(works; mismatched, CN: *.posterous.com)
+
+
+	Mixed content:
+
+		- css from fonts.googleapis.com *
+
+		- Bug from platform.tumblr.com *
+
+	* Secured by us
+
+
+	Insecure cookies are set for these domains:
+
+		- .dailydot.com
+
+	Mixed content per https://github.com/EFForg/https-everywhere/issues/1290
+
+-->
+<ruleset name="DailyDot.com (partial)" platform="mixedcontent">
+
+	<target host="dailydot.com" />
+	<target host="cdn0.dailydot.com" />
+	<target host="www.dailydot.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^\.dailydot\.com$" name="^__qca$" />
+
+
+	<rule from="^http://dailydot\.com/"
+		to="https://www.dailydot.com/" />
+
+	<!--	s? for protocol-relative urls...:
+						-->
+	<rule from="^https?://cdn0\.dailydot\.com/"
+		to="https://dailydot.s3.amazonaws.com/" />
+
+		<test url="https://cdn0.dailydot.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

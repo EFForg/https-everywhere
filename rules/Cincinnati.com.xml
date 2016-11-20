@@ -1,0 +1,149 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://cincinnati.com/ => https://cincinnati.com/: (51, "SSL: no alternative certificate subject name matches target host name 'cincinnati.com'")
+	For other Gannett Company coverage, see Gannett-Company.xml.
+
+
+	CDN buckets:
+
+		- img.gannett.edgesuite.net
+
+			- cmsimg
+
+		- studio-5.financialcontent.com
+
+			- finance
+
+		- cin.planetdiscover.com
+
+			- deals
+
+
+	Nonfunctional subdomains:
+
+		- communitypress ¹
+		- dunes ²
+		- preps ²
+		- tickets ¹
+
+	¹ Dropped
+	² Dropped
+
+
+	Problematic subdomains:
+
+		- cinweekly *
+		- cmsimg	(503, akamai)
+		- deals		(works; mismatched, CN: *.planetdiscover.com)
+		- finance	(works; mismatched, CN: *.financialcontent.com)
+		- rodeo *
+
+	* Dropped
+
+
+	Partially covered subdomains:
+
+		- cinweekly	(→ www, some in .+ 404s)
+		- rodeo		(→ local, www; some in .+ 404s)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- classifiedads
+		- cmsimg	(→ news)
+		- deals		(→ cin.planetdiscover.com)
+		- finance	(→ studio-5.financialcontent.com)
+		- local *
+		- news
+		- nky
+		- secure
+
+	* Server is configured for rc4 only
+
+
+	Observed cookie domains:
+
+		- cinweekly
+		- classifiedads
+		- communitypress
+		- deals
+		- local
+
+
+	Mixed content:
+
+		- css, on:
+
+			- news from news ¹
+			- nky from news ¹
+
+		- Images, on:
+
+			- classifiedads from news ²
+			- local from news ²
+			- news from cmsimg ²
+			- nky from cmsimg ²
+			- nky from news ²
+			- nky from cincyblogs.com
+			- nky from bcdownload.gannett.edgesuite.net
+			- news from bcdownload.gannett.edgesuite.net
+			- nky from www.enquirer.com
+			- news from www.gannett-cdn.com ³
+			- news from cdn.newslook.com ²
+			- nky from cdn.newslook.com ²
+			- nky from cmsimg.nky.com
+
+		- Web bugs, on:
+
+			- classifiedads from gpaper120.112.2o7.net ²
+			- local from gpaper120.112.2o7.net ²
+			- news from gpaper120.112.2o7.net ²
+			- nky from gpaper120.112.2o7.net ²
+			- news from www.facebook.com ²
+			- local from pixel.quantserve.com ²
+			- news from pixel.quantserve.com ²
+			- nky from pixel.quantserve.com ²
+
+	¹ Secured by us, poll formatting
+	² Secured by us
+	³ Unsecurable
+
+-->
+<ruleset name="Cincinnati.com (partial)" default_off='failed ruleset test'>
+
+	<target host="cincinnati.com" />
+	<target host="*.cincinnati.com" />
+
+
+	<securecookie host="^(?:classifiedads|local)\.cincinnati\.com$" name=".+" />
+
+
+	<rule from="^http://((?:classifiedads|local|nky|secure|www)\.)?cincinnati\.com/"
+		to="https://$1cincinnati.com/" />
+
+	<rule from="^http://(?:cinweekly|rodeo)\.cincinnati\.com/+(?:\?.*)?$"
+		to="https://cincinnati.com/thingstodo/" />
+
+	<rule from="^http://(?:cmsimg|news)\.cincinnati\.com/"
+		to="https://news.cincinnati.com/" />
+
+	<rule from="^http://deals\.cincinnati\.com/+(?:\?.*)?$"
+		to="https://cin.planetdiscover.com/sp?aff=1180" />
+
+	<rule from="^http://deals\.cincinnati\.com/"
+		to="https://cin.planetdiscover.com/" />
+
+	<rule from="^http://finance\.cincinnati\.com/+(?:\?.*)?$"
+		to="https://studio-5.financialcontent.com/gannett.theenquirer" />
+
+	<rule from="^http://finance\.cincinnati\.com/"
+		to="https://studio-5.financialcontent.com/" />
+
+	<rule from="^http://rodeo\.cincinnati\.com/getlocal/all\.aspx"
+		to="https://local.cincinnati.com/community/" />
+
+	<rule from="^http://rodeo\.cincinnati\.com/re/+(?:\?.*)?$"
+		to="https://local.cincinnati.com/realestatenews/" />
+
+</ruleset>

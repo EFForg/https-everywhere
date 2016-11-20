@@ -1,0 +1,81 @@
+<!--
+	Nonfunctional subdomains:
+
+		- planet ¹
+		- vger ²
+		- wireless ³
+		- oops ⁴
+		- ftp ⁵
+
+	¹ Plaintext reply
+	² Refused
+	³ 404, CN: sipsolutions.net
+	⁴ CN: *.rhcloud.com, too many redirects
+	⁵ Uses www.kernel.org cert
+
+
+	Problematic subdomains:
+
+		- mirrors.us *
+
+	* Mismatched
+
+
+	Fully covered domains:
+
+		- kernel.org
+
+		- mirrors.\w\w.kernel.org:	(→ mirrors)
+
+			- us
+
+		- *.kernel.org: *
+
+			- (www.)?
+			- accounts
+			- all
+			- archive
+			- boot
+			- bugzilla
+			- eu
+			- git
+			- [\w-]+.git
+			- mirrors
+			- patchwork
+			- pub
+			- userweb
+			- wiki
+			- [\w-]+.wiki
+
+	* Except where excluded below
+
+-->
+<ruleset name="Kernel.org (partial)">
+
+	<target host="kernel.org" />
+	<target host="*.kernel.org" />
+
+		<exclusion pattern="^http://(?:ftp|oops|planet|vger|wireless)\." />
+
+			<!--	+ve:
+					-->
+			<test url="http://ftp.kernel.org" />
+			<test url="http://oops.kernel.org" />
+			<test url="http://planet.kernel.org" />
+			<test url="http://vger.kernel.org" />
+			<test url="http://wireless.kernel.org" />
+
+		<test url="http://mirrors.eu.kernel.org/" />
+		<test url="http://patchwork.kernel.org/" />
+
+
+	<securecookie host=".*\.kernel\.org$" name=".+" />
+
+
+	<rule from="^http://mirrors\.\w\w\.kernel\.org/"
+		to="https://mirrors.kernel.org/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

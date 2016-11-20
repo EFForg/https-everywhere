@@ -1,0 +1,33 @@
+<!--
+	Problematic  subdomains:
+
+		- ^	(cert only matches www)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(some [most?] pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- login
+		- shop
+
+-->
+<ruleset name="American College of Radiology (partial)">
+
+	<target host="acr.org" />
+	<target host="*.acr.org" />
+
+
+	<securecookie host="^(?:login|shop)\.acr\.org$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?acr\.org/(~|css|images|js|Login)($|\?|/)"
+		to="https://www.acr.org/$1$2" />
+
+	<rule from="^http://(login|shop)\.acr\.org/"
+		to="https://$1.acr.org/" />
+
+</ruleset>

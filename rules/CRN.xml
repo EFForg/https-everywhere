@@ -1,0 +1,32 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://crn.com/ => https://crn.com/: Cycle detected - URL already encountered: https://www.crn.com/
+Fetch error: http://crn.verticalsearchworks.com/ => https://ad-secure.firstlightera.com/: (51, "SSL: no alternative certificate subject name matches target host name 'ad-secure.firstlightera.com'")
+	For other UBM coverage, see UBM-mismatches.xml.
+
+-->
+<ruleset name="CRN" platform="mixedcontent" default_off='failed ruleset test'>
+
+	<target host="crn.com" />
+	<target host="*.crn.com" />
+	<!--
+		Should be in a vert... ruleset
+						-->
+	<target host="crn.verticalsearchworks.com" />
+
+
+	<!--	covers:
+
+			^i
+			^signin
+					-->
+	<securecookie host="^.*\.crn\.com$" name=".+" />
+
+
+	<rule from="^http://(i\.|signin\.|www\.)?crn\.com/"
+		to="https://$1crn.com/" />
+
+	<rule from="^http://crn\.verticalsearchworks\.com/"
+		to="https://ad-secure.firstlightera.com/" />
+
+</ruleset>

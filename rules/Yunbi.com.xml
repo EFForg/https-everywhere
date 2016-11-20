@@ -1,0 +1,65 @@
+<!--
+	Nonfunctional subdomains:
+
+		- bbs *
+		- t *
+
+	* Dropped
+
+
+	Problematic hosts in *yunbi.com:
+
+		- www *
+		- yun *
+
+	* Mismatched
+
+
+	Fully covered subdomains:
+
+		- (www.)?	(www → ^)
+		- yun		(→ yunbi.com)
+
+
+	slanger: Dropped over http & https
+
+
+	These altnames don't exist:
+
+		- d.yunbi.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- yunbi.com
+
+-->
+<ruleset name="Yunbi.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="yunbi.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www.yunbi.com" />
+	<target host="yun.yunbi.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^yunbi\.com$" name="^(_peatio_session|XSRF-TOKEN)$" /-->
+
+	<securecookie host="^yunbi\.com$" name=".+" />
+
+
+	<!--	Redirect keeps path, args,
+		and forward slash:
+					-->
+	<rule from="^http://(?:www|yun)\.yunbi\.com/"
+		to="https://yunbi.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

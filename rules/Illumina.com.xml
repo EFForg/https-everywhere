@@ -1,0 +1,59 @@
+<!--
+	Nonfunctional subdomains:
+
+		- (www.)? *
+		- designstudio *
+		- support *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- assets ¹
+		- blog.basespace ²
+		- res ²
+
+	¹ Cloudfront
+	² Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .basespace.illumina.com
+		- my.illumina.com
+
+-->
+<ruleset name="Illumina.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="accounts.illumina.com" />
+	<target host="basespace.illumina.com" />
+
+	<target host="api.basespace.illumina.com" />
+	<target host="developer.basespace.illumina.com" />
+	<target host="help.basespace.illumina.com" />
+
+	<target host="my.illumina.com" />
+
+	<!--	Complications:
+				-->
+	<!--target host="assets.illumina.com" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.basespace\.illumina\.com$" name="^BasespaceLogin$" /-->
+	<!--securecookie host="^my\.illumina\.com$" name="^BIGipServer[\w.~]+$" /-->
+
+	<securecookie host="^my\.illumina\.com$" name=".+" />
+
+
+	<!--rule from="^http://assets\.illumina\.com/"
+		to="https://???.cloudfront.net/" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

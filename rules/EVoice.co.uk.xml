@@ -1,0 +1,48 @@
+<!--
+	For other j2 Global coverage, see J2global.com.xml.
+
+
+	CDN buckets:
+
+		- home.evoice.com.edgesuite.net
+
+			- a347.g.akamai.net
+			- home.evoice.co.uk
+
+
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+		- home	(works, akamai)
+
+
+	Partially covered subdomains:
+
+		- home	(→ go & akamai, css refers to images relative to /)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- go
+
+-->
+<ruleset name="eVoice.co.uk (partial)">
+
+	<target host="evoice.co.uk" />
+	<target host="*.evoice.co.uk" />
+
+
+	<securecookie host="^www\.evoice\.co\.uk$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?evoice\.co\.uk/"
+		to="https://www.evoice.co.uk/" />
+
+	<rule from="^http://go\.evoice\.co\.uk/"
+		to="https://go.evoice.co.uk/" />
+
+	<rule from="^http://home\.evoice\.co\.uk/+(?=$|\?)"
+		to="https://go.evoice.co.uk/eV_UK_NS_MyWebHelp/eV_UKHelp_Left.htm" />
+
+</ruleset>

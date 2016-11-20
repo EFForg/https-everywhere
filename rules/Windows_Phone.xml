@@ -1,0 +1,69 @@
+<!--
+	For other Microsoft coverage, see Microsoft.xml.
+
+
+	Problematic hosts in *windowsphone.com:
+
+		- ^ *
+		- images.partner *
+
+	* Mismatched
+
+
+	Fully covered windowsphone.com domains:
+
+		- ^		(^ → www)
+		- assets
+		- cmsresources
+		- dev
+		- developer
+		- images.partner	(→ wmoxy.vo.msecnd.net)
+		- resources
+
+
+	Insecure cookies are set for these hosts:
+
+		- developer.windowsphone.com
+
+-->
+<ruleset name="Windows Phone.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="assets.windowsphone.com" />
+	<target host="cmsresources.windowsphone.com" />
+	<target host="dev.windowsphone.com" />
+	<target host="developer.windowsphone.com" />
+	<target host="resources.windowsphone.com" />
+	<target host="www.windowsphone.com" />
+
+	<!--	Complications:
+				-->
+	<target host="windowsphone.com" />
+	<target host="images.partner.windowsphone.com" />
+
+		<test url="http://cmsresources.windowsphone.com/devcenter/en-us/DevCenter_v4/css/site.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^developer\.windowsphone\.com$" name="^(UT|ssostate)$" /-->
+
+	<!--	Observed cookie subdomains:
+
+			- dev
+			- www
+				-->
+	<securecookie host=".+\.windowsphone\.com$" name=".+" />
+
+
+	<rule from="^http://windowsphone\.com/"
+		to="https://www.windowsphone.com/" />
+
+	<rule from="^http://images\.partner\.windowsphone\.com/"
+		to="https://wmoxy.vo.msecnd.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

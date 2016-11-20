@@ -1,0 +1,60 @@
+<!--
+	Cert matches portal.carnegiescience.edu, but portal times out over both http & https.
+
+
+	Problematic domains:
+
+		- (www.)?ciw.edu *
+
+	* Cert only matches carnegiescience.edu
+
+
+	Mixed content:
+
+		- iframes on carnegiescience.edu from www.youtube.com *
+
+		- Images, on:
+
+			- carnegiescience.edu from www.ciw.edu *
+			- carnegiescience.edu from img.youtube.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Carnegie Institution for Science (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="carnegiescience.edu" />
+	<target host="cao.carnegiescience.edu" />
+	<target host="board.carnegiescience.edu" />
+	<target host="ghstatus.dge.carnegiescience.edu" />
+	<target host="hr.carnegiescience.edu" />
+	<target host="vpn.carnegiescience.edu" />
+	<target host="www.carnegiescience.edu" />
+
+	<target host="hazen.gl.ciw.edu" />
+	<target host="people.gl.ciw.edu" />
+	<target host="www.gl.ciw.edu" />
+
+	<target host="mail.ciw.edu" />
+
+	<!--	Complications:
+				-->
+	<target host="ciw.edu" />
+	<target host="www.ciw.edu" />
+
+
+	<securecookie host=".*\.carnegiescience\.edu$" name=".+" />
+	<securecookie host="^(?:\.gl|\.hazen\.gl|mail)\.ciw\.edu$" name=".+" />
+
+
+	<!--	Redirects like so:
+					-->
+	<rule from="^http://(?:www\.)?ciw\.edu/"
+		to="https://carnegiescience.edu/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

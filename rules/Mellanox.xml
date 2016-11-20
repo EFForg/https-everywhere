@@ -1,0 +1,56 @@
+<!--
+	For problematic rules, see Mellanox-problematic.xml.
+
+
+	Nonfunctional subdomains:
+
+		- community ¹
+		- ir		(cert: *.shareholder.com; "Directory Listing Denied")
+		- support ¹
+
+	¹ Refused
+
+
+	Problematic subdomains:
+
+		- calc		(works; expired 2012-09-16, CN: plesk)
+
+
+	Partially covered subdomains:
+
+		- calc		(→ www)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- (www.)partners
+
+-->
+<ruleset name="Mellanox (partial)">
+
+	<target host="mellanox.com" />
+	<target host="*.mellanox.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?mellanox\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^(www\.)?partners\.mellanox\.com$" name="^BIGipServerHTTP_Pool$" /-->
+
+	<securecookie host="^(?:(?:www\.)?partners\.|www\.)?mellanox\.com$" name=".+" />
+
+
+	<!--	^ redirects to www over http,
+		so copy that behavior:
+					-->
+	<rule from="^http://(?:www\.)?mellanox\.com/"
+		to="https://www.mellanox.com/" />
+
+	<rule from="^http://calc\.mellanox\.com/(?:\?.*)?$"
+		to="https://www.mellanox.com/" />
+
+	<rule from="^http://(www\.)?partners\.mellanox\.com/"
+		to="https://$1partners.mellanox.com/" />
+
+</ruleset>

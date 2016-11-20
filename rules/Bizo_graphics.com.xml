@@ -1,0 +1,56 @@
+<!--
+	For other LinkedIn coverage, see LinkedIn.xml.
+
+
+	Problematic domains:
+
+		- js.bizographics.com *
+
+	* Cloudfront
+
+
+	Fully covered subdomains:
+
+		- api
+		- imp2 ¹
+		- js ²	(→ sjs)
+		- sjs
+		- www
+
+	¹ Tracking beacon
+	² Uses sjs for https
+
+
+	^bizographics.com doesn't exist.
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .bizographics.com
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+
+-->
+<ruleset name="Bizo graphics.com">
+
+	<target host="api.bizographics.com" />
+	<target host="imp2.bizographics.com" />
+	<target host="js.bizographics.com" />
+	<target host="sjs.bizographics.com" />
+	<target host="www.bizographics.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.bizographics\.com$" name="^(BizoCustomSegments|BizoData|BizoID|BizoUserMatchHistory)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://js\.bizographics\.com/"
+		to="https://sjs.bizographics.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

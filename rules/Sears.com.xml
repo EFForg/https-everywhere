@@ -1,0 +1,66 @@
+<!--
+	Other Sears Holdings rulesets:
+
+		- FitStudio.com.xml
+		- Grilling_is_Happiness.com.xml
+		- Kmart.com.xml
+		- Sears_Commerce_Services.com.xml
+		- Sears_Ecommerce_Jobs.com.xml
+		- Sears_Labs.com.xml
+		- SHld.net.xml
+		- Shop_Your_Way.com.xml
+		- SYW_CDN.net.xml
+
+
+	sears.com.d1.sc.omtrdc.net
+
+		- om
+
+
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+		- om	(mismatched, CN: *.d1.sc.omtrdc.net)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(^ → www, some pages redirect to login)
+
+
+	Fully covered subdomains:
+
+		- davidtuterajewelry
+		- handbooks
+		- seller.marketplace
+		- om	(→ sears-com.d1.sc.omtrdc.net)
+		- oascentral
+		- s7
+		- ux
+
+
+	Mixed content;
+
+		- images on handbooks from c2.shld.net *
+
+	* Secured by us
+
+-->
+<ruleset name="Sears.com (partial)">
+
+	<target host="*.sears.com" />
+
+
+	<securecookie host="^(?:\.handbooks|seller\.marketplace|oascentral)\.sears\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?sears\.com/(?=favicon\.ico|shc/s/UserLogonFormView(?:$|[?/]))"
+		to="https://www.sears.com/" />
+
+	<rule from="^http://om\.sears\.com/"
+		to="https://sears-com.d1.sc.omtrdc.net/" />
+
+	<rule from="^http://(davidtuterajewelry|handbooks|seller\.marketplace|oascentral|s7|ux)\.sears\.com/"
+		to="https://$1.sears.com/" />
+
+</ruleset>

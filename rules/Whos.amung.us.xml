@@ -1,0 +1,84 @@
+<!--
+	whos.amung.us Inc
+
+
+	Problematic hosts in *amung.us:
+
+		- feeds ¹
+		- whos ²
+
+	¹ Feedburner
+	² Mixed css
+
+
+	Mixed content:
+
+		- css, on:
+
+			- whos from assets.amung.us *
+			- whos from fonts.googleapis.com *
+
+		- Images, on:
+
+			- whos from assets.amung.us *
+			- whos from widgets.amung.us *
+
+		- Bug on whos from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="whos.amung.us (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="amung.us" />
+	<target host="assets.amung.us" />
+	<target host="whos.amung.us" />
+	<target host="widgets.amung.us" />
+	<target host="www.amung.us" />
+
+	<!--	Complications:
+				-->
+	<target host="feeds.amung.us" />
+
+		<!--	Mixed css:
+					-->
+		<!--exclusion pattern="^http://whos\.amung\.us/(?:$|(?:about|blog|contact|help|legal|learnmore|showcase|stats)/?$|pro(?!/login/))" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://whos\.amung\.us/(?!colorgen/|favicon\.ico|flash/|pro/login/|show/|swidget/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://whos.amung.us/about" />
+			<test url="http://whos.amung.us/blog" />
+			<test url="http://whos.amung.us/contact" />
+			<test url="http://whos.amung.us/help" />
+			<test url="http://whos.amung.us/learnmore" />
+			<test url="http://whos.amung.us/legal" />
+			<test url="http://whos.amung.us/pro" />
+			<test url="http://whos.amung.us/showcase" />
+			<test url="http://whos.amung.us/stats" />
+
+			<!--	-ve:
+					-->
+			<test url="http://whos.amung.us/favicon.ico" />
+			<test url="http://whos.amung.us/pro/login/" />
+
+		<test url="http://widgets.amung.us/small/00/1.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^whos\.amung\.us$" name="^uid$" /-->
+
+
+	<rule from="^http://feeds\.amung\.us/"
+		to="https://feeds.feedburner.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

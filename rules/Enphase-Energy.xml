@@ -1,0 +1,68 @@
+<!--
+	Other Enphase Energy rulesets:
+
+		- Enphase_Energy.com.xml
+
+
+	Nonfunctional hosts in *enphase.com:
+
+		- info ¹
+		- investor ²
+
+	¹ Marketo
+	² Dropped
+
+
+	www.enphase.com: Mismatched
+
+-->
+<ruleset name="Enphase.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="enphase.com"/>
+	<target host="www2.enphase.com"/>
+
+	<!--	Complications:
+				-->
+	<target host="info.enphase.com"/>
+	<target host="www.enphase.com"/>
+
+		<exclusion pattern="^http://info\.enphase\.com/+(?!$|\?|css/|images/|rs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://info.enphase.com/2015-02-AU-Event-California-Dreamin_Registration.html/" />
+			<test url="http://info.enphase.com/2015-0707-NA-Newsletter-Partner_Intersolar-2015-Learn-More.html" />
+			<test url="http://info.enphase.com/AC-Rocks_2014.html" />
+			<test url="http://info.enphase.com/Enphase-Training-Anywhere-2015.html" />
+			<test url="http://info.enphase.com/FolsomLabs.html" />
+			<test url="http://info.enphase.com/NL_Collateral.html" />
+			<test url="http://info.enphase.com/newsletter-signup" />
+
+			<!--	-ve:
+					-->
+			<test url="http://info.enphase.com//" />
+			<test url="http://info.enphase.com/?" />
+			<test url="http://info.enphase.com/?f" />
+			<test url="http://info.enphase.com/?o" />
+			<test url="http://info.enphase.com/?b" />
+			<test url="http://info.enphase.com/css/mktLPSupportCompat.css" />
+			<test url="http://info.enphase.com/rs/129-YCL-825/images/ENPH_rev2_Logo_white.png" />
+
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://info\.enphase\.com/+(?:\?.*)?$"
+		to="https://enphase.com/"/>
+
+	<rule from="^http://info\.enphase\.com/"
+		to="https://na-abb.marketo.com/" />
+
+	<rule from="^http://www\.enphase\.com/"
+		to="https://enphase.com/"/>
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

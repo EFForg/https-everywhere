@@ -1,0 +1,38 @@
+<!--
+	Problematic subdomains:
+
+		- helium	(403)
+		- www		(mismatched, CN: helium.uberspace.de)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(www → ^)
+		- aries
+		- *.aries *
+		- cetus
+		- *.cetus *
+		- helium	(→ ^)
+		- *.helium *
+		- menkar
+		- *.menkar *
+
+	* Client subdomains
+
+-->
+<ruleset name="Uberspace">
+
+	<target host="uberspace.de" />
+	<target host="*.uberspace.de" />
+
+
+	<securecookie host="^(?:.+\.)?uberspace\.de$" name=".+" />
+
+
+	<rule from="^http://(?:helium\.|www\.)?uberspace\.de/"
+		to="https://uberspace.de/" />
+
+	<rule from="^http://((?:[\w-]+\.)?(?:aries|cetus|menkar)|[\w-]+\.helium)\.uberspace\.de/"
+		to="https://$1.uberspace.de/" />
+
+</ruleset>

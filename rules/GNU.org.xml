@@ -1,0 +1,118 @@
+<!--
+	For other Free Software Foundation coverage, see FSF.xml.
+
+
+	Nonfunctional subdomains:
+
+		- alpha ¹
+		- ftpmirror
+		- gnuzilla ²
+		- download.savannah ³
+		- cvs.savannah ⁴
+		- git.savannah ⁴
+		- git.sv ⁴
+
+	¹ Shows ftp
+	² Shows chapters.gnu.org
+	³ Shows audio-video
+	⁴ Reset
+
+
+	Problematic domains:
+
+		- (www.)classpath.org ¹
+
+		- chapters.gnu.org ᶜ ᵐ
+		- (www.)?es.gnu.org ᶜ ᵐ
+		- (www.)?fr.gnu.org ᶜ ᵐ
+		- health.gnu.org ᵉ ᵐ ˢ
+		- (www.)?it.gnu.org ᶜ ᵐ
+		- mail.gnu.org ᵈ
+		- (www.)?mx.gnu.org ᶜ ᵐ
+		- (www.)?planet.gnu.org ᶜ
+		- sv.gnu.org ᵐ
+
+	¹ Shows gnu.org; mismatched, CN: www.gnu.org
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵈ Dropped
+	ᵉ Expired
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	Fully covered domains:
+
+		- (www.)classpath.org	(→ www.gnu.org)
+
+
+	These altnames don't exist:
+
+		- www.audio-video.gnu.org
+		- www.debbugs.gnu.org
+		- www.elpa.gnu.org
+		- www.gcc.gnu.org
+
+
+	Mixed content:
+
+		- css on health from fonts.googleapis.com ˢ
+
+		- Images, on:
+
+			- (www.)?planet from static.gnu.org ˢ
+			- (www.)?planet from www.gnu.org ˢ
+
+		- Bug on health from i.creativecommons.org ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="GNU.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host=            "gnu.org" />
+	<target host="audio-video.gnu.org" />
+	<target host=    "debbugs.gnu.org" />
+	<target host=       "elpa.gnu.org" />
+	<target host=        "ftp.gnu.org" />
+	<target host=        "gcc.gnu.org" />
+	<target host=      "lists.gnu.org" />
+	<target host=       "mail.gnu.org" />
+	<!--target host=     "planet.gnu.org" /-->
+	<!--target host= "www.planet.gnu.org" /-->
+	<target host=   "savannah.gnu.org" />
+	<target host=        "www.gnu.org" />
+
+	<!--	Complications:
+				-->
+	<target host=      "classpath.org" />
+	<target host=  "www.classpath.org" />
+
+	<target host=         "sv.gnu.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^gcc\.gnu\.org$" name="^DEFAULTFORMAT$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://(?:www\.)?classpath\.org/$"
+		to="https://www.gnu.org/software/classpath/" />
+
+	<rule from="^http://mail\.gnu\.org/"
+		to="https://lists.gnu.org/" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://sv\.gnu\.org/+"
+		to="https://savannah.gnu.org/" />
+
+		<test url="http://sv.gnu.org/account/login.php" />
+
+	<rule from="^http:"
+		to="https:" />
+</ruleset>

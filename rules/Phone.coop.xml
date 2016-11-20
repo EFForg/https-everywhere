@@ -1,0 +1,46 @@
+<!--
+	For other phone co-operative coverage, see Thephone.coop.xml.
+
+
+	(www.)?phone.coop: Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- my.phone.coop
+
+-->
+<ruleset name="phone.coop">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="my.phone.coop" />
+
+	<!--	Complications:
+				-->
+	<target host="phone.coop" />
+	<target host="www.phone.coop" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^my\.phone\.coop$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^my\.phone\.coop$" name=".+" />
+
+
+	<!--	Redirect keeps path, but not
+		args nor forward slash:
+					-->
+	<rule from="^http://(?:www\.)?phone\.coop/+([^?]*).*"
+		to="https://www.thephone.coop/$1" />
+
+		<test url="http://phone.coop/index?drop" />
+		<test url="http://phone.coop/index?me" />
+		<test url="http://www.phone.coop/index?drop" />
+		<test url="http://www.phone.coop/index?me" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,201 @@
+<!--
+	For problematic rules, see West_Virginia_University-problematic.xml.
+
+
+	Nonfunctional subdomains:
+
+		- www.ce *
+		- directory	(http reply)
+		- fom **
+		- (www.)health *
+
+		- hsc subdomains:
+
+			- dentistry *
+			- directory	(reset)
+			- home *
+			- nursing *
+			- pharmacy *
+			- publichealth *
+
+		- kuali ***
+
+		- lib subdomains:
+
+			- agnic **
+			- findingaids **
+			- iai **
+			- illiad ***
+			- mountainlynx **
+			- wvrhc		(shows enginecms.lib; mismatched, CN: enginecms.lib.wvu.edu)
+
+		- search
+		- idquery.wvu-ad ***
+
+	* Shows www.hsc; mismatched, CN: www.hsc.wvu.edu
+	** Refused
+	*** Dropped
+
+
+	Problematic domains:
+
+		- www.admissions *
+		- beta.campusmap *
+		- www.eberly *
+		- www.emergency *
+		- www.finaid *
+
+		- hr subdomains:
+
+			- (www.)benefits *
+			- (www.)benefitsadmin *
+			- (www.)classcomp *
+			- (www.)employeerelations *
+			- (www.)employeewellness *
+			- (www.)employment *
+			- employmentservices *
+			- (www.)medicalmanagement *
+			- (www.)mountaineertemps *
+			- (www.)studentemployment *
+			- (www.)tnd *
+			- www *
+
+		- hsc		(\w+ 404s, valid cert)
+		- medicine.hsc	(shows www.hsc)
+		- www.itunes *
+		- www.law *
+		- libguides	(mismatched, CN: *.libguides.com)
+		- libraries	(cert only matches www.libraries)
+		- www.mix *
+		- www.oit *
+		- www.protected *
+		- (www.)oric.research *
+		- (www.)osp.research *
+		- www.research *
+		- (www.)simpleforms.scripts *
+		- (www.)assets.slate *
+		- www.slate
+		- www.slatecms *
+		- (www.)web.ur *
+		- www.wvutoday *
+
+	* Works, cert only matches *.wvu.edu
+
+
+	Partially covered subdomains:
+
+		- medicine.hsc		(→ www.hsc)
+		- libguides			(→ libguides.com, $ redirects to http)
+		- www.simpleforms.scripts	(→ www)
+		- (www.)assets.slate		(→ slate)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- about
+		- (www.)admissions	(www → ^)
+		- apply
+		- brand
+		- cal
+		- calendar
+		- careerservices
+		- cas
+		- connect
+		- (www.)eberly		(www → ^)
+		- facebook
+		- (www.)finaid		(www → ^)
+		- financialaid
+		- (www.)emergency	(www → ^)
+		- ferpa
+		- grad
+		- (www.)hr		(www → ^)
+
+		- hsc subdomains:
+
+			- autodiscover
+			- exweb
+			- sole
+			- www
+
+		- (www.)itunes		(www → ^)
+		- kc
+		- (www.)law		(www → ^)
+
+		- lib subdomains:
+
+			- enginecms
+			- mediasite
+			- mediasitehscmed
+			- reserves
+			- systems
+
+		- (www.)libraries	(^ → www)
+		- map
+		- (www.)mix		(www → ^)
+		- mixinfo
+		- myaccess
+		- myapps
+		- myid
+		- nanosafe
+		- (www.)oit		(www → ^)
+		- (www.)protected	(www → ^)
+		- (www.)research	(www → ^)
+		- researchoffice
+		- sharedresearchfacilities
+		- (www.)slate		(www → ^)
+		- (www.)slatecms	(www → ^)
+		- studentaccounts
+		- tour
+		- twitter
+		- webservices
+		- wvudownloads
+		- wvugw
+		- (www.)wvutoday	(www → ^)
+
+-->
+<ruleset name="West Virginia University (partial)">
+
+	<target host="wvu.edu" />
+	<target host="*.wvu.edu" />
+
+
+	<!--securecookie host="^\.wvu\.edu$" name="^fos\.web\.server$" /-->
+	<securecookie host="^\.wvu\.edu$" name="^(?:fos\.secure\.web\.server|slate_\w{32}|_wvutodaystaging_1\.0\.0)$" />
+	<securecookie host="^(?:about|admissions|apply|brand|cal|calendar|careerservices|cas|connect|eberly|emergency|facebook|ferpa|finaid|financialaid|grad|hr|(?:exweb|www)\.hsc|itunes|kc|law|(?:enginecms|mediasite(?:hscmed)?|reserves|systems)\.lib|www\.libraries|map|mix|mixinfo|myapps|myid|nanosafe|research(?:office)?|sharedresearchfacilities|slate|slatecms|studentaccounts|tour|twitter|webservices|wvudownloads|wvugw|wvutoday|www)\.wvu\.edu$" name=".+" />
+
+
+	<rule from="^http://((?:about|apply|brand|cal|calendar|careerservices|cas|connect|facebook|ferpa|financialaid|grad|(?:autodiscover|exweb|sole|www)\.hsc|kc|(?:enginecms|mediasite(?:hscmed)?|reserves|systems)\.lib|map|mixinfo|myaccess|myapps|myid|nanosafe|researchoffice|sharedresearchfacilities|tour|twitter|webservices|wvudownloads|wvugw|www)\.)?wvu\.edu/"
+		to="https://$1wvu.edu/" />
+
+	<!--	Domains for which both ^ & www exist, but cert is only valid for ^:
+											-->
+	<rule from="^http://(?:www\.)?(admissions|eberly|emergency|finaid|hr|itunes|law|mix|oit|protected|research|slate|slatecms|studentaccounts|wvutoday)\.wvu\.edu/"
+		to="https://$1.wvu.edu/" />
+
+	<rule from="^http://libguides\.wvu\.edu/(css\d*/|data/|favicon\.ico|images/|include/|js\d*/)"
+		to="https://libguides.com/$1" />
+
+	<rule from="^http://(?:www\.)?libraries\.wvu\.edu/"
+		to="https://www.libraries.wvu.edu/" />
+
+	<rule from="^http://medicine\.hsc\.wvu\.edu/(?:\?.*)$"
+		to="https://www.hsc.wvu.edu/som" />
+
+	<!--	Everything but $ redirects like so:
+							-->
+	<rule from="^http://www\.simpleforms\.scripts\.wvu\.edu/(?!\?).+"
+		to="https://www.wvu.edu/error/404.html" />
+
+	<!--	This avoids some mixed images on connect, ferpa, financialaid, grad, hr, law, map, nanosafe, research, & slatecms.
+		Note that assets.slate.../$ and slate.../$ are not identical.
+									-->
+	<rule from="^http://(?:www\.)?assets\.slate\.wvu\.edu/resources/"
+		to="https://slate.wvu.edu/resources/" />
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://www\.slate\.wvu\.edu/[^?]*(\?.*)?"
+		to="https://slate.wvu.edu/$1" />
+
+</ruleset>

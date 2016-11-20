@@ -1,0 +1,162 @@
+<!--
+	For rules causing false/broken MCB, see Rackspace.com-falsemixed.xml.
+
+
+	Other Rackspace rulesets:
+
+		- Mailgun.com.xml
+		- Mailgun.net.xml
+		- Mosso.com.xml
+		- RackCDN.com.xml
+		- Rackspace.co.uk.xml
+		- Rackspace.co.za.xml
+		- Rackspace.com.hk.xml
+		- Rackspace.dk.xml
+		- Rackspace.hk.xml
+		- Rackspace.nl.xml
+		- Rackspace_Cloud.com.xml
+
+
+	Nonfunctional domains:
+
+		- www.rackertalent.com ¹
+
+		- status.apps.rackspace.com ²
+		- sharepoint.rackspace.com ²
+		- solve.rackspace.com ²
+
+		- (www.)rackspacestartups.com
+
+	¹ Dropped
+	² Refused
+
+
+	Problematic hosts in *rackspace.com:
+
+		- broadcast ¹
+		- docs ¹
+		- ir ²
+		- jobs ³
+		- support ¹
+		- talent ³
+
+	¹ Server sends no certificate chain, see https://whatsmychaincert.com
+	² Akamai
+	³ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .rackspace.com
+		- blog.rackspace.com
+		- broadcast.rackspace.com
+		- cart.rackspace.com
+		- community.rackspace.com
+		- feedback.rackspace.com
+		- ir.rackspace.com
+		- manage.rackspace.com
+		- mycloud.rackspace.com
+		- status.rackspace.com
+		- stories.rackspace.com
+		- www.rackspace.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- docs from cdn.jsdelivr.net *
+			- ir from phx.corporate-ir.net *
+			- stories, www from fonts.googleapis.com *
+			- www from $self *
+
+		- Images, on:
+
+			- blog, www from *.r\d+.cf\d.rackcdn.com *
+			- blog, cp, www from images.cdn.rackspace.com *
+			- ir from media.corporate-ir.net *
+			- partners, www from broadcast.rackspace.com
+
+		- favicon, on:
+
+			- community, stories from www.rackspace.com *
+			- docs from images.cdn.rackspace.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Rackspace.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="rackspace.com" />
+	<target host="apps.rackspace.com" />
+	<target host="blog.rackspace.com" />
+	<!--target host="broadcast.rackspace.com" /-->
+	<target host="cart.rackspace.com" />
+	<target host="cloudtools.rackspace.com" />
+	<target host="community.rackspace.com" />
+	<target host="data.rackspace.com" />
+	<target host="developer.rackspace.com" />
+	<target host="cp.rackspace.com" />
+	<!--target host="docs.rackspace.com" /-->
+	<target host="feedback.rackspace.com" />
+	<target host="marketplace.rackspace.com" />
+	<target host="my.rackspace.com" />
+	<target host="mycloud.rackspace.com" />
+	<target host="partners.rackspace.com" />
+	<target host="status.rackspace.com" />
+	<target host="stories.rackspace.com" />
+	<!--target host="support.rackspace.com" /-->
+	<target host="www.rackspace.com" />
+
+	<!--	Complications:
+				-->
+	<target host="images.cdn.rackspace.com" />
+	<!--target host="talent.rackspace.com" /-->
+
+		<!--	Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://www\.rackspace\.com/+talent(?!/wp-content/|/wp-includes/)" />
+
+			<!--	ve:
+					-->
+			<test url="http://www.rackspace.com/talent/" />
+			<test url="http://www.rackspace.com/talent/culture/" />
+			<test url="http://www.rackspace.com/talent/san-antonio-tx-usa/" />
+			<test url="http://www.rackspace.com/talent/support/" />
+
+			<!--	ve:
+					-->
+			<test url="http://www.rackspace.com/talent/wp-content/plugins/revslider/images/dummy.png" />
+			<test url="http://www.rackspace.com/talent/wp-content/themes/jumpstart/framework/assets/plugins/bootstrap/css/bootstrap.min.css" />
+
+		<!--	Formerly redirected to http:
+							-->
+		<test url="http://www.rackspace.com/knowledge_center/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.rackspace\.com$" name="^(IS_UASrackuid|RackSID|US[0-9a-f]{32}_pagecount|cloud_signup_reminder|keyword|tech_chat)$" /-->
+	<!--securecookie host="^(?:blog|broadcast|manage|stories)\.rackspace\.com$" name="^X-Mapping-\w+$" /-->
+	<!--securecookie host="^cart\.rackspace\.com$" name="^BIGip$" /-->
+	<!--securecookie host="^feedback\.rackspace\.com$" name="^_rf$" /-->
+	<!--securecookie host="^mycloud\.rackspace\.com$" name="^csrftoken$" /-->
+	<!--securecookie host="^(?:status|www)\.rackspace\.com$" name="^BigIP_Cookie$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://images\.cdn\.rackspace\.com/"
+		to="https://034d24a88b3e71fd72a6-f083e9a6295a3f0714fa019ffdca65c3.ssl.cf1.rackcdn.com/" />
+
+	<!--	Redirect preserves path and args:
+							-->
+	<!--rule from="^http://talent\.rackspace\.com/"
+		to="https://www.rackspace.com/talent/" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

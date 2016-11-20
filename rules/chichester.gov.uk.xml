@@ -1,0 +1,104 @@
+<!--
+	Chichester District Council
+
+	For rules causing false/broken MCB, see chichester.gov.uk-falsemixed.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *chichester.gov.uk:
+
+		- new ⁴
+
+	⁴ 404
+
+
+	Problematic hosts in *chichester.gov.uk:
+
+		- mydistrict ˣ
+
+	ˣ Mixed css; see see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	These altnames do not exist:
+	
+		- chichester.gov.uk
+
+
+	Insecure cookies are set for these hosts:
+
+		- mydistrict.chichester.gov.uk
+		- parking.chichester.gov.uk
+		- westgateleisure.chichester.gov.uk
+		- www.westgateleisure.chichester.gov.uk
+		- www.chichester.gov.uk
+
+
+	Mixed content:
+
+		- css on mydistrict from $self ˢ
+		- Images mydistrict from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Chichester.gov.uk (partial)">
+
+	<target host="eforms.chichester.gov.uk" />
+	<target host="jobs.chichester.gov.uk" />
+	<!--target host="mydistrict.chichester.gov.uk" /-->
+	<target host="parking.chichester.gov.uk" />
+	<target host="publicaccess.chichester.gov.uk" />
+	<target host="westgateleisure.chichester.gov.uk" />
+	<target host="www.westgateleisure.chichester.gov.uk" />
+	<target host="www.chichester.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.chichester\.gov\.uk/(?:$|article/23431/A-to-Z$|fees$|home$|pollingstations$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.chichester\.gov\.uk/(?!/*(?:CHttpHandler\.ashx|contactus(?:$|\?)|images/|media/)|.+/(?:css|images|template)/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.chichester.gov.uk/adviceandstandards" />
+			<test url="http://www.chichester.gov.uk/article/23431/A-to-Z" />
+			<test url="http://www.chichester.gov.uk/carparkcharges" />
+			<test url="http://www.chichester.gov.uk/fees" />
+			<test url="http://www.chichester.gov.uk/helpwithhomelessness" />
+			<test url="http://www.chichester.gov.uk/home" />
+			<test url="http://www.chichester.gov.uk/licensingact" />
+			<test url="http://www.chichester.gov.uk/pestfees" />
+			<test url="http://www.chichester.gov.uk/planningadvice" />
+			<test url="http://www.chichester.gov.uk/pollingstations" />
+			<test url="http://www.chichester.gov.uk/seasontickets" />
+			<test url="http://www.chichester.gov.uk/studies" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.chichester.gov.uk/CHttpHandler.ashx?id=22902&amp;p=0" />
+			<test url="http://www.chichester.gov.uk/chichesterdotnet/css/font-awesome/css/font-awesome.min.css" />
+			<test url="http://www.chichester.gov.uk/chichesterdotnet/images/cdclogo.gif" />
+			<test url="http://www.chichester.gov.uk/chichesterdotnet/images/cdclogo.gif" />
+			<test url="http://www.chichester.gov.uk/chichesterdotnet/template/atozmetadata/css/atozmetadata.css" />
+			<test url="http://www.chichester.gov.uk/contactus" />
+			<test url="http://www.chichester.gov.uk/images/media/pdficon.gif" />
+			<test url="http://www.chichester.gov.uk/media/image/c/3/Buddy-web-normal.jpg" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^mydistrict\.chichester\.gov\.uk$" name="^(?:ASP\.NET_SessionId|atLocation|atMyCouncil|astun)$" /-->
+	<!--securecookie host="^parking\.chichester\.gov\.uk$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+	<!--securecookie host="^(?:www\.)?westgateleisure\.chichester\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^www\.chichester\.gov\.uk$" name="^(?:ASP\.NET_SessionId|TextOnlyX|clientvars)$" /-->
+
+	<securecookie host="^(?!www\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

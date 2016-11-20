@@ -1,0 +1,52 @@
+<!--
+	CDN buckets:
+
+		- c0427193.r93.cf2.rackcdn.com | c0427193.cdn2.cloudfiles.rackspacecloud.com
+
+
+		- c427193.r93.cf2.rackcdn.com
+
+			- images.aclj.org
+
+		- c391070.r70.cf2.rackcdn.com
+
+			- media.aclj.org
+
+
+	Nonfunctional subdomains:
+
+		- congress	(shows secure; mismatched, CN: secure.rallycongress.com)
+
+
+	Problematic subdomains:
+
+		- action	(refused)
+		- images *
+		- media *
+
+	* Akamai
+
+-->
+<ruleset name="American Center for Law and Justice (partial)">
+
+	<target host="aclj.org" />
+	<target host="*.aclj.org" />
+
+
+	<securecookie host="^aclj\.org$" name=".+" />
+	<!--securecookie host="^\.aclj\.org$" name="^rfr$" /-->
+
+
+	<rule from="^http://(www\.)?aclj\.org/"
+		to="https://$1aclj.org/" />
+
+	<rule from="^http://action\.aclj\.org/\??$"
+		to="https://www.aclj.org/" />
+
+	<rule from="^http://images\.aclj\.org/"
+		to="https://c427193.ssl.cf2.rackcdn.com/" />
+
+	<rule from="^http://media\.aclj\.org/"
+		to="https://c391070.ssl.cf2.rackcdn.com/" />
+
+</ruleset>

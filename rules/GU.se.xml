@@ -1,0 +1,40 @@
+<!--
+	Gothenburg university
+
+
+lots of subdomains lack ssl, and the site does less intelligent rewriting. how to fix?
+
+
+	(www.): redirects to http
+
+
+	Fully covered subdomains:
+
+		- gupea.ub
+		- webresources
+
+-->
+<ruleset name="GU.se">
+
+	<target host="*.gu.se" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.gu\.se/+($|\?|digitalAssets/)" /-->
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^webresources\.gu\.se$" name="^JSESSIONID$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^gupea\.ub\.gu\.se$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^gupea\.ub\.gu\.se$" name=".+" />
+
+
+	<rule from="^http://(gupea\.ub|webresources)\.gu\.se/"
+		to="https://$1.gu.se/" />
+
+</ruleset>

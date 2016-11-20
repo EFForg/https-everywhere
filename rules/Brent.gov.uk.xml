@@ -1,0 +1,93 @@
+<!--
+	Brent Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *brent.gov.uk:
+
+		- brookings ᵈ
+		- server2 ᵃ
+
+	ᵃ Shows another domain
+	ᵈ Dropped	
+
+
+	Problematic hosts in *brent.gov.uk:
+
+		- archive * ᵐ
+
+	* Seems identical to www.brent.gov.uk
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- democracy.brent.gov.uk
+		- pcbooking.brent.gov.uk
+
+
+	Mixed content:
+
+		- Bug on (www.)? from www.browsealoud.com ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Brent.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="brent.gov.uk" />
+	<target host="children.brent.gov.uk" />
+	<target host="democracy.brent.gov.uk" />
+	<target host="forms.brent.gov.uk" />
+	<target host="intelligence.brent.gov.uk" />
+	<target host="local.brent.gov.uk" />
+	<target host="pcbooking.brent.gov.uk" />
+	<target host="sharenet.brent.gov.uk" />
+	<target host="www.brent.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="archive.brent.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://democracy\.brent\.gov\.uk/(?:mgPasswordReqst|uuCoverPage)\.aspx" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://democracy\.brent\.gov\.uk/+(?!(?:ieLogon|ieRegisterUser|mgRegisterKeywordInterest)\.aspx|sitespecific/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://democracy.brent.gov.uk/Default.aspx" />
+			<test url="http://democracy.brent.gov.uk/mgCalendarMonthView.aspx" />
+			<test url="http://democracy.brent.gov.uk/mgPasswordReqst.aspx" />
+			<test url="http://democracy.brent.gov.uk/mgUserAttendanceSummary.aspx" />
+			<test url="http://democracy.brent.gov.uk/uuCoverPage.aspx?bcr=1" />
+
+			<!--	-ve:
+					-->
+			<test url="http://democracy.brent.gov.uk/ieLogon.aspx" />
+			<test url="http://democracy.brent.gov.uk/ieRegisterUser.aspx" />
+			<test url="http://democracy.brent.gov.uk/mgRegisterKeywordInterest.aspx?bcr=1" />
+			<test url="http://democracy.brent.gov.uk/sitespecific/ssWordStyles.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:democracy|pcbooking)\.brent\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\." name="^_gat$" />
+	<securecookie host="^(?!democracy\.)\w" name="." />
+
+
+	<rule from="^http://archive\.brent\.gov\.uk/"
+		to="https://www.brent.gov.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

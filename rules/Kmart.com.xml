@@ -1,0 +1,86 @@
+<!--
+	For other Sears Holdings coverage, see Sears.com.xml.
+
+
+		kmart.com.d1.sc.omtrdc.net
+
+			- om
+
+
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+		- om	(mismatched, CN: *.d1.sc.omtrdc.net)
+
+
+	Fully covered subdomains:
+
+		- birthdayclub
+		- c
+		- fashionclub
+		- playdateplace
+		- stylesipblog
+
+
+	Partially covered subdomains:
+
+		- (www.)	(some paths 404, others redirect to login)
+
+
+	Mixed content:
+
+		- css, on:
+
+			- birthdayclub from nc.shld.net ¹
+			- fashionblog and stylesipblog from fonts.googleapis.com ²
+
+		- Images, on:
+
+			- birthdayclub, and fashionclub, and stylesipblog from c ²
+			- birthdayclub, fashionclub, playdateplace, and stylesipblog from www ²
+
+		- Web bugs, on;
+
+			- playdateplace from:
+
+				- www.facebook.com ²
+				- static.ak.fbcdn.net ²
+				- platform.twitter.com ²
+
+			- stylesipblog from w.sharethis.com ²
+
+	¹ Secured by us, little effect
+	² Secured by us
+
+-->
+<ruleset name="Kmart.com (partial)">
+
+	<target host="kmart.com" />
+	<target host="*.kmart.com" />
+		<!--
+			404:
+				-->
+		<!--exclusion pattern="^http://(www\.)?kmart\.com/(en_us/dap/hp-exclusions\.html|etc/clientlibs/foundation/|etc/designs/)" /-->
+		<!--
+			Redirects to login:
+						-->
+		<!--exclusion pattern="^http://(www\.)?kmart\.com/shc/s/dap_" /-->
+
+
+	<!--	Tracking cookies.  Note that there
+		seem to be auth cookies in s_\w+
+						-->
+	<securecookie host="^\.kmart\.com$" name="^s_vi$" />
+	<securecookie host="^\.?(?:playdateplace|stylesipblog)\.kmart\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?kmart\.com/(?=favicon\.ico|ue/|\d+/ue/)"
+		to="https://www.kmart.com/" />
+
+	<rule from="^http://(birthdayclub|c|fashionclub|playdateplace|stylesipblog)\.kmart\.com/"
+		to="https://$1.kmart.com/" />
+
+	<rule from="^http://om\.kmart\.com/"
+		to="https://kmart-com.d1.sc.omtrdc.net/" />
+
+</ruleset>

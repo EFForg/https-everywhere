@@ -1,0 +1,28 @@
+<!--
+	Nonfunctional subdomains:
+
+		- mail	("website temporarily unavailable")
+		- php5	(ditto)
+
+-->
+<ruleset name="VIPserv.org">
+
+	<target host="vipserv.org" />
+	<target host="www.vipserv.org" />
+	<target host="x14.eu" />
+
+
+	<rule from="^http://((?:webmail|www)\.)?vipserv\.org/"
+		to="https://$1vipserv.org/" />
+
+	<!--
+		- x14.eu doesn't work over https
+		- //x14 is identical to vipserv.org
+		- www doesn't exist
+		- Clients have unique x14 subdomains
+		- Those subdomains 404 over https
+				-->
+	<rule from="^http://x14\.eu/"
+		to="https://vipserv.org/" />
+
+</ruleset>

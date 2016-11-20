@@ -1,0 +1,61 @@
+<!--
+	Nonfunctional subdomains:
+
+		- forum		(http reply)
+
+
+	Problematic hosts in *purevpn.com:
+
+		- support ¹ ²
+
+	¹ Mismatched
+	² Self-signed
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .purevpn.com
+		- billing.purevpn.com
+		- www.purevpn.com
+
+-->
+<ruleset name="PureVPN.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="purevpn.com" />
+	<target host="billing.purevpn.com" />
+	<target host="www.purevpn.com" />
+
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://billing\.purevpn\.com/(?:announcements|downloads|index|knowledgebase)\.php" />
+
+			<!--	+ve:
+					-->
+			<test url="http://billing.purevpn.com/announcements.php" />
+			<test url="http://billing.purevpn.com/downloads.php" />
+			<test url="http://billing.purevpn.com/index.php" />
+			<test url="http://billing.purevpn.com/knowledgebase.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://billing.purevpn.com/clientarea.php" />
+			<test url="http://billing.purevpn.com/register.php" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.purevpn\.com$" name="^(?:first_visit|incap_ses_\d+_\d+|nlbi_\d+|visid_incap_\d+|visits)$" /-->
+	<!--securecookie host="^billing\.purevpn\.com$" name="^(?:___utm[abm]\w+|WHMCS\w+)$" /-->
+	<!--securecookie host="^www\.purevpn\.com$" name="^(?:___utm[abm]\w+|PHPSESSID|laravel_session)$" /-->
+
+	<securecookie host="^\.purevpn\.com$" name="^(?:first_visit|incap_ses_\d+_\d+|nlbi_\d+|visid_incap_\d+|visits)$" />
+	<securecookie host="^billing\.purevpn\.com$" name="^___utm\w+$" />
+	<securecookie host="^www\.purevpn\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

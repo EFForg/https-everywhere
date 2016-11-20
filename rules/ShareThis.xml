@@ -1,0 +1,89 @@
+<!--
+	CDN buckets:
+
+		- cdn.sharethis.com.edgesuite.net
+		- s.sharethis.com.edgesuite.net
+		- w.sharethis.com.edgesuite.net
+
+
+	Nonfunctional hosts in *sharethis.com:
+
+		- ^ ¹
+		- forums ²
+		- support ²
+		- www ²
+
+	¹ 503
+	² Redirects to http
+
+
+	Problematic hosts in *sharethis.com:
+
+		- cdn *
+		- s *
+		- w *
+
+	* Works, akamai
+
+
+	Mixed content:
+
+		- Fonts on support from www.sharethis.com ¹
+		- Images on support from www.sharethis.com ¹
+		- Bugs on support from hello.myfonts.net ²
+
+	¹ Unsecurable <= redirects to http
+	² Secured by us
+
+-->
+<ruleset name="ShareThis.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="cf-wp-prod.sharethis.com" />
+	<target host="help.sharethis.com" />
+	<target host="l.sharethis.com" />
+	<target host="sd.sharethis.com" />
+	<target host="seg.sharethis.com" />
+	<target host="wd.sharethis.com" />
+	<target host="wd-edge.sharethis.com" />
+	<target host="ws.sharethis.com" />
+
+	<!--	Complications:
+				-->
+	<target host="s.sharethis.com" />
+	<target host="w.sharethis.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(support|www)\.sharethis\.com/$" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://forums\.sharethis\.com/($|wp-content/)" /-->
+
+			<!--test url="http://forums.sharethis.com/wp-content/themes/sharethis/images/homepage-engage-radar-1.png" /-->
+
+		<test url="http://cf-wp-prod.sharethis.com/wp-content/plugins/yet-another-related-posts-plugin/style/widget.css.gzip" />
+		<test url="http://seg.sharethis.com/socialOptimizationPixel.php" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.sharethis\.com$" name="^__seg$$" /-->
+
+	<!--securecookie host="^\.sharethis\.com$" name="^(__stid|__uset)$" /-->
+	<!--securecookie host="^(?:.*\.)?sharethis\.com$" name=".+" /-->
+	<securecookie host=".+\.sharethis\.com$" name=".+" />
+
+
+	<rule from="^http://s\.sharethis\.com/"
+		to="https://sd.sharethis.com/" />
+
+	<rule from="^http://w\.sharethis\.com/"
+		to="https://ws.sharethis.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

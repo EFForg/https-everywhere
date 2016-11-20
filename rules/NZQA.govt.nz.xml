@@ -1,0 +1,39 @@
+<!--
+	404 (except for root, which redirects):
+		- nzqa.govt.nz
+		- www.nzqa.govt.nz
+		- evaluate.nzqa.govt.nz
+
+	Mismatch:
+		- mail.nzqa.govt.nz
+
+	Refused:
+		- search.nzqa.govt.nz
+		- timetable.nzqa.govt.nz
+
+	Timeout:
+		- api.nzqa.govt.nz
+-->
+<ruleset name="NZQA.govt.nz">
+	<target host="nzqa.govt.nz" />
+	<target host="www.nzqa.govt.nz" />
+		<exclusion pattern="^http://(www\.)?nzqa\.govt\.nz/$" />
+		<rule from="^http://(www\.)?nzqa\.govt\.nz/(.+)\.(jpg|gif)$"
+			to="https://www.nzqa.govt.nz/$2.$3" />
+		<test url="http://nzqa.govt.nz/assets/Qualifications-and-standards/Qualifications/NCEA/NCEA-cartoon-screen1.gif" />
+		<test url="http://nzqa.govt.nz/assets/Imagery/landingpages/landing-ncea-tile.jpg" />
+		<test url="http://www.nzqa.govt.nz/assets/Qualifications-and-standards/Qualifications/NCEA/NCEA-cartoon-screen1.gif" />
+		<test url="http://www.nzqa.govt.nz/assets/Imagery/landingpages/landing-ncea-tile.jpg" />
+
+	<target host="api-store.nzqa.govt.nz" />
+	<target host="api-test.nzqa.govt.nz" />
+	<target host="api-test-store.nzqa.govt.nz" />
+	<target host="careers.nzqa.govt.nz" />
+	<target host="external-moderation.nzqa.govt.nz" />
+	<target host="lms.nzqa.govt.nz" />
+	<target host="secure.nzqa.govt.nz" />
+	<rule from="^http://(api-store|api-test|api-test-store|careers|external-moderation|lms|secure)\.nzqa\.govt\.nz/"
+		to="https://$1.nzqa.govt.nz/" />
+
+	<securecookie host="^(api-store|careers|secure)\.nzqa\.govt\.nz$" name=".+" />
+</ruleset>

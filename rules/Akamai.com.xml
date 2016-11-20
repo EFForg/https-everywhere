@@ -1,0 +1,63 @@
+<!--
+	For other Akamai coverage, see Akamai.xml.
+
+
+	CDN buckets:
+
+		- /=/529/248063/9999d/blaze-cdn.s3.amazonaws.com/Z/i/	← 1.kc.blz.io
+
+
+	Nonfunctional hosts in *akamai.com:
+
+		- apps-community-uat ¹
+
+	¹ 503
+
+
+	Problematic hosts in *akamai.com:
+
+		- www.ir ᵐ
+		- it ᵐ
+		- spanish ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .akamai.com
+		- community.akamai.com
+		- community-uat.akamai.com
+		- it.akamai.com
+		- www.akamai.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Akamai.com (partial)">
+
+	<target host="akamai.com" />
+	<target host="apps-community.akamai.com" />
+	<target host="blogs.akamai.com" />
+	<target host="community.akamai.com" />
+	<target host="community-uat.akamai.com" />
+	<target host="control.akamai.com" />
+	<target host="developer.akamai.com" />
+	<target host="http2.akamai.com" />
+	<target host="www.akamai.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.akamai\.com$" name="^ak_bmsc$" /-->
+	<!--securecookie host="^community(-uat)?\.akamai\.com$" name="^(BIGipServer[\w-]+|jive\.login\.ts|jive\.security\.context)$" /-->
+	<!--securecookie host="^(it|www)\.akamai\.com$" name="^cm_sessionid$" /-->
+
+	<securecookie host="^\." name="^_(?:_qca$|gat?$|gat_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

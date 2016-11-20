@@ -1,0 +1,48 @@
+<!--
+	CDN buckets:
+
+		- pubnub.s3.amazonaws.com
+		- cdn.pubnub.com.a.prod.fastly.net
+
+		- pubnub.zendesk.com
+
+			- help
+
+
+	Nonfunctional domains:
+
+		- ^
+		- status	(tumblr)
+		- www	(interrupted)
+
+
+	Problematic subdomains:
+
+		- www.help	(dropped)
+
+
+	Fully covered subdomains:
+
+		- admin
+		- (www.)help	(www → ^)
+		- ps\d*
+
+-->
+<ruleset name="PubNub (partial)">
+
+	<target host="*.pubnub.com" />
+
+
+	<securecookie host="^(?:\.admin|help)\.pubnub\.com$" name=".+" />
+
+
+	<rule from="^http://cdn\.pubnub\.com/"
+		to="https://cdn.pubnub.com/" />
+
+	<rule from="^http://(admin|ps\d*|pubsub)\.pubnub\.com/"
+		to="https://$1.pubnub.com/" />
+
+	<rule from="^http://(?:www\.)?help\.pubnub\.com/"
+		to="https://help.pubnub.com/" />
+
+</ruleset>

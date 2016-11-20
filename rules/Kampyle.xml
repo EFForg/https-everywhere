@@ -1,0 +1,27 @@
+<!--
+	Nonfunctional subdomains:
+
+		- metrics	(times out)
+
+-->
+<ruleset name="Kampyle (partial)" platform="mixedcontent">
+
+	<target host="kampyle.com" />
+	<target host="www.kampyle.com" />
+
+
+	<!--	FF_* are set by clients' feedback forms.	-->
+	<securecookie host="^www\.kampyle\.com$" name="^FF_\w+$" />
+
+
+	<!--	Cert doesn't match !www		-->
+	<rule from="^http://kampyle\.com/"
+		to="https://www.kampyle.com/" />
+
+	<!--	Clients' forms go under feedback_form, e.g.:
+			www.kampyle.com/feedback_form/ff-feedback-form.php?site_code=8954894&form_id=43614
+					-->
+	<rule from="^http://www\.kampyle\.com/(feedback_form/|images/|login|logos/|min/|static/|test/)"
+		to="https://www.kampyle.com/$1" />
+
+</ruleset>

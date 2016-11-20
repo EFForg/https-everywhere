@@ -1,0 +1,88 @@
+<!--
+	Other Western Union rulesets:
+
+		- WU_Payment_Solutions.com.xml
+
+
+		- westernunion.com.d1.sc.omtrdc.net
+
+			- metrics
+
+
+	Nonfunctional subdomains:
+
+		- (www.)business *
+		- corporate		(Handshake fails)
+		- foundation *
+		- ir			(refused)
+		- onlinefx		(Refused)
+		- www			(redirects to http, valid cert)
+
+	* Times out
+
+
+	Problematic subdomains:
+
+		- metrics	(mismatched, CN: *.d1.sc.omtrdc.net)
+		- payments	(works; mismatched, CN: www.wupaymentsolutions.com)
+
+
+	Fully covered domains:
+
+		- ^
+		- agentportal
+
+		- globalpay subdomains:
+
+			- ^
+			- demo
+			- payee
+
+		- marketing
+		- metrics		(→ westernunion-com.d1.sc.omtrdc.net)
+		- online
+		- secure
+		- wumt
+
+
+	Insecure cookies are set for these hosts:
+
+		- agentportal.westernunion.com
+
+-->
+<ruleset name="Western Union.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="westernunion.com" />
+	<target host="agentportal.westernunion.com" />
+	<target host="globalpay.westernunion.com" />
+	<target host="demo.globalpay.westernunion.com" />
+	<target host="payee.globalpay.westernunion.com" />
+	<target host="marketing.westernunion.com" />
+	<target host="online.westernunion.com" />
+	<target host="secure.westernunion.com" />
+	<target host="wumt.westernunion.com" />
+
+	<!--	Complications:
+				-->
+	<target host="metrics.westernunion.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^agentportal\.westernunion\.com$" name="^(JSESSIONID|StaticCookieNameWU)$" /-->
+
+	<!--	Omniture cookies:
+					-->
+	<securecookie host="^\.westernunion\.com$" name="^s_\w+$" />
+	<securecookie host="^(?:agentportal|(?:demo\.)?globalpay|marketing|online|secure|wumt)\.westernunion\.com$" name=".+" />
+
+
+	<rule from="^http://metrics\.westernunion\.com/"
+		to="https://westernunion-com.d1.sc.omtrdc.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

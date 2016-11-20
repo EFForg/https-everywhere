@@ -1,0 +1,51 @@
+<!--
+	CDN buckets:
+
+		- m6d.wpengine.com
+
+			- (www.)m6d.com
+			- (www.)media6degrees.com
+
+
+	Nonfunctional media6degrees.com subdomains:
+
+		- map *
+		- orbit		(401)
+
+	* Times out
+
+
+	Problematic domains:
+
+		- (www.)m6d.com *
+		- action.media6degrees.com	(dropped)
+		- (www.)media6degrees.com *
+
+	* Redirects to http; mismatched, CN: *.wpengine.com
+
+
+	Fully covered domains:
+
+		- media6degrees.com subdomains:
+
+			- action	(→ secure)
+
+-->
+<ruleset name="media6degrees (partial)">
+
+	<target host="m6d.com" />
+	<target host="www.m6d.com" />
+	<target host="media6degrees.com" />
+	<target host="*.media6degrees.com" />
+
+
+	<securecookie host="^\.media6degrees\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?m(?:6d|edia6degrees)\.com/"
+		to="https://m6d.wpengine.com/" />
+
+	<rule from="^http://(?:action|secure)\.media6degrees\.com/"
+		to="https://secure.media6degrees.com/" />
+
+</ruleset>

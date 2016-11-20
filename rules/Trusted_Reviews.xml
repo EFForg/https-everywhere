@@ -1,0 +1,34 @@
+<!--
+	CDN buckets:
+
+		- www.trustedreviews.com.edgesuite.net
+
+			- a1974.g.akamai.net
+			- static.trustedreviews.com
+
+
+	Nonfunctional subdomains:
+
+		- ^		(404; mismatched, CN: *.ipcmediasecure.com)
+		- mobile-deals	(redirects to http; mismatched, CN: *.recombu.com)
+		- www		(redirects to http except for css/, akamai)
+
+
+	Problematic subdomains:
+
+		- cms		(mismatched, CN: *.ipcmediasecure.com)
+		- static	(works, akamai)
+
+-->
+<ruleset name="Trusted Reviews (partial)">
+
+	<target host="trustedreviews.com" />
+	<target host="static.trustedreviews.com" />
+	<target host="www.trustedreviews.com" />
+		<exclusion pattern="^http://(?:www\.)?trustedreviews\.com/(?!css/)" />
+
+
+	<rule from="^http://(?:secure\.|www\.)?trustedreviews\.com/"
+		to="https://secure.trustedreviews.com/" />
+
+</ruleset>

@@ -1,0 +1,50 @@
+<!--
+	Problematic hosts in *eduserv.org.uk:
+
+		- consumption.echannels ᵐ
+		- lacuna.echannels ᵐ
+		- stg.web.echannels ᵐ
+
+		- swalive ᵐ
+
+	ᵐ Mismatched
+	
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- eduserv.org.uk
+		- .eduserv.org.uk
+		- www.eduserv.org.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on (www.)? from fonts.googleapis.com ˢ
+		- Bug on (www.)? from www.final-azr-01.com ᵐ
+	
+	ᵐ Not secured by us <= mismatched
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Eduserv.org.uk (partial)">
+
+	<target host="eduserv.org.uk" />
+	<target host="www.eduserv.org.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?eduserv\.org\.uk$" name="^(?:ASP\.NET_SessionId|SC_ANALYTICS_(?:GLOBAL|SESSION)_COOKIE)$" /-->
+	<!--securecookie host="^\.eduserv\.org\.uk$" name="^(?:incap_ses_\d+|visid_incap)_\d+$" /-->
+	<!--securecookie host="^www\.eduserv\.org\.uk$" name="^__utm[abm]\w+$" /-->
+
+	<securecookie host="^\." name="^(?:_gat?$|_gat_|incap_ses_|visid_incap_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

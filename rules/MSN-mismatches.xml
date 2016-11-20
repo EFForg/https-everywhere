@@ -1,0 +1,81 @@
+<!--
+	For rules that are on by default, see MSN.xml.
+
+
+	CDN buckets:
+
+		- www.msnbc.msn.com.edgesuite.net
+
+-->
+<ruleset name="MSN (mismatches)" default_off="expired, mismatch">
+
+	<!--	*.msnbc.msn.com, doesn't redirect to www
+						-->
+	<target host="msnbc.msn.com" />
+	<!--
+		301s to www.
+					-->
+		<exclusion pattern="^http://www\.msnbc\.msn\.com/id/" />
+	<target host="msndata.jp.msn.com" />
+	<!--
+		Akamai: assets(\dd)?, www
+						-->
+
+	<target host="*.msnbc.msn.com" />
+	<target host="*.today.msnbc.msn.com" />
+	<target host="my.msn.com" />
+	<target host="eb.my.msn.com" />
+	<target host="m.now.msn.com" />
+	<target host="realestate.msn.com" />
+	<target host="wonderwall.msn.com" />
+	<target host="img1.video.s-msn.com" />
+
+	<!--	www moved from Akamai to pantherssl and so stopped working.
+
+		These paths don't 301 to http:
+
+			- redirect.aspx
+
+		These do:
+
+			- id/
+					-->
+	<rule from="^http://(?:www\.)?msnbc\.msn\.com/"
+		to="https://msnbc.msn.com/" />
+
+	<!--	Akamai
+			-->
+	<rule from="^http://(behindthewall|bodyodd|bottomline|cartoonblog|cosmiclog|ed|dailynightly|entertainment|firstread|hardballblog|insidedateline|itineraries|maddowblog|mojoe|openchannel|overheadbin|photoblog|presspass|redtape|scoop|thelastword|(?:animaltracks|bites|celebrate|digitallife|lifeinc|moms|rockcenter|scoop|theclicker|thelook|today(?:entertainment|health|hiringourheroes|onthetrail|travel)|windsorknot)\.today|travelkit|usnews(?:first)?|vitals|world(?:blog|news|newsfirst))\.msnbc\.msn\.com/"
+		to="https://$1.msnbc.msn.com/" />
+
+	<!--	- foo.today.msnbc.msn.com cert: *.newsvine.com
+		- foo.today 302s to foo
+					-->
+	<rule from="^http://(economywatch|marketday|nbcpolitics)(?:\.today)?\.msnbc\.msn\.com/"
+		to="https://$1.msnbc.msn.com/" />
+
+	<!--	- Akamai
+		- 302s like so
+				-->
+	<rule from="^http://fieldnotes\.msnbc\.msn\.com/"
+		to="https://usnews.msnbc.msn.com/" />
+
+	<!--	- Akamai
+		- allday 302s to allday.today
+						-->
+	<rule from="^http://allday(?:\.today)\.msnbc\.com/"
+		to="https://allday.today.msnbc.com/" />
+
+	<!--	- www.today cert: *.msnbc.msn.com
+		- 301s to today
+					-->
+	<rule from="^http://(?:www\.)?today\.msnbc\.msn\.com/"
+		to="https://today.msnbc.msn.com/" />
+
+	<rule from="^http://(msndata\.jp|my|eb\.my|realestate|wonderwall)\.msn\.com/"
+		to="https://$1.msn.com/" />
+
+	<rule from="^http://img1\.video\.s-msn\.com/"
+		to="https://img1.video.s-msn.com/" />
+
+</ruleset>

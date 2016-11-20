@@ -1,0 +1,128 @@
+<!--
+	Other Facebook rulesets:
+
+		- Facebook.net.xml
+		- Facebook_Studio.xml
+		- Facebook_ccTLDs.xml
+		- Fb.com.xml
+		- Fb.me.xml
+		- FbCDN.net.xml
+		- Messenger.com.xml
+		- PrivateCore.com.xml
+		- FacebookCoreWWWi.onion.xml
+
+
+	CDN buckets:
+
+		- fbcdn-dragon-a.akamaihd.net
+		- fbcdn-photos-a.akamaihd.net
+		- fbcdn-profile-a.akamaihd.net
+		- fbcdn-sphotos-a.akamaihd.net
+		- fbcdn-sphotos-[a-h]-a.akamaihd.net
+		- fbcdn-vthumb-a.akamaihd.net
+		- fbexternal-a.akamaihd.net
+		- fbstatic-a.akamaihd.net
+		- s-static.ak.facebook.com.edgekey.net
+		- s-static.ak.fbcdn.net.edgekey.net
+		- profile.ak.facebook.com.edgesuite.net
+		- dragon.ak.fbcdn.net.edgesuite.net
+		- external.ak.fbcdn.net.edgesuite.net
+
+		- photos-c.ak.facebook.com.edgesuite.net
+
+			- photos-g.ak.fbcdn.net
+
+		- photos-d.ak.facebook.com.edgesuite.net
+
+			- photos-h.ak.fbcdn.net
+
+		- static.ak.connect.facebook.com.edgesuite.net
+
+
+	Problematic hosts in *facebook.com:
+
+		- external.ak *
+		- profile.ak *
+		- connect *
+		- www.connect	(shows www)
+		- l.prod ³
+
+	* akamai
+	³ Fails to redirect
+
+
+	These altnames don't exist:
+
+		- prod.facebook.com
+		- www.v6.facebook.com
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .facebook.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Facebook.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host=              "facebook.com" />
+	<target host=  "s-static.ak.facebook.com" />
+	<target host="b.s-static.ak.facebook.com" />
+	<target host=          "api.facebook.com" />
+	<target host=     "api-read.facebook.com" />
+	<target host=         "apps.facebook.com" />
+	<target host=        "badge.facebook.com" />
+	<target host=         "blog.facebook.com" />
+	<target host=         "code.facebook.com" />
+	<target host=      "connect.facebook.com" />
+	<target host=        "da-dk.facebook.com" />
+	<target host=        "de-de.facebook.com" />
+	<target host=   "developers.facebook.com" />
+	<target host=        "es-es.facebook.com" />
+	<target host=        "fr-fr.facebook.com" />
+	<target host= "govtrequests.facebook.com" />
+	<target host=        "graph.facebook.com" />
+	<target host=        "ja-jp.facebook.com" />
+	<target host=            "l.facebook.com" />
+	<target host=           "lm.facebook.com" />
+	<target host=        "login.facebook.com" />
+	<target host=            "m.facebook.com" />
+	<target host=       "mbasic.facebook.com" />
+	<target host=        "nb-no.facebook.com" />
+	<target host=        "pixel.facebook.com" />
+	<target host=    "code.prod.facebook.com" />
+	<target host=     "www.prod.facebook.com" />
+	<target host=     "research.facebook.com" />
+	<target host=        "sv-se.facebook.com" />
+	<target host=          "ssl.facebook.com" />
+	<target host=    "static-ak.facebook.com" />
+	<target host=        "touch.facebook.com" />
+	<target host=          "www.facebook.com" />
+
+	<!--	Complications:
+				-->
+	<target host=    "static.ak.facebook.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.facebook\.com$" name="^(datr|m_ts|reg_ext_ref|reg_fb_gate|reg_fb_ref)$" /-->
+	<!--
+		Others observed:
+				-->
+	<!--securecookie host="^(?:.*\.)?facebook\.com$" name="(?:c_user|lu|sct|xs)" /-->
+
+	<securecookie host="." name="." />
+
+
+	<!--	Cert doesn't match. Also on fbstatic-a.akamaihd.net, but this is what the servers do.
+								-->
+	<rule from="^http://static\.ak\.facebook\.com/"
+		to="https://s-static.ak.facebook.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+</ruleset>

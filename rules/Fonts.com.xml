@@ -1,0 +1,133 @@
+<!--
+	For rules subject to javascript redirect loops, see Fonts.com-noscript.xml.
+
+	For other Monotype Imaging coverage, see Monotype-Imaging.xml.
+
+
+	Problematic hosts in *fonts.com:
+
+		- blog ¹
+		- www0[1-4] ²
+
+	¹ Mismatched
+	² Akamai
+
+
+	Mixed content:
+
+		- Images on blog from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Fonts.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="fonts.com" />
+	<target host="fast.fonts.com" />
+	<target host="fast10.fonts.com" />
+	<target host="webfonts.fonts.com" />
+	<target host="www.fonts.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www.webfonts.fonts.com" />
+	<target host="www01.fonts.com" />
+	<target host="www02.fonts.com" />
+	<target host="www03.fonts.com" />
+	<target host="www04.fonts.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://fast10\.fonts\.com/(?:$|en-US$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://fast10\.fonts\.com/(?!(?:Account/)?LogOn(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://fast10.fonts.com/?" />
+			<test url="http://fast10.fonts.com//" />
+			<test url="http://fast10.fonts.com/en-US" />
+
+			<!--	-ve:
+					-->
+			<test url="http://fast10.fonts.com/Account/LogOn" />
+			<test url="http://fast10.fonts.com/en-US/Account/LogOn" />
+
+		<!--exclusion pattern="^http://fast10\.fonts\.com/(?:$|en-US$)" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://webfonts\.fonts\.com/(?:$|en-US$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://webfonts\.fonts\.com/(?![Cc]ontent/|min/|.+/Subscription/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://webfonts.fonts.com/?" />
+			<test url="http://webfonts.fonts.com//" />
+			<test url="http://webfonts.fonts.com/en-US" />
+			<test url="http://webfonts.fonts.com/en-US/Project/ChooseFonts" />
+
+			<!--	-ve:
+					-->
+			<test url="http://webfonts.fonts.com/en-US/Subscription/SelectSubscription" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.fonts\.com/(?:$|secure/support$)" /-->
+		<!--
+			https://trac.torproject.org/projects/tor/ticket/11126
+
+			Redirect to http via js:
+							-->
+		<!--exclusion pattern="^http://www\.fonts\.com/+web-fonts/\w+" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.fonts\.com/+(?!favicon\.ico|(?:customer/login-page|customer-signin-page|secure/(?:become-a-member|reset-password|sign-in))(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.fonts.com/browse/font-tools" />
+			<test url="http://www.fonts.com/content/select-language" />
+			<test url="http://www.fonts.com/font/linotype/linotype-atomatic" />
+			<test url="http://www.fonts.com/id/by-sight" />
+			<test url="http://www.fonts.com/info/contact" />
+			<test url="http://www.fonts.com/secure/support" />
+			<test url="http://www.fonts.com/sitemap" />
+			<test url="http://www.fonts.com/support" />
+			<test url="http://www.fonts.com/web-fonts/developers" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.fonts.com/customer/login-page" />
+			<test url="http://www.fonts.com/customer-signin-page" />
+			<test url="http://www.fonts.com/favicon.ico" />
+			<test url="http://www.fonts.com/secure/become-a-member" />
+			<test url="http://www.fonts.com/secure/reset-password" />
+			<test url="http://www.fonts.com/secure/sign-in" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.blog\.fonts\.com$" name="^ARRAffinity$" /-->
+	<!--securecookie host="^www\.fonts\.com$" name="^ProfileTicket$" /-->
+
+
+	<rule from="^http://www\.webfonts\.fonts\.com/"
+		to="https://webfonts.fonts.com/" />
+
+	<rule from="^http://www0\d\.fonts\.com/"
+		to="https://www.fonts.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+
+</ruleset>

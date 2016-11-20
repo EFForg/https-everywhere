@@ -1,0 +1,67 @@
+<!--
+	CDN buckets:
+
+		- www-udemy-com.global.ssl.fastly.net
+
+
+	Nonfunctional hosts in *udemy.com:
+
+		- httpproxy *
+
+	* 404
+
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- about
+		- blog
+		- business
+		- press
+		- support
+		- teach
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .udemy.com
+		- about.udemy.com
+		- blog.udemy.com
+		- teach.udemy.com
+		- www.udemy.com
+
+
+	Mixed content:
+
+		- favicon on press from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Udemy.com (partial)">
+
+	<target host="udemy.com" />
+	<target host="about.udemy.com" />
+	<target host="blog.udemy.com" />
+	<target host="business.udemy.com" />
+	<target host="press.udemy.com" />
+	<target host="support.udemy.com" />
+	<target host="teach.udemy.com" />
+	<target host="www.udemy.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.udemy\.com$" name="^(__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^(about|teach)\.udemy\.com$" name="^_icl_current_language$" /-->
+	<!--securecookie host="^(about|blog)\.udemy\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^(blog|www)\.udemy\.com$" name="^__udmyvstr?$" /-->
+	<!--securecookie host="^www\.udemy\.com$" name="^(_prmtn_|access_token|msplash-passed)$" /-->
+
+	<securecookie host="^(?:about|blog|teach|www)?\.udemy\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

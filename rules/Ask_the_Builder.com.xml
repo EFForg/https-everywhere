@@ -1,0 +1,40 @@
+<!--
+	Nonfunctional hosts in *askthebuilder.com:
+
+		- (www.)? ᵃ
+		- go ᵃ
+
+	ᵃ Shows another domain
+
+
+	Problematic hosts in *askthebuilder.com:
+
+		- shop ᶜ
+		- sod1 ˢ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ˢ Self-signed
+
+
+	Insecure cookies are set for these domains:
+
+		- .shop.askthebuilder.com
+
+-->
+<ruleset name="Ask the Builder.com (partial)" default_off="missing certificate chain">
+
+	<target host="shop.askthebuilder.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.shop\.askthebuilder\.com$" name="^(?:RECENTLY_VIEWED_PRODUCTS|SHOP_SESSION_TOKEN|fornax_anonymousId)$" /-->
+
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\.shop\." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

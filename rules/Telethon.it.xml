@@ -1,0 +1,61 @@
+<!--
+	Nonfunctional subdomains:
+
+		- www2	(dropped)
+
+
+	Problematic hosts in *telethon.it:
+
+		- ^ ʳ
+		- adottailfuturo ᶜ
+		- dti ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ʳ Refused
+
+-->
+<ruleset name="Telethon.it (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="adottailfuturo.telethon.it" /-->
+	<!--target host="dti.telethon.it" /-->
+	<target host="www.telethon.it" />
+
+	<!--	Complications:
+				-->
+	<target host="telethon.it" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.telethon\.it/(?:$|aziende/adotta-futuro$|donation$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?telethon\.it/+(?!misc/|modules/|sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.telethon.it/aziende/adotta-futuro" />
+			<test url="http://www.telethon.it/cosa-facciamo/la-missione" />
+			<test url="http://www.telethon.it/donation" />
+			<test url="http://www.telethon.it/taxonomy/term/23" />
+
+			<!--	-ve:
+					-->
+			<test url="http://telethon.it/misc/message-24-error.png" />
+			<test url="http://www.telethon.it/modules/node/node.css" />
+			<test url="http://www.telethon.it/sites/all/themes/telethon/css/form.css" />
+
+
+	<securecookie host="^\." name="^_(?:gat?|_cfduid)$" />
+	<!--securecookie host="^(?!www\.)\w" name="." /-->
+
+
+	<rule from="^http://telethon\.it/"
+		to="https://www.telethon.it/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

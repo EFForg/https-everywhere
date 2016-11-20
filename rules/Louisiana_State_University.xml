@@ -1,0 +1,154 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://lsu.edu/ => https://www.lsu.edu/: Pycurl fetch failed for 'https://www.lsu.edu/'
+	For problematic rules, see Louisiana_State_University-problematic.xml.
+
+
+		- lsu.catalog.acalog.com
+
+			- catalog
+
+
+	Nonfunctional subdomains:
+
+		- (www.)bgtplan
+		- (www.)caspresentations **
+		- catalog	("not available at this address"; mismatched, CN: *.acalogadmin.com)
+		- gradlsu.gs *
+		- offcampuslife	(redirects to http, valid cert)
+		- www.oip *
+		- www.phys *
+		- uiswcmsweb.prod *
+		- research *
+		- autoconnect	(reset)
+		- urec		(dropped)
+
+	** Shows studlife-web1.psu.edu, valid cert
+	* Refused
+
+
+	Problematic subdomains:
+
+		- ^		(cert only matches www)
+		- (www.)familes	(mismatched, CN: studlife-web1.lsu.edu)
+		- www.family *
+		- my		(works; mismatched, CN: mylsu.apps.lsu.edu)
+		- appl008.ocs	(mismatched, CN: appl008.lsu.edu)
+		- appl037.ocs	(mismatched, CN: appl037.lsu.edu)
+		- www.sg	(mismatched, CN: studlife-web1.lsu.edu)
+		- tigercard	(shows as)
+
+	* Mismatched, CN: studlife-web1.lsu.edu
+
+
+	Partially covered subdomains:
+
+		- (www.)bengalbound *
+		- careercenter *
+		- (www.)cas *
+		- (www.)deanofstudents *
+		- (www.)disability
+		- (www.)families *	(→ studlife-web1)
+		- (www.)family *	(www → ^)
+		- (www.)fye *
+		- (www.)greeks *
+		- (www.)sfmc *
+		- (www.)sg *		(www → ^)
+		- (www.)studentlife *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- appl00[38]
+		- appl037
+
+		- apps subdomains:
+
+			- calendar
+			- mylsu
+			- myproxy
+			- web
+
+		- (www.)as
+		- (www.)complaints
+		- courses
+
+		- grok subdomains:
+
+			- (www.)
+			- connect
+			- moodle2
+			- networking
+
+		- housing
+		- itservice
+		- appl00[38].ocs	(→ appl00[38])
+		- appl037.ocs		(→ appl037)
+		- sso.paws
+		- photo-management
+		- photos
+		- (www.)saa
+		- jlee.saa
+		- sites01
+		- lsumvs.sncc
+		- studlife-web1
+		- (www.)tigercard	(→ as)
+		- piwik.uss
+
+
+	Observed cookie domains:
+
+		- .bengalbound
+		- courses
+		- .disability
+		- .family
+		- photo-management
+		- photos
+
+-->
+<ruleset name="Louisiana State University (partial)" default_off='failed ruleset test'>
+
+	<target host="lsu.edu" />
+	<target host="*.lsu.edu" />
+		<exclusion pattern="^http://(?:careercenter|(?:www\.)?(?:bengalbound|cas|deanofstudents|disability|families|family|fye|greeks|sg|sfmc|studentlife))\.lsu\.edu/(?!favicon\.ico|misc/|sites/)" />
+
+
+	<securecookie host="^(?:(?:calendar|mylsu|myproxy|web)\.apps|\.complaints|courses|\.grok|sso\.paws|photo-management|photos|\.saa|sites01)\.lsu\.edu$" name=".+" />
+
+
+	<!--	Domains for which both ^foo and www.foo exist,
+		but only www.foo works without caveats:
+							-->
+	<rule from="^http://(?:www\.)?lsu\.edu/"
+		to="https://www.lsu.edu/" />
+
+	<rule from="^http://appl0(08|37)(?:\.ocs)?\.lsu\.edu/"
+		to="https://appl0$1.lsu.edu/" />
+
+	<rule from="^http://((?:calendar|careercenter|mylsu|myproxy|web)\.apps|courses|(?:connect|moodle2|networking)\.grok|housing|itservice|sso\.paws|photo-management|photos|jlee\.saa|sites01|lsumvs\.sncc|studlife-web1|piwik\.uss)\.lsu\.edu/"
+		to="https://$1.lsu.edu/" />
+
+	<!--	Domains for which both ^foo and www.foo
+		exist, and both work, with valid certs:
+							-->
+	<rule from="^http://(www\.)?(as|bengalbound|cas|complaints|deanofstudents|disability|fye|greeks|groksaa|sfmc|studentlife)\.lsu\.edu/"
+		to="https://$1$2.lsu.edu/" />
+
+	<rule from="^http://(?:www\.)?families\.lsu\.edu/"
+		to="https://studlife-web1.lsu.edu/" />
+
+	<!--	Domains for which both ^foo and www.foo exist,
+		but only ^foo works without caveats:
+							-->
+	<rule from="^http://(?:www\.)?(family|sg)\.lsu\.edu/"
+		to="https://$1.lsu.edu/" />
+
+	<!--	Server doesn't drop path:
+						-->
+	<rule from="^http://(?:www\.)?tigercard\.lsu\.edu/"
+		to="https://as.lsu.edu/tigercard" />
+
+</ruleset>

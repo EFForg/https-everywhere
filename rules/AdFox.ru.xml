@@ -1,0 +1,51 @@
+<!--
+	Insecure cookies are set for these domains and hosts:
+
+		- adfox.ru
+		- .adfox.ru
+		- auth.adfox.ru
+		- login.adfox.ru
+		- specs.adfox.ru
+		- www.adfox.ru
+
+
+	Mixed content:
+
+		- Bug on (www.)? from ads.adfox.ru *
+
+	* Secured by us
+
+-->
+<ruleset name="AdFox.ru">
+
+	<target host="adfox.ru" />
+	<target host="ads.adfox.ru" />
+	<target host="auth.adfox.ru" />
+	<target host="content.adfox.ru" />
+	<target host="help.adfox.ru" />
+	<target host="login.adfox.ru" />
+	<target host="specs.adfox.ru" />
+	<target host="www.adfox.ru" />
+
+		<!--	Set cookie without Secure:
+							-->
+		<test url="http://ads.adfox.ru/1/getCode?p1=&amp;p2=&amp;ptrc=&amp;pfc=&amp;pfb=&amp;puid1=&amp;pr=" />
+		<test url="http://ads.adfox.ru/1/getCodeTest?yandexuid=&amp;sign=&amp;p1=&amp;p2=&amp;p3=&amp;p4=&amp;pct=&amp;plp=&amp;pli=&amp;pop=&amp;pfc=&amp;pfb=&amp;puid1=" />
+		<test url="http://ads.adfox.ru/1/tracePointTest?p7=&amp;p8=" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?adfox\.ru$" name="^(?:csrftoken|sessionid)$" /-->
+	<!--securecookie host="^\.adfox\.ru$" name="^(?:cryptouid|cryptouid_actual|cryptouid_sign|luid1|luid1_ts)$" /-->
+	<!--securecookie host="^auth\.adfox\.ru$" name="^lang$" /-->
+	<!--securecookie host="^login\.adfox\.ru$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^specs\.adfox\.ru$" name="^ci_session$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

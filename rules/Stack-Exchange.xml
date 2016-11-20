@@ -1,0 +1,136 @@
+<!--
+	This ruleset aims to cover all sites in the Stackexchange family
+	
+	For rules causing false/broken MCB, see Stack-Exchange-mixedcontent.xml
+
+	Problematic domains:
+
+		- www.stackapps.com ==> Mismatched
+		- mathoverflow.com ==> No response (only a redirect to mathoverflow.net anyway)
+		- meta.*.stackexchange.com ==> Mismatched
+		- blog.*  ==> Mixed Active Content
+
+-->
+<ruleset name="Stack Exchange (partial)">
+
+	<!-- Askubuntu -->
+	<target host="askubuntu.com" />
+	<target host="meta.askubuntu.com" />
+	<target host="www.askubuntu.com" />
+
+	<!-- Blogoverflow -->
+	<target host="blogoverflow.com" />
+	<target host="www.blogoverflow.com" />
+
+	<!-- Mathoverflow -->
+	<target host="mathoverflow.net" />
+	<target host="meta.mathoverflow.net" />
+	<target host="www.mathoverflow.net" />
+	
+	<!-- Serverfault -->
+	<target host="clc.serverfault.com" />
+	<target host="meta.serverfault.com" />
+	<target host="serverfault.com" />
+	
+	<!-- Stackauth -->
+	<target host="stackauth.com" />
+	<target host="dev.stackauth.com" />
+	
+	<!-- Stackexchange -->
+	<target host="stackexchange.com" />
+	<target host="*.stackexchange.com" />
+	<!-- This wildcard covers 125 subdomains -->
+		<test url="http://academia.stackexchange.com/" />
+		<test url="http://crypto.stackexchange.com/" />
+		<test url="http://reverseengineering.stackexchange.com/" />
+		<test url="http://unix.stackexchange.com/" />
+		<test url="http://writers.stackexchange.com/" />
+
+		<!-- deeper domains cause certificate mismatch errors - there is also a downgrade rule below -->
+		<exclusion pattern="^http://([\w.-]+)\.([\w-]+)\.stackexchange\.com"/>
+		<test url="http://meta.unix.stackexchange.com/" />
+		<test url="http://meta.opendata.stackexchange.com/" />
+		<test url="http://blog.gaming.stackexchange.com/" />
+		<test url="https://meta.unix.stackexchange.com/" />
+		<test url="https://meta.opendata.stackexchange.com/" />
+		<test url="https://blog.gaming.stackexchange.com/" />
+		
+		<!-- subdomains with no https support -->
+		<exclusion pattern="^http://elections\.stackexchange\.com" />
+			<test url="http://elections.stackexchange.com/" />
+
+	<!-- Stackoverflow -->
+	<target host="chat.stackoverflow.com" />
+	<target host="careers.stackoverflow.com" />
+	<target host="ja.stackoverflow.com" />
+	<target host="meta.stackoverflow.com" />
+	<target host="pt.stackoverflow.com" />
+	<target host="stackoverflow.com" />
+	<target host="blog.stackoverflow.com" />
+	<target host="www.stackoverflow.com" />
+
+	<!-- Superuser -->
+	<target host="superuser.com" />
+	<target host="meta.superuser.com" />
+	<target host="www.superuser.com" />
+	
+	<!-- Misc -->
+	<target host="sstatic.net" />
+	<target host="cdn.sstatic.net" />
+	<target host="stackapps.com" />
+	<target host="teststackoverflow.com" />
+	<target host="www.teststackoverflow.com" />
+
+<!-- Securecookies -->
+
+	<!-- Blogoverflow -->
+	<securecookie host="^blogoverflow\.com$" name=".+" />
+
+	<!-- Askubuntu -->
+	<securecookie host="^askubuntu\.com$" name=".+" />
+	<securecookie host="^meta\.askubuntu.com$" name=".+" />
+
+	<!-- Mathoverflow -->
+	<securecookie host="^mathoverflow\.net$" name=".+" />
+	<securecookie host="^meta\.mathoverflow.net$" name=".+" />
+	
+	<!-- Serverfault -->
+	<securecookie host="^clc\.serverfault\.com$" name=".+" />
+	<securecookie host="^meta\.serverfault\.com$" name=".+" />
+	<securecookie host="^serverfault\.com$" name=".+" />
+	
+	<!-- Stackauth -->
+	<securecookie host="^stackauth\.com$" name=".+" />
+	<securecookie host="^dev\.stackauth\.com$" name=".+" />
+	
+	<!-- Stackexchange -->
+	<securecookie host="^stackexchange\.com$" name=".+" />
+	<securecookie host="^([\w-]+)\.stackexchange\.com$" name=".+" />
+	
+	<!-- Stackoverflow -->
+	<securecookie host="^chat\.stackoverflow\.com$" name=".+" />
+	<securecookie host="^careers\.stackoverflow\.com$" name=".+" />
+	<securecookie host="^ja\.stackoverflow\.com$" name=".+" />
+	<securecookie host="^meta\.stackoverflow\.com$" name=".+" />
+	<securecookie host="^pt\.stackoverflow\.com$" name=".+" />
+	<securecookie host="^stackoverflow\.com$" name=".+" />
+	
+	<!-- Superuser -->
+	<securecookie host="^superuser\.com$" name=".+" />
+	<securecookie host="^meta\.superuser\.com$" name=".+" />	
+	
+	<!-- Misc -->
+	<securecookie host="^sstatic\.net$" name=".+" />
+	<securecookie host="^cdn\.sstatic\.net$" name=".+" />
+	<securecookie host="^stackapps\.com$" name=".+" />
+	<securecookie host="^teststackoverflow\.com$" name=".+" />
+
+<!-- Rules -->
+	
+	<!-- https links from other pages to these will cause MCB for important elements, hence the downgrades -->
+	<rule from="^https://([\w.-]+)\.([\w-]+)\.stackexchange\.com/" 
+		to="http://$1.$2.stackexchange.com/" downgrade="1" />
+	
+	<rule from="^http:" to="https:" />
+
+</ruleset>

@@ -1,0 +1,53 @@
+<!--
+	Nonfunctional subdomains:
+
+		- cdn		(refused)
+
+
+	Problematic hosts in *zeusclicks.com:
+
+		- (www.)? ¹ ²
+		- ads2 ³
+
+	¹ Mismatched
+	² Mixed css
+	³ Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	These altnames don't exist:
+
+		- www.ads2.zeusclicks.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- zeusclicks.com
+		- ads2.zeusclicks.com
+		- www.zeusclicks.com
+
+
+	Mixed content:
+
+		- css on (www.)? from ^zeusclicks.com
+		- Images on (www.)? from ^zeusclicks.com
+
+-->
+<ruleset name="ZeusClicks.com (partial)" default_off="missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ads2.zeusclicks.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^ads2\.zeusclicks\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^(www\.)?zeusclicks\.com$" name="^csrf_c_zeus$" /-->
+
+	<securecookie host="^ads2\.zeusclicks\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,37 @@
+<!--
+	For other Cupid plc coverage, see Cupid_plc.com.xml
+
+
+	Problematic subdomains:
+
+		- ^	(.+ redirects to www.../$, valid cert)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(^ → www, some pages redirect to http)
+
+-->
+<ruleset name="BeCoquin.com (partial)">
+
+	<target host="becoquin.com" />
+	<target host="www.becoquin.com" />
+		<!--
+			Some pages redirect to http:
+							-->
+		<!--exclusion pattern="^http://(www\.)?becoquin\.com/+($|\?|(aboutus\.asp|activities3\.asp|ajax_blog_subscribe\.php|ajax_savetimezoneoffset\.php|contactus\.php|email\.asp|flirting\.asp|help\.asp|helptandc\.asp|index\.html|lostpsswd\.asp|myaccountmanagement\.asp|press\.php|searchf\.asp|spd_stories\.php|spd_stories\.new\.php|static\.php)($|\?)|(forum|users/\w+)($|[?/]))" /-->
+		<!--exclusion pattern="^http://(www\.)?becoquin\.com/(?!blog($|[?/])|ext\.php|favicon\.ico|login\.html|static/)" /-->
+
+
+	<!--securecookie host=".*\.becoquin\.com$" name=".+" /-->
+	<securecookie host="^\.becoquin\.com$" name="^(?:TRACK_(?:CLOG|VISIT)|__utm\w)$" />
+	<!--
+		Can we secure any of these safely?
+							-->
+	<!--securecookie host="^\.becoquin\.com$" name="^(PHPSESSID|SLP|SSV|TLC|UCL)" /-->
+
+
+	<rule from="^http://(?:www\.)?becoquin\.com/(?=blog(?:$|[?/])|ext\.php|favicon\.ico|login\.html|static/)"
+		to="https://www.becoquin.com/" />
+
+</ruleset>

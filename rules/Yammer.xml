@@ -1,0 +1,92 @@
+<!--
+	For problematic coverage, see Yammer-problematic.xml.
+
+	For other Microsoft coverage, see Microsoft.xml.
+
+	Other Yammer rulesets:
+
+		- Assets-Yammer.com.xml
+
+
+	yammer.pagely.com
+
+
+	Nonfunctional hosts in *yammer.com:
+
+		- marketing *
+
+	* Redirects to app-sj04.marketo.com
+
+
+	Problematic hosts in *yammer.com:
+
+		- blog ¹
+		- feedback ²
+		- research ²
+		- status ³
+		- success ⁴
+
+	¹ Dropped
+	² Works, mismatched, CN: sites.yammer.com
+	³ Works, mismatched, CN: *.wordpress.com
+	⁴ Works, mismatched, CN: page.ly
+
+
+	Insecure cookies are set for these hosts:
+
+		- about.yammer.com
+		- devices.yammer.com
+
+-->
+<ruleset name="Yammer.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="yammer.com" />
+	<target host="about.yammer.com" />
+	<target host="design.yammer.com" />
+	<target host="developer.yammer.com" />
+	<target host="devices.yammer.com" />
+	<target host="eng.yammer.com" />
+	<target host="help.yammer.com" />
+	<target host="sites.yammer.com" />
+
+	<target host="design.staging.yammer.com" />
+	<target host="developer.staging.yammer.com" />
+	<target host="eng.staging.yammer.com" />
+
+	<target host="www.yammer.com" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.yammer.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(about|devices)\.yammer\.com$" name="^X-Mapping-[a-z]+$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://blog\.yammer\.com/(?:\?.*)?$"
+		to="https://about.yammer.com/yammer-blog/" />
+
+		<test url="http://blog.yammer.com/?f" />
+		<test url="http://blog.yammer.com/?o" />
+		<test url="http://blog.yammer.com/?b" />
+
+	<!--	Direct keeps path and args, and
+		prefixes with forward slash:
+						-->
+	<rule from="^http://blog\.yammer\.com/"
+		to="https://about.yammer.com//" />
+
+		<test url="http://blog.yammer.com//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

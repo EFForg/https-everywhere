@@ -1,0 +1,35 @@
+<!--
+	Peerius Ltd
+
+	For problematic rules, see Peerius.com-problematic.xml.
+
+
+	Nonfunctional subdomains:
+
+		- (www.)	(shows another domain; expired 2013-03-30, CN: localhost.localdomain)
+
+
+	Problematic subdomains:
+
+		- (www.)deutsch	(works; expired 2013-03-30, CN: localhost.localdomain)
+
+-->
+<ruleset name="Peerius.com (partial)">
+
+	<target host="*.peerius.com" />
+		<!--
+			Expired, self-signed:
+						-->
+		<!--exclusion pattern="^http://(www\.)?deutsch\." /-->
+		<!--
+			Shows another (old?) domain:
+							-->
+		<!--exclusion pattern="^http://www\." /-->
+
+
+	<!--	Per-client subdomains serving web bugs:
+							-->
+	<rule from="^http://(?!deutsch\.|www\.)([\w-]+)\.peerius\.com/"
+		to="https://$1.peerius.com/" />
+
+</ruleset>

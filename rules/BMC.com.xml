@@ -1,0 +1,52 @@
+<!--
+	Other BMC Software rulesets:
+
+		- BMC_Logo_Store.com.xml
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- go ²
+
+	¹ Refused
+	² Works; mismatched, CN: secure.eloqua.com
+
+
+	Fully covered subdomains:
+
+		- media.cms
+		- communities
+		- docs
+		- webapps
+
+-->
+<ruleset name="BMC.com (partial)">
+
+	<target host="bmc.com" />
+	<target host="*.bmc.com" />
+		<!--exclusion pattern="^http://go\.bmc\.com/" /-->
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.bmc\.com/+($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://www\.bmc\.com/+(?!include/|s\?action=doLogin)" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^communities\.bmc\.com$" name="^(BIGipServerm\w{5}-\d-pool|JSESSIONID|jive\.security\.context)$" /-->
+
+	<securecookie host="^communities\.bmc\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?bmc\.com/(?=includes/|s\?action=doLogin)"
+		to="https://www.bmc.com/" />
+
+	<rule from="^http://(media\.cms|communities|docs|webapps)\.bmc\.com/"
+		to="https://$1.bmc.com/" />
+
+</ruleset>

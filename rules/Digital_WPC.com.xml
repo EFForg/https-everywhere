@@ -1,0 +1,66 @@
+<!--
+	For other Microsoft coverage, see Microsoft.xml.
+
+
+	Problematic hosts in *digitalwpc.com:
+
+		- (www.)? *
+		- sessions *
+
+	* Mismatched
+
+
+	(www.)?: Different redirects from different paths
+
+
+	Insecure cookies are set for these domains:
+
+		- .sessions.digitalwpc.com
+
+
+	Mixed content:
+
+		- css on sessions from www.microsoft.com *
+
+	* Secured by us
+
+-->
+<ruleset name="digital WPC.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="connect.digitalwpc.com" />
+	<!--target host="sessions.digitalwpc.com" /-->
+
+	<!--	Complications:
+				-->
+	<target host="digitalwpc.com" />
+	<target host="www.digitalwpc.com" />
+
+		<exclusion pattern="^http://(?:www\.)?digitalwpc\.com/+(?!$|\?)" />
+
+			<test url="http://www.digitalwpc.com/WPC2015/Pages/Logistics.aspx" />
+			<test url="http://www.digitalwpc.com/awards/pages/home.aspx" />
+			<test url="http://www.digitalwpc.com/pages/faq.aspx" />
+			<test url="http://www.digitalwpc.com/sessions/VisionKeynotes/Pages/Keynote-Speakers.aspx" />
+			<test url="http://www.digitalwpc.com/videos/pages/videos.aspx" />
+			<test url="http://www.digitalwpc.com/wpc2013/wpcconnect/pages/home.aspx" />
+			<test url="http://www.digitalwpc.com/wpc2015/pages/registration.aspx" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.sessions.digitalwpc\.com$" name="^ARRAffinity$" /-->
+
+
+	<!--	Redirect keeps args, but not forward slash:
+								-->
+	<rule from="^http://(?:www\.)?digitalwpc\.com/+"
+		to="https://mspartner.microsoft.com/en/us/Pages/WPC/overview.aspx" />
+
+		<test url="http://www.digitalwpc.com/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,49 @@
+<!--
+	Problematic hosts in *artemis-ia.eu:
+
+		- community *
+		- www *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- artemis-ia.eu
+
+-->
+<ruleset name="Artemis-IA.eu">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="artemis-ia.eu" />
+
+	<!--	Complications:
+				-->
+	<target host="community.artemis-ia.eu" />
+	<target host="www.artemis-ia.eu" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^artemis-ia\.eu$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^artemis-ia\.eu$" name=".+" />
+
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://community\.artemis-ia\.eu/[^?]*"
+		to="https://artemis-ia.eu/community" />
+
+		<test url="http://community.artemis-ia.eu/?foo" />
+		<test url="http://community.artemis-ia.eu/index" />
+
+	<rule from="^http://www\.artemis-ia\.eu/"
+		to="https://artemis-ia.eu/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

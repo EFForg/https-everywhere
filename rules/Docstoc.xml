@@ -1,0 +1,28 @@
+<!--	s3.amazonaws.com/content1.docstoc.com/
+	s3.amazonaws.com/img.docstoc.com/
+
+	!functional:
+		- blog.docstream.com	(cert: *.gridserver.com; infinite redirection)
+		- platform.docstoc.com	(403)
+-->
+<ruleset name="Docstoc (partial)">
+
+	<target host="docstoc.com"/>
+	<target host="*.docstoc.com"/>
+	<target host="*.docstoccdn.com"/>
+
+	<!--	!cdn cert:	EdgeCast	-->
+	<rule from="^http://(css|i|swf)\.docstoc(?:cdn)?\.com/"
+		to="https://$1.docstoccdn.com/"/>
+
+	<rule from="^http://img\.docstoc(?:cdn)?\.com/"
+		to="https://s3.amazonaws.com/img.docstoc.com/"/>
+
+	<!--	!www:	!found			-->
+	<rule from="^http://(?:www\.)?docstoc\.com/(account/|Captcha\.ashx|cart/|favicon\.ico|i/|pass(?:$|\?))"
+		to="https://www.docstoc.com/$1"/>
+
+	<rule from="^http://static2\.docstoccdn\.com/"
+		to="https://static2.docstoccdn.com/" />
+
+</ruleset>

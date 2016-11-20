@@ -1,0 +1,45 @@
+<!--
+	CDN buckets:
+
+		- earwolf.earwolf.netdna-cdn.com
+
+			- -ssl doesn't exist
+			- cdn.earwolf.com
+			- cdn[234].earwolf.com
+
+
+	Nonfunctional subdomains:
+
+		- blog		(times out)
+		- forum
+
+
+	Problematic subdomains:
+
+		- cdn *
+		- cdn[234] *
+
+	* 404; mismatched, CN: *.netdna-ssl.com
+
+
+	Mixed content:
+
+		- Images from cdn *
+		- Images from cdn[234] *
+
+	* Secured by us
+
+-->
+<ruleset name="Earwolf Podcast Network" default_off="expired cert">
+
+	<target host="earwolf.com" />
+	<target host="*.earwolf.com" />
+
+
+	<securecookie host="^(?:www\.)?earwolf\.com$" name=".+" />
+
+
+	<rule from="^http://(?:cdn\d?\.|(www\.))?earwolf\.com/"
+		to="https://$1earwolf.com/" />
+
+</ruleset>

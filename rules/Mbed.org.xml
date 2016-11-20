@@ -1,0 +1,56 @@
+
+<!--
+	For other ARM coverage, see ARM.xml.
+
+
+	www: Mismatched
+
+
+	Fully covered subdomains:
+
+		- (www.)?	(www → ^)
+		- developer
+		- tls
+
+
+	yotta: Dropped over http
+
+
+	These altnames don't exist:
+
+		- cdn.mbed.org
+		- www.tls.mbed.org
+
+
+	Insecure cookies are set for these hosts:
+
+		- mbed.org
+
+-->
+<ruleset name="mbed.org">
+
+	<target host="mbed.org" />
+	<target host="developer.mbed.org" />
+	<target host="tls.mbed.org" />
+	<target host="www.mbed.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^mbed\.org$" name="^csrftoken$" /-->
+
+	<securecookie host="^mbed\.org$" name=".+" />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://www\.mbed\.org/+"
+		to="https://mbed.org/" />
+	
+		<test url="http://www.mbed.org/about/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

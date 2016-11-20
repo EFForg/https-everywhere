@@ -1,0 +1,275 @@
+<!--
+	For rules covering resources which do not secure
+	mixed content, see voxmedia.com-resources.xml.
+
+	For other Vox Media coverage, see Vox.com.xml.
+
+
+	CDN buckets:
+
+		- d3jpjf0yeaswad.cloudfront.net	← cdn.hymnal
+		- d8wuu9msfgurd.cloudfront.net	← ea-cdn
+
+
+	Nonfunctional hosts in *voxmedia.com:
+
+		- blog *
+		- pixelpunch ²
+
+	ʰ Redirects to http
+	* Tumblr
+	² 500
+	¹ Refused
+
+
+	Problematic hosts in *voxmedia.com:
+
+		- ^ ¹
+		- cdn.hymnal ²
+		- jobs ¹
+		- status ³
+
+	¹ Refused, preemptable redirect
+	² Fastly / mismatched
+	³ StatusPage / mismatched
+
+
+	Partially covered hosts in *voxmedia.com:
+
+		- marketing ʰ
+		- product ʰ
+
+	ʰ Some pages redirect to http
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- marketing.voxmedia.com
+		- product.voxmedia.com
+		- www.voxmedia.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Vox Media.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="voxmedia.com" />
+	<!--target host="ea-cdn.voxmedia.com" /-->
+	<!--target host="fonts.voxmedia.com" /-->
+	<target host="marketing.voxmedia.com" />
+	<target host="optimize-stats.voxmedia.com" />
+	<!--target host="phonograph-static.voxmedia.com" /-->
+	<!--target host="phonograph2.voxmedia.com" /-->
+	<target host="product.voxmedia.com" />
+	<!--target host="providence.voxmedia.com" /-->
+	<target host="www.voxmedia.com" />
+
+		<!--
+		<test url="http://ea-cdn.voxmedia.com/production/voxmedia/images/about/chorus-e232d7e7.svg" />
+		<test url="http://fonts.voxmedia.com/unison/voxmedia/voxmedia.css" />
+		<test url="http://phonograph2.voxmedia.com/pickup.js" />
+		<test url="http://phonograph-static.voxmedia.com/beacon-min.js" />
+		-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.voxmedia\.com/(?:$|\?|a/|(?:.+/)?\d{4}/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://www\.voxmedia\.com/(?!(?!(?:.*/)?\d{4}/)/*(?:(?:about-vox-media|admin|brands|contact|google_news_sitemap|login|networks|pages|press|racked|reader|recode|rss|security|style|the-verge|trending|users|vox-creative)(?:$|[?/])|favicon\.ico|robots\.txt))" /-->
+		<!--
+			Avoid porential XHR problems:
+							-->
+		<!--exclusion pattern="^http://www\.voxmedia\.com/(?:/*sbn_scoreboard/|.+\.js(?:$|\?))" /-->
+		<!--
+			Lessen non-Tor distinguishability:
+								-->
+		<!--exclusion pattern="^http://(?:www\.)?voxmedia\.com/*(?:favicon\.ico|styles/)" /-->
+		<!--
+			In combination:
+					-->
+		<exclusion pattern="^http://(?:www\.)?voxmedia\.com/(?!(?!.+\.js(?:$|\?)|(?:.*/)?\d{4}/)/*(?:(?:about-vox-media|admin|brands|contact|google_news_sitemap|login|networks|pages|press|racked|reader|recode|rss|security|the-verge|trending|users|vox-creative)(?:$|[?/])|robots\.txt))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.voxmedia.com/2015/12/21/10641582/new-york-times-vox-media-adds-re-code-to-its-stable-of-websites" />
+			<test url="http://www.voxmedia.com/2015/12/21/10641604/adweek-vox-media-sings-the-praises-of-chorus" />
+			<test url="http://www.voxmedia.com/2015/12/21/10641664/digiday-the-agency-view-on-vox-media-the-modern-day-conde-nast" />
+			<test url="http://www.voxmedia.com/2015/12/21/10641680/business-insider-vox-medias-jim-bankoff-on-silicon-alley-100" />
+			<test url="http://www.voxmedia.com/2015/12/21/10641738/wsj-vox-ceo-says-quality-will-trump-clickbait" />
+			<test url="http://www.voxmedia.com/2015/12/21/10641754/digiday-vox-com-is-snapchat-s-newest-discover-partner" />
+			<test url="http://www.voxmedia.com/2015/12/21/10641780/fortune-vox-media-becomes-a-startup-unicorn-with-nbcu-funding" />
+			<test url="http://www.voxmedia.com/2016/1/15/10777470/news-from-vox-media" />
+			<test url="http://www.voxmedia.com/2016/1/4/10711422/vp-chad-mumm-named-forbes-30-under-30" />
+			<test url="http://www.voxmedia.com/2016/3/1/11139200/get-ready-for-panorama" />
+			<test url="http://www.voxmedia.com/2016/3/1/11139200/get-ready-for-panorama" />
+			<test url="http://www.voxmedia.com/2016/4/28/11526430/win-a-vip-brunch-experience-with-eater-and-uber" />
+			<test url="http://www.voxmedia.com/2016/8/9/12411460/vox-com-and-eater-join-the-vox-media-collection-on-flipboard" />
+			<test url="http://www.voxmedia.com/?" />
+			<test url="http://www.voxmedia.com/?foo" />
+			<test url="http://www.voxmedia.com/a/year-in-review-2015" />
+			<test url="http://www.voxmedia.com/about-vox-media/2016/4/4/11357412/concert-largest-premium-quality-content-and-audience-marketplace" />
+			<test url="http://www.voxmedia.com/about-vox-media/2016/7/13/12167138/trending-pokemon-invade-the-vox-media-office" />
+			<test url="http://www.voxmedia.com/about-vox-media/2016/7/26/12284406/bloomberg-sb-nation-expands-into-radio-programming-with-gow-media" />
+			<test url="http://www.voxmedia.com/press/2016/2/25/11117512/melissa-bell-on-google-s-accelerated-mobile-pages" />
+			<test url="http://www.voxmedia.com/press/2016/3/14/11221528/silicon-valley-re-codes-kara-swisher-says-it-s-time-for-silicon" />
+			<test url="http://www.voxmedia.com/press/2016/3/2/11147202/cnbc-the-verges-nilay-patel-re-codes-edmund-lee-on-privacy-vs-security" />
+			<test url="http://www.voxmedia.com/press/2016/4/1/11350712/marketing-land-vox-media-discusses-the-third-party-measurement" />
+			<test url="http://www.voxmedia.com/press/2016/4/1/11350728/digiday-vox-media-moves-into-experiential-marketing" />
+			<test url="http://www.voxmedia.com/press/2016/4/4/11359982/bloomberg-nbcu-vox-media-tell-advertisers-real-viewers-will-see-their" />
+			<test url="http://www.voxmedia.com/press/2016/7/11/12148692/cnbc-will-snapchat-keep-cool-factor" />
+			<test url="http://www.voxmedia.com/recode/2016/2/25/11117918/re-code-media-with-peter-kafka-adrian-wojnarowski-editor-of-the" />
+			<test url="http://www.voxmedia.com/recode/2016/2/25/11117922/code-media-full-video-interview-with-espn-boss-john-skipper" />
+			<test url="http://www.voxmedia.com/sbn_scoreboard/ajax_leagues_and_events" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.voxmedia.com/about-vox-media" />
+			<test url="http://www.voxmedia.com/admin" />
+			<test url="http://www.voxmedia.com/brands/vox/" />
+			<test url="http://www.voxmedia.com/contact" />
+			<test url="http://www.voxmedia.com/google_news_sitemap" />
+			<test url="http://www.voxmedia.com/login" />
+			<test url="http://www.voxmedia.com/networks/enter_private_mode_password" />
+			<test url="http://www.voxmedia.com/pages/pgp-public-key" />
+			<test url="http://www.voxmedia.com/press" />
+			<test url="http://www.voxmedia.com/racked" />
+			<test url="http://www.voxmedia.com/reader" />
+			<test url="http://www.voxmedia.com/recode" />
+			<test url="http://www.voxmedia.com/robots.txt" />
+			<test url="http://www.voxmedia.com/rss/smartnews.xml" />
+			<test url="http://www.voxmedia.com/security" />
+			<!--
+			<test url="http://www.voxmedia.com/style/39ba52252694457a2ece9335b34f6733/chorus.css" />
+			-->
+			<test url="http://www.voxmedia.com/the-verge" />
+			<test url="http://www.voxmedia.com/trending" />
+			<test url="http://www.voxmedia.com/users/VoxMedia" />
+			<test url="http://www.voxmedia.com/vox-creative" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://marketing\.voxmedia\.com/(?:$|\?|(?:.+/)?\d{4}/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://marketing\.voxmedia\.com/(?!(?!(?:.+/)?\d{4}/)/*(?:case-studies|page)(?:$|[?/]))" /-->
+		<!--
+			Avoid porential XHR problems:
+							-->
+		<!--exclusion pattern="^http://marketing\.voxmedia\.com/.+\.js(?:$|\?)" /-->
+		<!--
+			In combination:
+					-->
+		<exclusion pattern="^http://marketing\.voxmedia\.com/(?!(?!.+\.js(?:$|\?)|(?:.+/)?\d{4}/)/*(?:case-studies|page)(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://marketing.voxmedia.com/2015/10/14/9531041/vox-in-your-inbox-vox-sentences-gets-personal-with-email-marketing" />
+			<test url="http://marketing.voxmedia.com/2015/10/2/9441139/the-latest-news-from-vox-media" />
+			<test url="http://marketing.voxmedia.com/2015/10/23/9605572/the-latest-news-from-vox-media" />
+			<test url="http://marketing.voxmedia.com/2015/10/29/9640284/new-york-treat-yourself-to-a-flavorful-weekend-with-mofad-lab-and" />
+			<test url="http://marketing.voxmedia.com/2015/11/11/9714382/vox-media-launches-on-notify" />
+			<test url="http://marketing.voxmedia.com/2015/12/22/10447668/sb-nation-names-the-first-ever-winner-of-the-piesman-trophy" />
+			<test url="http://marketing.voxmedia.com/2015/3/23/8276159/welcome-the-vox-media-marketing-blog" />
+			<test url="http://marketing.voxmedia.com/2015/4/3/8320575/social-amplification-how-we-expand-our-audience" />
+			<test url="http://marketing.voxmedia.com/2015/8/12/9144537/nbcuniversal-announces-strategic-investment-in-vox-media" />
+			<test url="http://marketing.voxmedia.com/2016/1/22/10817010/the-latest-news-from-vox-media" />
+			<test url="http://marketing.voxmedia.com/2016/2/10/10943252/join-vox-media-at-sxsw" />
+			<test url="http://marketing.voxmedia.com/2016/2/22/11083046/reintroducing-curbed-love-where-you-live" />
+
+			<!--	-ve:
+					-->
+			<test url="http://marketing.voxmedia.com/case-studies" />
+			<test url="http://marketing.voxmedia.com/page/2" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://product\.voxmedia\.com/(?:$|\?|a/|(?:.+/)?\d{4}/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://product\.voxmedia\.com/(?!(?!(?:.*/)?\d{4}/)/*(?:archives|authors|development|events|interns|pages|source|style|til|trending|vax)(?:$|[?/]))" /-->
+		<!--
+			Avoid porential XHR problems:
+							-->
+		<!--exclusion pattern="^http://product\.voxmedia\.com/.+\.js(?:$|\?)" /-->
+		<!--
+			Lessen non-Tor distinguishability:
+							-->
+		<!--exclusion pattern="^http://product\.voxmedia\.com/+styles/" /-->
+		<!--
+			In combination:
+					-->
+		<exclusion pattern="^http://product\.voxmedia\.com/(?!(?!.+\.js(?:$|\?)|(?:.*/)?\d{4}/)/*(?:archives|authors|development|events|interns|pages|source|til|trending|vax)(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://product.voxmedia.com/2012/5/4/5426770/earn-while-working-from-home-keeping-a-close-knit-team-with-far-flung" />
+			<test url="http://product.voxmedia.com/2012/6/15/5426782/introducing-syllabus-vox-medias-s3-powered-liveblog-platform" />
+			<test url="http://product.voxmedia.com/2012/7/31/5426792/better-grids-for-a-responsive-world" />
+			<test url="http://product.voxmedia.com/2013/1/24/5426808/an-inside-peek-into-the-polygon-design-process" />
+			<test url="http://product.voxmedia.com/2013/1/31/5426810/vox-medias-design-interns-redesigning-the-way-you-see-the-web" />
+			<test url="http://product.voxmedia.com/2013/12/6/5426882/driving-for-distraction-how-do-we-survive-the-premium-media-onslaught" />
+			<test url="http://product.voxmedia.com/2013/2/20/5426816/vax-13-vox-media-product-teams-first-hack-week-in-austin-texas" />
+			<test url="http://product.voxmedia.com/2014/10/15/6982751/all-aboard-bringing-teams-together-to-talk-shippin" />
+			<test url="http://product.voxmedia.com/2014/2/21/5433452/verge-fanboys-web-design-as-troll" />
+			<test url="http://product.voxmedia.com/2014/6/25/5842182/vax-14-day-1-so-you-want-to-have-a-hack-week" />
+			<test url="http://product.voxmedia.com/2014/6/6/5673934/nine-weeks-to-launch-vox" />
+			<test url="http://product.voxmedia.com/2014/8/4/5968419/you-should-be-the-vox-media-2015-opennews-fellow" />
+			<test url="http://product.voxmedia.com/2015/10/28/9631108/afk-day-2015" />
+			<test url="http://product.voxmedia.com/2015/6/12/8771459/vax-15-generate-your-project-name-today-and-get-to-work" />
+			<test url="http://product.voxmedia.com/2016/5/26/11787530/remote-user-testing-at-vox" />
+			<test url="http://product.voxmedia.com/2016/6/16/11920356/reducing-the-start-render-time-on-chorus" />
+			<test url="http://product.voxmedia.com/a/communication-2025" />
+			<test url="http://product.voxmedia.com/interns/2016/6/29/11964076/meet-our-summer-2016-intern-class" />
+			<test url="http://product.voxmedia.com/post/21784396576/all-together-now-introducing-the-vox-product-blog-and" />
+			<test url="http://product.voxmedia.com/til/2016/1/22/10814518/css-injection-with-browsersync-gulp-and-the-rails-asset-pipeline" />
+
+			<!--	-ve:
+					-->
+			<test url="http://product.voxmedia.com/archives" />
+			<test url="http://product.voxmedia.com/authors/winston-hearn" />
+			<test url="http://product.voxmedia.com/development" />
+			<test url="http://product.voxmedia.com/events" />
+			<test url="http://product.voxmedia.com/interns" />
+			<test url="http://product.voxmedia.com/pages/team" />
+			<test url="http://product.voxmedia.com/source" />
+			<!--
+			<test url="http://product.voxmedia.com/style/a4599c476fee06f907e34d73f5302974/chorus.css" />
+			-->
+			<test url="http://product.voxmedia.com/til" />
+			<test url="http://product.voxmedia.com/trending" />
+			<test url="http://product.voxmedia.com/vax" />
+
+	<!--	Complications:
+				-->
+	<target host="jobs.voxmedia.com" />
+	<target host="status.voxmedia.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:marketing|product|www)\.voxmedia\.com$" name="^_chorus_unison_testing_v4$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://jobs\.voxmedia\.com/[^?]*"
+		to="https://www.voxmedia.com/careers" />
+
+		<test url="http://jobs.voxmedia.com//" />
+		<test url="http://jobs.voxmedia.com///" />
+
+	<rule from="^http://status\.voxmedia\.com/"
+		to="https://voxmedia.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

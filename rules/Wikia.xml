@@ -1,0 +1,50 @@
+<!--
+	CDN buckets:
+
+		- images2.wikia.nocookie.net
+		- slot1.images[1-4]?.wikia.nocookie.net
+
+
+	Nonfunctional domains:
+
+		- slot1.images.wikia.nocookie.net ²
+		- slot1.images[1-4].wikia.nocookie.net ²
+		- img[1-4].wikia.nocookie.net ²
+
+		- (www.)wikia.com ¹
+		- images.wikia.com ²
+
+	¹ Redirect to http, valid cert
+	² Redirect to http; mismatched, CN: *.a.ssl.fastly.net
+
+
+	Problematic domains:
+
+		- a.wikia-beacon.com	(works, mismatched, CN: *.a.ssl.fastly.net)
+
+-->
+<ruleset name="Wikia (broken)" default_off="no longer supports SSL">
+
+	<target host="*.wikia.nocookie.net" />
+	<target host="wikia.com" />
+	<target host="*.wikia.com" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://images\.wikia\.com/(favicon\.ico|$account_name/\w\w/images/)" /-->
+		<exclusion pattern="^http://images\.wikia\.com/(?:favicon\.ico|\w+/\w\w/images/)" />
+
+
+	<securecookie host="^.*\.wikia\.com$" name=".+" />
+
+
+	<rule from="^http://(?:slot\d\.)?images\d?\.wikia\.nocookie\.net/"
+		to="https://images.wikia.com/" />
+
+	<rule from="^http://(?:www\.)?wikia\.com/"
+		to="https://www.wikia.com/" />
+
+	<rule from="^http://([\w-]+)\.wikia\.com/"
+		to="https://$1.wikia.com/" />
+
+</ruleset>

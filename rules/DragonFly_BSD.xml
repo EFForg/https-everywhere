@@ -1,0 +1,55 @@
+<!--
+	Nonfunctional hosts in *dragonflybsd.org:
+
+		- lists *
+
+	* Refused
+
+
+	Problematic hosts in *dragonflybsd.org:
+
+		- ^	(refused)
+		- bugs ³
+		- gitweb ³
+		- leaf ³ ²
+
+	³ Server sometimes sends no certificate chain
+	² Mixed css
+
+
+	Mixed content:
+
+		- css on leaf from www *
+
+	* Secured by us
+
+ -->
+<ruleset name="DragonFly BSD.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="bugs.dragonflybsd.org" />
+	<target host="gitweb.dragonflybsd.org" />
+	<target host="leaf.dragonflybsd.org" />
+	<target host="www.dragonflybsd.org" />
+
+	<!--	Complications:
+				-->
+	<target host="dragonflybsd.org" />
+
+		<test url="http://leaf.dragonflybsd.org//" />
+		<test url="http://leaf.dragonflybsd.org/cgi/web-man" />
+		<test url="http://leaf.dragonflybsd.org/mailarchive/" />
+		<test url="http://leaf.dragonflybsd.org/manpages/" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://dragonflybsd\.org/"
+		to="https://www.dragonflybsd.org/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,69 @@
+<!--
+	voxer.theresumator.com
+	voxer.zendesk.com
+
+
+	Nonfunctional subdomains:
+
+		- blog *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- dev-10 *
+
+	* Refused
+
+
+	Partially covered subdomains:
+
+		- dev-10 *	(→ ^)
+
+	* Being cautious wrt possibly differing paths
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- business
+		- one
+		- support
+		- web
+
+
+	Mixed content:
+
+		- Images, on (www.) from:
+
+			- ^ *
+			- dev-10 *
+
+	* Secured by us
+
+-->
+<ruleset name="Voxer (partial)">
+
+	<target host="voxer.com" />
+	<target host="*.voxer.com" />
+		<!--
+			Some paths may be different(?):
+								-->
+		<!--exclusion pattern="^http://dev-10\.voxer\.com/+(?!assets/)" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^business\.voxer\.com$" name="^is_enterprise$" /-->
+
+	<securecookie host=".+\.voxer\.com$" name=".+" />
+
+
+	<rule from="^http://((?:business|one|support|web|www)\.)?voxer\.com/"
+		to="https://$1voxer.com/" />
+
+	<rule from="^http://dev-10\.voxer\.com/assets/"
+		to="https://voxer.com/assets/" />
+
+</ruleset>

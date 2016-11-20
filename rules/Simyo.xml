@@ -1,0 +1,46 @@
+<!--
+	For other E-Plus Gruppe coverage, see E-Plus_Gruppe.xml.
+
+
+	Nonfunctional domains:
+
+		- simyo.de subdomains:
+
+			- api		(401)
+			- blog *
+			- newsroom *
+			- prozess	(times out)
+
+		- (www.)simyoblog.de *
+		- cdn.simyostatic01.de *
+
+	* Shows another domain, mismatched, CN: *.your-server.de
+
+
+	Problematic domains:
+
+		- simyo.de subdomains:
+
+			- ^		(cert only matches www)
+			- a		(mismatched, CN: *.122.2o7.net)
+
+-->
+<ruleset name="Simyo (partial)">
+
+	<target host="simyo.de" />
+	<target host="*.simyo.de" />
+
+
+	<securecookie host="^.*\.simyo\.de$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?simyo\.de/"
+		to="https://www.simyo.de/" />
+
+	<rule from="^http://a\.simyo\.de/"
+		to="https://simyo-de.122.2o7.net/" />
+
+	<rule from="^http://(b|cdn|handyshop|m|sync)\.simyo\.de/"
+		to="https://$1.simyo.de/" />
+
+</ruleset>

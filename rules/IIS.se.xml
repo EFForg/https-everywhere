@@ -1,0 +1,34 @@
+<!--
+	IIS handles the swedish TLD, .se.
+
+
+	Problematic hosts in *iis.se:
+
+		- domainmanager *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Fully covered hosts in *iis.se:
+
+		- (www.)?
+		- domanhanteraren
+
+-->
+<ruleset name="IIS.se (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="iis.se" />
+	<!--target host="domainmanager.iis.se" /-->
+	<target host="domanhanteraren.iis.se" />
+	<target host="www.iis.se" />
+
+
+	<securecookie host="^(?:domainmanager|domanhanteraren)\.iis\.se$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

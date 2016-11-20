@@ -1,0 +1,78 @@
+<!--
+	Nonfunctional subdomains:
+
+		- emailprod...:6777 *
+		- library **
+		- loki *
+		- oclc *
+		- r25ws...:8080		(http reply)
+		- sirsi *
+		- wp *
+
+	* Times out
+	** Shows intraweb; mismatched, CN: intraweb.stockton.edu
+
+
+	Problematic subdomains:
+
+		- (www.) *
+		- admission **
+		- libguides	(mismatched, CN: libguides.com)
+		- www2 **
+
+	* Times out
+	** Shows intraweb; mismatched, CN: intraweb.stockton.edu
+
+
+	Partially covered subdomains:
+
+		- (www.)	(→ intraweb)
+		- libguides	(→ libguides.com)
+		- www2		(→ intraweb)
+
+
+	Fully covered subdomains:
+
+		- admissions	(→ intraweb)
+		- aspweb
+		- bbweb
+		- ezproxy...:8443
+		- go
+		- intraweb
+		- piper
+		- pssb...:9000
+		- webmail
+
+www.lynda.com.ezproxy.stockton.edu
+
+-->
+<ruleset name="Stockton College (partial)">
+
+	<target host="stockton.edu" />
+	<target host="*.stockton.edu" />
+
+
+	<securecookie host="^(?:bbweb|intraweb|go|piper|pssb)\.stockton\.edu$" name=".+" />
+
+
+	<rule from="^http://(?:www2?\.)?stockton\.edu/(?:\?.*)?$"
+		to="https://intraweb.stockton.edu/eyos/page.cfm?siteID=197&amp;pageID=5&amp;layout=hp" />
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://admissions\.stockton\.edu/.*"
+		to="https://intraweb.stockton.edu/eyos/page.cfm?siteID=64&amp;pageID=1" />
+
+	<rule from="^http://(aspweb|bbweb|go|intraweb|piper|webmail)\.stockton\.edu/"
+		to="https://$1.stockton.edu/" />
+
+	<rule from="^http://ezproxy\.stockton\.edu:8443/"
+		to="https://ezproxy.stockton.edu:8443/" />
+
+	<rule from="^http://libguides\.stockton\.edu/(css\d*/|data/|include/|js\d*/|process_home\.php)"
+		to="https://libguides.com/$1" />
+
+	<rule from="^http://pssb\.stockton\.edu:9000/"
+		to="https://pssb.stockton.edu:9000/" />
+
+</ruleset>

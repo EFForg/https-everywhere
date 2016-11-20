@@ -1,0 +1,51 @@
+<!--
+	Other Digium rulesets:
+
+		- Asterisk.xml
+		- Asterisk_Exchange.xml
+
+
+	Nonfunctional subdomains:
+
+		- blogs ¹
+		- developers ²
+		- kb	(redirects to http, CN: slotmatching9.salesforce.com)
+		- www ³
+		- www1
+
+	¹ Recursive redirect
+	² Refused
+	³ Redirects to http
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- phones ²
+
+	¹ Mismatched
+	² Expired 2014
+
+-->
+<ruleset name="Digium.com (partial)">
+
+	<target host="digium.com" />
+	<target host="*.digium.com" />
+
+		<!--
+			Redirects to http.
+						-->
+		<exclusion pattern="^http://www\.digium\.com/(?:en/(?:$|\?|partner-portal|products$)|favicon\.ico|sites/)" />
+
+
+	<securecookie host="^\.digium\.com$" name="^__cfduid$" />
+	<securecookie host="^login\.digium\.com$" name=".+" />
+
+
+	<rule from="^http://digium\.com/"
+		to="https://www.digium.com/" />
+
+	<rule from="^http://(login|store|www)\.digium\.com/"
+		to="https://$1.digium.com/" />
+
+</ruleset>

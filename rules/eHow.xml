@@ -1,0 +1,47 @@
+<!--
+	CDN buckets:
+
+		- www.ehow.com.ipi.demand.akadns.net
+		- blog.ehow.com.edgesuite.net
+		- www.ehow.com.edgesuite.net
+		- www.ehow.co.uk.edgesuite.net
+		- img.ehowcdn.com.edgesuite.net
+		- v5-static.ehowcdn.com.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- ehow-com.blog.ehow.com	(Akamai; 503)
+		- www.ehow.co.uk		(ditto)
+
+
+	Problematic domains:
+
+		- img.ehow.com *
+		- preprod-www.ehow.com		(works, akamai)
+		- v5-static.ehow.com		(redirects to www.ehow.com)
+		- img.ehowcdn.com *
+		- test8-img.ehowcdn.com *
+		- test8-v5-static.ehowcdn.com *
+		- v5-static.ehowcdn.com *
+
+	*Akamai, 503
+
+-->
+<ruleset name="eHow (partial)" platform="mixedcontent">
+
+	<target host="ehow.com" />
+	<target host="*.ehow.com" />
+	<target host="*.ehowcdn.com" />
+
+
+	<securecookie host="^www\.ehow\.com$" name=".+" />
+
+
+	<rule from="^http://(www\.)?ehow\.com/"
+		to="https://$1ehow.com/" />
+
+	<rule from="^http://(?:test\d-)?(?:img|v5-static)\.ehow(?:cdn)?\.com/"
+		to="https://www.ehow.com/" />
+
+</ruleset>

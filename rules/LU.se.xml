@@ -1,0 +1,66 @@
+<!--
+	Lunds universitet
+
+
+	Nonfunctional subdomains:
+
+		- www.fil ¹
+		- (www.)ht ¹
+		- (www.)lub ²
+		- lovisa.lub ²
+		- (www.)lunduniversity ²
+		- www.med ²
+		- www.sol ¹
+		- www4 ¹
+		- www5 ¹
+
+	¹ Plaintext reply
+	² Refused
+
+
+	Problematic subdomains:
+
+		- lucs.ht ¹
+		- lucs ¹
+		- calendar.student ²
+		- webmail.student ²
+
+	¹ Cert only matches www.lucs
+	² Interrupted (google)
+
+
+	Fully covered subdomains:
+
+		- lucs.ht
+		- (www.)lucs		(^ -> www)
+		- calendar.student	(-> www.google.com)
+		- webmail.student	(-> mail.google.com)
+		- webmail
+
+
+	Mixed content:
+
+		- Images on www.lucs from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="LU.se (partial)">
+
+	<target host="*.lu.se" />
+		<!--exclusion pattern="^http://(www\.fil|(www\.)?ht|(www\.)?lub|lovisa\.lub|(www\.)?lunduniversity|www\.med|www\.sol|www4|www5)\.lu\.se/" /-->
+
+
+	<rule from="^http://(?:lucs\.ht|(?:www\.)?lucs)\.lu\.se/"
+		to="https://www.lucs.lu.se/" />
+
+	<rule from="^http://calendar\.student\.lu\.se/.*"
+		to="https://www.google.com/calendar/hosted/student.lu.se" />
+
+	<rule from="^http://webmail\.student\.lu\.se/.*"
+		to="https://mail.google.com/a/student.lu.se" />
+
+	<rule from="^http://webmail\.lu\.se/"
+		to="https://webmail.lu.se/" />
+
+</ruleset>

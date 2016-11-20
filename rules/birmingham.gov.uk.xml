@@ -1,0 +1,108 @@
+<!--
+	Birmingham City Council
+
+	For rules causing false/broken MCB, see birmingham.gov.uk-falsemixed.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *birmingham.gov.uk:
+
+		- www.aqua ᵇ
+		- cypftraining ᵃ
+
+	ᵃ Shows another domain
+	ᵇ Shows default page
+
+
+	Problematic hosts in *birmingham.gov.uk:
+
+		- consult ᵐ
+		- eadmissions ᶜ
+		- property ˣ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+	ˣ Mixed css
+
+
+	These altnames don't exist:
+
+		- www.data.birmingham.gov.uk
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- birmingham.gov.uk
+		- .birmingham.gov.uk
+		- bikenorth.birmingham.gov.uk
+		- consult.birmingham.gov.uk
+		- disruption.birmingham.gov.uk
+		- localview.birmingham.gov.uk
+		- online.birmingham.gov.uk
+		- pcn.birmingham.gov.uk
+		- property.birmingham.gov.uk
+
+
+	Mixed content:
+
+		- css, on:
+		
+			- lsblaw from fonts.googleapis.com ˢ
+			- property from $self ˢ
+
+		- Images on bigcityplan, brasshouse, eplanning, events, hwb, lsblaw, property, www from $self ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Birmingham.gov.uk (partial)">
+
+	<target host="birmingham.gov.uk" />
+	<target host="bikenorth.birmingham.gov.uk" />
+	<target host="bigcityplan.birmingham.gov.uk" />
+	<target host="brasshouse.birmingham.gov.uk" />
+	<target host="data.birmingham.gov.uk" />
+	<target host="disruption.birmingham.gov.uk" />
+	<!--target host="eadmissions.birmingham.gov.uk" /-->
+	<target host="eplanning.birmingham.gov.uk" />
+	<target host="events.birmingham.gov.uk" />
+	<target host="hwb.birmingham.gov.uk" />
+	<target host="www.leisurebookings.birmingham.gov.uk" />
+	<target host="localview.birmingham.gov.uk" />
+	<target host="lsblaw.birmingham.gov.uk" />
+	<target host="netloan.birmingham.gov.uk" />
+	<target host="online.birmingham.gov.uk" />
+	<target host="pcn.birmingham.gov.uk" />
+	<!--target host="property.birmingham.gov.uk" /-->
+	<target host="www.birmingham.gov.uk" />
+
+		<!--	Mixed images:
+					-->
+		<!--test url="http://eplanning.birmingham.gov.uk/Northgate/PlanningExplorer/GeneralSearch.aspx" /-->
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://pcn.birmingham.gov.uk/userservices/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:localview\.|www\.)?birmingham\.gov\.uk$" name="^___utm[abm]" /-->
+	<!--securecookie host="^\.birmingham\.gov\.uk$" name="^(?:incap_ses_\d+_\d+|visid_incap_\d+)$" /-->
+	<!--securecookie host="^bikenorth\.birmingham\.gov\.uk$" name="^(?:PHPSESSID|wfvt_[\d-]+)$" /-->
+	<!--securecookie host="^consult\.birmingham\.gov\.uk$" name="^(?:JSESSION|Server)ID$" /-->
+	<!--securecookie host="^disruption\.birmingham\.gov\.uk$" name="^(?:PHPSESSID|wfvt_[\d-]+)$" /-->
+	<!--securecookie host="^(?:localview|online)\.birmingham\.gov\.uk$" name="^(?:JSESSIONID|customerfirst\.birmingham\.gov\.uk)$" /--> 
+	<!--securecookie host="^lsblaw\.birmingham\.gov\.uk$" name="^wmp_load_app$" /-->
+	<!--securecookie host="^pcn\.birmingham\.gov\.uk$" name="^(?:ASPSESSIONID[A-Z]{8}|pcn\.birmingham\.gov\.uk)$" /-->
+	<!--securecookie host="^property\.birmingham\.gov\.uk$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\." name="^(?:incap_ses|visid_incap)_" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

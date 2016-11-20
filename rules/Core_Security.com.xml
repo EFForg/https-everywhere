@@ -1,0 +1,78 @@
+<!--
+	CDN buckets:
+
+		- coresecurity.mktoweb.com
+
+			- ws.coresecurity.com
+
+
+	Nonfunctional domains:
+
+		- www.core-sdi.com *
+		- (www.)coresecurity.com *
+		- corelabs.coresecurity.com *
+
+	* Dropped
+
+
+	Problematic subdomains:
+
+		- ws	(marketo)
+
+
+	Partially covered subdomains:
+
+		- ws	(→ na-d.marketo.com)
+
+
+	Fully covered subdomains:
+
+		- blog
+		- cs
+
+
+	Mixed content:
+
+		- Images on blog from blog *
+
+	* Secured by us, doesn't trip MCB
+
+-->
+<ruleset name="Core Security.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="blog.coresecurity.com" />
+	<target host="cs.coresecurity.com" />
+
+	<!--	Complications:
+				-->
+	<target host="ws.coresecurity.com" />
+
+		<exclusion pattern="^http://ws\.coresecurity\.com/+(?!css/|images/|rs/)" />
+
+			<test url="http://ws.coresecurity.com/ProtectingYourOrgfromPhishingThreatsArchived.html" />
+			<test url="http://ws.coresecurity.com/core-impact-trial-request-q314.html" />
+			<test url="http://ws.coresecurity.com/vulnerability-management-best-practices.html" />
+			<test url="http://ws.coresecurity.com/vulnerability-management-quiz.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://ws.coresecurity.com/rs/coresecurity/images/twitter_counter.png" />
+
+
+	<securecookie host="^cs\.coresecurity\.com$" name=".+" />
+
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<!--rule from="^http://ws\.coresecurity\.com/+(\?.*)?"
+		to="https://www.coresecurity.com/" /-->
+
+	<rule from="^http://ws\.coresecurity\.com/"
+		to="https://na-d.marketo.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,41 @@
+<!--
+	Nonfunctional subdomains:
+
+		- ot		(replies with http)
+
+
+	Problematic subdomains:
+
+		- hub		(works, akamai)
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- hub from cdn1.hubspot.com *
+			- www from $self *
+
+		- favicon on hub from cdn1.hubspot.com *
+
+	* Secured by us
+
+-->
+<ruleset name="SingleHop (partial)">
+
+	<target host="singlehop.com" />
+	<target host="leap3.singlehop.com" />
+	<target host="www.singlehop.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?singlehop\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.singlehop\.com$" name="^site_theme$" /-->
+
+	<securecookie host="^(?:\.|leap3\.|www\.)?singlehop\.com$" name=".+" />
+
+
+	<rule from="^http:" to="https:" />
+
+</ruleset>

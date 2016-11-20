@@ -1,0 +1,145 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://ssl1.gmti.com/ => https://ssl1.gmti.com/: (7, 'Failed to connect to ssl1.gmti.com port 80: Connection refused')
+Fetch error: http://deals.montomeryadvertiser.com/ => http://deals.montomeryadvertiser.com/: (6, 'Could not resolve host: deals.montomeryadvertiser.com')
+	Other Gannett Company rulesets:
+
+		- Army_Times.xml
+		- Asbury_Park_Press.xml
+		- Asheville_Citizen-Times.xml
+		- Bucyrus_Telegraph_Forum.xml
+		- Cincinnati.com.xml
+		- Coloradoan.xml
+		- GCIon.com.xml
+		- Gannett-cdn.com.xml
+		- GannettLocal.xml
+		- Azcentral.com.xml
+		- Battle_Creek_Enquirer.xml
+		- Baxter_Bulletin.xml
+		- Burlington_Free_Press.xml
+		- Chillicothe_Gazette.xml
+		- Clarion-Ledger.xml
+		- Courier-Post.xml
+		- Delaware_Online.xml
+		- Democrat_and_Chronicle.xml
+		- Florida_Today.xml
+		- GreenvilleOnline.com.xml
+		- Herald_Times_Reporter.xml
+		- Indianapolis_Star.xml
+		- Jackson_Sun.xml
+		- Lohud.com.xml
+		- Marion_Star.xml
+		- Pointroll.xml
+		- Reno_Gazette-Journal.xml
+		- ShopLocal.xml
+		- Statesman_Journal.xml
+		- USA_Today.xml
+		- Visalia_Times-Delta.xml
+		- Zanesville_Times_Recorder.xml
+
+
+	usat.ly is handled in Bit.ly_vanity_domains.xml.
+
+
+	www.gannett.com/section/WHOWEARE06
+
+
+	CDN buckets:
+
+		- gntbcstglobal.112.2o7.net
+
+		- s3-us-west-2.amazonaws.com/gannettdigital-static-web/
+
+		- bcdownload.gannett.edgesuite.net
+
+		- img.gannett.edgesuite.net 
+			- cmsimg.floridatoday.com
+
+		- i.usatoday.net.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- (www.)freep.com *
+		- cmsimg.freep.com *
+		- aws.gannett.com			(no https)
+		- cmsimg.gannet.com			(Akamai, 503)
+		- origin-cmsimg.gannet.com		(exists but no https)
+		- origin-www.gannett.com		(ditto)
+		- www.gannet.com			(Akamai, 503)
+		- topics.gannett.com			(404, akamai)
+		- floridatoday.gannettdigital.com
+		- content.gannettonline.com		(times out)
+		- floridatoday.gon.gannettonline.com
+		- gon.gannettonline.com			(no https)
+		- static.gcion.net			(no https)
+		- montgomeryadvertiser.com
+		- www.montgomeryadvertiser.com		(Akamai; 503)
+		- i.usatoday.net *
+		- www.vipjacksonmag.com			(no https)
+
+	* 503, akamai
+
+
+	Problematic domains:
+
+		- deals.montomeryadvertiser.com		(CN: *.planetdiscover.com)
+
+
+	Fully covered domains:
+
+		- support.dmslocal.com
+		- wiki.dmslocal.com
+
+		- gannett.com subdomains:
+
+			- ammoc0[12]
+			- ampoc01
+			- autodiscover
+			- benefits	(→ www.benefitsweb.com)
+			- circportal
+			- webmail.dmz
+			- www.ganweb01
+			- webmail
+			- webmail.west
+
+		- deals.montgomeryadvertiser.com
+		- classifieds.nncogannett.com
+
+-->
+<ruleset name="Gannett Company (partial)" default_off='failed ruleset test'>
+
+	<target host="*.dmslocal.com" />
+	<target host="*.gannett.com" />
+	<target host="ssl1.gmti.com" />
+	<target host="deals.montomeryadvertiser.com" />
+	<target host="classifieds.nncogannett.com" />
+
+
+	<securecookie host="^(?:support|wiki)\.dmslocal\.com$" name=".+" />
+	<!--	Omniture tracking cookies:
+						-->
+	<securecookie host="^\.gannett\.com$" name="^s_\w+$" />
+	<securecookie host="^(?:am[mp]oc0\d|circportal|cwa|www\.ganweb01|webmail(?:\.\w+)?)\.gannett\.com$" name=".+" />
+	<securecookie host="^classifieds\.nncogannett\.com$" name=".+" />
+
+
+	<rule from="^http://(support|wiki)\.dmslocal\.com/"
+		to="https://$1.dmslocal.com/" />
+
+	<rule from="^http://(am[mp]oc0\d|autodisover|circportal|cwa|www\.ganweb01|webmail(?:\.\w+)?)\.gannett\.com/"
+		to="https://$1.gannett.com/" />
+
+	<rule from="^http://benefits\.gannett\.com/[^\?]*(\?.*)?"
+		to="https://www.benefitsweb.com/gannett.html$1" />
+
+	<rule from="^http://ssl1\.gmti\.com/"
+		to="https://ssl1.gmti.com/" />
+
+	<rule from="^http://deals\.montgomeryadvertiser\.com/"
+		to="https://montgom.planetdiscover.com/" />
+
+	<rule from="^http://classifieds\.nncogannett\.com/"
+		to="https://classifieds.nncogannett.com/" />
+
+</ruleset>

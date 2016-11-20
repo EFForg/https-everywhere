@@ -1,0 +1,63 @@
+<!--
+	For other Tremor Video coverage, see Tremor_Video.com.xml.
+
+
+	CDN buckets:
+
+		- app.scanscout.com.edgesuite.net
+
+			- a1682.w7.akamai.net
+
+		- media.scanscout.com.edgesuite.net
+
+			- a197.g.akamai.net
+
+
+	Nonfunctional subdomains:
+
+		- media		(shows app, akamai)
+		- services	(optout.php 404s, valid cert)
+
+
+	Problematic subdomains:
+
+		- app		(works, akamai)
+		- portal	(mismatched, CN: *.videohub.tv)
+
+
+	Fully covered subdomains:
+
+		- app		(→ akamai)
+		- dt
+		- portal	(→ portal.videohub.tv)
+
+
+	dt serves web bugs.
+
+-->
+<ruleset name="scanscout.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="dt.scanscout.com" />
+
+	<!--	Complications:
+				-->
+	<target host="portal.scanscout.com" />
+
+
+	<securecookie host="^\.scanscout\.com$" name="^(?:o?bsm|uid)" />
+	<securecookie host="^dt\.scanscout\.com$" name=".+" />
+
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://portal\.scanscout\.com/.*"
+		to="https://portal.videohub.tv/vhn" />
+
+		<test url="http://portal.scanscout.com//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

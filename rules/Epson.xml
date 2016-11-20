@@ -1,0 +1,78 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://epson.com.mx/ => https://global.latin.epson.com/mx: (6, 'Could not resolve host: epson.com.mx')
+Fetch error: http://www.epson.com.mx/ => https://global.latin.epson.com/mx: Redirect for 'http://www.epson.com.mx/' missing Location
+
+	Nonfunctional:
+
+		- global.epson.com	(cert: netporter.ebz.epson.net; 403)
+		- (www.)epson.jp
+
+
+	Mixed content:
+
+		- Ads/web bugs, on www.epson.com from:
+
+			- epson.112.2o7.net *
+			- www.googleadservices.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Epson.com (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+
+	<target host="epson.ca" />
+	<target host="www.epson.ca" />
+	<target host="epson.com" />
+	<target host="*.epson.com" />
+		<exclusion pattern="^http://(?:www\.)?epson\.com/cgi-bin/Store/consumer/(?!cross_sell\.jsp)"/>
+		<exclusion pattern="^http://(?:www\.)?epson\.com/cgi-bin/Store/jsp/Product/(?:Overview|Photos)\.do"/>
+		<!--	URLs such as http://www.epson.com/snowleopard	-->
+		<exclusion pattern="^http://(?:www\.)?epson\.com/(?:[a-zA-Z][a-zA-Z\d]+){1}$"/>
+	<target host="global.latin.epson.com" />
+	<target host="epson.com.mx" />
+	<target host="www.epson.com.mx" />
+	<target host="*.epson.jp" />
+
+
+	<securecookie host="^(?:.*\.)?epson\.c(?:a|om)$" name=".*" />
+
+
+	<!--	ca: cert only matches www.
+		com: !www times out.	-->
+	<rule from="^http://(?:www\.)?epson\.c(a|om)/"
+		to="https://www.epson.c$1/" />
+
+	<!--	At least some pages redirect to http.
+
+		When fetched via https,
+
+			(mx|sites)/newSite/pages/home/carouselDataES-Educacion.php
+
+		appear to cause JS to break.	-->
+	<rule from="^http://global\.latin\.epson\.com/(data|frame|template)/"
+		to="https://global.latin.epson.com/$1/" />
+
+	<rule from="^http://(pos|was)\.epson\.com/"
+		to="https://$1.epson.com/" />
+
+	<!--	What is this doing?
+		It looks as though this is excluded above...
+	<rule from="^https://(?:www\.)?epson\.com/((?:[a-zA-Z][a-zA-Z\d]+){1})$"
+		to="https://www.epson.com/$1" /-->
+
+	<!--	Cert only matches global.*
+		Redirects as so.	-->
+	<rule from="^http://(?:www\.)?epson\.com\.mx/"
+		to="https://global.latin.epson.com/mx" />
+
+	<rule from="^http://cform\.epson\.jp/"
+		to="https://cform.epson.jp/" />
+
+	<!--	At least the homepage redirects to http.	-->
+	<rule from="^http://shop\.epson\.jp/eshop/"
+		to="https://shop.epson.jp/eshop/" />
+
+</ruleset>
+
+

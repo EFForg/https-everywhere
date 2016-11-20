@@ -1,0 +1,132 @@
+<!--
+	For rules causing false/broken MCB, see xfinity.com-falsemixed.xml.
+
+	For other Comcast coverage, see Comcast.xml.
+
+
+	Nonfunctional hosts in *xfinity.com:
+
+		- dns ᵈ
+		- games ᵈ
+		- networkmanagement ʳ
+		- parents ʳ
+		- speedtest ᵈ
+		- techfund ʳ
+		- hotspots.wifi ᵈ
+
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *xfinity.com:
+
+		- constantguard ᶜ
+		- my ᴬ
+		- serviceo ᵐ
+		- www.stg ˣ
+		- store ²
+		- tvgo ᴬ
+
+	² Redirects to 200 notfound.html
+	ᴬ Akamai / mismatched
+	ᵐ 2o7.net / mismatched
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ˣ Mixed css
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .xfinity.com
+		- cdn.xfinity.com
+		- cdn.ch2.xfinity.com
+		- customer.xfinity.com
+		- es.xfinity.com
+		- forums.xfinity.com
+		- partner.xfinity.com
+		- customer.pdc.prd.xfinity.com
+		- www.pdc.prd.xfinity.com
+		- referafriend.xfinity.com
+		- .referafriend.xfinity.com
+		- customer.stg.xfinity.com
+		- www.stg.xfinity.com
+		- cdn.wcdc.xfinity.com
+		- accesspass.wifi.xfinity.com
+		- www.xfinity.com
+
+
+	Mixed content:
+
+		- css on www.stg from $self ˢ
+
+		- Images, on:
+		
+			- forums from i221.photobucket.com ˢ
+			- www.stg from cdn.comcast.com ˢ
+			- www.stg from $self ˢ
+
+		- favicon on forums from www.xfinity.com ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Xfinity.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="cdn.xfinity.com" />
+	<target host="cdn.ch2.xfinity.com" />
+	<!--target host="constantguard.xfinity.com" /-->
+	<target host="customer.xfinity.com" />
+	<target host="es.xfinity.com" />
+	<target host="forums.xfinity.com" />
+	<target host="partner.xfinity.com" />
+	<target host="customer.pdc.prd.xfinity.com" />
+	<target host="www.pdc.prd.xfinity.com" />
+	<target host="referafriend.xfinity.com" />
+	<target host="secure.xfinity.com" />
+	<target host="securestore.xfinity.com" />
+	<target host="customer.stg.xfinity.com" />
+	<!--target host="www.stg.xfinity.com" /-->
+	<target host="cdn.wcdc.xfinity.com" />
+	<target host="wifi.xfinity.com" />
+	<target host="accesspass.wifi.xfinity.com" />
+	<target host="prov.wifi.xfinity.com" />
+	<target host="wifilogin.xfinity.com" />
+	<target host="www.xfinity.com" />
+
+	<!--	Complications:
+				-->
+	<target host="serviceo.xfinity.com" />
+	<target host="store.xfinity.com" />
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://www.stg.xfinity.com/corporate/Learn/DigitalCable/starz.html" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.xfinity\.com$" name="^(?:BSC|IPToMbox|P?SC|SHS|cc)$" /-->
+	<!--securecookie host="^(?:cdn|cdn\.ch2|customer|es|(?:customer|www)\.pdc\.prd|(?:customer|www)\.stg|cdn\.wcdc|www)\.xfinity\.com$" name="(?:-prd_\w\w|^ADRUM_BT[1a]|^ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^forums\.xfinity\.com$" name="^Lithium(?:UserInfo|UserSecure|Visitor)$" /-->
+	<!--securecookie host="^partner\.xfinity\.com$" name="^(?:connect\.s|uu)id$" /-->
+	<!--securecookie host="^www\.pdc\.prd\.xfinity\.com$" name="(?:-prd_\w\w|^ADRUM_BT[1a])$" /-->
+	<!--securecookie host="^referafriend\.xfinity\.com$" name="^UserDevice$" /-->
+	<!--securecookie host="^\.referafriend\.xfinity\.com$" name="^(?:Culture|ISI\.CMS\.RepositoryVersion|Visit|Visitor)$" /-->
+	<!--securecookie host="^accesspass\.wifi\.xfinity\.com$" name="^\w{32}$" /-->
+
+	<securecookie host="^\." name="^(?:_gat?$|s_v)" />
+	<securecookie host="^\.referafriend\." name="." />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://serviceo\.xfinity\.com/"
+		to="https://xfinity.112.2o7.net/" />
+
+	<rule from="^http://store\.xfinity\.com/"
+		to="https://securestore.xfinity.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

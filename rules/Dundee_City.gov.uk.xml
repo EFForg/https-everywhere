@@ -1,0 +1,70 @@
+<!--
+	Dundee City Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *dundeecity.gov.uk:
+
+		- bygone ᵈ
+		- citycentre ᵈ
+		- idoxwarn ᵈ
+		- inspire ᵈ
+		- opac ᵈ
+		- photopolis ᵈ
+		- pplwd ᵈ
+		- webcam ᵈ
+
+	ᵈ Dropped
+
+
+	^dundeecity.gov.uk: Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- taskflow-portal.dundeecity.gov.uk
+
+-->
+<ruleset name="Dundee City.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="civilcontingencies.dundeecity.gov.uk" />
+	<target host="forms.dundeecity.gov.uk" />
+	<target host="mydundeeaccount.dundeecity.gov.uk" />
+	<target host="secure.dundeecity.gov.uk" />
+	<target host="taskflow-portal.dundeecity.gov.uk" />
+	<target host="www.dundeecity.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="dundeecity.gov.uk" />
+
+		<!--	200 "service unavailable" over http & 403
+			over https => fetch test would fail.
+
+			This makes us stand out more, but that's
+			better than this ruleset being disabled.
+								-->
+		<exclusion pattern="^http://secure\.dundeecity\.gov\.uk/$" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://taskflow-portal.dundeecity.gov.uk/portal-live/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^taskflow-portal\.dundeecity\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://dundeecity\.gov\.uk/"
+		to="https://www.dundeecity.gov.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

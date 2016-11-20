@@ -1,0 +1,88 @@
+<!--
+	For other US government coverage, see US-government.xml.
+
+
+	Nonfunctional hosts in *data.gov:
+
+		 - staging.catalog *
+
+	* 401
+
+
+	Problematic hosts in *data.gov:
+
+		- labs *
+
+	* Akamai
+
+
+	Insecure cookies are set for these hosts:
+
+		- labs.data.gov
+		- staging.data.gov
+		- www.data.gov
+
+
+	Mixed content:
+
+		- Images on ethics, wiki from www.data.gov *
+
+	* Secured by us
+
+-->
+<ruleset name="Data.gov (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="data.gov" />
+	<target host="api.data.gov" />
+	<target host="catalog.data.gov" />
+	<target host="ethics.data.gov" />
+	<target host="explore.data.gov" />
+	<target host="geo.data.gov" />
+	<target host="idm.data.gov" />
+	<target host="idp.data.gov" />
+	<target host="labs-staging.data.gov" />
+	<target host="staging.data.gov" />
+	<target host="static.data.gov" />
+	<target host="wiki.data.gov" />
+	<target host="www.data.gov" />
+
+	<!--	Complications:
+				-->
+	<target host="labs.data.gov" />
+
+		<!--	404:
+				-->
+		<exclusion pattern="^http://labs\.data\.gov/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://labs.data.gov//home.php" />
+			<test url="http://labs.data.gov/index.asp" />
+			<test url="http://labs.data.gov/index.aspx" />
+			<test url="http://labs.data.gov/index.cgi" />
+			<test url="http://labs.data.gov/index.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://labs.data.gov//?foo" />
+			<test url="http://labs.data.gov/?bar" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:labs|staging|www)\.data\.gov$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://labs\.data\.gov/.*"
+		to="https://www.data.gov/labs" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

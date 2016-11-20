@@ -1,0 +1,68 @@
+<!--
+	Dresden University of Technology
+
+
+	Nonfunctional subdomains:
+
+		- inf		(mismatched, CN: www.inf.tu-dresden.de)
+		- www.verw	(refused)
+		- (www.)	(dropped)
+
+
+	Problematic subdomains:
+
+		- alumni	(works, self-signed)
+		- www.iai.inf	(differs from http)
+
+
+	Fully covered subdomains:
+
+		- (www.)inf	(^ → www)
+		- www.iai.inf	(→ www.inf)
+		- anon.inf
+		- dudle.inf
+		- os.inf
+
+
+	Insecure cookies are set for these hosts:
+
+		- dudle.inf.tu-dresden.de
+
+
+	Mixed content:
+
+		- Images on www.inf from ^ *
+
+	* Unsecurable, doesn't trip MCB
+
+-->
+<ruleset name="TU-Dresden.de (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="dudle.inf.tu-dresden.de" />
+	<target host="anon.inf.tu-dresden.de" />
+	<target host="os.inf.tu-dresden.de" />
+	<target host="www.inf.tu-dresden.de" />
+
+	<!--	Complications:
+				-->
+	<target host="inf.tu-dresden.de" />
+	<target host="iai.inf.tu-dresden.de" />
+	<target host="www.iai.inf.tu-dresden.de" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^dudle\.inf\.tu-dresden\.de$" name="^lang$" /-->
+
+	<securecookie host="^dudle\.inf\.tu-dresden\.de$" name=".+" />
+
+
+	<rule from="^http://(?:(?:www\.)?iai\.)?inf\.tu-dresden\.de/"
+		to="https://www.inf.tu-dresden.de/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

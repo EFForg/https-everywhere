@@ -1,0 +1,53 @@
+<!--
+	www.osmc.tv: Refused
+
+
+	Problematic hosts in *osmc.tv:
+
+		- www.discourse * ᵐ
+
+	* Differs from http
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- discourse.osmc.tv
+		- www.discourse.osmc.tv
+		- store.osmc.tv
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="OSMC.tv">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="osmc.tv" />
+	<target host="discourse.osmc.tv" />
+	<target host="store.osmc.tv" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://store.osmc.tv/embed_cart_widget/" /-->
+
+	<!--	Complications:
+				-->
+	<target host="www.osmc.tv" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^discourse\.osmc\.tv$" name="^_forum_session$" /-->
+	<!--securecookie host="^(?:www\.discourse|store)\.osmc\.tv$" name="^_wp_woocommerce_session_[\da-f]{32}$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://www\.osmc\.tv/"
+		to="https://osmc.tv/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

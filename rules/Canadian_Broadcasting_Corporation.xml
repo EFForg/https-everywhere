@@ -1,0 +1,39 @@
+<!--
+	See Canadian_Broadcasting_Corporation-mixedcontent.xml for rules with mixed content.
+
+
+	CDN buckets:
+
+		- podcast.cbc.ca.edgesuite.net
+
+		- www.cbc.ca.edgesuite.net
+
+			- static.music.cbc.ca
+
+
+	Problematic subdomains:
+
+		-		(works, redirects to https://www)
+		- static.music *
+		- podcast *
+		- www *
+
+	* Works, akamai
+
+
+	Mixed css & js on music from static.music & www => separate mixedcontent ruleset.
+
+-->
+<ruleset name="Canadian Broadcasting Corporation (partial)">
+
+	<target host="*.cbc.ca" />
+		<!--
+			We only want to secure non-page data here:
+									-->
+		<exclusion pattern="^http://music\.cbc\.ca/(?!config/|images/|(?:.+/)?(?:j|service)s/|lib/|modules/|(?:Web|Script)Resource\.axd/|stats/)" />
+
+
+	<rule from="^http://(music|sso)\.cbc\.ca/"
+		to="https://$1.cbc.ca/" />
+
+</ruleset>

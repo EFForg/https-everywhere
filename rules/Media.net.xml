@@ -1,0 +1,73 @@
+<!--
+	CDN buckets:
+
+		- mycdn-a.akamaihd.net | cdn.media.net.edgesuite.net
+
+		- log-a.akamaihd.net
+
+			- static
+
+		- a1778.g.akamai.net/... | qsearch-a.akamaihd.net
+
+			- contextual.media.net
+
+		- srvjs-a.akamaihd.net
+
+		- qsearch.media.net.edgesuite.net
+
+			- a728.g.akamai.net
+
+		- static.media.net.edgesuite.net
+
+			- a1574.g.akamai.net
+
+		- www.media.net.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- ^	(refused)
+		- www	(503, akamai)
+
+
+	Problematic subdomains:
+
+		- cdn *
+		- contextual *
+		- qsearch *
+		- static *
+
+	* Works, akamai
+
+
+	Fully covered subdomains:
+
+		- qsearch	(→ qsearch-a.akamaihd.net)
+		- static	(→ log-a.akamaihd.net)
+
+-->
+<ruleset name="media.net (partial)">
+
+	<target host="*.media.net" />
+
+
+	<!--	Can this be secured safely?
+						-->
+	<!--securecookie host="^\.media\.net$" name="^visitor-id$" /-->
+	<!--
+		Tracking cookies:
+					-->
+	<securecookie host="^\.media\.net$" name="^(?:__utm\w|wooTracker)$" />
+	<securecookie host="^\.www\.media\.net$" name="^(?:__ar_v4|_te_)$" />
+
+
+	<rule from="^http://cdn\.media\.net/"
+		to="https://mycdn-a.akamaihd.net/" />
+
+	<rule from="^http://(?:contextual|qsearch)\.media\.net/"
+		to="https://qsearch-a.akamaihd.net/" />
+
+	<rule from="^http://static\.media\.net/"
+		to="https://log-a.akamaihd.net/" />
+
+</ruleset>

@@ -1,0 +1,63 @@
+<!--
+	Nonfunctional host in *gitter.im:
+
+		- blog ³
+		- next ʳ
+
+	³ 403
+	ʳ Refused
+
+
+	Problematic host in *gitter.im:
+
+		- support ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- billing.gitter.im
+		- developer.gitter.im
+		- irc.gitter.im
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Gitter.im (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="gitter.im" />
+	<target host="badges.gitter.im" />
+	<target host="billing.gitter.im" />
+	<target host="cdn01.gitter.im" />
+	<target host="cdn02.gitter.im" />
+	<target host="cdn03.gitter.im" />
+	<target host="developer.gitter.im" />
+	<target host="irc.gitter.im" />
+	<target host="sidecar.gitter.im" />
+	<target host="update.gitter.im" />
+	<target host="www.gitter.im" />
+
+	<!--	Special cases:
+				-->
+	<target host="support.gitter.im" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(billing|developer|irc)\.gitter\.im$" name="^connect\.sid$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://support\.gitter\.im/.*"
+		to="https://gitter.zendesk.com/hc" />
+
+		<test url="http://support.gitter.im/?foo" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

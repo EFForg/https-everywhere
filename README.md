@@ -45,16 +45,15 @@ This is the source tree for HTTPS Everywhere for Firefox and Chrome.
 
 Important directories you might want to know about
 
-    src/                      The Firefox source
-
     chromium/                 The Chromium/Chrome source
                               (not to be confused with Firefox browser "chrome" or UI)
 
+    src/                      The Firefox source
     src/components            |
     src/chrome/content        | Firefox JavaScript and XUL code
     src/chrome/content/code   |
 
-    src/chrome/content/rules  The rulesets live here
+    rules/                    The rulesets live here
 
     test/                     The tests live here
 
@@ -72,11 +71,11 @@ https-everywhere@lists.eff.org (code).
 
 HTTPS Everywhere consists of a large number of rules for switching sites from HTTP to HTTPS. You can read more about how to write these rules here: https://www.eff.org/https-everywhere/rulesets
 
-If you want to create new rules to submit to us, we expect them to be in the src/chrome/content/rules directory. That directory also contains a useful script, make-trivial-rule, to create a simple rule for a specified domain. There is also a script called trivial-validate.py, to check all the pending rules for several common errors and oversights. For example, if you wanted to make a rule for the example.com domain, you could run
+If you want to create new rules to submit to us, we expect them to be in the `rules/` directory. That directory also contains a useful script, `make-trivial-rule`, to create a simple rule for a specified domain. There is also a script called `trivial-validate.py`, to check all the pending rules for several common errors and oversights. For example, if you wanted to make a rule for the example.com domain, you could run
 
     bash ./make-trivial-rule example.com
 
-inside the rules directory. This would create Example.com.xml, which you could then take a look at and edit based on your knowledge of any specific URLs at example.com that do or don't work in HTTPS. You should then run
+inside the rules directory. This would create `Example.com.xml`, which you could then take a look at and edit based on your knowledge of any specific URLs at example.com that do or don't work in HTTPS. You should then run
 
     bash test.sh
 
@@ -97,7 +96,7 @@ We have two publicly-archived mailing lists: the https-everywhere list (https://
 Tests
 -------------
 
-There are some very basic unittests under test/. These are run with
+There are some very basic unittests under `test/`. These are run with
 
     bash test.sh
 

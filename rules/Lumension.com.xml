@@ -1,0 +1,88 @@
+<!--
+	CDN buckets:
+
+		- cdn.lumension.com.edgesuite.net
+
+			- marketing.cdn
+			- leic
+
+
+	Nonfunctional subdomains:
+
+		- my *
+
+	* Redirects to sftp, some paths 404
+
+
+	Problematic subdomains:
+
+		- blog ¹
+		- marketing.cdn ²
+		- leic ²
+
+	¹ Works, bluehost
+	² Works, akamai
+
+
+	Partially covered subdomains:
+
+		- blog ¹	(→ bluehost)
+		- leic ¹	(→ akamai)
+		- my ²		(→ www)
+
+	¹ Avoiding user-visible paths
+	² Some redirects preempted
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- marketing.cdn		(→ akamai)
+		- portal
+		- sftp
+		- support
+
+
+	Mixed content:
+
+		- css on leic from www *
+
+		- Images, on:
+
+			- blog and leic from marketing.cdn *
+			- blog and leic from www *
+
+	* Secured by us
+
+-->
+<ruleset name="Lumension.com (partial)">
+
+	<target host="lumension.com" />
+	<target host="*.lumension.com" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<!--exclusion pattern="^http://blog\.bluehost\.com/+(?!favicon\.ico|wp-content/)" /-->
+		<exclusion pattern="^http://leic\.lumensions\.com/+(?!css/|images/)" />
+		<!--exclusion pattern="^http://my\.lumension\.com/+(?!$|\?|partner_request_form\.jsp)" /-->
+
+
+	<securecookie host="^\.lumension\.com$" name="^_mkto_trk$" />
+
+
+	<rule from="^http://((?:portal|sftp|support|www)\.)?lumension\.com/"
+		to="https://$1lumension.com/" />
+
+	<rule from="^http://blog\.lumension\.com/favicon\.ico"
+		to="https://secure.bluehost.com/~lumensio/blog_prod/favicon.ico" />
+
+	<rule from="^http://blog\.lumension\.com/wp-content/"
+		to="https://secure.bluehost.com/~lumensio/blog_prod/wp-content/" />
+
+	<rule from="^http://my\.lumension\.com/+(?:\?.*)?$"
+		to="https://www.lumension.com/mylumension/mylumension.aspx" />
+
+	<rule from="^http://my\.lumension\.com/+partner_request_form\.jsp(?:\??$|(\?.+))"
+		to="https://www.lumension.com/Partners/Become-A-Lumension-Partner.aspx$1" />
+
+</ruleset>

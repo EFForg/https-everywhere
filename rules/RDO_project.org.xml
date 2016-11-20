@@ -1,0 +1,55 @@
+<!--
+	For other Red Hat coverage, see Red_Hat.xml.
+
+
+	Problematic hosts in *rdoproject.org:
+
+		- ask ᵐ
+
+	ᵐ Mismatched
+
+
+	STS header includes includeSubdomains
+	for ^, ask, www
+
+-->
+<ruleset name="RDO project.org">
+
+	<target host="rdoproject.org" />
+	<target host="*.rdoproject.org" />
+
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?:(?![^./]+\.(?:ask|www)\.rdoproject\.org/)(?:[^./]+\.){2,}|(?:[^./]+\.){2,}(?:ask|www)\.)rdoproject\.org/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.rdoproject.org/" />
+			<test url="http://exists.not.rdoproject.org/" />
+			<test url="http://this.host.ask.rdoproject.org/" />
+			<test url="http://exists.not.ask.rdoproject.org/" />
+			<test url="http://this.host.www.rdoproject.org/" />
+			<test url="http://exists.not.www.rdoproject.org/" />
+			<test url="http://really.and.www.rdoproject.org/" />
+			<test url="http://honestly.not.www.rdoproject.org/" />
+
+		<test url="http://trunk.rdoproject.org/" />
+		<test url="http://www.rdoproject.org/" />
+
+
+	<securecookie host="." name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://ask\.rdoproject\.org/+"
+		to="https://ask.openstack.org/en/questions/scope:unanswered/sort:age-desc/page:1/query:rdo/" />
+
+		<test url="http://ask.rdoproject.org/" />
+		<test url="http://ask.rdoproject.org/default.aspx" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

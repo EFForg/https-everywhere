@@ -1,0 +1,93 @@
+<!--
+	Other OpenDNS rulesets:
+
+		- BGPStream.com.xml
+
+
+	CDN buckets:
+
+		- d1c21ex135qvy3.cloudfront.net
+
+			- cdn-blog
+
+
+	Nonfunctional hosts in *opendns.com:
+
+		- feeds *
+
+	* Handshake fails
+
+
+	Fully covered hosts in *opendns.com:
+
+		- (www.)?
+		- blog
+		- careers
+		- cdn-blog	(→ d1c21ex135qvy3.cloudfront.net)
+		- community
+		- dashboard
+		- engineering
+		- ideabank
+		- labs
+		- login
+		- shared
+		- support
+		- system
+
+
+	Insecure cookies are set for these domains:
+
+		- .opendns.com
+
+
+	Mixed content:
+
+		- Images on community from shared.opendns.com
+		- Bug on labs from code.highcharts.com *
+
+	* Secured by us
+
+-->
+<ruleset name="OpenDNS (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="opendns.com" />
+	<target host="blog.opendns.com" />
+	<target host="careers.opendns.com" />
+	<target host="community.opendns.com" />
+	<target host="dashboard.opendns.com" />
+	<target host="engineering.opendns.com" />
+	<target host="ideabank.opendns.com" />
+	<target host="labs.opendns.com" />
+	<target host="login.opendns.com" />
+	<target host="shared.opendns.com" />
+	<target host="support.opendns.com" />
+	<target host="system.opendns.com" />
+	<target host="www.opendns.com" />
+
+	<!--	Complications:
+				-->
+	<target host="cdn-blog.opendns.com" />
+
+		<!--	https://trac.torproject.org/projects/tor/ticket/3734
+										-->
+		<!--exclusion pattern="^http://screenshots\.opendns\.com/" /-->
+		<!--
+			More breakage reported by OpenDNS users:
+								 -->
+		<!--exclusion pattern="^http://(?:block|feeds|guide|info|malware|phish)\.opendns\.com/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.opendns\.com$" name="^OPENDNS_ACCOUNT$" /-->
+
+
+	<rule from="^http://cdn-blog\.opendns\.com/"
+		to="https://d1c21ex135qvy3.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

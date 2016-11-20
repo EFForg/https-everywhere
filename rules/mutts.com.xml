@@ -1,0 +1,66 @@
+<!--
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.mutts.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on www from $self ˢ
+
+		- Images, on:
+
+			- staging, www from ^mutts.com ˢ
+			- staging, www from $self ˢ
+			- staging from www.mutts.com ˢ
+			- www from staging.mutts.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="mutts.com (partial)" platform="mixedcontent">
+
+	<target host="mutts.com" />
+	<target host="staging.mutts.com" />
+	<target host="www.mutts.com" />
+
+		<!--	Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(?:staging|www)\.mutts\.com/(?:$|accessories$|awards-list$|calendar$|cart$|copyright$|help$|mutts-manifesto$|privacy-policy$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:staging|www)\.mutts\.com/(?!/*(?:favicon\.ico|misc/|news(?:$|[?/])|sites/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.mutts.com/accessories" />
+			<test url="http://www.mutts.com/awards-list" />
+			<test url="http://www.mutts.com/calendar" />
+			<test url="http://www.mutts.com/copyright" />
+			<test url="http://www.mutts.com/help" />
+			<test url="http://www.mutts.com/mutts-manifesto" />
+			<test url="http://www.mutts.com/privacy-policy" />
+			<test url="http://www.mutts.com/splash" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.mutts.com/favicon.ico" />
+			<test url="http://www.mutts.com/misc/menu-expanded.png" />
+			<!--	sets cookie without secure, mixed content:	-->
+			<test url="http://www.mutts.com/news/" />
+			<test url="http://www.mutts.com/sites/all/themes/muttscomics1/images/facebook.png" />
+			<test url="http://www.mutts.com/sites/default/files/css/css_a7lQP2XcNT8OtrLuooPT06s97x8tRZ9kAalBwRFh88M.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.mutts\.com$" name="^PHPSESSID$" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

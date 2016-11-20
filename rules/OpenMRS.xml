@@ -1,0 +1,111 @@
+<!--
+	For problematic rules, see OpenMRS.org-problematic.xml.
+
+
+	Nonfunctional hosts in *openmrs.org:
+
+		- go *
+
+	* Handshake fails
+
+
+	Problematic hosts in *openmrs.org:
+
+		- ^ ¹
+		- answers ²
+		- ask ³
+		- events ¹
+		- www ³
+
+	¹ Mismatched
+	² Plaintext reply
+	³ Refused
+
+
+	Fully covered hosts in *openmrs.org:
+
+		- answers	(→ wiki.openmrs.org)
+		- ask		(→ wiki.openmrs.org)
+		- id
+		- issues
+		- modules
+		- talk
+		- tickets
+
+
+	source: Dropped over http & https
+
+
+	Insecure cookies are set for these hosts:
+
+		- openmrs.org
+		- ci.openmrs.org
+		- events.openmrs.org
+		- id.openmrs.org
+		- talk.openmrs.org
+		- wiki.openmrs.org
+
+
+	Mixed content:
+
+		- Font on ^, events from themes.googleusercontent.com *
+		- Images on ^, events from $self
+
+	* Secured by us
+-->
+<ruleset name="OpenMRS.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="openmrs.org" /-->
+	<target host="ci.openmrs.org" />
+	<!--target host="events.openmrs.org" /-->
+	<target host="id.openmrs.org" />
+	<target host="issues.openmrs.org" />
+	<target host="modules.openmrs.org" />
+	<target host="talk.openmrs.org" />
+	<target host="tickets.openmrs.org" />
+	<target host="wiki.openmrs.org" />
+
+	<!--	Complications:
+				-->
+	<target host="answers.openmrs.org" />
+	<target host="ask.openmrs.org" />
+	<!--target host="www.openmrs.org" /-->
+
+
+	<!--securecookie host="^(events\.)?openmrs\.org$" name="^newvisitor$" /-->
+	<!--securecookie host="^ci\.openmrs\.org$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^id\.openmrs\.org$" name="^connect\.sid$" /-->
+	<!--securecookie host="^talk\.openmrs\.org$" name="^(_forum_session|destination_url)$" /-->
+	<!--securecookie host="^wiki\.openmrs\.org$" name="^wit-announce-token$" /-->
+
+	<!--securecookie host="^(?:(?:ci|events|id|talk|wiki)\.)?openmrs\.org$" name=".+" /-->
+	<securecookie host="^(?:ci|id|talk|wiki)\.openmrs\.org$" name=".+" />
+
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://answers\.openmrs\.org/[^?]*"
+		to="https://wiki.openmrs.org/display/ask/Home" />
+
+		<test url="http://answers.openmrs.org/?f" />
+		<test url="http://answers.openmrs.org//?o" />
+
+	<!--	Redirect keeps path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://ask\.openmrs\.org/([^?]*)(?:\?.*)?"
+		to="https://wiki.openmrs.org/display/ask$1" />
+
+		<test url="http://ask.openmrs.org/?f" />
+		<test url="http://ask.openmrs.org/?o" />
+		<test url="http://ask.openmrs.org//?o" />
+		<test url="http://ask.openmrs.org/?b" />
+		<test url="http://ask.openmrs.org/?a" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

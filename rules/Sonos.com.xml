@@ -1,0 +1,43 @@
+<!--
+		- sonos.custhelp.com
+
+
+	Nonfunctional subdomains:
+
+		- blog	(dropped)
+		- forums *
+
+	* Dropped
+
+
+	Problematic subdomains:
+
+		- ^	(cert only matches *.sonos.com)
+
+
+	Some pages redirect to http.
+
+
+	Fully covered subdomains:
+
+		- faq
+
+-->
+<ruleset name="Sonos.com (partial)">
+
+	<target host="sonos.com" />
+	<target host="*.sonos.com" />
+
+
+	<!--securecookie host="^\.sonos\.com$" name="^(ASP\.NET_SessionId|_csm_ux_data|redirectInfo)$" /-->
+	<securecookie host="^\.sonos\.com$" name="^__u(?:tm\w|tmli|nam)$" />
+	<!--securecookie host="^\.www\.sonos\.com$" name="^(lang|region)$" /-->
+
+
+	<rule from="^http://(?:www\.)?sonos\.com/(?=(?:\w+/)?(?:[cC]ss/|images/|js/|(?:Script|Web)Resource\.axd)|fancybox/|login(?:$|[?/])|shop/(?:i/|login\.aspx|[tT]hemes/)|static/|widgets/)"
+		to="https://www.sonos.com/" />
+
+	<rule from="^http://faq\.sonos\.com/"
+		to="https://faq.sonos.com/" />
+
+</ruleset>

@@ -1,0 +1,120 @@
+<!--
+	For other Vodafone Group coverage, see Vodafone.xml.
+
+
+	Nonfunctional hosts in *vodafone.co.nz:
+
+		- feedback-reporting ¹
+		- foundation ¹
+		- search ¹
+		- topmodel ¹
+		- tradein ²
+		- vmusic ³
+
+	¹ Blank page
+	² Handshake fails
+	³ Plaintext reply
+
+
+	Problematic hosts in *vodafone.co.nz:
+
+		- forum *
+
+		- www.wholesale *
+
+	* Mismatched
+
+
+	These altnames don't exist:
+
+		- blogs.vodafone.co.nz
+		- games.vodafone.co.nz
+		- firstmobile.vodafone.co.nz
+		- storybook.vodafone.co.nz
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- vodafone.co.nz
+		- community.vodafone.co.nz
+		- feedback.vodafone.co.nz
+		- help.vodafone.co.nz
+		- m.vodafone.co.nz
+		- .wholesale.vodafone.co.nz
+		- www.vodafone.co.nz
+
+
+	Mixed content:
+
+		- Images on help from $self *
+		- Bug on www from a.tribalfusion.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Vodafone.co.nz (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="vodafone.co.nz" />
+	<target host="community.vodafone.co.nz" />
+	<target host="feedback.vodafone.co.nz" />
+	<target host="help.vodafone.co.nz" />
+	<target host="m.vodafone.co.nz" />
+	<target host="stores.vodafone.co.nz" />
+	<target host="webmail.vodafone.co.nz" />
+	<target host="wholesale.vodafone.co.nz" />
+	<target host="www.vodafone.co.nz" />
+
+	<!--	Complications:
+				-->
+	<target host="forum.vodafone.co.nz" />
+	<target host="search.vodafone.co.nz" />
+
+		<!--	/\w.* 404s:
+					-->
+		<exclusion pattern="^http://search\.vodafone\.co\.nz/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://search.vodafone.co.nz/f" />
+			<test url="http://search.vodafone.co.nz/o" />
+			<test url="http://search.vodafone.co.nz//o" />
+			<test url="http://search.vodafone.co.nz/b" />
+			<test url="http://search.vodafone.co.nz/a" />
+
+		<test url="http://feedback.vodafone.co.nz/analytics/ga.php?utmac=" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?vodafone\.co\.nz$" name="^bIPs$" /-->
+	<!--securecookie host="^communityfeedback\.vodafone\.co\.nz$" name="^LithiumVisitor$" /-->
+	<!--securecookie host="^feedback\.vodafone\.co\.nz$" name="^__utmmobile$" /-->
+	<!--securecookie host="^help\.vodafone\.co\.nz$" name="^cp_session$" /-->
+	<!--securecookie host="^m\.vodafone\.co\.nz$" name="^(?:BIGipServer\w+|JSESSIONID)$" /-->
+	<!--securecookie host="^\.wholesale\.vodafone\.co\.nz$" name="^(?:ANON|VIS)ID\d+$" /-->
+
+	<securecookie host="^(?:.*\.)?vodafone\.co\.nz$" name=".+" />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://forum\.vodafone\.co\.nz/+"
+		to="https://community.vodafone.co.nz/" />
+
+		<test url="http://forum.vodafone.co.nz//" />
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://search\.vodafone\.co\.nz/.*"
+		to="https://www.vodafone.co.nz/search" />
+
+		<test url="http://search.vodafone.co.nz/?f" />
+		<test url="http://search.vodafone.co.nz/?o" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

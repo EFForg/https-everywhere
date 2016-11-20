@@ -1,0 +1,51 @@
+<!--
+	Nonfunctional hosts in *coub.com:
+
+		- blog *
+
+	* Tumblr
+
+	Problematic hosts in *coub.com:
+
+		- assets1-new.akamai ¹
+		- storage.akamai ¹
+		- www ²
+
+	¹ Akamai
+	² Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- coub.com
+
+-->
+<ruleset name="Coub.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="coub.com" />
+
+	<!--	Complications:
+				-->
+	<target host="assets1-new.akamai.coub.com" />
+	<target host="www.coub.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^coub\.com$" name="^(?:_coub_session_2|split)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://assets1-new\.akamai\.coub\.com/"
+		to="https://coubsecureassets-a.akamaihd.net/" />
+
+	<rule from="^http://www\.coub\.com/"
+		to="https://coub.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

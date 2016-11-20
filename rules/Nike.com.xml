@@ -1,0 +1,169 @@
+<!--
+	CDN buckets:
+
+		- nike.112.2o7.net
+
+		- nike.com.112.2o7.net
+
+			- modus
+
+		- nike.com.102.112.2o7.net
+
+			- smodus
+
+		- ak1s.abmr.net/is/secure-store.nike.com
+		- nikeplus.nike.com.edgesuite.net
+		- niketown.nike.com.edgesuite.net
+		- nikevideo.nike.com.edgesuite.net
+		- secure-niketown.nike.com.edgekey.net
+		- secure-store.nike.com.edgekey.net
+		- store.nike.com.edgesuite.net
+		- ugc.nikeid.com.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- legacydev	(refused)
+		- news ³
+
+	³ 503, Akamai
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- images *
+		- modus		(mismatched, CN: *.112.2o7.net)
+		- nikeplus *
+		- nikevideo *
+		- secure-nikeplus ᵀ
+		- store		(redirects to secure-store, akamai)
+		- ugc *
+		- www		(Blocks Tor users)
+
+	¹ Refused
+	ᵀ Blocks Tor users
+	* Works, akamai
+
+
+	Partially covered subdomains:
+
+		- ^	(→ www, $ redirects to http)
+		- nikeplus	(some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- developer
+		- help-all
+		- help-de-de
+		- help-de-eu
+		- help-en-cn
+		- help-en-eu
+		- help-en-gb
+		- help-en-us
+		- help-es-eu
+		- help-es-la
+		- help-fr-eu
+		- help-fr-fr
+		- help-it-eu
+		- help-ja-jp
+		- help-nl-eu
+		- help-pt-br
+		- help-zh-tw
+		- images *
+		- modus		(→ nike-com.112.2o7.net)
+		- origin-www
+		- secure-nikeplus
+		- secure-niketown
+		- secure-store
+		- store
+		- smodus
+		- store		(→ secure-store)
+
+
+	Observed cookie domains:
+
+		- .
+		- secure-store
+		- www
+
+
+	Mixed content:
+
+		- css:
+
+			- on secure-store from store *
+
+		- Images:
+
+			- on secure-store from images **
+			- on secure-store from ugc **
+			- on secure-store from www **
+
+	* Secured by us, seems to load custom fonts only.
+	** Secured by us, doesn't trip MCB anyway.
+
+-->
+<ruleset name="Nike.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="developer.nike.com" />
+	<target host="help-all.nike.com" />
+	<target host="help-de-de.nike.com" />
+	<target host="help-de-eu.nike.com" />
+	<target host="help-en-cn.nike.com" />
+	<target host="help-en-eu.nike.com" />
+	<target host="help-en-gb.nike.com" />
+	<target host="help-en-us.nike.com" />
+	<target host="help-es-eu.nike.com" />
+	<target host="help-es-la.nike.com" />
+	<target host="help-fr-eu.nike.com" />
+	<target host="help-fr-fr.nike.com" />
+	<target host="help-it-eu.nike.com" />
+	<target host="help-ja-jp.nike.com" />
+	<target host="help-nl-eu.nike.com" />
+	<target host="help-pt-br.nike.com" />
+	<target host="help-zh-tw.nike.com" />
+	<target host="origin-www.nike.com" />
+	<target host="secure-nikeplus.nike.com" />
+	<target host="secure-niketown.nike.com" />
+	<target host="smodus.nike.com" />
+	<target host="secure-store.nike.com" />
+	<!--target host="www.nike.com" /-->	<!-- ← needs clearnet testing	-->
+
+	<!--	Complications:
+				-->
+	<target host="nike.com" />
+	<target host="modus.nike.com" />
+	<target host="nikeplus.nike.com" />
+	<target host="nikevideo.nike.com" />
+	<target host="store.nike.com" />
+
+		<!--exclusion pattern="^http://www\.nike\.com/+(?!apps/|content/|dat/tealeaftarget\.html|etc/|nikeos/scripts/)" /-->
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.nike\.com$" name="^(?:AnalysisUserId|ResonanceSegment|RES_TRACKINGID|s_\w+|utag_main)$" />
+	<!--securecookie host="^(help-(?:all|de-de|de-eu|en-cn|en-eu|en-gb|en-us|es-eu|es-la|fr-eu|fr-fr|it-eu|ja-jp|nl-eu|pt-br|zh-tw)|secure-store)\.nike\.com$" name=".+" /-->
+	<securecookie host="^(?:help-[\w-]+|secure-store)\.nike\.com$" name=".+" />
+
+
+	<rule from="^http://nike\.com/"
+		to="https://www.nike.com/" />
+
+	<rule from="^http://modus\.nike\.com/"
+		to="https://nike-com.112.2o7.net/" />
+
+	<rule from="^http://nikeplus\.nike\.com/"
+		to="https://secure-nikeplus.nike.com/" />
+
+	<rule from="^http://store\.nike\.com/"
+		to="https://secure-store.nike.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

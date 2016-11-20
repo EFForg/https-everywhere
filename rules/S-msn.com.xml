@@ -1,0 +1,135 @@
+<!--
+	For other Microsoft coverage, see Microsoft.xml.
+
+
+	CDN buckets:
+
+		- kaw.st[bc].s-msn.com.edgekey.net
+
+		- colst(b|c)01.msn.com.edgesuite.net
+
+			- col.st(b|c).s-msn.com
+
+		- estb00.msn.com.edgesuite.net
+
+			- db2.stb.s-msn.com
+
+		- sgsts.msn.com.edgesuite.net | sgst.sin.cb3.glbdns.microsoft.com
+
+			- sgst[cj].msn.com
+			- sin.st[cjs].s-msn.com
+
+		- legstatics.s-msn.com.edgesuite.net
+
+			- cpc.db3.s-msn.com
+
+		- sgstb0[01]-s.msn.com.edgesuite.net | sgstb.sin.cb3.glbdns.microsoft.com
+
+			- sin.stb0[01].s-msn.com
+
+		- img1.video.s-msn.com.edgesuite.net
+		- img2.video.s-msn.com.edgesuite.net
+		- img.widgets.video.s-msn.com.edgesuite.net
+
+		- colstb.co1.cb3.glbdns.microsoft.com
+
+			- col.stb00.s-msn.com
+
+		- msnvidprod.vo.msecnd.net
+
+			- img1.video.s-msn.com
+
+
+	Nonfunctional hosts in *s-msn.com
+
+		- cpc.db3 *
+		- col.stc *
+		- hlc **
+		- hli **
+		- livc **
+		- kaw.st[bc] **
+		- sin.st[cj]		(504, akamai)
+		- img[12].video *
+
+	* 503, akamai
+	** Times out
+
+
+	Problematic hosts in *s-msn.com:
+
+		- cpc.db3		(mismatched, CN: images.partner.windowsphone.com)
+
+		- *.st
+
+		- static *
+		- static-hp		504, Akamai
+		- static-finance-neu *
+
+		- *.stb
+
+			- col
+			- db2
+			- kaw
+			- sin *
+
+		- *.stb\d*
+
+			- db2.stb0[01] **
+			- sin.stb00 *
+
+		- *.stc
+
+			- db2
+			- db3
+			- kaw
+
+		- *.stj
+
+			- db2.stj
+
+		- img3.catalog.video *
+		- img.widgets.video *
+
+	* Works, akamai
+	** CN: *.sharepointonline.com; works
+
+-->
+<ruleset name="s-msn.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="entcss.s-msn.com" />
+	<target host="entimg.s-msn.com" />
+	<target host="img.s-msn.com" />
+	<target host="media-social.s-msn.com" />
+	<target host="static-hp-eus.s-msn.com" />
+	<target host="blu.stb.s-msn.com" />
+	<target host="blu.stc.s-msn.com" />
+	<target host="col.stb00.s-msn.com" />
+	<target host="col.stb01.s-msn.com" />
+	<target host="kaw.stb.s-msn.com" />
+	<target host="col.stc.s-msn.com" />
+	<target host="stc-now.s-msn.com" />
+	<target host="stj-now.s-msn.com" />
+	<target host="wst.s-msn.com" />
+
+	<!--	Complications:
+				-->
+	<target host="static-hp.s-msn.com" />
+
+
+	<!--	Serves stylesheets, so we cannot
+		rewrite to akamai.
+					-->
+	<rule from="^http://static-hp\.s-msn\.com/"
+		to="https://preview.msn.com/" />
+
+	<!--	Moved to akamai and broke:
+
+	<rule from="^http://(\w+)\.st(b|c|j)?\d*\.s-msn\.com/"
+		to="https://$1.st$2.s-msn.com/" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

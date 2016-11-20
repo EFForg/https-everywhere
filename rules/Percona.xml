@@ -1,0 +1,57 @@
+<!--
+	Problematic hosts in *percona.com:
+
+		- forum ¹
+		- mysql101 ²
+
+	¹ Refused
+	² Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- customers.percona.com
+		- form.percona.com
+		- www.percona.com
+
+-->
+<ruleset name="Percona.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="percona.com" />
+	<target host="customers.percona.com" />
+	<target host="form.percona.com" />
+	<target host="s0.percona.com" />
+	<target host="s1.percona.com" />
+	<target host="s2.percona.com" />
+	<target host="s3.percona.com" />
+	<target host="tools.percona.com" />
+	<target host="www.percona.com" />
+
+	<!--	Complications:
+				-->
+	<target host="forum.percona.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^customers\.percona\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^form\.percona\.com$" name="^BIGipServer" /-->
+	<!--securecookie host="^www\.percona\.com$" name="^bb(?:lastactivity|lastvisit|sessionhash)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://forum\.percona\.com/[^?]*"
+		to="https://www.percona.com/forums/" />
+
+		<test url="http://forum.percona.com//index.php?foo" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

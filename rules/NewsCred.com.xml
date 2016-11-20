@@ -1,0 +1,55 @@
+<!--
+	CDN buckets:
+
+		- d35o6c6ifjoa8g.cloudfront.net
+
+			- static.cms.newscred.com
+
+		- ds9y5y40x6zaj.cloudfront.net
+
+			- daylifeimages.newscred.com
+
+
+	Nonfunctional subdomains:
+
+		- (www.) *
+		- blog *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- static.cms ¹
+		- dailylifeimages ¹
+		- info ²
+
+	¹ cloudfront
+	² Marketo
+
+
+	Mixed content:
+
+		- Images on newsdaily.cms from images *
+
+	* Secured by us
+
+-->
+<ruleset name="NewsCred.com (partial)">
+
+	<target host="*.newscred.com" />
+
+
+	<rule from="^http://static\.cms\.newscred\.com/"
+		to="https://d35o6c6ifjoa8g.cloudfront.net/" />
+
+	<rule from="^http://(newsdaily\.cms|images)\.newscred\.com/"
+		to="https://$1.newscred.com/" />
+
+	<rule from="^http://daylifeimages\.newscred\.com/"
+		to="https://ds9y5y40x6zaj.cloudfront.net/" />
+
+	<rule from="^http://info\.newscred\.com/(?=css/|images/|js/|rs/)"
+		to="https://na-sjn.marketo.com/" />
+
+</ruleset>

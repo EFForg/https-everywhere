@@ -1,0 +1,160 @@
+<!--
+	Other Salesforce.com rulesets:
+
+		- Chatter.xml
+		- Cloudforce.com.xml
+		- Data.com.xml
+		- Database.com.xml
+		- Desk.com.xml
+		- Salesforce_Live_Agent.com.xml
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/dfc-wiki/
+		- d3cpryevho78f5.cloudfront.net
+
+		- secure.sfdcstatic.com.edgekey.net
+
+			- www.sfdcstatic.com
+
+		- www2.sfdcstatic.com.edgesuite.net
+		- sforce.i.lithium.com
+		- c9649669.r69.cf2.rackcdn.com
+
+
+	Nonfunctional domains:
+
+		- force.com subdomains:
+
+			- careers *
+			- cms **
+			- developer *
+			- sites *
+
+		- blogs.salesforce.com *
+
+	* Redirects to http; CN: slotmatching4.salesforce.com
+	** Redirects to http; CN: slotmatching3.salesforce.com
+
+
+	Problematic domains:
+
+		- developerforce.com		(cert only matches www)
+		- boards.developerforce.com
+		- force.com *
+		- partners.salesforce.com	(works, mismatched, CN: www.salesforce.com)
+		- uesurveys.salesforce.com	(works; mismatched, CN: *.datstathost.com)
+
+	* Times out
+
+
+	Fully covered domains:
+
+		- developerforce.com subdomains:
+
+			- (www.)	(^ → www)
+			- blogs
+			- boards	(→ sforce.i.lithium.com)
+			- events
+			- wiki
+			- workbench
+
+		- force.com subdomains:
+
+			- (www.)	(^ → www)
+
+			- c.\w\w\d+.content:
+
+				- eu0
+				- na5
+				- na13
+
+			- *.secure	(per-client subdomains)
+			- www2
+			- www-blitz0[0-4]
+
+		- salesforce.com subdomains:
+
+			- (www.)
+			- ap
+			- appexchange
+			- appexchangejp
+			- developer
+			- emea
+			- help
+			- lct
+			- login
+			- *.my
+			- \w{2,4}\d+
+
+				- ap[01]
+				- cs\d
+				- cs\d[0-7]
+				- eu[012]
+				- na[1-9]
+				- na\d[0-5]
+				- tapp0
+
+			- \w\{2,4}d+-api
+
+				- ap[01]-api
+				- cs[1-9]-api
+				- cs\d[0-7]-api
+				- eu[012]-api
+				- na\d-api
+				- na1[0-5]-api
+				- tapp0-api
+
+			- omtr2.partners
+			- ssl
+			- store
+			- success
+			- trust
+
+		- www.sfdcstatic.com
+
+-->
+<ruleset name="Salesforce.com (partial)">
+
+	<target host="developerforce.com" />
+	<target host="*.developerforce.com" />
+	<target host="force.com" />
+	<target host="*.force.com" />
+	<target host="salesforce.com" />
+	<target host="*.salesforce.com" />
+	<target host="*.sfdcstatic.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.force\.com$" name="^BrowserId$" /-->
+
+	<securecookie host="^(?:.*\.)?(?:developer|sales)?force\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?(developer)?force\.com/"
+		to="https://www.$1force.com/" />
+
+	<rule from="^http://(blogs|events|wiki|workbench)\.developerforce\.com/"
+		to="https://$1.developerforce.com/" />
+
+	<rule from="^http://boards\.developerforce\.com/"
+		to="https://sforce.i.lithium.com/" />
+
+	<rule from="^http://(cms-stg|c\.\w\w\d+\.content|[\w-]+\.secure|www2|www-blitz0\d)\.force\.com/"
+		to="https://$1.force.com/" />
+
+	<rule from="^http://sites\.force\.com/appexchange/home$"
+		to="https://appexchange.salesforce.com/" />
+
+	<rule from="^http://((?:ap|appexchange(?:jp)?|developer|emea|help|lct|login|\w{2,4}\d+(?:-api)?|[\w-]+\.my|omtr2\.partners|ssl|store|success|trust|www)\.)?salesforce\.com/"
+		to="https://$1salesforce.com/" />
+
+	<rule from="^http://partners\.salesforce\.com/(?:[^\?]*)(\?.*)$"
+		to="https://www.salesforce.com/partners/$1" />
+
+	<rule from="^http://(secure2?|www2?)\.sfdcstatic\.com/"
+		to="https://$1.sfdcstatic.com/" />
+
+</ruleset>

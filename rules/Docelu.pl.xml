@@ -1,0 +1,103 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://docelu.pl/ => https://docelu.pl/: (60, 'SSL certificate problem: certificate has expired')
+Fetch error: http://trasy.docelu.pl/ => https://trasy.docelu.pl/: Pycurl fetch failed for 'http://trasy.docelu.pl/ http://www.pkt.pl/mapa-strony/miejscowosci/a/15-1/?docelu'
+Fetch error: http://www.docelu.pl/ => https://docelu.pl/: (60, 'SSL certificate problem: certificate has expired')
+	For problematic rules, see Docelu.pl-problematic.xml.
+
+
+	Nonfunctional subdomains:
+
+		- api	(refused)
+		- mapa	(redirects to ^; mismatched, CN: docelu.pl)
+
+
+	Problematic subdomains:
+
+		- imprezy *
+		- rozklady *
+		- www		(refused)
+		- zdjecia *
+
+	* Works; mismatched, CN: imprezy.docelu.pl
+
+
+	Fully covered subdomains:
+
+		- (www.)	(www → ^)
+		- trasy
+
+
+	Mixed content:
+
+		- Scripts, on:
+
+			- trasy from ^ *
+
+		- css, on:
+
+			- ^ from ^ *
+
+			- trasy from:
+
+				- ^ *
+				- i.wp.pl *
+				- b.wpimg.com *
+			
+
+		- Images, on:
+
+			- ^ from:
+
+				- i.wp.pl *
+				- get-2.wpapi.wp.pl **
+				- a.wpimg.pl *
+				- b.wpimg.pl *
+				- c.wpimg.pl *
+				- i.wpimg.pl *
+
+			- trasy from:
+
+				- i.wp.pl *
+				- b.wpimg.pl *
+				- c.wpimg.pl *
+
+		- Web bug on trasy from www.facebook.com *
+
+	* Secured by us
+	** Unsecurable, doesn't trip MCB
+
+
+	Observed cookie domains:
+
+		- ^
+		- .
+		- api
+		- imprezy
+		- mapa
+		- rozklady
+		- trasy
+		- www
+		- zdjecia
+
+
+	mixedcontent due to css from ^docelu.pl, i.wp.pl, & b.wpimg.com.
+
+-->
+<ruleset name="docelu.pl (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+
+	<target host="docelu.pl" />
+	<target host="trasy.docelu.pl" />
+	<target host="www.docelu.pl" />
+
+
+	<!--	Can we secure any wildcard cookies here safely?
+								-->
+	<!--securecookie host="^\.docelu\.pl$" name="^(reksticket|WP-cookie-info|wpsticket)" /-->
+	<securecookie host="^(?:.+\.)?docelu\.pl$" name=".+" />
+
+
+	<rule from="^http://(?:(trasy\.)|www\.)?docelu\.pl/"
+		to="https://$1docelu.pl/" />
+
+</ruleset>

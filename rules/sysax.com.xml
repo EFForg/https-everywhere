@@ -1,0 +1,47 @@
+<!--
+	Insecure cookies are set for these hosts: ᶜ
+
+		- sysax.com
+		- www.sysax.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on (www.)? from www.sysax.com ˢ
+		- Images on (www.)? from www.sysax.com ˢ
+
+		- Bug, on:
+		
+			- (www.)? from static.getclicky.com ˢ
+			- (www.)? from www.sysax.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Sysax.com" platform="mixedcontent">
+
+	<target host="sysax.com" />
+	<target host="www.sysax.com" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://sysax.com/strx/track/default.html?st=1" /-->
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://sysax.com/support/index.php" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?sysax\.com$" name="ns_visitor$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

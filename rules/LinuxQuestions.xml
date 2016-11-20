@@ -1,0 +1,51 @@
+<!--
+	CDN buckets:
+
+		- lqo-thequestionsnetw.netdna-ssl.com
+
+
+	Problematic subdomains:
+
+		- account	(works; mismatched, CN: www.linuxquestions.org)
+		- static	(refused)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- static	(→ lqo-thequestionsnetw.netdna-ssl.com)
+
+
+	Mixed content:
+
+		- Ads/web bugs, on www from:
+
+			- pagead2.googlesyndication.com *
+			- kona.kontera.com *
+			- ap.lijit.com *
+			- www.lijit.com *
+			- s.skimresources.com *
+
+	* Secured by us
+
+-->
+<ruleset name="LinuxQuestions.org (partial)">
+
+	<target host="linuxquestions.org" />
+	<target host="*.linuxquestions.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.linuxquestions\.org$" name="^(bb2_screener_|bbsessionhash)$" /-->
+
+	<securecookie host="^www\.linuxquestions\.org$" name=".+" />
+
+
+	<rule from="^http://(www\.)?linuxquestions\.org/"
+		to="https://$1linuxquestions.org/" />
+
+	<rule from="^http://static\.linuxquestions\.org/"
+		to="https://lqo-thequestionsnetw.netdna-ssl.com/" />
+
+</ruleset>

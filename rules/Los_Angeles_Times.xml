@@ -1,0 +1,58 @@
+<!--
+	lat.ms is handled in Bit.ly_vanity_domains.xml.
+
+	For other Tribune coverage, see Tribune.xml.
+
+
+	CDN buckets:
+
+		- touch.latimes.com
+
+			- touch
+
+
+	Nonfunctional subdomains:
+
+		- articles	(CN: ssl.cdngc.net; 403)
+		- local		(refused)
+		- mediakit
+		- touch		(504, akamai)
+
+
+	Problematic subdomains:
+
+		- circulars	(pages redirect to http; mismatched, CN: www.flyertown.ca)
+
+-->
+<ruleset name="Los Angeles Times (partial)">
+
+	<target host="latimes.com" />
+	<target host="*.latimes.com" />
+		<!--
+			Not on secure, redirects to another domain. e.g.
+
+				latimes.com/media/photo/2009-11/50719492.jpg
+
+			redirects to
+
+				latimes.image2.trb.com/lanews/media/photo/2009-11/50719492.jpg
+									-->
+		<exclusion pattern="^http://(?:www\.)?latimes\.com/media/photo/" />
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.latimes\.com$" name="^(?:gpv_p\w|metrics_id|s_\w+|tribanalyticscookie)$" />
+	<securecookie host="^.+\.latimes\.com$" name=".+" />
+
+
+	<rule from="^http://(?:(?:origin-)?www\.)?latimes\.com/(favicon\.ico|hive/|images/|includes/|media/|stylesheets/)"
+		to="https://secure.latimes.com/$1" />
+
+	<rule from="^http://(membership|myaccount2|secure)\.latimes\.com/"
+		to="https://$1.latimes.com/" />
+
+	<rule from="^http://circulars\.latimes\.com/(assets/|dist_stage/|favicon\.ico|images/)"
+		to="https://www.flyertown.ca/$1" />
+
+</ruleset>

@@ -1,0 +1,112 @@
+<!--
+	Federal Communications Commission
+
+	See US-government.xml for other US government coverage.
+
+
+	Nonfunctional subdomains:
+
+		- hraunfoss	(shows fjallfoss, CN: fjallfoss.fcc.gov)
+
+
+	Problematic subdomains:
+
+		- ^		(shows transition; mismatched, CN: transition.fcc.gov)
+		- publicsafety	(times out)
+		- reboot *
+		- transition (404 on http://transition.fcc.gov/Daily_Releases/Daily_Digest/2015/dd2015.html)
+		- apps (404, expired)
+		- fjallfoss (404)
+
+	* Times out
+
+
+	Partially covered hosts in *fcc.gov:
+
+		- hraunfoss	(/edocs_public/attachmatch/(?!$))
+
+-->
+<ruleset name="FCC.gov (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="apps.fcc.gov" /-->
+	<target host="data.fcc.gov" />
+	<target host="fjallfoss.fcc.gov" />
+	<target host="licensing.fcc.gov" />
+	<target host="stations.fcc.gov" />
+	<target host="transition.fcc.gov" />
+	<target host="www.fcc.gov" />
+
+	<!--	Complications:
+				-->
+	<target host="fcc.gov" />
+	<target host="hraunfoss.fcc.gov" />
+
+		<exclusion pattern="^http://hraunfoss\.fcc\.gov/(?!edocs_public/attachmatch/(?!$))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://hraunfoss.fcc.gov/edocs_public/attachmatch/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://hraunfoss.fcc.gov/edocs_public/attachmatch/DOC-235879A1.txt" />
+			<test url="http://hraunfoss.fcc.gov/edocs_public/attachmatch/DOC-235879A1.pdf" />
+
+		<!--	apps and fjalloss have been disabled in response to
+			https://github.com/EFForg/https-everywhere/issues/2874.
+
+			Considering the pattern of what works and what doesn't
+			isn't known yet, let's include only what we know to work
+			as we find it.
+
+			exclusions and tests are left for commentary and potential
+			future use.
+
+	<test url="http://hraunfoss.fcc.gov/edocs_public/attachmatch/DOC-235879A1.txt" />
+	<test url="http://hraunfoss.fcc.gov/edocs_public/attachmatch/DOC-235879A1.pdf" />
+
+			404:
+				-->
+		<!--exclusion pattern="^http://apps\.fcc\.gov/ecfs/$" /-->
+		<!--exclusion pattern="^http://fjallfoss\.fcc\.gov/ecfs2/$" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://apps.fcc.gov/ecfs/" /-->
+			<!--test url="http://fjallfoss.fcc.gov/ecfs2/" /-->
+
+		<!--	This used to 404:
+						-->
+		<test url="http://transition.fcc.gov/Daily_Releases/Daily_Digest/2015/dd2015.html" />
+
+
+	<securecookie host=".*\.fcc\.gov$" name=".+" />
+
+
+	<rule from="^http://fcc\.gov/"
+		to="https://www.fcc.gov/" />
+
+	<!--	Redirects like so:
+					-->
+	<rule from="^http://hraunfoss\.fcc\.gov/edocs_public/attachmatch/"
+		to="https://apps.fcc.gov/edocs_public/attachmatch/" />
+
+	<!-- These rules need tests:
+
+	<rule from="^http://publicsafety\.fcc\.gov/(?:\?.*)?$"
+		to="https://www.fcc.gov/pshs/" />
+
+	<rule from="^http://reboot\.fcc\.gov/about-reboot$"
+		to="https://www.fcc.gov/about" />
+
+	<rule from="^http://reboot\.fcc\.gov/data(?:\?.*)?$"
+		to="https://www.fcc.gov/data" />
+
+	-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

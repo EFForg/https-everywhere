@@ -1,0 +1,75 @@
+<!--
+	CDN buckets:
+
+		- a70.g.akamai.net/7/70/36744/v001/schneider2.download.akamai.com/
+
+		- sch.edgesuite.net
+
+			- www2
+
+		- schneiderele.taleo.net
+
+
+	Nonfunctional subdomains:
+
+		- www2	(503, akamai)
+
+
+	Problematic subdomains:
+
+		- ^	(works, cert only matches www)
+
+
+	Partially covered subdomains:
+
+		- (www.)
+
+			- Some pages redirect to http
+
+			- These paths 503:
+
+				- css/
+				- documents/flash/en/shared/
+				- gc_1_0/	(xiti web bugs)
+				- images/
+				- js/
+				- sites/corporate/en/customers/satisfy-our-customers/electric-utilities.page
+				- templatedata/Configuration/Xiti/
+
+			- These don't 503:
+
+				- download/resource/scripts/
+				- navigation/images/
+				- navigation/scripts/
+				- products$
+				- resource/scripts/
+				- site/home/images/custom/
+				- site/home/images/structure/
+				- site/home/js/
+				- site/marketing_center/images/
+				- site/marketing_center/js/
+				- site/tasks/sites/marketing_center/assets/Image/Corporate/Teasers/
+				- stat/xtcore.js
+				- solutions$
+				- solutions/resource/css/
+				- solutions/resource/images/
+				- solutions/resource/js/
+				- solutions/ww/en/rme/\d+/image/
+
+-->
+<ruleset name="Schneider-Electric.com (partial)">
+
+	<target host="schneider-electric.com" />
+	<target host="*.schneider-electric.com" />
+		<!--exclusion pattern="^http://(www\.)?schneider-electric\.com/(css|documents|gc_1_0|images|js|sites|templatedata)/" /-->
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.schneider-electric\.com$" name="^(?:__utm\w|xtvrn)$" />
+
+
+	<rule from="^http://(?:www\.)?schneider-electric\.com/(download/|navigation/|(?:product|solution)s(?:$|[?/])|resource/|site/(?:home|marketing_center)/(?:image|j)s/|site/tasks/sites/|stat/)"
+		to="https://www.schneider-electric.com/$1" />
+
+</ruleset>

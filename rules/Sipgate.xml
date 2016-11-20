@@ -1,0 +1,83 @@
+<!--
+	Other Sipgate GmbH rulesets:
+
+		- Sipgate.co.uk.xml
+		- Sipgate.io.xml
+		- Simquadrat.de.xml
+
+
+	Nonfunctional hosts in sipgate.de:
+
+		- teamsupport *
+
+	* Zendesk
+
+
+	Problematic hosts in sipgate.de:
+
+		- live ¹
+		- status ²
+
+	¹ Mismatched
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	These altnames don't exist:
+
+		- www.secure.live.sipgate.de
+		- www.secure.sipgate.de
+
+
+	Insecure cookies are set for these hosts:
+
+		- secure.live.sipgate.de
+
+-->
+<ruleset name="Sipgate.de (partial)">
+
+	<!--	Direct rewrites:
+				-->
+  <target host="sipgate.de" />
+	<!--target host="live.sipgate.de" /-->
+	<target host="secure.live.sipgate.de" />
+	<target host="secure.sipgate.de" />
+	<!--target host="status.sipgate.de" /-->
+	<target host="www.sipgate.de" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.sipgate\.de/(?:$|sim$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.sipgate\.de/+(?!(?:basic|design|trunking)(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.sipgate.de/academy" />
+			<test url="http://www.sipgate.de/faq/" />
+			<test url="http://www.sipgate.de/sim" />
+			<test url="http://www.sipgate.de/team" />
+			<test url="http://www.sipgate.de/team/apps" />
+			<test url="http://www.sipgate.de/team/produkte" />
+			<test url="http://www.sipgate.de/team/voip" />
+			<test url="http://www.sipgate.de/unternehmen" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.sipgate.de/basic/" />
+			<test url="http://www.sipgate.de/design/" />
+			<test url="http://www.sipgate.de/trunking/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^secure\.live\.sipgate\.de$" name="^SERVERID$" /-->
+
+	<securecookie host="^secure\.live\.sipgate\.de$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

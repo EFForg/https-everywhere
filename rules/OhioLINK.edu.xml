@@ -1,0 +1,69 @@
+<!--
+	Nonfunctional hosts in *ohiolink.edu:
+
+		- ead ʳ
+		- ebooks ʰ
+		- journals ʰ
+
+	ʳ Refused
+	ʰ Redirects to http
+
+
+	Problematic hosts in *ohiolink.edu:
+
+		- drc ᴿ
+
+	ᴿ Configured for RC4 only
+
+
+	Insecure cookies are set for these hosts:
+
+		- .ohiolink.edu
+		- databases.ohiolink.edu
+		- olc1.ohiolink.edu
+		- platinum.ohiolink.edu
+		- rave.ohiolink.edu
+		- www.ohiolink.edu
+
+-->
+<ruleset name="OhioLINK.edu (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ohiolink.edu" />
+	<target host="auth.ohiolink.edu" />
+	<target host="authdb.ohiolink.edu" />
+	<target host="databases.ohiolink.edu" />
+	<target host="drc.ohiolink.edu" />
+	<target host="etd.ohiolink.edu" />
+	<target host="music.ohiolink.edu" />
+	<target host="olc1.ohiolink.edu" />
+	<target host="platinum.ohiolink.edu" />
+	<target host="rave.ohiolink.edu" />
+	<target host="www.ohiolink.edu" />
+
+	<!--	Complications:
+				-->
+	<target host="proxy.ohiolink.edu" />
+
+		<test url="http://proxy.ohiolink.edu:9100/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:(?:databases|platinum|rave|www)\.)?ohiolink\.edu$" name="^BIGipServer" /-->
+	<!--securecookie host="^\.ohiolink\.edu$" name="^(?:III_EXPT_FILE|III_SESSION_ID|SESSION_LANGUAGE)$" /-->
+	<!--securecookie host="^olc1\.ohiolink\.edu$" name="^SESSION_SCOPE$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://proxy\.ohiolink\.edu:9099/"
+		to="https://proxy.ohiolink.edu/" />
+
+		<test url="http://proxy.ohiolink.edu:9099/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

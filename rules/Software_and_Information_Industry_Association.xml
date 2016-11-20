@@ -1,0 +1,57 @@
+<!--
+	Software & Information Industry Association
+
+
+	Problematic hosts in *siia.net:
+
+		- dnn ᵈ
+
+	ᵈ Dropped, preemptable redirect
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- siia.net
+		- www.siia.net
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Image on www from dnn.siia.net ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="SIIA.net">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="siia.net" />
+	<target host="www.siia.net" />
+
+	<!--	Complications:
+				-->
+	<target host="dnn.siia.net" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^siia\.net$" name="^dnn_IsMobile$" /-->
+	<!--securecookie host="^www\.siia\.net$" name="^(?:\.ASPXANONYMOUS|__RequestVerificationToken|dnn_IsMobile|language)$" /-->
+
+	<securecookie host="^\w" name=".+" />
+
+
+	<rule from="^http://dnn\.siia\.net/"
+		to="https://www.siia.net/" />
+
+		<!--	Said mixed image:
+						-->
+		<test url="http://www.siia.net/Portals/0/Images/home/dc2.jpg" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

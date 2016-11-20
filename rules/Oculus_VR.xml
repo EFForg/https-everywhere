@@ -1,0 +1,54 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/static.oculus.com/
+		- d11g5bl75h7gks.cloudfront.net
+
+
+	Problematic hosts in *oculusvr.com:
+
+		- answers ¹
+		- forums ¹
+		- static ²
+		- storystudio ¹
+		- www1 ¹
+
+	¹ Shows www1.oculus.com
+	² Cloudfront/mismatched
+
+-->
+<ruleset name="Oculus VR">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="oculusvr.com" />
+	<target host="careers.oculusvr.com" />
+	<target host="developer.oculusvr.com" />
+	<target host="share.oculusvr.com" />
+	<target host="www.oculusvr.com" />
+
+	<!--	Complications:
+				-->
+	<target host="answers.oculusvr.com" />
+	<target host="forums.oculusvr.com" />
+	<target host="static.oculusvr.com" />
+	<target host="storystudio.oculusvr.com" />
+	<target host="www1.oculusvr.com" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://(?:answers|forums|storystudio|www1)\.oculusvr\.com/+"
+		to="https://www.oculus.com/" />
+
+	<rule from="^http://static\.oculusvr\.com/"
+		to="https://d11g5bl75h7gks.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

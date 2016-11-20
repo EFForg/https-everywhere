@@ -1,0 +1,85 @@
+<!--
+	For problematic rules, see Viddler.com-mismatches.xml.
+
+
+	Nonfunctional subdomains:
+
+		- advertise	(redirects improperly, target 404s)
+		- developers	(redirects to www)
+
+
+	Problematic subdomains:
+
+		- blog		(works, mismatched, CN: page.ly)
+		- vidgets	(redirects improperly)
+
+
+	Partially covered subdomains:
+
+		- (www.)
+
+			- $ redirects to http
+
+			- These paths 404:
+
+				- about/
+				- addons/
+				- features/
+				- learning/
+				- partners/
+				- privacy-policy/
+				- terms-of-use/
+				- tools/
+
+		- vidgets	[(?!\?).+ 404s]
+
+
+	Fully covered subdomains:
+
+		- *.cdn-ec:
+
+			- static
+			- static[1-9]
+			- thumbs
+
+		- cdn-static
+		- cdn-static\d\d
+		- cdn-thumbs
+		- support
+
+
+	Observed cookie domains:
+
+		- developers
+		- www
+
+
+	Mixed content:
+
+		- Images on blog from blog
+
+		- css on blog from fonts.googleapis.com *
+
+		- Web bug on www from in.getclicky.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Viddler.com (partial)">
+
+	<target host="viddler.com" />
+	<target host="*.viddler.com" />
+		<!--exclusion pattern="^http://(www\.)?viddler\.com/+($|\?|(about|addons|features|partners|tools)($|[?/]))" /-->
+		<exclusion pattern="^http://(?:www\.)?viddler\.com/(?!embed/|favicon\.ico|login(?:$|[?/])|mini/|plans|vidgets/)" />
+
+
+	<securecookie host="^(?:support|www)\.viddler\.com$" name=".+" />
+
+
+	<rule from="^http://((?:\w+\.cdn-ec|cdn-static(?:-\d\d)?|cdn-thumbs|support|www)\.)?viddler\.com/"
+		to="https://$1viddler.com/" />
+
+	<rule from="^http://vidgets\.viddler\.com/(?=\?.*)$"
+		to="https://www.viddler.com/vidgets/" />
+
+</ruleset>

@@ -1,0 +1,41 @@
+<!--
+	Nonfunctional domains:
+
+		- ad.jp.ap.valuecommerce.com *
+		- ck.jp.ap.valuecommerce.com *
+
+	* Times out
+
+
+	Problematic domains:
+
+		- valuecommerce.com *
+		- valuecommerce.ne.jp *
+
+	* Cert only matches www
+
+-->
+<ruleset name="ValueCommerce (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.valuecommerce.com" />
+	<target host="www.valuecommerce.ne.jp" />
+
+	<!--	Complications:
+				-->
+	<target host="valuecommerce.com" />
+	<target host="valuecommerce.ne.jp" />
+
+
+	<securecookie host="^\.valuecommerce\.com$" name="^VCIDENTITY$" />
+	<securecookie host="^www\.valuecommerce\.ne\.jp$" name=".+" />
+
+
+	<rule from="^http://valuecommerce\.(com|ne\.jp)/"
+		to="https://www.valuecommerce.$1/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

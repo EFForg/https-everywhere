@@ -1,0 +1,39 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://shutterfly.com/ => https://shutterfly.com/: (7, 'Failed to connect to shutterfly.com port 443: Connection refused')
+	For problematic rules, see Shutterfly-mismatches.xml.
+
+
+	Nonfunctional domains:
+
+		- blog.shutterfly.com			(cert: shutterflystorytelling.com, self-signed, expired; shows default Plesk page)
+		- (www.)shutterflystorytelling.com	(ditto)
+
+-->
+<ruleset name="Shutterfly (partial)" default_off='failed ruleset test'>
+
+	<target host="shutterfly.com" />
+	<target host="*.shutterfly.com" />
+	<target host="*.staticsfly.com" />
+
+
+	<securecookie host="^(?:www)?\.shutterfly\.com$" name=".*" />
+
+
+	<!--	Cert doesn't match businesssolutions.
+							-->
+	<rule from="^http://(?:businesssolutions|sbmsshare)\.shutterfly\.com/"
+		to="https://sbmsshare.shutterfly.com/" />
+
+	<rule from="^http://(sbmsomp\.|web1\.|www\.)?shutterfly\.com/"
+		to="https://$1shutterfly.com/" />
+
+	<!--	302s like so.
+				-->
+	<rule from="^http://sortino\.shutterfly\.com/$"
+		to="https://www.lexusdealerstore.com/lexus/" />
+
+	<rule from="^http://cdn(\d)?\.staticsfly\.com/"
+		to="https://cdn$1.staticsfly.com/" />
+
+</ruleset>

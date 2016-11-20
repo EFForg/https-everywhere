@@ -1,0 +1,110 @@
+<!--
+	American Library Association
+
+	Other American Library Association rulesets:
+
+		- chooseprivacyweek.org.xml
+
+
+	Nonfunctional hosts in *ala.org:
+
+		- ala14 *
+		- alaac15 *
+
+	* Shows another domain
+
+
+	Problematic hosts in *ala.org:
+
+		- alastore ¹
+		- login.connect ¹
+		- exhibitors ²
+		- idp ³
+
+	¹ Mismatched
+	² Expired
+	³ Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.alastore.ala.org
+		- idp.ala.org
+		- joblist.ala.org
+
+
+	Mixed content:
+
+		- css on connect from fonts.googleapis.com *
+		- Images on www.alastore from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="ALA.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ala.org" />
+	<target host="www.alastore.ala.org" />
+	<target host="connect.ala.org" />
+	<!--target host="login.connect.ala.org" /-->
+	<!--target host="exhibitors.ala.org" /-->
+	<!--target host="idp.ala.org" /-->
+	<target host="joblist.ala.org" />
+	<target host="www.ala.org" />
+
+	<!--	Complications:
+				-->
+	<target host="alastore.ala.org" />
+
+		<!--	Differs from http:
+						-->
+		<!--exclusion pattern="^http://ala\.org/$" /-->
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.ala\.org/$" /-->
+		<!--
+			404:
+				-->
+		<!--exclusion pattern="^http://(?:www\.)?ala\.org/(?:sites/|membership/renew$|user/login$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?ala\.org/+(?!Security/|Template\.cfm)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://ala.org/aboutala/contactus/" />
+			<test url="http://www.ala.org/aboutala/donate" />
+			<test url="http://www.ala.org/membership/renew" />
+			<test url="http://www.ala.org/tools/" />
+			<test url="http://www.ala.org/user/login" />
+
+			<!--	-ve:
+					-->
+			<test url="http://ala.org/Template.cfm" />
+			<test url="http://ala.org/Security/Login.cfm" />
+			<test url="http://www.ala.org/Security/Shibboleth.sso/Login?target=" />
+			<test url="http://www.ala.org/Template.cfm" />
+
+		<!--test url="http://idp.ala.org/idp/profile/SAML2/Redirect/SSO?SAMLRequest=" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.alastore\.ala\.org$" name="^(?:ASP\.NET_SessionId|HttpReferer|Referer)$" /-->
+	<!--securecookie host="^idp\.ala\.org$" name="^_idp_authn_lc_key$" /-->
+	<!--securecookie host="^joblist\.ala\.org$" name="^(?:CFID|CFTOKEN)$" /-->
+
+	<securecookie host="^(?:www\.alastore|joblist)\.ala\.org$" name=".+" />
+
+
+	<rule from="^http://alastore\.ala\.org/"
+		to="https://www.alastore.ala.org/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

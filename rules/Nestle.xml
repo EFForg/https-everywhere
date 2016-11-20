@@ -1,0 +1,38 @@
+<!--
+	Other Nestlé rulesets:
+
+		- Nestle_Scholler.xml
+		- Water-Challenge.com.xml
+
+
+	Problematic domains:
+
+		- cdn.nestle.com	(akamai)
+		- nestle.de	(cert only matches www)
+
+
+	Partially covered domains:
+
+		- (www.)nestle.com	($ 503s)
+		- (www.)nestle.de	(some [most?] pages redirect to http)
+
+-->
+<ruleset name="Nestlé (partial)">
+
+	<target host="nestle.com" />
+	<target host="*.nestle.com" />
+		<exclusion pattern="^http://(?:www\.)?nestle\.com/(?![aA]sset-library/|skin-engine-shared/|staticlocal/)" />
+	<target host="nestle.de" />
+	<target host="www.nestle.de" />
+
+
+	<securecookie host="^hosting\.nestle\.com$" name=".+" />
+
+
+	<rule from="^http://((?:eur-tools|hosting|www)\.)?nestle\.com/"
+		to="https://$1nestle.com/" />
+
+	<rule from="^http://(?:www\.)?nestle\.de/(_layouts/|DownloadPDF\.ashx|Helper/|MetaNavigation/|Style Library/)"
+		to="https://www.nestle.de/$1" />
+
+</ruleset>

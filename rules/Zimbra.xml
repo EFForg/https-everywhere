@@ -1,0 +1,90 @@
+<!--
+	CDN buckets:
+
+		- files.zimbra.com.s3.amazonaws.com
+
+		- files2.zimbra.com.edgesuite.net
+
+			- a1843.g.akamai.net
+
+
+	Problematic domains:
+
+		- zimbra.com subdomains:
+
+			- files		(amazonws)
+			- files2	(works, akamai)
+
+		- (www.)zimbrablog.com	(works; mismatched, CN: *.zimbra.com)
+
+
+	Fully covered domains:
+
+		- *.zimbra.com:
+
+			- (www.)
+			- blog
+			- files *
+			- files2 *
+			- gallery
+			- help
+
+		- (www.)zimbrablog.com	(→ blog.zimbra.com)
+
+	* → s3.amazonaws.com/files.zimbra.com/
+
+
+	Mixed content:
+
+		- Scripts:
+
+			- On blog from www.google.com *
+			- On help from www.google.com *
+			- On www from www *
+			- On www from www.google.com *
+
+		- css:
+
+			- On blog from blog *
+			- On blog from www.google.com *
+			- On www from www *
+			- On www from www.google.com *
+
+		- Images, on www from:
+
+			- www *
+			- feeds2.feedburner.com **
+
+		- Web bug on www from munchkin.marketo.net *
+
+	* Secured by us
+	** Unsecurable, doesn't trip MCB anyway
+
+
+	NB: We secure all resources, and thus
+	platform should be removed with Ffx 24.
+
+-->
+<ruleset name="Zimbra (false MCB)" platform="mixedcontent">
+
+	<target host="zimbra.com" />
+	<target host="*.zimbra.com" />
+	<target host="zimbrablog.com" />
+	<target host="www.zimbrablog.com" />
+
+
+	<!--securecookie host="^\.zimbra\.com$" name="^(_mkto_trk|optimizely\w+|__utm\w)$" /-->
+	<securecookie host="^(?:.*\.)?zimbra\.com$" name=".+" />
+
+
+	<rule from="^http://files2?\.zimbra\.com/"
+		to="https://s3.amazonaws.com/files.zimbra.com/" />
+
+	<rule from="^http://([^/:@\.]+\.)?zimbra\.com/"
+		to="https://$1zimbra.com/" />
+
+	<rule from="^http://(?:www\.)?zimbrablog\.com/"
+		to="https://blog.zimbra.com/" />
+
+</ruleset>
+

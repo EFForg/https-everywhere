@@ -1,0 +1,48 @@
+<!--
+	(www.)?q1media.com: Refused
+
+
+	Problematic hosts in *q1media.com:
+
+		- ads *
+
+	* Mismatched, CN: *.adnxs.com
+
+
+	Mixed content:
+
+		- css on pubdash from fonts.googleapis.com *
+		- Image on pubdash from admin.q1media.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Q1Media.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="admin.q1media.com" />
+	<target host="hydra.q1media.com" />
+	<target host="pubdash.q1media.com" />
+
+	<!--	 Complications:
+				-->
+	<target host="ads.q1media.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.q1media\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^admin\.q1media\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://ads\.q1media\.com/"
+		to="https://ib.adnxs.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,45 @@
+<!--
+	Problematic hosts in *silverrushstyle.com:
+
+		- ^ ¹
+		- secure ²
+		- th ³
+		- www ³
+
+	¹ Mismatched, CN: secure.silverrushstyle.com
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+	³ Redirects to http
+
+
+	Insecure cookies are set for these domains:
+
+		- .silverrushstyle.com
+
+-->
+<ruleset name="SilverRush Style.com" default_off="missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="secure.silverrushstyle.com" />
+
+	<!--	Complications:
+				-->
+	<target host="silverrushstyle.com" />
+	<target host="th.silverrushstyle.com" />
+	<target host="www.silverrushstyle.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.silverrushstyle\.com$" name="^(?:silverrush_old_user|silverushstyle|wt_cookie_test)$" /-->
+
+	<securecookie host="^\.silverrushstyle\.com$" name=".+" />
+
+
+	<rule from="^http://(?:th\.|www\.)?silverrushstyle\.com/"
+		to="https://secure.silverrushstyle.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

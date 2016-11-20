@@ -1,0 +1,168 @@
+<!--
+	For rules causing false/broken MCB, see GNOME-falsemixed.xml
+
+
+	Other GNOME rulesets:
+
+		- Gnumeric.org.xml
+
+
+	Nonfunctional domains:
+
+		- gnome.asia subdomains:
+
+			- (www.) *
+			- 2012 *
+			- 2013 *
+
+		- gnome.org subdomains:
+
+			- art		(prints "ok"; self-signed, CN: CentOS-63-64-minimal)
+			- ftp		(refused)
+			- jabber **
+			- webapps **
+			- webapps2 **
+
+	* Shows empty tree, CN: guzheng.lyrical.net
+	** http reply
+
+
+	Problematic domains:
+
+		- gnome.org subdomains:
+
+			- ldap		(http reply)
+			- src		(mismatched, CN: bugzilla.gnome.org)
+
+		- (www.)gnomejournal.org	(identical to gnome.org; mismatched, CN: bugzilla.org)
+		- (www.)gupnp.org		(mismatched, CN: www.webstreams.de)
+
+
+	Fully covered domains:
+
+		- gnome.org subdomains:
+
+			- (www.)
+			- admin
+			- api
+			- blogs
+			- bugs
+			- bugzilla
+			- bugzilla-attachments
+			- *.bugzilla-attachments
+			- build
+			- cloud
+			- developer
+			- download
+			- etherpad
+			- extensions
+			- foundation
+			- git
+			- glade
+			- help
+			- ldap		(→ www)
+			- l10n
+			- library
+			- mail
+			- mango
+			- meetbot
+			- nagios
+			- news
+			- live
+			- ostree
+			- planet
+			- people
+			- progress
+			- projects
+			- rt
+			- src		(→ git)
+			- static
+			- usability
+			- vote
+			- webstats
+			- wiki
+			- www-old
+
+		- (www.)gnomejournal.org	(→ www.gnome.org)
+		- (www.)gupnp.org		(→ live.gnome.org)
+
+
+	Mixed content:
+
+		- Script on news from ajax.googleapis.com *
+
+		- css, on:
+
+			- blogs from blogs *
+			- news from fonts.googleapis.com *
+
+		- Images, on:
+
+			- blogs from $self *
+			- blogs from planet *
+			- blogs from www *
+			- git from www-old *
+			- mail from www *
+			- mail from www-old *
+			- mango from www *
+			- news from planet *
+			- news from www *
+			- news from upload.wikimedia.org *
+			- planet from blogs
+			- planet from \d.bp.blogspot.com *
+			- planet from i.minus.com *
+			- planet from \w+.files.wordpress.com *
+			- planet from s0.wp.com *
+			- projects from ^ *
+			- www from www *
+
+		- Web bug, on:
+
+			- news from planet *
+			- planet from stats.wordpress.com *
+			- projects from webstats *
+
+	* Secured by us
+
+
+	blogs and news are in a separate -falsemixed ruleset due
+	to css and script from blogs and ajax.googleapis.com.
+
+	NB: We secure all resources, and thus
+	-falsemixed should be merged for Ffx 24.
+
+-->
+<ruleset name="GNOME (partial)">
+
+	<target host="gnome.org" />
+	<target host="*.gnome.org" />
+		<!--
+			Causes false/broken MCB:
+							-->
+		<exclusion pattern="^http://(?:blog|new)s\.gnome\.org/" />
+	<target host="gnomejournal.org" />
+	<target host="www.gnomejournal.org" />
+	<target host="gupnp.org" />
+	<target host="www.gupnp.org" />
+
+
+	<securecookie host="^(?:.*\.)?gnome\.org$" name=".+" />
+
+
+	<rule from="^http://((?:admin|api|blogs|bugs|bugzilla|(?:\w+\.)?bugzilla-attachments|build|cloud|developer|download|etherpad|extensions|foundation|git|glade|help|l10n|library|live|mail|mango|meetbot|nagios|news|ostree|people|planet|progress|projects|rt|static|usability|vote|webstats|wiki|www)\.)?gnome\.org/"
+		to="https://$1gnome.org/" />
+
+	<rule from="^http://ldap\.gnome\.org/"
+		to="https://www.gnome.org/" />
+
+	<rule from="^http://src\.gnome\.org/"
+		to="https://git.gnome.org/browse/" />
+
+	<rule from="^http://(?:www\.)?gnomejournal\.org/"
+		to="https://www.gnome.org/" />
+
+	<rule from="^http://(?:www\.)?gupnp\.org/"
+		to="https://live.gnome.org/GUPnP/" />
+
+
+</ruleset>

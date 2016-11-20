@@ -1,0 +1,71 @@
+<!--
+	For other Facebook coverage, see Facebook.xml.
+
+	This ruleset covers Facebook hidden services on Tor.
+	Note: This should be something like platform=tor, to indicate
+	that these rules should not go through the fetch tester on the
+	non-Tor Internet because they will fail. As an approximation to
+	that, we just use platform="mixedcontent", since Tor Browser is a
+	mixedcontent platform, and the https-everywhere-checker will skip
+	non-default platforms.
+
+
+	Fully covered hosts:
+
+		- facebookcorewwwi.onion
+
+		- *.facebookcorewwwi.onion:
+
+			- (www.)?
+			- ar-ar
+			- de-de
+			- developers
+			- es-la
+			- fr-fr
+			- hi-in
+			- it-it
+			- ja-jp
+			- pt-br
+			- m
+			- zh-cn
+
+		- in *fbcdn23dssr3jqnq.onion:
+
+			- ^
+			- scontent.xx
+
+		- fbsbx2q4mvcl63pw.onion
+
+
+	Insecure cookies are set for these domains:
+
+		- .facebookcorewwwi.onion
+
+-->
+<ruleset name="Facebook Hidden Service" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="facebookcorewwwi.onion" />
+	<target host="*.facebookcorewwwi.onion" />
+
+		<test url="http://developers.facebookcorewwwi.onion/" />
+		<test url="http://m.facebookcorewwwi.onion/" />
+		<test url="http://www.facebookcorewwwi.onion/" />
+
+	<target host="fbcdn23dssr3jqnq.onion" />
+	<target host="scontent.xx.fbcdn23dssr3jqnq.onion" />
+
+	<target host="fbsbx2q4mvcl63pw.onion" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.facebookcorewwwi\.onion$" name="^(datr|noscript|reg_ext_ref|reg_fb_gate|reg_fb_ref)$" /-->
+
+	<securecookie host="." name="." />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

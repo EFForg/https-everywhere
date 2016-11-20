@@ -1,0 +1,59 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://register.pearsoncmg.com/ => https://register.pearsoncmg.com/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
+	Other Pearson rulesets:
+
+		- InformIT.xml
+
+
+	Nonfunctional domains:
+
+		- pearson.com subdomains:
+
+			- (www.) *
+			- blog *
+			- cr2012		(dropped)
+			- thelearningcurve	(refused)
+
+	* http reply
+
+
+	Fully covered domains:
+
+		- developer.pearson.com
+		- neo.pearson.com
+		- register.pearsoncmg.com
+		- (www.)pearsonvue.com *
+		- www8.pearsonvue.com
+		- (www.)vue.com *
+
+	* → www8.pearsonvue.com
+
+-->
+<ruleset name="Pearson (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+
+	<target host="*.pearson.com" />
+	<target host="register.pearsoncmg.com" />
+	<target host="pearsonvue.com" />
+	<target host="*.pearsonvue.com" />
+	<target host="vue.com" />
+	<target host="www.vue.com" />
+
+
+	<securecookie host="^\.?(?:developer|neo)\.pearson\.com$" name=".+" />
+	<securecookie host="^register\.pearsoncmg\.com$" name=".+" />
+	<securecookie host="^www8\.pearsonvue\.com$" name=".+" />
+
+
+	<rule from="^http://(developer|neo)\.pearson\.com/"
+		to="https://$1.pearson.com/" />
+
+	<rule from="^http://register\.pearsoncmg\.com/"
+		to="https://register.pearsoncmg.com/" />
+
+	<!--	Should this always go to www8?  Some other numbers work too.
+										-->
+	<rule from="^http://(?:www8?\.)?(?:pearson)?vue\.com/"
+		to="https://www8.pearsonvue.com/" />
+
+</ruleset>

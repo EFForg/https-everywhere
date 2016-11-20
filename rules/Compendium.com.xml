@@ -1,0 +1,55 @@
+<!--
+	For other Oracle coverage, see Oracle.xml.
+
+
+	(www.): mismatched, CN: www-legacy.oracle.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- imagefilter.app.compendium.com
+
+-->
+<ruleset name="Compendium.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="app.compendium.com" />
+	<target host="cdn.app.compendium.com" />
+	<target host="imagefilter.app.compendium.com" />
+
+	<!--	Complications:
+				-->
+	<target host="compendium.com" />
+	<target host="www.compendium.com" />
+
+		<exclusion pattern="^http://(?:www\.)?compendium\.com/(?!$)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^imagefilter\.app\.compendium\.com$" name="^rack\.session$" /-->
+
+	<securecookie host="^imagefilter\.app\.compendium\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?compendium\.com/"
+		to="https://www.oracle.com/us/corporate/acquisitions/compendium/index.html" />
+
+	<!--	Redirect drops path but not args:
+
+		..but there are specific redirects caught by this.
+						-->
+	<!--rule from="^http://(?:www\.)?compendium\.com/[^?]+"
+		to="https://www.oracle.com/index.html" /-->
+
+		<!-- e.g.:
+				-->
+		<test url="http://www.compendium.com/blog/" />
+		<test url="http://www.compendium.com/clients/" />
+		<test url="http://www.compendium.com/how-it-works/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

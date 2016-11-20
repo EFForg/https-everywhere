@@ -1,0 +1,66 @@
+<!--
+	Amnesty International Norway
+
+	For other Amnesty International coverage, see Amnesty-International.xml.
+
+
+	Nonfunctional hosts in *amnesty.no:
+
+		- blogg *
+
+	* Redirects to www, valid cert
+
+
+	Insecure cookie are set for these domains and hosts:
+
+		- .amnesty.no
+		- minside.amnesty.no
+
+
+	Mixed content:
+
+		- Image on minside from www.amnesty.no *
+
+	* Secured by us
+
+-->
+<ruleset name="Amnesty.no (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="amnesty.no" />
+	<target host="minside.amnesty.no" />
+	<target host="www.amnesty.no" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.amnesty\.no/$" /-->
+
+		<!--	Exceptions:
+					-->
+		<exclusion pattern="^http://www\.amnesty\.no/+(?!sites/)" />
+
+			<!--	+ve:
+						-->
+			<test url="http://www.amnesty.no/LHBTI" />
+			<test url="http://www.amnesty.no/PussyRiot" />
+			<test url="http://www.amnesty.no/kontakt" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.amnesty.no/sites/all/themes/amnesty_desktop/images/bli_meldem_340x114.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.amnesty\.no$" name="^SESS[\da-f]{32}$" /-->
+	<!--securecookie host="^minside\.amnesty\.no$" name="^ASP\.NET_SessionId$" /-->
+
+	<!--securecookie host="^(?:w*\.)?amnesty\.no$" name=".+" /-->
+	<securecookie host="^minside\.amnesty\.no$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

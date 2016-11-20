@@ -1,0 +1,60 @@
+<!--
+	For rules causing false/broken MCB, see Vungle.com-falsemixed.xml.
+
+
+	CDN buckets:
+
+		- vungle.wpengine.com
+
+			- blog
+
+
+	Problematic subdomains:
+
+		- www ¹
+		- blog ²
+
+	¹ Mixed css from $self
+	² wpengine
+
+
+	Partially covered subdomains:
+
+		- blog *
+		- www *
+
+	* Avoiding false/broken MCB
+
+
+	Mixed content:
+
+		- css on www from $self *
+
+		- Images on www from $self *
+		- Images on www from blog *
+
+	* Secured by us
+
+-->
+<ruleset name="Vungle (partial)">
+
+	<target host="vungle.com" />
+	<target host="blog.vungle.com" />
+	<target host="v.vungle.com" />
+	<target host="www.vungle.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:blog|www)\.vungle\.com/+(?!wp-content/|wp-includes/)" />
+
+
+	<securecookie host="^v\.vungle\.com$" name=".+" />
+
+
+	<rule from="^http://(v\.|www\.)?vungle\.com/"
+		to="https://$1vungle.com/" />
+
+	<rule from="^http://blog\.vungle\.com/"
+		to="https://www.vungle.com/blog/" />
+
+</ruleset>

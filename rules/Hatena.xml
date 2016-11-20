@@ -1,0 +1,93 @@
+<!--
+	CDN buckets:
+
+		- cdn.b.st-hatena.com.edgesuite.net
+
+		- cdn.favicon.st-hatena.com.edgesuite.net
+
+			- a336.g.akamai.net
+
+		- cdn.www.st-hatena.com.edgesuite.net
+
+			- a1075.g.akamai.net
+			- cdn1.www.st-hatena.com
+
+
+	Nonfunctional domains:
+
+		- counter.hatena.ne.jp ¹
+		- r.hatena.ne.jp ¹
+		- cdn.b.st-hatena.com *
+		- cdn-ak.b.st-hatena.com *
+		- cdn-ak.favicon.st-hatena.com	(works, akamai)
+
+	¹ Refused
+	* 503, akamai
+
+
+	Problematic domains:
+
+		- b.st-hatena.com	(mismatched, CN: b.hatena.ne.jp)
+		- www.st-hatena.com	(mismatch, CN: www.hatena.ne.jp)
+		- cdn.www.st-hatena.com	(akamai)
+		- cdn1.www.st-hatena.com *
+
+	* Works, akamai
+
+
+	Partially covered domains:
+
+		- (www.)hatena.ne.jp *
+		- d.hatena.ne.jp *
+
+	* At least some pages redirect to http.
+
+
+	Fully covered domains:
+
+		- www.st-hatena.com *
+		- cdn.www.st-hatena.com *
+
+	* → www.hatena.ne.jp
+
+-->
+<ruleset name="Hatena (partial)">
+
+	<target host="*.hatena.ne.jp" />
+	<target host="*.st-hatena.com" />
+
+	<!--	Not secured by server:			-->
+	<!--securecookie host="^\.hatena\.ne\.jp$" name="^b$" /-->
+	<!--securecookie host="^\.hatena\.ne\.jp$" name=".+" /-->
+
+
+	<rule from="^http://(www\.)?hatena\.ne\.jp/(css/|images/|login($|\?|/)|statics/)"
+		to="https://www.hatena.ne.jp/$2" />
+
+		<test url="http://hatena.ne.jp/css/" />
+		<test url="http://hatena.ne.jp/images/" />
+		<test url="http://hatena.ne.jp/login/" />
+		<test url="http://hatena.ne.jp/statics/" />
+		<test url="http://www.hatena.ne.jp/css/" />
+		<test url="http://www.hatena.ne.jp/images/" />
+		<test url="http://www.hatena.ne.jp/login/" />
+		<test url="http://www.hatena.ne.jp/statics/" />
+
+	<rule from="^http://(b|d)\.st-hatena\.com/images/"
+		to="https://$1.hatena.ne.jp/images/" />
+
+		<test url="http://b.st-hatena.com/images/" />
+		<test url="http://d.st-hatena.com/images/" />
+
+	<rule from="^http://(cdn\.)?www\.st-hatena\.com/"
+		to="https://www.hatena.ne.jp/" />
+
+		<test url="http://cdn.www.st-hatena.com/" />
+		<test url="http://www.st-hatena.com/" />
+
+	<rule from="^http://cdn\.api\.b\.hatena\.ne\.jp/"
+		to="https://cdn.api.b.hatena.ne.jp/" />
+
+		<test url="http://cdn.api.b.hatena.ne.jp/" />
+
+</ruleset>
