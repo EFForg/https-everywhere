@@ -39,7 +39,6 @@ target host with a right-side wildcard. But this is not yet implemented.
 
 		<rule from="^http://([\w-]+\.)?example\.com/"
 			to="https://$1example.com/" />
-
 	</ruleset>
 
 This ruleset has one implicit test URL from a target host
