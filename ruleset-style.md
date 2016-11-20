@@ -85,7 +85,7 @@ Here is an example ruleset pre-style guidelines:
 	<target host='whatwg.org' />
 	<target host="*.whatwg.org" />
 
-	<rule from="^http://((?:developers|html-differences|images|resources|\w+\.spec|wiki|www)\.)?whatwg\.org/"
+	<rule from="^http://((developers|html-differences|images|resources|\w+\.spec|wiki|www)\.)?whatwg\.org/"
 		to="https://$1whatwg.org/" />
 </ruleset>
 ```
