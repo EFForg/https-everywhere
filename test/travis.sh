@@ -6,7 +6,7 @@ function docker_build {
 }
 
 # Folder paths, relative to parent
-RULESETFOLDER="src/chrome/content/rules"
+RULESETFOLDER="/rules"
 
 # Go to git repo root; taken from ../test.sh. Note that
 # $GIT_DIR is .git in this case.
