@@ -1,42 +1,53 @@
 <!--
-  Subdomains covered by the rule:
-    - nsidc.org
-    - extranet.nsidc.org
-    - staging.extranet.nsidc.org
-    - igloo.nsidc.org
-    - integration.igloo.nsidc.org
-    - qa.igloo.nsidc.org
-    - staging.igloo.nsidc.org
-    - integration.nsidc.org
-    - qa.nsidc.org
-    - staging.nsidc.org
-    - www.nsidc.org (invalid certificate, redirect to nsidc.org)
+	503, HTTPS only:
+		- noaa_waf.apps.nsidc.org
+		- soac.apps.nsidc.org
 
-  Subdomains not covered by the rule but included in the certificate:
-    - ops.nsidc.org
-    - scm.nsidc.org
-    - wordpress.nsidc.org
-    - staging.wordpress.nsidc.org
+	Incomplete certificate chain:
+		- n5eil01u.ecs.nsidc.org
 
-  Subdomains with invalid certificates:
-    - integration.igloo.nsidc.org
-    - qa.igloo.nsidc.org
-    - staging.igloo.nsidc.org
+	Invalid certificate:
+		- integration.igloo.nsidc.org
+		- qa.igloo.nsidc.org
+		- staging.igloo.nsidc.org
+		- www.nsidc.org
+
+	No working URL known:
+		- n5eil01u.ecs.nsidc.org
+		- staging.inside.nsidc.org
+
+	Mixed content errors:
+		- http://nsidc.org/arcticseaicenews/charctic-interactive-sea-ice-graph/
 -->
 
 <ruleset name="National Snow and Ice Data Center">
 	<target host="nsidc.org" />
+	<target host="www.nsidc.org" />
+	<target host="daacdata.apps.nsidc.org" />
+	<target host="smap_op.apps.nsidc.org" />
 	<target host="extranet.nsidc.org" />
 	<target host="staging.extranet.nsidc.org" />
 	<target host="igloo.nsidc.org" />
 	<target host="integration.nsidc.org" />
 	<target host="qa.nsidc.org" />
 	<target host="staging.nsidc.org" />
-	<target host="www.nsidc.org" />
+	<target host="support.nsidc.org" />
 
-  <securecookie host=".+" name=".+" />
-  
-	<!-- Certificate does not match the www subdomain -->
+	<securecookie host="^nsidc\.org$" name=".+" />
+	<securecookie host="^daacdata\.apps\.nsidc\.org$" name=".+" />
+	<securecookie host="^smap_op\.apps\.nsidc\.org$" name=".+" />
+	<securecookie host="^extranet\.nsidc\.org$" name=".+" />
+	<securecookie host="^staging\.extranet\.nsidc\.org$" name=".+" />
+	<securecookie host="^igloo\.nsidc\.org$" name=".+" />
+	<securecookie host="^integration\.nsidc\.org$" name=".+" />
+	<securecookie host="^qa\.nsidc\.org$" name=".+" />
+	<securecookie host="^staging\.nsidc\.org$" name=".+" />
+	<securecookie host="^support\.nsidc\.org$" name=".+" />
+
+	<exclusion pattern="^http://nsidc\.org/arcticseaicenews/charctic-interactive-sea-ice-graph/" />
+	<rule from="^https://nsidc\.org/arcticseaicenews/charctic-interactive-sea-ice-graph/" 
+		to="http://nsidc.org/arcticseaicenews/charctic-interactive-sea-ice-graph/" downgrade="1" />
+
 	<rule from="^https?://www\.nsidc\.org/" to="https://nsidc.org/" />
 	<rule from="^http:" to="https:" />
 </ruleset>
