@@ -141,7 +141,7 @@ const HTTPS = {
       }
       if (!cookies) return;
       var c;
-      for each (var cs in cookies.split("\n")) {
+      for (var cs in cookies.split("\n")) {
         this.log(DBUG, "Examining cookie: ");
         c = new Cookie(cs, host);
         if (!c.secure && HTTPSRules.shouldSecureCookie(alist, c, true)) {
@@ -229,7 +229,7 @@ const HTTPS = {
     
     var cs = CC['@mozilla.org/cookieService;1'].getService(CI.nsICookieService).getCookieString(uri, req);
       
-    for each (c in dcookies) {
+    for (c in dcookies) {
       c.secure = dsecure;
       c.save();
       this.log(WARN,"Toggled secure flag on " + c);
