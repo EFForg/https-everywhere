@@ -21,8 +21,18 @@ which subdomains are covered.
 If you know all subdomains of a given domain support HTTPS, go ahead and use a
 left-wildcard, along with a plain rewrite from `"^http:"` to `"^https:"`. Make sure
 to add a bunch of test URLs for the more important subdomains. If you're not
-sure what subdomains might exist, you can iteratively use Google queries and enumerate
-the list of results like such:
+sure what subdomains might exist, you can install the `Sublist3r` tool:
+
+    git clone https://github.com/aboul3la/Sublist3r.git
+    cd Sublist3r
+    sudo pip install -r requirements.txt # or use virtualenv...
+
+Then you can to enumerate the list of subdomains:
+
+    python sublist3r.py -d example.com -e Baidu,Yahoo,Google,Bing,Ask,Netcraft,Virustotal,SSL
+
+Alternatively, you can iteratively use Google queries and enumerate the list of
+results like such:
 
 1. site:*.eff.org
 2. site:*.eff.org -site:www.eff.org
