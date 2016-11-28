@@ -322,8 +322,8 @@ class RuleWriter(Writer):
                 print(host.status(), file=sys.stderr)
             hosts.append(host)
 
-        self._write_xml_head(output)
         self._write_xml_comment(output, list(filter(lambda h: h.error is not None and not h.skipped, hosts)))
+        self._write_xml_head(output)
         for host in filter(lambda h: h.error is None and not h.skipped, hosts):
             self._write_xml_target(output, host)
         self._write_xml_footer(output)
