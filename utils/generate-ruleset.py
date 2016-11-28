@@ -163,7 +163,6 @@ class ZoneFileParser(Parser):
     def punycode_decode(self, label):
         """Support for internationalized domain names"""
         if label.startswith(b'xn--'):
-            print(label)
             return codecs.decode(label[4:], 'punycode')
         return label.decode()
 
