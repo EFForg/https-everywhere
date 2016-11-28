@@ -1,45 +1,46 @@
 <!--
 	Other Avast rulesets:
-
 		- IAvs.net.xml
 
-
 	CDN buckets:
-
 		- avast.com.edgesuite.net
-
 			- sf0.iavs.net
-
 		- avast.co.jp.ldc.d3.sc.omtrdc.net
-
 			- an.avast.com
 
+	Redirects to http:
+		- foundation.avast.com
 
-	Nonfunctional hosts in *avast.com:
-
-		- foundation ¹
-		- \w\w.support ¹
-		- ts ²
-
-	¹ Redirects to http
-	² 403
-
+	Invalid certificate:
+		- an.avast.com
+		- ans.avast.com
+		- ts.avast.com
+		- *.u.avast.com
 
 	Insecure cookies are set for these domains and hosts:
-
 		- .avast.com
 		- id.avast.com
 		- press.avast.com
 		- www.avast.com
-
 -->
+
 <ruleset name="Avast.com (partial)">
+
+	<!--	Complications:
+				-->
+	<target host="an.avast.com" />
+	<target host="ans.avast.com" />
+	<rule from="^http://ans?\.avast\.com/"
+		to="https://avast-co-jp-ldc.d3.sc.omtrdc.net/" />
+		<test url="http://an.avast.com/robots.txt" />
+		<test url="http://ans.avast.com/robots.txt" />
 
 	<!--	Direct rewrites:
 				-->
 	<target host="avast.com" />
-	<target host="ans.avast.com" />
+	<target host="www.avast.com" />
 	<target host="blog.avast.com" />
+	<target host="files.avast.com" />
 	<target host="forum.avast.com" />
 	<target host="help.avast.com" />
 	<target host="id.avast.com" />
@@ -48,28 +49,14 @@
 	<target host="static.avast.com" />
 	<target host="static2.avast.com" />
 	<target host="support.avast.com" />
-	<target host="www.avast.com" />
 
-	<!--	Complications:
-				-->
-	<target host="an.avast.com" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.avast\.com$" name="^(?:avastComGiCountry|s_vi)$" /-->
-	<!--securecookie host="^id\.avast\.com$" name="^PLAY_SESSION$" /-->
-	<!--securecookie host="^press\.avast\.com$" name="^x-avast-(?:pro|vbd)$" /-->
-	<!--securecookie host="^www\.avast\.com$" name="^avastComLocale$" /-->
+	<target host="*.support.avast.com" />
+		<test url="http://cs.support.avast.com/" />
+		<test url="http://fr.support.avast.com/" />
+		<test url="http://ru.support.avast.com/" />
 
 	<securecookie host="^\." name="^s_vi$" />
 	<securecookie host="^\w" name="." />
-
-
-	<rule from="^http://an\.avast\.com/"
-		to="https://avast-co-jp-ldc.d3.sc.omtrdc.net/" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	
+	<rule from="^http:" to="https:" />
 </ruleset>
