@@ -46,34 +46,34 @@ class Host():
         Representation of a host
 
         ``error`` is what is added as comment the ruleset
-        ``warnings`` are printed in the summary
+        ``messages`` are printed in the summary
     """
     def __init__(self, name):
         self.name = name
-        self.warnings = []
+        self.messages = []
         self.error = None
         self.skipped = False
 
-    def add_warning(self, message):
-        self.warnings.append(message)
+    def add_message(self, level, message):
+        self.messages.append([level, message])
 
-    def skip(self, message):
+    def skip(self, level, message):
         self.skipped = True
-        self.add_warning(message)
+        self.add_message(level, message)
 
     def set_error(self, error, message):
         assert isinstance(error, Err)
-        self.message = message
+        self.error_message = message
         self.error = error
 
     def status(self):
         lines = ['host {}:'.format(self)]
         if self.error:
-            lines.append('    • ERROR: {!r}: {}'.format(self.error.value, self.message))
-        for warning in self.warnings:
-            lines.append('    • WARN:  {}'.format(warning))
+            lines.append('    • ERROR : {!r}: {}'.format(self.error.value, self.error_message))
+        for level, message in self.messages:
+            lines.append('    • {:5} : {}'.format(level.upper(), message))
 
-        if not self.error and not self.warnings:
+        if not self.error and not self.messages:
             lines.append('    OK')
 
         return '\n'.join(lines)
@@ -231,7 +231,7 @@ class RuleWriter(Writer):
         """Verify validity of ``host`` as a <target>"""
         result = Host(host)
         if not self._has_dns_entry(host):
-           result.skip('skipping host, failed to fetch A/AAAA DNS entry'.format(host))
+           result.skip('warn', 'skipping host, failed to fetch A/AAAA DNS entry'.format(host))
            return result
 
         url = 'https://' + host
@@ -256,7 +256,7 @@ class RuleWriter(Writer):
                     'unexpected status code {} for {!r}'.format(resp_http.status_codeurl))
 
             if any(i.startswith('http://') for i in redirects):
-                result.add_warning('https:// url redirects to http://: {}'.format(' → '.join(redirects)))
+                result.add_message('warn', 'https:// url redirects to http://: {}'.format(' → '.join(redirects)))
         except requests.exceptions.SSLError as e:
             if 'CERTIFICATE_VERIFY_FAILED' in str(e):
                 result.set_error(Err.self_signed_certificate,
@@ -267,12 +267,12 @@ class RuleWriter(Writer):
             if e.request.url.startswith('https://'):
                 result.set_error(Err.timeout_on_https, 'Connection timed-out for {!r}: {}'.format(host, e))
             else:
-                result.skip('skipping host, it is not reachable via http://:', e)
+                result.skip('warn', 'skipping host, it is not reachable via http://:', e)
         except requests.exceptions.ConnectionError as e:
             if e.request.url.startswith('https://'):
                 result.set_error(Err.connection_refused, 'Failed to get {!r}: {}'.format(url, e))
             else:
-                result.skip('skipping host, it is not reachable via http://:', e)
+                result.skip('warn', 'skipping host, it is not reachable via http://:', e)
         return result
 
     def _write_xml_head(self, file):
@@ -318,7 +318,7 @@ class RuleWriter(Writer):
 
         hosts = []
         for host in self._process_hosts(hostnames):
-            if host.error or host.warnings:
+            if host.error or host.messages:
                 print(host.status(), file=sys.stderr)
             hosts.append(host)
 
