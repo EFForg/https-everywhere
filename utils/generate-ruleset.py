@@ -8,6 +8,7 @@ import argparse
 import codecs
 import collections
 import concurrent.futures
+from datetime import timedelta
 import dns.resolver
 import dns.zone
 import enum
@@ -227,6 +228,19 @@ class RuleWriter(Writer):
 
         return False
 
+    def _verify_hsts_header(self, result, hsts):
+        if hsts is None:
+            return  # header absent
+
+        max_age_match = re.search('max-age\s*=\s*(\d+)', hsts)
+        max_age = timedelta(seconds=int(max_age_match.group(1))) if max_age_match else 'unknown'
+
+        if re.search('(^|\s|;)preload($|\s|;)', hsts):
+            result.add_message('warn', 'HSTS indicates a preloaded domain: {!r}'.format(hsts))
+
+        result.add_message('info', 'found HSTS header with a max-age of {}: {!r}'.format(max_age, hsts))
+
+
     def _verify_entry(self, host):
         """Verify validity of ``host`` as a <target>"""
         result = Host(host)
@@ -242,6 +256,8 @@ class RuleWriter(Writer):
 
             redirects = [i.url for i in resp.history + [resp]]
             redirects_http = [i.url for i in resp_http.history + [resp_http]]
+
+            self._verify_hsts_header(result, resp.headers.get('Strict-Transport-Security'))
 
             if len(redirects) > 1 and any(i.startswith(url_http + '/') for i in redirects[1]):
                 # Verify none of the redirects for https:// redirects to the http:// version of the page
