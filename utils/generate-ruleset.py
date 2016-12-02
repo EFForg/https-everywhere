@@ -14,6 +14,7 @@ import dns.zone
 import enum
 import itertools
 import io
+import os
 import re
 import requests
 import sys
@@ -292,7 +293,8 @@ class RuleWriter(Writer):
         return result
 
     def _write_xml_head(self, file):
-        print('<ruleset name="{}">'.format(re.sub('\.xml$', '', file.name)), file=file)
+        name = re.sub('\.xml$', '', os.path.basename(file.name))
+        print('<ruleset name="{}">'.format(name), file=file)
 
     def _write_xml_comment(self, file, hosts):
         if hosts:
