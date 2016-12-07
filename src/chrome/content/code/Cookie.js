@@ -119,8 +119,8 @@ Cookie.prototype = {
   },
   save: function() {
     this.save = ("cookieExists" in this.cookieManager)
-      ? function() { this.cookieManager.add(this.host, this.path, this.name, this.value, this.secure, this.httponly, this.session, this.expires); }
-      : function() { this.cookieManager.add(this.host, this.path, this.name, this.value, this.secure,                this.session, this.expires);}
+      ? function() { this.cookieManager.add(this.host, this.path, this.name, this.value, this.secure, this.httponly, this.session, this.expires, {});}
+      : function() { this.cookieManager.add(this.host, this.path, this.name, this.value, this.secure,                this.session, this.expires, {});}
     ;
     return this.save();
   },
