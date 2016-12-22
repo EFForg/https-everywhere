@@ -17,23 +17,26 @@
 	<!--	Complications:	-->
 	<target host="yeah.net" />
 	<target host="mail.yeah.net" />
-		<exclusion pattern="^http://yeah\.net/(?!favicon\.ico)" />
+		<exclusion pattern="^http://(mail\.)?yeah\.net/(?!favicon\.ico)" />
 			<test url="http://yeah.net/favicon.ico" />
-			<test url="http://yeah.net/logout.htm" />
-		<exclusion pattern="^http://mail\.yeah\.net/(?!favicon\.ico)" />
 			<test url="http://mail.yeah.net/favicon.ico" />
+			<test url="http://yeah.net/logout.htm" />
 			<test url="http://mail.yeah.net/index.htm" />
 
 	<!-- To fix the broken of email login. Test in (mail.)?yeah.net -->
 	<target host="passport.yeah.net" />
 		<!-- MCB -->
 		<exclusion pattern="^http://passport\.yeah\.net/webzj/myeah1\.0\.1/pub/index_dl\.html" />
-		<test url="http://passport.yeah.net/webzj/myeah1.0.1/pub/index_dl.html?wdaId=" />
+			<test url="http://passport.yeah.net/webzj/myeah1.0.1/pub/index_dl.html?wdaId=" />
 		<!-- CORS -->
-		<exclusion pattern="^http://passport\.yeah\.net/dl/(gt|ini|l)" />
-		<test url="http://passport.yeah.net/dl/gt?un=username" />
-		<test url="http://passport.yeah.net/dl/ini?pd=mailyeah&#x26;pkid=ruHHKUR&#x26;pkht=mail.yeah.net" />
-		<test url="http://passport.yeah.net/dl/l" />
+		<exclusion pattern="^http://passport\.yeah\.net/dl/(ini|gt|l|cp|vfcp)" />
+			<test url="http://passport.yeah.net/dl/ini?pd=mailyeah&#x26;pkid=ruHHKUR&#x26;pkht=mail.yeah.net" />
+			<!-- get below tests after click the login button -->
+			<test url="http://passport.yeah.net/dl/gt?un=username" />
+			<test url="http://passport.yeah.net/dl/l" />
+			<!-- get below tests while you enter wrong username or password -->
+			<test url="http://passport.yeah.net/dl/cp?pd=mailyeah#x26;pkid=ruHHKUR#x26;random=6666666666666" />
+			<test url="http://passport.yeah.net/dl/vfcp" />
 
 	<rule from="^http:" to="https:" />
 </ruleset>
