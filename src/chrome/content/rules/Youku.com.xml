@@ -1,7 +1,7 @@
 <!--
 	Nonfunctional hosts in *youku.com:
-
 		- (www.)? ¹
+		- actives ¹
 		- static.atm ¹
 		- auto ¹
 		- baby ¹
@@ -16,7 +16,6 @@
 		- game ¹
 		- gongyi ¹
 		- hz ¹
-		- i ¹
 		- index ¹
 		- life ¹
 		- labs ¹
@@ -29,7 +28,6 @@
 		- tds.ott ¹
 		- share ¹
 		- sports
-		- static ¹
 		- tech ¹
 		- travel
 		- tv ¹
@@ -39,64 +37,28 @@
 		- bbs.yj ¹
 		- yuanxian ¹
 		- zy
-
 	¹ Refused
-	³ Dropped
+	² Dropped
 	³ Plaintext reply
 
+	403, HTTPS only:
+		- login ( example: https://login.youku.com/user/signup?user=login )
 
-	Problematic hosts in *youku.com:
-
-		- login *
-		- passport ˣ
-
-	* Protocol-relative inclusions of static.ykimg.com
-	ˣ Mixed css
-
-
-	Insecure cookies are set for these domains:
-
-		- .youku.com
-
-
-	Mixed content:
-
-		- css on passport from static.youku.com ʳ
-
-	ʳ Unsecurable <= refused
-
+	MCB:
+		- dingyue	( example: https://ding.youku.com/a/id_XMTY2NDYw.html )
+		- i	( example: https://i.youku.com/i/UNTI4NDU4OTgw )
 -->
-<ruleset name="Youku.com (partial)" platform="mixedcontent">
 
-	<!--	Direct rewrites:
-				-->
-	<target host="login.youku.com" />
+<ruleset name="Youku.com (partial)">
+	<target host="account.youku.com" />
+	<target host="cloud.youku.com" />
 	<target host="passport.youku.com" />
+	<target host="hudong.pl.youku.com" />
+		<test url="http://hudong.pl.youku.com/interact/libs/get/plugins" />
+	<target host="static.youku.com" />
+		<test url="http://static.youku.com/v/js/blank.html" />
+	<target host="userlive.youku.com" />
+		<test url="http://userlive.youku.com/microplayer/u/UNTI4NDU4OTgw" />
 
-	<!--	Complications:
-				-->
-	<target host="static.ykimg.com" />
-
-		<exclusion pattern="^http://static\.ykimg\.com/" />
-
-			<!--	+ve:
-					-->
-			<test url="http://static.ykimg.com/yk/lib/css/youku.17b39556b5.css" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie name="^\.youku\.com$" host="^ykss$" /-->
-
-
-	<!--	Protocol-relative includes on login:
-							-->
-	<rule from="^https://static\.ykimg\.com/"
-		to="http://static.ykimg.com/" downgrade="1" />
-
-		<test url="https://static.ykimg.com/yk/passport/css/login_page.ee46495e24.css" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
