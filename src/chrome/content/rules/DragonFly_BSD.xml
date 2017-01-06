@@ -1,56 +1,49 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *dragonflybsd.org:
 
 		- lists *
 
 	* Refused
 
 
-	Problematic subdomains:
+	Problematic hosts in *dragonflybsd.org:
 
 		- ^	(refused)
 		- bugs ³
 		- gitweb ³
 		- leaf ³ ²
-		- www ³
 
-	³ Server sends no certificate chain
+	³ Server sometimes sends no certificate chain
 	² Mixed css
 
 
 	Mixed content:
 
 		- css on leaf from www *
-		- Images on leaf from www *
 
 	* Secured by us
 
  -->
-<ruleset name="DragonFly BSD.org (partial)" default_off="missing certificate chain">
+<ruleset name="DragonFly BSD.org (partial)">
 
-	<target host="dragonflybsd.org" />
+	<!--	Direct rewrites:
+				-->
 	<target host="bugs.dragonflybsd.org" />
 	<target host="gitweb.dragonflybsd.org" />
 	<target host="leaf.dragonflybsd.org" />
 	<target host="www.dragonflybsd.org" />
-		<!--
-			Avoid broken MCB:
-						-->
-		<exclusion pattern="^http://leaf\.dragonflybsd\.org/(?!~|cgi/web-man|manpages/)" />
 
-			<!--	+ve:
-					-->
-			<test url="http://leaf.dragonflybsd.org//" />
-			<test url="http://leaf.dragonflybsd.org/mailarchive/" />
+	<!--	Complications:
+				-->
+	<target host="dragonflybsd.org" />
 
-			<!--	-ve:
-					-->
-			<test url="http://leaf.dragonflybsd.org/~beket/rt.py" />
-			<test url="http://leaf.dragonflybsd.org/cgi/web-man" />
-			<test url="http://leaf.dragonflybsd.org/manpages/" />
+		<test url="http://leaf.dragonflybsd.org//" />
+		<test url="http://leaf.dragonflybsd.org/cgi/web-man" />
+		<test url="http://leaf.dragonflybsd.org/mailarchive/" />
+		<test url="http://leaf.dragonflybsd.org/manpages/" />
 
 
-	<securecookie host="^bugs\.dragonflybsd\.org$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
 	<rule from="^http://dragonflybsd\.org/"

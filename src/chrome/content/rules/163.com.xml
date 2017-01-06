@@ -1,0 +1,162 @@
+<!--
+	For rules causing MCB, see 163.com-problematic.xml.
+
+
+	Nonfunctional hosts in *163.com:
+
+		- adgeo ʳ
+		- auto ⁵
+		- biz ʳ
+		- caipiao ⁵
+		- game.campus ²
+		- corp ʳ
+		- gb.corp ʳ
+		- data ʳ
+		- developer
+		- digi ʳ
+		- e ʳ
+		- email2 ʳ
+		- emarketing ʳ
+		- ent ʳ
+		- game ⁵
+		- hr.game ʳ
+		- gamer ⁵
+		- gm ³
+		- box.gm ⁴
+		- epay.gm ⁴
+		- gift.gm ⁴
+		- help ⁵
+		- home ʳ
+		- lady ⁵
+		- count.mail ʳ
+		- mall ᵇ
+		- money ⁵
+		- men ʳ
+		- news ʳ
+		- img.nie ⁵
+		- pay ʳ
+		- sports ʳ
+		- tech ʳ
+		- v ʳ
+		- vhouse ʳ
+		- view ʳ
+		- vipmail ʳ
+		- www ⁵
+		- yuehui ʳ
+		- zh ⁵
+
+	² 502
+	³ 403
+	⁴ 404
+	⁵ 503
+	ᵇ Blank page
+	ʳ Refused
+
+
+	Problematic hosts in *163.com:
+
+		- baoxian ˣ
+		- email ˣ
+		- reg.email ᵐ ˣ
+		- fa ˣ
+		- 18.mail ᵐ
+		- help.mail ᵐ
+		- pstat.mail ᵐ
+		- res.nie ᵐ
+		- piao ˣ
+		- qiye ᵐ
+		- sitemap ᵐ
+		- api.t ᵉ
+		- trip ˣ
+
+	ᵉ Expired
+	ᵐ Mismatched
+	ˣ Mixed css or iframe
+
+
+	Mixed content:
+
+		- iframe on email, mail from $self *
+
+		- css, on:
+		
+			- baoxian, fa, piao, trip from pimg1.126.net
+			- 1, reg.email from mimg.127.net
+			- i.money from img1.cache.netease.com
+
+		- Images, on:
+		
+			- 1, email, reg.email, mail, help.mail, from mimg.127.net
+			- 1, help.mail from nos.netease.com *
+			- baoxian, fa, piao, trip from pimg1.126.net
+			- i.money from img1.cache.netease.com
+
+		- favicons, on:
+		
+			- 1 from res.126.net
+			- email, mail from $self *
+			- reg.email from mail.163.com *
+
+		- Bugs, on:
+		
+			- email, mail from pstat.mail.163.com
+			- i.money from 163.wrating.com
+			- i.money from developer.163.com
+
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+
+<ruleset name="163.com (partial)">
+
+	<target host="163.com" />
+	<target host="analytics.163.com" />
+	<!--target host="1.163.com" /-->
+	<!--target host="baoxian.163.com" /-->
+	<!--target host="email.163.com" /-->
+	<target host="fm.163.com" />
+	<!--target host="mail.163.com" /-->
+	<target host="mima.163.com" />
+	<!--target host="i.money.163.com" /-->
+	<!--target host="piao.163.com" /-->
+	<target host="www.qiye.163.com" />
+	<target host="reg.163.com" />
+	<!--target host="trip.163.com" /-->
+	<target host="webzj.reg.163.com" />
+	
+	<target host="ssl.mail.126.com" />
+	<target host="ct.stu.126.net" />
+
+	<!-- Complications: -->
+	<target host="dl.reg.163.com" />
+		<!-- MCB -->
+		<exclusion pattern="^http://dl\.reg\.163\.com/webzj/m163_1\.0\.1/pub/index_dl\.html" />
+			<test url="http://dl.reg.163.com/webzj/m163_1.0.1/pub/index_dl.html?wdaId=" />
+		<!-- Avoid CORS problem when logging in at http://mail.163.com -->
+		<exclusion pattern="^http://dl\.reg\.163\.com/(ini|gt|l|vfcp)" />
+			<test url="http://dl.reg.163.com/ini?pd=mail163&#x26;pkid=CvViHzl&#x26;pkht=mail.163.com" />
+			<!-- these tests happen after clicking the blue login button with a valid username/password -->
+			<test url="http://dl.reg.163.com/gt?un=username" />
+			<test url="http://dl.reg.163.com/l" />
+			<!-- the below test happen after clicking the blue login button with a invalid username/password, https will return errors whatever CAPTCHA input -->
+			<test url="http://dl.reg.163.com/vfcp" />
+
+	<target host="passport.126.com" />
+		<!-- MCB -->
+		<exclusion pattern="^http://passport\.126\.com/webzj/m126_1\.0\.1/pub/index_dl\.html" />
+			<test url="http://passport.126.com/webzj/m126_1.0.1/pub/index_dl.html?wdaId=" />
+		<!-- Avoid CORS problem when logging in at http://mail.126.com -->
+		<exclusion pattern="^http://passport\.126\.com/dl/(ini|gt|l|vfcp)" />
+			<test url="http://passport.126.com/dl/ini?pd=mail126&#x26;pkid=QdQXWEQ&#x26;pkht=mail.126.com" />
+			<!-- these tests happen after clicking the green login button with a valid username/password -->
+			<test url="http://passport.126.com/dl/gt?un=username" />
+			<test url="http://passport.126.com/dl/l" />
+			<!-- the below test happen after clicking the green login button with a invalid username/password, https will return errors whatever CAPTCHA input -->
+			<test url="http://passport.126.com/dl/vfcp" />
+
+	<!--	The mixed iframe:
+					-->
+	<!--test url="http://mail.163.com/preload6.htm" /-->
+
+	<rule from="^http:" to="https:" />
+</ruleset>

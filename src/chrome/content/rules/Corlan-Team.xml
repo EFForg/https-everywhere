@@ -1,24 +1,50 @@
 <!--
-	Mixed content:
+	Corlan Team
 
-		- Image on www from www.webutation.net *
 
-		- Ads/web bugs on www from pagead2.googlesyndication.com **
+	Problematic hosts in *corelan.be:
 
-	* Unsecurable, doesn't trip MCB anyway
-	** Secured by us, who cares
+		- redmine ʳ
+
+	ʳ Refused, preemptable redirect
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- corelan.be
+		- www.corelan.be
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Corlan Team">
+<ruleset name="Corlan.be">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="corelan.be" />
-	<target host="*.corelan.be" />
+	<target host="www.corelan.be" />
+
+	<!--	Complications:
+				-->
+	<target host="redmine.corelan.be" />
 
 
-	<securecookie host="^(?:w*\.)?corelan\.be$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?corelan\.be$" name="^PHPSESSID$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(www\.)?corelan\.be/"
-		to="https://$1corelan.be/" />
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://redmine\.corelan\.be/+"
+		to="https://github.com/corelan" />
+
+		<test url="http://redmine.corelan.be/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

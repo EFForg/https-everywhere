@@ -1,0 +1,111 @@
+<!--
+	Cardiff County Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *cardiff.gov.uk:
+
+		- emerge ᶠ
+		- fis ᵇ
+		- ishare ᶠ
+		- www.roadsafety ʳ
+		- sites ⁴
+
+	⁴ 404
+	ᵇ Shows default page
+	ᶠ Handshake fails
+	ʳ Refused
+
+
+	Problematic hosts in *cardiff.gov.uk:
+
+		- ibistro ᵐ
+		- (www.)?surveys ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	Problematic hosts in *cardiff.gov.uk:
+
+		- formerly ʰ
+
+	ʰ Some pages redirect to http
+
+
+	Insecure cookies are set for these hosts:
+
+		- apps2.cardiff.gov.uk
+		- apps8.cardiff.gov.uk
+		- digigov.cardiff.gov.uk
+		- epay.cardiff.gov.uk
+		- foi.cardiff.gov.uk
+		- formerly.cardiff.gov.uk
+		- jobs.cardiff.gov.uk
+		- netloan.cardiff.gov.uk
+		- www.cardiff.gov.uk
+
+-->
+<ruleset name="Cardiff.gov.uk (partial)">
+
+	<target host="cardiff.gov.uk" />
+	<target host="active.cardiff.gov.uk" />
+	<target host="apps.cardiff.gov.uk" />
+	<target host="apps2.cardiff.gov.uk" />
+	<target host="apps8.cardiff.gov.uk" />
+	<target host="ctaxdd.cardiff.gov.uk" />
+	<target host="digigov.cardiff.gov.uk" />
+	<target host="emsonline.cardiff.gov.uk" />
+	<target host="epay.cardiff.gov.uk" />
+	<target host="foi.cardiff.gov.uk" />
+	<target host="hwrcforms.cardiff.gov.uk" />
+	<target host="jobs.cardiff.gov.uk" />
+	<target host="netloan.cardiff.gov.uk" />
+	<!--target host="surveys.cardiff.gov.uk" /-->
+	<!--target host="www.surveys.cardiff.gov.uk" /-->
+	<target host="www.cardiff.gov.uk" />
+
+		<!--	Set cookie without Secure:
+							-->
+		<!--test url="http://apps2.cardiff.gov.uk/educationtss/adminlogin.php" /-->
+		<!--test url="http://apps8.cardiff.gov.uk/leisureactivities/" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://formerly\.cardiff\.gov\.uk/content\.asp\?nav=2868" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://formerly\.cardiff\.gov\.uk/+(?!favicon\.ico|template/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://formerly.cardiff.gov.uk/content.asp?id=14527&amp;d1=0" />
+			<test url="http://formerly.cardiff.gov.uk/content.asp?id=2025" />
+			<test url="http://formerly.cardiff.gov.uk/content.asp?nav=2867,5636&amp;parent_directory_id=2865" />
+			<test url="http://formerly.cardiff.gov.uk/content.asp?nav=2868" />
+
+			<!--	-ve:
+					-->
+			<test url="http://formerly.cardiff.gov.uk/favicon.ico" />
+			<test url="http://formerly.cardiff.gov.uk/template/cardiff2/logo8.gif" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^apps2\.cardiff\.gov\.uk$" name="^educationtss$" /-->
+	<!--securecookie host="^apps8\.cardiff\.gov\.uk$" name="^CCCLAD$" /-->
+	<!--securecookie host="^(?:epay|jobs|netloan)\.cardiff\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^digigov\.cardiff\.gov\.uk$" name="^(?:JSESSION|SERVER)ID$" /-->
+	<!--securecookie host="^foi\.cardiff\.gov\.uk$" name="^(?:BIGipServer|WebAnalyticsSessionId2$)" /-->
+	<!--securecookie host="^formerly\.cardiff\.gov\.uk$" name="^COMS_COOKIE$" /-->
+	<!--securecookie host="^www\.cardiff\.gov\.uk$" name="^BIGipServer" /-->
+
+	<securecookie host="^(?!formerly\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

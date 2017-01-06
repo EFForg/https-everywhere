@@ -1,9 +1,5 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://newsvine.com/ => https://www.newsvine.com/: Cycle detected - URL already encountered: https://www.newsvine.com/
-	For problematic rules, see MSN.com.xml.
-
-	For other Microsoft coverage, see Microsoft.xml.
+	For other NBCUniversal coverage, see NBCUniversal_Media.xml.
 
 
 	CDN buckets:
@@ -11,7 +7,7 @@ Fetch error: http://newsvine.com/ => https://www.newsvine.com/: Cycle detected -
 		- m.static.newsvine.com.edgesuite.net
 
 
-	Problematic subdomains:
+	Problematic hosts in *newsvine.com:
 
 		- cdn.lib ¹
 		- m.static *
@@ -25,48 +21,75 @@ Fetch error: http://newsvine.com/ => https://www.newsvine.com/: Cycle detected -
 		- .newsvine.com
 
 -->
-<ruleset name="newsvine.com (partial)" default_off='failed ruleset test'>
+<ruleset name="newsvine.com (partial)" default_off='Needs ruleset tests'>
 
+	<!--	Direct rewrites:
+				-->
 	<target host="newsvine.com" />
+	<!--target host="bonosrama.newsvine.com" /-->
+	<target host="lib.newsvine.com" />
+	<target host="log.newsvine.com" />
+	<target host="onesearch4-2.newsvine.com" />
+	<target host="www.newsvine.com" />
+
 	<!--	Akamai	-->
+	<target host="cdn.bonosrama.newsvine.com" />
+	<target host="www.cdn.newsvine.com" />
+	<target host="i.newsvine.com" />
 	<target host="cdn.lib.newsvine.com" />
-	<target host="*.newsvine.com" />
-		<!--	redirects to www	-->
-		<exclusion pattern="^http://www\.newsvine\.com/_nv/" />
-	<target host="www.*.newsvine.com" />
+	<target host="polls.newsvine.com" />
+	<target host="www.polls.newsvine.com" />
+	<target host="m.static.newsvine.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://bonosrama\.newsvine\.com/(?:$|_nv/)" /-->
+
+		<!--	Pages redirect to www:
+						-->
+		<exclusion pattern="^http://onesearch4-2\.newsvine\.com/+(?!_vine/)" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.polls\.newsvine\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?polls\.newsvine\.com/(?!_static/|_vine/)" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.newsvine\.com/(?:$|_nv/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.newsvine\.com/(?!_static/|_vine/)" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.newsvine\.com$" name="^vid$" /-->
 
-	<securecookie host="^\.newsvine\.com$" name=".*" />
 
+	<rule from="^http://cdn\.bonosrama\.newsvine\.com/"
+		to="https://bonosrama.newsvine.com/" />
 
-	<!--	- Cert doesn't match !www.
-		- www.cdn: Akamai
+	<!--	- www.cdn: Akamai
 		- i times out as-is
 					-->
-	<rule from="^http://(?:i\.|www\.(?:cdn\.)?)?newsvine\.com/"
-		 to="https://www.newsvine.com/" />
-
-	<rule from="^http://(?:(?:cdn\.|www\.)?(bonosrama|lib)|(log))\.newsvine\.com/"
-		to="https://$1$2.newsvine.com/" />
-
-	<!--	Pages redirect to www.		-->
-	<rule from="^http://onesearch4-2\.newsvine\.com/_vine/"
-		to="https://onesearch4-2.newsvine.com/_vine/" />
+	<rule from="^http://(?:www\.cdn|i)\.newsvine\.com/"
+		to="https://www.newsvine.com/" />
 
 	<!--	polls uses Akamai.
 		This is what server does for https pages.
 		NB: Most polls pages are handled in MSN.com.xml.	-->
-	<rule from="^http://(?:www\.)?polls\.newsvine\.com/_(static|vine)/"
-		to="https://www.newsvine.com/_$1/" />
-
-	<rule from="^http://m\.static\.newsvine\.com/(?=servista/imagesizer\?)"
-		to="https://a248.e.akamai.net/f/248/9206/10/m.static.newsvine.com/" />
+	<rule from="^http://(?:www\.)?polls\.newsvine\.com/"
+		to="https://www.newsvine.com/" />
 
 	<rule from="^http://m\.static\.newsvine\.com/"
 		to="https://m.newsvine.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

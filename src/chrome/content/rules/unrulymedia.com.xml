@@ -1,0 +1,80 @@
+<!--
+	For rules covering resources which do not secure
+	mixed content, see unrulymedia.com-resources.xml.
+
+	For other Unruly Group coverage, see unruly.co.xml.
+
+
+	Partially covered hosts in *unrulymedia.com:
+
+		- console ʰ
+
+	ʰ >= 3 pages redirect to http
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- console.unrulymedia.com
+		- wiki.unrulymedia.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Unrulymedia.com (partial)">
+
+	<target host="cloud-video.unrulymedia.com" />
+	<!--target host="console.unrulymedia.com" /-->
+	<target host="video.unrulymedia.com" />
+	<target host="wiki.unrulymedia.com" />
+
+		<!--exclusion pattern="^http://console\.unrulymedia\.com/(?:$|login$|misc/settings/showResetPassword$)" /-->
+		<!--
+			Avoid potential XHR problems:
+							-->
+		<!--exclusion pattern="^http://console\.unrulymedia\.com/.+\.js(?:$|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://console\.unrulymedia\.com/(?!/*resource/(?!.+\.js(?:$|\?)))" /-->
+
+			<!--	+ve:
+					-->
+			<!--
+			<test url="http://console.unrulymedia.com/login" />
+			<test url="http://console.unrulymedia.com/misc/settings/showResetPassword" />
+			<test url="http://console.unrulymedia.com/publisher/video/signup" />
+			<test url="http://console.unrulymedia.com/resource/js/chosen.jquery.js" />
+			<test url="http://console.unrulymedia.com/resource/js/jquery.colorbox.js" />
+			<test url="http://console.unrulymedia.com/resource/js/jquery.multiselect.filter.js" />
+			<test url="http://console.unrulymedia.com/resource/js/jquery.multiselect.min.js" />
+			<test url="http://console.unrulymedia.com/resource/js/jquery.qtip-1.0.0-rc3.min.js" />
+			<test url="http://console.unrulymedia.com/resource/js/prototype.js" />
+			<test url="http://console.unrulymedia.com/resource/js/select2-2.0.min.js" />
+			-->
+
+			<!--	-ve:
+					-->
+			<!--
+			<test url="http://console.unrulymedia.com/resource/css/channels.css" />
+			-->
+
+		<!--	$ shows blank page, so:
+						-->
+		<test url="http://cloud-video.unrulymedia.com/ux-guidelines/latest/styles/unruly-styles.css" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://video.unrulymedia.com/rtbprivacypolicy/index.html" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:console|wiki)\.unrulymedia\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

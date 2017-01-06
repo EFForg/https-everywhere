@@ -1,39 +1,90 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *tradedoubler.com:
 
-		- (www.)	(refused)
-		- financials	(handshake fails)
+		- financials ʳ
+		- www ⁴
+
+	⁴ 404
+	ʳ Refused
 
 
-	Fully covered subdomains:
+	Partially covered hosts in *tradedoubler.com:
 
-		- anet
-		- clk
+		- anet ⁴
+		- clk ⁴
 
-		- clk\w\w:
+		- clk\w\w: ⁴
 
 			- clkde
 			- clkgb
 
+		- imp\w\w ⁴
+		- pdt ⁴
+		- star\w\w ⁴
+		- tracker ⁴
+
+	⁴ $ redirects to 404
+
+
+	Fully covered hosts in *tradedoubler.com:
+
 		- img
-		- imp\w\w
 		- login
+		- prod
 		- publisher
-		- stardk
-		- tracker
+		- solutions
+
+
+	Insecure cookies are set for these domains:
+
+		- .tradedoubler.com
 
 -->
-<ruleset name="Tradedoubler (partial)">
+<ruleset name="Tradedoubler.com (partial)">
 
 	<target host="*.tradedoubler.com" />
 
+		<!--	$ redirects to s://www
+						-->
+		<exclusion pattern="^http://(?:anet|clk|clk\w\w|imp\w\w|pdt|star\w\w|tracker)\.tradedoubler\.com/$" />
 
-	<!--securecookie host="^\.tradedoubler\.com$" name="^TD_EH_0$" /-->
-	<securecookie host="^\.tradedoubler\.com$" name="^(?:ANETC|BT|PI|TD_UNIQUE_IMP|TradeDoublerGUID|UI)$" />
-	<securecookie host="^(?:login|publisher)\.tradedoubler\.com$" name=".+" />
+			<!--	+ve:
+					-->
+			<test url="http://anet.tradedoubler.com/" />
+			<test url="http://clk.tradedoubler.com/" />
+			<test url="http://clkde.tradedoubler.com/" />
+			<test url="http://impfr.tradedoubler.com/" />
+			<test url="http://impit.tradedoubler.com/" />
+			<test url="http://pdt.tradedoubler.com/" />
+			<test url="http://stardk.tradedoubler.com/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://anet.tradedoubler.com/anet?type()loc()" />
+			<test url="http://clk.tradedoubler.com/click?p=&amp;a=&amp;f=0" />
+			<test url="http://clkde.tradedoubler.com/click?p=&amp;a=&amp;f=0" />
+			<test url="http://impfr.tradedoubler.com/imp?type()g()a()" />
+			<test url="http://impit.tradedoubler.com/click?p()g()a()" />
+			<test url="http://pdt.tradedoubler.com/click?a()p()prod()ttid()url()" />
+			<test url="http://stardk.tradedoubler.com/click?" />
+			<test url="http://tracker.tradedoubler.com/click?p=&amp;a=&amp;url=" />
+
+		<test url="http://hst.tradedoubler.com/" />
+		<test url="http://img.tradedoubler.com/images/inv.gif" />
+		<test url="http://login.tradedoubler.com/" />
+		<test url="http://prod.tradedoubler.com/" />
+		<test url="http://publisher.tradedoubler.com/" />
+		<test url="http://solutions.tradedoubler.com/" />
 
 
-	<rule from="^http://(anet|clk|clk\w\w|img|imp\w\w|login|publisher|stardk|tracker)\.tradedoubler\.com/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.tradedoubler\.com$" name="^(?:ANETC|BT|GUID|PI|TD_UNIQUE_IMP|TradeDoublerGUID|UI)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://(anet|clk|clk\w\w|hst|img|imp\w\w|login|pdt|prod|publisher|solutions|star\w\w|tracker)\.tradedoubler\.com/"
 		to="https://$1.tradedoubler.com/" />
 
 </ruleset>

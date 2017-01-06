@@ -1,55 +1,146 @@
 <!--
+	Other Virgin rulesets:
+
+		- VirginAustralia.xml
+		- Virgin-mismatches.xml
+		- VirginMobile.xml
+
 	Nonfunctional subdomains:
 
-		- anywhere	(refused)
+		- about *
+		- admin *
+		- advancedsearch2 *
+		- adserver *
+		- anywhere *
+		- careers *
+		- cms *
+		- contact *
+		- dev *
+		- downloads *
+		- ebill *
+		- email *
+		- energy *
+		- events *
+		- fedora *
+		- finance *
+		- ftp *
+		- identity2 *
+		- m *
+		- mediacentre *
+		- mirrors *
+		- netreport *
+		- news *
+		- ntp *
+		- nt *
+		- onlinemovies-cache *
+		- origin *
+		- php *
+		- pop3 *
+		- press *
+		- redirect *
+		- redirects *
+		- samba *
+		- search *
+		- search2 *
+		- shop *
+		- static-content *
+		- smtp *
+		- tools *
+		- tv *
+		- ubuntu *
+		- wap *
+		- webcache *
 
+		- accessibility **
+		- chat **
+		- forums **
+		- guides **
+		- health **
+		- jobs **
+		- mailing **
+		- metrics **
+		- old **
+		- profile **
+		- static **
+		- web **
+		- wwww **
 
-	Problematic subdomains:
+		- social ***
 
-		- ^			(cert only matches www)
-		- static-content	(refused)
+		- www.mail	(http redirects to https://mail2.virginmedia.com, https returns "Invalid request")
+		- myphotos	(mixed active content blocked from http://static.sf-cdn.com)
+		- myphotos1	(mixed active content blocked from http://static.sf-cdn.com)
+		- myphotos2	(mixed active content blocked from http://static.sf-cdn.com)
+		- myphotos3	(mixed active content blocked from http://static.sf-cdn.com)
 
+	* unable to connect or (https) connection refused
+	** certificate name mismatch
+	*** certificate expired
 
 	Partially covered subdomains:
 
-		- (www.) *
-		- onlinemovies *
-		- shop *
-
-	* $ redirects to http
-
+		- ^		(302 redirects to http://www.virginmedia.com except certain directories)
+		- allyours	(301 redirects to http://shop.virginmedia.com)
+		- checkout	(302 redirects to http://store.virginmedia.com/virgin-media-mobile/pay-monthly-phones.html)
+		- keepup	(302 redirects to http://store.virginmedia.com)
+		- mobilebill	(301 redirects to http://store.virginmedia.com/virgin-media-mobile.html)
+		- onlinemovies	(302 redirects to http://onlinemovies.virginmedia.com except certain directories)
+		- store		(302 redirects to http://store.virginmedia.com)
 
 	Fully covered subdomains:
 
-		- allyours
+		- assets
+		- cablemystreet
+		- community 
 		- da
-		- help
-		- identity
-		- mail
-		- national
+		- ebill2
+		- help		(requires assets rule to prevent mixed-content)
+		- login
+		- mail		(301 redirects to https://mail2.virginmedia.com)
+		- mail2
+		- mobile
 		- my
-		- static-content	(→ www)
+		- myphotos4
+		- payments
+		- websafe
+		- www
+		- identity
+		- national
 
 -->
 <ruleset name="Virgin Media.com (partial)">
 
+	<target host="identity.virginmedia.com" />
+	<target host="national.virginmedia.com" />
+
 	<target host="virginmedia.com" />
-	<target host="*.virginmedia.com" />
-		<exclusion pattern="^http://(?:www\.)?virginmedia\.com/(?!favicon\.ico|images/|img/|styles/)" />
-		<exclusion pattern="^http://onlinemovies\.virginmedia\.com/(?!App_Themes/|[cC]ommon/|COMMON/|favicon\.ico|js/|rfc\d+\.gif|WebResource\.axd)" />
-		<exclusion pattern="^http://store\.virginmedia\.com/(?!assets/|content/|etc/|images/|includes/)" />
+	<target host="allyours.virginmedia.com" />
+	<target host="checkout.virginmedia.com" />
+	<target host="keepup.virginmedia.com" />
+	<target host="mobilebill.virginmedia.com" />
+	<target host="onlinemovies.virginmedia.com" />
+	<target host="store.virginmedia.com" />
 
+	<target host="assets.virginmedia.com" />
+	<target host="cablemystreet.virginmedia.com" />
+	<target host="community.virginmedia.com" />
+	<target host="da.virginmedia.com" />
+	<target host="ebill2.virginmedia.com" />
+	<target host="help.virginmedia.com" />
+	<target host="login.virginmedia.com" />
+	<target host="mail.virginmedia.com" />
+	<target host="mail2.virginmedia.com" />
+	<target host="mobile.virginmedia.com" />
+	<target host="my.virginmedia.com" />
+	<target host="myphotos4.virginmedia.com" />
+	<target host="payments.virginmedia.com" />
+	<target host="websafe.virginmedia.com" />
+	<target host="www.virginmedia.com" />
 
-	<!--	Tracking cookies:
-					-->
+	<!--	Tracking cookies (TODO: update hosts)	-->
 	<securecookie host="^\.virginmedia\.com$" name="^(?:gpv_p\w|s_\w+)$" />
 	<securecookie host="^(?:da|help|identity|my|national)\.virginmedia\.com$" name=".+" />
 
-
-	<rule from="^http://(?:static-content\.|www\.)?virginmedia\.com/"
-		to="https://www.virginmedia.com/" />
-
-	<rule from="^http://(allyours|da|help|identity|mail|my|national|onlinemovies|store)\.virginmedia\.com/"
-		to="https://$1.virginmedia.com/" />
+	<rule from="^http:" to="https:" />
 
 </ruleset>

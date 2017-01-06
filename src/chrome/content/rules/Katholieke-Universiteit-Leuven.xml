@@ -1,6 +1,8 @@
 <!--
 	Katholieke Universiteit Leuven
 
+	For rules causing false/broken MCB, see Kuleuven.be-falsemixed.xml.
+
 
 	Nonfunctional subdomains:
 
@@ -13,16 +15,11 @@
 	Problematic subdomains:
 
 		- alumni ¹
-		- videolab.avnet **
-		- videolab.cc **
-		- esat *
 		- kuleuven.ezproxy ²
 		- services.libis ⁵
 		- organigram
 
 	¹ Refused
-	** Server sends no certificate chain, see https://whatsmychaincert.com
-	* Cert only matches www.foo
 	² Cert only matches *.kuleuven.ezproxy
 	⁵ Mismatched
 
@@ -30,10 +27,10 @@
 	Partially covered subdomains:
 
 		- (www.)? ¹
-		- (www.)esat *	(^ → www)
+		- (www.)esat *
 
 	¹ wieiswie/ prompts for login
-	* cosic 400s
+	* Broken MCB triggered by /cosic
 
 
 	netlogin: Dropped over http & https
@@ -42,17 +39,22 @@
 	These altnames don't exist:
 
 		- www.agenda.kuleuven.be
-		- www.videolab.avnet.kuleuven.be
+		- videolab.kuleuven.be
 
 
 	Mixed content:
 
+		- css, on:
+
+			- www.esat from $self *
+			- www.esat from stijl.kuleuven.be *
+
 		- Images, on:
 
-			- associatie from stijl *
+			- associatiem, www.esat from stijl *
 			- videolab.avnet, videolab.cc, status from piwik.cc *
-			- videolab.avnet, videolab.cc from piwik.icts *
-			- news from www *
+			- www.esat from www.cosic.esat.kuleuven.be *
+			- www.esat, news from www *
 
 		- Bugs on news from piwik.cc *
 
@@ -75,24 +77,28 @@
 	<target host="associatie.kuleuven.be" />
 	<target host="wiki.associatie.kuleuven.be" />
 	<target host="www.associatie.kuleuven.be" />
-	<!--target host="videolab.avnet.kuleuven.be" /-->
+	<target host="videolab.avnet.kuleuven.be" />
 	<target host="bib.kuleuven.be" />
 	<target host="www.bib.kuleuven.be" />
 
 	<target host="cygnus.cc.kuleuven.be" />
 	<target host="m.cygnus.cc.kuleuven.be" />
 	<target host="piwik.cc.kuleuven.be" />
-	<!--target host="videolab.cc.kuleuven.be" /-->
+	<target host="videolab.cc.kuleuven.be" />
 
 	<target host="cwisdb.kuleuven.be" />
 	<target host="dml.kuleuven.be" />
 	<target host="www.dml.kuleuven.be" />
 	<target host="doel.kuleuven.be" />
 	<target host="www.doel.kuleuven.be" />
+	<target host="esat.kuleuven.be" />
+
 	<target host="bronx.esat.kuleuven.be" />
 	<target host="www.cosic.esat.kuleuven.be" />
 	<target host="securehomes.esat.kuleuven.be" />
+	<target host="securewww.esat.kuleuven.be" />
 	<target host="www.esat.kuleuven.be" />
+
 	<target host="login.kuleuven.ezproxy.kuleuven.be" />
 	<target host="www.kuleuven.ezproxy.kuleuven.be" />
 	<target host="owa.groupware.kuleuven.be" />
@@ -119,21 +125,26 @@
 	<!--	Complications:
 				-->
 	<target host="alumni.kuleuven.be" />
-	<target host="esat.kuleuven.be" />
 	<target host="kuleuven.ezproxy.kuleuven.be" />
 	<target host="services.libis.kuleuven.be" />
 
-		<!--
-			400:
-				-->
-		<exclusion pattern="^http://(?:www\.)?esat\.kuleuven\.be/+cosic(?:$|[?/])" />
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?esat\.kuleuven\.be/+cosic(?!/wp-content/)(?:$|[?/])" />
 
+			<!--	+ve:
+					-->
 			<test url="http://esat.kuleuven.be/cosic" />
 			<test url="http://esat.kuleuven.be/cosic?" />
 			<test url="http://esat.kuleuven.be/cosic/" />
 			<test url="http://www.esat.kuleuven.be//cosic" />
 			<test url="http://www.esat.kuleuven.be//cosic?" />
 			<test url="http://www.esat.kuleuven.be//cosic/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://esat.kuleuven.be/cosic/wp-content/themes/kuleuven/style.css" />
+			<test url="http://www.esat.kuleuven.be/cosic/wp-content/plugins/the-events-calendar/resources/tribe-events-theme-mobile.min.css" />
 
 		<!--exclusion pattern="^http://organigram\.kuleuven\.be/(?!$)" /-->
 
@@ -143,6 +154,8 @@
 						-->
 		<exclusion pattern="^http://(?:www\.)?kuleuven\.be/+wieiswie(?:$|[?/])" />
 
+			<!--	+ve:
+					-->
 			<test url="http://www.kuleuven.be/wieiswie/" />
 			<test url="http://www.kuleuven.be/wieiswie/en/person" />
 			<test url="http://www.kuleuven.be/wieiswie/nl/person" />
@@ -162,11 +175,8 @@
 		<test url="http://alumni.kuleuven.be//" />
 		<test url="http://alumni.kuleuven.be/?foo" />
 
-	<!--	Domains for which both !www and www exist,
-		but only www works without caveat:
-							-->
-	<rule from="^http://(esat|kuleuven\.ezproxy)\.kuleuven\.be/"
-		to="https://www.$1.kuleuven.be/" />
+	<rule from="^http://kuleuven\.ezproxy\.kuleuven\.be/"
+		to="https://www.kuleuven.ezproxy.kuleuven.be/" />
 
 	<rule from="^http://services\.libis\.kuleuven\.be/"
 		to="https://services.libis.be/" />

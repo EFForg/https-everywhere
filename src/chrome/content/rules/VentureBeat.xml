@@ -17,6 +17,13 @@
 	* Refused
 
 
+	Problematic hosts in *venturebeat.com:
+
+		- multimedia *
+
+	* Mismatched
+
+
 	Insecure cookies are set for these hosts:
 
 		- venturebeat.com
@@ -26,26 +33,43 @@
 
 	Mixed content:
 
-		- css on events from fonts.googleapis.com *
-		- Image from i1.wp.com *
-		- Ad from curate.vbstatic.co
-
-	* Secured by us
+		- Image on multimedia from $self
 
 -->
 <ruleset name="VentureBeat.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="venturebeat.com" />
 	<target host="events.venturebeat.com" />
 	<target host="users.venturebeat.com" />
 	<target host="www.venturebeat.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://venturebeat\.com/(?:$|\d{4}/(?:\d\d/){2}[\w-]+/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://venturebeat\.com/+(?!wp-content/|wp-includes/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://venturebeat.com/2013/03/12/prezi/" />
+			<test url="http://venturebeat.com/about/" />
+			<test url="http://venturebeat.com/contact/" />
+			<test url="http://venturebeat.com/tag/startx/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://venturebeat.com/wp-content/uploads/2015/10/BusinessWire_FeaturedImage.jpg" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^(?:events\.|www\.)?venturebeat\.com$" name="^X-Mapping-fjhppofk$" /-->
 
-	<securecookie host="^(?:events\.|www\.)?venturebeat\.com$" name=".+" />
+	<securecookie host="^events\.venturebeat\.com$" name="." />
 
 
 	<rule from="^http:"

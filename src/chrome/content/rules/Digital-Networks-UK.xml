@@ -1,14 +1,28 @@
-<ruleset name="Digital Networks UK (partial)">
+<!--
+	Digital Networks UK
 
-	<target host="dnuk.com"/>
-	<target host="*.dnuk.com"/>
+-->
+<ruleset name="DNUK.com (partial)" default_off="mismatched">
 
-	<securecookie host="^secure\.dnuk\.com$" name=".*"/>
+	<!--	Direct rewrites:
+				-->
+	<target host="secure.dnuk.com" />
 
-	<rule from="^http://(?:www\.)?dnuk\.com/(_elements|images)/"
-		to="https://secure.dnuk.com/$1/"/>
+	<!--	Complications:
+				-->
+	<target host="dnuk.com" />
+	<target host="www.dnuk.com" />
 
-	<rule from="^http://secure\.dnuk\.com/"
-		to="https://secure.dnuk.com/"/>
+		<exclusion pattern="^http://(?:www\.)?dnuk\.com/(?!_elements/|images/)" />
+
+
+	<securecookie host="^secure\.dnuk\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?dnuk\.com/"
+		to="https://secure.dnuk.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

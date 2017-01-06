@@ -1,0 +1,72 @@
+<!--
+	Fife Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *fife.gov.uk:
+
+		- planning ʳ
+
+	ʳ Refused
+
+
+	Problematic hosts in *fife.gov.uk:
+
+		- (www.)? ᵐ
+		- socialwork ᵐ ˣ
+
+	ᵐ Mismatched
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	These altnames do not exist:
+
+		- map03.fife.gov.uk
+		- maps03.fife.gov.uk
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- knowfife.fife.gov.uk
+		- socialwork.fife.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on soclialwork from $self
+		- Images on soclialwork from $self
+
+-->
+<ruleset name="Fife.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="knowfife.fife.gov.uk" />
+	<target host="maps.fife.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="fife.gov.uk" />
+	<target host="www.fife.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^knowfife\.fife\.gov\.uk$" name="^(?:ASP\.NET_SessionId|ias\.Locale|ias\.PreferredItemCount)$" /-->
+	<!--securecookie host="^socialwork\.fife\.gov\.uk$" name="^MoodleSessionfife$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://(?:www\.)?fife\.gov\.uk/"
+		to="https://www.fifedirect.org.uk/" />
+
+		<test url="http://www.fife.gov.uk/index.cfm" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

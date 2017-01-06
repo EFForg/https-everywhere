@@ -1,6 +1,8 @@
 <!--
 	Texas Instruments
 
+	For rules causing false/broken MCB, see TI.com-falsemixed.xml.
+
 
 	Nonfunctional domains:
 
@@ -23,6 +25,7 @@
 		- www-k.ext		(times out)
 		- trainingcenter	(mismatched, CN: *.vsearch2.net)
 		- videos		(redirects to www; mismatched, CN: www.ti.com)
+		- www			Blocks Tor users
 
 	² Self-signed, mismatched, CN: 515969-UAT1.saas.telligent.com
 
@@ -30,9 +33,10 @@
 	Partially covered subdomains:
 
 		- www-k.ext	(→ www)
-		- www ² ³
+		- www ² * ³
 
 	² Excluded doc downloads per https://github.com/EFForg/https-everywhere/issues/1467
+	* Excluded product per https://github.com/EFForg/https-everywhere/issues/3179
 	³ Excluded tools/ per https://github.com/EFForg/https-everywhere/issues/1611
 
 
@@ -93,6 +97,7 @@
 	<target host="e2e-uat.ti.com" />
 	<target host="www-k.ext.ti.com" />
 	<target host="reviews.ti.com" />
+	<target host="videos.ti.com" />
 
 		<exclusion pattern="^http://www-k\.ext\.ti\.com/(?!sc/technical-support/pic/asia\.htm|sc/technical-support/pic/japan\.htm)" />
 
@@ -129,6 +134,19 @@
 			<test url="http://www.ti.com/general/docs/lit/getliterature.tsp?baseLiteratureNumber=spruer9&amp;fileType=pdf" />
 			<test url="http://www.ti.com/lit/ug/spruer9d/spruer9d.pdf" />
 
+		<!--	https://github.com/EFForg/https-everywhere/issues/3179
+
+			Apparently some subset of product/* triggers MCB:
+									-->
+		<exclusion pattern="^http://(?:www\.)?ti\.com/product(?:$|[?/])" />
+
+			<!--	+ve:
+					-->
+			<test url="http://ti.com/product/tps3511" />
+			<test url="http://www.ti.com/product/am3358" />
+			<test url="http://www.ti.com/product/cc3000" />
+			<test url="http://www.ti.com/product/tps3511" />
+
 		<!--	https://github.com/EFForg/https-everywhere/issues/1611
 								-->
 		<exclusion pattern="^http://www.ti.com/tool/" />
@@ -158,7 +176,8 @@
 		on e2e or othe unsecurable subdomains:
 
 	<securecookie host="^\.ti\.com$" name="^iatc$" /-->
-	<securecookie host="^.+\.ti\.com$" name=".+" />
+
+	<securecookie host=".+\.ti\.com$" name="." />
 
 
 	<!--	Server drops path:

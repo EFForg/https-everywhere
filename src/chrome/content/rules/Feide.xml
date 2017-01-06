@@ -2,60 +2,59 @@
 	For other Uninett coverage, see Uninett.xml.
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these hosts:
 
-		- (www.)
-		- api
-		- crawler
-		- demo
-		- idp.demo
-		- sp[1-4].demo
-		- docs
-		- foodle
-		- fwtest
-		- idp
-		- idp-dev
-		- innsyn
-		- kunde
-		- logout
-		- metadata
-		- openidp
-		- openwiki
-		- ow
-		- rnd
-		- beta.rnd
-		- translation.rnd
-		- sp-test
-		- tools
-		- wiki
+		- idp.feide.no
+		- rnd.feide.no
+		- sp-test.feide.no
 
 
-	Observed cookie domains:
+	Mixed content:
 
-		- .
-		- .crawler
-		- idp.demo
-		- sp\d.demo
-		- .fwtest
-		- idp
-		- openidp
-		- rnd
-		- translation.rnd
-		- sp-test
-		- tools
-		- www
+		- iframe on rnd from www.youtube.com ˢ
+		- Images on rnd from clippings.erlang.no ᵐ
+
+	ᵐ Not secured by us <= mismatched
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Feide">
+<ruleset name="Feide.no">
 
 	<target host="feide.no" />
-	<target host="*.feide.no" />
+	<target host="api.feide.no" />
+	<target host="crawler.feide.no" />
+	<target host="docs.feide.no" />
+	<target host="fwtest.feide.no" />
+	<target host="idp.feide.no" />
+	<target host="idp-dev.feide.no" />
+	<target host="innsyn.feide.no" />
+	<target host="kunde.feide.no" />
+	<target host="logout.feide.no" />
+	<target host="metadata.feide.no" />
+	<target host="openidp.feide.no" />
+	<target host="openwiki.feide.no" />
+	<target host="rnd.feide.no" />
+	<target host="translation.rnd.feide.no" />
+	<target host="sp-test.feide.no" />
+	<target host="tools.feide.no" />
+	<target host="wiki.feide.no" />
+	<target host="www.feide.no" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://idp.feide.no/simplesaml/module.php/feide/login.php?language=en" /-->
 
 
-	<securecookie host=".*\.feide\.no$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^idp\.feide\.no$" name="^language$" /-->
+	<!--securecookie host="^rnd\.feide\.no$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^sp-test\.feide\.no$" name="^SimplieSAMLSessionId$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://((?:api|crawler|(?:idp\.|sp\d\.)?demo|docs|foodle|fwtest|idp|idp-dev|innsyn|kunde|logout|metadata|openidp|openwiki|ow|rnd|(?:beta|translation)\.rnd|sp-test|tools|wiki|www)\.)?feide\.no/"
-		to="https://$1feide.no/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

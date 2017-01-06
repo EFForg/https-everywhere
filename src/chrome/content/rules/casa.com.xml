@@ -1,0 +1,45 @@
+<!--
+	For other Amazon coverage, see Amazon.xml.
+
+
+	CDN buckets:
+
+		- casa.q-assets.com
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .casa.com
+		- www.casa.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Casa.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.casa.com" />
+
+	<!--	Complications:
+				-->
+	<target host="casa.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.casa\.com$" name="^(?:cookie-check|session-id|session-id-time|session-token|ubid-main)$" /-->
+	<!--securecookie host="^www\.casa\.com$" name="^(?:ASP\.NET_SessionId|GEO_COUNTRYCODE|GEO_ZIPCODE|cookie-check)$" /-->
+
+	<securecookie host="." name="^aps-trtmnt$" />
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://casa\.com/"
+		to="https://www.casa.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

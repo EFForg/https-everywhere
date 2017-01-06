@@ -1,0 +1,142 @@
+<!--
+	Royal Borough of Windsor & Maidenhead Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *rbwm.gov.uk:
+
+		- fsd ᵃ
+		- maps ᵈ
+		- mol ᵈ
+		- petitions ᵗ
+		- pledge ᵗ
+		- www ʳ
+
+	ᵃ Shows search3.openobjects.com
+	ᵈ Dropped
+	ʳ Refused
+	ᵗ Reset
+
+
+	Problematic hosts in *rbwm.gov.uk:
+
+		- consult ᵐ
+		- directory ᵐ
+
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *rbwm.gov.uk:
+
+		- directory ʰ
+		- www *
+
+	* Not all paths redirect
+	ʰ Some pages redirect to http
+
+
+	^rbwm.gov.uk does not exist.
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- licensing.rbwm.gov.uk
+		- system8.rbwm.gov.uk
+		- www3.rbwm.gov.uk
+		- .www3.rbwm.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- myportaladmissions, system8 from d1.logo-net.co.uk ʳ
+			- myportaladmissions, system8 from www.rbwm.gov.uk ʳ
+
+		- Bugs on myportaladmissions, payments, system8 from uk.sitestat.com ˢ
+
+	ʳ Unsecurable <= refused
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="RBWM.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="forms.rbwm.gov.uk" />
+	<target host="licensing.rbwm.gov.uk" />
+	<target host="myportaladmissions.rbwm.gov.uk" />
+	<target host="payments.rbwm.gov.uk" />
+	<target host="system8.rbwm.gov.uk" />
+	<target host="www3.rbwm.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="consult.rbwm.gov.uk" />
+	<target host="directory.rbwm.gov.uk" />
+	<target host="www.rbwm.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^licensing\.rbwm\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^system8\.rbwm\.gov\.uk$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^www3\.rbwm\.gov\.uk$" name="^\w{16}$" /-->
+	<!--securecookie host="^\.www3\.rbwm\.gov\.uk$" name="^TestCookie$" /-->
+
+	<securecookie host="^(?!directory\.|www\.)\w" name="." />
+	<securecookie host="^\.www3\." name="." />
+
+
+	<rule from="^http://directory\.rbwm\.gov\.uk/"
+		to="https://search3.openobject.com/" />
+
+		<exclusion pattern="^http://directory\.rbwm\.gov\.uk/(?!/*(?:kb5/\w+/directory/(?:image|stylesheet)s/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://directory.rbwm.gov.uk/kb5/rbwm/directory/complaints.page" />
+			<test url="http://directory.rbwm.gov.uk/kb5/rbwm/directory/families.page" />
+			<test url="http://directory.rbwm.gov.uk/kb5/rbwm/directory/localoffer.page" />
+			<test url="http://directory.rbwm.gov.uk/kb5/rbwm/directory/news.page" />
+
+			<!--	-ve:
+					-->
+			<test url="http://directory.rbwm.gov.uk/kb5/rbwm/directory/images/customer/nc2_img_minus-size-icon.png" />
+			<test url="http://directory.rbwm.gov.uk/kb5/rbwm/directory/stylesheets/css/customer-print.css" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://www\.rbwm\.gov\.uk/.*"
+		to="https://www3.rbwm.gov.uk/" />
+
+		<!--	/*\w(?!ndex\.htm) does not redirect:
+								-->
+		<exclusion pattern="^http://www\.rbwm\.gov\.uk/(?!/*(?:$|\?|index\.htm))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.rbwm.gov.uk/berks-pension/" />
+			<test url="http://www.rbwm.gov.uk/events/" />
+			<test url="http://www.rbwm.gov.uk/events/e_detail.asp?ID=5703" />
+			<test url="http://www.rbwm.gov.uk/web/foi_requests_by_cat_finance.htm" />
+			<test url="http://www.rbwm.gov.uk/web/foi_requests_by_cat_highways.htm" />
+			<test url="http://www.rbwm.gov.uk/web/sdop_flooding_info.htm" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.rbwm.gov.uk/?" />
+			<test url="http://www.rbwm.gov.uk/index.htm" />
+
+	<rule from="^http://consult\.rbwm\.gov\.uk/"
+		to="https://rbwm-consult.objective.co.uk/" />
+
+		<test url="http://consult.rbwm.gov.uk/portal/contact_us" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

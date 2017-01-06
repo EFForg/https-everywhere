@@ -2,7 +2,7 @@
 	University of Göttingen
 
 
-	Problematic subdomains:
+	Problematic hosts in *uni-goettingen.de:
 
 		- (www.)coar	(works, self-signed)
 		- grc		(works; mismatched, CN: vweb12.gwdg.de)
@@ -10,42 +10,47 @@
 		- karzer	(shows www, valid cert)
 
 
-	Fully covered subdomains:
-
-		- www.sec.informatik	(→ www)
-		- karzer	(→ www)
-		- www
-
-
 	^uni-goettingen.de times out over http.
 
 
-	Observed cookie domains:
+	These altnames don't exist:
 
-		- grc
+		- sub.uni-goettingen.de
+		- piwik.uni-goettingen.de
+		- www.piwik.uni-goettingen.de
 
 
 	Mixed content:
 
 		- Images on www from www *
+		- Bug on ediss from piwik.gwdg.de *
 
 	* Secured by us
 
 -->
 <ruleset name="Uni-Goettingen.de (partial)">
 
-	<target host="*.uni-goettingen.de" />
+	<!--	Direct rewrites:
+				-->
+	<target host="ediss.uni-goettingen.de" />
+	<target host="www.sub.uni-goettingen.de" />
+	<target host="www.uni-goettingen.de" />
+
+	<!--	Complications:
+				-->
+	<target host="www.sec.informatik.uni-goettingen.de" />
+	<target host="karzer.uni-goettingen.de" />
 
 
-	<rule from="^http://www\.uni-goettingen\.de/"
-		to="https://www.uni-goettingen.de/" />
+	<rule from="^http://karzer\.uni-goettingen\.de/"
+		to="https://www.uni-goettingen.de/de/sh/29360.html" />
 
 	<!--	Server doesn't drop path:
 						-->
 	<rule from="^http://www\.sec\.informatik\.uni-goettingen\.de/"
 		to="https://www.uni-goettingen.de/de/266195.html" />
 
-	<rule from="^http://karzer\.uni-goettingen\.de/"
-		to="https://www.uni-goettingen.de/de/sh/29360.html" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

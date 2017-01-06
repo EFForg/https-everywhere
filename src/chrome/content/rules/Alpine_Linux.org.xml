@@ -1,30 +1,21 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *alpinelinux.org:
 
 		- git ²
-		- nl ³
-		- wiki *
+		- mail ²
+		- dl-cdn mismatch
+		- distfiles timed out
+		- dev timed out
+		- build timed out
 
-	² Refused
-	³ Shows bugs
-	* 503
-
-
-	Problematic subdomains:
-
-		- (www.)? *
-		- bugs *
-		- forum ²
-
-	* Server sends no certificate chain
-	² Mismatched
+	² Dropped
 
 
-	Fully covered subdomains:
+	Problematic hosts in *alpinelinux.org:
 
-		- (www.)?
-		- bugs
-		- mail
+		- forum *
+
+	* Mixed css
 
 
 	Insecure cookies are set for these hosts:
@@ -34,23 +25,36 @@
 
 	Mixed content:
 
-		- css on forum from $self
-		- Images on forum from $self
+		- css, on:
+		
+			- forum from $self *
+			- forum from fonts.googleapis.com *
+
+		- Images on forum from $self *
+
+	* Secured by us
 
 -->
-<ruleset name="Alpine Linux.org (partial)" default_off='missing certificate chain'>
+<ruleset name="Alpine Linux.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="alpinelinux.org" />
 	<target host="bugs.alpinelinux.org" />
-	<target host="mail.alpinelinux.org" />
 	<target host="www.alpinelinux.org" />
+	<target host="wiki.alpinelinux.org" />
+	<target host="forum.alpinelinux.org" />
+	<target host="pkgs.alpinelinux.org" />
+	<target host="patchwork.alpinelinux.org" />
+	<target host="lists.alpinelinux.org" />
+	<target host="nl.alpinelinux.org" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^bugs\.alpinelinux\.org$" name="^_redmine_session" /-->
 
-	<securecookie host="^bugs\.alpinelinux\.org$" name=".+" />
+	<securecookie host="." name="." />
 
 
 	<rule from="^http:"

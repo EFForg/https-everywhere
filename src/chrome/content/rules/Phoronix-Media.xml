@@ -1,31 +1,49 @@
 <!--
+	Other Phoronix Media rulesets:
+
+		- OpenBenchmarking.org.xml
+
+
 	Nonfunctional:
 
 		- (www.)phoronix.net ¹
 		- (www.)phoronix-media.com ¹
 		- (www.)phoromatic.com ¹
 		- (www.)phoronix-test-suite.com ¹
-		- (www.)phoronix.com/forums (mixed content)
 
-	¹ ssl_error_rx_record_too_long
+	¹ Plaintext reply
+
+
+	Insecure cookies are set for these domains:
+
+		- .phoronix.com
+
+
+	Mixed content:
+
+		- css on (www.)? from fonts.googleapis.com ²
+
+	² Secured by us
+
 -->
+<ruleset name="Phoronix.com">
 
-<ruleset name="Phoronix Media">
-  	<target host="phoronix.com" />
-  	<target host="www.phoronix.com" />
-	<target host="openbenchmarking.org" />
-	<target host="www.openbenchmarking.org" />
+	<target host="phoronix.com" />
+	<target host="www.phoronix.com" />
 
-	<exclusion pattern="^http://(www\.)?phoronix\.com/forums/" />
-		<test url="http://phoronix.com/forums/" />
-		<test url="https://phoronix.com/forums/" />
-		<test url="http://www.phoronix.com/forums/" />
-		<test url="https://www.phoronix.com/forums/" />
-  	<rule from="^https://(www\.)?phoronix\.com/forums/" to="http://$1phoronix.com/forums/" downgrade="1" />
 
-	<!-- breaks forum
-	<securecookie host="^.*\.phoronix\.com$" name=".*" />-->
-	<securecookie host="^.*\.openbenchmarking\.org$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.phoronix\.com$" name="^phx(?:lastactivity|sessionhash)$" /-->
 
-  	<rule from="^http:" to="https:" />
+	<!--	Breaks forum:
+				-->
+	<!--securecookie host="." name="." /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

@@ -1,28 +1,51 @@
 <!--
-	Nonfunctional subdomains:
+	Other Newsmax rulesets:
 
-		- profiles	("Invalid license key", valid cert)
+		- Newsmax_Health.com.xml
 
 
-	Problematic subdomains:
+	Nonfunctional hosts in *newsmax.com:
 
-		- ^	(works; mismatched, CN: WWW.NEWSMAX.COM)
+		- profiles *
+
+	* "Invalid license key"
+
+
+	^newsmax.com: Mismatched
+
+
+	Mixed content:
+
+		- Ads, on:
+
+			- www from intermrkts.vo.llnwd.net
+			- www from b.scorecardresearch.com *
+
+		Image on www from $self *
+
+	* Secured by us
 
 -->
 <ruleset name="Newsmax.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="shop.newsmax.com" />
+	<target host="www.newsmax.com" />
+
+	<!--	Complications:
+				-->
 	<target host="newsmax.com" />
-	<target host="*.newsmax.com" />
 
 
-	<securecookie host="^\.newsmax\.com$" name="^__utm\w$" />
-	<securecookie host="^(?:shop|www)\.newsmax\.com$" name=".+" />
+	<securecookie host="^\." name="^__utm" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?newsmax\.com/"
+	<rule from="^http://newsmax\.com/"
 		to="https://www.newsmax.com/" />
 
-	<rule from="^http://shop\.newsmax\.com/"
-		to="https://shop.newsmax.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

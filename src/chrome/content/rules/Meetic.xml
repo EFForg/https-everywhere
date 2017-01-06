@@ -4,13 +4,10 @@
 
 	CDN buckets:
 
-		- stda.ilius.net.edgesuite.net
-
-			- a1129.g.akamai.net
+		- iliusstda-a.akamaihd.net <=> stda.ilius.net.edgesuite.net
 
 		- meetic.fr.edgesuite.net
 
-			- a1627.g.akamai.net
 			- static.editor.meetic.com
 			- statics.meetic-affinity.com
 
@@ -21,7 +18,6 @@
 
 	Nonfunctional domains:
 
-		- (www.)meetic.com *
 		- (www.)meetic.fr *
 
 	* Dropped
@@ -29,7 +25,6 @@
 
 	Problematic domains:
 
-		- k.ilius.net		(works, mismatched, CN: *.keyade.com)
 		- stda.ilius.net *
 		- static.editor.meetic.com *
 		- pictures.meetic.com *
@@ -41,26 +36,41 @@
 -->
 <ruleset name="Meetic (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="k.ilius.net" />
+	<target host="tk.ilius.net" />
+	<target host="meetic.com" />
+	<target host="www.meetic.com" />
+
+	<!--	Complications:
+				-->
 	<target host="stda.ilius.net" />
-		<!--
-			References images relative to /:
+
+		<!--	References images relative to /:
 								-->
 			<!--exclusion pattern="^http://stda\.ilius\.net/css/(brands/match/uk/signup/2013/01/23/landing_hpv_default_yahoo_profiles|components/themes/abyss/buttons\.css|core/login/login_form|core/login/login_form_a1)\.css" /-->
 			<!--exclusion pattern="^http://stda\.ilius\.net/css/(?!components/core/forgot\.css)" /-->
-	<target host="tk.ilius.net" />
-	<target host="static.editor.meetic.com" />
 
+		<test url="http://k.ilius.net/?mtcmk=&amp;fsid=" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<test url="http://www.meetic.com/signup/smart_landing_v2.phsl?tpl=&amp;mtcmk=&amp;fsid=&amp;ktid=&amp;klid=&amp;tckka=&amp;tckvs=" />
+
+
+	<!--securecookie host="^meetic\.com$" name="^(?:ADRUM_BT|MeeticLTM)$" /-->
+	<!--securecookie host="^www\.meetic\.com$" name="^(?:ADRUM_BT|KY_OPTS|MeeticLTM|STACK_CMK|ky|meetic_cmk)$" /-->
 
 	<securecookie host="^tk\.ilius\.net$" name=".+" />
 
 
-	<rule from="^http://tk\.ilius\.net/"
-		to="https://tk.ilius.net/" />
+	<rule from="^http://stda\.ilius\.net/"
+		to="https://iliusstda-a.akamaihd.net/" />
 
-	<rule from="^http://stda\.ilius\.net/(?!css/(?!components/core/forgot\.css))"
-		to="https://a248.e.akamai.net/f/1129/7423/4/stda.ilius.net/" />
+		<test url="http://stda.ilius.net/css/core/common/maintenance.css" />
 
-	<rule from="^http://static\.editor\.meetic\.com/"
-		to="https://a248.e.akamai.net/f/1627/8414/3/static.editor.meetic.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

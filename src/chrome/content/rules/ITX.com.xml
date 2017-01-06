@@ -1,17 +1,13 @@
 <!--
-	CN: WMSvc-ITXDOTNET2
+	Insecure cookies are set for these hosts: ᶜ
 
+		- itx.com
+		- www.itx.com
 
-	Mixed content:
-
-		- Images from ^ *
-
-		- favicon from $self *
-
-	* Secured by us
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="ITX.com" default_off="self-signed">
+<ruleset name="ITX.com">
 
 	<target host="itx.com" />
 	<target host="www.itx.com" />
@@ -19,10 +15,14 @@
 
 	<!--	Not secured by server:
 					-->
-	<securecookie host="^(?:www\.)?itx\.com$" name=".+" />
+	<!--securecookie host="^itx\.com$" name="^dnn_IsMobile$" /-->
+	<!--securecookie host="^www\.itx\.com$" name="^(?:\.ASPXANONYMOUS|dnn_IsMobile|language)$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(www\.)?itx\.com/"
-		to="https://$1itx.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,143 @@
+<!--
+	Centers for Medicare & Medicaid Services
+
+	For other U.S. government coverage, see US-government.xml.
+
+
+	Problematic hosts in *cms.gov:
+
+		- (www.)? ᵀ
+		- ahrc ᵀ
+		- ahrcvo ᵀ
+		- assets ᵀ
+		- ci ᵀ
+		- crowd ᵀ
+		- developer ᵀ
+		- dnav ᵀ
+		- download ᴬ
+		- downloads ᵀ
+		- ehrincentives ᶜ
+		- eidm ᵀ
+		- eud ᶜ
+		- github ᵀ
+		- hcia ᵐ
+		- hfpp ᵀ
+		- hipchat ᵀ
+		- (www.)?innovation ᵀ
+		- jira ᵀ
+		- maps ᶜ
+		- marketplace ᵀ
+		- openpaymentsdata ᵀ
+		- partnershipforpatients ᵀ
+		- portal ᵀ
+		- portalval ᵀ
+		- questions ᶜ
+		- scclia ᵀ
+		- zone ᶜ
+
+	ᴬ Akamai / mismatched
+	ᵀ Blocks Tor users
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	These altnames do not exist:
+
+		- cicd.cms.gov
+		- qpp.cms.gov
+		- qualitypaymentprogram.cms.gov
+		- wcms.cms.gov
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .cms.gov
+		- confluence.cms.gov
+		- data.cms.gov
+		- eap.cms.gov
+		- ehrincentives.cms.gov
+		- eud.cms.gov
+		- localcoverage.cms.gov
+		- portal.cms.gov
+		- portalval.cms.gov
+		- questions.cms.gov
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="CMS.gov (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="cms.gov" />
+	<target host="ahrc.cms.gov" />
+	<target host="ahrcvo.cms.gov" />
+	<target host="assets.cms.gov" />
+	<target host="blog.cms.gov" />
+	<target host="calt.cms.gov" />
+	<target host="cciio.cms.gov" />
+	<target host="www.cciio.cms.gov" />
+	<target host="ci.cms.gov" />
+	<target host="confluence.cms.gov" />
+	<target host="crowd.cms.gov" />
+	<target host="data.cms.gov" />
+	<target host="developer.cms.gov" />
+	<target host="dnav.cms.gov" />
+	<target host="downloads.cms.gov" />
+	<target host="eap.cms.gov" />
+	<!--target host="ehrincentives.cms.gov" /-->
+	<target host="eidm.cms.gov" />
+	<target host="emeasuretool.cms.gov" />
+	<target host="www.emeasuretool.cms.gov" />
+	<!--target host="eua.cms.gov" /-->
+	<target host="github.cms.gov" />
+	<target host="www.hcia.cms.gov" />
+	<target host="hfpp.cms.gov" />
+	<target host="hics.cms.gov" />
+	<target host="hipchat.cms.gov" />
+	<target host="innovation.cms.gov" />
+	<target host="www.innovation.cms.gov" />
+	<target host="innovations.cms.gov" />
+	<target host="www.innovations.cms.gov" />
+	<target host="jira.cms.gov" />
+	<target host="localcoverage.cms.gov" />
+	<!--target host="maps.cms.gov" /-->
+	<target host="marketplace.cms.gov" />
+	<target host="meetings.cms.gov" />
+	<target host="openpaymentsdata.cms.gov" />
+	<target host="partnershipforpatients.cms.gov" />
+	<target host="portal.cms.gov" />
+	<target host="portalval.cms.gov" />
+	<!--target host="questions.cms.gov" /-->
+	<target host="scclia.cms.gov" />
+	<target host="www.cms.gov" />
+	<!--target host="zone.cms.gov" /-->
+
+	<!--	Complications:
+				-->
+	<target host="hcia.cms.gov" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.cms\.gov$" name="^ak_bmsc$" /-->
+	<!--securecookie host="^confluence\.cms\.gov$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^data\.cms\.gov$" name="^logged_in$" /-->
+	<!--securecookie host="^eap\.cms\.gov$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^ehrincentives\.cms\.gov$" name="^BIGipServer" /-->
+	<!--securecookie host="^eua\.cms\.gov$" name="^(?:BIGipServer|JSESSIONID$)" /-->
+	<!--securecookie host="^localcoverage\.cms\.gov$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^portal(?:val)?\.cms\.gov$" name="^akavpau_default$" /-->
+	<!--securecookie host="^questions\.cms\.gov$" name="^THE_GOVT$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://hcia\.cms\.gov/"
+		to="https://www.hcia.cms.gov/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

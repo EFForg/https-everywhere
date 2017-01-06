@@ -1,0 +1,115 @@
+<!--
+	HM Revenue & Customs
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *hmrc.gov.uk:
+
+		- (www.)? ʰ
+		- tools ³
+
+	³ 403
+	ʰ Redirects to http
+
+
+	Problematic hosts in *hmrc.gov.uk:
+
+		- aka ᵐ
+		- aka-customs ᵐ
+
+	ᵐ Mismatched
+
+
+	These altnames don't exist:
+
+		- billpay.hmrc.gov.uk
+		- digital.ws.hmrc.gov.uk
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .hmrc.gov.uk
+		- customs.hmrc.gov.uk
+
+
+	Mixed content:
+
+		- Bug on customs from statse.webtrendslive.com ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="HMRC.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="companieshouse-online.hmrc.gov.uk" />
+	<target host="customs.hmrc.gov.uk" />
+	<target host="ecw.hmrc.gov.uk" />
+	<target host="esi2calculator.hmrc.gov.uk" />
+	<target host="online.hmrc.gov.uk" />
+	<target host="www.online.hmrc.gov.uk" />
+	<target host="pensionschemes.hmrc.gov.uk" />
+	<target host="public-online.hmrc.gov.uk" />
+	<target host="api.service.hmrc.gov.uk" />
+	<target host="developer.service.hmrc.gov.uk" />
+	<target host="www.tpvs.hmrc.gov.uk" />
+	<target host="tpvs2.hmrc.gov.uk" />
+	<target host="webservices.hmrc.gov.uk" />
+
+	<target host="dps.ws.hmrc.gov.uk" />
+	<target host="emcs.ws.hmrc.gov.uk" />
+	<target host="ics.ws.hmrc.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="hmrc.gov.uk" />
+	<target host="aka.hmrc.gov.uk" />
+	<target host="www.hmrc.gov.uk" />
+
+		<!--	Not all paths redirect to www.gov.uk
+								-->
+		<exclusion pattern="^http://(?:aka\.|www\.)?hmrc\.gov\.uk/+(?!$|\?|index\.htm)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://aka.hmrc.gov.uk/Default.aspx" />
+			<test url="http://hmrc.gov.uk/Default.aspx" />
+			<test url="http://www.hmrc.gov.uk/Default.aspx" />
+			<test url="http://www.hmrc.gov.uk/adjustednetincome/" />
+			<test url="http://www.hmrc.gov.uk/charitiesonline" />
+			<test url="http://www.hmrc.gov.uk/complaint" />
+			<test url="http://www.hmrc.gov.uk/sa103s" />
+			<test url="http://www.hmrc.gov.uk/vat/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://hmrc.gov.uk/index.htm" />
+			<test url="http://aka.hmrc.gov.uk/index.htm" />
+			<test url="http://www.hmrc.gov.uk/index.htm" />
+
+		<!--	Mixed bug:
+					-->
+		<test url="http://customs.hmrc.gov.uk/channelsPortalWebApp/channelsPortalWebApp.portal" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.hmrc\.gov\.uk$" name="^X_DEVICE_ID$" /-->
+	<!--securecookie host="^customs\.hmrc\.gov\.uk$" name="^TS[\da-f]+$" /-->
+
+	<securecookie host="^\." name="^X_DEVICE_ID$" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops forward slash,
+		path (index.htm), and args:
+						-->
+	<rule from="^http://(?:aka\.|www\.)?hmrc\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/hm-revenue-customs" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

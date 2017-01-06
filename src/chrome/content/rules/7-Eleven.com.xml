@@ -1,7 +1,5 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://7-eleven.com/ => https://www.7-eleven.com/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *7-eleven.com:
 
 		- blog.franchise ¹
 		- www.realestate ²
@@ -10,7 +8,7 @@ Fetch error: http://7-eleven.com/ => https://www.7-eleven.com/: (28, 'Operation 
 	² Dropped
 
 
-	Problematic subdomains:
+	Problematic hosts in *7-eleven.com:
 	
 		- ^ *
 		- careers *
@@ -20,31 +18,63 @@ Fetch error: http://7-eleven.com/ => https://www.7-eleven.com/: (28, 'Operation 
 	* Mismatched
 
 
-	Fully covered subdomains:
+	Mixed content:
 
-		- (www.)?	(^ → www)
-		- apply
-		- corp		(→ sites)
-		- sites
+		- Bugs, on;
+
+			- sites from b.collective-media.net *
+			- sites from pubads.g.doubleclick.net
+
+	* Secured by us
 
 -->
-<ruleset name="7-Eleven.com (partial)" default_off='failed ruleset test'>
+<ruleset name="7-Eleven.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="apply.7-eleven.com" />
+	<target host="sites.7-eleven.com" />
+	<target host="www.7-eleven.com" />
+
+	<!--	Complications:
+				-->
 	<target host="7-eleven.com" />
-	<target host="*.7-eleven.com" />
-		<!--
-			$ is not identical:
-						-->
-		<exclusion pattern="^http://(?:careers|franchise)\.7-eleven\.com/+(?!careers/|franchise/)" />
+	<target host="careers.7-eleven.com" />
+	<target host="corp.7-eleven.com" />
+	<target host="franchise.7-eleven.com" />
+
+		<test url="http://careers.7-eleven.com/careers/Careers.html" />
+		<test url="http://sites.7-eleven.com/franchise/home" />
 
 
-	<rule from="^http://(?:www\.)?7-eleven\.com/"
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^\.7-eleven\.com$" name="^__qca$" />
+
+
+	<rule from="^http://7-eleven\.com/"
 		to="https://www.7-eleven.com/" />
 
-	<rule from="^http://(?:careers|corp|franchise|sites)\.7-eleven\.com/"
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://careers\.7-eleven\.com/+(?:\?.*)?$"
+		to="https://sites.7-eleven.com/careers/Careers.html" />
+
+		<test url="http://careers.7-eleven.com//" />
+		<test url="http://careers.7-eleven.com/?" />
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://franchise\.7-eleven\.com/+(?:\?.*)?$"
+		to="https://sites.7-eleven.com/franchise/home" />
+
+		<test url="http://franchise.7-eleven.com//" />
+		<test url="http://franchise.7-eleven.com/?" />
+
+	<rule from="^http://(?:careers|corp|franchise)\.7-eleven\.com/"
 		to="https://sites.7-eleven.com/" />
 
-	<rule from="^http://apply\.7-eleven\.com/"
-		to="https://apply.7-eleven.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

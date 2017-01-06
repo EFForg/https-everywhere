@@ -2,26 +2,49 @@
 	For other Brightcove coverage, see Brightcove.xml.
 
 
-	Fully covered subdomains:
+	Problematic hosts in *zencoder.com:
 
-		- (www.)
-		- app
+		- help ʳ
+		- status ʳ
+
+	ʳ Refused
+
+
+	Mixed content:
+
+		- Images from photos\d.meetupstatic.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Zencoder (partial)">
+<ruleset name="Zencoder.com (partial)">
 
-	<target host="*.zencdn.net"/>
+	<!--	Direct rewrites:
+				-->
 	<target host="zencoder.com" />
-	<target host="*.zencoder.com" />
+	<target host="app.zencoder.com" />
+	<target host="blog.zencoder.com" />
+	<target host="www.zencoder.com" />
+
+	<!--	Complications:
+				-->
+	<target host="help.zencoder.com" />
+	<!--target host="status.zencoder.com" /-->
 
 
-	<securecookie host="^(?:app)?\.zencoder\.com$" name=".+" />
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(a|vjs)\.zencdn\.net/"
-		to="https://$1.zencdn.net/"/>
+	<!--	Redirect keeps path, args,
+		and forward slash:
+					-->
+	<rule from="^http://help\.zencoder\.com/"
+		to="https://app.zencoder.com/docs/" />
 
-	<rule from="^http://(app\.|www\.)?zencoder\.com/"
-		to="https://$1zencoder.com/" />
+	<!--rule from="^http://status\.zencoder\.com/"
+		to="https://status.brightcove.com/" /-->
+
+	<rule from="^http:"
+		to="https:"/>
 
 </ruleset>

@@ -1,0 +1,52 @@
+<!--
+	covered subdomains:
+		- $
+		- www
+		- language specific subdomains
+
+	Nonfunctional subdomains:
+		- blog          -> redirects to HTTP
+		- store         -> cert expired
+		- community     -> only partial, sometimes redirects to HTTP
+
+	Cookies needed for authentication on non-HTTPS:
+		- bguid
+		- bgue
+-->
+<ruleset name="Billiongraves.com">
+	<target host="billiongraves.com" />
+	<target host="*.billiongraves.com" />
+	<!-- <target host="store.billiongraves.com" /> -->
+
+	<test url="http://billiongraves.com/" />
+	<test url="http://www.billiongraves.com/" />
+	<test url="http://ca.billiongraves.com/" />
+	<test url="http://de.billiongraves.com/" />
+	<test url="http://es.billiongraves.com/" />
+	<test url="http://nl.billiongraves.com/" />
+	<test url="http://ar.billiongraves.com/" />
+
+	<!-- https://regex101.com/r/uD1iE1/1 -->
+	<exclusion pattern="^http://(blog|store|community)\.billiongraves\.com" />
+	<test url="http://blog.billiongraves.com/" />
+	<test url="http://store.billiongraves.com/" />
+	<test url="http://community.billiongraves.com/" />
+
+	<!--
+		Cookie from [https://]billiongraves.com is needed for login on
+		http://community.billiongraves.com
+	-->
+	  <!-- <securecookie host="^(www\.)?billiongraves\.com$" name=".+" /> -->
+
+	<!--
+		Securecookie for all billiongraves domains, for all cookies expect of
+		bguid and bgue
+
+		host: https://regex101.com/r/wN7wU2/2
+		name: https://regex101.com/r/fO3pB4/3
+	-->
+	<securecookie host="^(www\.|\w{2}\.)?billiongraves\.com$" name="^(?!bguid|bgue).+" />
+
+	<rule from="^http:"
+			to="https:" />
+</ruleset>

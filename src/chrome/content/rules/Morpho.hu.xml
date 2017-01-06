@@ -1,11 +1,22 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://morpho.hu/ => https://morpho.hu/: (60, 'SSL certificate problem: unable to get local issuer certificate')
--->
-<ruleset name="Morpho.hu" default_off='failed ruleset test'>
+	NB: Server sends no certificate chain, see https://whatsmychaincert.com
 
+	www.morpho.hu: Mismatched
+
+-->
+<ruleset name="Morpho.hu" default_off="expired, missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="morpho.hu" />
 
-	<securecookie host="^morpho\.hu$" name=".+" />
-  <rule from="^http://morpho\.hu/" to="https://morpho.hu/" />
+	<!--	Complications:
+				-->
+	<target host="www.morpho.hu" />
+
+	<securecookie host="^\w" name="." />
+  <rule from="^http://www\.morpho\.hu/" to="https://morpho.hu/" />
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

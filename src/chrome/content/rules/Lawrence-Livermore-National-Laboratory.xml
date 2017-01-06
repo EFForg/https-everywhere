@@ -1,33 +1,97 @@
 <!--
+	Lawrence Livermore National Laboratory
+
 	For other US government coverage, see US-government.xml.
 
+
+	Nonfunctional hosts in *llnl.gov:
+
+		- frontrange ʳ
+		- hpcinnovationcenter ʳ
+		- rzlc ᵈ
+
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *llnl.gov:
+
+		- careers-ext ᵐ
+		- computation ᶜ
+		- students ᵐ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	STS header includes includeSubdomains
+
+
+	Mixed content:
+
+		- favicon on hpc from www.llnl.gov ˢ
+		- Bug on www-envirinfo from c.statcounter.com ˢ
+
+	ˢ Secured by us
+
 -->
-<ruleset name="Lawrence Livermore National Laboratory">
+<ruleset name="LLNL.gov">
 
 	<target host="llnl.gov" />
 	<target host="*.llnl.gov" />
 
+		<exclusion pattern="^http://(?:careers-ext|computation|frontrange|hpcinnovationcenter|rzlc|students)\.llnl\.gov/" />
 
-	<securecookie host="^(?:.*\.)?llnl\.gov$" name=".+" />
+			<test url="http://careers-ext.llnl.gov/" />
+			<test url="http://computation.llnl.gov/" />
+			<test url="http://frontrange.llnl.gov/" />
+			<test url="http://hpcinnovationcenter.llnl.gov/" />
+			<test url="http://rzlc.llnl.gov/" />
+			<test url="http://students.llnl.gov/" />
+
+		<test url="http://analytics.llnl.gov/" />
+		<test url="http://asc.llnl.gov/" />
+		<test url="http://bioengineering.llnl.gov/" />
+		<test url="http://careers.llnl.gov/" />
+		<test url="http://careers-prd.llnl.gov/" />
+		<test url="http://casis.llnl.gov/" />
+		<test url="http://computational-eng.llnl.gov/" />
+		<test url="http://computing.llnl.gov/" />
+		<test url="http://computing-dev.llnl.gov/" />
+		<test url="http://data-analytics.llnl.gov/" />
+		<test url="http://e-reports-ext.llnl.gov/" />
+		<test url="http://education.llnl.gov/" />
+		<test url="http://engineering.llnl.gov/" />
+		<test url="http://fcoi.llnl.gov/" />
+		<test url="http://flowcharts.llnl.gov/" />
+		<test url="http://hpc.llnl.gov/" />
+		<test url="http://ipo.llnl.gov/" />
+		<test url="http://jobs.llnl.gov/" />
+		<test url="http://lasers.llnl.gov/" />
+		<test url="http://lc.llnl.gov/" />
+		<test url="http://manufacturing.llnl.gov/" />
+		<test url="http://missions.llnl.gov/" />
+		<test url="http://nci.llnl.gov/" />
+		<test url="http://newsline.llnl.gov/" />
+		<test url="http://pls.llnl.gov/" />
+		<test url="http://postdocs.llnl.gov/" />
+		<test url="http://protocol.llnl.gov/" />
+		<test url="http://publicaffairs.llnl.gov/" />
+		<test url="http://signal-processing.llnl.gov/" />
+		<test url="http://st.llnl.gov/" />
+		<test url="http://str.llnl.gov/" />
+		<test url="http://supplychain.llnl.gov/" />
+		<test url="http://wci.llnl.gov/" />
+		<test url="http://www.llnl.gov/" />
+		<test url="http://www-eng.llnl.gov/" />
+		<test url="http://www-envirinfo.llnl.gov/" />
+		<test url="http://www-gs.llnl.gov/" />
 
 
-	<!--	Observed subdomains:
+	<securecookie host="." name="." />
 
-			- careers
-			- computing
-			- e-reports-ext
-			- flowcharts
-			- missions
-			- newsline
-			- postdocs
-			- protocol
-			- publicaffairs
-			- st
-			- wci
-			- www
-			- www-envirinfo
-					-->
-	<rule from="^http://([\w-]+\.)?llnl\.gov/"
-		to="https://$1llnl.gov/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

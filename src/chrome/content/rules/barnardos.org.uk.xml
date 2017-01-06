@@ -1,0 +1,51 @@
+<!--
+	Nonfunctional hosts in *barnardos.org.uk:
+
+		- www1 ᵃ
+
+	ᵃ Shows another domain
+
+
+	Problematic hosts in *barnardos.org.uk:
+
+		- ^ ³
+		- community ᶜ
+
+	³ 403
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.barnardos.org.uk
+
+-->
+<ruleset name="Barnardos.org.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="community.barnardos.org.uk" /-->
+	<target host="greetingcards.barnardos.org.uk" />
+	<target host="testllwcmlw.barnardos.org.uk" />
+	<target host="www.barnardos.org.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="barnardos.org.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.barnardos\.org\.uk$" name="^ANONID$" /-->
+
+	<securecookie host="^\." name="^_(?:_qca|gat?)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://barnardos\.org\.uk/"
+		to="https://www.barnardos.org.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

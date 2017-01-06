@@ -1,0 +1,62 @@
+<!--
+	CDN buckets:
+
+		- az801177.vo.msecnd.net
+		- acastprod.blob.core.windows.net
+
+
+	Problematic hosts in *acast.com:
+
+		- ^ ᵈ
+		- status ᵐ
+
+	ᵈ Dropped; preemptable redirect
+	ᵐ StatusPage.io/mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- rss.acast.com
+		- .rss.acast.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="acast.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="embed.acast.com" />
+	<target host="rss.acast.com" />
+	<target host="stitcher.acast.com" />
+	<target host="www.acast.com" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://rss.acast.com/historyofthepapacy" /-->
+
+	<!--	Complications:
+				-->
+	<target host="acast.com" />
+	<target host="status.acast.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^rss\.acast\.com$" name="^acastRss$" /-->
+	<!--securecookie host="^\.rss\.acast\.com$" name="^TiPMix$" /-->
+
+	<securecookie host="^\.rss\." name="." />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://acast\.com/"
+		to="https://www.acast.com/" />
+
+	<rule from="^http://status\.acast\.com/"
+		to="https://acast.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

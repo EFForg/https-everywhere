@@ -18,8 +18,12 @@
 
 	Nonfunctional subdomains:
 
+		- careers ¹
 		- grouper ¹
+		- lifesciences	Shows ewh.ieee.org
+		- oc ²
 		- sites ²
+		- smartgrid ¹
 		- spectrum	(Akamai; 503)
 		- theinstitute ⁴
 		- uce ²
@@ -33,6 +37,8 @@
 
 		- ewh ¹
 		- www.ewh	(cert only matches ^ewh)
+		- ieeexplore ³
+		- innovate ³
 		- jobs		(mismatched, CN: sitemanager2.adico.com)
 		- listserv *
 		- mentor *
@@ -40,6 +46,7 @@
 		- staticieeexplore ⁴
 
 	¹ Configured for rc4 only
+	³ Mixed css
 	* Server sends no certificate chain, see https://whatsmychaincert.com
 	⁴ Works, akamai
 
@@ -49,47 +56,39 @@
 		- eleccomm	(homepage 403s)
 
 
-	Fully covered subdomains:
-
-		- (www.)	(^ → www)
-		- (www.)ewh	(www → ^)
-		- ieeexplore
-		- mentor
-		- securesso
-		- services28
-		- standards
-		- development.standards
-		- staticieeexplore	(→ akamai)
-		- origin.www
-
-
 	Mixed content:
 
-		- css on ieeexplore from staticieeexplore *
+		- css, on:
 
-		- Images,:
+			- innovate from $self
+			- ieeexplore from staticieeexplore *
+
+		- Images, on:
 
 			- ieeexplore from staticieeexplore *
-			- on standards from $self *
+			- innovate from $self
+			- standards from $self *
 
 	* Secured by us
 
 -->
-<ruleset name="IEEE.org (partial)" default_off="Breaks some functions">
+<ruleset name="IEEE.org (needs testing)" default_off="needs testing">
 
-	<target host="ieee.org" />
 	<target host="eleccomm.ieee.org" />
 	<target host="ewh.ieee.org" />
-	<target host="www.ewh.ieee.org" />
 	<target host="ieeexplore.ieee.org" />
 	<!--target host="listserv.ieee.org" /-->
 	<!--target host="mentor.ieee.org" /-->
-	<target host="origin.www.ieee.org" />
 	<target host="securesso.ieee.org" />
 	<target host="services28.ieee.org" />
 	<target host="standards.ieee.org" />
 	<target host="development.standards.ieee.org" />
-	<target host="staticieeexplore.ieee.org" />
+	<target host="origin.www.ieee.org" />
+
+	<!--	Complications:
+				-->
+	<target host="ieee.org" />
+	<target host="www.ewh.ieee.org" />
 	<target host="www.ieee.org" />
 
 		<!--	Avoid broken MCB:
@@ -107,14 +106,8 @@
 	<!--securecookie host="^\.ieee\.org$" name="^(ISA4|cookieCheck|ipCheck)$" /-->
 	<!--securecookie host="^(ieeexplore)?\.ieee\.org$" name="^TS[0-9]a-f]{8}$" /-->
 	<!--securecookie host="^ieeexplore\.ieee\.org$" name="^(JSESSIONID|WLSESSION)$" /-->
-	<!--
-		Observed cookie subdomains:
 
-			- ^.
-			- ^origin.www
-			- ^www
-				-->
-	<securecookie host="^.*\.ieee\.org$" name=".+" />
+	<securecookie host="." name="." />
 
 
 	<!--	404s over https, redirects like so over http.
@@ -144,11 +137,6 @@
 
 	<rule from="^http://www\.ewh\.ieee\.org/"
 		to="https://ewh.ieee.org/" />
-
-	<!--	css seems to use self-relative paths, so this should work:
-										-->
-	<rule from="^http://staticieeexplore\.ieee\.org/"
-		to="https://a248.e.akamai.net/f/248/815/10/staticieeexplore.ieee.org/" />
 
 	<rule from="^http:"
 		to="https:" />

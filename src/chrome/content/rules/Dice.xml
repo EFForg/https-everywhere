@@ -6,10 +6,11 @@
 
 		- EFinancialCareers.xml
 		- EFinancialCareers.cn.xml
+		- SlashCDN.com.xml
 		- Slashdot_Media.xml
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *dice.com:
 
 		- marketing ¹
 		- media ²
@@ -23,28 +24,13 @@
 	³ Redirects to http
 
 
-	Problematic subdomains:
+	Problematic hosts in *dice.com:
 
-		- ^ *
-		- get *
+		- ^ ᵈ
+		- get ᵐ
 
-	¹ Mismatched
-
-
-	Partially covered subdomains:
-
-		- (www.) *	(^ → www)
-
-	* Some pages redirect to http
-
-
-	Fully covered subdomains:
-
-		- assets
-		- cdn		(→ d1i4601q19kpjz.cloudfront.net)
-		- employer
-		- images
-		- secure
+	ᵈ Dropped
+	ᵐ Mismatched
 
 
 	These altnames don't exist:
@@ -77,6 +63,8 @@
 -->
 <ruleset name="Dice.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="assets.dice.com" />
 	<target host="employer.dice.com" />
 	<target host="images.dice.com" />
@@ -97,19 +85,23 @@
 		<!--
 			Exceptions:
 					-->
-		<exclusion pattern="^http://www\.dice\.com/(?!assets/|content/|(?:dashboard|jobs)(?:$|[?/])favicon\.ico)" />
+		<exclusion pattern="^http://www\.dice\.com/(?!assets/|company/\w|content/|(?:dashboard|jobs)(?:$|[?/])|favicon\.ico)" />
 
 			<!--	+ve:
 					-->
+			<test url="http://www.dice.com/adnetwork" />
 			<test url="http://www.dice.com/common/content/marketing/salesAndMarketing.jsp" />
 			<test url="http://www.dice.com/common/content/postJobs/index2.jsp" />
 			<test url="http://www.dice.com/common/seeker/docs/dice_jobs.jsp" />
 			<test url="http://www.dice.com/company/NETSO" />
+			<test url="http://www.dice.com/dice141" />
 			<test url="http://www.dice.com/job/advancedSearch.html" />
 			<test url="http://www.dice.com/social" />
+			<test url="http://www.dice.com/socialrecruiting" />
 
 			<!--	-ve:
 					-->
+			<test url="http://www.dice.com/company/10267824" />
 			<test url="http://www.dice.com/dashboard" />
 			<test url="http://www.dice.com/favicon.ico" />
 			<test url="http://www.dice.com/jobs" />
@@ -120,6 +112,8 @@
 	<!--securecookie host="^\.dice\.com$" name="^ubvt$" /-->
 	<!--securecookie host="^get\.dice\.com$" name="^(ubpv|ubvs)$" /-->
 	<!--securecookie host="^www\.dice\.com$" name="^(JSESSIONID|DQS)$" /-->
+
+	<securecookie host="^\." name="^(?:__qca$|s_v)" />
 
 
 	<rule from="^http://dice\.com/"

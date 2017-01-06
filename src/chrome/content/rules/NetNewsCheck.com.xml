@@ -1,0 +1,59 @@
+<!--
+	For other NewsCheckMedia coverage, see Newscheckmedia.com.xml.
+
+
+	Problematic hosts in *netnewscheck.com:
+
+		- ^ ᵐ
+		- assets ʳ
+
+	ᵐ Mismatched
+	ʳ Refused
+
+-->
+<ruleset name="NetNewsCheck.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.netnewscheck.com" />
+
+	<!--	Complications:
+				-->
+	<target host="netnewscheck.com" />
+	<target host="assets.netnewscheck.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.netnewscheck\.com/(?:article/\d+/[\w-]+$|contact$|member/(?:login|register|reset)$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?netnewscheck\.com/+(?!images/|resource/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.netnewscheck.com/article/46189/kptv-rules-social-portland" />
+			<test url="http://www.netnewscheck.com/contact" />
+			<test url="http://www.netnewscheck.com/member/login" />
+			<test url="http://www.netnewscheck.com/member/register" />
+			<test url="http://www.netnewscheck.com/member/reset" />
+			<test url="http://www.netnewscheck.com/sso/index/response-handler?sid=&amp;request=&amp;sig=" />
+
+			<!--	-ve:
+					-->
+			<test url="http://netnewscheck.com/images/icons/mail.png" />
+			<test url="http://www.netnewscheck.com/resource/css/r/e98db184ab2119a0a50a36d052994e0f_1432233109.css" />
+
+
+	<rule from="^http://netnewscheck\.com/"
+		to="https://www.netnewscheck.com/" />
+
+	<rule from="^http://assets\.netnewscheck\.com/"
+		to="https://secure.newscheckmedia.com/" />
+
+		<test url="http://assets.netnewscheck.com/sites/netnewscheck/images/article/toolbar-bkgd.png" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

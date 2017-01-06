@@ -4,35 +4,25 @@
 	For problematic rules, see Institute-of-Physics-mismatches.xml.
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *iop.org:
 
-		- ej *
-		- journals *
-		- stacks *
+		- ej ʳ
+		- journals ʳ
+		- stacks ʳ
 
-	* Refused
-
-
-	Problematic subdomains:
-
-		- ^ *
-		- content.cws *
-		- cms.iopscience *
-
-	* Works, mismatched, CN: *.iop.org
+	ʳ Refused
 
 
-	Fully covered subdomains:
+	Problematic hosts in *iop.org:
 
-		- (www.)?	(^ → www)
-		- atom
-		- authors
-		- images
-		- iopscience
-		- ticket
+		- ^ ᵐ
+		- content.cws ᵐ
+		- cms.iopscience ᵐ
+
+	ᵐ Mismatched
 
 
-	Insecure cookies are set for these domains:
+	Insecure cookies are set for these domains and hosts:
 
 		- .iop.org
 		- iopscience.iop.org
@@ -42,17 +32,27 @@
 
 	Mixed content:
 
-		- Images on iopscience from ej ¹
-		- Images on iopscience from cms.iopscience ²
+		- Images on iopscience from ej.iop.org ʳ
+		- Images on iopscience from cms.iopscience.iop.org ᵐ
 
-	¹ Unsecurable <= refused
-	² Rule disabled by default <= mismatched
+	ʳ Unsecurable <= refused
+	ᵐ Rule disabled by default <= mismatched
 
 -->
 <ruleset name="IoP.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="atom.iop.org" />
+	<target host="authors.iop.org" />
+	<target host="images.iop.org" />
+	<target host="iopscience.iop.org" />
+	<target host="ticket.iop.org" />
+	<target host="www.iop.org" />
+
+	<!--	Complications:
+				-->
 	<target host="iop.org" />
-	<target host="*.iop.org" />
 
 
 	<!--	Not secured by server:
@@ -61,13 +61,14 @@
 	<!--securecookie host="^iopscience\.iop\.org$" name="^JSESSIONID$" /-->
 	<!--securecookie host="^\.iopscience\.iop\.org$" name="^ssi_checked$" /-->
 
-	<securecookie host="^(?:\.?iopscience|ticket)\.iop\.org$" name=".+" />
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\.iopscience\." name="." />
 
 
-	<rule from="^http://(?:www\.)?iop\.org/"
+	<rule from="^http://iop\.org/"
 		to="https://www.iop.org/" />
 
-	<rule from="^http://(atom|authors|images|iopscience|ticket)\.iop\.org/"
-		to="https://$1.iop.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

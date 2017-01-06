@@ -1,0 +1,40 @@
+<!--
+	STS header includes includeSubdomains
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- bogner.sh
+		- www.bogner.sh
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="bogner.sh">
+
+	<target host="bogner.sh" />
+	<target host="*.bogner.sh" />
+
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?:[^./]+\.){2,}bogner\.sh/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.bogner.sh/" />
+			<test url="http://exists.not.bogner.sh/" />
+
+		<test url="http://www.bogner.sh/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?bogner\.sh$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

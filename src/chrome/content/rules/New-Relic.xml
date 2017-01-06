@@ -50,6 +50,12 @@
 			- www
 
 
+	Insecure cookies are set for these hosts:
+
+		- rpm.newrelic.com
+		- try.newrelic.com
+
+
 	Mixed content:
 
 		- css on blog from fonts.googleapis.com *
@@ -66,13 +72,20 @@
 
 			<test url="http://get.newrelic.com/" />
 
+		<exclusion pattern="^http://(?:[^./]+\.){2,}newrelic\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.newrelic.com/" />
+			<test url="http://exists.not.newrelic.com/" />
+
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^rpm\.newrelic\.com$" name="^omniauth\.states$" /-->
-	<!--securecookie host="^try\.newrelic\.com$" name="^BIGipServerabjweb-ssl4_https$" /-->
+	<!--securecookie host="^try\.newrelic\.com$" name="^BIGipServer" /-->
 
-	<securecookie host="^(?:.*\.)?newrelic\.com$" name=".+" />
+	<securecookie host="." name="." />
 
 
 	<rule from="^http://blog-assets\.newrelic\.com/"
@@ -80,9 +93,10 @@
 
 		<test url="http://blog-assets.newrelic.com/wp-includes/js/jquery/jquery.js" />
 
-	<rule from="^http://([\w-]+\.)?newrelic\.com/"
-		to="https://$1newrelic.com/" />
+	<rule from="^http:"
+		to="https:" />
 
+		<test url="http://docs.newrelic.com/" />
 		<test url="http://rpm.newrelic.com/" />
 		<test url="http://www.newrelic.com/" />
 

@@ -8,16 +8,34 @@
 -->
 <ruleset name="FlamingSpork.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="flamingspork.com" />
-	<target host="*.flamingspork.com" />
+	<target host="www.flamingspork.com" />
 
+	<!--	Complications:
+				-->
+	<target host="bugzilla.flamingspork.com" />
 
-	<rule from="^http://(www\.)?flamingspork\.com/"
-		to="https://$1flamingspork.com/" />
+		<exclusion pattern="^http://bugzilla\.flamingspork\.com/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://bugzilla.flamingspork.com/home" />
+			<test url="http://bugzilla.flamingspork.com/home.asp" />
+			<test url="http://bugzilla.flamingspork.com/home.aspx" />
+			<test url="http://bugzilla.flamingspork.com/home.htm" />
+			<test url="http://bugzilla.flamingspork.com/home.php" />
+
 
 	<!--	Redirect drops args:
 					-->
-	<rule from="^http://bugzilla\.flamingspork\.com/+(?:$|\?.*)"
+	<rule from="^http://bugzilla\.flamingspork\.com/.*"
 		to="https://bugs.launchpad.net/memberdb" />
+
+		<test url="http://bugzilla.flamingspork.com/?" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
