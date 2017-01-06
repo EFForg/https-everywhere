@@ -1,0 +1,82 @@
+<!--
+	Other Unruly Group rulesets:
+
+		- unrulymedia.com.xml
+
+
+	Problematic hosts in *unruly.co:
+
+		- go ᵐ
+		- tech ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- unruly.co
+		- partnerportal.unruly.co
+		- www.unruly.co
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bug from c.statcounter.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Unruly.co (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="unruly.co" />
+	<target host="partnerportal.unruly.co" />
+	<target host="www.unruly.co" />
+
+	<!--	Complications:
+				-->
+	<target host="go.unruly.co" />
+
+		<exclusion pattern="^http://go\.unruly\.co/(?!/*(?:$|\?|[el]/))" />
+
+			<test url="http://go.unruly.co/2016-trends" />
+			<test url="http://go.unruly.co/FacebookVVC" />
+			<test url="http://go.unruly.co/TwitterVideoChart" />
+			<test url="http://go.unruly.co/fovadownload" />
+			<test url="http://go.unruly.co/nc-blog-social" />
+			<test url="http://go.unruly.co/nc-social" />
+			<test url="http://go.unruly.co/pp-about-unrulyx" />
+			<test url="http://go.unruly.co/pp-contact" />
+			<test url="http://go.unruly.co/vertical" />
+			<test url="http://go.unruly.co/webhero10" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="(?:partnerportal\.|www\.)?unruly\.co$" name="^(?:X-Mapping-|wordpress_google_apps_login)$" /-->
+
+	<securecookie host="^\." name="_ga(?:t?$|t_)" />
+	<securecookie host="^(?!go\.)\w" name="." />
+
+
+	<rule from="^http://go\.unruly\.co/+(?:\?.*)?$"
+		to="https://unruly.co/" />
+
+		<test url="http://go.unruly.co/?" />
+
+	<rule from="^http://go\.unruly\.co/"
+		to="https://go.pardot.com/" />
+
+		<test url="http://go.unruly.co/l/50182/2014-11-11/rtxy" />
+		<test url="http://go.unruly.co/l/50182/2015-08-17/3wmwmr/50182/63492/submit_button.png" />
+		<test url="http://go.unruly.co/l/50182/2015-12-09/57f3t2/50182/82583/SB_template_v1.png" />
+		<test url="http://go.unruly.co/l/50182/2015-12-09/57r24x" />
+		<test url="http://go.unruly.co/l/50182/2016-04-28/66l55p" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

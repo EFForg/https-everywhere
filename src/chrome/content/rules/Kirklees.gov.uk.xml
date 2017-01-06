@@ -28,7 +28,7 @@
 	ˢ Self-signed
 
 
-	Insecure cookies are set for these hosts:
+	Insecure cookies are set for these hosts: ᶜ
 
 		- kirklees.gov.uk
 		- communitydirectory.kirklees.gov.uk
@@ -43,6 +43,8 @@
 		- schoolapplications.kirklees.gov.uk
 		- tickets.kirklees.gov.uk
 
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
 
 	Mixed content:
 
@@ -56,11 +58,13 @@
 			- observatory from observatory.wakefield.gov.uk
 
 	ᵐ Not secured by us <= mismatched
-	ˢ Secured by us
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="Kirklees.gov.uk (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="kirklees.gov.uk" />
 	<target host="communitydirectory.kirklees.gov.uk" />
 	<target host="customerservice.kirklees.gov.uk" />
@@ -78,6 +82,10 @@
 	<target host="tickets.kirklees.gov.uk" />
 	<target host="www.kirklees.gov.uk" />
 
+	<!--	Complications:
+				-->
+	<target host="consult.kirklees.gov.uk" />
+
 
 	<!--	Not secured by server:
 					-->
@@ -89,9 +97,12 @@
 	<!--securecookie host="^parking(?:permits)?\.kirklees\.gov\.uk$" name="^ASPSESSIONID[A-Z]{8}$" /-->
 	<!--securecookie host="^tickets\.kirklees\.gov\.uk$" name="^(?:ASP\.NET_SessionId|af|gid)$" /-->
 
-	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
 	<securecookie host="^\w" name="." />
 
+
+	<rule from="^http://consult\.kirklees\.gov\.uk/"
+		to="https://kirklees-consult.objective.co.uk/" />
 
 	<rule from="^http:"
 		to="https:" />

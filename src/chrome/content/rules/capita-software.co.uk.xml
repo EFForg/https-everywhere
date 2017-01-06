@@ -1,0 +1,67 @@
+<!--
+	CDN buckets:
+
+		- cssmarketing.blob.core.windows.net
+		- netccapita.blob.core.windows.net
+
+
+	Problematic hosts in *capita-software.co.uk:
+
+		- storage ᵐ
+
+	ᵐ Mismatched
+
+
+	^capita-software.co.uk does not exist.
+
+-->
+<ruleset name="Capita-Software.co.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="mysupport.capita-software.co.uk" />
+	<target host="www.capita-software.co.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.capita-software\.co\.uk/(?:$|about-us$|case-studies$|corporate/customer-support$|events$|libraries/prism$|markets$|news$|solutions$|technical-services$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.capita-software\.co\.uk/(?!/*sitefiles/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.capita-software.co.uk/about-us" />
+			<test url="http://www.capita-software.co.uk/case-studies" />
+			<!--test url="http://www.capita-software.co.uk/corporate/contact-us" /-->
+			<!--test url="http://www.capita-software.co.uk/corporate/customer-support" /-->
+			<!--test url="http://www.capita-software.co.uk/events" /-->
+			<!--test url="http://www.capita-software.co.uk/libraries/prism" /-->
+			<!--test url="http://www.capita-software.co.uk/markets" /-->
+			<!--test url="http://www.capita-software.co.uk/news" /-->
+			<!--test url="http://www.capita-software.co.uk/solutions" /-->
+			<!--test url="http://www.capita-software.co.uk/technical-services" /-->
+
+			<!--	-ve:
+					-->
+			<test url="http://www.capita-software.co.uk/sitefiles/images/pixel-opacity.png" />
+
+	<!--	Complications:
+				-->
+	<target host="storage.capita-software.co.uk" />
+
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^[^.w]" name="." />
+
+
+	<rule from="^http://storage\.capita-software\.co\.uk/"
+		to="https://cssmarketing.blob.core.windows.net/" />
+
+		<test url="http://storage.capita-software.co.uk/cmsstorage/capita/media/solutions/solutions_teasers/incomecollection-in-health_teaser.jpg?ext=.jpg" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

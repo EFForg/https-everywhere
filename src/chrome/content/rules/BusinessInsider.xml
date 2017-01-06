@@ -35,9 +35,7 @@
 	<!--	Direct rewrites:
 				-->
 	<target host="businessinsider.com" />
-	<target host="insider.businessinsider.com" />
 	<target host="intelligence.businessinsider.com" />
-	<target host="oascentral.businessinsider.com" />
 	<target host="static.businessinsider.com" />
 	<target host="static-bii.businessinsider.com" />
 	<target host="static-ssl.businessinsider.com" />
@@ -50,6 +48,13 @@
 	<target host="static7.businessinsider.com" />
 	<target host="static8.businessinsider.com" />
 
+	<!--	Fix broken video, see:
+			https://github.com/EFForg/https-everywhere/issues/5014 -->
+		<exclusion pattern="^http://static(\d|-ssl)?.businessinsider.com/assets/js/app/partners/ooyala/skin.json$" />
+		<test url="http://static.businessinsider.com/assets/js/app/partners/ooyala/skin.json" />
+		<test url="http://static1.businessinsider.com/assets/js/app/partners/ooyala/skin.json" />
+		<test url="http://static-ssl.businessinsider.com/assets/js/app/partners/ooyala/skin.json" />
+
 	<target host="static1.uk.businessinsider.com" />
 	<target host="static2.uk.businessinsider.com" />
 	<target host="static3.uk.businessinsider.com" />
@@ -61,8 +66,6 @@
 
 	<!--	Complications:
 				-->
-	<target host="jobs.businessinsider.com" />
-
 		<!--	Many pages redirect to http.
 							-->
 		<!--exclusion pattern="^http://uk\.businessinsider\.com/[\w-]+($|\?)" /-->
@@ -70,7 +73,7 @@
 		<!--
 			Exceptions:
 					-->
-	        <exclusion pattern="^http://www\.businessinsider\.com/(?!account|assets/|favicon\.ico|login|register)" />
+	        <exclusion pattern="^http://www\.businessinsider\.com/(?!assets/|favicon\.ico|login)" />
 
 			<!--	+ve:
 					-->
@@ -83,21 +86,8 @@
 
 			<!--	-ve:
 					-->
-			<test url="http://www.businessinsider.com/account" />
 			<test url="http://www.businessinsider.com/favicon.ico" />
 			<test url="http://www.businessinsider.com/login" />
-			<test url="http://www.businessinsider.com/register" />
-
-		<exclusion pattern="^http://jobs\.businessinsider\.com/(?!c/)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://jobs.businessinsider.com/a/all-jobs/list/q-first+citizens+bank" />
-			<test url="http://jobs.businessinsider.com/a/all-jobs/list/q-intuit" />
-
-			<!--	-ve:
-					-->
-			<test url="http://jobs.businessinsider.com/c/" />
 
 
 	<!--	Not secured by server:
@@ -105,17 +95,12 @@
 	<!--securecookie host="^\.businessinsider\.com$" name="^s$" /-->
 	<!--securecookie host="^intelligence\.businessinsider\.com$" name="^PHPSESSID$" /-->
 
-	<!--	Tracking cookie set by oascentral:
-							-->
 	<securecookie host="^\.businessinsider\.com$" name="^OAX$" />
-	<securecookie host="^(?:intelligence|oascentral)\.businessinsider\.com$" name=".+" />
+	<securecookie host="^intelligence\.businessinsider\.com$" name=".+" />
 
 
         <!--    See Simply-Hired-clients.xml for problematic jobs rules.
 									-->
-        <rule from="^http://jobs\.businessinsider\.com/"
-                to="https://businessinsider.jobamatic.com/" />
-
         <rule from="^http:"
 		to="https:" />
 

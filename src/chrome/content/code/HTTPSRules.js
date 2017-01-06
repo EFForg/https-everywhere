@@ -246,7 +246,31 @@ const RuleWriter = {
     return rv;
   },
 
-  read: function(file) {
+  readFromUrl: function (url) {
+    var ios = CC['@mozilla.org/network/io-service;1']
+        .getService(CI.nsIIOService);
+    var encoding = "UTF-8";
+    var channel = ios.newChannel(url, encoding, null);
+    var stream = channel.open();
+    var streamSize = stream.available();
+
+    if (!streamSize) {
+      return null;
+    }
+
+    var convStream = CC["@mozilla.org/intl/converter-input-stream;1"]
+        .createInstance(CI.nsIConverterInputStream);
+
+    convStream.init(stream, encoding, streamSize,
+        convStream.DEFAULT_REPLACEMENT_CHARACTER);
+
+    var data = {};
+    convStream.readString(streamSize, data);
+
+    return data.value;
+  },
+
+  readFromFile: function(file) {
     if (!file.exists())
       return null;
     var data = "";
@@ -285,7 +309,7 @@ const RuleWriter = {
   rulesetFromFile: function(file, rule_store, ruleset_id) {
     if ((rule_store.targets == null) && (rule_store.targets != {}))
       this.log(WARN, "TARGETS IS NULL");
-    var data = this.read(file);
+    var data = this.readFromFile(file);
     if (!data) return null;
     return this.readFromString(data, rule_store, ruleset_id);
   },
@@ -409,8 +433,9 @@ const HTTPSRules = {
    * XML string, which will be parsed on an as-needed basis.
    */
   loadTargets: function() {
-    var file = new FileUtils.File(RuleWriter.chromeToPath("chrome://https-everywhere/content/rulesets.json"));
-    var rules = JSON.parse(RuleWriter.read(file));
+    var loc = "chrome://https-everywhere/content/rulesets.json";
+    var data = RuleWriter.readFromUrl(loc);
+    var rules = JSON.parse(data);
     this.targets = rules.targets;
     this.rulesetStrings = rules.rulesetStrings;
   },

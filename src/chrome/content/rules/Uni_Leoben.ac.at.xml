@@ -1,58 +1,72 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://unileoben.ac.at/ => https://www.unileoben.ac.at/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-	^: mismatched
+	Montanuniversitaet Leoben
 
 
-	Problematic subdomains:
+	Problematic hosts in *unileoben.ac.at:
 
-		- bibliothek *
-		- presse *
-		- starter *
-		- weiterbildung *
+		- ^ ᶜ *
+		- asi ᶜ *
+		- bibliothek ᶜ *
+		- international ᶜ *
+		- presse ᶜ *
+		- rohstoffaufbereitung ᶜ *
+		- starter ᶜ *
+		- usi ᶜ
+		- wbw ᶜ *
+		- weiterbildung ᶜ *
+		- wild ᶜ *
+		- www ᶜ
 		- www4 *
-		- zid *
+		- zid ᶜ *
 
-	* Works; mismatched, CN: www.unileoben.ac.at
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	* Mismatched, CN: www.unileoben.ac.at
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these hosts: ᶜ
 
-		- (www.)	(^ → www)
-		- online
-		- usi
-		- usionline
+		- pure.unileoben.ac.at
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
 
-		- iframe on bibliothek from www  ¹
+		- Flash on wild from www.usflashmap.com
+		- iframe on bibliothek from www.unileoben.ac.at *
+		- css on bibliothek from www.unileoben.ac.at *
 
-		- css on bibliothek from $self ²
-
-		- Images on bibliothek from $self ²
-
-		- favicon, on:
-
-			- bibliothek from $self ²
-			- presse from $self ²
-			- starter from $self ²
-
-	¹ Secured by us
-	² Not secured by us <= mismatched
+	* See https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Uni Leoben.ac.at (partial)" default_off='failed ruleset test'>
+<ruleset name="Uni Leoben.ac.at (partial)">
 
-	<target host="unileoben.ac.at" />
-	<target host="*.unileoben.ac.at" />
+	<!--	Direct rewrites:
+				-->
+	<target host="online.unileoben.ac.at" />
+	<target host="pure.unileoben.ac.at" />
+	<!--target host="usi.unileoben.ac.at" /-->
+	<target host="usionline.unileoben.ac.at" />
+	<!--target host="www.unileoben.ac.at" /-->
+
 		<!--exclusion pattern="^http://(bibliothek|presse|starter|weiterbildung|www4|zid)\.unileoben\.ac\.at/" /-->
 
+	<!--	Complications:
+				-->
+	<!--target host="unileoben.ac.at" /-->
 
-	<rule from="^http://(?:www\.)?unileoben\.ac\.at/"
-		to="https://www.unileoben.ac.at/" />
 
-	<rule from="^http://(online|usi|usionline)\.unileoben\.ac\.at/"
-		to="https://$1.unileoben.ac.at/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^pure\.unileoben\.ac\.at$" name="^com\.sun\.aces\.context\.flash\.PostbackRequest$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--rule from="^http://unileoben\.ac\.at/"
+		to="https://www.unileoben.ac.at/" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

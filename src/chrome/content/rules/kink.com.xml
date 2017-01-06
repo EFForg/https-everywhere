@@ -1,0 +1,47 @@
+<!--
+	Nonfunctional hosts in *kink.com:
+
+		- press ʰ
+		- store ʰ
+
+	ʰ WP Engine / redirects to http
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.kink.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Ads on www from www.flirt4free.com ʳ
+
+	ʳ Unsecurable <= connection refused
+
+-->
+<ruleset name="Kink.com (partial)">
+
+	<target host="kink.com" />
+	<target host="cdnp.kink.com" />
+	<target host="content.kink.com" />
+	<target host="www.kink.com" />
+
+		<test url="http://cdnp.kink.com/assets/sitelogos/logo.png" />
+		<test url="http://content.kink.com/imagedb/40125/i/h/410/10.jpg" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.kink\.com$" name="^(?:kink-ltc|kinky\.sess)$" /-->
+
+	<securecookie host="." name="^optimizely" />
+	<securecookie host="^\." name="(?:__cfduid$|_gat?$|_gat_|cf_clearance$)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

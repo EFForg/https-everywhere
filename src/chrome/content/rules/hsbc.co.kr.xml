@@ -1,0 +1,53 @@
+<!--
+	For other HSBC Holdings coverage, see HSBC.xml.
+
+
+	Nonfunctional hosts in *hsbc.co.kr:
+
+		- www.about *
+
+	* Unrecognized name
+
+
+	^hsbc.co.kr: mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.hsbc.co.kr
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bug on www from www1.member-hsbc-group.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="HSBC.co.kr (partial)" default_off="testing">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.hsbc.co.kr" />
+
+	<!--	Complications:
+				-->
+	<target host="hsbc.co.kr" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.hsbc\.co\.kr$" name="^(?:JSESSIONID|SEPTK)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://hsbc\.co\.kr/"
+		to="https://www.hsbc.co.kr/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

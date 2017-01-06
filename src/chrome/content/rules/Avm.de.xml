@@ -1,56 +1,66 @@
 <!--
-	For problematic rules, see AVM.de-problematic.xml.
+	Nonfunctional hosts in *avm.de:
+
+		- webgw ᵖ
+
+	ᵖ Plaintext reply
 
 
-	webgw.avm.de doesn't support TLS
+	Insecure cookies are set for these hosts: ᶜ
+
+		- partner.avm.de
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
-	Problematic hosts in *avm.de:
+	Mixed content:
 
-		- piwik *
+		- Bug on help from piwik.avm.de ˢ
 
-	* Server sends no certificate chain, see https://whatsmychaincert.com
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="AVM.de (partial)">
 
 	<target host="avm.de"/>
+	<target host="at.avm.de"/>
+	<target host="be.avm.de"/>
+	<target host="ch.avm.de"/>
+	<target host="download.avm.de"/>
 	<target host="en.avm.de"/>
-	<!--target host="piwik.avm.de"/-->
+	<target host="ftp.avm.de"/>
+	<target host="it.avm.de"/>
+	<target host="jobs.avm.de"/>
+	<target host="lu.avm.de"/>
+	<target host="nl.avm.de"/>
+	<target host="partner.avm.de"/>
+	<target host="piwik.avm.de"/>
+	<target host="pl.avm.de"/>
+	<target host="service.avm.de"/>
 	<target host="www.avm.de"/>
 
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://en\.avm\.de/$" /-->
-		<!--
-			Exceptions:
+		<test url="http://en.avm.de/contact/" />
+		<test url="http://en.avm.de/guide/" />
+		<test url="http://en.avm.de/news/" />
+		<test url="http://en.avm.de/products/" />
+		<test url="http://en.avm.de/service/" />
+
+		<test url="http://avm.de/produkte/" />
+		<test url="http://avm.de/service/" />
+		<test url="http://avm.de/ratgeben/" />
+		<test url="http://avm.de/aktuelles/" />
+
+		<!--	$ 404s, so:
 					-->
-		<exclusion pattern="^http://(en\.)?avm\.de/+(?!favicon\.ico|fileadmin/|typo3conf/|typo3temp/)" />
+		<test url="http://help.avm.de/fritzbox.php?topic=hilfe_fon_waehlhilfe" />
 
-			<!--	+ve:
+
+	<!--	Not secured by server:
 					-->
-			<test url="http://en.avm.de/contact/" />
-			<test url="http://en.avm.de/guide/" />
-			<test url="http://en.avm.de/news/" />
-			<test url="http://en.avm.de/products/" />
-			<test url="http://en.avm.de/service/" />
+	<!--securecookie host="^partner\.avm\.de$" name="^_web\d+_session$" /-->
 
-			<test url="http://avm.de/produkte/" />
-			<test url="http://avm.de/service/" />
-			<test url="http://avm.de/ratgeben/" />
-			<test url="http://avm.de/aktuelles/" />
+	<securecookie host="^\w" name="." />
 
-			<!--	+ve:
-					-->
-			<test url="http://en.avm.de/favicon.ico" />
-			<test url="http://en.avm.de/fileadmin/user_upload/Global/Verschiedenes/icon_news_43x34.png" />
-			<test url="http://en.avm.de/typo3conf/ext/avm/Resources/Public/Images/logo.png" />
-			<test url="http://en.avm.de/typo3temp/compressor/merged-608c235dc169b392ffdc9ad6bd972759.css?1437379980" />
-
-			<test url="http://avm.de/favicon.ico" />
-			<test url="http://avm.de/fileadmin/user_upload/Global/Verschiedenes/icon_news_43x34.png" />
-			<test url="http://avm.de/typo3conf/ext/avm/Resources/Public/Images/logo.png" />
-			<test url="http://avm.de/typo3temp/compressor/merged-608c235dc169b392ffdc9ad6bd972759.css?1437379980" />
 
 	<rule from="^http:"
 		to="https:" />

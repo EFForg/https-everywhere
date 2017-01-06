@@ -8,7 +8,6 @@
 
 		- static.reuters.com.edgesuite.net
 
-			- a1768.g.akamai.net
 			- s[1-4]
 
 		- g3.us.reuters.com.edgesuite.net
@@ -22,6 +21,7 @@
 
 		- reuters.com subdomains:
 
+			- (www.)? ²
 			- blogs *
 			- af ²
 			- ca		(redirects to http)
@@ -41,23 +41,41 @@
 	⁴ 504, akamai
 
 
-	Problematic domains:
+	Problematic hosts in *reuters.com:
 
-		- reuters.com			(redirects to http, CN: localhost.localdomain)
-		- mediacdn.reuters.com
-		- www.reuters.com		(redirects to http, akamai)
-		- reut.rs			(dropped)
+		- mediacdn
+		- mediaexpress ᵐ
 
-	Fully covered domains:
-		- cdnstatic.reuters.tv
-		- commerce.us.reuters.com
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- customers.reuters.com
+		- pictures.reuters.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Reuters.com (partial, broken)" default_off="breaks www.reuters.com">
+<ruleset name="Reuters.com (partial)">
 
+	<target host="commerce.reuters.com" />
+	<target host="customers.reuters.com" />
+	<target host="pictures.reuters.com" />
 	<target host="commerce.us.reuters.com" />
-	<target host="cdnstatic.reuters.tv" />
-	<target host="www.reuters.tv" />
+
+		<!--	$ 404,s so:
+					-->
+		<test url="http://commerce.reuters.com/agencyaccess/signIn.do" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^customers\.reuters\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^pictures\.reuters\.com$" name="^(?:ASP\.NET_SessionId|CorexLanguageRTR)$" /-->
+
+	<securecookie host="^\w" name="." />
+
 
 	<rule from="^http:"
 		to="https:" />

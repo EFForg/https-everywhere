@@ -47,5 +47,3 @@ else
   fi
   die "Validation of rulesets against $GRAMMAR failed."
 fi
-
-cp "../pkg/rulesets.json" ../src/chrome/content/rulesets.json

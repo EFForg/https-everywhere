@@ -1,25 +1,110 @@
 <!--
+	UK Department for Business, Innovation & Skills
+
+	For rules causing false/broken MCB, see bis.gov.uk-falsemixed.xml.
+
 	For other UK government coverage, see GOV.UK.xml.
 
 
-	Nonfunctional subdomains:
+	CDN buckets:
 
-		- skillsfundingagency	(401, mismatched, CN: www.lsc.gov.uk)
+		- sfa-pd-waf.westeurope.cloudapp.azure.com
 
 
-	Problematic subdomains:
+	Problematic hosts in *bis.gov.uk:
 
-		- (www.)		(works; mismatched, CN: cms.bis.gov.uk)
+		- (www.)? ᵐ
+		- www.edrs.sfa ᵐ
+		- feconnect.sfa ˣ
+		- (www.)?skillsfundingagency ᵐ
+
+	ᵐ Mismatched
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- edrs.sfa.bis.gov.uk
+		- feconnect.sfa.bis.gov.uk
+		- gateway.sfa.bis.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on feconnect.sfa from $self ˢ
+
+		- Images, on:
+
+			- feconnect.sfa from $self ˢ
+			- feconnect.sfa from sfa-pd-waf.westeurope.cloudapp.azure.com
+
+		- Bugs on feconnect.sfa from css.rating-widget.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="UK Department for Business, Innovation &amp; Skills" default_off="expired">
+<ruleset name="BIS.gov.uk (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="edrs.sfa.bis.gov.uk" />
+	<!--target host="feconnect.sfa.bis.gov.uk" /-->
+	<target host="gateway.sfa.bis.gov.uk" />
+
+	<!--	Complications:
+				-->
 	<target host="bis.gov.uk" />
-	<target host="*.bis.gov.uk" />
+	<target host="www.edrs.sfa.bis.gov.uk" />
+	<target host="skillsfundingagency.bis.gov.uk" />
+	<target host="www.skillsfundingagency.bis.gov.uk" />
+	<target host="www.bis.gov.uk" />
+
+		<!--	\w$ does not redirect:
+						-->
+		<exclusion pattern="^http://(?:www\.)?(?:skillsfundingagency\.)?bis\.gov\.uk/(?!/*(?:$|\?))" />
+
+			<!--	For negative cases see below respective rules.
+
+				+ve:
+					-->
+			<test url="http://bis.gov.uk/default.aspx" />
+			<test url="http://bis.gov.uk/favicon.ico" />
+			<test url="http://bis.gov.uk/index.htm" />
+			<test url="http://www.bis.gov.uk/index.html" />
+			<test url="http://www.bis.gov.uk/index.jsp" />
+			<test url="http://www.bis.gov.uk/index.php" />
+			<test url="http://www.bis.gov.uk/index.xml" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:edrs|gateway)\.sfa\.bis\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^feconnect\.sfa\.bis\.gov\.uk$" name="^(?:BNES_)?wfvt_\d+$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<!--	Cert doesn't match !www.	-->
-	<rule from="^http://(?:www\.)?bis\.gov\.uk/"
-		to="https://www.bis.gov.uk/" />
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://(?:www\.)?bis\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/department-for-business-innovation-skills" />
+
+		<test url="http://bis.gov.uk/" />
+		<test url="http://www.bis.gov.uk/" />
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://(?:www\.)?skillsfundingagency\.bis\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/skills-funding-agency" />
+
+		<test url="http://skillsfundingagency.bis.gov.uk/" />
+		<test url="http://www.skillsfundingagency.bis.gov.uk/" />
+
+	<rule from="^http://www\.edrs\.sfa\.bis\.gov\.uk/"
+		to="https://edrs.sfa.bis.gov.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

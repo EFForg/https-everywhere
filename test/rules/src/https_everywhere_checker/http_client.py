@@ -45,6 +45,14 @@ class CertificatePlatforms(object):
 class FetchOptions(object):
 	"""HTTP fetcher options like timeouts."""
 	
+	# NSS cipher list from https://github.com/EFForg/https-everywhere/issues/5628#issuecomment-236050924
+	_DEFAULT_CIPHERLIST_NSS = "rsa_3des_sha,rsa_des_sha,rsa_null_md5,rsa_null_sha,rsa_rc2_40_md5,rsa_rc4_128_md5,rsa_rc4_128_sha,rsa_rc4_40_md5,fips_des_sha,fips_3des_sha,rsa_des_56_sha,rsa_rc4_56_sha,rsa_aes_128_sha,rsa_aes_256_sha,rsa_aes_128_gcm_sha_256,dhe_rsa_aes_128_gcm_sha_256,ecdh_ecdsa_null_sha,ecdh_ecdsa_rc4_128_sha,ecdh_ecdsa_3des_sha,ecdh_ecdsa_aes_128_sha,ecdh_ecdsa_aes_256_sha,ecdhe_ecdsa_null_sha,ecdhe_ecdsa_rc4_128_sha,ecdhe_ecdsa_3des_sha,ecdhe_ecdsa_aes_128_sha,ecdhe_ecdsa_aes_256_sha,ecdh_rsa_null_sha,ecdh_rsa_128_sha,ecdh_rsa_3des_sha,ecdh_rsa_aes_128_sha,ecdh_rsa_aes_256_sha,echde_rsa_null,ecdhe_rsa_rc4_128_sha,ecdhe_rsa_3des_sha,ecdhe_rsa_aes_128_sha,ecdhe_rsa_aes_256_sha,ecdhe_ecdsa_aes_128_gcm_sha_256,ecdhe_rsa_aes_128_gcm_sha_256"
+	
+	# The default list of cipher suites that ships with Firefox 35.0.1
+	_DEFAULT_CIPHERLIST_OTHER = "RC4-MD5:RC4-SHA:DES-CBC3-SHA:AES128-SHA:AES256-SHA:DHE-DSS-AES128-SHA:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-RC4-SHA:ECDHE-RSA-AES128-SHA:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-RC4-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256"
+	
+	_DEFAULT_CIPHERLIST = _DEFAULT_CIPHERLIST_NSS if re.search('NSS/\d+\.\d+', pycurl.version) else _DEFAULT_CIPHERLIST_OTHER
+	
 	def __init__(self, config):
 		"""Parse options from [http] section
 		
@@ -58,8 +66,7 @@ class FetchOptions(object):
 		self.sslVersion = pycurl.SSLVERSION_DEFAULT
 		self.useSubprocess = True
 		self.staticCAPath = None
-		# The default list of cipher suites that ships with Firefox 35.0.1
-		self.cipherList = "RC4-MD5:RC4-SHA:DES-CBC3-SHA:AES128-SHA:AES256-SHA:DHE-DSS-AES128-SHA:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-RC4-SHA:ECDHE-RSA-AES128-SHA:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-RC4-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256"
+		self.cipherList = self._DEFAULT_CIPHERLIST
 
 		if config.has_option("http", "user_agent"):
 			self.userAgent = config.get("http", "user_agent")
@@ -167,8 +174,6 @@ class ErrorSanitizer():
 class HTTPFetcher(object):
 	"""Fetches HTTP(S) pages via PyCURL. CA certificates can be configured.
 	"""
-	
-	_headerRe = regex.compile(r"(?P<name>\S+?): (?P<value>.*?)\r\n")
 	
 	def __init__(self, platform, certPlatforms, fetchOptions, ruleTrie=None):
 		"""Create fetcher that validates certificates using selected
@@ -372,14 +377,12 @@ class HTTPFetcher(object):
 			if httpCode == 0:
 				raise HTTPFetcherError("Pycurl fetch failed for '%s'" % newUrl)
 			elif httpCode in (301, 302, 303, 307):
-				# Parse out the headers and extract location, case-insensitively.
-				# If there are multiple location headers, pick the last one.
-				headers = dict()
-				for k, v in self._headerRe.findall(headerStr):
-					headers[k.lower()] = v
-				location = headers.get('location')
-				if not location:
-					raise HTTPFetcherError("Redirect for '%s' missing Location" % newUrl)
+				location = None
+				for piece in headerStr.split('\n'):
+					if piece.lower().startswith('location:'):
+						location = piece[len('location:'):].strip()
+				if location is None:
+					raise HTTPFetcherError("Redirect for '%s' missing location header" % newUrl)
 				
 				location = self.absolutizeUrl(newUrl, location)
 				logging.debug("Following redirect %s => %s", newUrl, location)

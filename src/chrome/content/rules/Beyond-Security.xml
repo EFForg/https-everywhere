@@ -4,21 +4,38 @@
 		- ScanMyServer.com.xml
 
 
-	Insecure cookies are set for these hosts:
+	Insecure cookies are set for these hosts: ᶜ
 
 		- cloud2.beyondsecurity.com
 		- cloud3.beyondsecurity.com
 		- sp-us.beyondsecurity.com
 
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
 -->
-<ruleset name="Beyond Security.com">
+<ruleset name="Beyond Security.com (partial)">
 
 	<target host="beyondsecurity.com" />
 	<target host="*.beyondsecurity.com" />
 
+		<exclusion pattern="^http://(?:[^./]+\.){2,}beyondsecurity\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.beyondsecurity.com/" />
+			<test url="http://exists.not.beyondsecurity.com/" />
+
 		<!--	Pages started redirecting to http.
 								-->
-		<exclusion pattern="^http://www\.beyondsecurity\.com/(?:.+\.html)?(?:$|\?)" />
+		<!--exclusion pattern="^http://www\.beyondsecurity\.com/(?:.+\.html)?(?:$|\?)" /-->
+		<!--
+			Now others have started to 404...:
+								-->
+		<!--exclusion pattern="^http://www\.beyondsecurity\.com/scan_pentest_network_vulnerabilities_web_server_cross_site_scripting$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.beyondsecurity\.com/(?!/*assets/)" />
 
 			<!--	+ve:
 					-->
@@ -26,6 +43,7 @@
 			<test url="http://www.beyondsecurity.com/network_scanner.html" />
 			<test url="http://www.beyondsecurity.com/network_security.html" />
 			<test url="http://www.beyondsecurity.com/pen_testing.html" />
+			<test url="http://www.beyondsecurity.com/scan_pentest_network_vulnerabilities_web_server_cross_site_scripting" />
 
 			<!--	-ve:
 					-->
@@ -43,11 +61,10 @@
 					-->
 	<!--securecookie host="^(?:cloud[23]|sp-us)\.beyondsecurity\.com$" name="^CGISESSID$" /-->
 
-	<!--securecookie host="." name="." /-->
-	<securecookie host="^(?:cloud[23]|sp-us)\.beyondsecurity\.com$" name="." />
+	<securecookie host="^(?!www\.)." name="." />
 
 
-	<rule from="^http://([\w-]+\.)?beyondsecurity\.com/"
-		to="https://$1beyondsecurity.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,26 +1,29 @@
 <!--
+
 	Open Researcher & Contributor ID
 
 
-	Nonfunctional hosts in *orcid.org:
+	Nonfunctional hosts in *.orcid.org:
 
-		- qrcode *
+		- qrcode 		(connection times out)
 
-	* Dropped
+	Problematic domains:
 
+		- support.orcid.org	(cert name mismatch)
 
-	Problematic hosts in *orcid.org:
+	The following URLs (with nothing after the trailing slash)
+	redirect to the specific URL http://orcid.org/ instead:
 
-		- support *
-
-	* Uservoice
-
+		- https://orcid.org/
+		- https://about.orcid.org/
+		- https://www.orcid.org/
 
 	Insecure cookies are set for these domains and hosts:
 
 		- orcid.org
 		- .orcid.org
 		- about.orcid.org
+		- .about.orcid.org
 		- members.orcid.org
 		- support.orcid.org
 		- www.orcid.org
@@ -33,46 +36,19 @@
 	<target host="orcid.org" />
 	<target host="about.orcid.org" />
 	<target host="members.orcid.org" />
-	<!--target host="support.orcid.org" /-->
 	<target host="www.orcid.org" />
 
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://orcid\.org/$" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://orcid\.org/+(?!misc/|(?:register|reset-password|signin)(?:$|[?/])|sites/|static/)" />
 
-			<!--	+ve:
-					-->
-			<test url="http://orcid.org/about/events" />
-			<test url="http://orcid.org/about/news" />
-			<test url="http://orcid.org/blog" />
-			<test url="http://orcid.org/bylaws" />
-			<test url="http://orcid.org/content/initiative" />
-			<test url="http://orcid.org/help" />
-			<test url="http://orcid.org/help/contact-us" />
-			<test url="http://orcid.org/organizations" />
-			<test url="http://orcid.org/statistics" />
+	<exclusion pattern="^http://orcid\.org/$" />
+	<exclusion pattern="^http://about\.orcid\.org/$" />
+	<exclusion pattern="^http://www\.orcid\.org/$" />
 
-			<!--	-ve:
-					-->
-			<test url="http://orcid.org/misc/menu-expanded.png" />
-			<test url="http://orcid.org/register" />
-			<test url="http://orcid.org/reset-password" />
-			<test url="http://orcid.org/signin" />
-			<test url="http://orcid.org/sites/all/themes/orcidResponsive/img/orcid-logo.png" />
-			<test url="http://orcid.org/static/css/fonts.css" />
+	<test url="http://orcid.org/" />
+	<test url="http://about.orcid.org/" />
+	<test url="http://www.orcid.org/" />
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^orcid\.org$" name="^JSESSIONID$" /-->
-	<!--securecookie host="^\.orcid\.org$" name="^(?:__cfduid|cf_clearance)$" /-->
-	<!--securecookie host="^(?:about\.|members\.|www\.)?orcid\.org$" name="^X-Mapping-fjhppofk$" /-->
-	<!--securecookie host="^support\.orcid\.org$" name="^(?:_session_id|_rf)$" /-->
 
-	<securecookie host="^(?:about|members|www)\.orcid\.org$" name=".+" />
+	<securecookie host="(^|\.)(about|members)\.orcid\.org$" name=".+" />
 
 
 	<rule from="^http:"

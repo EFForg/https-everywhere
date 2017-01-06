@@ -92,6 +92,7 @@ function updateEnabledDisabledUI() {
   } else {
     document.body.className = "disabled"
   }
+  backgroundPage.updateState();
 }
 
 // Toggle extension enabled/disabled status
@@ -99,15 +100,14 @@ function toggleEnabledDisabled() {
   if (backgroundPage.isExtensionEnabled) {
     // User wants to disable us
     backgroundPage.isExtensionEnabled = false;
-    chrome.browserAction.setBadgeText({ text: "OFF" });
   } else {
     // User wants to enable us
     backgroundPage.isExtensionEnabled = true;
-    chrome.browserAction.setBadgeText({ text: "" });
   }
   updateEnabledDisabledUI();
   // The extension state changed, so reload this tab.
   chrome.tabs.reload();
+  window.close();
 }
 
 /**

@@ -123,7 +123,7 @@ function SSLObservatory() {
     this.setupASNWatcher();
 
   try {
-    NSS.initialize("");
+    NSS.initialize();
   } catch(e) {
     this.log(WARN, "Failed to initialize NSS component:" + e);
   }
@@ -778,7 +778,16 @@ SSLObservatory.prototype = {
      */
     this.proxy_test_successful = null;
 
-    if (this.getProxySettings().tor_safe == false) {
+    var proxy_settings = this.getProxySettings();
+    // if proxy_settings is false, we're using tor browser for sure
+    // if tor_safe is false, the user has specified use_custom_proxy
+    // in either case, don't issue request to tor check url
+    if (!proxy_settings) {
+      this.proxy_test_successful = true;
+      this.log(INFO, "Tor check assumed succeeded.");
+      return;
+    }
+    if (proxy_settings.tor_safe == false) {
       this.proxy_test_successful = false;
       this.log(INFO, "Tor check failed: Not safe to check.");
       return;
@@ -851,18 +860,7 @@ SSLObservatory.prototype = {
     this.log(INFO,"in getProxySettings()");
     var custom_proxy_type = this.myGetCharPref("proxy_type");
     if (this.torbutton_installed && this.myGetBoolPref("use_tor_proxy")) {
-      this.log(INFO,"CASE: use_tor_proxy");
-      // extract torbutton proxy settings
-      proxy_settings.type = "http";
-      proxy_settings.host = this.prefs.getCharPref("extensions.torbutton.https_proxy");
-      proxy_settings.port = this.prefs.getIntPref("extensions.torbutton.https_port");
-
-      if (proxy_settings.port == 0) {
-        proxy_settings.type = "socks";
-        proxy_settings.host = this.prefs.getCharPref("extensions.torbutton.socks_host");
-        proxy_settings.port = this.prefs.getIntPref("extensions.torbutton.socks_port");
-      }
-      proxy_settings.tor_safe = true;
+      return false;
     /* Regarding the test below:
      *
      * custom_proxy_type == "direct" is indicative of the user having selected "submit certs even if
@@ -885,7 +883,7 @@ SSLObservatory.prototype = {
       proxy_settings.port = 9050;
       proxy_settings.tor_safe = true;
     }
-    this.log(INFO, "Using proxy: " + proxy_settings);
+    this.log(INFO, "Using proxy: " + JSON.stringify(proxy_settings));
     return proxy_settings;
   },
 
@@ -916,12 +914,16 @@ SSLObservatory.prototype = {
         // for the torbutton proxy settings.
         try {
           proxy_settings = this.getProxySettings(testingForTor);
-          proxy = this.pps.newProxyInfo(
-            proxy_settings.type,
-            proxy_settings.host,
-            proxy_settings.port,
-            Ci.nsIProxyInfo.TRANSPARENT_PROXY_RESOLVES_HOST,
-            0xFFFFFFFF, null);
+          if(proxy_settings){
+            proxy = this.pps.newProxyInfo(
+              proxy_settings.type,
+              proxy_settings.host,
+              proxy_settings.port,
+              Ci.nsIProxyInfo.TRANSPARENT_PROXY_RESOLVES_HOST,
+              0xFFFFFFFF, null);
+          } else {
+            proxy = aProxy;
+          }
         } catch(e) {
           this.log(WARN, "Error specifying proxy for observatory: "+e);
         }

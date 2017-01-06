@@ -1,0 +1,147 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/tribepad.g4s/
+		- d3lpyoo42b5obf.cloudfront.net
+
+
+	Nonfunctional hosts in *g4s.com:
+
+		- (www.)? ᶠ
+		- (www.)?annualreport ᵈ
+		- annualreport2014 ᵈ
+		- (www.)?au ᵈ
+		- (www.)?br ᶠ
+		- cgf2.ec ᶠ
+		- (www.)?gu ʳ
+		- (www.)?nz ᵈ
+		- www.safeguards ᶠ
+		- search ᵈ
+
+	ᵈ Dropped
+	ᶠ Handshake fails
+	ʳ Refused
+
+
+	Problematic hosts in *g4s.com:
+
+		- www.africajobs ᵐ
+		- www.amejobs ᵐ
+		- www.canadajobs ᵐ
+		- www.careers ᵐ
+		- autogestion.co ᶜ
+		- www.empleos ᵐ
+		- www.eventsjobsuk ᵐ
+		- www.greaterchinajobs ᵐ
+		- www.job ᵐ
+		- www.jobat ᵐ
+		- specialisttraining ᵐ
+		- www.technologycareers ᵐ
+		- www.ukjobs ᵐ
+		- www.usajobs ᵐ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- africajobs.g4s.com
+		- .africajobs.g4s.com
+		- amejobs.g4s.com
+		- canadajobs.g4s.com
+		- .canadajobs.g4s.com
+		- careers.g4s.com
+		- .careers.g4s.com
+		- community.g4s.com
+		- empleos.g4s.com
+		- .empleos.g4s.com
+		- gis.g4s.com
+		- www.gis.g4s.com
+		- greaterchinajobs.g4s.com
+		- .greaterchinajobs.g4s.com
+		- job.g4s.com
+		- jobsat.g4s.com
+		- .jobsat.g4s.com
+		- www.specialisttraining.g4s.com
+		- technologycareers.g4s.com
+		- ukjobs.g4s.com
+		- usajobs.g4s.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- africajobs, careers, greaterchinajobs from $self ˢ
+			- amejobs, empleos, greaterchinajobs, jobsat, technologycareers, ukjobs from careers.g4s.com ˢ
+			- amejobs, canadajobs, careers, empleos, greaterchinajobs, jobsat, technologycareers, ukjobs, usajobs from cdn-[123].tribepad.com
+			- empleos from d3lpyoo42b5obf.cloudfront.net ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="G4S.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="africajobs.g4s.com" />
+	<target host="amejobs.g4s.com" />
+	<target host="extranet.au.g4s.com" />
+	<target host="canadajobs.g4s.com" />
+	<target host="careers.g4s.com" />
+	<!--target host="autogestion.co.g4s.com" /-->
+	<target host="community.g4s.com" />
+	<target host="empleos.g4s.com" />
+	<target host="eventsjobsuk.g4s.com" />
+	<target host="gis.g4s.com" />
+	<target host="www.gis.g4s.com" />
+	<target host="greaterchinajobs.g4s.com" />
+	<target host="job.g4s.com" />
+	<target host="jobsat.g4s.com" />
+	<target host="meterreads.g4s.com" />
+	<target host="www.specialisttraining.g4s.com" />
+	<target host="technologycareers.g4s.com" />
+	<target host="ukjobs.g4s.com" />
+	<target host="usajobs.g4s.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www.africajobs.g4s.com" />
+	<target host="www.amejobs.g4s.com" />
+	<target host="www.canadajobs.g4s.com" />
+	<target host="www.careers.g4s.com" />
+	<target host="www.empleos.g4s.com" />
+	<target host="www.eventsjobsuk.g4s.com" />
+	<target host="www.greaterchinajobs.g4s.com" />
+	<target host="www.job.g4s.com" />
+	<target host="www.jobsat.g4s.com" />
+	<target host="specialisttraining.g4s.com" />
+	<target host="www.technologycareers.g4s.com" />
+	<target host="www.ukjobs.g4s.com" />
+	<target host="www.usajobs.g4s.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:(?:www\.)?gis|specialisttraining)\.g4s\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^(?:africajobs|amejobs||canadajobs|careers|empleos|eventsjobsuk|greaterchinajobs|jobsat|technologycareers|ukjobs|usajobs)\.g4s\.com$" name="^(?:PHPSESSID$|X-Mapping-)" /-->
+	<!--securecookie host="^\.(?:africajobs|canadajobs|careers|emploes|greaterchinajobs|jobsat)\.g4s\.com$" name="^_icl_current_language$" /-->
+	<!--securecookie host="^community\.g4s\.com$" name="^X-Mapping-" /-->
+	<!--securecookie host="^job\.g4s\.com$" name="^(?:PHPSESSID$|X-Mapping-|lang_code$)" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://www\.(africajobs|amejobs|canadajobs|empleos|eventsjobsuk|greaterchinajobs|job|jobsat|technologycareers|ukjobs|usajobs)\.g4s\.com/"
+		to="https://$1.g4s.com/" />
+
+	<rule from="^http://specialisttraining\.g4s\.com/"
+		to="https://www.specialisttraining.g4s.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
