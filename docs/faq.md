@@ -29,7 +29,7 @@ You can also report the problem to the site, since they have the power to fix it
 
 ### [Why is HTTPS Everywhere preventing me from joining this hotel/school/other wireless network?](#why-is-https-everywhere-preventing-me-from-joining-this-hotelschoolother-wireless-network)
 
-Some wireless networks hijack your HTTP connections when you first join them, in order to demand authentication or simply to try to make you agree to terms of use. HTTPS pages are protected against this type of hijacking, which is as it should be. If you go to a website that isn't protected by HTTPS Everywhere (currently, nytimes.com is one such site) that will allow your connection to be captured and redirected to the authentication or terms of use page.
+Some wireless networks hijack your HTTP connections when you first join them, in order to demand authentication or simply to try to make you agree to terms of use. HTTPS pages are protected against this type of hijacking, which is as it should be. If you go to a website that isn't protected by HTTPS Everywhere or by HSTS (currently, example.com is one such site), that will allow your connection to be captured and redirected to the authentication or terms of use page.
 
 ### [Will there be a version of HTTPS Everywhere for IE, Safari, or some other browser?](#will-there-be-a-version-of-https-everywhere-for-ie-safari-or-some-other-browser)
 
@@ -67,6 +67,8 @@ If you want to protect yourself against monitoring of the sites you visit, consi
 
 You can learn [how to write rules](https://www.eff.org/https-everywhere/rulesets) that teach HTTPS Everywhere to support new sites. You can install these rules in your own browser or send them to us for possible inclusion in the official version.
 
+Webmasters: See "[How do I add my own site to HTTPS Everywhere?](#how-do-i-add-my-own-site-to-https-everywhere)" below.
+
 ### [What if the site doesn't support HTTPS, or only supports it for some activities, like entering credit card information?](#what-if-the-site-doesnt-support-https-or-only-supports-it-for-some-activities-like-entering-credit-card-information)
 
 You could try to contact the site and point out that using HTTPS for all site features is an increasingly common practice nowadays and protects users (and sites) against a variety of Internet attacks. For instance, it defends against the ability of other people on a wifi network to spy on your use of the site or even take over your account. You can also point out that credit card numbers aren't the only information you consider private or sensitive.
@@ -77,7 +79,7 @@ Sites like Google, Twitter, and Facebook now support HTTPS for non-financial inf
 
 It can be, but some sites have been pleasantly surprised to see how practical it can be. Also, experts at Google are currently implementing several enhancements to the TLS protocol that make HTTPS dramatically faster; if these enhancements are added to the standard soon, the speed gap between the two should almost disappear. See [Adam Langley's description of the HTTPS deployment situation](https://www.imperialviolet.org/2010/06/25/overclocking-ssl.html) for more details on these issues. Notably, Langley states: "In order to [enable HTTPS by default for Gmail] we had to deploy no additional machines and no special hardware. On our production frontend machines, SSL/TLS accounts for less than 1% of the CPU load, less than 10KB of memory per connection and less than 2% of network overhead."
 
-It used to be expensive to purchase a certificate for HTTPS usage, but they can now be obtained for free from [Let's Encrypt](https://letsencrypt.org/) as well.
+It used to be expensive to purchase a certificate for HTTPS usage, but short-term certificates can now be obtained for free from [Let's Encrypt](https://letsencrypt.org/), and long-term certificates from [SSLs.com](https://ssls.com/) are inexpensive.
 
 ### [Why should I use HTTPS Everywhere instead of just typing https:// at the beginning of site names?](#why-should-i-use-https-everywhere-instead-of-just-typing-https-at-the-beginning-of-site-names)
 
@@ -85,7 +87,9 @@ Even if you normally type https://, HTTPS Everywhere might protect you if you oc
 
 ### [Why does HTTPS Everywhere include rules for sites like PayPal that already require HTTPS on all their pages?](#why-does-https-everywhere-include-rules-for-sites-like-paypal-that-already-require-https-on-all-their-pages)
 
-HTTPS Everywhere, like the [HSTS spec](https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security), tries to address an attack called [SSL stripping](https://moxie.org/software/sslstrip/). Users are only protected against the SSL stripping attack if their browsers don't even _try_ to connect to the HTTP version of the site — even if the site would have redirected them to the HTTPS version. With HTTPS Everywhere, the browser won't even attempt the insecure HTTP connection, even if that's what you ask it to do. (Note that HTTPS Everywhere currently does not include a comprehensive list of such sites, which are mainly financial institutions.)
+HTTPS Everywhere, like the [HSTS spec](https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security), tries to address an attack called [SSL stripping](https://moxie.org/software/sslstrip/). Users are only protected against the SSL stripping attack if their browsers don't even _try_ to connect to the HTTP version of the site — even if the site would have redirected them to the HTTPS version. With HTTPS Everywhere, the browser won't even attempt the insecure HTTP connection, even if that's what you ask it to do.
+
+Note that HTTPS Everywhere currently does not include a comprehensive list of such sites, which are mainly financial institutions. Such a list would largely be redundant to the HSTS preload list.
 
 ### [What do the different colors for rulesets in the Firefox toolbar menu mean?](#what-do-the-different-colors-for-rulesets-in-the-firefox-toolbar-menu-mean)
 
