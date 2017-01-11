@@ -4,7 +4,7 @@
 
 	CORS:
 		- www.bilibili.com
-			( test: https://bangumi.bilibili.com/22/ Could not get the error every time. )
+			( test: https://bangumi.bilibili.com/22/ Could not get the error each time. )
 		- api.bilibili.com
 			( test: http://h.bilibili.com/dy\d+ )
 		- comment.bilibili.com
@@ -12,13 +12,23 @@
 		- data.bilibili.com
 			( test: http://h.bilibili.com/dy\d+ or http://bml.bilibili.com/index2016/ )
 
+	Access-Control-Allow-Credentials:true
+	Access-Control-Allow-Methods:POST, GET
+	Access-Control-Allow-Origin:http://www.bilibili.com
+
+	If the origin in request is https, then the server will use Access-Control-Allow-Origin:https://www.bilibili.com instead.
+
+	Which means any redirection executed by https everywhere will be blocked because the origin is dropped after redirect. However, the player requests a protocol-relative URL, so it should be safe to keep this target as we also secured www.bilibili.com .
+
 	MCB:
 		- app.bilibili.com
 		- bangumi.bilibili.com
+		- big.bilibili.com	*( )
 		- bmall.bilibili.com	( css from static.hdslb.com , seems no Broken.)
 		- bml.bilibili.com
 		- h.bilibili.com
 		- search.bilibili.com
+	*	Test in https://big.bilibili.com/site/big.html , click the blue button "积分兑换大会员", requested an insecure resource 'http://vip.bilibili.com/site/vip-exchange-plugin.html?'. This request has been blocked, and now all buttons in the page are broken.
 
 	Mismatch:
 		- ^bilibili.com
@@ -101,12 +111,12 @@
 	<!--	Directly:	-->
 	<target host="account.bilibili.com" />
 		<test url="http://account.bilibili.com/site/nameplate.html" />
-	<target host="big.bilibili.com" />
 	<target host="bmall.bilibili.com" />
 	<target host="game.bilibili.com" />
 	<target host="interface.bilibili.com" />
 		<test url="http://interface.bilibili.com/msg.xml" />
 	<target host="api.live.bilibili.com" />
+		<test url="http://api.live.bilibili.com/feed/v1/feed/heartBeat" />
 	<target host="live-feed.bilibili.com" />
 	<target host="live-trace.bilibili.com" />
 	<target host="message.bilibili.com" />
@@ -116,6 +126,7 @@
 	<target host="planet2017.bilibili.com" />
 	<target host="space.bilibili.com" />
 	<target host="static-s.bilibili.com" />
+	<target host="vip.bilibili.com" />
 	<target host="zb.bilibili.com" />
 
 	<rule from="^http:" to="https:" />
