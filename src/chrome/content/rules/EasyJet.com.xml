@@ -31,13 +31,6 @@ Non-2xx HTTP code: http://easyjet.com/ (200) => http://easyjet.com/ (403)
 	* Some pages redirect to http
 
 
-	Fully covered subdomains:
-
-		- onboarding
-		- js.sc
-		- media.sc
-
-
 	These altnames don't exist:
 
 		- sc.easyjet.com
@@ -53,18 +46,14 @@ Non-2xx HTTP code: http://easyjet.com/ (200) => http://easyjet.com/ (403)
 <ruleset name="easyJet.com (partial)" default_off='failed ruleset test'>
 
 	<target host="easyjet.com" />
-	<target host="*.easyjet.com" />
+	<target host="www.easyjet.com" />
+	<target host="onboarding.easyjet.com" />
+	<target host="js.sc.easyjet.com" />
+	<target host="media.sc.easyjet.com" />
 		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://stafftravel\.easyjet\.com/($|en$)" /-->
-		<!--exclusion pattern="^http://www\.easyjet\.com/($|en/$|en/searchpod\.mvc/showborderless3\?)" /-->
-		<!--
-			Exceptions:
+			CORS issues:
 					-->
-		<exclusion pattern="^http://stafftravel\.easyjet\.com/+(?!asp/en/stafftravel\.asp|common/|favicon\.ico)" />
-		<!--exclusion pattern="^http://www\.easyjet\.com/+(?!Content/|ejcms/|favicon\.ico|fonts/)" /-->
-
+		<exclusion pattern="^http://(?:www\.)?easyjet\.com/ejcms/cache15m/api/" />
 
 	<rule from="^http://(?:www\.)?easyjet\.com/(?=Content/|ejcms/|favicon\.ico|fonts/)"
 		to="https://www.easyjet.com/" />
