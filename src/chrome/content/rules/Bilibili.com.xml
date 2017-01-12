@@ -1,41 +1,107 @@
 <!--
-	Mismatch
-		- ^	
-	Redirect to http
-		- www
-	Different than http
-		- game
-		- h
-		- live
-		- message
-		- news
-		- search
-		- space
-		- yoo
-		
-	Passive mixed content ON
-		- app, pay, passport FROM static.hdslb.com
-		- bangumi            FROM i[0-2].hdslb.com
-	Display mixed content ON
-		- app           FROM activity.hdslb.com
-		- bangumi       FROM static.hdslb.com, s[1-3].hdslb.com
-		- pay, passport FROM api*
-	* Secured by us
+	Relate ruleset:
+		BiliGame.xml
+
+	CORS:
+		- www.bilibili.com
+			( No functional breakage. Test: https://bangumi.bilibili.com/22/ )
+		- api.bilibili.com
+			( Comments are not displaying properly. Test: http://h.bilibili.com/dy\d+ )
+		- data.bilibili.com
+			( No functional breakage. Test: http://h.bilibili.com/dy\d+ or http://bml.bilibili.com/index2016/ )
+
+	MCB:
+		- app.bilibili.com
+		- bangumi.bilibili.com
+		- big.bilibili.com	*
+		- bmall.bilibili.com	( css from static.hdslb.com , seems no Broken.)
+		- bml.bilibili.com
+		- h.bilibili.com
+		- search.bilibili.com
+	*	Test in https://big.bilibili.com/site/big.html , click the blue button "积分兑换大会员", requested an insecure resource 'http://vip.bilibili.com/site/vip-exchange-plugin.html?'. This request has been blocked, and now all buttons in the page are broken.
+
+	Mismatch:
+		- ^bilibili.com
+		- live-api.bilibili.com
+		- yoo.bilibili.com
+
+	Redirect to http:
+		- live.bilibili.com
 -->
+
 <ruleset name="Bilibili.com (partial)">
-	<target host="account.bilibili.com" />
-		<test url="http://account.bilibili.com/site/nameplate.html" />
+
+	<!--	CORS:	-->
 	<target host="api.bilibili.com" />
 		<exclusion pattern="^http://api\.bilibili\.com/$" />
 		<test url="http://api.bilibili.com/x/web-show/res/loc?pf=0&#x26;id=142" />
+		<exclusion pattern="^http://api\.bilibili\.com/x/reply\?jsonp=jsonp" />
+		<test url="http://api.bilibili.com/x/reply?jsonp=jsonp&#x26;oid=190003&#x26;type=3" />
+		<test url="http://api.bilibili.com/x/reply?jsonp=jsonp&#x26;oid=191437&#x26;type=3" />
+
+	<!--	MCB:	-->
+	<target host="app.bilibili.com" />
+		<exclusion pattern="^http://app\.bilibili\.com/(?!images/)" />
+		<test url="http://app.bilibili.com/images/android.html" />
+		<test url="http://app.bilibili.com/mobile/android.html" />
+
+	<target host="bangumi.bilibili.com" />
+		<exclusion pattern="^http://bangumi\.bilibili\.com/moe/2016/" />
+		<test url="http://bangumi.bilibili.com/moe/2016/jp/index" />
+		<test url="http://bangumi.bilibili.com/moe/2016/jp/character/list" />
+
+		<test url="http://bangumi.bilibili.com/22/" />
+		<test url="http://bangumi.bilibili.com/anime/1111" />
+		<test url="http://bangumi.bilibili.com/sponsor/rankweb/get_sponsor_week_list" />
+		<test url="http://bangumi.bilibili.com/web_api/user_area" />
+
 	<target host="bml.bilibili.com" />
+		<exclusion pattern="^http://bml\.bilibili\.com/(?!bml_intro)" />
+		<test url="http://bml.bilibili.com/bml_intro" />
 		<test url="http://bml.bilibili.com/bml_intro?bid=13" />
+
+		<test url="http://bml.bilibili.com/index2016/" />
+		<test url="http://bml.bilibili.com/micro2015/" />
+
+	<target host="h.bilibili.com" />
+		<exclusion pattern="^http://h\.bilibili\.com/(?!css/|js/|images/|img/)" />
+		<test url="http://h.bilibili.com/css/draw_yoo.css" />
+		<test url="http://h.bilibili.com/js/picwall.js" />
+		<test url="http://h.bilibili.com/images/ra.js" />
+		<test url="http://h.bilibili.com/img/Icons2.png" />
+
+		<test url="http://h.bilibili.com/nav.js" />
+		<test url="http://h.bilibili.com/dy190003" />
+		<test url="http://h.bilibili.com/dy191437" />
+		<test url="http://h.bilibili.com/index/pic_banner.json" />
+		<test url="http://h.bilibili.com/login" />
+		<test url="http://h.bilibili.com/member?mod=addbanner&#x26;id=41" />
+
+	<!--	Directly:	-->
+	<target host="www.bilibili.com" />
+	<target host="account.bilibili.com" />
+		<test url="http://account.bilibili.com/site/nameplate.html" />
+	<target host="bmall.bilibili.com" />
+	<target host="comment.bilibili.com" />
 	<target host="data.bilibili.com" />
 		<exclusion pattern="^http://data\.bilibili\.com/$" />
 		<test url="http://data.bilibili.com/a/access.js" />
-	<target host="passport.bilibili.com" />
+	<target host="game.bilibili.com" />
+	<target host="interface.bilibili.com" />
+		<test url="http://interface.bilibili.com/msg.xml" />
+	<target host="api.live.bilibili.com" />
+		<test url="http://api.live.bilibili.com/feed/v1/feed/heartBeat" />
+	<target host="live-feed.bilibili.com" />
+	<target host="live-trace.bilibili.com" />
+	<target host="message.bilibili.com" />
+	<target host="news.bilibili.com" />
 	<target host="pay.bilibili.com" />
+	<target host="passport.bilibili.com" />
+	<target host="planet2017.bilibili.com" />
+	<target host="space.bilibili.com" />
 	<target host="static-s.bilibili.com" />
+	<target host="vip.bilibili.com" />
+	<target host="zb.bilibili.com" />
 
 	<rule from="^http:" to="https:" />
 </ruleset>
