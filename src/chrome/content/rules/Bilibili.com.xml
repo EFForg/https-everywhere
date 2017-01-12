@@ -2,15 +2,13 @@
 	Relate ruleset:
 		BiliGame.xml
 
-	CORS:
+	CORS: https://github.com/EFForg/https-everywhere/pull/7495#discussion_r95588380
 		- www.bilibili.com
-			( detail: https://github.com/EFForg/https-everywhere/pull/7495#discussion_r95588380 )
+			( No functional breakage. Test: https://bangumi.bilibili.com/22/ )
 		- api.bilibili.com
-			( test: http://h.bilibili.com/dy\d+ )
-		- comment.bilibili.com
-			( test: https://www.bilibili.com/video/av\d+/ )
+			( Functional breakage. Test: http://h.bilibili.com/dy\d+ )
 		- data.bilibili.com
-			( test: http://h.bilibili.com/dy\d+ or http://bml.bilibili.com/index2016/ )
+			( No functional breakage. Test: http://h.bilibili.com/dy\d+ or http://bml.bilibili.com/index2016/ )
 
 	MCB:
 		- app.bilibili.com
@@ -34,49 +32,28 @@
 <ruleset name="Bilibili.com (partial)">
 
 	<!--	CORS:	-->
-	<target host="www.bilibili.com" />
-		<exclusion pattern="^http://www\.bilibili\.com/index/index-icon\.json" />
-		<exclusion pattern="^http://www\.bilibili\.com/widget/getSearchDefaultWords" />
-		<test url="http://www.bilibili.com/index/index-icon.json" />
-		<test url="http://www.bilibili.com/widget/getSearchDefaultWords" />
-
 	<target host="api.bilibili.com" />
 		<exclusion pattern="^http://api\.bilibili\.com/$" />
+		<test url="http://api.bilibili.com/x/web-show/res/loc?pf=0&#x26;id=142" />
 		<exclusion pattern="^http://api\.bilibili\.com/x/reply\?jsonp=jsonp" />
 		<test url="http://api.bilibili.com/x/reply?jsonp=jsonp&#x26;oid=190003&#x26;type=3" />
 		<test url="http://api.bilibili.com/x/reply?jsonp=jsonp&#x26;oid=191437&#x26;type=3" />
-		<test url="http://api.bilibili.com/x/web-show/res/loc?pf=0&#x26;id=142" />
-
-	<target host="comment.bilibili.com" />
-		<exclusion pattern="^http://comment\.bilibili\.com/cloud/filter/" />
-		<test url="http://comment.bilibili.com/cloud/filter/5000000.json" />
-		<test url="http://comment.bilibili.com/11998315.xml" />
-
-	<target host="data.bilibili.com" />
-		<exclusion pattern="^http://data\.bilibili\.com/$" />
-		<exclusion pattern="^http://data\.bilibili\.com/e/p" />
-		<exclusion pattern="^http://data\.bilibili\.com/v/web/" />
-		<test url="http://data.bilibili.com/a/access.js" />
-		<test url="http://data.bilibili.com/e/p" />
-		<test url="http://data.bilibili.com/v/web/live_web_statistics?mid=698051" />
-		<test url="http://data.bilibili.com/v/web/web_page_view?mid=698051" />
 
 	<!--	MCB:	-->
 	<target host="app.bilibili.com" />
 		<exclusion pattern="^http://app\.bilibili\.com/(?!images/)" />
 		<test url="http://app.bilibili.com/images/android.html" />
-
 		<test url="http://app.bilibili.com/mobile/android.html" />
 
 	<target host="bangumi.bilibili.com" />
 		<exclusion pattern="^http://bangumi\.bilibili\.com/moe/2016/" />
-		<test url="http://bangumi.bilibili.com/sponsor/rankweb/get_sponsor_week_list" />
-		<test url="http://bangumi.bilibili.com/web_api/user_area" />
-		<test url="http://bangumi.bilibili.com/22/" />
-		<test url="http://bangumi.bilibili.com/anime/1111" />
-
 		<test url="http://bangumi.bilibili.com/moe/2016/jp/index" />
 		<test url="http://bangumi.bilibili.com/moe/2016/jp/character/list" />
+
+		<test url="http://bangumi.bilibili.com/22/" />
+		<test url="http://bangumi.bilibili.com/anime/1111" />
+		<test url="http://bangumi.bilibili.com/sponsor/rankweb/get_sponsor_week_list" />
+		<test url="http://bangumi.bilibili.com/web_api/user_area" />
 
 	<target host="bml.bilibili.com" />
 		<exclusion pattern="^http://bml\.bilibili\.com/(?!bml_intro)" />
@@ -101,9 +78,12 @@
 		<test url="http://h.bilibili.com/member?mod=addbanner&#x26;id=41" />
 
 	<!--	Directly:	-->
+	<target host="www.bilibili.com" />
 	<target host="account.bilibili.com" />
 		<test url="http://account.bilibili.com/site/nameplate.html" />
 	<target host="bmall.bilibili.com" />
+	<target host="comment.bilibili.com" />
+	<target host="data.bilibili.com" />
 	<target host="game.bilibili.com" />
 	<target host="interface.bilibili.com" />
 		<test url="http://interface.bilibili.com/msg.xml" />
