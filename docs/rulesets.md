@@ -35,7 +35,7 @@ The `rule` tags do the actual rewriting work. The `from` attribute of each rule 
     <target host="*.wikipedia.org" />
 
     <rule from="^http://(\w{2})\.wikipedia\.org/wiki/"
-            to="https://secure.wikimedia.org/wikipedia/$1/wiki/"/>
+            to="https://secure.wikimedia.org/wikipedia/$1/wiki/" />
 </ruleset>
 ```
 
