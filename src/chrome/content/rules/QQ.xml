@@ -90,6 +90,7 @@
 			- admin.qun *
 			- user.qzone	504
 			- os.qzs	504
+			- service *
 			- shang *
 			- soft *
 			- t		Shows another domain
@@ -162,7 +163,6 @@
 			- pay ²
 			- qqgame ²
 			- open.qqgame ²
-			- service ³
 			- cdn.tencentgroup ²
 			- cache.tv ³
 			- v ³
@@ -205,7 +205,7 @@
 		- css, on:
 			- ac from ac.gtimg.com
 			- act.daoju from ossweb-img.qq.com
-			- cb, service, cache.tv, v from imgcache.qq.com *
+			- cb, cache.tv, v from imgcache.qq.com *
 			- film, kg, m.v, y, m.y from imgcache.gtimg.cn
 			- igame from i.igcdn.cn
 			- pay from imgcache.qq.com
@@ -213,7 +213,8 @@
 
 		- Images, on:
 			- ac from ac.gtimg.com
-			- cb, kf, pay, service from imgcache.qq.com *
+			- cb, kf, pay from imgcache.qq.com *
+			- kf from file.service.qq.com *
 			- act.daoju, igame from ossweb-img.qq.com
 			- m.exmail from mail.qq.com
 			- film, kg, v, m.v, y, m.y from imgcache.gtimg.cn *
@@ -232,6 +233,20 @@
 	* Secured by us
 -->
 <ruleset name="QQ.com (partial)">
+	<!-- Complications -->
+	<target host="kf.qq.com" />
+	<target host="service.qq.com" />
+		<!-- Redirect to http -->
+		<rule from="^http://(kf|service)\.qq\.com/$"
+			to="https://kf.qq.com/index.html" />
+		<!-- `service` timeout in https -->
+		<rule from="^http://(kf|service)\.qq\.com/"
+			to="https://kf.qq.com/" />
+		<test url="http://kf.qq.com/product/aq.html" />
+		<test url="http://service.qq.com/product/aq.html" />
+		<test url="http://kf.qq.com/product/QQ.html" />
+		<test url="http://service.qq.com/product/QQ.html" />
+
 	<!--target host="ac.qq.com" /-->
 	<target host="aq.qq.com" />
 	<target host="js.aq.qq.com" />
@@ -259,8 +274,6 @@
 	<target host="igame.qq.com" />
 	<target host="imgcache.qq.com" />
 	<target host="ke.qq.com" />
-	<!--	redirects to http and Mixedcontent on https://kf.qq.com/product/weixin.html :
-	target host="kf.qq.com" /-->
 	<target host="kg.qq.com" />
 	<target host="x.l.qq.com" />
 		<test url="http://x.l.qq.com/unique.swf" />
@@ -291,7 +304,6 @@
 	<target host="qian.qq.com" />
 	<target host="r.qq.com" />
 	<target host="reader.qq.com" />
-	<!--target host="service.qq.com" /-->
 	<target host="file.service.qq.com" />
 	<target host="support.qq.com" />
 	<target host="open.t.qq.com" />
