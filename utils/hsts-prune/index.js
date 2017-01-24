@@ -25,6 +25,15 @@ const rules_dir = `${__dirname}/../../src/chrome/content/rules`;
 
 let bar;
 
+let rulesets_changed;
+if('RULESETS_CHANGED' in process.env){
+  rulesets_changed = process.env.RULESETS_CHANGED.split("\n");
+  for(let i in rulesets_changed){
+    let split_path = rulesets_changed[i].split("/");
+    rulesets_changed[i] = split_path[split_path.length - 1];
+  }
+}
+
 // Here begins the process of fetching HSTS rules and parsing the from the
 // relevant URLs
 
@@ -188,7 +197,13 @@ const files =
     bar = new ProgressBar(':bar', { total: rules.length, stream: process.stdout });
   })
   .sequence()
-  .filter(name => name.endsWith('.xml'));
+  .filter(name => {
+    if(rulesets_changed){
+      return ~rulesets_changed.indexOf(name);
+    } else {
+      return name.endsWith('.xml');
+    }
+  });
 
 const sources =
   files.fork()
