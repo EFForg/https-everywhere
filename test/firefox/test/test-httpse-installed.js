@@ -16,9 +16,9 @@ exports["test httpse installed"] = function(assert) {
 
 exports["test httpse potentiallyApplicableRulesets"] = function(assert) {
   let HTTPSRules = HTTPSEverywhere.https_rules;
-  assert.deepEqual(HTTPSRules.potentiallyApplicableRulesets("www.eff.org").length,
+  assert.deepEqual(HTTPSRules.potentiallyApplicableRulesets("www.wikia.com").length,
               1,
-              "Test that HTTPSE finds one applicable rule for www.eff.org");
+              "Test that HTTPSE finds one applicable rule for www.wikia.com");
 }
 
 exports["test sample ruleset"] = function(assert, done) {
