@@ -72,7 +72,7 @@ Cookie.prototype = {
     this.value = nv.join('=') || '';
     
     var n, v;
-    for each (p in parts) {
+    for (p of parts) {
       nv = p.split("=");
       switch (n = nv[0].toLowerCase()) {
         case 'expires':
