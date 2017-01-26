@@ -1,41 +1,36 @@
 <!--
+	Note: This site blocks Tor users.
+
+
 	CDN buckets:
 
 		- rmncdn.com.edgesuite.net
 
-			- a1170.g1.akamai.net
 			- o.rmncdn.com
 
 
-	Nonfunctional domains:
+	Insecure cookies are set for these domains: ᶜ
 
-		- b.retailmenot.com	(refused)
+		- .retailmenot.com
 
-
-	Problematic domains:
-
-		- retailmenot.com ¹
-		- o.rmncdn.com ²
-
-	¹ Dropped
-	² Works, akamai
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="RetailMeNot.com (partial)">
+<ruleset name="RetailMeNot.com">
 
 	<target host="retailmenot.com" />
+	<target host="b.retailmenot.com" />
 	<target host="www.retailmenot.com" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="http://(www\.)?retailmenot\.com/+($|\?|(community/login|community/signup|submit)($|\?))" /-->
-		<!--
-			Exceptions (srsly):
-						-->
-		<!--exclusion pattern="http://(www\.)?retailmenot\.com/+(?!favicon\.ico)" /-->
 
 
-	<rule from="^http://(?:www\.)?retailmenot\.com/favicon\.ico"
-		to="https://www.retailmenot.com/favicon.ico" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.retailmenot\.com$" name="^(?:country_code|deviceFingerprint|rqid|session|userFlashVersion|userQualifier|visit_count|visitor)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

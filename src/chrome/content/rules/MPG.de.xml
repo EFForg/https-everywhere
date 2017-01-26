@@ -1,28 +1,29 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://mpg.de/ => https://mpg.de/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
-	Fully covered subdomains:
+	Insecure cookies are set for these hosts: ᶜ
 
-		- (www.)
-		- www.cbs
-		- (www.)dsb
+		- www.cbs.mpg.de
+		- www.mpg.de
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="MPG.de" default_off='failed ruleset test'>
+<ruleset name="MPG.de">
 
 	<target host="mpg.de" />
-	<target host="*.mpg.de" />
+	<target host="www.cbs.mpg.de" />
+	<target host="dsb.mpg.de" />
+	<target host="www.dsb.mpg.de" />
+	<target host="www.mpg.de" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^www\.cbs\.mpg\.de$" name="^zope3_cs_\w{7}$" /-->
-	<!--securecookie host="^www\.mpg\.de$" name="^_mpg_session$" /-->
+	<!--securecookie host="^www\.(?:cbs\.)?mpg\.de$" name="^_mpg_session_r$" /-->
 
-	<securecookie host="^www\.(?:cbs\.)?mpg\.de$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://((?:www\.cbs|(?:www\.)?dsb|www)\.)?mpg\.de/"
-		to="https://$1mpg.de/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

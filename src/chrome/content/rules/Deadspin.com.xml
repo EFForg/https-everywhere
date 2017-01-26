@@ -2,19 +2,70 @@
 	For other Gawker coverage, see Gawker.xml.
 
 
-	CN: *.a.ssl.fastly.net
+	Problematic hosts in *deadspin.com:
+
+		- cache ᵐ
+
+	ᵐ Mismatched, CN: *.a.ssl.fastly.net
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- deadspin.com
+		- (column_name).deadspin.com
+		- www.deadspin.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bugs on ^, (column_name) from b.scorecardresearch.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Deadspin.com" default_off="mismatched">
+<ruleset name="Deadspin.com">
 
 	<target host="deadspin.com" />
 	<target host="*.deadspin.com" />
 
+		<exclusion pattern="^http://(?:[^./]+\.){2,}deadspin\.com/" />
 
-	<securecookie host="^\.?deadspin\.com$" name=".+" />
+			<!--	+ve:
+					-->
+			<test url="http://this.host.deadspin.com/" />
+			<test url="http://exists.not.deadspin.com/" />
+
+		<!--	Direct rewrites:
+					-->
+		<test url="http://adequateman.deadspin.com/" />
+		<test url="http://fittish.deadspin.com/" />
+		<test url="http://foodspin.deadspin.com/" />
+		<test url="http://rabbithole.deadspin.com/" />
+		<test url="http://regressing.deadspin.com/" />
+		<test url="http://screamer.deadspin.com/" />
+		<test url="http://screengrabber.deadspin.com/" />
+		<test url="http://theconcourse.deadspin.com/" />
+		<test url="http://thestacks.deadspin.com/" />
+		<test url="http://www.deadspin.com/" />
+
+		<!--	Complications:
+					-->
+		<test url="http://cache.deadspin.com/" />
 
 
-	<rule from="^http://(?:www\.)?deadspin\.com/"
-		to="https://deadspin.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:(column_name)\.|www\.)?deadspin\.com$" name="^geocc$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://cache\.deadspin\.com/"
+		to="https://cache.gawkerassets.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

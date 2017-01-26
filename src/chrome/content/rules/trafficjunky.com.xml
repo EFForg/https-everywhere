@@ -1,0 +1,62 @@
+<!--
+	Other TrafficJunky rulesets:
+
+		- TrafficJunky.xml
+
+
+	Nonfunctional hosts in *trafficjunky.com:
+
+		- blog ʳ
+
+	ʳ Refused
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- trafficjunky.com
+		- www.trafficjunky.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="TrafficJunky.com (partial)">
+
+	<target host="trafficjunky.com" />
+	<target host="static.trafficjunky.com" />
+	<target host="www.trafficjunky.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?trafficjunky\.com/(?:$|about-us$|mobile$|privacy-policy$|publishers$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?trafficjunky\.com/(?!/*(?:member/forgotpassword|signin|signup)(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.trafficjunky.com/about-us" />
+			<test url="http://www.trafficjunky.com/about-us/newsletter" />
+			<test url="http://www.trafficjunky.com/advertisers" />
+			<test url="http://www.trafficjunky.com/mobile" />
+			<test url="http://www.trafficjunky.com/privacy-policy" />
+			<test url="http://www.trafficjunky.com/publishers" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.trafficjunky.com/signin" />
+			<test url="http://www.trafficjunky.com/member/forgotpassword" />
+			<test url="http://www.trafficjunky.com/signup" />
+
+		<test url="http://static.trafficjunky.com/mp3/bundles/manwinadsbase/images/TJ/front/body_bg.png?v=3" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?trafficjunky\.com$" name="^(?:PHPSESSID|RNLBSERVERID)$" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

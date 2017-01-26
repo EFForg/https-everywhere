@@ -1,0 +1,71 @@
+<!--
+	Borough Council of King's Lynn and West Norfolk
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *west-norfolk.gov.uk:
+
+		- apps ᵇ
+		- democracy ³
+		- homechoice ᵖ
+		- m ᵇ
+
+	³ 403
+	ᵇ Shows default page
+	ᵖ Plaintext reply
+
+
+	Problematic hosts in *west-norfolk.gov.uk:
+
+		- consult ᵐ
+		- mylimehouse ᵐ
+
+	ᵐ Mismatched
+
+
+	These altnames do not exist:
+
+		- mail.west-norfolk.gov.uk
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .www.west-norfolk.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="West-Norfolk.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="west-norfolk.gov.uk" />
+	<target host="autodiscover.west-norfolk.gov.uk" />
+	<target host="owa.west-norfolk.gov.uk" />
+	<target host="parkingpermits.west-norfolk.gov.uk" />
+	<target host="www.west-norfolk.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="consult.west-norfolk.gov.uk" />
+	<target host="mylimehouse.west-norfolk.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.www\.west-norfolk\.gov\.uk$" name="^TestCookie$" /-->
+
+	<securecookie host="^(?!\.west-norfolk\.gov\.uk$)." name="." />
+
+
+	<rule from="^http://consult\.west-norfolk\.gov\.uk/"
+		to="https://west-norfolk-consult.objective.co.uk/" />
+
+	<rule from="^http://mylimehouse\.west-norfolk\.gov\.uk/"
+		to="https://west-norfolk.objective.co.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

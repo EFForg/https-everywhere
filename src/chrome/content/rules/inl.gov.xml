@@ -1,0 +1,165 @@
+<!--
+	Idaho National Laboratory
+
+	For other U.S. government coverage, see US-government.xml.
+
+
+	Nonfunctional hosts in *inl.gov:
+
+		- (www.)?amwtp ʳ
+		- communicationsystems2013 ⁴
+		- controlsystems2013 ⁴
+		- cybersystems2013 ⁴
+		- gridgame ⁴
+		- hydropower ᵈ
+		- irphep ᵈ
+		- newsdesk ⁴
+		- nrcoe ⁴
+		- nuclear ᵈ
+		- rcschallenge ⁴
+		- resilienceweek2014 ⁴
+		- resilienceweek2015 ⁴
+		- resweek2013 ⁴
+		- www4vip ʳ
+
+	⁴ 404
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *inl.gov:
+
+		- thinktank ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- inl.gov
+		- .inl.gov
+		- atmsuf.inl.gov
+		- cset.inl.gov
+		- fukushima.inl.gov
+		- intlcareers.inl.gov
+		- nmed.inl.gov
+		- nrod.inl.gov
+		- www.inl.gov
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on bioenergylibrary from fonts.googleapis.com ˢ
+		- Bug on at from go.microsoft.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="INL.gov (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="inl.gov" />
+	<target host="art.inl.gov" />
+	<target host="artsci.inl.gov" />
+	<target host="at.inl.gov" />
+	<target host="atmsuf.inl.gov" />
+	<target host="avt.inl.gov" />
+	<target host="bioenergy.inl.gov" />
+	<target host="bioenergylibrary.inl.gov" />
+	<target host="bison.inl.gov" />
+	<target host="busoperations.inl.gov" />
+	<target host="cset.inl.gov" />
+	<target host="dmzadfs.inl.gov" />
+	<target host="factsheets.inl.gov" />
+	<target host="fuelcycleevaluation.inl.gov" />
+	<target host="fukushima.inl.gov" />
+	<target host="gain.inl.gov" />
+	<target host="icis.inl.gov" />
+	<target host="inlcareers.inl.gov" />
+	<target host="inldigitallibrary.inl.gov" />
+	<target host="inlrecruiting.inl.gov" />
+	<target host="inr.inl.gov" />
+	<target host="ldrd.inl.gov" />
+	<target host="lwrs.inl.gov" />
+	<target host="mapep.inl.gov" />
+	<target host="mir.inl.gov" />
+	<target host="moose.inl.gov" />
+	<target host="neup.inl.gov" />
+	<target host="nmed.inl.gov" />
+	<target host="nrod.inl.gov" />
+	<target host="nuclearinnovationworkshop.inl.gov" />
+	<target host="relap7.inl.gov" />
+	<target host="renewableenergy.inl.gov" />
+	<target host="secureportal.inl.gov" />
+	<target host="secureweb.inl.gov" />
+	<target host="smr.inl.gov" />
+	<target host="snrworkshop.inl.gov" />
+	<target host="sp13dmztheme.inl.gov" />
+	<!--target host="thinktank.inl.gov" /-->
+	<target host="wnwn.inl.gov" />
+	<target host="www.inl.gov" />
+
+		<!--	Mixed stylesheet:
+							-->
+		<!--test url="http://bioenergylibrary.inl.gov/Home/Login.aspx" /-->
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://cset.inl.gov/SitePages/Defect%20Tracker.aspx" /-->
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://secureportal.inl.gov/caestrain/" />
+		<test url="http://secureweb.inl.gov/Resweek2014/Plenary.aspx" />
+
+	<!--	Complications:
+				-->
+	<target host="amwtp.inl.gov" />
+	<target host="www.amwtp.inl.gov" />
+	<target host="nuclear.inl.gov" />
+
+		<!--	Not all paths redirect:
+						-->
+		<exclusion pattern="^http://(?:amwtp|www\.amwtp|nuclear)\.inl\.gov/(?!/*(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://amwtp.inl.gov/Home/PrivacyStatement" />
+			<test url="http://amwtp.inl.gov/Jobs/Apply/12" />
+			<test url="http://www.amwtp.inl.gov/Jobs/Download/2" />
+			<test url="http://www.amwtp.inl.gov/Jobs/EVerify" />
+			<test url="http://nuclear.inl.gov/gen4/msr.shtml" />
+			<test url="http://nuclear.inl.gov/gen4/scwr.shtml" />
+			<test url="http://nuclear.inl.gov/gougar.shtml" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?inl\.gov$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.inl\.gov$" name="-PSJSESSIONID$" /-->
+	<!--securecookie host="^(?:cset)?\.inl\.gov$" name="^citrix_ns_id" /-->
+	<!--securecookie host="^(?:atmsuf|fukushima|nmed|nrod)\.inl\.gov$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^intlcareers\.inl\.gov$" name="^__RequestVerificationToken$" /-->
+
+	<securecookie host="^(?!amwtp\.|www\.amwtp\.|nuclear\.)\w" name="." />
+
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://(?:www\.)?amwtp\.inl\.gov/.*"
+		to="https://idahocleanupproject.com/" />
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://nuclear\.inl\.gov/.*"
+		to="https://inlportal.inl.gov/portal/server.pt?open=512&amp;objID=277&amp;mode=2" />
+
+		<test url="http://nuclear.inl.gov/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

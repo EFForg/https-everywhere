@@ -1,0 +1,54 @@
+<!--
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *met.police.uk:
+
+		- content ᵈ
+		- media ᵈ
+		- maps ᵈ
+		- safe ᵈ
+		- www ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *met.police.uk:
+
+		- news ᵐ
+
+	ᵐ Mismatched
+
+
+	^met.police.uk does not exist.
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .police.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Met.Police.uk (partial)">
+
+	<target host="online.met.police.uk" />
+	<target host="secure.met.police.uk" />
+
+		<!--	$ redirects to another domain, so:
+								-->
+		<test url="http://secure.met.police.uk/hatecrime_national/index.php" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.police\.uk$" name="^(?:_mynewsdesk_session|origin_site|picked_site)$" /-->
+
+	<securecookie host="^\." name="_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

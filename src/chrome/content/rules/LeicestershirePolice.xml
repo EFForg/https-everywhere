@@ -1,19 +1,36 @@
 <!--
-	For Leicestershire Police
+	Leicestershire Police
 
-		Works:
 
-			- $
-			- www
+	Problematic hosts in *leics.police.uk:
 
-		Mismatch:
+		- helicopter ᵐ
 
-			- helicopter.leics.police.uk
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- leics.police.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Leicestershire Police">
+<ruleset name="Leics.Police.uk">
+
 	<target host="leics.police.uk" />
 	<target host="www.leics.police.uk" />
 
-	<rule from="^http:" to="https:" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^leics\.police\.uk$" name="^csrftoken$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

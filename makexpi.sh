@@ -84,6 +84,7 @@ die() {
 }
 
 bash utils/validate.sh
+cp pkg/rulesets.json src/chrome/content/rulesets.json
 
 # The name/version of the XPI we're building comes from src/install.rdf
 XPI_NAME="pkg/$APP_NAME-`grep em:version src/install.rdf | sed -e 's/[<>]/	/g' | cut -f3`"
@@ -99,7 +100,7 @@ fi
 
 # Prepare packages suitable for uploading to EFF and AMO, respectively.
 [ -d pkg ] || mkdir pkg
-rsync -a --delete --delete-excluded --exclude /chrome/content/rules src/ pkg/xpi-eff
+rsync -aL --delete --delete-excluded --exclude /chrome/content/rules src/ pkg/xpi-eff
 cp -a translations/* pkg/xpi-eff/chrome/locale/
 rsync -a --delete pkg/xpi-eff/ pkg/xpi-amo
 # The AMO version of the package cannot contain the updateKey or updateURL tags.

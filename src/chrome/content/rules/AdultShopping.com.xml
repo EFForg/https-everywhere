@@ -1,5 +1,15 @@
 <!--
-	Insecure cookies are set for these hosts:
+	For other CNV.com coverage, see cnv.com.xml.
+
+
+	Problematic hosts in *adultshopping.com:
+
+		- store ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
 
 		- admin.adultshopping.com
 		- affiliates.adultshopping.com
@@ -7,16 +17,20 @@
 		- secure.adultshopping.com
 		- www.adultshopping.com
 
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
 
 	Mixed content:
 
-		- css on www from fonts.googleapis.com
+		- css on www from fonts.googleapis.com ˢ
 
 		- Images, on:
 
-			- admin, affiliates, checkout, secure from cnvassets.s3.amazonaws.com
-			- admin, affiliates, checkout, secure from d1o1wlqwda3y1b.cloudfront.net
-			- admin, affiliates, checkout, secure from d235bdyk0zpoq6.cloudfront.net
+			- admin, affiliates, checkout, secure from cnvassets.s3.amazonaws.com ˢ
+			- admin, affiliates, checkout, secure from d1o1wlqwda3y1b.cloudfront.net ˢ
+			- admin, affiliates, checkout, secure from d235bdyk0zpoq6.cloudfront.net ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="AdultShopping.com">
@@ -30,13 +44,26 @@
 	<target host="secure.adultshopping.com" />
 	<target host="www.adultshopping.com" />
 
+	<!--	Complications:
+				-->
+	<target host="store.adultshopping.com" />
+
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^(?:admin|affiliates|checkout|secure|www)\.adultshopping\.com$" name="^laravel_session$" /-->
 
-	<securecookie host="^(?:admin|affiliates|checkout|secure|www)\.adultshopping\.com$" name=".+" />
+	<securecookie host="^\." name="^(?:optimizely|_gat?$|_gat_)" />
+	<securecookie host="^\w" name="." />
 
+
+	<!--	s? for protocol-relative redirects
+		from affiliates & secure:
+						-->
+	<rule from="^https?://store\.adultshopping\.com/"
+		to="https://checkout.adultshopping.com/" />
+
+		<test url="https://store.adultshopping.com/" />
 
 	<rule from="^http:"
 		to="https:" />

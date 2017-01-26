@@ -38,25 +38,32 @@ var switchPlannerInfo = {};
 
 // Is HTTPSe enabled, or has it been manually disabled by the user?
 var isExtensionEnabled = true;
-// The setBadgeText API has an abandoned bug: https://crbug.com/170413
-chrome.browserAction.setBadgeText({ text: "" });
 
 // Load prefs about whether http nowhere is on. Structure is:
 //  { httpNowhere: true/false }
 var httpNowhereOn = false;
 storage.get({httpNowhere: false}, function(item) {
   httpNowhereOn = item.httpNowhere;
-  setIconColor();
+  updateState();
 });
 chrome.storage.onChanged.addListener(function(changes, areaName) {
   if (areaName === 'sync' || areaName === 'local') {
     for (var key in changes) {
       if (key === 'httpNowhere') {
         httpNowhereOn = changes[key].newValue;
-        setIconColor();
+        updateState();
       }
     }
   }
+});
+chrome.tabs.onActivated.addListener(function() {
+  updateState();
+});
+chrome.windows.onFocusChanged.addListener(function() {
+  updateState();
+});
+chrome.webNavigation.onCompleted.addListener(function() {
+  updateState();
 });
 
 /**
@@ -88,26 +95,35 @@ loadStoredUserRules();
 
 /**
  * Set the icon color correctly
- * Depending on http-nowhere it should be red/default
+ * inactive: extension is enabled, but no rules were triggered on this page.
+ * blocking: extension is in "block all HTTP requests" mode.
+ * active: extension is enabled and rewrote URLs on this page.
+ * disabled: extension is disabled from the popup menu.
  */
-var setIconColor = function() {
-  var newIconPath = httpNowhereOn ? './icon38-red.png' : './icon38.png';
-  chrome.browserAction.setIcon({
-    path: newIconPath
+var updateState = function() {
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    if (!tabs || tabs.length === 0) {
+      return;
+    }
+    var applied = activeRulesets.getRulesets(tabs[0].id)
+    var iconState = "inactive";
+    if (!isExtensionEnabled) {
+      iconState = "disabled";
+    } else if (httpNowhereOn) {
+      iconState = "blocking";
+    } else if (applied) {
+      iconState = "active";
+    }
+    chrome.browserAction.setIcon({
+      path: {
+        "38": "icons/icon-" + iconState + "-38.png"
+      }
+    });
+    chrome.browserAction.setTitle({
+      title: "HTTPS Everywhere (" + iconState + ")"
+    });
   });
-};
-
-/*
-for (var v in localStorage) {
-  log(DBUG, "localStorage["+v+"]: "+localStorage[v]);
 }
-
-var rs = all_rules.potentiallyApplicableRulesets("www.google.com");
-for (r in rs) {
-  log(DBUG, rs[r].name +": "+ rs[r].active);
-  log(DBUG, rs[r].name +": "+ rs[r].default_state);
-}
-*/
 
 /**
  * Adds a new user rule
@@ -225,8 +241,6 @@ function onBeforeRequest(details) {
   }
 
   var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
-  // If no rulesets could apply, let's get out of here!
-  if (potentiallyApplicable.size === 0) { return {cancel: shouldCancel}; }
 
   if (redirectCounter[details.requestId] >= 8) {
     log(NOTE, "Redirect counter hit for " + canonical_url);
@@ -266,6 +280,15 @@ function onBeforeRequest(details) {
   }
 
   if (httpNowhereOn) {
+    // If loading a main frame, try the HTTPS version as an alternative to
+    // failing.
+    if (shouldCancel) {
+      if (!newuristr) {
+        return {redirectUrl: canonical_url.replace(/^http:/, "https:")};
+      } else {
+        return {redirectUrl: newuristr.replace(/^http:/, "https:")};
+      }
+    }
     if (newuristr && newuristr.substring(0, 5) === "http:") {
       // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
       return {cancel: true};

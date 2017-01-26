@@ -56,7 +56,6 @@
 	<target host="xkcd.com" />
 	<target host="3d.xkcd.com" />
 	<!--
-	<target host="c.xkcd.com" />
 	<target host="c0.xkcd.com" />
 	<target host="c1.xkcd.com" />
 	<target host="c2.xkcd.com" />
@@ -79,6 +78,7 @@
 
 	<!--	Complications:
 				-->
+	<target host="c.xkcd.com" />
 	<target host="www.store.xkcd.com" />
 
 	<target host="xkcd.org" />
@@ -88,14 +88,21 @@
 
         <exclusion pattern="^http://(www\.|m\.)?xkcd\.com/1663/" />
 
+		<test url="http://xkcd.com/1663/" />
+		<test url="http://m.xkcd.com/1663/" />
+		<test url="http://www.xkcd.com/1663/" />
 
-        <test url="http://xkcd.com/1663/" />
-        <test url="http://m.xkcd.com/1663/" />
-        <test url="http://www.xkcd.com/1663/" />
+	<exclusion pattern="^http://c\.xkcd\.com/" />
 
 
 	<rule from="^http://(www\.|m\.)?xkcd\.org/"
 		to="https://$1xkcd.com/" />
+
+	<rule from="^https://c\.xkcd\.com/"
+		to="http://c.xkcd.com/"
+		downgrade="1" />
+
+		<test url="https://c.xkcd.com/" />
 
 	<rule from="^http://www\.store\.xkcd\.com/"
 		to="https://store.xkcd.com/" />

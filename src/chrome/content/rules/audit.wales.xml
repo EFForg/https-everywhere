@@ -1,0 +1,52 @@
+<!--
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Problematic hosts in *audit.wales:
+
+		- autodiscover * ᵐ
+
+	* Does not redirect
+	ᵐ Mismatched
+
+
+	These altnames do not exist:
+
+		- mail.audit.wales
+		- owa.audit.wales
+
+
+	Mixed content:
+
+		- css on (www.)? from fonts.googleapis.com ˢ
+		- Images on (www.)? from audit.wales ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Audit.Wales">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="audit.wales" />
+	<target host="www.audit.wales" />
+
+	<!--	Complications:
+				-->
+	<target host="autodiscover.audit.wales" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://autodiscover\.audit\.wales/.*"
+		to="https://email.wao.gov.uk/owa" />
+
+		<test url="http://autodiscover.audit.wales/default.aspx" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -6,6 +6,7 @@
 
 	Nonfunctional hosts in *kent.gov.uk:
 
+		- beta ʰ
 		- local ʰ
 		- whatson ʳ
 
@@ -21,7 +22,7 @@
 		- www.eis ᵐ
 
 	ᵐ Mismatched
-	ʳ Refused
+	ʳ Refused, preemptable redirect
 	ˢ Self-signed
 
 
@@ -30,8 +31,9 @@
 		- www.ola.kent.gov.uk
 
 	
-	Insecure cookies are set for these hosts:
+	Insecure cookies are set for these hosts: ᶜ
 
+		- beta.kent.gov.uk
 		- consult.kent.gov.uk
 		- democracy.kent.gov.uk
 		- www.eis.kent.gov.uk
@@ -44,6 +46,8 @@
 		- webapps.kent.gov.uk
 		- www.kent.gov.uk
 
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
 
 	Mixed content:
 
@@ -52,7 +56,7 @@
 			- consultations from fonts.googleapis.com ˢ
 			- www.eis, oktd, admin.oktd, open, admin.open from www.google.com ˢ
 
-	ˢ Secured by us
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="Kent.gov.uk (partial)">
@@ -73,27 +77,15 @@
 
 	<!--	Complications:
 				-->
+	<target host="consult.kent.gov.uk" />
 	<target host="digital.kent.gov.uk" />
 	<target host="www.eis.kent.gov.uk" />
 
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://www\.kent\.gov\.uk/$" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://(?:www\.)?kent\.gov\.uk/+(?!__data/|jobs/jobs-at-kent-county-council$)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://www.kent.gov.uk/about-the-council" />
-			<test url="http://www.kent.gov.uk/business/trading-standards/consumer-protection/consumer-alerts" />
-			<test url="http://www.kent.gov.uk/roads-and-travel" />
-
-			<!--	-ve:
-					-->
-			<test url="http://www.kent.gov.uk/__data/assets/image/0005/52907/Dry-january-970-banner.jpg" />
-			<test url="http://www.kent.gov.uk/jobs/jobs-at-kent-county-council" />
+		<!--	Formerly redirected to http:
+							-->
+		<test url="http://www.kent.gov.uk/about-the-council" />
+		<test url="http://www.kent.gov.uk/business/trading-standards/consumer-protection/consumer-alerts" />
+		<test url="http://www.kent.gov.uk/roads-and-travel" />
 
 
 	<!--	Not secured by server:
@@ -102,10 +94,13 @@
 	<!--securecookie host="^(?:democracy|netloan)\.kent\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
 	<!--securecookie host="^(?:www\.eis|shareweb|webapps)\.kent\.gov\.uk$" name="^ISAWPLB\{[\dA-F]{8}(?:-[\da-f]{4}){3}-[\dA-F]{8}\}$" /-->
 	<!--securecookie host="^(?:oktd|admin\.oktd|open|admin\.open)\.kent\.gov\.uk$" name="^(?:CFGLOBALS|CFID|CFTOKEN|ISAWPLB\{[\dA-F]{8}(?:-[\da-f]{4}){3}-[\dA-F]{8}\})$" /-->
-	<!--securecookie host="^www\.kent\.gov\.uk$" name="^SQ_SYSTEM_SESSION$" /-->
+	<!--securecookie host="^(?:beta|www)\.kent\.gov\.uk$" name="^SQ_SYSTEM_SESSION$" /-->
 
-	<securecookie host="^(?!www\.)\w" name="." />
+	<securecookie host="^\w" name="." />
 
+
+	<rule from="^http://consult\.kent\.gov\.uk/"
+		to="https://kent-consult.objective.co.uk/" />
 
 	<!--	Redirect keeps path amd args,
 		but not forward slash:

@@ -10,12 +10,28 @@
 
 
 	STS header includes includeSubdomains
+	for ^, ask, www
 
 -->
 <ruleset name="RDO project.org">
 
 	<target host="rdoproject.org" />
 	<target host="*.rdoproject.org" />
+
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?:(?![^./]+\.(?:ask|www)\.rdoproject\.org/)(?:[^./]+\.){2,}|(?:[^./]+\.){2,}(?:ask|www)\.)rdoproject\.org/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.rdoproject.org/" />
+			<test url="http://exists.not.rdoproject.org/" />
+			<test url="http://this.host.ask.rdoproject.org/" />
+			<test url="http://exists.not.ask.rdoproject.org/" />
+			<test url="http://this.host.www.rdoproject.org/" />
+			<test url="http://exists.not.www.rdoproject.org/" />
+			<test url="http://really.and.www.rdoproject.org/" />
+			<test url="http://honestly.not.www.rdoproject.org/" />
 
 		<test url="http://trunk.rdoproject.org/" />
 		<test url="http://www.rdoproject.org/" />

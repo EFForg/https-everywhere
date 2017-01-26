@@ -2,11 +2,13 @@ sudo: required
 language: generic
 services:
   - docker
-before_install:
-  - docker build -t httpse .
 script:
-  - docker run --rm -ti -v $(pwd):/opt -e FIREFOX=/$FIREFOX/firefox/firefox httpse bash -c "./test.sh"
-  - docker run --rm -ti -v $(pwd):/opt -e FIREFOX=/$FIREFOX/firefox/firefox --privileged httpse bash -c "service miredo start && test/travis-ruleset-fetch.sh"
+  - test/travis.sh
 env:
-  - FIREFOX=firefox-latest
-  - FIREFOX=firefox-esr-latest
+  - TEST=firefox FIREFOX=firefox-dev
+  - TEST=firefox FIREFOX=firefox-latest
+  - TEST=firefox FIREFOX=firefox-esr-latest
+  - TEST=chromium
+  - TEST=rules
+  - TEST=fetch
+  - TEST=preloaded

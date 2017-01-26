@@ -1,32 +1,44 @@
 <!--
-	Fully covered subdomains:
+	For other TrafficJunky coverage, see trafficjunky.com.xml.
 
-		- (www.)
-		- ads
-		- cdn\d*:
 
-			- cdn10
+	Problematic hosts in *trafficyjunky.net:
 
-		- marketplace
-		- pt
+		- cdn11 ᵐ
+		- beta.marketplace ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- marketplace.trafficjunky.net
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="TrafficJunky.net">
+<ruleset name="TrafficJunky.net (partial)">
 
 	<target host="trafficjunky.net" />
-	<target host="*.trafficjunky.net" />
+	<target host="ads.trafficjunky.net" />
+	<target host="cdn10.trafficjunky.net" />
+	<target host="marketplace.trafficjunky.net" />
+	<target host="media.trafficjunky.net" />
+	<target host="pt.trafficjunky.net" />
+	<target host="www.trafficjunky.net" />
+
+		<test url="http://cdn10.trafficjunky.net/html5video/video-js.css" />
+		<test url="http://media.trafficjunky.net/delivery/js/abp/js1.js" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^marketplace\.trafficjunky\.net$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^marketplace\.trafficjunky\.net$" name="^RNLBSERVERID$" /-->
 
-	<securecookie host="^(?:marketplace|www)\.trafficjunky\.net$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
-	<!--	ads: included on 3rd-party websites.
-							-->
-	<rule from="^http://((?:ads|cdn\d*|marketplace|pt|www)\.)?trafficjunky\.net/"
-		to="https://$1trafficjunky.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
