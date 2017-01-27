@@ -258,7 +258,9 @@ async.parallel({
         }
 
         let [name, source, ruleset] = ruleset_data;
-        bar.tick();
+        if(!rulesets_changed){
+          bar.tick();
+        }
 
         let targets = ruleset.target.map(target => target.$.host);
 
@@ -296,6 +298,7 @@ async.parallel({
                 if(err) return cb(err);
                 if(meets_header_requirements){
                   for(let target of preload_check_mapping[included_domain]){
+                    console.log(`Removing ${target} from ${name}`);
                     source = remove_target_from_xml(source, target);
                     source_overwritten = true;
                   }
