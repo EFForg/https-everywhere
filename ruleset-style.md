@@ -92,11 +92,11 @@ Here is an example ruleset pre-style guidelines:
 
 ```xml
 <ruleset name="WHATWG.org">
-  <target host='whatwg.org' />
-  <target host="*.whatwg.org" />
+	<target host='whatwg.org' />
+	<target host="*.whatwg.org" />
 
-  <rule from="^http://((?:developers|html-differences|images|resources|\w+\.spec|wiki|www)\.)?whatwg\.org/"
-    to="https://$1whatwg.org/" />
+	<rule from="^http://((developers|html-differences|images|resources|\w+\.spec|wiki|www)\.)?whatwg\.org/"
+		to="https://$1whatwg.org/" />
 </ruleset>
 ```
 
@@ -119,7 +119,6 @@ test URLs:
 	<test url="http://xhr.spec.whatwg.org/" />
 	<test url="http://dom.spec.whatwg.org/" />
 
-	<rule from="^http:"
-		to="https:" />
+	<rule from="^http:" to="https:" />
 </ruleset>
 ```
