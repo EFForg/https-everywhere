@@ -30,18 +30,18 @@ target host with a left-side wildcard, and at least ten test URLs for each
 target host with a right-side wildcard. But this is not yet implemented.
 
 # Example:
-	<ruleset name="example.com">
-		<target host="example.com" />
-		<target host="*.example.com" />
+```xml
+<ruleset name="example.com">
+	<target host="example.com" />
+	<target host="*.example.com" />
 
-		<test url="http://www.example.com/" />
-		<test url="http://beta.example.com/" />
+	<test url="http://www.example.com/" />
+	<test url="http://beta.example.com/" />
 
-		<rule from="^http://([\w-]+\.)?example\.com/"
-			to="https://$1example.com/" />
-
-	</ruleset>
-
+	<rule from="^http://([\w-]+\.)?example\.com/"
+		to="https://$1example.com/" />
+</ruleset>
+```
 This ruleset has one implicit test URL from a target host
 ("http://example.com/"). The other target host has a wildcard, so creates no
 implicit test URL. There's a single rule. That rule contains a '+' and a '?', so
