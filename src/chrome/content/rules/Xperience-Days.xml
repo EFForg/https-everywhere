@@ -1,21 +1,69 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://xperiencedays.com/ => https://secure.xperiencedays.com/: Cycle detected - URL already encountered: https://secure.xperiencedays.com/
-Fetch error: http://secure.xperiencedays.com/ => https://secure.xperiencedays.com/: Cycle detected - URL already encountered: https://secure.xperiencedays.com/
-Fetch error: http://static.xperiencedays.com/ => https://secure.xperiencedays.com/: Cycle detected - URL already encountered: https://secure.xperiencedays.com/
-Fetch error: http://www.xperiencedays.com/ => https://secure.xperiencedays.com/: Cycle detected - URL already encountered: https://secure.xperiencedays.com/
+	For rules covering resources which do not secure
+	mixed content, see xperiencedays.com-resources.xml.
+
+
+	Problematic hosts in *xperiencedays.com:
+
+		- media ᵉ
+		- secure ᵉ
+
+	ᵉ Expired
+
 -->
-<ruleset name="Xperience Days.com" default_off='failed ruleset test'>
+<ruleset name="Xperience Days.com (partial)" default_off="testing">
+
 	<target host="xperiencedays.com" />
-	<target host="secure.xperiencedays.com" />
-	<target host="static.xperiencedays.com" />
 	<target host="www.xperiencedays.com" />
 
-	<securecookie host="^secure\.xperiencedays\.com$"
-			name=".+" />
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?xperiencedays\.com/(?:$|account$|account/password$|checkout/cart$|privacy-policy$|redeem$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(?:www\.)?xperiencedays\.com/(?!account/logon(?:$|[?/])|assets/|min/)" /-->
+		<!--
+			Reduce non-Tor distinguishability:
+								-->
+		<exclusion pattern="^http://(?:www\.)?xperiencedays\.com/(?!account/logon(?:$|[?/]))" />
 
-	<rule from="^http://secure\.xperiencedays\.com/"
-		to="https://secure.xperiencedays.com/" />
-	<rule from="^http://(?:static\.|www\.)?xperiencedays\.com/"
-		to="https://secure.xperiencedays.com/" />
+			<!--	+ve:
+					-->
+			<test url="http://xperiencedays.com/account" />
+			<test url="http://xperiencedays.com/account/password" />
+			<test url="http://xperiencedays.com/checkout/cart" />
+			<test url="http://www.xperiencedays.com/contact" />
+			<test url="http://www.xperiencedays.com/privacy-policy" />
+			<test url="http://www.xperiencedays.com/redeem" />
+
+		<!--	Avoid potential XHR problems:
+							-->
+		<!--exclusion pattern="^http://(?:www\.)?xperiencedays\.com/(?:.+\.js(?:$|\?)|min/.+_js(?:$|[?&amp;]))" /-->
+
+			<!--	+ve:
+					-->
+			<!--
+			<test url="http://xperiencedays.com/min/?g=common_js" />
+			<test url="http://xperiencedays.com/min/?g=home_js" />
+			<test url="http://xperiencedays.com/min/?g=common_js&amp;" />
+			<test url="http://xperiencedays.com/min/?g=home_js&amp;" />
+			<test url="http://xperiencedays.com/min/?g=home_js&amp;1" />
+			<test url="http://www.xperiencedays.com/min/?g=common_js" />
+			<test url="http://www.xperiencedays.com/min/?g=home_js" />
+			<test url="http://www.xperiencedays.com/min/?g=common_js&amp;" />
+			<test url="http://www.xperiencedays.com/min/?g=home_js&amp;" />
+			-->
+
+		<test url="http://xperiencedays.com/account/logon" />
+		<test url="http://www.xperiencedays.com/account/logon" />
+		<!--
+		<test url="http://www.xperiencedays.com/assets/2011/css/img/spacer.gif" />
+		<test url="http://www.xperiencedays.com/min/?g=home_css" />
+		-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>
