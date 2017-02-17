@@ -1,12 +1,13 @@
 <!--
 Disabled by https-everywhere-checker because:
 Fetch error: http://hddn.com/ => https://hddn.com/: (51, "SSL: no alternative certificate subject name matches target host name 'hddn.com'")
-Fetch error: http://netdna.com/ => https://netdna.com/: (51, "SSL: no alternative certificate subject name matches target host name 'netdna.com'")
-Fetch error: http://netdnasite.wpengine.netdna-cdn.com/ => https://www.netdna.com/: (51, "SSL: no alternative certificate subject name matches target host name 'www.netdna.com'")
+
+	For other MaxCDN coverage, see MaxCDN.com.xml.
+
+
 	Other NetDNA rulesets:
 
 		- BootstrapCDN.xml
-		- MaxCDN.com.xml
 		- Netdna-ssl.com.xml
 
 
@@ -20,14 +21,25 @@ Fetch error: http://netdnasite.wpengine.netdna-cdn.com/ => https://www.netdna.co
 		- feedback.netdna.com	(prints "It works!", CN: squeeze)
 		- resources.netdna.com	(redirects to app-l.marketo.com)
 
+
+	Problematic hosts in *netdna.com:
+
+		- (www.)? ʰ
+
+	ʰ WP Engine / redirects to http
+
 -->
 <ruleset name="NetDNA (partial)" default_off='failed ruleset test'>
 
 	<target host="hddn.com" />
 	<target host="*.hddn.com" />
-	<target host="netdna.com" />
 	<target host="*.netdna.com" />
 	<target host="netdnasite.wpengine.netdna-cdn.com" />
+
+	<!--	Complications:
+				-->
+	<target host="netdna.com" />
+	<target host="www.netdna.com" />
 
 
 	<securecookie host="^login\.hddn\.com$" name=".+" />
@@ -38,10 +50,20 @@ Fetch error: http://netdnasite.wpengine.netdna-cdn.com/ => https://www.netdna.co
 	<rule from="^http://(login\.|www\.)?hddn\.com/"
 		to="https://$1hddn.com/" />
 
-	<rule from="^http://((?:blog|cp|developer|login|rws|status|(?:cp3)?support|www)\.)?netdna\.com/"
-		to="https://$1netdna.com/" />
+	<!--	Redirect drops path and forward slash:
+							-->
+	<rule from="^http://(?:www\.)?netdna\.com/[^?]*\??$"
+		to="https://www.maxcdn.com/?ref=netdna" />
+
+	<!--	...but not args:
+				-->
+	<rule from="^http://(?:www\.)?netdna\.com/[^?]*\?"
+		to="https://www.maxcdn.com/?ref=netdna&amp;" />
+
+	<rule from="^http://(blog|cp|developer|login|rws|status|(?:cp3)?support)\.netdna\.com/"
+		to="https://$1.netdna.com/" />
 
 	<rule from="^http://netdnasite\.wpengine\.netdna-cdn\.com/"
-		to="https://www.netdna.com/" />
+		to="https://www.maxcdn.com/" />
 
 </ruleset>
