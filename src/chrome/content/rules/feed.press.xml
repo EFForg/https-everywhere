@@ -1,0 +1,43 @@
+<!--
+	Nonfunctional hosts in *feed.press:
+
+		- uptime ⁴
+
+	⁴ 404
+
+
+	Problematic hosts in *feed.press:
+
+		- support ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- feed.press
+		- support.feed.press
+		- www.feed.press
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Feed.Press (partial)">
+
+	<target host="feed.press" />
+	<target host="www.feed.press" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?feed\.press$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^support\.feed\.press$" name="^PLAY_SESSION$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
