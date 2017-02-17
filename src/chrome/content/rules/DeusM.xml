@@ -1,25 +1,35 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://deusm.com/ => https://deusm.com/: (51, "SSL: no alternative certificate subject name matches target host name 'deusm.com'")
 	For mismatches and other UBM coverage, see UBM-mismatches.xml
-
 
 	For clients, see DeusM-clients.xml.
 
+
+	CDN buckets:
+
+		- deusm.cachefly.net	← img.deusm.com
+
+
+	Problematic hosts in *deusm.com:
+
+		- (www.)? ᵐ
+		- img ᵐ
+
+	ᵐ Mismatched
+
 -->
-<ruleset name="DeusM.com (partial)" default_off='failed ruleset test'>
+<ruleset name="DeusM.com (partial)" default_off="testing">
 
-	<target host="deusm.com" />
-	<target host="*.deusm.com" />
-
-
-	<securecookie host="^.*\.deusm\.com$" name=".*" />
+	<!--	Complications:
+				-->
+	<target host="img.deusm.com" />
 
 
-	<rule from="^http://(payment\.)?deusm\.com/"
-		to="https://$1deusm.com/" />
+	<securecookie host="." name="." />
+
 
 	<rule from="^http://img\.deusm\.com/"
 		to="https://deusm.cachefly.net/" />
+
+		<test url="http://img.deusm.com/images/spacer.gif" /><!--	49 -->
 
 </ruleset>
