@@ -1,0 +1,69 @@
+<!--
+	For other Cornell University coverage, see Cornell.xml
+
+
+	Nonfunctional hosts in *weillcornell.org:
+
+		- eggdonor ᵃ
+		- (www.)?prc ᵃ
+		- primarycare ᵃ
+
+	ᵃ Shows another domain
+
+
+	Problematic hosts in *weillcornell.org:
+
+		- hearthealth ᵐ
+		- www ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- cardiology.weillcornell.org
+		- jillrobertsibdcenter.weillcornell.org
+		- pops.weillcornell.org
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Image on jillrobertsibdcenter from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Weill Cornell.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="weillcornell.org" />
+	<target host="cardiology.weillcornell.org" />
+	<target host="jillrobertsibdcenter.weillcornell.org" />
+	<target host="pops.weillcornell.org" />
+	<target host="radiology.weillcornell.org" />
+	<target host="urology.weillcornell.org" />
+	<target host="veintreatment.weillcornell.org" />
+
+	<!--	Complications:
+				-->
+	<target host="www.weillcornell.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:cardiology|jillrobertsibdcenter)\.weillcornell\.org$" name="^SimpleSAMLSessionID$" /-->
+	<!--securecookie host="^pops\.weillcornell\.org$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://www\.weillcornell\.org/"
+		to="https://weillcornell.org/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
