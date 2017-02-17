@@ -1,0 +1,61 @@
+<!--
+	Nonfunctional hosts in *oikotie.fi:
+
+		- asuntokauppa ³
+		- autot ʳ
+		- m.autot ʳ
+		- taito ʰ
+
+	³ 403
+	ʰ WP Engine / redirects to http
+	ʳ Refused
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- asunnot.oikotie.fi
+		- rekry.oikotie.fi
+		- .tyonantaja.oikotie.fi
+		- .www.oikotie.fi
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on www from fonts.googleapis.com ˢ
+		- Images on asunnot from $self ˢ
+
+		- Bugs. on:
+
+			- tyopaikat from analytics.sanoma.fi ˢ
+			- tyopaikat from oikotie.spring-tns.net ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Oikotie.fi (partial)">
+
+	<target host="oikotie.fi" />
+	<target host="asunnot.oikotie.fi" />
+	<target host="rekry.oikotie.fi" />
+	<target host="tyonantaja.oikotie.fi" />
+	<target host="tyopaikat.oikotie.fi" />
+	<target host="www.oikotie.fi" />
+	<target host="www2.oikotie.fi" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^asunnot\.oikotie\.fi$" name="^(?:AWSELB|PHPSESSID|user_id)$" /-->
+	<!--securecookie host="^rekry\.oikotie\.fi$" name="^AWSELB$" /-->
+	<!--securecookie host="^\.(?:tyonantaja|www)\.oikotie\.fi$" name="^SESS[\da-f]{32}$" /-->
+
+	<securecookie host="^\." name="^_ga" />
+	<securecookie host="^(?!\.oikotie\.fi$)." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
