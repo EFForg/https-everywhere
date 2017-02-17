@@ -1,5 +1,9 @@
 <!--
-	For other NetDNA coverage, see NetDNA.xml.
+	Other MaxCDN rulesets:
+
+		- BootstrapCDN.xml
+		- NetDNA.xml
+		- Netdna-ssl.com.xml
 
 
 	CDN buckets:
@@ -8,85 +12,81 @@
 
 			- maxcdn-wpengine.netdna-ssl.com doesn't exist
 
-
-	Nonfunctional subdomains:
-
-		- tools ³
-
-	³ Refused
+		- toolsmaxcdn.netdnasa9.netdna-cdn.com
 
 
-	Problematic subdomains:
+	Nonfunctional hosts in *maxcdn.com:
 
-		- ^ ¹
-		- blog *
-		- status ²
-		- support ⁴
-		- tracking ⁴
+		- tools ʳ
 
-	¹ Refused
-	* wpengine
-	² StatusPage.io
-	⁴ Revoked
+	ʳ Refused
 
 
-	Fully covered subdomains:
+	Problematic hosts in *maxcdn.com:
 
-		- (www.)	(^ → www)
-		- cp
-		- docs
-		- rws
-		- secure
-		- secure-cdn
-		- status	(→ maxcdn.statuspage.io)
-		- support	(→ www)
+		- blog ʰ
+		- feedback ᵐ
+		- pages ᵐ
+		- support ᵛ
+
+	ʰ WP Engine / redirects to http, preemptable redirect
+	ᵐ Mismatched
+	ᵛ Revoked, preemptable redirect
 
 
-	These altnames don't exist:
+	These altnames do not exist:
 
-		- www.docs.maxcdn.com
+		- www.twemoji.maxcdn.com
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- cp.maxcdn.com
+		- rws.maxcdn.com
+		- secure.maxcdn.com
+		- secure-cdn.maxcdn.com
+		- tracking.maxcdn.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
 
-		- css on www from fonts.googleapis.com *
+		- css on status from fonts.googleapis.com ˢ
 
-		- Images on www from $self *
-
-	* Secured by us
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="MaxCDN.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="maxcdn.com" />
-	<target host="blog.maxcdn.com" />
 	<target host="cp.maxcdn.com" />
 	<target host="docs.maxcdn.com" />
+	<target host="oss.maxcdn.com" />
 	<target host="rws.maxcdn.com" />
 	<target host="secure.maxcdn.com" />
 	<target host="secure-cdn.maxcdn.com" />
 	<target host="status.maxcdn.com" />
-	<target host="support.maxcdn.com" />
 	<target host="www.maxcdn.com" />
-	<target host="oss.maxcdn.com" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.maxcdn.com" />
+	<target host="support.maxcdn.com" />
+
+		<!--test url="http://feedback.maxcdn.com/customer-happiness-awards-2015" /-->
 
 
-	<!--	Secured by server:
+	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^(cp|rws)\.maxcdn\.com$" name="^PHPSESSID$" /-->
-	<!--
-		Not secured by server:
-					-->
-	<!--securecookie host="^secure(-cdn)?\.maxcdn\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^(?:cp|rws|secure|secure-cdn)\.maxcdn\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^tracking\.maxcdn\.com$" name="^AWSELB$" /-->
 
-	<!--	Tracking cookies:
-					-->
-	<securecookie host="^\.(?:[\w-]\.)?maxcdn\.com$" name="^optimizely\w+$" />
-	<securecookie host="^secure(?:-cdn)?\.maxcdn\.com$" name=".+" />
+	<securecookie host="^\." name="^optimizely" />
+	<securecookie host="^\w" name="." />
 
-
-	<rule from="^http://maxcdn\.com/"
-		to="https://www.maxcdn.com/" />
 
 	<!--	Redirect keeps path and args,
 		but not forward slash:
@@ -103,9 +103,6 @@
 		to="https://www.maxcdn.com/one/" />
 
 		<test url="http://support.maxcdn.com//" />
-
-	<rule from="^http://status\.maxcdn\.com/"
-		to="https://maxcdn.statuspage.io/" />
 
 	<rule from="^http:"
 		to="https:" />
