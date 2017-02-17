@@ -1,29 +1,77 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://informationweek.com/ => https://informationweek.com/: (51, "SSL: no alternative certificate subject name matches target host name 'informationweek.com'")
 	For other UBM coverage, see UBM-mismatches.xml.
 
 
-	Mixed images from brightcove.vo.llnwd.net
+	Insecure cookies are set for these hosts: ᶜ
+
+		- webinar.informationweek.com
+		- www.informationweek.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	(www.)?byte.com: mismatched
+	^informationweek.com: mismatched
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www from img.deusm.com ᵐ
+			- www from fonts.googleapis.com ˢ
+			- www from $self ˢ
+			- www from i.ubm-us.net ˢ
+
+		- Images, on:
+
+			- www from img.deusm.com ᵐ
+			- www from img.lightreading.com
+			- www from brightcove.vo.llnwd.net
+			- www from thewallstreetwiki.com
+
+		- Ads / bugs, on:
+
+			- www from b.scorecardresearch.com ˢ
+			- www from img.deusm.com ᵐ
+			- www from cmp.112.2o7.net ˢ
+			- www from static.adsnative.com
+			- www from content.dl-rms.com ˢ
+
+	ᵐ Not secured by us <= mismatched
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="InformationWeek" default_off='failed ruleset test'>
+<ruleset name="InformationWeek" default_off="testing" platform="mixedcontent">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="webinar.informationweek.com"/>
+	<target host="www.informationweek.com"/>
+
+	<!--	Complications:
+				-->
 	<target host="byte.com"/>
 	<target host="www.byte.com"/>
 	<target host="informationweek.com"/>
-	<target host="www.informationweek.com"/>
 
 
-	<securecookie host="^www\.informationweek\.com$" name=".*"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^webinar\.informationweek\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^www\.informationweek\.com$" name="^(?:cplChannelTagID|informationweek_lastvisit|informationweek_visits)$" /-->
+
+	<securecookie host="^\." name="^(?:_ga|s_v)" />
+	<securecookie host="^\w" name="." />
 
 
-	<!--	Cert: i.cmpnet.com.
-		Redirects as so, apart from https.	-->
 	<rule from="^http://(?:www\.)?byte\.com/"
-		to="https://www.informationweek.com/byte/"/>
+		to="https://www.informationweek.com/" />
 
-	<rule from="^http://(www\.)?informationweek\.com/"
-		to="https://$1informationweek.com/"/>
+	<rule from="^http://informationweek\.com/"
+		to="https://www.informationweek.com/" />
+
+	<rule from="^http:"
+		to="https:"/>
 
 </ruleset>
