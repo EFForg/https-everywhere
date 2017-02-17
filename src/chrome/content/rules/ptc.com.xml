@@ -1,0 +1,125 @@
+<!--
+	Nonfunctional hosts in *ptc.com:
+
+		- blogs ʰ
+
+		- de.creo ʰ
+		- fr.creo ʰ
+		- it.creo ʰ
+		- ja.creo ʰ
+
+		- de ʰ
+		- es ʰ
+		- fr ʰ
+		- investor ᵈ
+		- it ʰ
+		- ja ʰ
+		- ko ʰ
+		- liveexchange ᶠ
+		- liveforum ᶠ
+		- livestuttgart ᶠ
+		- ru ʰ
+
+	ᵈ Dropped
+	ᶠ Handshake fails
+	ʰ Redirects to http
+
+
+	Problematic hosts in *ptc.com:
+
+		- assessments ᶜ
+		- pfiles[12] ᵐ
+		- ptcindiajobs ᵐ ˢ
+
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .ptc.com
+		- assessments.ptc.com
+		- communities.ptc.com
+		- precisionlms.ptc.com
+		- www.ptc.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on ptcindiajobs from fonts.googleapis.com ˢ
+		- Images on ptcindiajobs from companies.naukri.com
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="PTC.com (partial)">
+
+	<target host="ptc.com" />
+	<!--target host="assessments.ptc.com" /-->
+	<target host="careers.ptc.com" />
+	<target host="communities.ptc.com" />
+	<target host="help.ptc.com" />
+	<target host="learningexchange.ptc.com" />
+	<target host="login.ptc.com" />
+	<target host="precisionlms.ptc.com" />
+	<target host="share.ptc.com" />
+	<target host="support.ptc.com" />
+	<target host="thingworx.ptc.com" />
+	<target host="www.ptc.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="http://support\.ptc\.com/(?:apps/help_center/help/$|appserver/search/(?:resellers|software-partners)\.jsp|appserver/support/account/my_account\.jsp|appserver/support/csguide/csguide\.jsp|common/account/index\.htm|support/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="http://support\.ptc\.com/(?!/*appserver/(?:auth/authenticate\.jsp|common/(?:account/(?:createAccount\.jsp|password\.jsp|ssl/)|login/ssl/)))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://support.ptc.com/apps/help_center/help/" />
+			<test url="http://support.ptc.com/appserver/search/resellers.jsp" />
+			<test url="http://support.ptc.com/appserver/search/software-partners.jsp" />
+			<test url="http://support.ptc.com/appserver/support/account/my_account.jsp" />
+			<test url="http://support.ptc.com/appserver/support/csguide/csguide.jsp" />
+			<test url="http://support.ptc.com/common/account/index.htm" />
+			<test url="http://support.ptc.com/support/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://support.ptc.com/apps/jawr/981380950/bundles/print.css" /><!--	451 -->
+			<test url="http://support.ptc.com/appserver/auth/authenticate.jsp" />
+			<test url="http://support.ptc.com/appserver/common/account/createAccount.jsp" />
+			<test url="http://support.ptc.com/appserver/common/account/password.jsp" />
+			<test url="http://support.ptc.com/appserver/common/account/ssl/passwordReset.jsp" />
+			<test url="http://support.ptc.com/appserver/common/login/ssl/login.jsp" />
+			<test url="http://support.ptc.com/common/css/apps/wam.css" /><!--	1976 -->
+			<test url="http://support.ptc.com/common/css/partners/search.css" /><!--	297 -->
+			<test url="http://support.ptc.com/images/960/sprite-vertical-backgrounds.png" /><!--	561 -->
+			<test url="http://support.ptc.com/images/common/icon_help.png" /><!--	786 -->
+			<test url="http://support.ptc.com/images/cs/portal/2012b2b/Create_a_New_Account.png" /><!--	3864 -->
+
+		<!--
+		<test url="http://pfiles1.ptc.com/apps/jawr/N1189581387/bundles/media.js" />
+		<test url="http://pfiles2.ptc.com/images/960/country_flags/us.png" />
+		-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.ptc\.com$" name="^(?:Apache|country|lang)$" /-->
+	<!--securecookie host="^assessments\.ptc\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^communities\.ptc\.com$" name="^BIGipServer" /-->
+	<!--securecookie host="^precisionlms\.ptc\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^www\.ptc\.com$" name="^(?:ASP\.NET_sessionId|ptc-current-sid|ptc-daily-sid|sc_expview)$" /-->
+
+	<securecookie host="^\." name="^_ga" />
+	<securecookie host="^(?!support\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
