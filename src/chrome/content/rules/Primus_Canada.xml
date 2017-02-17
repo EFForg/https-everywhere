@@ -1,17 +1,96 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://vws3.primus.ca/ => https://vws3.primus.ca/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *primus.ca:
 
-		- (www.)	(400, valid cert)
+		- businesssupport ⁴
+		- cloudserver ᵗ
+		- home ʳ
+		- resisupport ᵃ
+		- sansfil ᵈ
+		- speedtest ʳ
+		- support ᵃ
+		- voiptest ʳ
+		- wireless ᵈ
+
+	⁴ 400
+	ᵃ Shows vws2.magma.ca
+	ᵈ Dropped
+	ʳ Refused
+	ᵗ Reset
+
+
+	Problematic hosts in *primus.ca:
+
+		- myaccount ʳ
+		- ssd ᵐ ˢ
+
+	ᵐ Mismatched
+	ʳ Refused, preemptable redirect
+	ˢ Self-signed
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- primus.ca
+		- .primus.ca
+		- monotelephone.primus.ca
+		- monphv.primus.ca
+		- myhomephone.primus.ca
+		- mypbx.primus.ca
+		- myphone.primus.ca
+		- mytbb.primus.ca
+		- pbxapps.primus.ca
+		- moncompte.sansfil.primus.ca
+		- myaccount.wireless.primus.ca
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Primus Canada (partial)" default_off='failed ruleset test'>
+<ruleset name="Primus Canada (partial)" default_off="testing">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="primus.ca" />
+	<target host="monotelephone.primus.ca" />
+	<target host="monphv.primus.ca" />
+	<target host="myhomephone.primus.ca" />
+	<target host="mypbx.primus.ca" />
+	<target host="myphone.primus.ca" />
+	<target host="mytbb.primus.ca" />
+	<target host="pbxapps.primus.ca" />
+	<target host="moncompte.sansfil.primus.ca" />
+	<target host="spamcontrol.primus.ca" />
 	<target host="vws3.primus.ca" />
+	<target host="webmail.primus.ca" />
+	<target host="myaccount.wireless.primus.ca" />
+	<target host="www.primus.ca" />
+
+		<!--	$ 404s, so:
+					-->
+		<test url="http://pbxapps.primus.ca/callcentre/" />
+
+	<!--	Complications:
+				-->
+	<target host="myaccount.primus.ca" />
 
 
-	<rule from="^http://vws3\.primus\.ca/"
-		to="https://vws3.primus.ca/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^primus\.ca$" name="^(?:frontend|geolocation)$" /-->
+	<!--securecookie host="^\.primus\.ca$" name="^Cookie$" /-->
+	<!--securecookie host="^(?:monotelephone|monphv|mypbx|myphone|mytbb)\.primus\.ca$" name="(?:^PHPSESSID|\.sid)$" /-->
+	<!--securecookie host="^myhomephone\.primus\.ca$" name="\.sid$" /-->
+	<!--securecookie host="^pbxapps\.primus\.ca$" name="(?:^JSESSIONID|\.sid)$" /-->
+	<!--securecookie host="^(?:moncompte\.sansfil|myaccount\.wireless)\.primus\.ca$" name="(?:PHPSESSID|exp_csrf_token|exp_language|exp_language_code|exp_last_activity|exp_last_visit|exp_tracker)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps all:
+					-->
+	<rule from="^http://myaccount\.primus\.ca/"
+		to="https://myaccount.primustel.ca/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
