@@ -33,8 +33,13 @@
 		- www.nysaes *
 		- nysipm	Handshake fails
 		- (www.)vivo *
-		- weill **
+		- weill ᵃ
 
+		- osra.weill ᵃ
+		- researchintegrity.weill ᵃ
+		- s010.weill ᵃ
+
+	ᵃ Shows another domain
 	* Refused
 	** Dropped
 
@@ -75,23 +80,33 @@
 		- itnews *
 		- judicialadministrator	Mixed css
 		- cls-maila.law		(expired 2012-07-18)
+		- emergency.med ᵃ
 		- news *
 		- outlook *
 		- parents	Mixed css
 		- (www.)?socialsciences *
 		- www.sustainablecampus *
 
+	ᵃ Shows another domain, preemptable redirect
 	* Mismatched
 
 
 	These altnames do not exist:
 
 		- confluence-test.cit.cornell.edu
+		- careers.med.cornell.edu
 
 
 	Insecure cookies are set for these hosts: ᶜ
 
 		- confluence.cornell.edu
+
+		- alumni.weill.cornell.edu
+		- directory.weill.cornell.edu
+		- give.weill.cornell.edu
+		- jcto.weill.cornell.edu
+		- radiology.weill.cornell.edu
+		- wcmcentral.weill.cornell.edu
 
 	ᶜ See https://owasp.org/index.php/SecureFlag
 
@@ -212,6 +227,9 @@
 	<target host="web3.login.cornell.edu" />
 	<target host="web4.login.cornell.edu" />
 
+	<target host="med.cornell.edu" />
+	<target host="its.med.cornell.edu" />
+	<target host="shib.med.cornell.edu" />
 	<target host="www.news.cornell.edu" />
 	<target host="netid.cornell.edu" />
 	<target host="www.netid.cornell.edu" />
@@ -228,7 +246,25 @@
 	<target host="cornell-classic.univcomm.cornell.edu" />
 	<target host="embanner.univcomm.cornell.edu" />
 	<target host="media.univcomm.cornell.edu" />
+
+	<target host="alumni.weill.cornell.edu" />
+	<target host="careers.weill.cornell.edu" />
+	<target host="directory.weill.cornell.edu" />
+	<target host="emergency.weill.cornell.edu" />
+	<target host="give.weill.cornell.edu" />
+	<target host="its.weill.cornell.edu" />
+	<target host="jcto.weill.cornell.edu" />
+	<target host="library.weill.cornell.edu" />
+	<target host="meeting.weill.cornell.edu" />
+	<target host="radiology.weill.cornell.edu" />
+	<target host="studentservices.weill.cornell.edu" />
+	<target host="wcmcentral.weill.cornell.edu" />
+
 	<target host="www.cornell.edu" />
+
+		<!--	$ prints domain name, so:
+							-->
+		<test url="http://s010.med.cornell.edu/wcmc/make-a-donation.html" />
 
 	<!--	Complications:
 				-->
@@ -237,12 +273,16 @@
 	<target host="cuaes.cornell.edu" />
 	<target host="dfa.cornell.edu" />
 	<!--target host="www.einaudi.cornell.edu" /-->
+	<target host="emergency.med.cornell.edu" />
 	<target host="news.cornell.edu" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^confluence\.cornell\.edu$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^(?:alumni|careers|give|jcto|radiology)\.weill\.cornell\.edu$" name="^SimpleSAMLSessionId$" /-->
+	<!--securecookie host="^directory\.weill\.cornell\.edu$" name="^JSESSIONI$$" /-->
+	<!--securecookie host="^wcmcentral\.weill\.cornell\.edu$" name="^(?:SimpleSAMLSessionId|simplesamlphp_auth_returnto)$" /-->
 
 	<securecookie host="." name="." />
 
@@ -258,6 +298,14 @@
 
 	<rule from="^http://(dfa|news)\.cornell\.edu/"
 		to="https://www.$1.cornell.edu/"/>
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://emergency\.med\.cornell\.edu/[^?]*"
+		to="https://emergency.weill.cornell.edu/" />
+
+		<test url="http://emergency.med.cornell.edu/index.htm" />
 
 	<rule from="^http:"
 		to="https:"/>
