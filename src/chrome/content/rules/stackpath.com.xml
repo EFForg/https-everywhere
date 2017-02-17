@@ -1,0 +1,54 @@
+<!--
+	STS header includes includeSubdomains
+	for app
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- api.stackpath.com
+		- app.stackpath.com
+		- vault.stackpath.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="StackPath.com">
+
+	<target host="stackpath.com" />
+	<target host="api.stackpath.com" />
+	<target host="app.stackpath.com" />
+	<target host="*.app.stackpath.com" />
+	<target host="blog.stackpath.com" />
+	<target host="status.stackpath.com" />
+	<target host="support.stackpath.com" />
+	<target host="vault.stackpath.com" />
+	<target host="www.stackpath.com" />
+
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?:[^./]+\.){2}app\.stackpath\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.app.stackpath.com/" />
+			<test url="http://exists.not.app.stackpath.com/" />
+
+		<test url="http://www.app.stackpath.com/" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://vault.stackpath.com/nginx-whitepaper" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^ap[ip]\.stackpath\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^vault\.stackpath\.com$" name="^hs_ab_test_\d+$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
