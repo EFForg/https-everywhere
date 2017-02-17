@@ -1,26 +1,106 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://cartercenter.org/ => https://cartercenter.org/: (51, "SSL: no alternative certificate subject name matches target host name 'cartercenter.org'")	See CarterCenter.org-mismatches.xml also
+	 Nonfunctional hosts in *cartercenter.org:
+
+		- blog ʰ
+		- donate ᵃ
+		- electionstandards ⁵
+		- forumonwomen ᵈ
+		- legacycircle ⁴
+
+	⁴ 404
+	⁵ 503
+	ᵈ Dropped
+	ʰ Redirects to http
 
 
-	 subdomains:
+	 Problematic hosts in *cartercenter.org:
 
-		- donate	(shows secure3; mismatched, CN: secure3.convio.net)
+		- auction ᵐ
+		- forumonwomenblog ᵐ ᵀ
+		- interns ᵉ ᵐ ˢ
+
+	ᵀ Blocks Tor users
+	ᵃ Shows secure3.convio.net, partially equivalent to secure3.../carter/
+	ᵉ Expired
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- alumni.cartercenter.org
+		- eos.cartercenter.org
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on alumni, interns from fonts.googleapis.com ˢ
+		- Images on interns from $self
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="CarterCenter.org" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="CarterCenter.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="cartercenter.org" />
-	<target host="*.cartercenter.org" />
+	<target host="alumni.cartercenter.org" />
+	<target host="eos.cartercenter.org" />
+	<target host="internapply.cartercenter.org" />
+	<target host="video.cartercenter.org" />
+	<target host="www.cartercenter.org" />
+
+	<!--	Complications:
+				-->
+	<target host="donate.cartercenter.org" />
+
+		<!--	Redirects to donate.cartercenter.org:
+								-->
+		<!--exclusion pattern="^http://donate\.cartercenter\.org/site/(?:(?:CO|Calendar/\d|Ecard|MessageViewer|PageServer|R)\?|Survey$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://donate\.cartercenter\.org/(?!$|\?|site/(?:PageServer$|(?:Donation2|SPageNavigator|UserLogin(?:$|[?/]))))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://donate.cartercenter.org/site/CO?cid=0" />
+			<test url="http://donate.cartercenter.org/site/Calendar/271847557" />
+			<test url="http://donate.cartercenter.org/site/Ecard?ecard_id=1282" />
+			<test url="http://donate.cartercenter.org/site/MessageViewer?em_id=18741.0" />
+			<test url="http://donate.cartercenter.org/site/PageServer?pagename=birthday_wall_1" />
+			<test url="http://donate.cartercenter.org/site/PageServer?pagename=birthday_wall_10" />
+			<test url="http://donate.cartercenter.org/site/PageServer?pagename=birthday_wall_2" />
+			<test url="http://donate.cartercenter.org/site/PageServer?pagename=birthday_wall_3" />
+			<test url="http://donate.cartercenter.org/site/R" />
+			<test url="http://donate.cartercenter.org/site/Survey" />
 
 
-	<securecookie host="^(?:www\.)?cartercenter\.org$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^alumni\.cartercenter\.org$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^eos\.cartercenter\.org$" name="^(?:_eos_session|request_method)$" /-->
+
+	<securecookie host="^\." name="^_ga" />
+	<securecookie host="^[^.d]" name="." />
 
 
-	<rule from="^http://(www\.)?cartercenter\.org/"
-		to="https://$1cartercenter.org/" />
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://donate\.cartercenter\.org/(?:\?.*)?$"
+		to="https://secure3.convio.net/carter/site/PageServer" />
 
-	<rule from="^http://donate\.cartercenter\.org/(?:site/PageServer)?(?:\?.*)?$"
-		to="https://cartercenter.org/" />
+	<rule from="^http://donate\.cartercenter\.org/"
+		to="https://secure3.convio.net/carter/" />
+
+		<test url="http://donate.cartercenter.org/site/Donation2?df_id=1220" />
+		<test url="http://donate.cartercenter.org/site/SPageNavigator/eCards" />
+		<test url="http://donate.cartercenter.org/site/UserLogin" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
