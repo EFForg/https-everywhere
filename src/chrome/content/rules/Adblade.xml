@@ -6,16 +6,33 @@
 	* Dropped
 
 
-	Insecure cookies are set for these domains:
+	Nonfunctional hosts in *adblade.com:
+
+		- blog ˣ
+		- static ᵐ
+
+	ᵐ Mismatched
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Insecure cookies are set for these domains: ᶜ
 
 		- .adblade.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
 
-		- Bug on (www.)? from piwik.adiant.com *
+		- css on blog from $self
 
-	* Unsecurable <= shows another domain
+		- Images, on:
+
+			- blog from echidnainc.com ⁴
+			- blog from www.mdgadvertising.com ʳ
+
+	⁴ Unsecurable <= 404
+	ʳ Unsecurable <= refused
 
 -->
 <ruleset name="Adblade.com (partial)">
@@ -27,29 +44,14 @@
 	<target host="web.adblade.com" />
 	<target host="www.adblade.com" />
 
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://(?:www\.)?adblade\.com/$" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://(?:www\.)?adblade\.com/+(?!css/|favicon\.ico|images/|img/|registration/)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://adblade.com/adblade-adspecs" />
-			<test url="http://adblade.com/doc/about" />
-			<test url="http://adblade.com/doc/contact" />
-			<test url="http://www.adblade.com/adblade-adspecs" />
-			<test url="http://www.adblade.com/doc/about" />
-			<test url="http://www.adblade.com/doc/contact" />
-
-			<!--	-ve:
-					-->
-			<test url="http://adblade.com/css/adblade.css" />
-			<test url="http://adblade.com/favicon.ico" />
-			<test url="http://adblade.com/images/design/adblade/logo.png" />
-			<test url="http://adblade.com/registration/" />
+		<!--	Previously redirected to http:
+							-->
+		<test url="http://adblade.com/adblade-adspecs" />
+		<test url="http://adblade.com/doc/about" />
+		<test url="http://adblade.com/doc/contact" />
+		<test url="http://www.adblade.com/adblade-adspecs" />
+		<test url="http://www.adblade.com/doc/about" />
+		<test url="http://www.adblade.com/doc/contact" />
 
 		<test url="http://pixel.adblade.com/imps.php?sgms=" />
 
@@ -58,7 +60,8 @@
 					-->
 	<!--securecookie host="^\.adblade\.com$" name="^__sgs$" /-->
 
-	<securecookie host="^\.adblade\.com$" name="^__sgs$" />
+	<securecookie host="^\." name="^__(?:qca|sgs$)" />
+	<securecookie host="^\w" name="." />
 
 
 	<rule from="^http:"
