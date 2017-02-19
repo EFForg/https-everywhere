@@ -75,8 +75,6 @@
 			- op.open *
 			- wiki.open	504
 			- zc.open *
-
-			- my.pay *
 			- passport.pengyou *
 			- piao *
 			- pushdata	500
@@ -84,6 +82,7 @@
 			- admin.qun *
 			- user.qzone	504
 			- os.qzs	504
+			- service *
 			- shang *
 			- soft *
 			- t		Shows another domain
@@ -128,7 +127,6 @@
 			- cb ³
 			- img1.chuangshi ²
 			- sta1.chuangshi ²
-			- connect ³
 			- act.daoju ² ³
 			- js01.daoju ²
 			- js02.daoju ²
@@ -148,11 +146,9 @@
 			- mxm ²
 			- mxv ²
 			- nr ³
-			- ossweb-img ²
-			- pay ²
 			- qqgame ²
 			- open.qqgame ²
-			- service ³
+			- dl.stream.qqmusic²
 			- cdn.tencentgroup ²
 			- cache.tv ³
 			- v ³
@@ -193,27 +189,26 @@
 		- css, on:
 			- ac from ac.gtimg.com
 			- act.daoju from ossweb-img.qq.com
-			- cb, service, cache.tv, v from imgcache.qq.com *
-			- connect from qzonestyle.gtimg.cn
+			- cb, cache.tv, v from imgcache.qq.com *
 			- film, kg, m.v, y, m.y from imgcache.gtimg.cn
 			- igame from i.igcdn.cn
-			- pay from imgcache.qq.com
-			- nr, p.y from qzonestyle.gtimg.cn
+			- p.y from qzonestyle.gtimg.cn
+
 		- Images, on:
 			- ac from ac.gtimg.com
-			- cb, kf, pay, service from imgcache.qq.com *
-			- connect from qzonestyle.gtimg.cn
-			- connect from pub.idqqimg.com *
+			- cb, kf from imgcache.qq.com *
+			- kf from file.service.qq.com *
 			- act.daoju, igame from ossweb-img.qq.com
 			- m.exmail from mail.qq.com
 			- film, kg, v, m.v, y, m.y from imgcache.gtimg.cn *
 			- film, cache.tv, v, y from i.gtimg.cn *
 			- film, v from mat1.gtimg.com
 			- film, v from puui.qpic.cn *
-			- nr from qzonestyle.gtimg.cn
 			- cache.tv, v from img1.gtimg.com
 			- v from vpic.video.qq.com *
 			- mp.weixin from res.wx.qq.com *
+			- y from wspeed.qq.com *
+
 		- favicons, on:
 			- exmail from $self *
 			- edu.exmail, tel.exmail from exmail.qq.com *
@@ -221,15 +216,41 @@
 -->
 
 <ruleset name="QQ.com (partial)">
+	<!-- Complications -->
+	<target host="kf.qq.com" />
+	<target host="service.qq.com" />
+		<!-- Redirect to http -->
+		<rule from="^http://(kf|service)\.qq\.com/$"
+			to="https://kf.qq.com/index.html" />
+		<!-- `service` timeout in https -->
+		<rule from="^http://(kf|service)\.qq\.com/"
+			to="https://kf.qq.com/" />
+		<test url="http://kf.qq.com/product/aq.html" />
+		<test url="http://service.qq.com/product/aq.html" />
+		<test url="http://kf.qq.com/product/QQ.html" />
+		<test url="http://service.qq.com/product/QQ.html" />
+
+	<target host="img1.sj.qq.com" />
+	<target host="img2.sj.qq.com" />
+	<target host="img3.sj.qq.com" />
+	<target host="img4.sj.qq.com" />
+	<target host="img5.sj.qq.com" />
+	<target host="img6.sj.qq.com" />
+		<!-- Only img1.sj has a vaild cert -->
+		<rule from="^http://img\d\.sj\.qq\.com/"
+			to="https://img1.sj.qq.com/" />
+		<test url="http://img1.sj.qq.com/api/styles/sjqqapi.css" />
+		<test url="http://img2.sj.qq.com/api/scripts/sjqqapi.js" />
+
 	<!--target host="ac.qq.com" /-->
 	<target host="aq.qq.com" />
 	<target host="js.aq.qq.com" />
 	<target host="combo.b.qq.com" />
-		<!-- Get from http://www.geetest.com/ -->
 		<test url="http://combo.b.qq.com/da/id.html" />
+	<target host="wpa.b.qq.com" />
+		<test url="http://wpa.b.qq.com/cgi/wpa.php" />
 	<target host="byod.qq.com" />
-	<!--target host="cb.qq.com" /-->
-	<!--target host="connect.qq.com" /-->
+	<target host="connect.qq.com" />
 	<target host="pcbrowser.dd.qq.com" />
 	<target host="exmail.qq.com" />
 		<!--target host="cnc.exmail.qq.com" /-->
@@ -246,9 +267,9 @@
 	<target host="igame.qq.com" />
 	<target host="imgcache.qq.com" />
 	<target host="isdspeed.qq.com" />
+	<target host="jsqmt.qq.com" />
+		<test url="http://jsqmt.qq.com/cdn_djl.js" />
 	<target host="ke.qq.com" />
-	<!--	redirects to http and Mixedcontent on https://kf.qq.com/product/weixin.html :
-	target host="kf.qq.com" /-->
 	<target host="kg.qq.com" />
 	<target host="x.l.qq.com" />
 		<test url="http://x.l.qq.com/unique.swf" />
@@ -266,11 +287,17 @@
 	<target host="wp.mail.qq.com" />
 	<target host="ws.mail.qq.com" />
 	<target host="music.qq.com" />
-	<!--target host="nr.qq.com" /-->
+	<target host="ossweb-img.qq.com" />
+		<!--	MCB:	-->
+		<exclusion pattern="^http://ossweb-img\.qq\.com/images/js/share/share\.shtml" />
+		<test url="http://ossweb-img.qq.com/images/js/share/share.shtml" />
 	<target host="pay.qq.com" />
+	<target host="my.pay.qq.com" />
 	<target host="s.pc.qq.com" />
 		<test url="http://s.pc.qq.com/discuz/css/style.css" />
 	<target host="pingfore.qq.com" />
+		<exclusion pattern="^http://pingfore\.qq\.com/$" />
+		<test url="http://pingfore.qq.com/pingd?dm=ent.qq.com&#x26;url=/a/20070713/000109.htm" />
 	<target host="pingjs.qq.com" />
 	<target host="ssl.ptlogin2.qq.com" />
 	<target host="ui.ptlogin2.qq.com" />
@@ -278,10 +305,8 @@
 	<target host="ssl.xui.ptlogin2.qq.com" />
 	<target host="cgi.pub.qq.com" />
 	<target host="qzs.qq.com" />
-	<target host="qian.qq.com" />
 	<target host="r.qq.com" />
 	<target host="reader.qq.com" />
-	<!--target host="service.qq.com" /-->
 	<target host="file.service.qq.com" />
 	<target host="qlogo1.store.qq.com" />
 		<test url="http://qlogo1.store.qq.com/qzone/11111111/11111111/100" />
@@ -310,6 +335,7 @@
 		<target host="web.weixin.qq.com" />
 		<target host="webpush.weixin.qq.com" />
 	<target host="weixin110.qq.com" />
+	<target host="wspeed.qq.com" />
 	<target host="wx.qq.com" />
 		<target host="file.wx.qq.com" />
 		<target host="login.wx.qq.com" />
@@ -318,8 +344,9 @@
 	<target host="wx2.qq.com" />
 		<target host="file.wx2.qq.com" />
 		<target host="login.wx2.qq.com" />
-	<!--target host="y.qq.com" /-->
-		<!--target host="p.y.qq.com" /-->
+	<target host="y.qq.com" />
+		<exclusion pattern="^http://y\.qq\.com/yanchu/" />
+		<test url="http://y.qq.com/yanchu/" />
 
 	<securecookie host="^\w" name="." />
 
