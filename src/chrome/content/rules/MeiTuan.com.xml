@@ -4,10 +4,11 @@
 
 	Cities:
 		There are more and more cities: https://www.meituan.com/index/changecity/initiative
-		While this ruleset be created on 28 May 2016, there were 886 cites.
+		While this ruleset be created on 28 May 2016, there were 886 cities.
 		On 20 Feb 2017, the number is 964.
 		We get error from travis: “The job exceeded the maximum time limit for jobs, and has been terminated.”
 		To fix this issue, maybe exclusion is the best choise.
+		Use strict regex ^http://(\w+)\.meituan\.com/ to avoid redirects on 4th level subdomains (*.*.meituan.com)
 
 	Different http/https content:
 		^meituan.com
@@ -39,8 +40,6 @@
 	<target host="s0.meituan.com"/>
 	<target host="s1.meituan.com"/>
 		<test url="http://s1.meituan.com/bs/js/?f=mta-js:mta.min.js" />
-	<target host="kaidian.waimai.meituan.com"/>
-		<test url="http://kaidian.waimai.meituan.com/images/welcome/step1.png" />
 	<target host="waimaie.meituan.com"/>
 
 	<!--MCB:-->
@@ -54,6 +53,11 @@
 		<test url="http://waimai.meituan.com/mobile/download/default" />
 
 	<!--For Cities:-->
+	<target host="kaidian.waimai.meituan.com"/>
+	<rule from="^http://kaidian\.waimai\.meituan\.com/"
+			to="https://kaidian.waimai.meituan.com/" />
+		<test url="http://kaidian.waimai.meituan.com/images/welcome/step1.png" />
+
 	<target host="*.meituan.com"/>
 		<test url="http://bj.meituan.com/" />
 		<test url="http://sh.meituan.com/" />
@@ -66,10 +70,7 @@
 		<test url="http://union.meituan.com/" />
 	<exclusion pattern="^http://zhao\.meituan\.com/" />
 		<test url="http://zhao.meituan.com/" />
-	<exclusion pattern="^http://ck\.dsp\.meituan\.com/" />
-		<test url="http://ck.dsp.meituan.com/beacon?adx=tanx" />
-	<exclusion pattern="^http://api\.mobile\.meituan\.com/" />
-		<test url="http://api.mobile.meituan.com/appupdate/download/simple/waimai?channel=1013" />
 
-	<rule from="^http:" to="https:" />
+	<rule from="^http://(\w+)\.meituan\.com/"
+			to="https://$1.meituan.com/" />
 </ruleset>
