@@ -171,8 +171,8 @@ const HTTPS = {
                             .getService(Components.interfaces.nsICookieManager2);
       //some braindead cookies apparently use umghzabilliontrabilions
       var expiry = Math.min(c.expiry, Math.pow(2,31));
-      cookieManager.remove(c.host, c.name, c.path, false);
-      cookieManager.add(c.host, c.path, c.name, c.value, true, c.isHTTPOnly, c.isSession, expiry);
+      cookieManager.remove(c.host, c.name, c.path, false, c.originAttributes);
+      cookieManager.add(c.host, c.path, c.name, c.value, true, c.isHTTPOnly, c.isSession, expiry, c.originAttributes);
     }
   },
   
