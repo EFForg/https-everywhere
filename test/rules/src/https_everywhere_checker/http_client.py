@@ -63,7 +63,7 @@ class FetchOptions(object):
 		self.redirectDepth = config.getint("http", "redirect_depth")
 		self.userAgent = None
 		self.curlVerbose = False
-		self.sslVersion = pycurl.SSLVERSION_TLSv1_2
+		self.sslVersion = pycurl.SSLVERSION_DEFAULT
 		self.useSubprocess = True
 		self.staticCAPath = None
 		self.cipherList = self._DEFAULT_CIPHERLIST
