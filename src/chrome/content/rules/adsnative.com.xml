@@ -1,0 +1,57 @@
+<!--
+	CDN buckets:
+
+		- adsnative-www.s3.amazonaws.com
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- console.adsnative.com
+		- dev.adsnative.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Ad on www from go.pardot.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="AdsNative.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="api.adsnative.com" />
+	<target host="bevo.adsnative.com" />
+	<target host="blog.adsnative.com" />
+	<target host="console.adsnative.com" />
+	<target host="dev.adsnative.com" />
+	<target host="static.adsnative.com" />
+	<target host="www.adsnative.com" />
+
+		<!--	$ 404s, so:
+					-->
+		<test url="http://bevo.adsnative.com/ck?url=http%3A%2F%2Ffocus.politico.com%2F&amp;sid=59bddb5adce140ceae1dca913c3f894c_b70d1db0" />
+
+	<!--	Complications:
+				-->
+	<target host="adsnative.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^console\.adsnative\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^dev\.adsnative\.com$" name="^(?:XSRF-TOKEN|connect\.sid)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://adsnative\.com/"
+		to="https://www.adsnative.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

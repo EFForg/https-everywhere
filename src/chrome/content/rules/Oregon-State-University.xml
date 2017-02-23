@@ -1,37 +1,46 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://osufoundation.org/ => https://osufoundation.org/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.osufoundation.org/ => https://osufoundation.org/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-	Nonfunctional domains:
+	Other Oregon State University rulesets:
 
-		- ftp-nyc.osuosl.org*
-		- gentoo.osuosl.org *
-		- rsync.osuosl.org *
+		- osufoundation.org.xml
+		- osuosl.org.xml
 
-	* Refused
+
+	Nonfunctional hosts in *oregonstate.edu:
+
+		- ecampus ᵃ
+
+	ᵃ Shows another domain
+
+
+	www.oregonstate.edu: mismatched
+
+
+	Mixed content:
+
+		- css on osulibrary from fonts.googleapis.com ˢ
+		- Images on ^ from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Oregon State University (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="Oregon State.edu (partial)">
 
-	<target host="oregonstate.edu"/>
-	<target host="*.oregonstate.edu"/>
-	<target host="osufoundation.org"/>
-	<target host="www.osufoundation.org"/>
-	<target host="osuosl.org"/>
-	<target host="*.osuosl.org"/>
+	<!--	Direct rewrites:
+				-->
+	<target host="oregonstate.edu" />
+	<target host="drupalweb.forestry.oregonstate.edu" />
+	<target host="osulibrary.oregonstate.edu" />
+	<target host="secure.oregonstate.edu" />
 
-	<securecookie host="^\.osuosl\.org$" name=".*"/>
+	<!--	Complications:
+				-->
+	<target host="www.oregonstate.edu" />
 
-	<rule from="^http://(?:www\.)?oregonstate\.edu/(favicon\.ico$|u_central/images/)"
-		to="https://secure.oregonstate.edu/$1"/>
 
-	<rule from="^http://(drupalweb\.forestry|osulibrary|secure)\.oregonstate\.edu/"
-		to="https://$1.oregonstate.edu/" />
+	<rule from="^http://www\.oregonstate\.edu/"
+		to="https://oregonstate.edu/" />
 
-	<rule from="^http://(?:www\.)?osufoundation\.org/"
-		to="https://osufoundation.org/"/>
-
-	<rule from="^http://(www\.)?osuosl\.org/"
-		to="https://$1osuosl.org/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

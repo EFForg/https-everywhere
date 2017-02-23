@@ -12,6 +12,7 @@
 		- DeusM.xml
 		- EE_Times.xml
 		- InformationWeek.xml
+		- lightreading.com.xml
 		- Network_Computing.xml
 		- OAG.xml
 		- PIERS.xml
@@ -28,25 +29,35 @@
 		- us.legal	(refused)
 		- media *
 		- sustainability *
+		- tech ʳ
 
 	* Times out
+	ʳ Refused
 
 
 	Problematic subdomains:
 
 		- www.events	(cert only matches ^events)
-		- tech		(works; mismatched, CN: events.ubm.com)
 
 -->
-<ruleset name="UBM (partial)">
+<ruleset name="UBM.com (partial)">
 
-	<target host="*.ubm.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="events.ubm.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www.events.ubm.com" />
 
 
-	<securecookie host="^events\.ubm\.com$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?events\.ubm\.com/"
+	<rule from="^http://www\.events\.ubm\.com/"
 		to="https://events.ubm.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

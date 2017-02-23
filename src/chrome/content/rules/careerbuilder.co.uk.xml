@@ -1,0 +1,78 @@
+<!--
+	For other CareerBuilder coverage, see CareerBuilder.xml.
+
+
+	Nonfunctional hosts in *careerbuilder.co.uk:
+
+		- advice ᶠ
+		- blog ʳ
+		- mobile ʰ
+
+	ᶠ Handshake fails
+	ʰ Redirects to http
+	ʳ Refused
+
+
+	Problematic hosts in *careerbuilder.co.uk:
+
+		- hiring ᴬ
+		- yahoo ᵐ
+
+	ᴬ Akamai / mismatched
+	ᵐ Mismatched
+
+
+	Clients have unique subdomains.
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .careerbuilder.co.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www from fonts.googleapis.com ˢ
+
+		- Images, on:
+
+			- hiring from $self ᵐ
+			- hiring from careerbuilder.semblancedesign.co.uk ⁴
+			- www from blog.careerbuilder.co.uk ʳ
+			- www from img.icbdr.com ˢ
+			- yahoo from l.yimg.com ˢ
+
+		- Ads/bugs, on:
+
+			- hiring from www.gblwebcen.com
+			- www from adserver.adtechus.com ˢ
+			- yahoo from cbglobal.112.2o7.net ˢ
+
+	⁴ Unsecurable <= 404
+	ʳ Unsecurable <= refused
+	ᵐ Not secured by us <= mismatched
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="CareerBuilder.co.uk (partial)" platform="mixedcontent">
+
+	<target host="careerbuilder.co.uk" />
+	<target host="www.careerbuilder.co.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.careerbuilder\.co\.uk$" name="^(?:BID|CB_SID|PU)$" /-->
+
+	<securecookie host="^\." name="^(?:_ga|s_v)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

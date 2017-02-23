@@ -1,27 +1,33 @@
 <!--
+	Insecure cookies are set for these hosts: ᶜ
+
+		- longform.org
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
 	Mixed content:
 
-		- Images from server.longformapp.com ¹
+		- Images from s3.longform.org.s3.amazonaws.com
+		- Web bugs from pixel.quantserve.com ˢ
 
-		- Web bugs from pixel.quantserve.com ²
-
-	¹ Unsecurable
-	² Secured by us
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="Longform.org">
 
 	<target host="longform.org" />
-	<target host="*.longform.org" />
+	<target host="www.longform.org" />
 
 
-	<securecookie host="^\.longform\.org$" name=".+" />
-
-
-	<!--	www redirects to ^ over http,
-		so copy that behavior:
+	<!--	Not secured by server:
 					-->
-	<rule from="^http://(?:www\.)?longform\.org/"
-		to="https://longform.org/" />
+	<!--securecookie host="^longform\.org$" name="^_longform\.org_session$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
