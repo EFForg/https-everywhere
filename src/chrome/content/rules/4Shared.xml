@@ -1,18 +1,76 @@
 <!--
-	Needs a lot of work...
+	Problematic hosts in *4shared.com:
+
+		- forum ᵃ ᵐ ˢ
+		- www.m ᵐ
+
+	ᵃ Shows another domain, preemptable redirect
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .4shared.com
+		- blog.4shared.com
+		- www.4shared.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- iframe on blog from www.youtube.com ˢ
+		- Images on blog, help from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="4Shared (experimental)">
+<ruleset name="4Shared.com">
 
 	<target host="4shared.com" />
 	<target host="*.4shared.com" />
-		<exclusion pattern="^http://(?:blog|forum)\.4shared\.com/" />
+
+		<test url="http://blog.4shared.com/" />
+		<test url="http://dc524.4shared.com/img/MqHOTUd8ce/1576faa6320/Hard_Carry" />
+		<test url="http://dc619.4shared.com/img/bHILmiaxce/156cbe984f0/Ezad_Lazim_-_Demi_Cinta" />
+		<test url="http://help.4shared.com/" />
+		<test url="http://m.4shared.com/" />
+		<test url="http://search.4shared.com/" />
+		<test url="http://static.4shared.com/images/spacer.gif" />
+		<test url="http://www.4shared.com/" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://www.4shared.com/dir/1128256/59d20c03/sharing.html" /-->
 
 
-	<securecookie host="^(?:.*\.)?4shared\.com$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.4shared\.com$" name="^(?:classicView|day1host)$" /-->
+	<!--securecookie host="^blog\.4shared\.com$" name="^_icl_current_language$" /-->
+	<!--securecookie host="^www\.4shared\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://([^/:@]*\.)?4shared\.com/"
-		to="https://$14shared.com/" />
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://forum\.4shared\.com/[^?]*"
+		to="https://blog.4shared.com/" />
+
+		<test url="http://forum.4shared.com/about/" />
+		<test url="http://forum.4shared.com/index.htm" />
+
+	<!--	Redirect keeps all:
+					-->
+	<rule from="^http://www\.m\.4shared\.com/"
+		to="https://www.4shared.com/" />
+
+		<test url="http://www.m.4shared.com/privacy.jsp" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

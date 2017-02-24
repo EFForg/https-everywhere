@@ -1,80 +1,27 @@
- <!--
-	For problematic rules, see Forbes_Magazine-mixed.xml.
+<!---
+Other Forbes rulesets:
+	- Forbes_Magazine.xml
 
+Invalid certificate:
+	cmo-practice.forbes.com
+	www.cmo-practice.forbes.com
+	custom.forbes.com
+	www.custom.forbes.com
+	insights.forbes.com
+	on.forbes.com
 
-	Other Forbes rulesets:
-
-		- Forbes_img.com.xml
-		- Forbes_Magazine.xml
-
-
-	CDN buckets:
-
-		- blogs-images.forbes.com.edgesuite.net
-		- images.forbes.com.edgesuite.net
-
-
-	Nonfunctional subdomains:
-
-		- ^ ¹
-		- images ²
-		- video
-		- www ⁴
-
-	¹ Shows another domain
-	² 503, Akamai
-	⁴ Redirects to http
-
-
-	Problematic domains:
-
-		- blogs ¹
-		- blogs-images ²
-		- newsletters ³
-
-	¹ Expired 2014
-	² Akamai
-	³ Cert only matches www.newsletters
-
-
-	Partially covered domains:
-
-		- (www.)?newsletters *	(^ → www)
-
-	* Some pages redirect to http
-
-
-	Fully covered subdomains:
-
-		- e-subscriptions
-		- safesource
-		- secureads
-
-
-	Insecure cookies are set for these domains:
-
-		- www.newsletters.forbes.com
-
-
-	Mixed content:
-
-		- Images on blogs from images *
-
-	* Unsecurable <= 503
-
+Refused connection:
+	beta.forbes.com
 -->
-<ruleset name="Forbes.com (partial)">
+<ruleset name="Forbes.com">
+	<target host="forbes.com"/> 
+	<target host="www.forbes.com"/>
+	<target host="blogs.forbes.com"/>
+	<target host="blogs-images.forbes.com" />
+	<target host="esp.forbes.com"/>
+	<target host="i.forbesimg.com" />
+	<target host="images.forbes.com" />
+	<target host="specials-images.forbesimg.com" />
 
-	<target host="*.forbes.com" />
-
-
-	<securecookie host="^www\.newsletters\.forbes\.com$" name="^fc\w+$" />
-
-
-	<rule from="^http://(?:www\.)?newsletters\.forbes\.com/(?=DRHM/|favicon\.ico|store\?Action=(?:AddItemToRequisition|DisplayPage)(?:$|[?/]))"
-		to="https://www.newsletters.forbes.com/" />
-
-	<rule from="^http://(e-subscriptions|safesource|secureads)\.forbes\.com/"
-		to="https://$1.forbes.com/" />
-
+	<rule from="^http:" to="https:"/>
 </ruleset>

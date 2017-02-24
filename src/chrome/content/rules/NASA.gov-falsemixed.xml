@@ -6,19 +6,49 @@
 
 	<!--	Direct rewrites:
 				-->
+	<target host="reverb.echo.nasa.gov" />
 	<target host="www.echo.nasa.gov" />
-	<target host="mars.jpl.nasa.gov" />
+	<target host="jwst.gsfc.nasa.gov" />
+	<target host="smap.jpl.nasa.gov" />
+
+		<exclusion pattern="^http://reverb\.echo\.nasa\.gov/(?!/*assets/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://reverb.echo.nasa.gov/reverb/" />
+			<test url="http://reverb.echo.nasa.gov/reverb/datasets" />
+			<test url="http://reverb.echo.nasa.gov/reverb/datasets/C179001967-SEDAC" />
+			<test url="http://reverb.echo.nasa.gov/reverb/datasets/C179002914-ORNL_DAAC" />
+			<test url="http://reverb.echo.nasa.gov/reverb/query.echo10?catalog_id=&amp;id=" />
+			<test url="http://reverb.echo.nasa.gov/reverb/redirect/wist" />
+
+			<!--	-ve:
+					-->
+			<test url="http://reverb.echo.nasa.gov/reverb/assets/page/sidebar-bg-a7d14eba8874362a070f3375c0d0f2d1.png" />
+
+		<exclusion pattern="^http://smap\.jpl\.nasa\.gov/(?!/*(?:assets|system)/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://smap.jpl.nasa.gov/documents" />
+			<test url="http://smap.jpl.nasa.gov/feedback" />
+			<test url="http://smap.jpl.nasa.gov/map" />
+
+			<!--	-ve:
+					-->
+			<test url="http://smap.jpl.nasa.gov/assets/arrow_down_prompt.png" />
+			<test url="http://smap.jpl.nasa.gov/system/internal_resources/details/original/258_ERN-Ad.jpg" />
 
 	<!--	Complications:
 				-->
-	<target host="mars.nasa.gov" />
+	<target host="jwst.nasa.gov" />
 
 
-	<securecookie host="." name="." />
+	<securecookie host="^\.?[jw]" name="." />
 
 
-	<rule from="^http://mars\.nasa\.gov/"
-		to="https://mars.jpl.nasa.gov/" />
+	<rule from="^http://jwst\.nasa\.gov/"
+		to="https://jwst.gsfc.nasa.gov/" />
 
 	<rule from="^http:"
 		to="https:" />

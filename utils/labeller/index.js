@@ -103,7 +103,7 @@ function github_process_prs(res, pr_cb){
 
               _.each(targets, function(host){
                 if(host.match(wildcard_www_regex)){
-                  host = host.match(wildcard_www_regex)[1];
+                  host = host.match(wildcard_www_regex)[2];
                 }
 
                 var alexa_placing = alexa.indexOf(host);

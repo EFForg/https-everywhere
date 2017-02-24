@@ -1,0 +1,77 @@
+<!--
+	Note: platform is so as not to increase non-Tor
+	distinguishability, given that no pages are covered
+	and no mixed content secured.
+
+
+	Nonfunctional hosts in *xvideos.com:
+
+		- (www.)? ʰ
+		- info ʳ
+		- jp ʰ
+		- support ᵃ
+		- upload ʰ
+
+	ᵃ Shows control.xvideos.com
+	ʰ Redirects to http
+	ʳ Refused
+
+
+	Problematic hosts in *xvideos.com:
+
+		- control ˢ
+		- img-hw ᶜ
+		- static-hw ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ˢ Self-signed
+
+-->
+<ruleset name="XVideos.com (partial)" default_off="missing certificate chain" platform="mixedcontent">
+
+	<target host="img-hw.xvideos.com" />
+	<target host="static-hw.xvideos.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?xvideos\.com/(?:$|channels$|channels/new-videos$|profileslist$|rss/rss\.xml)" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://www.xvideos.com/channels" /-->
+			<!--test url="http://www.xvideos.com/channels/new-videos" /-->
+			<!--test url="http://www.xvideos.com/profileslist" /-->
+			<!--test url="http://www.xvideos.com/rss/rss.xml" /-->
+
+		<!--	Avoid potential XHR problems:
+							-->
+		<exclusion pattern="^http://static-hw\.xvideos\.com/.+\.js(?:$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://static-hw.xvideos.com/v3/js/libs/jquery.min.js" />
+			<test url="http://static-hw.xvideos.com/v3/js/skins/min/default.header.static.js" />
+			<test url="http://static-hw.xvideos.com/v3/js/skins/min/require.static.js" />
+			<test url="http://static-hw.xvideos.com/v3/js/skins/min/xnxx.header.static.js" />
+			<test url="http://static-hw.xvideos.com/v3/js/static/test/include.js" />
+			<test url="http://static-hw.xvideos.com/v3/js/skins/min/default.footer.static.js" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://upload\.xvideos\.com/(?:$|account(?:$|/create$|/lostpassword$|/verify_account$))" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://upload.xvideos.com/account" /-->
+			<!--test url="http://upload.xvideos.com/account/create" /-->
+			<!--test url="http://upload.xvideos.com/account/lostpassword" /-->
+			<!--test url="http://upload.xvideos.com/account/verify_account" /-->
+
+		<test url="http://img-hw.xvideos.com/videos/thumbs/xvideos.gif" />
+		<test url="http://static-hw.xvideos.com/v3/img/skins/xnxx/icons-sprite2.png" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -4,40 +4,75 @@
 		- Politico_Pro.com.xml
 
 
-	!functional subdomains:
-		- avatar	(data not on images nor www)
-		- dyn ²
-		- find		(timeout)
+	Nonfunctional hosts in *politico.com:
 
-	² Dropped
+		- dyn ʳ
+		- pro.beta.ops ᵈ
+
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *politico.com:
+
+		- ^ * ᵐ ᵘ
+		- images ᵐ
+		- static ⁵
+		- static2 ᵐ
+		- tk ᵐ
+		- www ⁴
+
+	* Protocol-relative redirect
+	⁴ 404, equivalent to another domain
+	⁵ 504, equivalent to another domain
+	ᵐ Mismatched
+	ᵘ Untrusted root
+
+
+	Mixed content:
+
+		- Images on secure from static2.politico.com ᵐ
+		- favicon on secure from static.politico.com ˢ
+
+	ᵐ Not secured by us <= mismatched
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Politico (partial)" default_off="mismatch">
+<ruleset name="Politico.com (partial)">
 
-	<!--	cert: Akamai	-->
-	<target host="politico.com"/>
-	<target host="www.politico.com"/>
-	<target host="images.politico.com"/>
-	<target host="jobs.politico.com"/>
-		<!--	avatar: 404; data not on images nor www.
-			dyn: timeout
-			find: ditto
-			www2: ditto		-->
-		<exclusion pattern="^http://(?:avatar|dyn|find|www2)\."/>
+	<!--	Direct rewrites:
+				-->
+	<target host="login.politico.com" />
+	<target host="secure.politico.com" />
+	<target host="static3.politico.com" />
+
+		<!--	$ 404s, so:
+					-->
+		<test url="http://login.politico.com/_login?base=http%3A%2F%2Fwww.politico.com" />
+		<test url="http://static3.politico.com/resource/images/website/shared/template/bg-noise.24d18bcf9d414e030c36ffd7f30648e8.jpg" /><!--	2033 -->
+
+		<test url="http://tk.politico.com/zmr6qqx.js" />
+
+	<!--	Complications:
+				-->
+	<target host="politico.com" />
+	<target host="static.politico.com" />
+	<target host="www.politico.com" />
+
+		<test url="http://static.politico.com/cf/05/ee684a274496b04fa20ba2978da1/politico.png" /><!--	1064 -->
 
 
-	<!--	encountered cookies:
-			- ^.
-			- dyn
-			- find
-			- jobs	-->
-	<securecookie host="^(?:jobs)?\.politico\.com$" name=".*"/>
+	<securecookie host="^\." name="^(?:_ga|optimizely)" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://politico\.com/"
-		to="https://www.politico.com/"/>
+	<rule from="^http://(?:www\.)?politico\.com/"
+		to="https://secure.politico.com/" />
+
+	<rule from="^http://static\.politico\.com/"
+		to="https://static3.politico.com/" />
 
 	<rule from="^http:"
-		to="https:"/>
+		to="https:" />
 
 </ruleset>
