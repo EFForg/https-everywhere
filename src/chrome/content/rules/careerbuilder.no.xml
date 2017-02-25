@@ -1,0 +1,55 @@
+<!--
+	For other CareerBuilder coverage, see CareerBuilder.xml.
+
+
+	Problematic hosts in *careerbuilder.no:
+
+		- api ᵐ
+
+	ᵐ Mismatched
+
+
+
+	Mixed content:
+
+		- css on www from $self ˢ
+		- Images on www from img.icbdr.com ˢ
+
+		- Ads / bugs, on:
+
+			- www from cbglobal.112.2o7.net ˢ
+			- www from admin.brightcove.com
+			- www from pagead2.googlesyndication.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="CareerBuilder.no" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="careerbuilder.no" />
+	<target host="www.careerbuilder.no" />
+
+		<!--	Mixed css:
+					-->
+		<test url="http://www.careerbuilder.no/no/jobseeker/jobs/jobdetails.aspx?Job_DID=J3L6Z66JJMZTGT5H630" />
+
+	<!--	Complications:
+				-->
+	<target host="api.careerbuilder.no" />
+
+
+	<securecookie host="^\." name="^(?:_ga|s_v)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://api\.careerbuilder\.no/"
+		to="https://api.careerbuilder.com/" />
+
+		<test url="http://api.careerbuilder.no/v1/joblink?TrackingID=UNTRKD&amp;HostSite=NO&amp;DID=J3L6Z66JJMZTGT5H630" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

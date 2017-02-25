@@ -1,0 +1,60 @@
+<!--
+	For other Ogilvy Group coverage, see ogilvy.com.xml.
+
+
+	Nonfunctional hosts in *ogilvy.co.uk:
+
+		- ideashop ᵛ
+
+	ᵛ Revoked
+
+
+	www.ogilvy.co.uk: mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- ogilvy.co.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images on ^ from ogilvy.hal.graphicalliance.co.uk ʰ
+
+	ʰ Unsecurable <= redirects to http
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Ogilvy.co.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ogilvy.co.uk" />
+	<target host="stage.ogilvy.co.uk" />
+	<target host="ideashop.stage.ogilvy.co.uk" />
+
+		<!--	Mixed images:
+					-->
+		<test url="http://ogilvy.co.uk/about-us" />
+
+	<!--	Complications:
+				-->
+	<target host="www.ogilvy.co.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^ogilvy\.co\.uk$" name="^BALANCEID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://www\.ogilvy\.co\.uk/"
+		to="https://ogilvy.co.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,64 @@
+<!--
+	For other The Local coverage, see Local.xml.
+
+
+	Nonfunctional hosts in *thelocal.se:
+
+		- dating ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *thelocal.se:
+
+		- shop ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.thelocal.se
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on shop from www.thelocal.se ˢ
+
+		- Images, on:
+
+			- shop from $self ᵐ
+			- www from $self ˢ
+
+	ᵐ Not secured by us <= mismatched
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="The Local.se (partial)">
+
+	<target host="thelocal.se" />
+	<target host="www.thelocal.se" />
+
+		<!--	Mixed images:
+					-->
+		<!--test url="http://www.thelocal.se/jobs/" /-->
+		<!--test url="http://www.thelocal.se/jobs/recruiters/" /-->
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://www.thelocal.se/members/register" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.thelocal\.se$" name="^(?:PHPSESSID|ci_session)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -127,19 +127,36 @@
 	<target host="ssl.mail.126.com" />
 	<target host="ct.stu.126.net" />
 
-	<!--To fix the broken of email login. Test in mail.163.com and mail.126.com -->
+	<!-- Complications: -->
 	<target host="dl.reg.163.com" />
+		<!-- MCB -->
 		<exclusion pattern="^http://dl\.reg\.163\.com/webzj/m163_1\.0\.1/pub/index_dl\.html" />
-		<test url="http://dl.reg.163.com/webzj/m163_1.0.1/pub/index_dl.html?wdaId=" />
+			<test url="http://dl.reg.163.com/webzj/m163_1.0.1/pub/index_dl.html?wdaId=" />
+		<!-- Avoid CORS problem when logging in at http://mail.163.com -->
+		<exclusion pattern="^http://dl\.reg\.163\.com/(ini|gt|l|vfcp)" />
+			<test url="http://dl.reg.163.com/ini?pd=mail163&#x26;pkid=CvViHzl&#x26;pkht=mail.163.com" />
+			<!-- these tests happen after clicking the blue login button with a valid username/password -->
+			<test url="http://dl.reg.163.com/gt?un=username" />
+			<test url="http://dl.reg.163.com/l" />
+			<!-- the below test happen after clicking the blue login button with a invalid username/password, https will return errors whatever CAPTCHA input -->
+			<test url="http://dl.reg.163.com/vfcp" />
+
 	<target host="passport.126.com" />
+		<!-- MCB -->
 		<exclusion pattern="^http://passport\.126\.com/webzj/m126_1\.0\.1/pub/index_dl\.html" />
-		<test url="http://passport.126.com/webzj/m126_1.0.1/pub/index_dl.html?wdaId=" />
+			<test url="http://passport.126.com/webzj/m126_1.0.1/pub/index_dl.html?wdaId=" />
+		<!-- Avoid CORS problem when logging in at http://mail.126.com -->
+		<exclusion pattern="^http://passport\.126\.com/dl/(ini|gt|l|vfcp)" />
+			<test url="http://passport.126.com/dl/ini?pd=mail126&#x26;pkid=QdQXWEQ&#x26;pkht=mail.126.com" />
+			<!-- these tests happen after clicking the green login button with a valid username/password -->
+			<test url="http://passport.126.com/dl/gt?un=username" />
+			<test url="http://passport.126.com/dl/l" />
+			<!-- the below test happen after clicking the green login button with a invalid username/password, https will return errors whatever CAPTCHA input -->
+			<test url="http://passport.126.com/dl/vfcp" />
 
 	<!--	The mixed iframe:
 					-->
 	<!--test url="http://mail.163.com/preload6.htm" /-->
-
-	<securecookie host="^\w" name="." />
 
 	<rule from="^http:" to="https:" />
 </ruleset>

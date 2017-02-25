@@ -1,66 +1,88 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://sciamdigital.com/ => http://sciamdigital.com/: Cycle detected - URL already encountered: https://www.scientificamerican.com/page/welcome-scientific-american-digital-customers/
-Fetch error: http://www.sciamdigital.com/ => http://www.sciamdigital.com/: Cycle detected - URL already encountered: https://www.scientificamerican.com/page/welcome-scientific-american-digital-customers/
-Fetch error: http://scientificamerican.com/ => https://www.scientificamerican.com/: Cycle detected - URL already encountered: https://www.scientificamerican.com/
-	Nonfunctional subdomains:
+	Other Scientific American rulesets:
 
-		- books		(revoked)
+		- sciamdigital.com.xml
 
 
-	^: expired
+	Problematic hosts in *scientificamerican.com:
+
+		- ^ ᶜ
+		- books ᶜ
+		- links.email ᵐ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Silverpop / mismatched
+
+
+	STS header includes includeSubdomains
+	for subscribe
+
+
+	These altnames do not exist:
+
+		- www.subscribe.scientificamerican.com
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .scientificamerican.com
+		- subscribe.scientificamerican.com
+		- www.scientificamerican.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Scientific American (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="Scientific American.com (partial)">
 
-	<target host="sciamdigital.com" />
-	<target host="www.sciamdigital.com" />
-	<target host="scientificamerican.com" />
-	<target host="*.scientificamerican.com" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://www\.scientificamerican\.com/article/[\w-]+/$" /-->
-		<!--
-			More conservatively:
-						-->
-		<exclusion pattern="^http://www\.scientificamerican\.com/article/" />
-
-
-	<!--	Observed cookies:
-
-			- ^\.
-			- ^subscribe
-			- ^www
+	<!--	Direct rewrites:
 				-->
-	<securecookie host="subscribe\.scientificamerican.com$" name=".*" />
+	<target host="blogs.scientificamerican.com" />
+	<!--target host="books.scientificamerican.com" /-->
+	<target host="static.scientificamerican.com" />
+	<target host="subscribe.scientificamerican.com" />
+	<target host="*.subscribe.scientificamerican.com" />
+	<target host="www.scientificamerican.com" />
+
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?:[^./]+\.){2,}subscribe\.scientificamerican\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.subscribe.scientificamerican.com/" />
+			<test url="http://exists.not.subscribe.scientificamerican.com/" />
+
+		<test url="http://www.subscribe.scientificamerican.com/" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://www.scientificamerican.com/store/subscribe/scientific-american-magazine/" /-->
+
+	<!--	Complications:
+				-->
+	<target host="scientificamerican.com" />
+	<target host="links.email.scientificamerican.com" />
 
 
-	<rule from="^http://www\.scientificamerican\.com/(.+)\.pagespeed\..*$"
-		to="https://www.scientificamerican.com/$1" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.scientificamerican.com$" name="^(?:cfid|cftoken)$" /-->
+	<!--securecookie host="^subscribe\.scientificamerican.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^www\.scientificamerican.com$" name="^(?:MOBILEFORMAT|ORIGINALURLTOKEN)$" /-->
 
-	<!--	There may be more pages that
-		don't  redirect to http.	-->
-	<rule from="^http://(www\.)?sciamdigital\.com/(ax/|(cover)?images/|index\.cfm\?fa=Account\.ViewLogin)/"
-		to="https://$1sciamdigital.com/$2/" />
+	<securecookie host="^\." name="^(?:__qca$|optimizely)" />
+	<securecookie host="^\w" name="." />
 
-	<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html
 
-		https://mail1.eff.org/pipermail/https-everywhere-rules/2012-July/001248.html
-
-	<rule from="^http://www\.scientificamerican\.com/media/cover/current\.jpg"
-		to="https://www.scientificamerican.com/media/cover/current.cfm" /-->
-
-	<!--	https://trac.torproject.org/projects/tor/ticket/8077
-		https://mail1.eff.org/pipermail/https-everywhere-rules/2013-February/001487.html
-												-->
-	<rule from="^http://www\.scientificamerican\.com/assets/css/screen/I\.([\w\-\.]+)\.css\.pagespeed\.cf\.\w+\.css$"
-		to="https://www.scientificamerican.com/assets/css/screen/$1.css" />
-
-	<rule from="^http://(?:www\.)?scientificamerican\.com/"
+	<rule from="^http://scientificamerican\.com/"
 		to="https://www.scientificamerican.com/" />
 
-	<rule from="^http://subscribe\.scientificamerican\.com/"
-		to="https://subscribe.scientificamerican.com/" />
+	<rule from="^http://links\.email\.scientificamerican\.com/"
+		to="https://recp.links.mkt41.net/" />
+
+		<test url="http://links.email.scientificamerican.com/ctt?kn=26&amp;ms=NDc5ODcyOTYS1" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

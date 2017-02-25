@@ -50,17 +50,14 @@
 
 			- ^ ʳ
 			- about ʳ
-			- adinfo ʳ
-			- advertising
 			- dev.sandbox.autos ʳ
 			- misc.blogsmith ʳ
 			- browsers ʳ
 			- canada ʳ
 			- help.channels ʳ
-			- (www.)?corp ʳ
+			- (www.)?corp ᵃ
 			- daol ʳ
 			- dev ʳ
-			- discover ʳ
 			- downloaded ʰ
 			- features ʳ
 			- heroes ʰ
@@ -81,7 +78,6 @@
 			- oscars ʳ
 			- privacy ʳ
 			- realestate ʳ
-			- search ʳ
 			- share ʳ
 			- startpage ʳ
 			- thevoiceof ʰ
@@ -98,6 +94,7 @@
 		- www.winamp.com
 		- blog.winamp.com
 
+	ᵃ Shows another domain
 	ʳ Refused
 	ʰ Redirects to http
 	³ 503, Akamai
@@ -135,6 +132,8 @@
 		- .autos.aol.com
 		- bill.aol.com
 		- .bill.aol.com
+		- ui.comet.aol.com
+		- discover.aol.com
 		- feedback.aol.com
 		- .feedback.aol.com
 		- help.aol.com
@@ -142,9 +141,16 @@
 		- myaccount.aol.com
 		- .myaccount.aol.com
 		- .my.screenname.aol.com
+		- .search.aol.com
 		- dashboard.voice.aol.com
 
 	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Image on adinfo from media.blogcdn.com
+		- favicon on adinfo from www.aol.com
 
 -->
 <ruleset name="AOL.com (partial)">
@@ -152,9 +158,12 @@
 	<!--	Direct rewrites:
 				-->
 	<target host="account.aol.com" />
+	<target host="adinfo.aol.com" />
+	<target host="advertising.aol.com" />
 	<target host="autos.aol.com" />
 	<target host="bill.aol.com" />
 	<target host="captcha.aol.com" />
+	<target host="ui.comet.aol.com" />
 	<target host="contactus.aol.com" />
 	<target host="els-sso.corp.aol.com" />
 	<target host="idgfm.corp.aol.com" />
@@ -180,8 +189,11 @@
 	<target host="t.on.aol.com" />
 	<target host="openid.aol.com" />
 	<target host="api.oscar.aol.com" />
+	<target host="portfolios.aol.com" />
 	<target host="s2c.aol.com" />
 	<target host="my.screenname.aol.com" />
+	<target host="search.aol.com" />
+	<target host="shop.aol.com" />
 	<target host="dashboard.voice.aol.com" />
 	<target host="cdn.webmail.aol.com" />
 
@@ -209,17 +221,21 @@
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.aol\.com$" name="^newHelpSite$" /-->
+	<!--securecookie host="^\.aol\.com$" name="^(?:RSP_CHECK_PORTAL_SEARCH\.AOL\.COM|newHelpSite)$" /-->
 	<!--securecookie host="^(bill|myaccount|\.myaccount)?\.aol\.com$" name="^MC_UNAUTH$" /-->
 	<!--securecookie host="^(autos|\.autos)?\.aol\.com$" name="^RSP_CHECK_PORTAL_AUTOS\.AOL\.COM$" /-->
 	<!--securecookie host="^(bill|\.bill)?\.aol\.com$" name="(RSP_CHECK_PORTAL_BILL\.AOL\.COM|RSP_LOCAL_BILL\.AOL\.COM)$" /-->
 	<!--securecookie host="^(feedback|\.feedback)?\.aol\.com$" name="^(RSP_CHECK_PORTAL_FEEDBACK\.AOL\.COM|mcAuth)$" /-->
 	<!--securecookie host="^(myaccount|\.myaccount)?\.aol\.com$" name="^(RSP_CHECK_PORTAL_MYACCOUNT\.AOL\.COM|RSP_LOCAL_MYACCOUNT\.AOL\.COM|RSP_TRACK_MYACCOUNT\.AOL\.COM)$" /-->
 	<!--securecookie host="^account\.aol\.com$" name="^L$" /-->
+	<!--securecookie host="^ui\.comet\.aol\.com$" name="^AMPMV-40$" /-->
+	<!--securecookie host="^discover\.aol\.com$" name="^AWSELB$" /-->
 	<!--securecookie host="^(help|dashboard\.voice)\.aol\.com" name="^session$" /-->
 	<!--securecookie host="^\.mail\.aol\.com$" name="^(Context|L7Id)$" /-->
 	<!--securecookie host="^\.my\.screenname\.aol\.com$" name="^(SNS_LDC|SNS_SC)$" /-->
+	<!--securecookie host="^\.search\.aol\.com$" name="^(?:MVT_TB[PV]|RSP_CHECK_PORTAL_SEARCH\.AOL\.COM|s_guid)$" /-->
 
+	<securecookie host="^\." name="^(?:_ga|optimizely)" />
 	<securecookie host="^(?:dev\.sandbox\.autos|new)\.aol\.com$" name="." />
 
 

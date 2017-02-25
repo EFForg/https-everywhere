@@ -42,14 +42,22 @@ const HTTPS = {
     var blob = HTTPSRules.rewrittenURI(applicable_list, channel.URI.clone());
     var isSTS = securityService.isSecureURI(
         CI.nsISiteSecurityService.HEADER_HSTS, channel.URI, 0);
+    var uri;
     if (blob === null) {
       // Abort insecure non-onion requests if HTTP Nowhere is on
       if (httpNowhereEnabled && channel.URI.schemeIs("http") && !isSTS && !/\.onion$/.test(channel.URI.host)) {
-        IOUtil.abort(channel);
+        var newurl = channel.URI.spec.replace(/^http:/, "https:");
+        uri = CC["@mozilla.org/network/standard-url;1"].
+                    createInstance(CI.nsIStandardURL);
+        uri.init(CI.nsIStandardURL.URLTYPE_STANDARD, 443,
+                newurl, channel.URI.originCharset, null);
+        uri = uri.QueryInterface(CI.nsIURI);
+      } else {
+        return false; // no rewrite
       }
-      return false; // no rewrite
+    } else {
+      uri = blob.newuri;
     }
-    var uri = blob.newuri;
     if (!uri) this.log(WARN, "OH NO BAD ARGH\nARGH");
 
     // Abort downgrading if HTTP Nowhere is on
@@ -66,11 +74,13 @@ const HTTPS = {
     if (c2.redirectionLimit < 10) {
       this.log(WARN, "Redirection loop trying to set HTTPS on:\n  " +
       channel.URI.spec +"\n(falling back to HTTP)");
-      if (!blob.applied_ruleset) {
-        this.log(WARN,"Blacklisting rule for: " + channel.URI.spec);
-        https_everywhere_blacklist[channel.URI.spec] = true;
+      if (blob) {
+        if (!blob.applied_ruleset) {
+          this.log(WARN,"Blacklisting rule for: " + channel.URI.spec);
+          https_everywhere_blacklist[channel.URI.spec] = true;
+        }
+        https_everywhere_blacklist[channel.URI.spec] = blob.applied_ruleset;
       }
-      https_everywhere_blacklist[channel.URI.spec] = blob.applied_ruleset;
       var domain = null;
       try { domain = channel.URI.host; } catch (e) {}
       if (domain) https_blacklist_domains[domain] = true;
@@ -161,8 +171,8 @@ const HTTPS = {
                             .getService(Components.interfaces.nsICookieManager2);
       //some braindead cookies apparently use umghzabilliontrabilions
       var expiry = Math.min(c.expiry, Math.pow(2,31));
-      cookieManager.remove(c.host, c.name, c.path, false);
-      cookieManager.add(c.host, c.path, c.name, c.value, true, c.isHTTPOnly, c.isSession, expiry);
+      cookieManager.remove(c.host, c.name, c.path, false, c.originAttributes);
+      cookieManager.add(c.host, c.path, c.name, c.value, true, c.isHTTPOnly, c.isSession, expiry, c.originAttributes);
     }
   },
   
