@@ -3,16 +3,15 @@
 		ImageShack Changed policy, stopped image sharing service.
 		So, a.imageshack.us and img\d+.imageshack.us are 404 now, nomatter http or https.
 
-	Chain Contains anchor:
-		blog.imageshack.com
-
 	Mismatch:
-		api.imageshack.us
+		profile.imageshack.us
+		reg.imageshack.us
 -->
 <ruleset name="ImageShack">
 	<target host="imageshack.com" />
 	<target host="www.imageshack.com" />
 	<target host="api.imageshack.com" />
+	<target host="blog.imageshack.com" />
 
 	<target host="imageshack.us" />
 	<target host="www.imageshack.us" />
@@ -29,5 +28,9 @@
 
 	<securecookie host=".+" name=".+" />
 
-	<rule from="^http:" to="https:" />
+	<rule from="^http://(www\.|api\.|blog\.)?imageshack\.com/" to="https://$1imageshack.com/" />
+
+	<rule from="^http://(www\.|a\.|imagizer\.|post\.)?imageshack\.us/" to="https://$1imageshack.us/" />
+
+	<rule from="^http://img(\d+)\.imageshack\.us/" to="https://img$1.imageshack.us/" />
 </ruleset>
