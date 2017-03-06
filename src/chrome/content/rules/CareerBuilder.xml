@@ -1,23 +1,115 @@
-<ruleset name="CareerBuilder (partial)" platform="mixedcontent">
+<!--
+	Other CareerBuilder rulesets:
 
+		- careerbuilder.co.uk.xml
+		- careerbuilder.no.xml
+		- careerbuildercareers.com.xml
+		- icbdr.com.xml
+
+
+	CDN buckets:
+
+		- d23gwzhlslkz9a.cloudfront.net
+		- d30c0uivkwifa5.cloudfront.net
+
+
+	Nonfunctional hosts in *careerbuilder.com:
+
+		- www.college ʳ
+		- resources ʰ
+		- salary ʳ
+		- thehiringsite ʳ
+
+	ʰ Redirects to http
+	ʳ Refused
+
+
+	Problematic hosts in *careerbuilder.com:
+
+		- b2b ᵐ
+
+	ᵐ Pardot / mismatched
+
+
+	These altnames do not exist:
+
+		- atl.careerbuilder.com
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .careerbuilder.com
+		- hiring.careerbuilder.com
+		- www.careerbuilder.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bug on www from centro.pixel.ad
+
+-->
+<ruleset name="CareerBuilder.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="careerbuilder.com"/>
-	<target host="www.careerbuilder.com"/>
-	<target host="*.careerbuilder.co.uk" />
-	<target host="*.icbdr.com"/>
+	<target host="aol.careerbuilder.com" />
+	<target host="api.careerbuilder.com" />
+	<target host="coach.careerbuilder.com" />
+	<target host="edge.careerbuilder.com" />
+	<target host="employer.careerbuilder.com" />
+	<target host="hiring.careerbuilder.com" />
+	<target host="hiring-assets.careerbuilder.com" />
+	<target host="workat.careerbuilder.com" />
+	<target host="www.careerbuilder.com" />
+
+		<test url="http://hiring-assets.careerbuilder.com/media/attachments/careerbuilder-mini-1794.jpg" /><!--	1156 -->
+
+	<!--	Complications:
+				-->
+	<target host="b2b.careerbuilder.com" />
+
+		<exclusion pattern="^http://b2b\.careerbuilder\.com/(?!/*(?:$|\?|[els]/|emailPreference/|unsubscribe/|webmail/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://b2b.careerbuilder.com/CandidateBehaviorWebinar" />
+			<test url="http://b2b.careerbuilder.com/CareerBuilder1trainingpage" />
+			<test url="http://b2b.careerbuilder.com/FebruaryTalentAdvisorWebinar" />
+			<test url="http://b2b.careerbuilder.com/SignUp" />
+			<test url="http://b2b.careerbuilder.com/TalentAdvisor" />
+			<test url="http://b2b.careerbuilder.com/april2015talentadvisorwebinar" />
+			<test url="http://b2b.careerbuilder.com/index.htm" />
+			<test url="http://b2b.careerbuilder.com/roadshows" />
+			<test url="http://b2b.careerbuilder.com/talentstreamrecruittrainingpage" />
 
 
-	<securecookie host="^\.careerbuilder\.co\.uk$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.careerbuilder\.com$" name="^(?:BID|CB_SID)$" /-->
+	<!--securecookie host="^hiring\.careerbuilder\.com$" name="^first_time_popup$" /-->
+	<!--securecookie host="^www\.careerbuilder\.com$" name="^_session_id$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid$|_ga|cf_clearance$)" />
+	<securecookie host="^(?!b2b\.)\w" name="." />
 
 
-	<rule from="^http://(www\.)?careerbuilder\.com/"
-		to="https://$1careerbuilder.com/"/>
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://b2b\.careerbuilder\.com/+(?:\?.*)?$"
+		to="https://www.careerbuilder.com/" />
 
-	<!--	Clients have unique subdomains.
-						-->
-	<rule from="^http://(\w+)\.careerbuilder\.co\.uk/"
-		to="https://$1.careerbuilder.co.uk/" />
+		<test url="http://b2b.careerbuilder.com/?" />
 
-	<rule from="^http://(?:img|secure)\.icbdr\.com/"
-		to="https://secure.icbdr.com/"/>
+	<rule from="^http://b2b\.careerbuilder\.com/"
+		to="https://go.pardot.com/" />
+
+		<test url="http://b2b.careerbuilder.com/e/27812/cbforemployers/dcq1h/29948252" />
+		<test url="http://b2b.careerbuilder.com/l/27812/2014-09-08/sn3/27812/636/dhartleyrd.png" /><!--	43300 -->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

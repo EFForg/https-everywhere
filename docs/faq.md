@@ -29,7 +29,7 @@ You can also report the problem to the site, since they have the power to fix it
 
 ### [Why is HTTPS Everywhere preventing me from joining this hotel/school/other wireless network?](#why-is-https-everywhere-preventing-me-from-joining-this-hotelschoolother-wireless-network)
 
-Some wireless networks hijack your HTTP connections when you first join them, in order to demand authentication or simply to try to make you agree to terms of use. HTTPS pages are protected against this type of hijacking, which is as it should be. If you go to a website that isn't protected by HTTPS Everywhere (currently, nytimes.com is one such site) that will allow your connection to be captured and redirected to the authentication or terms of use page.
+Some wireless networks hijack your HTTP connections when you first join them, in order to demand authentication or simply to try to make you agree to terms of use. HTTPS pages are protected against this type of hijacking, which is as it should be. If you go to a website that isn't protected by HTTPS Everywhere or by HSTS (currently, example.com is one such site), that will allow your connection to be captured and redirected to the authentication or terms of use page.
 
 ### [Will there be a version of HTTPS Everywhere for IE, Safari, or some other browser?](#will-there-be-a-version-of-https-everywhere-for-ie-safari-or-some-other-browser)
 

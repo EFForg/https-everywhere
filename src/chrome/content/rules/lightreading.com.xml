@@ -1,0 +1,79 @@
+<!--
+	For problematic rules and other UBM coverage, see UBM-mismatches.xml.
+
+
+	CDN buckets:
+
+		- lightreading-images.s3.amazonaws.com
+		- newagora.cachefly.net
+
+		- d2x7anl33w5mmo.cloudfront.net
+
+			- img.lightreading.com
+
+
+
+	Problematic hosts in *lightreading.com:
+
+		- (www.)? ᵐ
+		- img ᵐ
+
+	ᵐ Mismatched
+
+
+	These altnames do not exist:
+
+		- www.payment.lightreading.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.lightreading.com
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- www from img.deusm.com ˢ
+			- www from img.lightreading.com ˢ
+			- www from thumbnails.lightreading.com ᵐ
+			- www from $self ᵐ
+			- www from img.lightreading.systems ᵐ
+			- www from brightcove.vo.llnwd.net
+
+		- Bug on www from cmp.112.2o7.net ˢ
+
+	ᵐ Not secured by us <= mismatched
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Light Reading.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="payment.lightreading.com" />
+
+	<!--	Complications:
+				-->
+	<target host="img.lightreading.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.lightreading\.com$" name="^lightreading_(?:lastvisit|visits)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<!--	darkreading/ data are also available in i.cmpnet.com/infoweek/security/darkreading/seo/
+					-->
+	<rule from="^http://img\.lightreading\.com/"
+		to="https://d2x7anl33w5mmo.cloudfront.net/" />
+
+		<test url="http://img.lightreading.com/images/spacer.gif" /><!--	49 -->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

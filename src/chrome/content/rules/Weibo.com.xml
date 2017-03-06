@@ -1,124 +1,61 @@
 <!--
-	For rules causing mixed content, see Weibo.com-mixedcontent.xml.
-
-	For other Sina coverage, see Sina.xml.
-
-
-	Nonfunctional hosts:
-
-		- ^ ²
-		- app ¹
-		- book ¹
-		- caipiao ¹
-		- help ¹
-		- manhua ¹
-		- open ¹
-		- qing ¹
-		- service ¹
-		- vdisk ²
-		- vgirl ¹
-		- widget ¹
-		- x ¹
-
-	¹ Refused
-	² Redirects to http
-
-
-	Problematic hosts:
-
-		- food ¹
-		- game *
-		- sg2.game *
-		- hr *
-		- widget ¹
-
-	¹ Mixed css
-	* Mismatched
-
-
-	Fully covered hosts:
-
-		- api
-		- upload.api
-		- passport
-		- static
-		- yahoo.tw
-
-
-	These altnames don't exist:
-
-		- www.yahoo.tw.weibo.com
-
+	Other Weibo coverage:	
+		Weibo.cn.xml
+		Weibo.com-mixedcontent.xml
+		WeiboPay.com.xml
 
 	Insecure cookies are set for these domains and hosts:
-
 		- .weibo.com
 		- game.weibo.com
 		- sg2.game.weibo.com
 		- yahoo.tw.weibo.com
 
+	Different http/https content:
+		s.weibo.com
 
-	Mixed content:
+	MCB:
+		chart.weibo.com
+		e.weibo.com
+		game.weibo.com
+		widget.weibo.com	( find test in help.sina.com.cn )
 
-		- css, on;
+	Invalid certificate:
+		app.weibo.com
+		book.weibo.com
+		static.book.weibo.com
+		caipiao.weibo.com
+		sg2.game.weibo.com
+		help.weibo.com
+		hr.weibo.com
+		manhua.weibo.com
+		open.weibo.com
+		rm2015.tv.weibo.com
+		service.weibo.com
+		vgirl.weibo.com
+		x.weibo.com
 
-			- weihr.sinaapp.com from img.t.sinajs.cn
-			- food from weibojs.yazuo.com	(Expired, mismatched
-			- game from img.app.wcdn.cn
-			- game from img[12].app.wcdn.cn
-			- widget from img.t.sinajs.cn
-
-		- Images, on:
-
-			- food from wpa.qq.com
-			- food from weibojs.yazuo.com
-			- food, widget from img.t.sinajs.cn
-			- game from ww[2-4].sinaimg.cn
-			- game from img.app.wcdn.cn
-			- game from img1.app.wcdn.cn
-			- game from image.game.weibo.com
-
-		- Bug on game from beacon.sina.com.cn
-
+	Redirect to http:
+		^
+		www.weibo.com
+		vdisk.weibo.com
 -->
-<ruleset name="Weibo.com (partial)">
 
-	<!--	Direct rewrites:
-				-->
+<ruleset name="Weibo.com">
 	<target host="api.weibo.com" />
+		<exclusion pattern="http://api\.weibo\.com/chat/" />
+		<test url="http://api.weibo.com/chat/#/main" />
+	<target host="rm.api.weibo.com" />
+		<test url="http://rm.api.weibo.com/2/remind/unread_count.json?source=1654744673" />
 	<target host="upload.api.weibo.com" />
-	<target host="e.weibo.com" />
-	<!--target host="food.weibo.com" /-->
-	<!--target host="game.weibo.com" /-->
+		<test url="http://upload.api.weibo.com/2/statuses/upload.json" />
+	<target host="captcha.weibo.com" />
+		<test url="http://captcha.weibo.com/static/js/patternLock.min.js" />
 	<target host="passport.weibo.com" />
-	<target host="static.weibo.com" />
+	<target host="security.weibo.com" />
+		<test url="http://security.weibo.com/app/js/v1/apps/account/jQuery1.7.1.js" />
 	<target host="yahoo.tw.weibo.com" />
-	<target host="www.weibo.com" />
 
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://weibo\.com/(?:$|login\.php)" /-->
-		<!--exclusion pattern="^http://vdisk\.weibo\.com/$" /-->
+	<securecookie host="^(upload\.api|yahoo\.tw)\.weibo\.com$" name=".+" />
 
-	<!--	Special cases:
-				-->
-	<!--target host="hr.weibo.com" /-->
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.weibo\.com$" name="^(ALF|SSOLoginState)$" /-->
-	<!--securecookie host="^game\.weibo\.com$" name="^usrmweb3$" /-->
-	<!--securecookie host="^sg2\.game\.weibo\.com$" name="^dpha$" /-->
-	<!--securecookie host="^yahoo\.tw\.weibo\.com$" name="^laravel_session$" /-->
-
-	<securecookie host="^(?:upload\.api|yahoo\.tw)\.weibo\.com$" name=".+" />
-
-
-	<!--rule from="^http://hr\.weibo\.com/"
-		to="https://weihr.sinaapp.com/" /-->
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

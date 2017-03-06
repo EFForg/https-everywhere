@@ -44,8 +44,8 @@ const HTTPS = {
         CI.nsISiteSecurityService.HEADER_HSTS, channel.URI, 0);
     var uri;
     if (blob === null) {
-      // Abort insecure non-onion requests if HTTP Nowhere is on
-      if (httpNowhereEnabled && channel.URI.schemeIs("http") && !isSTS && !/\.onion$/.test(channel.URI.host)) {
+      // Abort insecure non-onion, non-localhost requests if HTTP Nowhere is on
+      if (httpNowhereEnabled && channel.URI.schemeIs("http") && !isSTS && !/\.onion$/.test(channel.URI.host) && !/^localhost$/.test(channel.URI.host)) {
         var newurl = channel.URI.spec.replace(/^http:/, "https:");
         uri = CC["@mozilla.org/network/standard-url;1"].
                     createInstance(CI.nsIStandardURL);
@@ -171,8 +171,8 @@ const HTTPS = {
                             .getService(Components.interfaces.nsICookieManager2);
       //some braindead cookies apparently use umghzabilliontrabilions
       var expiry = Math.min(c.expiry, Math.pow(2,31));
-      cookieManager.remove(c.host, c.name, c.path, false);
-      cookieManager.add(c.host, c.path, c.name, c.value, true, c.isHTTPOnly, c.isSession, expiry);
+      cookieManager.remove(c.host, c.name, c.path, false, c.originAttributes);
+      cookieManager.add(c.host, c.path, c.name, c.value, true, c.isHTTPOnly, c.isSession, expiry, c.originAttributes);
     }
   },
   

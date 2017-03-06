@@ -1,0 +1,60 @@
+<!--
+	Problematic hosts in *goroost.com:
+
+		- docs ᵐ
+		- docs-api ᵐ
+		- docs-js ᵐ
+		- docs-rest ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- goroost.com
+		- .goroost.com
+		- www.goroost.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images on ^ from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="go Roost.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="goroost.com" />
+	<target host="cdn.goroost.com" />
+	<target host="dashboard.goroost.com" />
+	<target host="go.goroost.com" />
+	<target host="www.goroost.com" />
+
+		<!--test url="http://cdn.goroost.com/roostjspk/" /-->
+
+	<!--	Complications:
+				-->
+	<target host="docs-rest.goroost.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?goroost\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.goroost\.com$" name="^ORSESSIONID2$" /-->
+
+	<securecookie host="^\." name="^optimizely" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://docs-rest\.goroost\.com/"
+		to="https://roost.readme.io/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

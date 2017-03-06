@@ -16,18 +16,18 @@ exports["test httpse installed"] = function(assert) {
 
 exports["test httpse potentiallyApplicableRulesets"] = function(assert) {
   let HTTPSRules = HTTPSEverywhere.https_rules;
-  assert.deepEqual(HTTPSRules.potentiallyApplicableRulesets("www.eff.org").length,
+  assert.deepEqual(HTTPSRules.potentiallyApplicableRulesets("www.wikia.com").length,
               1,
-              "Test that HTTPSE finds one applicable rule for www.eff.org");
+              "Test that HTTPSE finds one applicable rule for www.wikia.com");
 }
 
 exports["test sample ruleset"] = function(assert, done) {
   tabs.open({
-    url: "http://libssh.org/robots.txt",
+    url: "http://www.senate.gov/robots.txt",
     onOpen: function(tab) {
       tab.on('load', function(tab) {
-        assert.equal(tab.url, "https://libssh.org/robots.txt",
-          "Test that LibSSH URLs are rewritten to HTTPS.");
+        assert.equal(tab.url, "https://www.senate.gov/robots.txt",
+          "Test that Senate URLs are rewritten to HTTPS.");
         tab.close();
         done();
       });
