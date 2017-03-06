@@ -79,6 +79,11 @@ if [ "$RULESETS_CHANGED" ]; then
     docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" node bash -c "cd /opt/utils/hsts-prune && npm install && node index.js"
     [ `git diff --name-only | wc -l` -eq 0 ]
   fi
+  
+  if [ "$TEST" == "mixed" ]; then
+    echo >&2 "Ensuring rulesets do not introduce targets containing active mixed content."
+    docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" node bash -c "cd /opt && apt-get update && apt-get install -y libxml2-utils && npm install -g galeksandrp/check-mixed-content#245e56ad5fd5412bdad986276911e5460d9e48c6 && xmllint --xpath '//ruleset[not(@platform)]/target' $RULESETS_CHANGED | grep -q -v '^$' || exit 0 && xmllint --xpath '//ruleset[not(@platform)]/target' $RULESETS_CHANGED | sed 's/<target host=\"//g' | sed 's&\"/>&\n&g' | grep -v '*' | xargs -n1 -i bash -c 'check-mixed-content --depth=1 --url {} || exit 255'"
+  fi
 fi
 
 exit 0
