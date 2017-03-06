@@ -9,6 +9,7 @@
 		- mathoverflow.com ==> No response (only a redirect to mathoverflow.net anyway)
 		- meta.*.stackexchange.com ==> Mismatched
 		- blog.*  ==> Mixed Active Content
+		- www.stackoverflow.blog ==> Mismatched
 
 -->
 <ruleset name="Stack Exchange (partial)">
@@ -28,7 +29,6 @@
 	<target host="www.mathoverflow.net" />
 	
 	<!-- Serverfault -->
-	<target host="clc.serverfault.com" />
 	<target host="meta.serverfault.com" />
 	<target host="serverfault.com" />
 	
@@ -54,7 +54,11 @@
 		<test url="https://meta.unix.stackexchange.com/" />
 		<test url="https://meta.opendata.stackexchange.com/" />
 		<test url="https://blog.gaming.stackexchange.com/" />
-		
+
+		<!-- but this one should not -->
+		<exclusion pattern="^https://qa\.sockets\.stackexchange\.com/" />
+		<test url="https://qa.sockets.stackexchange.com/" />
+
 		<!-- subdomains with no https support -->
 		<exclusion pattern="^http://elections\.stackexchange\.com" />
 			<test url="http://elections.stackexchange.com/" />
@@ -62,12 +66,17 @@
 	<!-- Stackoverflow -->
 	<target host="chat.stackoverflow.com" />
 	<target host="careers.stackoverflow.com" />
+	<target host="email.stackoverflow.com" />
+	<target host="stackoverflow.email" />
 	<target host="ja.stackoverflow.com" />
 	<target host="meta.stackoverflow.com" />
 	<target host="pt.stackoverflow.com" />
+	<target host="ru.stackoverflow.com" />
 	<target host="stackoverflow.com" />
 	<target host="blog.stackoverflow.com" />
 	<target host="www.stackoverflow.com" />
+	<target host="stackoverflow.blog" />
+	<target host="www.stackoverflow.blog" />
 
 	<!-- Superuser -->
 	<target host="superuser.com" />
@@ -77,6 +86,7 @@
 	<!-- Misc -->
 	<target host="sstatic.net" />
 	<target host="cdn.sstatic.net" />
+	<target host="cdn-chat.sstatic.net" />
 	<target host="stackapps.com" />
 	<target host="teststackoverflow.com" />
 	<target host="www.teststackoverflow.com" />
@@ -113,8 +123,9 @@
 	<securecookie host="^ja\.stackoverflow\.com$" name=".+" />
 	<securecookie host="^meta\.stackoverflow\.com$" name=".+" />
 	<securecookie host="^pt\.stackoverflow\.com$" name=".+" />
+	<securecookie host="^ru\.stackoverflow\.com$" name=".+" />
 	<securecookie host="^stackoverflow\.com$" name=".+" />
-	
+
 	<!-- Superuser -->
 	<securecookie host="^superuser\.com$" name=".+" />
 	<securecookie host="^meta\.superuser\.com$" name=".+" />	
@@ -122,6 +133,7 @@
 	<!-- Misc -->
 	<securecookie host="^sstatic\.net$" name=".+" />
 	<securecookie host="^cdn\.sstatic\.net$" name=".+" />
+	<securecookie host="^cdn-chat\.sstatic\.net$" name=".+" />
 	<securecookie host="^stackapps\.com$" name=".+" />
 	<securecookie host="^teststackoverflow\.com$" name=".+" />
 
@@ -130,6 +142,8 @@
 	<!-- https links from other pages to these will cause MCB for important elements, hence the downgrades -->
 	<rule from="^https://([\w.-]+)\.([\w-]+)\.stackexchange\.com/" 
 		to="http://$1.$2.stackexchange.com/" downgrade="1" />
+
+	<rule from="^http://www\.stackoverflow\.blog/" to="https://stackoverflow.blog/" />
 	
 	<rule from="^http:" to="https:" />
 
