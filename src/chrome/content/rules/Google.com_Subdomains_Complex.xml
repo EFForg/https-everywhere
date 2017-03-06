@@ -7,7 +7,7 @@
 	<target host="*.google.com" />
 
 	<rule from="^http://(clients\d)\.google\.com/"
-		 	to="https://clients1.google.com/" />
+			to="https://clients1.google.com/" />
 		<test url="http://clients1.google.com/" />
 		<test url="http://clients2.google.com/" />
 		<test url="http://clients3.google.com/" />
@@ -29,20 +29,30 @@
 			<test url="http://clients2.google.com/ocsp" />
 			<test url="http://clients3.google.com/ocsp" />
 
+		<!--
+			Captive portal detection of Google.
+			Many captive portals break TLS, so exempt this redirect URL.
+			See also GitHub bug #368 and #8921
+		-->
+		<exclusion pattern="^http://clients\d\.google\.com/generate_204$"/>
+			<test url="http://clients1.google.com/generate_204" />
+			<test url="http://clients2.google.com/generate_204" />
+			<test url="http://clients3.google.com/generate_204" />
+
 	<rule from="^http://(docs\d)\.google\.com/"
-		 	to="https://$1.google.com/" />
+			to="https://$1.google.com/" />
 			<test url="http://docs1.google.com/" />
 			<test url="http://docs2.google.com/" />
 			<test url="http://docs3.google.com/" />
 
 	<rule from="^http://(\d\.docs)\.google\.com/"
-		 	to="https://$1.google.com/" />
+			to="https://$1.google.com/" />
 			<test url="http://1.docs.google.com/" />
 			<test url="http://2.docs.google.com/" />
 			<test url="http://3.docs.google.com/" />
 
 	<rule from="^http://(spreadsheets\d)\.google\.com/"
-		 	to="https://$1.google.com/" />
+			to="https://$1.google.com/" />
 		<test url="http://spreadsheets1.google.com/" />
 		<test url="http://spreadsheets2.google.com/" />
 		<test url="http://spreadsheets3.google.com/" />
