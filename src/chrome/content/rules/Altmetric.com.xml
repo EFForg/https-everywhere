@@ -1,25 +1,33 @@
 <!--
-    Not covered:
-        - support.altmetric.com (bad cert)
-        
-    The page /blog/ would fail with mixed content in the relevant
-    browsers and so is excluded. However, /blog/ is linked relatively,
-    so simply using exclusion patterns is not sufficient.
+	Mismatch:
+		status.altmetric.com
+
+	Redirect to http:
+		metricstoolkit.altmetric.com
 -->
 <ruleset name="Altmetric.com">
 	<target host="altmetric.com" />
-	<target host="www.altmetric.com" />
-	<target host="alt.altmetric.com" />
+	<target host="*.altmetric.com" />
+		<test url="http://agingalbanyny.altmetric.com/" />
+		<test url="http://alt.altmetric.com/" />
+		<test url="http://bmj.altmetric.com/" />
+		<test url="http://bookalytics.altmetric.com/" />
+		<test url="http://cdc.altmetric.com/" />
+		<test url="http://cell.altmetric.com/" />
+		<test url="http://dovemedicalpress.altmetric.com/" />
+		<test url="http://elsevier.altmetric.com/" />
+		<test url="http://help.altmetric.com/" />
+		<test url="http://jamanetwork.altmetric.com/" />
+		<test url="http://nature.altmetric.com/" />
+		<test url="http://norden.altmetric.com/" />
+		<test url="http://oxfordjournals.altmetric.com/" />
+		<test url="http://springerlink.altmetric.com/" />
+		<test url="http://support.altmetric.com/" />
+		<test url="http://wiley.altmetric.com/" />
 
-	<test url="http://altmetric.com/blog/" />
-	<test url="https://altmetric.com/blog/" />
-	<test url="http://www.altmetric.com/blog/" />
-	<test url="https://www.altmetric.com/blog/" />
+	<exclusion pattern="^http://(metricstoolkit|status)\.altmetric\.com/" />
+		<test url="http://metricstoolkit.altmetric.com/" />
+		<test url="http://status.altmetric.com/" />
 
-	<exclusion pattern="^http://(www\.)?altmetric.com/blog/"/>
-	<rule from="^https://(www\.)?altmetric\.com/blog/" to="http://$1altmetric.com/blog/" downgrade="1" />
-
-	<rule from="^http:"
-		to="https:"/>
-
+	<rule from="^http:" to="https:"/>
 </ruleset>
