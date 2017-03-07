@@ -1,0 +1,71 @@
+<!--
+	Other MediaFire rulesets:
+		- MFi.re.xml
+
+	CDN buckets:
+		- staticcdn.mediafire.com.edgesuite.net
+
+	Mismatch:
+		blog.mediafire.com
+
+	Redirect to http:
+		www(1|2)?.mediafire.com/file/
+		www(1|2)?.mediafire.com/*.php
+
+	Redirect to www:
+		^
+		download\d+.mediafire.com
+		and so on
+-->
+
+<ruleset name="MediaFire.com">
+	<!-- Mismatch: -->
+	<target host="staticcdn.mediafire.com" />
+	<rule from="^http://staticcdn\.mediafire\.com/" to="https://static-cdn.mediafire.com/" />
+		<test url="http://staticcdn.mediafire.com/images/buttons/btn_twitter_connect.png" />
+
+	<!-- Redirect to http: -->
+	<target host="www.mediafire.com" />
+	<target host="www1.mediafire.com" />
+	<target host="www2.mediafire.com" />
+		<test url="http://www.mediafire.com/asuswrt-merlin/" />
+		<test url="http://www1.mediafire.com/asuswrt-merlin/" />
+		<test url="http://www2.mediafire.com/asuswrt-merlin/" />
+		<test url="http://www.mediafire.com/view/lhh2hm41m412un5/VOL_29_for_web.pdf" />
+		<test url="http://www1.mediafire.com/view/lhh2hm41m412un5/VOL_29_for_web.pdf" />
+		<test url="http://www2.mediafire.com/view/lhh2hm41m412un5/VOL_29_for_web.pdf" />
+
+	<exclusion pattern="^http://www(1|2)?\.mediafire\.com/file/" />
+		<test url="http://www.mediafire.com/file/0cmtrrpm5db9skw/2.35.pdf" />
+		<test url="http://www1.mediafire.com/file/0cmtrrpm5db9skw/2.35.pdf" />
+		<test url="http://www2.mediafire.com/file/0cmtrrpm5db9skw/2.35.pdf" />
+		<test url="http://www.mediafire.com/file/1ztynkwgjym/Hellblazer+102.cbr" />
+		<test url="http://www1.mediafire.com/file/1ztynkwgjym/Hellblazer+102.cbr" />
+		<test url="http://www2.mediafire.com/file/1ztynkwgjym/Hellblazer+102.cbr" />
+
+	<exclusion pattern="^http://www(1|2)?\.mediafire\.com/\S+\.php" />
+		<test url="http://www.mediafire.com/download_repair.php?dkey=093qciqr0a0&amp;qkey=cah5j9i4i3chrj5" />
+		<test url="http://www1.mediafire.com/download_repair.php?dkey=093qciqr0a0&amp;qkey=cah5j9i4i3chrj5" />
+		<test url="http://www2.mediafire.com/download_repair.php?dkey=093qciqr0a0&amp;qkey=cah5j9i4i3chrj5" />
+		<test url="http://www.mediafire.com/error.php" />
+		<test url="http://www1.mediafire.com/error.php" />
+		<test url="http://www2.mediafire.com/error.php" />
+
+	<!-- Directly: -->
+	<target host="mediafire.com" />
+	<target host="cdn.mediafire.com" />
+	<target host="cdnssl.mediafire.com" />
+	<target host="m.mediafire.com" />
+
+	<target host="*.mediafire.com" />
+		<test url="http://mediafire.com/asuswrt-merlin/" />
+		<test url="http://999-cdn.mediafire.com/images/buttons/btn_twitter_connect.png" />
+		<test url="http://origin-cdn.mediafire.com/images/buttons/btn_twitter_connect.png" />
+		<test url="http://w.mediafire.com/images/buttons/btn_twitter_connect.png" />
+		<test url="http://download9999.mediafire.com/11dagdfqsyqg/0cmtrrpm5db9skw/2.35.pdf" />
+
+	<exclusion pattern="^http://blog\.mediafire\.com/" />
+		<test url="http://blog.mediafire.com/" />
+
+	<rule from="^http:" to="https:" />
+</ruleset>
