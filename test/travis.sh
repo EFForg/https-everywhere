@@ -23,7 +23,14 @@ fi
 # Fetch the current GitHub version of HTTPS-E to compare to its master
 git remote add upstream-for-travis https://github.com/EFForg/https-everywhere.git
 trap 'git remote remove upstream-for-travis' EXIT
-git fetch --depth=1 upstream-for-travis master
+
+# Only do a shallow fetch if we're in Travis.  No need otherwise.
+if [ $TRAVIS ]; then
+  git fetch --depth=50 upstream-for-travis master
+else
+  git fetch upstream-for-travis master
+fi
+
 COMMON_BASE_COMMIT=$(git merge-base upstream-for-travis/master HEAD)
 RULESETS_CHANGED=$(git diff --name-only $COMMON_BASE_COMMIT | grep $RULESETFOLDER | grep '.xml')
 if [ "$(git diff --name-only $COMMON_BASE_COMMIT)" != "$RULESETS_CHANGED" ]; then

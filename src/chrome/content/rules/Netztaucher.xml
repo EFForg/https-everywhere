@@ -4,16 +4,36 @@
 		- (www.)netztaucher.com		(shows kundenserver42; mismatched, CN: kundenserver42.kundenserver42.de)
 		- www.stu.kundenserver42.de	(403, valid cert)
 
+
+	Problematic hosts in *kundenserver42.de:
+
+		- www.kundenserver ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- kundenserver42.kundenserver42.de
+		- stu.kundenserver42.de
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
 -->
 <ruleset name="die netztaucher (partial)">
 
-	<target host="*.kundenserver42.de" />
+	<target host="kundenserver42.kundenserver42.de" />
+	<target host="stu.kundenserver42.de" />
 
 
-	<securecookie host="^(?:(?:www\.)?kundenserver42|stu)\.kundenserver42\.de$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:kundenserver42|stu)\.kundenserver42\.de$" name="^SID$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://((?:www\.)?kundenserver42|stu)\.kundenserver42\.de/"
-		to="https://$1.kundenserver42.de/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -2,33 +2,31 @@
 	See CDS-Global-mismatches.xml for problematic rules.
 
 
-	Nonfunctional:
-
-		- cds-global.com        (times out)
-
 -->
 <ruleset name="CDS Global (partial)">
 
 	<target host="w1.buysub.com" />
+	<target host="cds-global.com" />
+	<target host="www.cds-global.com" />
 	<target host="mycdsglobal.com" />
-	<!--	* for cross-domain cookie.	-->
-	<target host="*.mycdsglobal.com" />
+	<target host="sso.mycdsglobal.com" />
+	<target host="www.mycdsglobal.com" />
 
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://sso.mycdsglobal.com/openam/UI/Login?goto=https%3A%2F%2Fwww.mycdsglobal.com%2F%2F" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.mycdsglobal\.com$" name="^(?:AMAuthCookie|amlbcookie)$" /-->
+	<!--securecookie host="^sso\.mycdsglobal\.com$" name="^APLBCOOKIE$" /-->
 
 	<securecookie host="^w1\.buysub\.com$" name=".*" />
 	<securecookie host="^(?:sso)?\.mycdsglobal\.com$" name=".*" />
 
 
-	<rule from="^http://w1\.buysub\.com/"
-		to="https://w1.buysub.com/" />
-
-	<!--	Cert doesn't match !www.
-		This is what the server does,
-		sans-https.	-->
-	<rule from="^http://mycdsglobal\.com/"
-		to="https://www.mycdsglobal.com//" />
-
-	<rule from="^http://(sso|www)\.mycdsglobal\.com/"
-		to="https://$1.mycdsglobal.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

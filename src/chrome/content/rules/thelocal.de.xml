@@ -1,0 +1,57 @@
+<!--
+	For other The Local coverage, see Local.xml.
+
+
+	Nonfunctional hosts in *thelocal.de:
+
+		- dating ᵈ
+
+	ᵈ Dropped
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.thelocal.de
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Image on www from $self ˢ
+
+		- Ads, on:
+
+			- www from $self ˢ
+			- www from www.thelocal.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="The Local.de (partial)">
+
+	<target host="thelocal.de" />
+	<target host="www.thelocal.de" />
+
+		<!--	Mixed content:
+					-->
+		<!--test url="http://www.thelocal.de/jobs/?alljobs=1" /-->
+		<!--test url="http://www.thelocal.de/jobs/recruiters/" /-->
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://www.thelocal.de/members/register" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.thelocal\.de$" name="^(?:PHPSESSID|ci_session)$" /-->
+
+	<securecookie host="^\." name="^_ga" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
