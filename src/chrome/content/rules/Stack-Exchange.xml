@@ -7,7 +7,7 @@
 
 		- www.stackapps.com ==> Mismatched
 		- mathoverflow.com ==> No response (only a redirect to mathoverflow.net anyway)
-		- meta.*.stackexchange.com ==> Mismatched
+		- meta.*.stackexchange.com ==> Mismatched (now *.meta.stackexchange.com)
 		- blog.*  ==> Mixed Active Content
 		- www.stackoverflow.blog ==> Mismatched
 
@@ -46,13 +46,16 @@
 		<test url="http://unix.stackexchange.com/" />
 		<test url="http://writers.stackexchange.com/" />
 
-		<!-- deeper domains cause certificate mismatch errors - there is also a downgrade rule below -->
-		<exclusion pattern="^http://([\w.-]+)\.([\w-]+)\.stackexchange\.com"/>
+		<!-- old child meta domains cause certificate mismatch errors -->
+		<exclusion pattern="^http://meta\.([\w-]+)\.stackexchange\.com"/>
 		<test url="http://meta.unix.stackexchange.com/" />
 		<test url="http://meta.opendata.stackexchange.com/" />
-		<test url="http://blog.gaming.stackexchange.com/" />
 		<test url="https://meta.unix.stackexchange.com/" />
 		<test url="https://meta.opendata.stackexchange.com/" />
+
+		<!-- gaming blog causes certificate mismatch errors -->
+		<exclusion pattern="^http://blog\.gaming\.stackexchange\.com"/>
+		<test url="http://blog.gaming.stackexchange.com/" />
 		<test url="https://blog.gaming.stackexchange.com/" />
 
 		<!-- but this one should not -->
@@ -138,11 +141,13 @@
 	<securecookie host="^teststackoverflow\.com$" name=".+" />
 
 <!-- Rules -->
-	
-	<!-- https links from other pages to these will cause MCB for important elements, hence the downgrades -->
-	<rule from="^https://([\w.-]+)\.([\w-]+)\.stackexchange\.com/" 
-		to="http://$1.$2.stackexchange.com/" downgrade="1" />
 
+	<!-- meta.* sites moved to *.meta - we can safely redirect to their new equivalents, which support https -->
+	<rule from="^https://meta\.([\w-]+)\.stackexchange\.com/" to="https://$1.meta.stackexchange.com/" />
+	
+	<!-- old gaming blog link does not support https -->
+	<rule from="^https://blog\.gaming\.stackexchange\.com/" to="http://blog.gaming.stackexchange.com/" downgrade="1" />
+	
 	<rule from="^http://www\.stackoverflow\.blog/" to="https://stackoverflow.blog/" />
 	
 	<rule from="^http:" to="https:" />
