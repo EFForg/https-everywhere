@@ -16,9 +16,17 @@ Run the latest code and rulesets in a standalone Firefox profile:
 
     bash test/firefox.sh --justrun
 
+Run the latest code and rulesets in a standalone profile for a specific version of Firefox:
+
+    FIREFOX=/path/to/firefox bash test/firefox.sh --justrun
+
 Run the latest code and rulesets in a standalone Chromium profile:
 
     bash test/chromium.sh --justrun
+
+Run the latest code and rulesets in a standalone Tor Browser profile:
+
+    bash test/tor path_to_tor_browser.tar.xz
 
 Build the Firefox extension as a .xpi package:
 
@@ -58,58 +66,9 @@ Important directories you might want to know about
 
     test/                     The tests live here
 
+    util/                     Various utilities
+
 Hacking on the Source Code
 --------------------------
 
-The current stable release series is 5.2. The maintainers release new versions
-off the current master branch about every two weeks.
-
-To submit changes, either use pull requests on GitHub or email patches to
-https-everywhere-rulesets@lists.eff.org (rulesets) or
-https-everywhere@lists.eff.org (code).
-
-### Writing rulesets
-
-HTTPS Everywhere consists of a large number of rules for switching sites from HTTP to HTTPS. You can read more about how to write these rules here: https://www.eff.org/https-everywhere/rulesets
-
-If you want to create new rules to submit to us, we expect them to be in the src/chrome/content/rules directory. That directory also contains a useful script, make-trivial-rule, to create a simple rule for a specified domain. There is also a script called trivial-validate.py, to check all the pending rules for several common errors and oversights. For example, if you wanted to make a rule for the example.com domain, you could run
-
-    bash ./make-trivial-rule example.com
-
-inside the rules directory. This would create Example.com.xml, which you could then take a look at and edit based on your knowledge of any specific URLs at example.com that do or don't work in HTTPS. You should then run
-
-    bash test.sh
-
-to make sure that your rule is free of common mistakes.
-
-### Writing translations
-
-If you would like to help translate HTTPS Everywhere into your language,
-you can do that through the Tor Project's Transifex page:
-https://www.transifex.com/projects/p/torproject/.
-
-### Bug trackers and mailing lists
-
-We currently have two bug trackers. The one on GitHub (https://github.com/EFForg/https-everywhere/issues) is recommended because it gets checked more frequently and has a friendlier user interface. The one on trac.torproject.org (https://trac.torproject.org/projects/tor/report/19) has a large backlog of bugs at this point, but it has the advantage of allowing you to post bugs anonymously using the "cypherpunks" / "writecode" account. (Note that you won't see replies unless you put an email address in the CC field.)
-
-We have two publicly-archived mailing lists: the https-everywhere list (https://lists.eff.org/mailman/listinfo/https-everywhere) is for discussing the project as a whole, and the https-everywhere-rulesets list (https://lists.eff.org/mailman/listinfo/https-everywhere-rules) is for discussing the rulesets and their contents, including patches and git pull requests.
-
-Tests
--------------
-
-There are some very basic unittests under test/. These are run with
-
-    bash test.sh
-
-Please help write more unittests and integration tests!
-
-There are also ruleset tests, which aim to find broken rulesets by actually
-loading URLs in a browser and watching for Mixed Content Blocking to fire.
-The easiest way to run ruleset tests is to load a standalone Firefox instance
-with the tests enabled:
-
-    bash test/firefox.sh --justrun
-
-Then click the HTTPS Everywhere icon on the toolbar, and click "Run HTTPS
-Everywhere Ruleset Tests." When you run the tests, be prepared to let your
-computer run them for a really long time.
+Please refer to our [contributing](CONTRIBUTING.md) document to contribute to the project.
