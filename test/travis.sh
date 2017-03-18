@@ -26,7 +26,7 @@ trap 'git remote remove upstream-for-travis' EXIT
 
 # Only do a shallow fetch if we're in Travis.  No need otherwise.
 if [ $TRAVIS ]; then
-  git fetch --depth=1 upstream-for-travis master
+  git fetch --depth=50 upstream-for-travis master
 else
   git fetch upstream-for-travis master
 fi

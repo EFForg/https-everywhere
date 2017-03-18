@@ -44,8 +44,15 @@ const HTTPS = {
         CI.nsISiteSecurityService.HEADER_HSTS, channel.URI, 0);
     var uri;
     if (blob === null) {
-      // Abort insecure non-onion requests if HTTP Nowhere is on
-      if (httpNowhereEnabled && channel.URI.schemeIs("http") && !isSTS && !/\.onion$/.test(channel.URI.host)) {
+      // Abort insecure non-onion, non-localhost requests if HTTP Nowhere is on
+      if (httpNowhereEnabled &&
+          channel.URI.schemeIs("http") &&
+          !isSTS &&
+          !/\.onion$/.test(channel.URI.host) &&
+          !/^localhost$/.test(channel.URI.host) &&
+          !/^127(\.[0-9]{1,3}){3}$/.test(channel.URI.host) &&
+          !/^0\.0\.0\.0$/.test(channel.URI.host)
+         ) {
         var newurl = channel.URI.spec.replace(/^http:/, "https:");
         uri = CC["@mozilla.org/network/standard-url;1"].
                     createInstance(CI.nsIStandardURL);

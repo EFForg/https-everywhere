@@ -1,27 +1,23 @@
 <!--
 	Nonfunctional subdomains:
 
-		- irc		(cert: trac.wolfire.com, expired; shows trac's data)
-		- forums	(ditto)
-
+		- www.wolfire.com (refused)
+		- amazon.wolfire.com (self-signed)
+		- www.amazon.wolfire.com (self-signed)
+		- blog.wolfire.com (refused)
+		- feeds.wolfire.com (refused)
+		- forums.wolfire.com (diffrent content, 401)
+		- irc.wolfire.com (self-signed)
+		- legacy.wolfire.com (self-signed)
+		- wiki.wolfire.com (self-signed)
 -->
-<ruleset name="Wolfire Games (partial)" default_off="expired, mismatch">
-
-	<!--	- Cert for all but trac: ghs-ssl.googlehosted.com
-		- trac's cert has expired
-			-->
+<ruleset name="Wolfire Games (partial)">
 	<target host="wolfire.com" />
-	<target host="*.wolfire.com" />
+	<target host="cdn.wolfire.com" />
+		<test url="http://cdn.wolfire.com/blog/discord.png" />
+	<target host="discourse.wolfire.com" />
 
 
-	<!--	- !www cert: trac.wolfire.com
-		- !www shows trac's data over https
-		- !www 301s to www over http
-				-->
-	<rule from="^http://(?:www\.)?wolfire\.com/"
-		to="https://www.wolfire.com/" />
-
-	<rule from="^http://(blog|trac)\.wolfire\.com/"
-		to="https://$1.wolfire.com/" />
-
+	<rule from="^http:"
+		to="https:" />
 </ruleset>
