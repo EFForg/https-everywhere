@@ -1,21 +1,49 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://bpsshop.org.uk/ => http://bpsshop.org.uk/: (28, 'Connection timed out after 10000 milliseconds')
+	Other BPS rulesets:
+
+		- bpsshop.org.uk.xml
+
+
+	Nonfunctional hosts in *bps.org.uk:
+
+		- cpd ⁴
+		- psychsource ʳ
+		- www ʰ
+		- www1 ᵃ
+
+	⁴ 404
+	ᵃ Shows another domain
+	ʰ Redirects to http
+	ʳ Refused
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .bps.org.uk
+		- login2.bps.org.uk
+		- .shop.bps.org.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
 -->
-<ruleset name="BPS.org.uk (partial)" default_off='failed ruleset test'>
+<ruleset name="BPS.org.uk (partial)">
 
-	<target host="bps.org.uk"/>
-	<target host="*.bps.org.uk"/>
-	<target host="bpsshop.org.uk"/>
-	<target host="www.bpsshop.org.uk"/>
+	<target host="beta.bps.org.uk"/>
+	<target host="digest.bps.org.uk"/>
+	<target host="login2.bps.org.uk"/>
+	<target host="shop.bps.org.uk"/>
 
-	<rule from="^http://(?:www\.)?bps\.org\.uk/sites/default/(files/cs|theme)s/"
-		to="https://www.bps.org.uk/sites/default/$1s/"/>
 
-	<rule from="^http://login\.bps\.org\.uk/"
-		to="https://login.bps.org.uk/"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.bps\.org\.uk$" name="^EU_COMPLIANCE_NOTICE_GIVEN$" /-->
+	<!--securecookie host="^login2\.bps\.org\.uk$" name="^(?:CFID|CFTOKEN|TESTBPSLOGIN)$" /-->
+	<!--securecookie host="^\.shop\.bps\.org\.uk$" name="^frontend$" /-->
 
-	<rule from="^http://(?:www\.)?bpsshop\.org\.uk/((?:App_Theme|Asset|image)s/|login\.aspx)"
-		to="https://www.bpsshop.org.uk/$1"/>
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
