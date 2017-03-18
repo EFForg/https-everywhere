@@ -34,71 +34,92 @@
 		- arstechnica.com subdomains:
 
 			- episteme	(works; mismatched, CN: arstechnica.com)
-			- feeds		(interrupted)
-			- media		(cachefly)
-			- stats2	(2o7.net)
+			- feeds ᶠ
+			- media ᵐ
+			- origin ᵐ
+			- stats2 ᵐ
 
+		- static.arstechnica.net ᵐ
 
-	Partially covered arstechnica.com subdomains:
-
-		- (www.)	(most pages redirect to http)
-		- feeds		(→ feedburner.google.com)
-
-
-	Fully covered domains:
-
-		- coins.arstechnica.com
+	ᶠ Feedburner / handshake fails
+	ᵐ Mismatched
 
 
 	These altnames don't exist:
 
-		- www.coins.arstechnica.com
 		- write.arstechnica.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- arstechnica.com
+		- .arstechnica.com
+		- cms.arstechnica.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
 
-		- iframes on ^ from www.youtube-nocookie.com *
-
-		- Bugs from condenast.112.2o7.net *
+		- Bug on ^ from b.scorecardresearch.com *
 
 	* Secured by us
 
 -->
 <ruleset name="Ars Technica (partial)">
 
-	<target host="ars.to" />
+	<!--	Direct rewrites:
+				-->
 	<target host="arstechnica.com" />
-	<target host="*.arstechnica.com" />
-		<exclusion pattern="^http://(?:www\.)?arstechnica\.com/(?!ads/|civis/ucp\.php|favicon\.ico|public-shared/|services/incr\.php|subscriptions(?:$|[?/])|wp-content/)" />
-	<target host="*.arstechnica.net" />
+	<target host="cms.arstechnica.com" />
+	<target host="coins.arstechnica.com" />
+	<target host="hq.arstechnica.com" />
+	<target host="www.arstechnica.com" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://arstechnica.com/civis/" /-->
+
+	<target host="cdn.arstechnica.net" />
+
+	<!--	Complications:
+				-->
+	<target host="ars.to" />
+
+	<target host="feeds.arstechnica.com" />
+	<target host="media.arstechnica.com" />
+	<target host="origin.arstechnica.com" />
+	<target host="stats2.arstechnica.com" />
+
+	<target host="static.arstechnica.net" />
+
+		<test url="http://cdn.arstechnica.net/civis/ars/theme/images/pages.png" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.arstechnica\.com$" name="^phpbb3_\w+_(k|sid|u)$" /-->
+	<!--securecookie host="^(?:cms\.)?arstechnica\.com$" name="^country$" /-->
 	<!--
 		Tracking cookies:
 						-->
-	<securecookie host="^\.arstechnica\.com$" name="^(?:mbox|s_\w+|timeSpent|__utm\w)$" />
+	<securecookie host="^\." name="^(?:mbox$|phpbb3_|s_\w|timeSpent|__utm\w)" />
+	<securecookie host="^\w" name="." />
 
 
 	<rule from="^http://ars\.to/"
 		to="https://bit.ly/" />
 
-	<rule from="^http://((?:cms|coins|hq|www)\.)?arstechnica\.com/"
-		to="https://$1arstechnica.com/" />
-
-	<rule from="^http://feeds\.arstechnica\.com/(?:\?.*)?$"
-		to="https://feedburner.google.com/fb/a/home" />
+	<rule from="^http://feeds\.arstechnica\.com/"
+		to="https://feeds.feedburner.com/" />
 
 	<rule from="^http://stats2\.arstechnica\.com/"
 		to="https://condenast.112.2o7.net/" />
 
-	<rule from="^http://api\.arstechnica\.net/"
-		to="https://api.arstechnica.net/" />
-
-	<rule from="^http://(?:(?:media|origin)\.arstechnica\.com|(?:cdn|static)\.arstechnica\.net)/"
+	<rule from="^http://(?:(?:media|origin)\.arstechnica\.com|static\.arstechnica\.net)/"
 		to="https://cdn.arstechnica.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
