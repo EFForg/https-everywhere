@@ -1,14 +1,35 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://aesnet.org/ => http://aesnet.org/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.aesnet.org/ => http://www.aesnet.org/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-
 	American Epilepsy Society 
 
+
+	Nonfunctional hosts in *aesnet.org:
+
+		- careers ʳ
+
+	ʳ Refused
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- my.aesnet.org
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 -->
-<ruleset name="AESnet.org (partial)" default_off='failed ruleset test'>
+<ruleset name="AESnet.org (partial)">
+
 	<target host="aesnet.org" />
+	<target host="my.aesnet.org" />
 	<target host="www.aesnet.org" />
 
-	<rule from="^http://(?:www\.)?aesnet\.org/erc/" to="https://www.aesnet.org/erc/" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^my\.aesnet\.org$" name="^(?:__RequestVerificationToken|\.ASPXANONYMOUS|language)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>
