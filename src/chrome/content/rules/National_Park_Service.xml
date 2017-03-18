@@ -6,20 +6,14 @@
 
 	Nonfunctional subdomains:
 
-		- ^ *
 		- consessions **
-		- cr **
 		- focus **
 		- nrhp.focus **
 		- home *
 		- image1 **
 		- www.itd	(503; mismatched, CN: *.nps.gov)
-		- maps **
-		- mms *
-		- nature	(404, valid cert)
 		- npsfocus **
 		- watertrails **
-		- www **
 
 	* 503, valid cert
 	** Times out
@@ -29,16 +23,81 @@
 
 		- hfc		(works; mismatched, CN: zionpermits.nps.gov)
 
+
+	STS header includes includeSubdomains
+	for nature, science.nature, www.nature, www.npssa
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .nps.gov
+		- .nature.nps.gov
+		- science.nature.nps.gov
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images on www.ncptt from ncptt.nps.gov ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
 -->
 <ruleset name="NPS.gov (partial)">
 
-	<target host="*.nps.gov" />
+	<target host="nps.gov" /><!--	for future commit -->
+	<target host="cr.nps.gov" /><!--	for future commit -->
+	<target host="irma.nps.gov" />
+	<target host="irmafiles.nps.gov" /><!--	for future commit -->
+	<target host="nature.nps.gov" /><!--	for future commit -->
+	<target host="*.nature.nps.gov" /><!--	for future commit -->
+	<target host="science.nature.nps.gov" />
+	<target host="ncptt.nps.gov" />
+	<target host="www.ncptt.nps.gov" /><!--	for future commit -->
+	<target host="npssa.nps.gov" />
+	<target host="*.npssa.nps.gov" /><!--	for future commit -->
+	<target host="parkplanning.nps.gov" />
+	<target host="pepc.nps.gov" />
+	<target host="zionpermits.nps.gov" />
+	<target host="www.nps.gov" /><!--	for future commit -->
+
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?![^.]+\.science\.nature\.nps\.gov/)(?:[^.]+\.){2,}nature\.nps\.gov/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.nature.nps.gov/" />
+			<test url="http://exists.not.nature.nps.gov/" />
+			<test url="http://this.host.science.nature.nps.gov/" />
+			<test url="http://exists.not.science.nature.nps.gov/" />
+
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?:[^.]+\.){2,}npssa\.nps\.gov/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.npssa.nps.gov/" />
+			<test url="http://exists.not.npssa.nps.gov/" />
+
+		<test url="http://irmafiles.nps.gov/WebContentV2/ThirdParty/extJs/ext-4.2.1/resources/css/ext-all-gray.css" /><!--	58 -->
+
+		<test url="http://www.nature.nps.gov/" />
+		<test url="http://www.science.nature.nps.gov/" />
+		<test url="http://www.npssa.nps.gov/" />
 
 
-	<securecookie host="^.+\.nps\.gov$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^\.(?:nature\.)?nps\.gov$" name="^def_cookie_id$" />
+	<securecookie host="^science\.nature\.nps\.gov$" name="^CF(?:GLOBALS|ID|TOKEN)$" />
+
+	<securecookie host=".\.nps\.gov$" name="." />
 
 
-	<rule from="^http://(irma|science\.nature|ncptt|npssa|parkplanning|pepc|zionpermits)\.nps\.gov/"
-		to="https://$1.nps.gov/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
