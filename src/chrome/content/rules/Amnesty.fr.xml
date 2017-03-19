@@ -2,23 +2,23 @@
 	For other Amnesty International coverage, see Amnesty-International.xml.
 
 
-	Nonfunctional hosts in *amnesty.fr:
+	Mismatched:
+		60dudh.amnesty.fr
+		boutique.amnesty.fr
+		envoigroupes.amnesty.fr
+		forums.amnesty.fr
+		legs.amnesty.fr
+		m.amnesty.fr
+		siteslocaux.amnesty.fr
 
-		- agir ᵃ
-		- www.boutique ¹
+	Private subdomain:
+		extranet.amnesty.fr
 
-	ᵃ Shows another domain
-	¹ Redirects to boutique-solidaire.com
+	Refused:
+		marathon.amnesty.fr
 
-
-	Problematic hosts in *amnesty.fr:
-
-		- (www.)? ᶜ
-		- extranet *
-		- stories *
-
-	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
-	* Mismatched
+	Time out:
+		webmail.amnesty.fr
 
 
 	Insecure cookies are set for these domains and hosts:
@@ -42,29 +42,11 @@
 -->
 <ruleset name="Amnesty.fr (partial)">
 
-	<!--target host="amnesty.fr" /-->
+	<target host="amnesty.fr" />
+	<target host="www.amnesty.fr" />
+	<target host="marathon.amnesty.fr" />
 	<target host="soutenir.amnesty.fr" />
-	<!--target host="www.amnesty.fr" /-->
-
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://www\.amnesty\.fr/($|favicon\.ico)" /-->
-		<!--
-			Exceptions:
-					-->
-		<!--sexclusion pattern="^http://www\.amnesty\.fr/+(?!misc/|sites/)" /-->
-
-			<!--	+ve:
-					-->
-			<!--test url="http://www.amnesty.fr/Accessibilite" /-->
-			<!--test url="http://www.amnesty.fr/Contact/AI-France" /-->
-			<!--test url="http://www.amnesty.fr/user/password" /-->
-
-			<!--	-ve:
-					-->
-			<!--test url="http://www.amnesty.fr/misc/menu-leaf.png" /-->
-			<!--test url="http://www.amnesty.fr/sites/default/files/amnesty_logo.png" /-->
-
+	<target host="stories.amnesty.fr" />
 
 	<!--	Not secured by server:
 					-->
@@ -77,6 +59,11 @@
 	<!--securecookie host="^\w" name="^BIGipServer" /-->
 	<securecookie host="^\w" name="." />
 
+	<rule from="^http://marathon\.amnesty\.fr/"
+		to="https://www.amnesty.fr/personnes" />
+	
+	<rule from="^http://(m|siteslocaux)\.amnesty\.fr/"
+		to="https://www.amnesty.fr/" />
 
 	<rule from="^http:"
 		to="https:" />
