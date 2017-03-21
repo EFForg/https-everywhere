@@ -1,62 +1,49 @@
 
 <!--
-	CDN buckets:
-
-		- giphygifs.s3.amazonaws.com
-
-			- media10
-
-		- d16jfyletng9p5.cloudfront.net
-
-
-	Problematic subdomains:
-
-		- media10 ²
-		- www		(refused)
-
-	² AmazonWS
-
-
-	Fully covered subdomains:
-
-		- (www.)?	(www → ^)
-		- api
-		- i
-		- media
-		- media10	(→ giphygifs.s3.amazonaws.com)
-		- media\d+	(0-4)
-
-
 	Insecure cookies are set for these domains:
 
 		- .giphy.com
 
+	Invalid certificate:
+		blog.giphy.com
 
-	Mixed content:
+	Time out:
+		happyholidays.giphy.com
+		labs.giphy.com
+		twitter.giphy.com
 
-		- Images on ^ from media4.giphy.com *
+	Refused:
+		gj.giphy.com
 
-	* Secured by us
+	No working URL known:
+		i.giphy.com
+		outlook.giphy.com
+		pingback.giphy.com
+		stickers.giphy.com
 
 -->
 <ruleset name="Giphy.com">
 
 	<target host="giphy.com" />
-	<target host="*.giphy.com" />
-
-		<!--	Direct rewrites:
-					-->
-		<test url="http://api.giphy.com/" />
-		<test url="http://i.giphy.com/" />
-		<test url="http://media.giphy.com/" />
-		<test url="http://media1.giphy.com/" />
-		<test url="http://media4.giphy.com/" />
-
-		<!--	Complications:
-					-->
-		<test url="http://media10.giphy.com/" />
-		<test url="http://www.giphy.com/" />
-
+	<target host="www.giphy.com" />
+	<target host="api.giphy.com" />
+	<target host="labs.giphy.com" />
+	<target host="media.giphy.com" />
+		<test url="https://media.giphy.com/media/xT1XH20RPY6rBmMBLa/giphy-loop.mp4" />
+	<target host="media0.giphy.com" />
+		<test url="https://media0.giphy.com/media/26tnmHJ2V8ZU3mbxm/200w.mp4" />
+	<target host="media1.giphy.com" />
+		<test url="https://media1.giphy.com/media/l3nWl5bhBoim7glNu/giphy-downsized.gif" />
+	<target host="media2.giphy.com" />
+		<test url="https://media2.giphy.com/media/l0NwuvFERvrjszjd6/200w.mp4" />
+	<target host="media3.giphy.com" />
+		<test url="https://media3.giphy.com/media/fLNQD3RQpAEYE/200w.mp4" />
+	<target host="media4.giphy.com" />
+		<test url="https://media4.giphy.com/media/3o7buiMZ5CbJ4imGnm/giphy.mp4" />
+	<target host="p.giphy.com" />
+	<target host="tv.giphy.com" />
+	<target host="twitter.giphy.com" />
+	<target host="upload.giphy.com" />
 
 	<!--	Not secured by server:
 					-->
@@ -64,14 +51,13 @@
 
 	<securecookie host="^\.giphy\.com$" name=".+" />
 
+	<rule from="^http://labs\.giphy\.com/"
+		to="https://giphy.com/labs/" />
 
-	<rule from="^http://media10\.giphy\.com/"
-		to="https://giphygifs.s3.amazonaws.com/" />
+	<rule from="^http://twitter.giphy.com/"
+		to="https://giphy.com/posts/giphy-makes-twitter-uploads-even-easier//" />
 
-	<rule from="^http://www\.giphy\.com/"
-		to="https://giphy.com/" />
-
-	<rule from="^http://((?:api|i|media\d*)\.)?giphy\.com/"
-		to="https://$1giphy.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
