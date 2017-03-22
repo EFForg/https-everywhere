@@ -1,32 +1,39 @@
 <!--
-	Problematic subdomains:
+	Invalid certficate:
+		darcs.frugalware.org
+		dors.frugalware.org
+		git.frugalware.org
+		lists.frugalware.org
+		packages.frugalware.org
+		planet.frugalware.org
+		wiki.frugalware.org
 
-		- ^		(works, mismatched, CN: webmail.frugalware.org)
-		- bugs *
-		- forums *
-		- webmail *
-		- wiki *
-		- www		(works, mismatched, CN: void.ironiq.eu)
-
-	* Self-signed
-
-
-	Targets solely for wildcard cookies:
-
-		- *.forums.frugalware.org
+	Private subdomain:
+		webmail.frugalware.org
 
 -->
 <ruleset name="Frugalware Linux" default_off="mismatched, self-signed">
 
 	<target host="frugalware.org" />
-	<target host="*.frugalware.org" />
+	<target host="www.frugalware.org" />
+	<target host="bugs.frugalware.org" />
+	<target host="lists.frugalware.org" />
+	<target host="packages.frugalware.org" />
+	<target host="planet.frugalware.org" />
 	<target host="*.forums.frugalware.org" />
-
 
 	<securecookie host="^.+\.frugalware\.org$" name=".+" />
 
+	<rule from="^http://lists\.frugalware\.org/"
+		to="https://frugalware.org/mailman/listinfo" />
 
-	<rule from="^http://(?:((?:bugs|forums|webmail|wiki)\.)|www\.)?frugalware\.org/"
-		to="https://$1frugalware.org/" />
+	<rule from="^http://packages\.frugalware\.org/"
+		to="https://frugalware.org/packages/?op=pkg&arch=i686&ver=current&srch=" />
+
+	<rule from="^http://planet\.frugalware\.org/"
+		to="https://frugalware.org/ "/>
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
