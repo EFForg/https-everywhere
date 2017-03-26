@@ -1,14 +1,54 @@
 <!--
-	Some pages redirect to http
+	Mismatch:
+		- support.doodle.com
+		- translate.doodle.com
+		- uptime.doodle.com
 
+	Handshake failure:
+		- deployer.doodle.com
 -->
 <ruleset name="Doodle (partial)">
 
 	<target host="doodle.com" />
-	<target host="www.doodle.com" />
+	<target host="*.doodle.com" />
 
+	<test url="http://www.doodle.com/"/ />
+	<test url="http://beta.doodle.com/" />
+	<test url="http://blog.doodle.com/" />
+		<test url="http://br.blog.doodle.com/" />
+		<test url="http://de.blog.doodle.com/" />
+		<test url="http://en.blog.doodle.com/" />
+		<test url="http://fr.blog.doodle.com/" />
+	<test url="http://dev.doodle.com/" />
 
-	<rule from="^http://(www\.)?doodle\.com/(builtstatic/|favicon\.ico|premium(?:$|\?|/))"
-		to="https://$1doodle.com/$2" />
+	<!-- Premium users get their own subdomain -->
+	<test url="http://englischtoenglish.doodle.com/" />
+	<test url="http://noricumcorp.doodle.com/" />
+
+	<!-- HTTP redirects for non premium users -->
+	<exclusion pattern="^http://doodle\.com/$" />
+	<exclusion pattern="^http://doodle\.com/\?" />
+	<exclusion pattern="^http://doodle\.com/create" />
+	<exclusion pattern="^http://doodle\.com/poll/" />
+	<test url="http://doodle.com/?home" />
+	<test url="http://doodle.com/create" />
+	<test url="http://doodle.com/poll/bsp2mkdubg3yfq4r" />
+
+	<!-- CORS issues -->
+	<exclusion pattern="^http://doodle\.com/np/" />
+	<test url="http://doodle.com/np/data" />
+
+	<!-- Other HTTPS issues -->
+	<exclusion pattern="^http://deployer\.doodle\.com/" />
+	<exclusion pattern="^http://support\.doodle\.com/" />
+	<exclusion pattern="^http://translate\.doodle\.com/" />
+	<exclusion pattern="^http://uptime\.doodle\.com/" />
+	<test url="http://deployer.doodle.com/" />
+	<test url="http://support.doodle.com/" />
+	<test url="http://translate.doodle.com/" />
+	<test url="http://uptime.doodle.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
