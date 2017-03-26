@@ -1,90 +1,106 @@
 <!--
 	Nonfunctional subdomains:
 
-		- autodiscover ¹
-		- blog
-		- owa ¹
 		- web ³
 
-	¹ Data differ between http & https
-	³ Marketo
-
-
-	Partially covered subdomains:
-
-		- hire *
-
-	* Some pages redirect to http
-
-
-	Fully covered subdomains:
-
-		- careers
-		- demo
-		- hire-stg
-		- recruiting
-		- search
-		- source
-		- source-stg
-		- www
-		- www-stg
-
-
-	These altnames don't exist:
-
-		- jvi-exc01.corp.jobvite.com
-		- www.owa.jobvite-inc.com
+	³ Marketo / shows another domain
 
 
 	Insecure cookies are set for these domains:
 
-		- .
-		- hire
-		- hire-stg
-		- source
+		- jobvite.com
+		- app.jobvite.com
+		- hire-stg.jobvite.com
+		- recruiting.jobvite.com
+		- source-stg.jobvite.com
+		- www.jobvite.com
+		- www-stg.jobvite.com
+
+
+	Mixed content:
+
+		- css on www from 1u7p3g2igrbh4643ym2ty7va-wpengine.netdna-ssl.com * ˢ
+
+		- Images, on:
+
+			- www from 1u7p3g2igrbh4643ym2ty7va-wpengine.netdna-ssl.com ˢ
+			- www from adamhyderdev.wpengine.com
+
+	* Only fonts
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="Jobvite (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="jobvite.com" />
-	<target host="*.jobvite.com" />
-		<!--
-			Redirect to http:
+	<target host="app.jobvite.com" />
+	<target host="app-stg.jobvite.com" />
+	<target host="blog.jobvite.com" />
+	<target host="careers.jobvite.com" />
+	<target host="hire.jobvite.com" />
+	<target host="hire-stg.jobvite.com" />
+	<target host="jobs.jobvite.com" />
+	<target host="jobs-stg.jobvite.com" />
+	<target host="recruiting.jobvite.com" />
+	<target host="search.jobvite.com" />
+	<target host="source.jobvite.com" />
+	<target host="source-stg.jobvite.com" />
+	<target host="www.jobvite.com" />
+	<target host="www-stg.jobvite.com" />
+
+		<!--	Redirect to http:
 						-->
-		<!--exclusion pattern="^http://www\.jobvite\.com/($|\?sccss=1&amp;ver=3\.9\.2|contact-us/|support/)" /-->
-		<!--exclusion pattern="^http://hire\.jobvite\.com/CompanyJobs/Careers\.aspx" /-->
+		<exclusion pattern="^http://app\.jobvite\.com/CompanyJobs/Careers\.aspx" />
 		<!--
 			Exceptions:
 					-->
-		<!--exclusion pattern="^http://hire\.jobvite\.com/(?!CompanyJobs/careers_1\.css|JV\.CareerSiteModalDialog\.css|images2/powered-by-jobvite\.gif)" /-->
-
-		<exclusion pattern="^http://www\.jobvite\.com/(?!favicon\.ico|wp-content/|wp-includes/)" />
+		<!--exclusion pattern="^http://app\.jobvite\.com/(?!TalentNetwork/action/campaign/w/|admin/info/timeout\.html|login/jvlogin\.aspx)" /-->
 
 			<!--	+ve:
 					-->
-			<test url="http://hire.jobvite.com/CompanyJobs/Careers.aspx" />
+			<test url="http://app.jobvite.com/CompanyJobs/Careers.aspx" />
 
 			<!--	-ve:
 					-->
-			<test url="http://hire.jobvite.com/CompanyJobs/careers_1.css" />
-			<test url="http://hire.jobvite.com/JV.CareerSiteModalDialog.css" />
-			<test url="http://hire.jobvite.com/images2/powered-by-jobvite.gif" />
+			<test url="http://app.jobvite.com/login/jvlogin.aspx" />
+			<test url="http://app.jobvite.com/admin/info/timeout.html" />
+			<test url="http://app.jobvite.com/TalentNetwork/action/campaign/w/MjUzODA" />
+
+	<!--	Complications:
+				-->
+	<target host="web.jobvite.com" />
+
+		<exclusion pattern="^http://web\.jobvite\.com/(?!css/|images/|rs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://web.jobvite.com/Q315_Website_Demo_LP.html" />
+			<test url="http://web.jobvite.com/Q315_Website_FreeTrial_LP.html" />
+			<test url="http://web.jobvite.com/Q415_Website_ProductTour_Platform_LP.html" />
+
+			<!--	+ve:
+					-->
+			<test url="http://web.jobvite.com/css/mktLPSupportCompat.css" />
+			<test url="http://web.jobvite.com/rs/jobvite/images/jobvite-logo-gunmetal.png" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.jobvite\.com$" name="^server$" /-->
-	<!--securecookie host="^hire\.jobvite\.com$" name="^(ASP\.NET_SessionId|AWSELB|guestidc)$" /-->
-	<!--securecookie host="^hire-stg.jobvite.com$" name="^ASP\.NET_SessionId$" /-->
-	<!--securecookie host="^source\.jobvite\.com$" name="^(AWSELB|JSESSIONID)$" /-->
+	<!--securecookie host="^(?:app\.)?jobvite\.com$" name="(?:^ADRUM_BT[a1]|AWSELB|ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^(?:app|www)-stg\.jobvite\.com$" name="(?:AWSELB|ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^(?:source|hire)-stg\.jobvite\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^(?:recruiting|www)\.jobvite\.com$" name="^X-Mapping" /-->
 
-	<securecookie host="^(?:.+\.)?jobvite\.com$" name=".*" />
+	<securecookie host="^\." name="^(?:_ga|optimizely)" />
+	<securecookie host="^(?!web\.)\w" name="." />
 
 
-	<rule from="^http://((?:careers|demo|hire|hire-stg|recruiting|search|source|source-stg|www|www-stg)\.)?jobvite\.com/"
-		to="https://$1jobvite.com/" />
+	<rule from="^http://web\.jobvite\.com/"
+		to="https://na-aba.marketo.com/" />
 
-	<rule from="^http://web\.jobvite\.com/(?=css/|images/|js/|rs/)"
-		to="https://na-a.marketo.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
