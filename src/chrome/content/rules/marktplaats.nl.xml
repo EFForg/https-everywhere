@@ -1,9 +1,17 @@
-<ruleset name="Marktplaats (buggy)" platform="mixedcontent" default_off="Mixed content block breaks advert editing and certain images">
-  <target host="*.marktplaats.nl" />
-  <target host="*.marktplaats.com" />
-  <target host="*.marktplaats.net" />
-		<exclusion pattern="^http://www\.marktplaats\.(?:com|net|nl)/kijkinuwwijk\.html" />
+<!--
+May 12th, 2016 rule rewrite: Due to marktplaats' recent decision to downgrade a fair bit of pages (Including searches), for simplicity this revision only handles item pages and categories.
+-->
 
-  <rule from="^http://([^/:@]*)\.marktplaats\.(nl|com|net)/" to="https://$1.marktplaats.$2/"/>
-  <rule from="^https://www\.marktplaats\.nl/kijkinuwwijk\.html" to="http://www.marktplaats.nl/kijkinuwwijk.html" downgrade="1" />
+<ruleset name="Marktplaats (minimal)">
+	
+	<target host="www.marktplaats.nl" /> <!-- marktplaat.nl redirects to www -->
+
+	<exclusion pattern="http://www\.marktplaats\.nl/unicorn" />
+
+	<test url="http://www.marktplaats.nl/c/auto-s/c91.html" />
+	<test url="http://www.marktplaats.nl/a/nothing.html" />
+	 
+	<rule from="^http://www\.marktplaats\.nl/a/([^?]*)\.html.*" to="https://www.marktplaats.nl/a/$1.html"/> <!-- Rewrites to cleaner advert URLs -->
+	<rule from="^http://www\.marktplaats\.nl/c/" to="https://www.marktplaats.nl/c/"/>
+
 </ruleset>
