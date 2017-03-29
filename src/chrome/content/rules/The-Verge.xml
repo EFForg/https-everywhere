@@ -1,69 +1,19 @@
 <!--
-	For other Vox Media coverage, see Vox.com.xml.
+For other Vox Media coverage, see Vox.com.xml.
 
-
-	CDN buckets:
-
-		- d35lb3dl296zwu.cloudfront.net
-
-
-	www.theverge.com: Redirects to http
-
-
-	Problematic hosts in *theverge.com:
-
-		- mobile ᵈ
-		- status ᵈ
-
-	ᵈ Dropped, preemptable redirect
-
-
-	Insecure cookies are set for these hosts:
-
-		- www.theverge.com
-
+Timeout:
+	mobile.theverge.com
+	status.theverge.com
 -->
-<ruleset name="The Verge.com (partial)">
+<ruleset name="The Verge.com">
+	<target host="theverge.com"/>
+	<target host="www.theverge.com"/>
+	<target host="live.theverge.com"/>
+	<target host="mobile.theverge.com"/>
+	<target host="status.theverge.com"/>
+	<target host="store.theverge.com"/>
 
-	<!--	Direct rewrites:
-				-->
-	<!--target host="theverge.com" /-->
-
-		<exclusion pattern="^http://www\.theverge\.com/comments/load_comments/" />
-
-			<test url="http://www.theverge.com/comments/load_comments/" />
-
-	<!--	Complications:
-				-->
-	<!--target host="mobile.theverge.com" /-->
-	<target host="status.theverge.com" />
-
-	<!--	Set by beacons.
-				-->
-	<!--securecookie host="www\.theverge\.com$" name="^umbel_api_key$" /-->
-
-	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
-
-
-	<!--	Doesn't redirect back, but updates fail to load when rewritten.
-
-	<rule from="^http://live\.theverge\.com/"
-		to="https://d35lb3dl296zwu.cloudfront.net/" /-->
-
-	<!--	Redirect keeps all:
-					-->
-	<!--rule from="^http://mobile\.theverge\.com/"
-		to="https://www.theverge.com/" /-->
-
-	<!--	Redirect drops path and forward
-		slash, but not args:
-					-->
-	<rule from="^http://status\.theverge\.com/[^?]*"
-		to="https://voxmedia.statuspage.io/" />
-
-		<test url="http://status.theverge.com/index.htm" />
-
-	<!--rule from="^http:"
-		to="https:" /-->
-
+	<rule from="^https://mobile\.theverge\.com/" to="https://www.theverge.com/" />
+	<rule from="^https://status\.theverge\.com/" to="https://voxmedia.statuspage.io/" />
+	<rule from="^http:" to="https:" />
 </ruleset>
