@@ -1,50 +1,52 @@
 <!--
-	For problematic rules, see Nextag-self-signed.xml.
+	Mismatch:
+		img.nextag.com	( equal to imgsrv )
+		stores.nextag.com
+		tickets.nextag.com
 
+		www.nextag.ca
+		www.nextag.co.jp
 
-	Nonfunctional:
+	Different http/https content:
+		www.nextag.com
+		www42.nextag.com
+		merchants.nextag.com
+		travel.nextag.com
 
-		- (www.)nextag.es
-		- (www.)nextag.co.jp
-		- (www.)nextag.com.au
-
+		www.nextag.com.au
+		www.nextag.de
+		www.nextag.fr
+		www.nextag.it
 -->
-<ruleset name="Nextag (partial)">
+<ruleset name="Nextag.com">
 
-	<target host="nextag.*" />
-	<target host="*.nextag.ca" />
-	<target host="*.nextag.com" />
-	<target host="*.nextag.de" />
-	<target host="*.nextag.fr" />
-	<target host="*.nextag.it" />
-	<target host="*.static-nextag.com" />
+	<target host="img.nextag.com" />
+	<target host="imgsrv.nextag.com" />
+	<target host="nextagnews.nextag.com" />
 
+	<target host="img01.static-nextag.com" />
+	<target host="img02.static-nextag.com" />
+	<target host="img03.static-nextag.com" />
+	<target host="img04.static-nextag.com" />
+	<target host="img05.static-nextag.com" />
 
-	<securecookie host="^.*\.nextag\.com$" name=".*" />
+	<securecookie host=".+" name=".+" />
 
+	<rule from="^http://nextagnews\.nextag\.com/"
+		to="https://nextagnews.nextag.com/" />
+		<test url="http://nextagnews.nextag.com/learn/2015/03/cool-new-uses-old-aquarium/" />
 
-	<!--	!www doesn't work.	-->
-	<rule from="^http://(?:www\.)?nextag\.(ca|com|de|fr|it)/"
-		to="https://www.nextag.$1/" />
-
-	<!--	img: Akamai	-->
-	<rule from="^http://img(?:srv)?\.nextag\.com/"
+	<rule from="^http://img(srv)?\.nextag\.com/"
 		to="https://imgsrv.nextag.com/" />
+		<test url="http://img.nextag.com/imagefiles/includes/roitrack.js" />
+		<test url="http://imgsrv.nextag.com/imagefiles/includes/roitrack.js" />
 
-	<rule from="^http://(merchants|stores|travel)\.nextag\.com/"
-		to="https://$1.nextag.com/" />
-
-	<!--	Cert only valid for fansnap.	-->
-	<rule from="^http://tickets\.nextag\.com/la/"
-		to="https://www.fansnap.com/la/" />
-
-	<!--	Doesn't work over https,
-		seems identical to www.	-->
-	<rule from="^http://www42\.nextag\.com/"
-		to="https://www.nextag.com/" />
-
-	<!--	Akamai	-->
-	<rule from="^http://img\d\d\.static-nextag\.com/"
+	<rule from="^http://img0(1|2|3|4|5)\.static-nextag\.com/"
 		to="https://imgsrv.nextag.com/" />
+		<test url="http://img01.static-nextag.com/image/Boys-Pants/4/000/000/027/003/2700378.jpg" />
+		<test url="http://img02.static-nextag.com/biofiles/SheaKellyBio.pdf" />
+		<test url="http://img03.static-nextag.com/biofiles/SheaKellyBio.pdf" />
+		<test url="http://img04.static-nextag.com/biofiles/SheaKellyBio.pdf" />
+		<test url="http://img05.static-nextag.com/fontfiles/psm2_0/700i/MuseoSans.ttf" />
 
 </ruleset>
