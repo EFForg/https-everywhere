@@ -1,14 +1,40 @@
 <!--
+	There are too much to list all unique subdomains for each client.
+
 	Too many redirects:
 		^	( equal to www )
+
+	Expired:
+		autry.iii.com
+
+	Mismatch:
+		cincb.iii.com
+		sierra.iii.com
+		usip.iii.com
+		0-help.lexisnexis.com.texsl.iii.com
+
+	Failed:
+		csdirect.iii.com
+		linkplusaccess.iii.com
 -->
 <ruleset name="iii.com">
 	<target host="iii.com" />
-	<target host="www.iii.com" />
-	<target host="csul.iii.com" />
-		<test url="http://csul.iii.com/search~S0?/aStoehr%2C+Judy./astoehr+judy/-3%2C-1%2C0%2CB/bibimage&amp;FF=astoehr+james+d&amp;1%2C1%2C" />
-
 	<rule from="^http://iii\.com/" to="https://www.iii.com/" />
 
-	<rule from="^http:" to="https:" />
+	<target host="*.iii.com" />
+	<rule from="^http://(\w+)\.iii\.com/" to="https://$1.iii.com/" />
+		<test url="http://www.iii.com/" />
+		<test url="http://csul.iii.com/search~S0?/aStoehr%2C+Judy./astoehr+judy/-3%2C-1%2C0%2CB/bibimage&amp;FF=astoehr+james+d&amp;1%2C1%2C" />
+
+	<exclusion pattern="^http://(autry|cincb|csdirect|linkplusaccess|sierra|usip)\.iii\.com/" />
+		<test url="http://autry.iii.com/" />
+		<test url="http://cincb.iii.com/" />
+		<test url="http://csdirect.iii.com/" />
+		<test url="http://linkplusaccess.iii.com/" />
+		<test url="http://sierra.iii.com/" />
+		<test url="http://usip.iii.com/" />
+		<test url="http://.iii.com/" />
+		<test url="http://.iii.com/" />
+		<test url="http://.iii.com/" />
+
 </ruleset>
