@@ -1,79 +1,24 @@
 <!--
-	CDN buckets:
-
-		- c714015.r15.cf2.rackcdn.com
-
-			- contextlysitescripts.contextly.com
-
-
-	Problematic subdomains:
-
-		- contextlysitescripts ¹
-		- press ²
-		- www ³
-
-	¹ akamai
-	² Works; mismatched, CN: *.heroku.com
-	³ Mismatched, CN: rest.contextly.com
-
-
-	Fully covered subdomains:
-
-		- app
-		- contextlysitescripts	(-> c714015.ssl.cf2.rackcdn.com)
-		- dev
-		- rest
-
-
-	These altnames don't exist:
-
-		- www.rest.contextly.com
-
-
-	Mixed content:
-
-		- Frame on (www.) from docs.google.com ¹
-
-		- css, on (www.) from:
-
-			- contextlysitescripts ¹
-			- contextly2.wpengine.com ¹
-
-		- Images from contextly2.wpengine.com ¹
-
-		- Ad from www.yolink.com ²
-
-	¹ Secured by us
-	² Not secured by us <= expired & mismatched
-
+	Mismatch:
+		blog.contextly.com
+		press.contextly.com
+		www.rest.contextly.com
 -->
-<ruleset name="Contextly.com (partial)">
-
+<ruleset name="Contextly.com">
 	<target host="contextly.com" />
-	<target host="*.contextly.com" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://(?:www\.)?contextly\.com/+blog" />
+	<target host="www.contextly.com" />
+	<target host="app.contextly.com" />
+	<target host="contextlysitescripts.contextly.com" />
+	<target host="dev.contextly.com" />
+	<target host="rest.contextly.com" />
+		<test url="http://rest.contextly.com/robots.txt" />
+	<target host="support.contextly.com" />
 
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^(dev\.)?contextly\.com$" name="^PHPSESSID$" /-->
-
-	<securecookie host="^dev\.contextly\.com$" name=".+" />
-
-
-	<rule from="^http://(?:((?:app|dev|rest)\.)|www\.)?contextly\.com/"
-		to="https://$1contextly.com/" />
+	<securecookie host=".+" name=".+" />
 
 	<rule from="^http://contextlysitescripts\.contextly\.com/"
 		to="https://c714015.ssl.cf2.rackcdn.com/" />
+		<test url="http://contextlysitescripts.contextly.com/kit/assets/2.4/widgets--page-view.css" />
 
-	<!--	For protocol-relative links:
-						-->
-	<rule from="^https://contextly\.com/blog"
-		to="http://contextly.com/blog"
-		downgrade="1" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
