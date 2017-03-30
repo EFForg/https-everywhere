@@ -61,12 +61,16 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
     }
   }
 });
-chrome.tabs.onActivated.addListener(function() {
-  updateState();
-});
-chrome.windows.onFocusChanged.addListener(function() {
-  updateState();
-});
+if (chrome.tabs) {
+  chrome.tabs.onActivated.addListener(function() {
+    updateState();
+  });
+}
+if (chrome.windows) {
+  chrome.windows.onFocusChanged.addListener(function() {
+    updateState();
+  });
+}
 chrome.webNavigation.onCompleted.addListener(function() {
   updateState();
 });
@@ -106,6 +110,9 @@ loadStoredUserRules();
  * disabled: extension is disabled from the popup menu.
  */
 var updateState = function() {
+  if (!chrome.tabs) {
+    return;
+  }
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     if (!tabs || tabs.length === 0) {
       return;
@@ -179,9 +186,11 @@ function AppliedRulesets() {
   this.active_tab_rules = {};
 
   var that = this;
-  chrome.tabs.onRemoved.addListener(function(tabId, info) {
-    that.removeTab(tabId);
-  });
+  if (chrome.tabs) {
+    chrome.tabs.onRemoved.addListener(function(tabId, info) {
+      that.removeTab(tabId);
+    });
+  }
 }
 
 AppliedRulesets.prototype = {
