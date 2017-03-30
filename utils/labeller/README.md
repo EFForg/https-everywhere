@@ -8,8 +8,6 @@ This compares the open PR requests that have ruleset changes to the Alexa top 1M
 4. `top-100k`
 5. `top-1m`
 
-The label `new-ruleset` will be applied if the PR includes a completely new ruleset.
-
 This will work for admins of HTTPS Everywhere that generate a [GitHub token](https://github.com/settings/tokens).
 
 ## Setup
