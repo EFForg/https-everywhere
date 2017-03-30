@@ -1,46 +1,21 @@
-<!--
-	Nonfunctional hosts in *adform.com:
-
-		- academy ᶠ
-		- blog ᶠ
-		- brandsolutions ᶠ
-		- creative ᶠ
-		- engineering ᶠ
-		- events ᶠ
-		- getcertified ᶠ
-		- join ᶠ
-		- pr-old ᶠ
-		- studio ʰ
-		- tools-tracking ᵇ
-
-	ᵇ Shows default page
-	ᶠ Handshake fails
-	ʰ Redirects to http
-
-
-	Insecure cookies are set for these domains and hosts: ᶜ
-
-		- .adform.net
-		- track.adform.net
-
-	ᶜ See https://owasp.org/index.php/SecureFlag
-
-
-	Mixed content:
-
-		- Images on showroom from showroom.adform.com ˢ
-
-	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
-
--->
-<ruleset name="Adform (partial)">
-
-	<!--	Direct rewrites:
-				-->
+<ruleset name="Adform">
 	<target host="adform.com" />
+	<target host="www.adform.com" />
+	<target host="academy.adform.com" />
+	<target host="blog.adform.com" />
+	<target host="brandsolutions.adform.com" />
+	<target host="creative.adform.com" />
+	<target host="engineering.adform.com" />
+	<target host="events.adform.com" />
+	<target host="getcertified.adform.com" />
+	<target host="join.adform.com" />
+	<target host="pr-old.adform.com" />
+		<test url="http://pr-old.adform.com/torifi-production-guides/advertising-formats/" />
 	<target host="showroom.adform.com" />
 	<target host="site.adform.com" />
-	<target host="www.adform.com" />
+	<target host="studio.adform.com" />
+	<target host="support.adform.com" />
+	<target host="tools-tracking.adform.com" />
 
 	<target host="a1.adform.net" />
 	<target host="adx.adform.net" />
@@ -58,53 +33,7 @@
 	<target host="s2.adformdsp.net" />
 	<target host="server.adformdsp.net" />
 
-		<!--	Set cookies without Secure:
-							-->
-		<!--test url="http://dmp.adform.net/dmp/profile/?CC=1&amp;pid=1&amp;" /-->
-		<!--test url="http://track.adform.net/Serving/TrackPoint/?pm=1" /-->
+	<securecookie host=".+" name=".+" />
 
-	<!--	Complications:
-				-->
-	<target host="academy.adform.com" />
-	<target host="blog.adform.com" />
-	<target host="creative.adform.com" />
-
-		<exclusion pattern="^http://(?:academy|blog|creative)\.adform\.com/" />
-
-			<!--	+ve:
-					-->
-			<test url="http://academy.adform.com/" />
-			<test url="http://blog.adform.com/" />
-			<test url="http://creative.adform.com/" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.adform\.net$" name="^uid$" /-->
-	<!--securecookie host="^track\.adform\.net$" name="^C$" /-->
-
-	<securecookie host="^\w.*\.adform\.com$" name="." />
-	<!--
-		name="^(GCM|TPC)$"
-					-->
-	<securecookie host="\.adform\.net$" name="." />
-	<!--
-		name="^uid$"
-				-->
-	<securecookie host="\.adformdsp\.net$" name="." />
-
-
-	<!--	Protocol-relative links on ^site.../$:
-							-->
-	<rule from="^https://(academy|blog|creative)\.adform\.com/"
-		  to="http://$1.adform.com/"
-	downgrade="1" />
-
-		<test url="https://academy.adform.com/" />
-		<test url="https://blog.adform.com/" />
-		<test url="https://creative.adform.com/" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
