@@ -77,9 +77,11 @@ sed -i -e "s/VERSION/$VERSION/g" pkg/crx/manifest.json
 
 if [ -n "$BRANCH" ] ; then
   crx="pkg/https-everywhere-$VERSION.crx"
+  xpi="pkg/https-everywhere-$VERSION.xpi"
   key=../dummy-chromium.pem
 else
   crx="pkg/https-everywhere-$VERSION~pre.crx"
+  xpi="pkg/https-everywhere-$VERSION~pre.xpi"
   key=dummy-chromium.pem
 fi
 if ! [ -f "$key" ] ; then
@@ -128,6 +130,11 @@ fi
   echo "$crmagic_hex $version_hex $pub_len_hex $sig_len_hex" | $sed -e 's/\s//g' -e 's/\([0-9A-F]\{2\}\)/\\\\\\x\1/gI' | xargs printf
   cat "$pub" "$sig" "$zip"
 ) > "$crx"
+
+cp $crx $xpi
+
+bash utils/android-push.sh "$xpi"
+
 #rm -rf pkg/crx
 
 #python2.7 githubhelper.py $VERSION
