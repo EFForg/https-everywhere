@@ -41,6 +41,7 @@ fi
 set -e
 
 echo >&2 "Running linting tests."
+travis setup npm
 npm install eslint --global
 eslint .
 
