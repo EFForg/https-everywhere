@@ -1,54 +1,38 @@
 <!--
 	Other Craigslist rulesets:
-
 		- Craigslist.ca.xml
 		- Craigslist.co.uk.xml
 
-
-	Problematic hosts in *craigslist.org:
-
-		- ^ ¹
-		- www ²
-
-	¹ Mismatched
-	² Blocks Tor users
-
--->
-<ruleset name="Craigslist.org (partial)">
-	<target host="craigslist.org" />
-	<target host="*.craigslist.org" />
-
-	<exclusion pattern="^http://blog\.craigslist\.org/" />
-
-		<test url="http://blog.craigslist.org/" />
-
-	<!--	Redirect to http:
-					-->
-	<exclusion pattern="^http://www\.craigslist\.org/$" />
-
-		<test url="http://www.craigslist.org/" />
-
-	<exclusion pattern="^http://geo\.craigslist\.org/" />
-
-		<test url="http://geo.craigslist.org/" />
-		<test url="https://geo.craigslist.org/" />
-
-	<test url="http://losangeles.craigslist.org/" />
-	<test url="http://sfbay.craigslist.org/" />
-	<test url="http://amsterdam.craigslist.org/" />
-	<test url="http://moscow.craigslist.org/" />
-
-	<securecookie host=".+" name=".+" />
-
-	<rule from="^http://craigslist\.org/" to="https://www.craigslist.org/" />
-
-	<!-- (May 2016) Craigslist only supports https on its .org, .ca, and .co.uk
+	(May 2016) Craigslist only supports https on its .org, .ca, and .co.uk
 	domains. geo.craigslist.org redirects to regional sites by sending protocol-
 	relative redirects such as "//toronto.craigslist.ca". Unfortunately, it does this
 	even when the destination doesn't support https, such as helsinki.craigslist.fi,
-	making a downgrade and exclusion necessary. -->
-	<rule from="^https://geo\.craigslist\.org/" to="http://geo.craigslist.org/" downgrade="1" />
+	making a downgrade and exclusion necessary.
 
-	<!-- As of 8/2013, 4th level craigslist.org domains do not support SSL. --> 
+	Mismatched:
+		blog.craigslist.org
+-->
+
+<ruleset name="Craigslist.org">
+	<target host="craigslist.org" />
+	<target host="*.craigslist.org" />
+		<test url="http://losangeles.craigslist.org/" />
+		<test url="http://sfbay.craigslist.org/" />
+		<test url="http://amsterdam.craigslist.org/" />
+		<test url="http://moscow.craigslist.org/" />
+
+	<exclusion pattern="^http://blog\.craigslist\.org/" />
+		<test url="http://blog.craigslist.org/" />
+
+	<exclusion pattern="^http://geo\.craigslist\.org/" />
+		<test url="http://geo.craigslist.org/" />
+	<rule from="^https://geo\.craigslist\.org/" to="http://geo.craigslist.org/" downgrade="1" />
+		<test url="https://geo.craigslist.org/" />
+
+	<securecookie host=".+" name=".+" />
+
+	<rule from="^http://craigslist\.org/" to="https://craigslist.org/" />
+
+	<!-- As of 3/2017, 4th level craigslist.org domains do not support SSL. -->
 	<rule from="^http://([\w-]+)\.craigslist\.org/" to="https://$1.craigslist.org/" />
 </ruleset>
