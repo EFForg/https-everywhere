@@ -39,7 +39,7 @@ rm -rf $HTTPSE_INSTALL_XPI
 
 # Build the XPI to run all the validations in makexpi.sh, and to ensure that
 # we test what is actually getting built.
-./makecrx.sh
+./make.sh
 XPI_NAME="`ls -tr pkg/https-everywhere-20*.xpi | tail -1`"
 
 # Install into our fresh Tor Browser

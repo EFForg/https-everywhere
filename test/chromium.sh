@@ -19,7 +19,7 @@ fi
 # If you just want to run Chromium with the latest code:
 if [ "$1" == "--justrun" ]; then
 	shift
-	./makecrx.sh
+	./make.sh
 	echo "running Chromium"
 	source utils/mktemp.sh
 
@@ -36,7 +36,7 @@ if [ "$1" == "--justrun" ]; then
 		--load-extension=pkg/crx/ \
 		"$@"
 else
-	./makecrx.sh
+	./make.sh
 	echo "running tests"
 	CRX_NAME="`ls -tr pkg/*.crx | tail -1`"
 	$XVFB_RUN python2.7 test/chromium/script.py $CRX_NAME
