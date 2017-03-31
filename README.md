@@ -28,13 +28,9 @@ Run the latest code and rulesets in a standalone Tor Browser profile:
 
     bash test/tor path_to_tor_browser.tar.xz
 
-Build the Firefox extension as a .xpi package:
+Build the Firefox (.xpi) & Chromium (.crx) extensions:
 
-    bash makexpi.sh
-
-Build the Chromium extension as a .crx package:
-
-    bash makecrx.sh
+    bash make.sh
 
 Both of the build commands store their output under pkg/.
 

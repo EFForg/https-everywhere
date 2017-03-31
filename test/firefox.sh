@@ -22,9 +22,9 @@ PROFILE_DIRECTORY="$(mktemp -d)"
 trap 'rm -r "$PROFILE_DIRECTORY"' EXIT
 HTTPSE_INSTALL_DIRECTORY=$PROFILE_DIRECTORY/extensions/https-everywhere-eff@eff.org
 
-# Build the XPI to run all the validations in makexpi.sh, and to ensure that
+# Build the XPI to run all the validations in make.sh, and to ensure that
 # we test what is actually getting built.
-./makecrx.sh
+./make.sh
 XPI_NAME="`ls -tr pkg/https-everywhere-20*.xpi | tail -1`"
 
 # Set up a skeleton profile and then install into it.
