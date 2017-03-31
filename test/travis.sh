@@ -40,6 +40,10 @@ fi
 # At this point, if anything fails, the test should fail
 set -e
 
+echo >&2 "Running linting tests."
+npm install eslint --global
+eslint .
+
 if ! $ONLY_RULESETS_CHANGED; then
   echo >&2 "Core code changes have been made."
   if [ "$TEST" == "firefox" ]; then
