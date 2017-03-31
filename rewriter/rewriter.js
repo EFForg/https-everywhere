@@ -6,7 +6,7 @@
 //
 // Usage:
 //  cd https-everywhere
-//  ./makecrx.sh # to build default.rulesets
+//  ./make.sh # to build default.rulesets
 //  cd rewriter
 //  (install node and npm)
 //  npm install
