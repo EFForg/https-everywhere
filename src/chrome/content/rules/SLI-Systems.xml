@@ -1,65 +1,41 @@
 <!--
 	Other SLI Systems rulesets:
-
+		- Resultsdemo.com.xml
 		- Resultspage.com.xml
 
+	Mismatched:
+		^(www.)?slisystems.com	( equal to sli-systems.com )
+		newsletter.sli-systems.com
+		site-search.sli-systems.com	( mismatched, CN: *.resultspage.com )
 
-	sli-systems.resultspage.com
-
-
-	Nonfunctional domains:
-
-		- (www.)slisystems.com *
-
-		- sli-systems.com subdomains:
-
-			- (www.) *
-			- newsletter *
-			- sitesearch.sli-systems.com	(redirects to app-sj01.marketo.com; mismatched, CN: *.marketo.com)
-			- site-search.sli-systems.com	(redirects to http; mismatched, CN: *.resultspage.com)
-
-	* Times out
-
-
-	Insecure cookies are set for these domains:
-
-		- .sli-systems.com
-
+	Redirect to http:
+		sitesearch.sli-systems.com
 -->
 <ruleset name="SLI-Systems.com (partial)">
-
-	<!--	Direct rewrites:
-				-->
-	<target host="tools.sli-systems.com" />
-
-	<!--	Complications:
-				-->
+	<!--	Complications:	-->
 	<target host="sitesearch.sli-systems.com" />
 
-		<exclusion pattern="^http://sitesearch\.sli-systems\.com/(?!css/|rs/)" />
+	<exclusion pattern="^http://sitesearch\.sli-systems\.com/(?!css/|rs/)" />
+		<test url="http://sitesearch.sli-systems.com/Webinar_MarineDepot_OnDemand.html" />
+		<test url="http://sitesearch.sli-systems.com/Webinar-Mobile-Registration-Page.html" />
+		<test url="http://sitesearch.sli-systems.com/Webinar2015-01-28TheFutureofE-Commerce_Webinar_OnDemand.html" />
 
-			<!--	+ve:
-					-->
-			<test url="http://sitesearch.sli-systems.com/Webinar_MarineDepot_OnDemand.html" />
-			<test url="http://sitesearch.sli-systems.com/Webinar-Mobile-Registration-Page.html" />
-			<test url="http://sitesearch.sli-systems.com/Webinar2015-01-28TheFutureofE-Commerce_Webinar_OnDemand.html" />
+	<rule from="^http://sitesearch\.sli-systems\.com/(css|rs)/"
+		to="https://na-sj01.marketo.com/$1/" />
+		<test url="http://sitesearch.sli-systems.com/css/mktLPSupport.css" />
+		<test url="http://sitesearch.sli-systems.com/rs/slisystemsinc/images/SLI-eCommerce-and-Site-Search-Survey-US-2014.pdf" />
 
-			<!--	-ve:
-					-->
-			<test url="http://sitesearch.sli-systems.com/css/mktLPSupport.css" />
+	<target host="slisystems.com" />
+	<target host="www.slisystems.com" />
 
+	<rule from="^http://(www\.)?sli-systems\.com/" to="https://$1sli-systems.com/" />
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.sli-systems\.com$" name="^tsess$" /-->
+	<!--	Direct rewrites:	-->
+	<target host="sli-systems.com" />
+	<target host="www.sli-systems.com" />
+	<target host="tools.sli-systems.com" />
 
-	<securecookie host="^tools\.sli-systems\.com$" name=".+" />
+	<securecookie host=".+" name=".+" />
 
-
-	<rule from="^http://sitesearch\.sli-systems\.com/"
-		to="https://na-sj01.marketo.com/" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
