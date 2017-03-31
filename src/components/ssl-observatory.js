@@ -16,7 +16,7 @@ let WARN=5;
 let BASE_REQ_SIZE=4096;
 let TIMEOUT = 60000;
 let MAX_OUTSTANDING = 20; // Max # submission XHRs in progress
-let MAX_DELAYED = 32;     // Max # XHRs are waiting around to be sent or retried 
+let MAX_DELAYED = 32;     // Max # XHRs are waiting around to be sent or retried
 
 let ASN_PRIVATE = -1;     // Do not record the ASN this cert was seen on
 let ASN_IMPLICIT = -2;    // ASN can be learned from connecting IP
@@ -41,10 +41,11 @@ const LOADER = CC["@mozilla.org/moz/jssubscript-loader;1"].getService(CI.mozIJSS
 const _INCLUDED = {};
 
 const INCLUDE = function(name) {
-  if (arguments.length > 1)
-    for (var j = 0, len = arguments.length; j < len; j++)
+  if (arguments.length > 1) {
+    for (var j = 0, len = arguments.length; j < len; j++) {
       INCLUDE(arguments[j]);
-  else if (!_INCLUDED[name]) {
+    }
+  }  else if (!_INCLUDED[name]) {
     try {
       LOADER.loadSubScript("chrome://https-everywhere/content/code/"
               + name + ".js");
@@ -53,7 +54,7 @@ const INCLUDE = function(name) {
       dump("INCLUDE " + name + ": " + e + "\n");
     }
   }
-}
+};
 
 INCLUDE('Root-CAs');
 INCLUDE('sha256');
@@ -119,8 +120,9 @@ function SSLObservatory() {
   this.wrappedJSObject = this;
 
   this.client_asn = ASN_PRIVATE;
-  if (this.myGetBoolPref("send_asn")) 
+  if (this.myGetBoolPref("send_asn")) {
     this.setupASNWatcher();
+  }
 
   try {
     NSS.initialize();
@@ -154,23 +156,23 @@ SSLObservatory.prototype = {
   getSSLCert: function(channel) {
     try {
         // Do we have a valid channel argument?
-        if (!channel instanceof Ci.nsIChannel) {
-            return null;
-        }
-        var secInfo = channel.securityInfo;
+      if (!(channel instanceof Ci.nsIChannel)) {
+        return null;
+      }
+      var secInfo = channel.securityInfo;
 
         // Print general connection security state
-        if (secInfo instanceof Ci.nsITransportSecurityInfo) {
-            secInfo.QueryInterface(Ci.nsITransportSecurityInfo);
-        } else {
-            return null;
-        }
-
-        if (secInfo instanceof Ci.nsISSLStatusProvider) {
-            return secInfo.QueryInterface(Ci.nsISSLStatusProvider).
-                   SSLStatus.QueryInterface(Ci.nsISSLStatus).serverCert;
-        }
+      if (secInfo instanceof Ci.nsITransportSecurityInfo) {
+        secInfo.QueryInterface(Ci.nsITransportSecurityInfo);
+      } else {
         return null;
+      }
+
+      if (secInfo instanceof Ci.nsISSLStatusProvider) {
+        return secInfo.QueryInterface(Ci.nsISSLStatusProvider).
+                   SSLStatus.QueryInterface(Ci.nsISSLStatus).serverCert;
+      }
+      return null;
     } catch(err) {
       return null;
     }
@@ -190,7 +192,7 @@ SSLObservatory.prototype = {
   regExpEscape: function(s) {
     // Borrowed from the Closure Library,
     // https://closure-library.googlecode.com/svn/docs/closure_goog_string_string.js.source.html
-     return String(s).replace(/([-()\[\]{}+?*.$\^|,:#<!\\])/g, '\\$1').replace(/\x08/g, '\\x08');
+    return String(s).replace(/([-()\[\]{}+?*.$\^|,:#<!\\])/g, '\\$1').replace(/\x08/g, '\\x08');
   },
 
   notifyCertProblem: function(socketInfo, status, targetSite) {
@@ -207,7 +209,7 @@ SSLObservatory.prototype = {
     this.max_ap = null;
 
     // we currently do not actually do *any* ASN watching from the client
-    // (in other words, the db will not have ASNs for certs submitted 
+    // (in other words, the db will not have ASNs for certs submitted
     // through Tor, even if the user checks the "send ASN" option)
     // all of this code for guessing at changes in our public IP via WiFi hints
     // is therefore disabled
@@ -249,8 +251,7 @@ SSLObservatory.prototype = {
     if (!this.myGetBoolPref("send_asn")) {
       this.client_asn = ASN_PRIVATE;
       return;
-    }
-    else if (!this.torbutton_installed) {
+    }    else if (!this.torbutton_installed) {
       this.client_asn = ASN_IMPLICIT;
       return;
     }
@@ -384,12 +385,10 @@ SSLObservatory.prototype = {
 
         if(!this.myGetBoolPref("use_whitelist")) {
           this.log(WARN, "Not using whitelist to filter cert chains.");
-        }
-        else if (this.isChainWhitelisted(chain_hash)) {
+        }        else if (this.isChainWhitelisted(chain_hash)) {
           this.log(INFO, "This cert chain is whitelisted. Not submitting.");
           return;
-        }
-        else {
+        }        else {
           this.log(INFO, "Cert chain is NOT whitelisted. Proceeding with submission.");
         }
 
@@ -408,19 +407,22 @@ SSLObservatory.prototype = {
 
   observatoryActive: function() {
 
-    if (!this.myGetBoolPref("enabled"))
+    if (!this.myGetBoolPref("enabled")) {
       return false;
+    }
 
     if (this.torbutton_installed && this.proxy_test_successful) {
       // Allow Tor users to choose if they want to submit
       // during tor and/or non-tor
-      if (this.myGetBoolPref("submit_during_tor") && 
-           this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) 
+      if (this.myGetBoolPref("submit_during_tor") &&
+           this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) {
         return true;
+      }
 
-      if (this.myGetBoolPref("submit_during_nontor") && 
-          !this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) 
+      if (this.myGetBoolPref("submit_during_nontor") &&
+          !this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) {
         return true;
+      }
 
       return false;
     }
@@ -503,7 +505,7 @@ SSLObservatory.prototype = {
     //this.log(WARN, convergence.certificateStatus.getVerificiationStatus(chain.certArray[0]));
     try {
       var certInfo = this.extractRealLeafFromConveregenceLeaf(chain.certArray[0]);
-      var b64Cert = certInfo["certificate"];
+      var b64Cert = certInfo.certificate;
       var certDB = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB);
       chain.leaf = certDB.constructX509FromBase64(b64Cert);
       chain.certArray = [chain.leaf];
@@ -528,8 +530,8 @@ SSLObservatory.prototype = {
     var completeCertificate = NSS.lib.CERT_DecodeDERCertificate(derItem.address(), 1, null);
 
     var extItem = NSS.types.SECItem();
-    var status = NSS.lib.CERT_FindCertExtension(completeCertificate, 
-                                                NSS.lib.SEC_OID_NS_CERT_EXT_COMMENT, 
+    var status = NSS.lib.CERT_FindCertExtension(completeCertificate,
+                                                NSS.lib.SEC_OID_NS_CERT_EXT_COMMENT,
                                                 extItem.address());
     if (status != -1) {
       var encoded = '';
@@ -553,8 +555,9 @@ SSLObservatory.prototype = {
     var rootidx = this.findRootInChain(chain.certArray);
     var ss= false;
 
-    if (chain.leaf.issuerName == chain.leaf.subjectName) 
+    if (chain.leaf.issuerName == chain.leaf.subjectName) {
       ss = true;
+    }
 
     if (!this.myGetBoolPref("self_signed") && ss) {
       this.log(INFO, "Not submitting self-signed cert for " + domain);
@@ -596,12 +599,15 @@ SSLObservatory.prototype = {
 
       // if there are too many current requests but not too many
       // delayed/pending ones, then delay this one
-      if (Object.keys(this.delayed_submissions).length < MAX_DELAYED)
+      if (Object.keys(this.delayed_submissions).length < MAX_DELAYED) {
         if (!(c.fps[0] in this.delayed_submissions)) {
           this.log(WARN, "Planning to retry submission...");
-          let retry = function() { this.submitChain(certArray, fps, domain, channel, host_ip, true); };
+          let retry = function() {
+            this.submitChain(certArray, fps, domain, channel, host_ip, true);
+          };
           this.delayed_submissions[c.fps[0]] = retry;
         }
+      }
       return;
     }
 
@@ -609,8 +615,9 @@ SSLObservatory.prototype = {
       var len = new Object();
       var derData = c.certArray[i].getRawDER(len);
       let result = "";
-      for (let j = 0, dataLength = derData.length; j < dataLength; ++j) 
+      for (let j = 0, dataLength = derData.length; j < dataLength; ++j) {
         result += String.fromCharCode(derData[j]);
+      }
       base64Certs.push(btoa(result));
     }
 
@@ -626,15 +633,13 @@ SSLObservatory.prototype = {
 
     if (resubmitting) {
       reqParams.push("client_asn="+ASN_UNKNOWABLE);
-    }
-    else {
+    }    else {
       reqParams.push("client_asn="+this.client_asn);
     }
 
     if (this.myGetBoolPref("priv_dns")) {
       reqParams.push("private_opt_in=1");
-    }
-    else {
+    }    else {
       reqParams.push("private_opt_in=0");
     }
 
@@ -712,7 +717,9 @@ SSLObservatory.prototype = {
           if (Object.keys(that.delayed_submissions).length < MAX_DELAYED &&
               c.fps[0] in that.delayed_submissions) {
             that.log(WARN, "Planning to retry submission...");
-            let retry = function() { that.submitChain(certArray, fps, domain, channel, host_ip, true); };
+            let retry = function() {
+              that.submitChain(certArray, fps, domain, channel, host_ip, true);
+            };
             that.delayed_submissions[c.fps[0]] = retry;
           }
         }
@@ -753,7 +760,7 @@ SSLObservatory.prototype = {
 
   warnUser: function(warningObj, win, cert) {
     var aWin = CC['@mozilla.org/appshell/window-mediator;1']
-                 .getService(CI.nsIWindowMediator) 
+                 .getService(CI.nsIWindowMediator)
                  .getMostRecentWindow('navigator:browser');
     aWin.openDialog("chrome://https-everywhere/content/observatory-warning.xul",
                     "","chrome,centerscreen", warningObj, win, cert);
@@ -814,7 +821,7 @@ SSLObservatory.prototype = {
             var result = req.responseXML.getElementById('TorCheckResult');
             if(result===null) {
               that.log(INFO, "Tor check failed: Non-XML returned by check service.");
-            } else if(typeof(result.target) == 'undefined' 
+            } else if(typeof(result.target) == 'undefined'
                     || result.target === null) {
               that.log(INFO, "Tor check failed: Busted XML returned by check service.");
             } else if(result.target === "success") {
@@ -972,7 +979,8 @@ SSLObservatory.prototype = {
 * XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).
 * XPCOMUtils.generateNSGetModule is for Mozilla 1.9.2 (Firefox 3.6).
 */
-if (XPCOMUtils.generateNSGetFactory)
-    var NSGetFactory = XPCOMUtils.generateNSGetFactory([SSLObservatory]);
-else
-    var NSGetModule = XPCOMUtils.generateNSGetModule([SSLObservatory]);
+if (XPCOMUtils.generateNSGetFactory) {
+  var NSGetFactory = XPCOMUtils.generateNSGetFactory([SSLObservatory]);
+}else {
+  var NSGetModule = XPCOMUtils.generateNSGetModule([SSLObservatory]);
+}

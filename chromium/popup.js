@@ -88,9 +88,9 @@ function updateEnabledDisabledUI() {
   document.getElementById('onoffswitch').checked = backgroundPage.isExtensionEnabled;
   // Hide or show the rules sections
   if (backgroundPage.isExtensionEnabled) {
-    document.body.className = ""
+    document.body.className = "";
   } else {
-    document.body.className = "disabled"
+    document.body.className = "disabled";
   }
   backgroundPage.updateState();
 }

@@ -30,10 +30,10 @@ ApplicableList.prototype = {
     // Empty everything, used when toggles occur in order to ensure that if
     // the reload fails, the resulting list is not erroneous
     this.active = {};
-    this.breaking = {}; 
+    this.breaking = {};
     this.inactive = {};
-    this.moot={};  
-    this.all={};  
+    this.moot={};
+    this.all={};
   },
 
   active_rule: function(ruleset) {
@@ -66,8 +66,9 @@ ApplicableList.prototype = {
 
   dom_handler: function(operation,key,data,src,dst) {
     // See https://developer.mozilla.org/En/DOM/UserDataHandler
-    if (src && dst) 
+    if (src && dst) {
       dst.setUserData(key, data, this.dom_handler);
+    }
   },
 
   populate_list: function() {
@@ -84,9 +85,9 @@ ApplicableList.prototype = {
   populate_menu: function(document, menupopup, weird) {
     this.populate_list();
     this.document = document;
-    
-    var https_everywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;   
-   
+
+    var https_everywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;
+
     // get the menu popup
     this.menupopup = menupopup;
 
@@ -94,14 +95,15 @@ ApplicableList.prototype = {
     while(this.menupopup.firstChild.tagName != "menuseparator") {
       this.menupopup.removeChild(this.menupopup.firstChild);
     }
-    
-    // add global enable/disable toggle button  
+
+    // add global enable/disable toggle button
     var strings = document.getElementById("HttpsEverywhereStrings");
-    
+
     var enableLabel = document.createElement('menuitem');
     var text = strings.getString("https-everywhere.menu.globalDisable");
-    if(!https_everywhere.prefs.getBoolPref("globalEnabled"))
+    if(!https_everywhere.prefs.getBoolPref("globalEnabled")) {
       text = strings.getString("https-everywhere.menu.globalEnable");
+    }
 
     enableLabel.setAttribute('label', text);
     enableLabel.setAttribute('command', 'https-everywhere-menuitem-globalEnableToggle');
@@ -139,77 +141,93 @@ ApplicableList.prototype = {
       win.appendChild(this.commandset);
     } else {
       // empty commandset
-      while(this.commandset.firstChild) 
+      while(this.commandset.firstChild) {
         this.commandset.removeChild(this.commandset.firstChild);
+      }
     }
 
     var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
                      .getService(Components.interfaces.nsIWindowMediator);
-                     
+
     var browser = wm.getMostRecentWindow("navigator:browser").gBrowser.selectedBrowser;
     var location = browser.currentURI.asciiSpec; //full url, including about:certerror details
-    
+
     if(location.substr(0, 6) == "about:"){
       //"From" portion of the rule is retrieved from the location bar via document.getElementById("urlbar").value
-        
-      var fromHost = document.getElementById("urlbar").value;  
-      
-      //scheme must be trimmed out to check for applicable rulesets       
-      if(fromHost.indexOf("://") != -1)
+
+      var fromHost = document.getElementById("urlbar").value;
+
+      //scheme must be trimmed out to check for applicable rulesets
+      if(fromHost.indexOf("://") != -1) {
         fromHost = fromHost.substr(fromHost.indexOf("://") + 3, fromHost.length);
-          
+      }
+
       //trim off any page locations - we only want the host - e.g. domain.com
-      if(fromHost.indexOf("/") != -1)
+      if(fromHost.indexOf("/") != -1) {
         fromHost = fromHost.substr(0, fromHost.indexOf("/"));
-                     
+      }
+
       // Search for applicable rulesets for the host listed in the location bar
-      var plist = HTTPSRules.potentiallyApplicableRulesets(fromHost);     
+      var plist = HTTPSRules.potentiallyApplicableRulesets(fromHost);
       for (var i = 0 ; i < plist.length ; i++){
         //For each applicable rulset, determine active/inactive, and append to proper list.
         var ruleOn = false;
         try {
-          if(https_everywhere.rule_toggle_prefs.getBoolPref(plist[i].name))
+          if(https_everywhere.rule_toggle_prefs.getBoolPref(plist[i].name)) {
             ruleOn = true;
+          }
         } catch(e) {
-          if(https_everywhere.https_rules.rulesetsByName[plist[i].name].active)
+          if(https_everywhere.https_rules.rulesetsByName[plist[i].name].active) {
             ruleOn = true;
+          }
         }
-        if(ruleOn)
+        if(ruleOn) {
           this.active_rule(plist[i]);
-        else
-          this.inactive_rule(plist[i]);                   
-      }   
-    }   
-    
+        }        else {
+          this.inactive_rule(plist[i]);
+        }
+      }
+    }
+
     // add all applicable commands
-    for(var x in this.breaking) 
-      this.add_command(this.breaking[x]); 
-    for(var x in this.active) 
-      this.add_command(this.active[x]); 
-    for(var x in this.moot)
+    for(var x in this.breaking) {
+      this.add_command(this.breaking[x]);
+    }
+    for(var x in this.active) {
+      this.add_command(this.active[x]);
+    }
+    for(var x in this.moot) {
       this.add_command(this.moot[x]);
-    for(var x in this.inactive) 
+    }
+    for(var x in this.inactive) {
       this.add_command(this.inactive[x]);
+    }
 
     if(https_everywhere.prefs.getBoolPref("globalEnabled")){
        // add all the menu items
-       for (var x in this.inactive)
-          this.add_menuitem(this.inactive[x], 'inactive');
+      for (var x in this.inactive) {
+        this.add_menuitem(this.inactive[x], 'inactive');
+      }
        // rules that are active for some uris are not really moot
-       for (var x in this.moot) 
-          if (!(x in this.active))   
-              this.add_menuitem(this.moot[x], 'moot');
+      for (var x in this.moot) {
+        if (!(x in this.active)) {
+          this.add_menuitem(this.moot[x], 'moot');
+        }
+      }
        // break once break everywhere
-       for (var x in this.active) 
-          if (!(x in this.breaking))
-              this.add_menuitem(this.active[x], 'active');
-       for (var x in this.breaking)
-          this.add_menuitem(this.breaking[x], 'breaking');
-          
-       if (label2) this.prepend_child(label2);
-       this.prepend_child(label);
+      for (var x in this.active) {
+        if (!(x in this.breaking)) {
+          this.add_menuitem(this.active[x], 'active');
+        }
+      }
+      for (var x in this.breaking) {
+        this.add_menuitem(this.breaking[x], 'breaking');
+      }
+
+      if (label2) this.prepend_child(label2);
+      this.prepend_child(label);
     }
-    
+
   },
 
   prepend_child: function(node) {
@@ -218,16 +236,16 @@ ApplicableList.prototype = {
 
   add_command: function(rule) {
       // basic validation for data to be added to xul
-      var ruleId = String(rule.id);
-      if (!ruleId.match(/^[a-zA-Z_0-9]+$/)) {
-        return;
-      }
+    var ruleId = String(rule.id);
+    if (!ruleId.match(/^[a-zA-Z_0-9]+$/)) {
+      return;
+    }
 
-      var command = this.document.getElementById("https-everywhere-menuitem-rule-toggle-template").cloneNode();
-      command.setAttribute('id', ruleId+'-command');
-      command.setAttribute('data-id', ruleId);
-      command.setAttribute('label', rule.name);
-      this.commandset.appendChild(command);
+    var command = this.document.getElementById("https-everywhere-menuitem-rule-toggle-template").cloneNode();
+    command.setAttribute('id', ruleId+'-command');
+    command.setAttribute('data-id', ruleId);
+    command.setAttribute('label', rule.name);
+    this.commandset.appendChild(command);
   },
 
   // add a menu item for a rule -- type is "active", "inactive", "moot",
@@ -243,11 +261,13 @@ ApplicableList.prototype = {
 
     // we can get confused if rulesets have their state changed after the
     // ApplicableList was constructed
-    if (!rule.active && (type == 'active' || type == 'moot'))
+    if (!rule.active && (type == 'active' || type == 'moot')) {
       type = 'inactive';
-    if (rule.active && type == 'inactive')
+    }
+    if (rule.active && type == 'inactive') {
       type = 'moot';
-    
+    }
+
     // set the icon
     var image_src;
     if (type == 'active') image_src = 'tick.png';
@@ -262,18 +282,22 @@ ApplicableList.prototype = {
 
   show_applicable: function() {
     this.log(WARN, "Applicable list number " + this.serial);
-    for (var x in this.active) 
+    for (var x in this.active) {
       this.log(WARN,"Active: " + this.active[x].name);
+    }
 
-    for (var x in this.breaking) 
+    for (var x in this.breaking) {
       this.log(WARN,"Breaking: " + this.breaking[x].name);
-  
-    for (x in this.inactive) 
-      this.log(WARN,"Inactive: " + this.inactive[x].name);
+    }
 
-    for (x in this.moot) 
+    for (x in this.inactive) {
+      this.log(WARN,"Inactive: " + this.inactive[x].name);
+    }
+
+    for (x in this.moot) {
       this.log(WARN,"Moot: " + this.moot[x].name);
-    
+    }
+
   }
 };
 

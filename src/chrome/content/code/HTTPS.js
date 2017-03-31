@@ -82,7 +82,9 @@ const HTTPS = {
         https_everywhere_blacklist[channel.URI.spec] = blob.applied_ruleset;
       }
       var domain = null;
-      try { domain = channel.URI.host; } catch (e) {}
+      try {
+        domain = channel.URI.host;
+      } catch (e) {}
       if (domain) https_blacklist_domains[domain] = true;
       if (httpNowhereEnabled && channel.URI.schemeIs("http")) {
         IOUtil.abort(channel);
@@ -91,7 +93,7 @@ const HTTPS = {
     }
 
     // Check for the new internal redirect API. If it exists, use it.
-    if (!"redirectTo" in channel) {
+    if (!("redirectTo" in channel)) {
       this.log(WARN, "nsIHTTPChannel.redirectTo API is missing. This version of HTTPS Everywhere is useless!!!!\n!!!\n");
       return false;
     }
@@ -112,7 +114,7 @@ const HTTPS = {
 
   // getApplicableListForContext was remove along with the nsIContentPolicy
   // bindings and the and forceURI path that used them.
-  
+
   onCrossSiteRequest: function(channel, origin, browser, rw) {
     try {
       this.handleCrossSiteCookies(channel, origin, browser);
@@ -120,10 +122,10 @@ const HTTPS = {
       this.log(WARN, e + " --- " + e.stack);
     }
   },
-  
+
   registered: false,
   handleSecureCookies: function(req) {
-    
+
     try {
       req = req.QueryInterface(CI.nsIHttpChannel);
     } catch(e) {
@@ -138,9 +140,10 @@ const HTTPS = {
     }
     //this.log(DBUG, "Cookie hunting in " + uri.spec);
     var alist = HTTPSEverywhere.instance.getApplicableListForChannel(req);
-    if (!alist)
+    if (!alist) {
       this.log(INFO, "No alist for cookies for "+(req.URI) ? req.URI.spec : "???");
-    
+    }
+
     if (uri.schemeIs("https")) {
       var host = uri.host;
       try {
@@ -160,7 +163,7 @@ const HTTPS = {
           req.setResponseHeader("Set-Cookie", c.source + ";Secure", true);
         }
       }
-      
+
     }
   },
 
@@ -175,35 +178,35 @@ const HTTPS = {
       cookieManager.add(c.host, c.path, c.name, c.value, true, c.isHTTPOnly, c.isSession, expiry, c.originAttributes);
     }
   },
-  
+
   handleCrossSiteCookies: function(req, origin, browser) {
-     
+
     var unsafeCookies = this.getUnsafeCookies(browser);
     if (!unsafeCookies) return;
-    
+
     var uri = req.URI;
     var dscheme = uri.scheme;
-    
+
     var oparts = origin && origin.match(/^(https?):\/\/([^\/:]+).*?(\/.*)/);
-    if (!(oparts && /https?/.test(dscheme))) return; 
-    
+    if (!(oparts && /https?/.test(dscheme))) return;
+
     var oscheme = oparts[1];
     if (oscheme == dscheme) return; // we want to check only cross-scheme requests
-    
+
     var dsecure = dscheme == "https";
-    
+
     if (dsecure && !ns.getPref("secureCookies.recycle", false)) return;
-   
+
     var dhost = uri.host;
     var dpath = uri.path;
-    
+
     var ohost = oparts[2];
     var opath = oparts[3];
-    
+
     var ocookieCount = 0, totCount = 0;
     var dcookies = [];
     var c;
-    
+
     for (var k in unsafeCookies) {
       c = unsafeCookies[k];
       if (!c.exists()) {
@@ -218,27 +221,27 @@ const HTTPS = {
         }
       }
     }
-    
+
     if (!totCount) {
       this.setUnsafeCookies(browser, null);
       return;
     }
-    
+
     // We want to "desecurify" cookies only if cross-navigation to unsafe
     // destination originates from a site sharing some secured cookies
 
-    if (ocookieCount == 0 && !dsecure || !dcookies.length) return; 
-    
+    if (ocookieCount == 0 && !dsecure || !dcookies.length) return;
+
     if (dsecure) {
       this.log(WARN,"Detected cross-site navigation with secured cookies: " + origin + " -> " + uri.spec);
-      
+
     } else {
       this.log(WARN,"Detected unsafe navigation with NoScript-secured cookies: " + origin + " -> " + uri.spec);
       this.log(WARN,uri.prePath + " cannot support secure cookies because it does not use HTTPS. Consider forcing HTTPS for " + uri.host + " in NoScript's Advanced HTTPS options panel.");
     }
-    
+
     var cs = CC['@mozilla.org/cookieService;1'].getService(CI.nsICookieService).getCookieString(uri, req);
-      
+
     for (c of dcookies) {
       c.secure = dsecure;
       c.save();
@@ -247,18 +250,26 @@ const HTTPS = {
 
     if (cs) {
       dcookies.push.apply(
-        dcookies, cs.split(/\s*;\s*/).map(function(cs) { var nv = cs.split("="); return { name: nv.shift(), value: nv.join("=") }; })
-         .filter(function(c) { return dcookies.every(function(x) { return x.name != c.name; }); })
+        dcookies, cs.split(/\s*;\s*/).map(function(cs) {
+          var nv = cs.split("="); return { name: nv.shift(), value: nv.join("=") };
+        })
+         .filter(function(c) {
+           return dcookies.every(function(x) {
+             return x.name != c.name;
+           });
+         })
       );
     }
 
-    cs = dcookies.map(function(c) { return c.name + "=" + c.value; }).join("; ");
+    cs = dcookies.map(function(c) {
+      return c.name + "=" + c.value;
+    }).join("; ");
 
     this.log(WARN,"Sending Cookie for " + dhost + ": " + cs);
     req.setRequestHeader("Cookie", cs, false); // "false" because merge syntax breaks Cookie header
   },
-  
-  
+
+
   cookiesCleanup: function(refCookie) {
     var downgraded = [];
 
@@ -287,13 +298,13 @@ const HTTPS = {
       if (!this.cookiesPerTab) break;
     }
   },
-  
+
   get cookiesPerTab() {
     return ns.getPref("secureCookies.perTab", false);
   },
-  
+
   _globalUnsafeCookies: {},
-  getUnsafeCookies: function(browser) { 
+  getUnsafeCookies: function(browser) {
     return this.cookiesPerTab
       ? browser && ns.getExpando(browser, "unsafeCookies")
       : this._globalUnsafeCookies;
@@ -303,26 +314,26 @@ const HTTPS = {
       ? browser && ns.setExpando(browser, "unsafeCookies", value)
       : this._globalUnsafeCookies = value;
   },
-  
+
   _getParent: function(req, w) {
     return  w && w.frameElement || DOM.findBrowserForNode(w || IOUtil.findWindow(req));
   }
-  
+
 };
 
 (function () {
-  ["secureCookies", "secureCookiesExceptions", "secureCookiesForced"].forEach(function(p) {
-    var v = HTTPS[p];
-    delete HTTPS[p];
-    HTTPS.__defineGetter__(p, function() {
-      return v;
-    });
-    HTTPS.__defineSetter__(p, function(n) {
-      v = n;
-      if (HTTPS.ready) HTTPS.cookiesCleanup();
-      return v;
-    });
+["secureCookies", "secureCookiesExceptions", "secureCookiesForced"].forEach(function(p) {
+  var v = HTTPS[p];
+  delete HTTPS[p];
+  HTTPS.__defineGetter__(p, function() {
+    return v;
   });
+  HTTPS.__defineSetter__(p, function(n) {
+    v = n;
+    if (HTTPS.ready) HTTPS.cookiesCleanup();
+    return v;
+  });
+});
 })();
 
 HTTPS.ready = true;

@@ -56,7 +56,7 @@ const chromium_version_fetch = version_url => {
         cb(null, String(data).match(/google-chrome-stable-([0-9\.]+)/)[1]);
       })
       .pull(_ => _);
-  }
+  };
 };
 
 
@@ -71,9 +71,9 @@ const parse_include = include_url => {
       })
       .pipe(split())
       .on('data', line => {
-        let regex_res = line.match(regex)
+        let regex_res = line.match(regex);
         if(regex_res){
-          hsts[regex_res[1]] = Boolean(regex_res[2])
+          hsts[regex_res[1]] = Boolean(regex_res[2]);
         }
       })
       .on('end', _ => {
@@ -104,7 +104,7 @@ const parse_json = json_url => {
         cb(null, hsts);
       });
   };
-}
+};
 
 const check_inclusion = (structs, domain) => {
   if(domain in structs.esr &&
@@ -125,7 +125,7 @@ const check_inclusion = (structs, domain) => {
     }
   }
   return [false, null];
-}
+};
 
 const check_header_directives = (check_domain, cb) => {
   let sent_callback = false;
@@ -136,7 +136,7 @@ const check_header_directives = (check_domain, cb) => {
       let include_subdomains = Boolean(
         res.headers['strict-transport-security'].match(/includesubdomains/i));
       let max_age_match =
-        res.headers['strict-transport-security'].match(/max-age=([0-9]+)/i)
+        res.headers['strict-transport-security'].match(/max-age=([0-9]+)/i);
       let max_age;
       if(max_age_match){
         max_age = Number(max_age_match[1]);

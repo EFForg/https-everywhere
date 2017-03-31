@@ -230,11 +230,11 @@ RuleSets.prototype = {
 
     var targets = ruletag.getElementsByTagName("target");
     for(var j = 0; j < targets.length; j++) {
-       var host = targets[j].getAttribute("host");
-       if (!(host in this.targets)) {
-         this.targets[host] = [];
-       }
-       this.targets[host].push(rule_set);
+      var host = targets[j].getAttribute("host");
+      if (!(host in this.targets)) {
+        this.targets[host] = [];
+      }
+      this.targets[host].push(rule_set);
     }
   },
 
@@ -247,8 +247,8 @@ RuleSets.prototype = {
     // Have we cached this result? If so, return it!
     var cached_item = this.ruleCache.get(host);
     if (cached_item !== undefined) {
-        log(DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.length);
-        return cached_item;
+      log(DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.length);
+      return cached_item;
     }
     log(DBUG, "Ruleset cache miss for " + host);
 
@@ -318,7 +318,7 @@ RuleSets.prototype = {
     }
 
     if (!this.safeToSecureCookie(hostname)) {
-        return null;
+      return null;
     }
 
     var potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
@@ -359,8 +359,8 @@ RuleSets.prototype = {
     }
     var cached_item = this.cookieHostCache.get(domain);
     if (cached_item !== undefined) {
-        log(DBUG, "Cookie host cache hit for " + domain);
-        return cached_item;
+      log(DBUG, "Cookie host cache hit for " + domain);
+      return cached_item;
     }
     log(DBUG, "Cookie host cache miss for " + domain);
 

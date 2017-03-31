@@ -40,7 +40,7 @@ var switchPlannerInfo = {};
 var isExtensionEnabled = true;
 
 // Load prefs about whether http nowhere is on. Structure is:
-//  { httpNowhere: true/false }
+// { httpNowhere: true/false }
 var httpNowhereOn = false;
 storage.get({httpNowhere: false}, function(item) {
   httpNowhereOn = item.httpNowhere;
@@ -105,7 +105,7 @@ var updateState = function() {
     if (!tabs || tabs.length === 0) {
       return;
     }
-    var applied = activeRulesets.getRulesets(tabs[0].id)
+    var applied = activeRulesets.getRulesets(tabs[0].id);
     var iconState = "inactive";
     if (!isExtensionEnabled) {
       iconState = "disabled";
@@ -123,7 +123,7 @@ var updateState = function() {
       title: "HTTPS Everywhere (" + iconState + ")"
     });
   });
-}
+};
 
 /**
  * Adds a new user rule
@@ -132,11 +132,11 @@ var updateState = function() {
  * */
 var addNewRule = function(params, cb) {
   if (all_rules.addUserRule(params)) {
-    // If we successfully added the user rule, save it in local 
-    // storage so it's automatically applied when the extension is 
+    // If we successfully added the user rule, save it in local
+    // storage so it's automatically applied when the extension is
     // reloaded.
     var oldUserRules = getStoredUserRules();
-    // TODO: there's a race condition here, if this code is ever executed from multiple 
+    // TODO: there's a race condition here, if this code is ever executed from multiple
     // client windows in different event loops.
     oldUserRules.push(params);
     // TODO: can we exceed the max size for storage?
@@ -211,8 +211,9 @@ function onBeforeRequest(details) {
   // Normalise hosts such as "www.example.com."
   var canonical_host = uri.hostname;
   if (canonical_host.charAt(canonical_host.length - 1) == ".") {
-    while (canonical_host.charAt(canonical_host.length - 1) == ".")
+    while (canonical_host.charAt(canonical_host.length - 1) == ".") {
       canonical_host = canonical_host.slice(0,-1);
+    }
     uri.hostname = canonical_host;
   }
 
@@ -220,16 +221,16 @@ function onBeforeRequest(details) {
   // analysis process
   var using_credentials_in_url = false;
   if (uri.password || uri.username) {
-      using_credentials_in_url = true;
-      var tmp_user = uri.username;
-      var tmp_pass = uri.password;
-      uri.username = null;
-      uri.password = null;
+    using_credentials_in_url = true;
+    var tmp_user = uri.username;
+    var tmp_pass = uri.password;
+    uri.username = null;
+    uri.password = null;
   }
 
   var canonical_url = uri.href;
   if (details.url != canonical_url && !using_credentials_in_url) {
-    log(INFO, "Original url " + details.url + 
+    log(INFO, "Original url " + details.url +
         " changed before processing to " + canonical_url);
   }
   if (urlBlacklist.has(canonical_url)) {
@@ -328,8 +329,9 @@ var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
  * */
 function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritten_url) {
   var rw = "rw";
-  if (rewritten_url == null)
+  if (rewritten_url == null) {
     rw = "nrw";
+  }
 
   var active_content = 0;
   if (activeTypes[type]) {
@@ -343,13 +345,15 @@ function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritt
 
   if (!switchPlannerInfo[tab_id]) {
     switchPlannerInfo[tab_id] = {};
-    switchPlannerInfo[tab_id]["rw"] = {};
-    switchPlannerInfo[tab_id]["nrw"] = {};
+    switchPlannerInfo[tab_id].rw = {};
+    switchPlannerInfo[tab_id].nrw = {};
   }
-  if (!switchPlannerInfo[tab_id][rw][resource_host])
+  if (!switchPlannerInfo[tab_id][rw][resource_host]) {
     switchPlannerInfo[tab_id][rw][resource_host] = {};
-  if (!switchPlannerInfo[tab_id][rw][resource_host][active_content])
+  }
+  if (!switchPlannerInfo[tab_id][rw][resource_host][active_content]) {
     switchPlannerInfo[tab_id][rw][resource_host][active_content] = {};
+  }
 
   switchPlannerInfo[tab_id][rw][resource_host][active_content][resource_url] = 1;
 }
@@ -386,7 +390,9 @@ function sortSwitchPlanner(tab_id, rewritten) {
     var score = activeCount * 100 + passiveCount;
     asset_host_list.push([score, activeCount, passiveCount, asset_host]);
   }
-  asset_host_list.sort(function(a,b){return a[0]-b[0];});
+  asset_host_list.sort(function(a,b){
+    return a[0]-b[0];
+  });
   return asset_host_list;
 }
 
@@ -408,8 +414,9 @@ function switchPlannerSmallHtmlSection(tab_id, rewritten) {
     output += "<b>" + host + "</b>: ";
     if (activeCount > 0) {
       output += activeCount + " active";
-      if (passiveCount > 0)
+      if (passiveCount > 0) {
         output += ", ";
+      }
     }
     if (passiveCount > 0) {
       output += passiveCount + " passive";
@@ -494,23 +501,23 @@ function onCookieChanged(changeInfo) {
   if (!changeInfo.removed && !changeInfo.cookie.secure && isExtensionEnabled) {
     if (all_rules.shouldSecureCookie(changeInfo.cookie)) {
       var cookie = {name:changeInfo.cookie.name,
-                    value:changeInfo.cookie.value,
-                    path:changeInfo.cookie.path,
-                    httpOnly:changeInfo.cookie.httpOnly,
-                    expirationDate:changeInfo.cookie.expirationDate,
-                    storeId:changeInfo.cookie.storeId,
-                    secure: true};
+        value:changeInfo.cookie.value,
+        path:changeInfo.cookie.path,
+        httpOnly:changeInfo.cookie.httpOnly,
+        expirationDate:changeInfo.cookie.expirationDate,
+        storeId:changeInfo.cookie.storeId,
+        secure: true};
 
       // Host-only cookies don't set the domain field.
       if (!changeInfo.cookie.hostOnly) {
-          cookie.domain = changeInfo.cookie.domain;
+        cookie.domain = changeInfo.cookie.domain;
       }
 
       // The cookie API is magical -- we must recreate the URL from the domain and path.
       if (changeInfo.cookie.domain[0] == ".") {
-          cookie.url = "https://www" + changeInfo.cookie.domain + cookie.path;
+        cookie.url = "https://www" + changeInfo.cookie.domain + cookie.path;
       } else {
-          cookie.url = "https://" + changeInfo.cookie.domain + cookie.path;
+        cookie.url = "https://" + changeInfo.cookie.domain + cookie.path;
       }
       // We get repeated events for some cookies because sites change their
       // value repeatedly and remove the "secure" flag.
@@ -527,16 +534,16 @@ function onCookieChanged(changeInfo) {
  * */
 function onBeforeRedirect(details) {
     // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
-    var prefix = details.redirectUrl.substring(0, 5);
-    if (prefix === "http:" || prefix === "https") {
-        if (details.requestId in redirectCounter) {
-            redirectCounter[details.requestId] += 1;
-            log(DBUG, "Got redirect id "+details.requestId+
+  var prefix = details.redirectUrl.substring(0, 5);
+  if (prefix === "http:" || prefix === "https") {
+    if (details.requestId in redirectCounter) {
+      redirectCounter[details.requestId] += 1;
+      log(DBUG, "Got redirect id "+details.requestId+
                 ": "+redirectCounter[details.requestId]);
-        } else {
-            redirectCounter[details.requestId] = 1;
-        }
+    } else {
+      redirectCounter[details.requestId] = 1;
     }
+  }
 }
 
 // Registers the handler for requests

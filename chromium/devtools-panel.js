@@ -8,8 +8,8 @@ function e(id) {
  */
 function sendMessage(type) {
   chrome.runtime.sendMessage({
-      type: type,
-      tabId: chrome.devtools.inspectedWindow.tabId,
+    type: type,
+    tabId: chrome.devtools.inspectedWindow.tabId,
   });
 }
 
@@ -41,8 +41,8 @@ function disableSwitchPlanner() {
  */
 function display() {
   chrome.runtime.sendMessage({
-      type: "getSmallHtml",
-      tabId: chrome.devtools.inspectedWindow.tabId,
+    type: "getSmallHtml",
+    tabId: chrome.devtools.inspectedWindow.tabId,
   }, function(response) {
     e("SwitchPlannerDetails").innerHTML = response.html;
     e("SwitchPlannerResults").style.display = "block";
@@ -53,7 +53,7 @@ window.onload = function() {
   // Open a connection to the background page. Right now this is only used
   // by the background page so it knows when the devtools pane has closed.
   // We don't receive messages from the background page currently, though that
-  // may be a future improvement. Sending messages to the background page doesn't 
+  // may be a future improvement. Sending messages to the background page doesn't
   // require an existing connection.
   chrome.runtime.connect({ name: "devtools-page" });
 

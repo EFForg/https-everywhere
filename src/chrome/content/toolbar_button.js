@@ -26,7 +26,9 @@ let HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
 
 // avoid polluting global namespace
 // see: https://developer.mozilla.org/en-US/docs/Security_best_practices_in_extensions#Code_wrapping
-if (!httpsEverywhere) { var httpsEverywhere = {}; }
+if (!httpsEverywhere) {
+  var httpsEverywhere = {};
+}
 
 /**
  * JS Object that acts as a namespace for the toolbar.
@@ -114,8 +116,8 @@ httpsEverywhere.toolbarButton = {
 
     // decide whether to show toolbar hint
     let hintPref = "extensions.https_everywhere.toolbar_hint_shown";
-    if (!Services.prefs.getPrefType(hintPref) 
-        || !Services.prefs.getBoolPref(hintPref)) { 
+    if (!Services.prefs.getPrefType(hintPref)
+        || !Services.prefs.getBoolPref(hintPref)) {
       // only run once
       Services.prefs.setBoolPref(hintPref, true);
       // gBrowser unavailable on Android, see above.
@@ -147,7 +149,7 @@ httpsEverywhere.toolbarButton = {
           { accessKey: 'F',
             callback: function(ntf, btn) {
                 // see https://developer.mozilla.org/en-US/docs/XUL/Method/appendNotification#Notification_box_events
-                gBrowser.selectedTab = gBrowser.addTab(faqURL);
+              gBrowser.selectedTab = gBrowser.addTab(faqURL);
             },
             label: 'FAQ…',
           }
@@ -276,7 +278,7 @@ httpsEverywhere.toolbarButton = {
    * Resets all rules to their default state.
    */
   resetToDefaults: function() {
-    HTTPSEverywhere.https_rules.resetRulesetsToDefaults()
+    HTTPSEverywhere.https_rules.resetRulesetsToDefaults();
   }
 };
 
@@ -354,8 +356,9 @@ function show_applicable_list(menupopup) {
       rulesetTestsMenuItem.setAttribute('label', label);
     }
 
-    if(!menupopup.contains(rulesetTestsMenuItem)) 
+    if(!menupopup.contains(rulesetTestsMenuItem)) {
       menupopup.appendChild(rulesetTestsMenuItem);
+    }
   }
 }
 
@@ -426,9 +429,9 @@ function migratePreferences(gBrowser) {
         let strings = document.getElementById('HttpsEverywhereStrings');
         let msg = strings.getString('https-everywhere.migration.notification0');
         nBox.appendNotification(
-          msg, 
-          'https-everywhere-migration0', 
-          'chrome://https-everywhere/skin/icon-active-24.png', 
+          msg,
+          'https-everywhere-migration0',
+          'chrome://https-everywhere/skin/icon-active-24.png',
           nBox.PRIORITY_WARNING_MEDIUM
         );
       }

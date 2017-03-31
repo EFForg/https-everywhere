@@ -15,14 +15,14 @@
 //  git diff
 
 var path = require("path"),
-    fs = require("fs"),
-    DOMParser = require('xmldom').DOMParser,
-    readdirp = require('readdirp'),
-    es = require('event-stream'),
+  fs = require("fs"),
+  DOMParser = require('xmldom').DOMParser,
+  readdirp = require('readdirp'),
+  es = require('event-stream'),
 
-    rules = require("../chromium/rules"),
+  rules = require("../chromium/rules"),
 
-    URI = require("urijs");
+  URI = require("urijs");
 
 var ruleSets = null;
 
@@ -34,18 +34,20 @@ var ruleSets = null;
 function processDir(dir) {
   var stream = readdirp({
     root: dir,
-    fileFilter: ['*.html', '*.js', '*.rb', '*.erb', '*.mustache', 
-                 '*.scala', '*.c', '*.cc', '*.cpp', '*.cxx',
-                 '*.java', '*.go', '*.php', '*.css', '*.pl', '*.py',
-                 '*.rhtml', '*.sh', '*.yaml']
+    fileFilter: ['*.html', '*.js', '*.rb', '*.erb', '*.mustache',
+      '*.scala', '*.c', '*.cc', '*.cpp', '*.cxx',
+      '*.java', '*.go', '*.php', '*.css', '*.pl', '*.py',
+      '*.rhtml', '*.sh', '*.yaml']
   });
 
   stream
-  .on('warn', function (err) { 
-    console.error('non-fatal error', err); 
+  .on('warn', function (err) {
+    console.error('non-fatal error', err);
     // Optionally call stream.destroy() here in order to abort and cause 'close' to be emitted
   })
-  .on('error', function (err) { console.error('fatal error', err); })
+  .on('error', function (err) {
+    console.error('fatal error', err);
+  })
   .pipe(es.mapSync(function (entry) {
     var filename = path.join(dir, entry.path);
     console.log("Rewriting " + filename);
