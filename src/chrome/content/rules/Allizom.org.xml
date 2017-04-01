@@ -1,0 +1,62 @@
+<!--
+	For other Mozilla coverage, see Mozilla.xml.
+
+
+	Problematic hosts in *allizom.org:
+
+		- developer-dev *
+		- m.wiki ²
+
+	* 403
+	² Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- bugzilla-dev.allizom.org
+		- support.allizom.org
+
+
+	Mixed content:
+
+		- Image on ^ from hardhat.mozilla.net *
+
+	* Not secured by us <= mismatched
+
+-->
+<ruleset name="Allizom.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="allizom.org" />
+	<target host="bugzilla-dev.allizom.org" />
+	<target host="whatsdeployed.paas.allizom.org" />
+	<target host="support.allizom.org" />
+	<target host="wiki.allizom.org" />
+	<target host="www.allizom.org" />
+
+	<!--	Complications:
+				-->
+	<target host="developer-dev.allizom.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^bugzilla-dev\.allizom\.org$" name="^DEFAULTFORMAT$" /-->
+	<!--securecookie host="^support\.allizom\.org$" name="^dwf_surveygizmo$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://developer-dev\.allizom\.org/+"
+		to="https://allizom.org/" />
+
+		<test url="http://developer-dev.allizom.org//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

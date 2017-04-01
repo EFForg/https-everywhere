@@ -1,29 +1,50 @@
 <!--
-	For problematic rules, see Qualcomm-mismatches.xml.
-
-
 	Other Qualcomm rulesets:
 
 		- AllJoyn.org.xml
 
 
-	Problematic subdomains:
+	Nonfunctional hosts in *qualcomm.com:
 
-		- ^	(refused)
-		- latam *
-		- www *
+		- latam ¹
+		- (www.)?qca ²
 
-	* Works, akamai
+	¹ Redirects to http
+	² Dropped
+
+
+	^qualcomm.com: Dropped
+
+
+	Mixed content:
+
+		- Bug on pages from examplecom.112.2o7.net *
+
+	* Secured by us
 
 -->
-<ruleset name="Qualcomm (partial)">
+<ruleset name="Qualcomm.com (partial)">
 
-	<target host="qca.qualcomm.com"/>
-	<target host="www.qca.qualcomm.com"/>
+	<!--	Direct rewrites:
+				-->
+	<target host="developer.qualcomm.com"/>
+	<target host="pages.qualcomm.com"/>
+	<target host="qrd.qualcomm.com"/>
+	<target host="toq.qualcomm.com"/>
+	<target host="www.qualcomm.com"/>
 
-	<securecookie host="^.*\.qca\.qualcomm\.com$" name=".*"/>
+	<!--	Complications:
+				-->
+	<target host="qualcomm.com"/>
 
-	<rule from="^http://(www\.)?qca\.qualcomm\.com/"
-		to="https://$1qca.qualcomm.com/"/>
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://qualcomm\.com/"
+		to="https://www.qualcomm.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

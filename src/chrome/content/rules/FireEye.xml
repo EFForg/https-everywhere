@@ -1,49 +1,66 @@
 <!--
 	Nonfunctional subdomains:
 
-		- ^
-		- blog
-		- www		(503)
+		- investors *
+
+	* shareholder
 
 
 	Problematic subdomains:
 
-		- ^	(refused)
+		- ^ ¹
+		- blog ²
+
+	¹ Refused
+	² "SSL Not Supported"
 
 
-	Partially covered subdomains:
+	Fully covered subdomains:
 
-		- www2		(pages redirect to app-i.marketo.com)
+		- (www.)	(^ → www)
+		- blog		(→ www)
+		- tfs
+		- www2
 
 
 	Mixed content:
 
-		- css on www from www *
+		- css on www from www ¹
 
-		- Images on www from www **
+		- Images, on:
 
-		- Ad on www from ad.doubleclick.net **
+			- www from www ²
+			- www2 from www2 ²
 
-	* Secured by us, formatting for a social button
-	** Secured by us
+		- Ads/bugs, on www from:
+
+			- s7.addthis.com ²
+			- ad.doubleclick.net ²
+			- t5.trackalyzer.com ²
+
+	¹ Secured by us, formatting for a social button
+	² Secured by us
 
 -->
 <ruleset name="FireEye (partial)">
 
-	<target host="fireeeye.com" />
-	<target host="*.fireeeye.com" />
+	<target host="fireeye.com" />
+	<target host="*.fireeye.com" />
+		<!--exclusion pattern="^http://investors\.fireeye\.com/" /-->
 
 
-	<securecookie host="^www\.fireeye\.com$" name=".+" />
+	<securecookie host="^(?:www)?\.fireeye\.com$" name=".+" />
 
 
 	<rule from="^http://(?:www\.)?fireeye\.com/"
 		to="https://www.fireeye.com/" />
 
-	<rule from="^http://csportal\.fireeye\.com/"
-		to="https://csportal.fireeye.com/" />
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://blog\.fireeye\.com/[^?]*"
+		to="https://www.fireeye.com/blog/" />
 
-	<rule from="^https?://www2\.fireeye\.com/(cs|image|j|r)s/"
-		to="https://na-i.marketo.com/$1s/" />
+	<rule from="^http://(csportal|tfs|www2)\.fireeye\.com/"
+		to="https://$1.fireeye.com/" />
 
 </ruleset>

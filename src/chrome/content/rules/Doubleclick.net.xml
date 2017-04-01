@@ -5,90 +5,97 @@
 	If we are going to include ads and tracking info, let's at least do it by https.
 
 
-	Problematic domains:
+	Problematic hosts in doubleclick.net:
 
-		- doubleclick.com	(mismatched, CN: *.doubleclick.net)
-
-		- doubleclick.net subdomains:
-
-			- *.es *
-			- *.nl *
-			- *.no *
+		- *.es *
+		- *.nl *
+		- *.no *
 
 	* Mismatched
 
 
-	Fully covered domains:
+	Fully covered hosts in *doubleclick.net:
 
-		- (www.)doubleclick.com		(^ → www)
+		- ad
+		- ad-ace
+		- ad-apac
+		- ad-emea
+		- *.au
+		- *.de
+		- *.es		(→ *)
+		- fls
 
-		- *.doubleclick.net:
+		- *.fls:
 
-			- ad
-			- ad-ace
-			- ad-apac
-			- ad-emea
-			- *.au
-			- *.de
-			- *.es		(→ *)
-			- fls
+			- \d+
 
-			- *.fls:
+		- *.fr
 
-				- \d+
+		- *.g:
 
-			- *.fr
+			- cm
+			- feedads
+			- googleads
+			- securepubads
+			- stats
+			- survey
 
-			- *.g:
+		- *.jp
+		- *.mo
+		- *.nl		(→ *)
+		- *.no		(→ *)
+		- s[01]
+		- *.uk
 
-				- cm
-				- feedads
-				- googleads
-				- securepubads
-				- stats
-				- survey
+		- static
 
-			- *.jp
-			- *.mo
-			- *.nl		(→ *)
-			- *.no		(→ *)
-			- s[01]
-			- *.uk
 
-			- static
+	Insecure cookies are set for these domains:
 
-		- www.googleadservices.com
+		- .doubleclick.net
 	
 
-	NB: If there's still any breakage *give details*.
+	This ruleset needs someone brave enough to figure out what exclusions
+	are needed in order not to break flash video streaming.
+
+	Since installing flash for torbrowser is the epitome of foolishness,
+	this ruleset is enabled for torbrowser through platform=mixedcontent.
 
 -->
-<ruleset name="Doubleclick.net (testing)">
+<ruleset name="Doubleclick.net (needs exclusions)" platform="mixedcontent">
 
-	<target host="doubleclick.com" />
-	<target host="www.doubleclick.com" />
 	<target host="doubleclick.net" />
 	<target host="*.doubleclick.net" />
-	<target host="www.googleadservices.com" />
+
+		<test url="http://pubads.g.doubleclick.net/activity;xsp=;ord=1;num=1?gtmcb=" />
+		<test url="http://securepubads.g.doubleclick.net/static/glade.js" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<test url="http://ad.doubleclick.net/jump/ns.liliputing/general;ppos=;kw=;tile=;sz=;ord=?" />
+		<test url="http://cm.g.doubleclick.net/pixel?google_nid=&amp;google_cm=&amp;&amp;bid=&amp;newuser=&amp;google_tc=" />
+		<!--
+		<test url="http://googleads.g.doubleclick.net/pagead/viewthroughconversion/1/?value=&amp;guid=&amp;script=" />
+		-->
 
 
-	<!--	name="^(id|test_cookie)$" /-->
-	<securecookie host="^\.doubleclick\.net$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.doubleclick\.net$" name="^(CheckForPermission|IDE|id|test_cookie)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:www\.)?doubleclick\.com/"
-		to="https://www.doubleclick.com/" />
-
-	<rule from="^http://doubleclick\.net/"
-		to="https://doubleclick.net/" />
-
-	<rule from="^http://([^/:@\.]+)\.(?:es|nl|no)\.doubleclick\.net/"
+	<rule from="^http://([^/:@.]+)\.(?!au|de|fr|jp|uk)[a-z]{2}\.doubleclick\.net/"
 		to="https://$1.doubleclick.net/" />
 
-	<rule from="^http://([^/:@\.]+)(\.(?:au|de|fls|fr|g|jp|mo|uk))?\.doubleclick\.net/"
-		to="https://$1$2.doubleclick.net/" />
+		<test url="http://ad.es.doubleclick.net/adj/dqa.ndrd" />
+		<test url="http://ad.kr.doubleclick.net/adj/dqa.ndrd" />
+		<test url="http://ad.nl.doubleclick.net/adj/dqa.ndrd" />
+		<test url="http://ad.ph.doubleclick.net/adj/dqa.ndrd" />
+		<test url="http://ad.se.doubleclick.net/adj/dqa.ndrd" />
 
-	<rule from="^http://www\.googleadservices\.com/"
-		to="https://www.googleadservices.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

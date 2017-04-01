@@ -1,35 +1,64 @@
-<!--	!functional:
-		- faq			(refused)
-		- origin-dbcalc		(timeout)
-		- origin-ircalc		(ditto)
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://usps.com/ => https://www.usps.com/: Cycle detected - URL already encountered: https://www.usps.com/root/global/server_responses/webtools-msg.htm
+	Nonfunctional subdomains:
+
+		- faq ¹
+		- origin-dbcalc ²
+		- origin-ircalc ²
 		- origin-pe
-		- origin-postcalc	(timeout)
-		- ircalc		(Akamai, redirects to http)
-		- pe.usps		(ditto)
-		- postcalc		(ditto)
+		- origin-postcalc ²
+		- ircalc ³
+		- pe.usps ²
+		- postcalc ²
+
+	¹ Refused
+	² Dropped
+	³ Redirects to http, Akamai
 
 
 	Fully covered subdomains:
 
+		- (www.)?	(^ → www)
+		- about
 		- cns
+		- fast
 		- gateway
+		- gateway-cat
+		- moversguide
+		- my
+		- poboxes
 		- sdc
+		- shop
 		- store
+		- tools
+
+
+	These altnames don't exist:
+
+		- www.eddm.usps.com
+
+
+	Mixed content:
+
+		- Bug on tools from sdc *
+
+	* Secured by us
 
 -->
-<ruleset name="USPS">
+<ruleset name="USPS.com" default_off='failed ruleset test'>
 
-	<target host="usps.com"/>
-	<target host="*.usps.com"/>
+	<target host="usps.com" />
+	<target host="*.usps.com" />
 
-	<rule from="^http://usps\.com/"
-		to="https://www.usps.com/"/>
 
-	<securecookie host="^(.*\.)?usps\.com$" name=".*"/>
+	<securecookie host="^(?:.*\.)?usps\.com$" name=".+" />
 
-	<!--	fast and gateway-cat are only useful for business
-		customers, but probably still worth listing here	-->
-	<rule from="^http://(about|cns|fast|gateway|gateway-cat|moversguide|sdc|shop|store|tools|www)\.usps\.com/"
-		to="https://$1.usps.com/"/>
+
+	<rule from="^http://(?:www\.)?usps\.com/"
+		to="https://www.usps.com/" />
+
+	<rule from="^http://(about|cns|fast|gateway|gateway-cat|moversguide|my|poboxes|sdc|shop|store|tools)\.usps\.com/"
+		to="https://$1.usps.com/" />
 
 </ruleset>

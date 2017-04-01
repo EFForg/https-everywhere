@@ -1,35 +1,69 @@
 <!--
-	Nonfunctional subdomains:
+	Problematic hosts in *tek.no:
 
-		- ish		(no https)
-		- prisguide	(times out)
-
-
-	Problematic subdomains:
-
+		- ^ ʰ
 		- ad	(mismatched, CN: *.adtech.de)
+		- prisguide ᵈ
+
+	ᵈ Dropped, preemptable redirect
+	ʰ Redirects to http, preemptable redirect
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .ish.tek.no
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed images from:
 
-		- img.gfx.no
+		- img.gfx.no ᵈ
+
+	ᵈ Unsecurable <= dropped
 
 -->
 <ruleset name="Tek.no (partial)">
 
-	<target host="tek.no" />
-	<target host="*.tek.no" />
+	<!--	Direct rewrites:
+				-->
+	<target host="ish.tek.no" />
+	<target host="static.tek.no" />
+	<target host="www.tek.no" />
 
+		<test url="http://static.tek.no/images/main/tek.svg" />
+
+	<!--	Complications:
+				-->
+	<target host="tek.no" />
+	<target host="ad.tek.no" />
+	<target host="prisguide.tek.no" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.ish\.tek\.no$" name="^(?:tek_)?ish$" /-->
 
 	<!--	Adtech cookie:
 				-->
 	<securecookie host="^\.tek\.no$" name="^CfP$" />
+	<securecookie host="^\.ish\." name="." />
 
 
-	<rule from="^http://(static\.|www\.)?tek\.no/"
-		to="https://$1tek.no/" />
+	<rule from="^http://tek\.no/"
+		to="https://www.tek.no/" />
 
 	<rule from="^http://ad\.tek\.no/"
 		to="https://adserver.adtech.de/" />
+
+	<!--	Redirect keeps all:
+					-->
+	<rule from="^http://prisguide\.tek\.no/"
+		to="https://www.prisguide.no/" />
+
+		<test url="http://prisguide.tek.no/kategorier" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

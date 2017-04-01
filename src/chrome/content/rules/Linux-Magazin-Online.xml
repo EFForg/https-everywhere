@@ -1,31 +1,77 @@
+
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://streaming.linux-magazin.de/ => https://streaming.linux-magazin.de/: (51, "SSL: no alternative certificate subject name matches target host name 'streaming.linux-magazin.de'")
+Fetch error: http://linux-magazin.de/ => https://www.linux-magazin.de/: Too many redirects while fetching 'https://www.linux-magazin.de/'
+
+	Linux-Magazin Online
+
 	For other Linux New Media coverage, see Linux-New-Media.xml.
 
+
+	Problematic hosts in *linux-magazin.de:
+
+		- academy *
+
+	* Expired
+
 -->
-<ruleset name="Linux-Magazin Online (partial)">
+<ruleset name="Linux-Magazin.de (partial)" default_off='failed ruleset test'>
 
+	<!--	Direct rewrites:
+				-->
+	<target host="shop.linux-magazin.de" />
+	<target host="streaming.linux-magazin.de" />
+	<target host="www.linux-magazin.de" />
+
+	<!--	Complications:
+				-->
 	<target host="linux-magazin.de" />
-	<target host="*.linux-magazin.de" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.linux-magazin\.de/(Ausgaben/\d\d/\d\d/[\w-]+$|Online-Artikel/)" /-->
+		<!--
+			404:
+				-->
+		<!--exclusion pattern="^http://academy\.linux-magazin\.de/(stylesheets/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://shop.linux-magazin.de/+(?!favicon\.ico|media/|skin/)" />
+		<exclusion pattern="^http://www\.linux-magazin\.de/(?!extension/|var/)" />
+
+			<!--	+ve:
+					-->
+
+			<test url="http://shop.linux-magazin.de/agb/" />
+			<test url="http://shop.linux-magazin.de/dh11412.html" />
+			<test url="http://shop.linux-magazin.de/ehb0003.html" />
+			<test url="http://shop.linux-magazin.de/sh70007.html" />
+			<test url="http://shop.linux-magazin.de/widerruf/" />
+
+			<test url="http://www.linux-magazin.de/Ausgaben/2013/08/SSH-Key-Management" />
+			<test url="http://www.linux-magazin.de/Jobs" />
+			<test url="http://www.linux-magazin.de/NEWS" />
+
+			<!--	-ve:
+					-->
+			<test url="http://shop.linux-magazin.de/favicon.ico" />
+			<test url="http://shop.linux-magazin.de/media/catalog/product/cache/3/small_image/135x/9df78eab33525d08d6e5fb8d27136e95/l/m/lm-nm_jdvd_2011.jpg" />
+			<test url="http://shop.linux-magazin.de/skin/frontend/lnm/cpt/images/i_asc_arrow.gif" />
+
+			<test url="http://www.linux-magazin.de/extension/lnm/design/linux_magazin/images/links-li-bg.gif" />
+			<test url="http://www.linux-magazin.de/var/linux_magazin/storage/images/linux-magazin.de/e-bibliothek/themenpakete/expertenpost.-das-bundle-rund-um-e-mail-spam-mailserver-und-imap/563167-1-ger-DE/Expertenpost.-Das-Bundle-rund-um-E-Mail-Spam-Mailserver-und-IMAP_small.jpg" />
 
 
-	<securecookie host="^.*\.linux-magazin\.de$" name=".*" />
+	<!--securecookie host="^.*\.linux-magazin\.de$" name=".*" /-->
 
 
 	<!--	Cert only matches www.	-->
-	<rule from="^https?://(?:www\.)?linux-magazin\.de/"
+	<rule from="^http://linux-magazin\.de/"
 		to="https://www.linux-magazin.de/" />
 
-	<!--	At least the homepage redirects to http.
-		stylesheets/ 404s.	-->
-	<rule from="^http://academy\.linux-magazin\.de/(design|extension|user)/"
-		to="https://academy.linux-magazin.de/$1/" />
-
-	<!--	Redirects like so.
-		shop.linuxnewmedia.de redirects to http pages, which is handled in Linux-New-Media.xml.	-->
-	<rule from="^https?://academy\.linux-magazin\.de/lnmshop/forward/online-services/academy-schulungen-1\.html"
-		to="https://shop.linuxnewmedia.de/online-services/academy-schulungen-1.html" />
-
-	<rule from="^http://streaming\.linux-magazin\.de/"
-		to="https://streaming.linux-magazin.de/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

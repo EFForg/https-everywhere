@@ -1,0 +1,87 @@
+<!--
+	Other Micro Focus rulesets:
+
+		- Attachmate.xml
+		- Attachmate-Group.xml
+		- Expanded_Support.com.xml
+		- NetIQ.xml
+		- Novell.xml
+		- OpenSUSE.xml
+		- PartnerNet_program.com.xml
+		- SUSE.xml
+		- SUSE_Studio.com.xml
+
+
+	Nonfunctional hosts:
+
+		- investors *
+		- partnerportal *
+		- trainingstore *
+
+	* Refused
+
+
+	Problematic hosts:
+
+		- ^ *
+		- online *
+		- images.online *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .microfocus.com
+		- www.microfocus.com
+
+
+	Mixed content:
+
+		- Image, on:
+
+			- community from microfocustest.telligenthosting.net ¹
+			- online from images.online.microfocus.com ²
+			- online from now.eloqua.com ²
+			- online from img.en25.com ²
+
+		- Bug on supportline from s7.addthis.com ²
+
+	¹ Unsecurable <= dropped
+	² Secured by us
+
+-->
+<ruleset name="Micro Focus.com (partial)" default_off='failed ruleset test'>
+
+	<!--	Direct rewrites:
+				-->
+	<target host="community.microfocus.com" />
+	<target host="supportline.microfocus.com" />
+	<target host="www.microfocus.com" />
+
+	<!--	Complications:
+				-->
+	<target host="microfocus.com" />
+	<target host="images.online.microfocus.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.microfocus\.com$" name="^AuthorizationCookie$" /-->
+	<!--securecookie host="^www\.microfocus\.com$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^www\.microfocus\.com$" name=".+" />
+
+
+	<rule from="^http://microfocus\.com/"
+		to="https://www.microfocus.com/" />
+
+	<rule from="^http://images\.online\.microfocus\.com/"
+		to="https://secure.eloqua.com/" />
+
+		<test url="http://images.online.microfocus.com//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

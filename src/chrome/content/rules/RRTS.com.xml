@@ -1,0 +1,40 @@
+<!--
+	^: mismatched
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- beta
+		- webservices
+		- webservicesbeta
+
+
+	Observed cookie domains:
+
+		- beta *
+		- www *
+
+	* Secured by us <= not secured by server
+
+-->
+<ruleset name="RRTS.com">
+
+	<target host="rrts.com" />
+	<target host="*.rrts.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(beta|www)\.rrts\.com$" name="^rrts-cookie$" /-->
+
+	<securecookie host="^(?:beta|www)\.rrts\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?rrts\.com/"
+		to="https://www.rrts.com/" />
+
+	<rule from="^http://(beta|webservices|webservicesbeta)\.rrts\.com/"
+		to="https://$1.rrts.com/" />
+
+</ruleset>

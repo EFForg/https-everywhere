@@ -2,44 +2,102 @@
 	For problematic rules, see Bazaarvoice-problematic.xml.
 
 
+	Nonfunctional hosts in *bazaarvoice.com:
+
+		- ^ ʳ
+		- investors ᵈ
+		- resources ᴹ
+		- status ᵈ
+		- www ³
+
+	³ 503
+	ᴹ Marketo
+	ᵈ Dropped
+	ʳ Refused
+
+
 	Problematic domains:
 
-		- bazaarvoice.com subdomains:
+		- in *bazaarvoice.com:
 
-			- ^			(expired, self-signed)
-			- bvlabs-hvr-web-staging.aws
-			- resources		($ redirects to app-a.marketo.com; mismatched, CN: *.marketo.com)
-			- spark			(mismatched, CN: slotmatching6.salesforce.com)
-			- *.ugc			(works, akamai)
-	
-		- resources.bazaarvoicecampaigns.com	(works, self-signed)
+			- media2 ᴬ ᵐ
+			- spark	ᵐ	(CN: slotmatching6.salesforce.com)
+
+		- resources.bazaarvoicecampaigns.com ˢ
+
+	ᴬ Akamai
+	ᵐ Mismatched
+	ˢ Self-signed
 
 
-	Partially covered domains:
+	Partially covered hosts in *bazaarvoice.com:
 
-		- dashboard.bazaarvoice.com	(some pages redirect to http)
+		- resources ᴹ
+
+	ᴹ Marketo
+
+
+	Insecure cookies are set for these hosts:
+
+		- login.bazaarvoice.com
 
 -->
-<ruleset name="Bazaarvoice">
+<ruleset name="Bazaarvoice.com (partial)">
 
-	<target host="bazaarvoice.com" />
-	<target host="*.bazaarvoice.com" />
-		<exclusion pattern="^http://dashboard\.bazaarvoice\.com/(?!css/|images/)" />
+	<!--	Direct rewrites:
+				-->
+	<target host="login.bazaarvoice.com" />
+	<target host="*.ugc.bazaarvoice.com" />
+
+		<test url="http://topshop.ugc.bazaarvoice.com/static/6025-en_us/bazaarvoice.css" />
+
+	<!--	Complications:
+				-->
+	<!--target host="media2.bazaarvoice.com" /-->
+	<target host="resources.bazaarvoice.com" />
+	<target host="spark.bazaarvoice.com" />
+
+		<exclusion pattern="^http://resources\.bazaarvoice\.com/+(?!css/|images/|rs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://resources.bazaarvoice.com/RequestADemo1.html" />
+			<test url="http://resources.bazaarvoice.com/RequestADemo1.html?utm_campaign=&amp;utm_content=&amp;utm_source=&amp;utm_medium=&amp;utm_term=&amp;utm_nooverride=&amp;gclid=" />
+			<test url="http://resources.bazaarvoice.com/fy14-retail.html" />
+			<test url="http://resources.bazaarvoice.com/fy14-retail.html?utm_campaign=&amp;utm_content=&amp;utm_source=&amp;utm_medium=&amp;utm_term=&amp;utm_nooverride=&amp;gclid=" />
+
+			<!--	-ve:
+					-->
+			<test url="http://resources.bazaarvoice.com/css/mktLPSupport.css" />
+			<test url="http://resources.bazaarvoice.com/images/forms/backRequiredGray.gif" />
+			<test url="http://resources.bazaarvoice.com/rs/bazaarvoice/images/logo_bv_sub.png" />
+
+		<test url="http://walmart.ugc.bazaarvoice.com/1336/164648/photoThumb.jpg" />
+		<test url="http://walmart.ugc.bazaarvoice.com/1336/165983/photoThumb.jpg" />
+		<test url="http://walmart.ugc.bazaarvoice.com/1336/165984/photoThumb.jpg" />
 
 
-	<securecookie host="^(?!dashboard\.).*\.bazaarvoice\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^login\.bazaarvoice\.com$" name="^BIGipServer" /-->
+	<!--securecookie host="^(?!dashboard\.)." name="." /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^login\." name="." />
 
 
-	<rule from="^https?://(?:www\.)?bazaarvoice\.com/"
-		to="https://www.bazaarvoice.com/" />
+	<!--rule from="^http://media2\.bazaarvoice\.com/"
+		to="https://???-a.akamaihd.net/" /-->
 
-	<rule from="^http://(dashboard|login)\.bazaarvoice\.com/"
-		to="https://$1.bazaarvoice.com/" />
+		<!--test url="http://media2.bazaarvoice.com/images/lexus-featured.jpg" /-->
 
-	<rule from="^https?://resources\.bazaarvoice\.com/images/"
-		to="https://na-a.bazaarvoice.com/images/" />
-
-	<rule from="^https?://spark\.bazaarvoice\.com/"
+	<rule from="^http://spark\.bazaarvoice\.com/"
 		to="https://bazaarvoice.secure.force.com/" />
+
+	<rule from="^http://resources\.bazaarvoice\.com/"
+		to="https://na-aba.marketo.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

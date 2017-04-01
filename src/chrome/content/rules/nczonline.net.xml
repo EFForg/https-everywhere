@@ -1,0 +1,54 @@
+<!--
+	^nczonline.net: Refused
+
+
+	Partially covered hosts in *nczonline.net:
+
+		- feeds *
+
+	* Not all paths redirect
+
+-->
+<ruleset name="NCZOnline.net (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.nczonline.net" />
+
+	<!--	Complications:
+				-->
+	<target host="nczonline.net" />
+	<target host="feeds.nczonline.net" />
+
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://nczonline\.net/"
+		to="https://www.nczonline.net/" />
+
+	<!--	Redirect keeps forward slashes:
+						-->
+	<rule from="^http://feeds\.nczonline\.net/blog"
+		to="https://feeds.feedburner.com/nczonline" />
+
+		<!--	404:
+				-->
+		<exclusion pattern="^http://feeds\.nczonline\.net/(?!blog/*(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://feeds.nczonline.net//blog/" />
+			<test url="http://feeds.nczonline.net/blog/index.xml" />
+			<test url="http://feeds.nczonline.net/index.htm" />
+			<test url="http://feeds.nczonline.net/index.xml" />
+
+			<!--	-ve:
+					-->
+			<test url="http://feeds.nczonline.net/blog/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

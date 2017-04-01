@@ -1,0 +1,202 @@
+<!--
+	For other US government coverage, see US-government.xml.
+
+
+	Nonfunctional hosts in *cancer.gov:
+
+		- (www.)? ʳ
+		- (www.)?appliedresearch ᵇ
+		- atbcstudy *
+		- biospecimens ᶠ
+		- breastscreening ᵈ
+		- budgettool ᶠ
+		- cam ʳ
+		- cancercenters ʳ
+		- cancercontrol ᵃ
+		- cancercontrolplanet ʳ
+		- home.ccr ⁴
+		- cdp ᶠ
+		- cgb ᵈ
+		- cisnet ᵈ
+		- class ᶠ
+		- clinicalcenter ᵈ
+		- crn ʳ
+		- cssi ᶠ
+		- dceg ʳ
+		- dceg2 *
+		- dctd ᶠ
+		- dietassessmentprimer ᵈ
+		- dtc ᶠ
+		- eagle ᵈ
+		- fundedresearch ᵇ
+		- glycomics ᵈ
+		- epi.grants *
+		- gutcheck ʳ
+		- healthcaredelivery ᵇ
+		- imaging ʳ
+		- innovation ᶠ
+		- legislative ʳ
+		- lfs ʳ
+		- maps ʳ
+		- marrowfailure ᵈ
+		- nano ᶠ
+		- ncccp ʳ
+		- ncl ᶠ
+		- ncorp ᵈ
+		- next ᶠ
+		- oham ʳ
+		- proteomics ʳ
+		- ratecalc ʳ
+		- rrp ᶠ
+		- sae ᵈ
+		- sarcoma ᵖ
+		- staffprofiles ʳ
+		- statfund ᵈ
+		- surveillance *
+		- trp ᶠ
+
+	* 200 blank page
+	⁴ 404
+	ᵃ Shows another domain
+	ᵇ Shows default page
+	ᵈ Dropped
+	ᶠ Handshake fails
+	ᵖ Plaintext reply
+	ʳ Refused
+
+
+	Problematic hosts in *cancer.gov:
+
+		- assays ᶜ
+		- itcr ᵐ
+		- ostr ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *cancer.gov:
+
+		- seer ʰ
+
+	ʰ Some pages redirect to http
+
+
+	These altnames do not exist:
+
+		- www.resources.cisnet.cancer.gov
+
+
+	Insecure cookies are set for these hosts:
+
+		- frederick.cancer.gov
+		- livehelp.cancer.gov
+		- ncifrederick.cancer.gov
+		- ostr.cancer.gov
+		- pubs.cancer.gov
+		- www.teamsciencetoolkit.cancer.gov
+		- visualsonline.cancer.gov
+
+
+	Mixed content:
+
+		- css on cptr from fonts.googleapis.com ˢ
+		- Image on visualsonline from www.cancer.gov ʳ
+
+	ʳ Unsecurable <= refused
+	ˢ Secured by us
+
+-->
+<ruleset name="Cancer.gov (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="1800quitnow.cancer.gov" />
+	<target host="accrualnet.cancer.gov" />
+	<target host="antibodies.cancer.gov" />
+	<!--target host="assays.cancer.gov" /-->
+	<target host="cahub.cancer.gov" />
+	<target host="popmodels.cancercontrol.cancer.gov" />
+	<target host="ccr.cancer.gov" />
+	<target host="ccr-abcam.cancer.gov" />
+	<target host="ccrrockland.cancer.gov" />
+	<target host="resources.cisnet.cancer.gov" />
+	<target host="costprojections.cancer.gov" />
+	<target host="www.costprojections.cancer.gov" />
+	<target host="cpfp.cancer.gov" />
+	<target host="www.cpfp.cancer.gov" />
+	<target host="cptr.cancer.gov" />
+	<target host="dtp.cancer.gov" />
+	<target host="emblem.cancer.gov" />
+	<target host="www.emblem.cancer.gov" />
+	<target host="emergencytool.cancer.gov" />
+	<target host="frederick.cancer.gov" />
+	<target host="livehelp.cancer.gov" />
+	<target host="mouserepository.cancer.gov" />
+	<target host="ncifrederick.cancer.gov" />
+	<target host="ocg.cancer.gov" />
+	<!--target host="ostr.cancer.gov" /-->
+	<target host="ppb.cancer.gov" />
+	<target host="www.ppb.cancer.gov" />
+	<target host="pcp.cancer.gov" />
+	<target host="prescancerpanel.cancer.gov" />
+	<target host="prevention.cancer.gov" />
+	<target host="www.prevention.cancer.gov" />
+	<target host="progressreport.cancer.gov" />
+	<target host="www.progressreport.cancer.gov" />
+	<target host="researchtoreality.cancer.gov" />
+	<target host="sbir.cancer.gov" />
+	<target host="seer.cancer.gov" />
+	<target host="specimens.cancer.gov" />
+	<target host="www.specimens.cancer.gov" />
+	<target host="tcga.cancer.gov" />
+	<target host="www.teamsciencetoolkit.cancer.gov" />
+	<target host="visualsonline.cancer.gov" />
+
+	<!--	Complications:
+				-->
+	<target host="itcr.cancer.gov" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://seer\.cancer\.gov/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://seer\.cancer\.gov/+(?!favicon\.ico|[is]/|toolbox/.+\.css)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://seer.cancer.gov/about/" />
+			<test url="http://seer.cancer.gov/publications/" />
+			<test url="http://seer.cancer.gov/resources/" />
+			<test url="http://seer.cancer.gov/seerabs/" />
+			<test url="http://seer.cancer.gov/statfacts/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://seer.cancer.gov/favicon.ico" />
+			<test url="http://seer.cancer.gov/i/grad.png" />
+			<test url="http://seer.cancer.gov/s/print.css" />
+			<test url="http://seer.cancer.gov/toolbox/javascript/jquery-ui-1.9.2/css/redmond/jquery-ui-1.9.2.custom.min.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:nci)?frederick\.cancer\.gov$" name="^__AXT$" /-->
+	<!--securecookie host="^livehelp\.cancer\.gov$" name="^TS[\da-f]{8}$" /-->
+	<!--securecookie host="^ostr\.cancer\.gov$" name="^bb2_screener_$" /-->
+	<!--securecookie host="^pubs\.cancer\.gov$" name="^(?:ASPSESSIONID[A-Z]{8}|DSLB)$" /-->
+	<!--securecookie host="^www\.teamsciencetoolkit\.cancer\.gov$" name="^(?:\.ASPXANONYMOUS|ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^visualsonline\.cancer\.gov$" name="^CF(?:ID|TOKEN)$" /-->
+
+	<securecookie host="^(?!seer\.)\w" name="." />
+
+
+	<rule from="^http://itcr\.cancer\.gov/"
+		to="https://cbiit.nci.nih.gov/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -4,6 +4,37 @@
 		- CloudForge.xml
 		- Codesion.xml
 
+
+	Nonfunctional subdomains:
+
+		- blogs ¹
+		- help ¹
+		- visit ²
+
+	¹ Refused
+	² Marketo
+
+
+	Problematic subdomains:
+
+		- open *
+
+	* Cert only matches *.open.collab.net
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- git.help from www.open ¹
+			- forums.open from www ¹
+			- forums.open from stg01 ²
+
+		- favicon on forums.open from www ¹
+
+	¹ Secured by us
+	² Unsecurable <= dropped
+
 -->
 <ruleset name="CollabNet">
 
@@ -14,7 +45,13 @@
 	<securecookie host="^\.collab\.net$" name=".+" />
 
 
-	<rule from="^http://(blog\.|www\.)?collab\.net/"
+	<rule from="^http://((?:blog|git\.help|forums\.open|www)\.)?collab\.net/"
 		to="https://$1collab.net/" />
+
+	<rule from="^http://(?:www\.)?open\.collab\.net/"
+		to="https://www.open.collab.net/" />
+
+	<rule from="^http://visit\.collab\.net/(?=css/|images/|js/|rs/)"
+		to="https://na-aba.collab.net/" />
 
 </ruleset>

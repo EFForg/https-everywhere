@@ -1,31 +1,55 @@
 <!--
-	For problematic rules, see SiteScout-problematic.xml.
-
-
 	CDN buckets:
+
+		- cdnsitescout1-a.akamaihd.net
 
 		- ssblog.sitescout.netdna-cdn.com
 
 			- *-ssl doesn't exist
 
 
-	Problematic subdomains:
+	www.sitescout.com: Refused
 
-		- (www.)		(cert expired 2012-08-12)
+
+	Problematic hosts in *sitescout.com:
+
+		- www-cdn *
+
+	* 503
+
+
+	Mixed content:
+
+		- favicon on rtb from www.sitescout.com *
+
+	* Unsecurable <= refused
 
 -->
-<ruleset name="SiteScout (partial)">
+<ruleset name="SiteScout.com (partial)">
 
-	<target host="*.sitescout.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="sitescout.com" />
+	<target host="clickserv.sitescout.com" />
+	<target host="guru.sitescout.com" />
+	<target host="pixel.sitescout.com" />
+	<target host="rtb.sitescout.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www-cdn.sitescout.com" />
 
 
 	<!--	Tracking cookies:
 						-->
-	<securecookie host="^\.sitescout\.com$" name="^(?:km_\w+|_ssum|ssi|__utm\w)$" />
-	<securecookie host="^rtb\.sitescout\.com$" name=".+" />
+	<securecookie host="^\." name="^(?:km_\w+|_ssum|ssi|__utm\w)$" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(guru|pixel|rtb)\.sitescout\.com/"
-		to="https://$1.sitescout.com/" />
+	<rule from="^http://www-cdn\.sitescout\.com/"
+		to="https://cdnsitescout1-a.akamaihd.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

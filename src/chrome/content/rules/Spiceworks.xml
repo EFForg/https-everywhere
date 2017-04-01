@@ -1,18 +1,107 @@
 <!--
-	Nonfunctional subdomains:
+	Note: resources2.../$ redirects to a host that doesn't exist.
+	Excluding /$ would be a problem in two ways:
 
-		- (www.)
+		- It would make us stand out more
+		- The fetch checker would fail the required tests
+
+
+	Other Spiceworks rulesets:
+
+		- Spiceworks_static.com.xml
+
+
+	Problematic hosts in *spiceworks.com:
+
+		- ^ ¹
+		- developers ²
+
+	¹ Mismatched
+	² Refused
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .spiceworks.com
+		- accounts.spiceworks.com
+		- on.spiceworks.com
+		- swagshop.spiceworks.com
+
+
+	Mixed content:
+
+		- Bug on community from stat.onestat.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Spiceworks (partial)">
+<ruleset name="Spiceworks.com">
 
-	<target host="*.spiceworks.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="accounts.spiceworks.com" />
+	<target host="banners.spiceworks.com" />
+	<target host="community.spiceworks.com" />
+	<target host="download.spiceworks.com" />
+	<target host="gekko.spiceworks.com" />
+	<target host="on.spiceworks.com" />
+	<target host="px.spiceworks.com" />
+	<target host="resources2.spiceworks.com" />
+	<target host="static.spiceworks.com" />
+	<target host="swagshop.spiceworks.com" />
+	<target host="wwwstatic.spiceworks.com" />
+	<target host="www.spiceworks.com" />
+	<target host="xact.spiceworks.com" />
+
+	<!--	Complications:
+				-->
+	<target host="spiceworks.com" />
+	<target host="developers.spiceworks.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://swagshop\.spiceworks\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://swagshop\.spiceworks\.com/+(?![Ss]hared/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://swagshop.spiceworks.com/all" />
+			<test url="http://swagshop.spiceworks.com/apparel" />
+			<test url="http://swagshop.spiceworks.com/store/p/45-Happy-SysAdmin-Day-Tshirt.aspx" />
+
+			<!--	-ve:
+					-->
+			<test url="http://swagshop.spiceworks.com/Shared/Themes/SpiceworksTheme%20%5Bclone%5D/Templates/spiceworks-home.css" />
 
 
-	<securecookie host="^\w.*\.spiceworks\.com$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.spiceworks\.com$" name="^(SessionId|SessionKey|ref|source|spiceworks_community|target|_swndat|_swnid)$" /-->
+	<!--securecookie host="^accounts\.spiceworks\.com$" name="^(?:_identity_service_session|request_method)$" /-->
+	<!--securecookie host="^on\.spiceworks\.com$" name="^_tron_session$" /-->
+	<!--securecookie host="^swagshop\.spiceworks\.com$" name="^ASP\.NET_SessionId$" /-->
+
+	<!--	Set by community:
+					-->
+	<securecookie host="^\.spiceworks\.com$" name="^(?:ref|spiceworks_community|_swndat|_swnid)$" />
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^(?!swagshop\.)\w" name="." />
 
 
-	<rule from="^http://(community|static)\.spiceworks\.com/"
-		to="https://$1.spiceworks.com/" />
+	<rule from="^http://spiceworks\.com/"
+		to="https://www.spiceworks.com/" />
+
+	<!--	Redirect preserves path,
+		args, and forward slash:
+					-->
+	<rule from="^http://developers\.spiceworks\.com/"
+		to="https://spiceworks.github.io/developers.spiceworks.com//" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

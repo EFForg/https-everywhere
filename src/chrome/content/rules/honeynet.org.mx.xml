@@ -1,0 +1,50 @@
+<!--
+	(www.)?honeynet.org.mx: Refused
+
+
+	Insecure cookies are set for these hosts:
+
+		- blog.honeynet.org.mx
+
+-->
+<ruleset name="Honeynet.org.mx (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="blog.honeynet.org.mx" />
+
+	<!--	Complications:
+				-->
+	<target host="honeynet.org.mx" />
+	<target host="www.honeynet.org.mx" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^blog\.honeynet\.org\.mx$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://(?:www\.)?honeynet\.org\.mx/.*"
+		to="https://blog.honeynet.org.mx/" />
+
+		<!--	/*\w does not redirect:
+						-->
+		<exclusion pattern="^http://(?:www\.)?honeynet\.org\.mx/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://honeynet.org.mx/default.aspx" />
+			<test url="http://honeynet.org.mx/index.htm" />
+			<test url="http://honeynet.org.mx/index.html" />
+			<test url="http://honeynet.org.mx/index.php" />
+			<test url="http://www.honeynet.org.mx/index.html" />
+			<test url="http://www.honeynet.org.mx/index.php" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

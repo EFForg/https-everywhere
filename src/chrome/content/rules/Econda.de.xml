@@ -1,0 +1,62 @@
+<!--
+	Other econda rulesets:
+
+		- Econda-monitor.de.xml
+
+
+	Nonfunctional hosts in *econda.de:
+
+		- blog ⁴
+		- support ᵈ
+
+	⁴ 404
+	ᵈ Dropped
+
+
+	Problematic hosts in *econda.de:
+
+		- mail ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- econda.de
+		- .econda.de
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Econda.de (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="econda.de"/>
+	<target host="support.econda.de"/>
+	<target host="www.econda.de"/>
+
+	<!--	Complications:
+				-->
+	<target host="mail.econda.de"/>
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.?econda\.de$" name="^fe_typo_user$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://mail\.econda\.de/+"
+		to="https://portal.office.com/" />
+
+		<test url="http://mail.econda.de/default.aspx" />
+
+	<rule from="^http:"
+		to="https:"/>
+
+</ruleset>

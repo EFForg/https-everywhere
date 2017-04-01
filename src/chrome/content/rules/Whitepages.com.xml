@@ -1,0 +1,99 @@
+<!--
+	Other Whitepages rulesets:
+
+		- CDN_WP.com.xml
+
+
+	Nonfunctioanl domains:
+
+		- names.whitepages.com *
+
+	* Dropped
+
+
+	Problematic domains:
+
+		- www.pro.whitepages.com ¹
+		- www.support.whitepages.com ²
+
+	¹ Mismatched
+	² Refused
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .whitepages.com
+		- apiportal.whitepages.com
+
+
+	Mixed content:
+
+		- Image on pro.lookup from $self
+		- css on secure from fonts.googleapis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Whitepages.com (partial)">
+
+	<target host="apiportal.whitepages.com" />
+	<target host="pro.lookup.whitepages.com"/>
+	<target host="pro.whitepages.com"/>
+	<target host="secure.whitepages.com"/>
+	<target host="support.whitepages.com" />
+
+	<!--	Complications:
+				-->
+	<target host="whitepages.com"/>
+	<target host="www.pro.whitepages.com"/>
+	<target host="www.support.whitepages.com" />
+
+		<!--	Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.whitepages\.com/($|3rdr/assets/stylesheets/|common/images/|favicon\.ico)" /-->
+		<!--exclusion pattern="^http://pro\.whitepages\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://pro\.whitepages\.com/+(?!wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://pro.whitepages.com/blog/" />
+			<test url="http://pro.whitepages.com/developer/" />
+			<test url="http://pro.whitepages.com/features/whitepages-pro-api/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://pro.whitepages.com/wp-content/themes/roots/assets/css/main.min.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.whitepages\.com$" name="^(_whitepages_session|rsi_segs)$" /-->
+	<!--securecookie host="^apiportal\.whitepages\.com$" name="^_session_id$" /-->
+	<!--securecookie host="^secure\.whitepages\.com$" name="^(eb|ewp|ipu|wp_endemic_provider|wp_pid)$" /-->
+
+	<securecookie host="^(?:apiportal|secure)\.whitepages\.com$" name=".+" />
+
+
+	<rule from="^http://whitepages\.com/"
+		to="https://www.whitepages.com/"/>
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://www\.pro\.whitepages\.com/+"
+		to="https://pro.whitepages.com/"/>
+
+		<test url="http://www.pro.whitepages.com/features/whitepages-pro-api/" />
+
+	<!--	Redirect keeps path, args, and forward slash:
+								-->
+	<rule from="^http://www\.support\.whitepages\.com/"
+		to="https://support.whitepages.com/"/>
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

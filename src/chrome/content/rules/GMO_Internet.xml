@@ -1,21 +1,143 @@
 <!--
+	Other GMO rulesets:
+
+		- Click-Sec.com.xml
+		- ConoHa.jp.xml
+		- FX_Prime.com.xml
+		- GlobalSign.xml
+		- GMO_BB.jp.xml
+		- GMO_Cloud.com.xml
+		- GMO_Cloud.us.xml
+		- GMO_Registry.com.xml
+		- GMO_server.jp.xml
+		- Hello.tokyo.xml
+		- Heteml.jp.xml
+		- InterQ.or.jp.xml
+		- Isle.jp.xml
+		- Kumapon.jp.xml
+		- MakeShop.jp.xml
+		- MyVPS.jp.xml
+		- OmakaseWeb.com.xml
+		- Onamae.com.xml
+		- Onamae-server.com.xml
+		- Quicktranslate.com.xml
+		- RapidSite.jp.xml
+		- Rentalserver.jp.xml
+		- Rocketnet.jp.xml
+		- Tenten.vn.xml
+		- Win-is.com.xml
+		- Win-rd.jp.xml
+		- Win-sv.jp.xml
+
+
 	Nonfunctional subdomains:
 
 		- error
-		- img
 		- cache.im	(reset)
+		- ir ²
+		- help.point *
+		- recruit ²
+
+	² Refused
+	* Dropped
+
+
+	Problematic subdomains:
+
+		- img *
+
+	* Refused
+
+
+	Partially covered subdomains:
+
+		- cloud *
+
+	* At least some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- cache.img
+		- img		(-> cache.img)
+		- point
+		- secure
+		- support
+
+
+	mng: Dropped over http & https
+
+
+	Insecure cookies are set for these hosts:
+
+		- point.gmo.jp
+
+
+	Mixed content:
+
+		- css on cloud from cache.img *
+
+		- Images on cloud from cache.img *
+
+	* Secured by us
 
 -->
-<ruleset name="GMO Internet (partial)">
+<ruleset name="GMO.jp (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="gmo.jp" />
-	<target host="*.gmo.jp" />
+	<target host="cloud.gmo.jp" />
+	<target host="cache.img.gmo.jp" />
+	<target host="point.gmo.jp" />
+	<target host="secure.gmo.jp" />
+	<target host="support.gmo.jp" />
+	<target host="www.gmo.jp" />
+
+	<!--	Complications:
+				-->
+	<target host="img.gmo.jp" />
+
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="http://cloud\.gmo\.jp/+($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="http://cloud\.gmo\.jp/+(?!common/|favicon\.ico|(?:\w+/)?images/|\w+/style\.css|this\.css)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://cloud.gmo.jp/blog/" />
+			<test url="http://cloud.gmo.jp/case/" />
+			<test url="http://cloud.gmo.jp/contact/" />
+			<test url="http://cloud.gmo.jp/faq/" />
+			<test url="http://cloud.gmo.jp/feature/" />
+			<test url="http://cloud.gmo.jp/news/" />
+			<test url="http://cloud.gmo.jp/order/" />
+			<test url="http://cloud.gmo.jp/price/" />
+			<test url="http://cloud.gmo.jp/spec/" />
+			<test url="http://cloud.gmo.jp/trial_contact/" />
+			<test url="http://cloud.gmo.jp/ver2/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://cloud.gmo.jp/favicon.ico" />
+
+		<exclusion pattern="http://point\.gmo\.jp/$" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^point\.gmo\.jp$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^point\.gmo\.jp$" name=".+" />
 
 
-	<securecookie host="^mng\.gmo\.jp$" name=".+" />
+	<rule from="^http://img\.gmo\.jp/"
+		to="https://cache.img.gmo.jp/" />
 
-
-	<rule from="^http://(mng\.|www\.)?gmo\.jp/"
-		to="https://$1gmo.jp/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

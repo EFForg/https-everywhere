@@ -1,5 +1,7 @@
 <!--
-	blog.evidon.com is handled in WordPress-blogs.xml.
+	Other Evidon rulesets:
+
+		- Ghostery_Enterprise.com.xml
 
 
 	CDN buckets:
@@ -10,25 +12,45 @@
 
 	Problematic domains:
 
-		- cdn.betteradvertising.com	(akamai, works, → cdn.beterad.com)
+		- cdn.betteradvertising.com ¹
+		- blog.evidon.com ²
+
+	¹ Akamai
+	² Dropped
 
 -->
 <ruleset name="Evidon Inc (partial)">
 
-	<target host="*.betrad.com"/>
-	<target host="*.betteradvertising.com"/>
-	<target host="*.evidon.com"/>
+	<!--	Direct rewrites:
+				-->
+	<target host="c.betrad.com" />
+	<target host="cdn.betrad.com" />
+	<target host="l.betrad.com" />
 
-	<rule from="^http://(c|cdn|l)\.betrad\.com/"
-		to="https://$1.betrad.com/"/>
+	<target host="info.evidon.com" />
+	<target host="my.evidon.com" />
 
-	<rule from="^https?://cdn\.(?:betteradvertising|evidon)\.com/"
+	<target host="my.betteradvertising.com" />
+
+	<!--	Complications:
+				-->
+	<target host="cdn.betteradvertising.com" />
+	<target host="blog.evidon.com" />
+	<target host="cdn.evidon.com" />
+
+
+	<rule from="^http://cdn\.(?:betteradvertising|evidon)\.com/"
 		to="https://cdn.betrad.com/" />
 
-	<rule from="^http://my\.betteradvertising\.com/"
-		to="https://my.betteradvertising.com/"/>
+	<rule from="^http://blog\.evidon\.com/(?![^?])"
+		to="https://www.ghostery.com/intelligence/business-blog/" />
 
-	<rule from="^http://(info|my)\.evidon\.com/"
-		to="https://$1.evidon.com/"/>
+		<test url="http://blog.evidon.com/home.php" />
+
+	<rule from="^http://blog\.evidon\.com/"
+		to="https://www.ghostery.com/intelligence/business-blog" />
+
+	<rule from="^http:"
+		to="https:"/>
 
 </ruleset>

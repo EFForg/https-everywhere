@@ -1,119 +1,133 @@
 <!--
-	For rules causing false/broken MCB, see Ubuntu.com-falsemixed.xml.
-
-
 	Other Ubuntu rulesets:
 
 		- Ubuntu_Forums.org.xml
+		- Ubuntu-CN.xml
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *ubuntu.com:
 
-		- (www.) ¹
-		- archive ²
-		- cdimage ²
-		- font			(http reply)
+		- archive ʳ
+		- brainstorm		(Redirects to www.ubuntu.com)
+		- cdimage ʳ
+		- font ᵖ
 		- irclogs		(shows irclogs.canonical.com; mismatched, CN: irclogs.canonical.com)
-		- kernel ¹
+		- kernel ᵈ
 		- loco ³
-		- manpages ¹
+		- manpages ᵈ
 		- odm ³
-		- old-releases ²
-		- packages ¹
-		- packages-import ¹
-		- people ¹
+		- old-releases ʳ
+		- packages ᵈ
+		- packages-import ᵈ
+		- packaging ***
+		- pastebin ʰ
+		- people ᵈ
+		- phablet ᵈ
 		- planet		(prints "Page Unavailable"; mismatched, CN: certification.canonical.com)
+		- popcon ᵈ
 		- iso.qa ³
-		- testcases.qa		(redirects to http, self-signed)
-		- pad ²
-		- releases ²
-		- security ²
-		- status ²
-		- summit ²
-		- women ¹
+		- reports.qa ³
+		- testcases.qa ʰ
+		- pad ʳ
+		- releases ʳ
+		- screenshots ⁴
+		- security ʳ
+		- status ʳ
+		- summit ʳ
+		- upstart ᵈ
+		- women ᵈ
+		- www ᵈ
 
-	¹ Dropped
-	² Refused
+	ᵈ Dropped
+	ʰ Redirects to http
+	ᵖ Plaintext reply
+	ʳ Refused
 	³ Redirects to testcases.qa; mismatched, CN: testcases.qa.ubuntu.com
+	*** Redirects to login.ubuntu.com
+	⁴ 404; mismatched, CN: *.canonical.com
 
 
-	Problematic subdomains:
+	Problematic hosts in *ubuntu.com:
 
-		- developer ¹
-		- shop	(mismatched, CN: shop.canonical.com)
+		- entropy
+		- fridge
+		- shop ᵐ
 
-	¹ Mixed css from $self and assets
-
-
-	Partially covered subdomains:
-
-		- developer *
-
-	* Avoiding false/broken MCB, rest handled in -falsemixed.xml
+	ᵐ Mismatched, CN: shop.canonical.com
 
 
-	Fully covered domains:
+	These altnames don't exist:
 
-		- ubuntu.com subdomains:
-
-			- apps
-			- assets
-			- cloud
-			- community
-			- myapps.developer
-			- fridge
-			- help
-			- lists
-			- login
-			- maas
-			- one
-			- patches
-			- pay
-			- jenkins.qa
-			- shop		(→ shop.canonical.com)
-			- uds
-			- uec-images
-			- wiki
-
-		- (www.)ubuntuone.com
+		- www.assets.ubuntu.com
+		- www.errors.ubuntu.com
+		- www.myapps.developer.ubuntu.com
+		- www.lists.ubuntu.com
 
 
 	Mixed content:
 
-		- css, on developer from:
+		- Images, on:
 
-			- $self ¹
-			- assets ¹
-			- fonts.googleapis.com ¹
+			- apps from screenshots.ubuntu.com ⁴
+			- community from assets.ubuntu.com ˢ
+			- developer from $self ˢ
+			- help from pix.toile-libre.org ᵘ
+			- insights from $self ˢ
 
-		- Images on developer from $self ¹
-		- Images on help from pix.toile-libre.org *
-
-	¹ Secured by us
-	* Unsecurable, doesn't trip MCB
-
+	⁴ Unsecurable <= 404
+	ˢ Secured by us
+	ᵘ Unsecurable, doesn't trip MCB
+	
+	Invalid certificate break redirects by server:
+		cloud
+		juju
+		
 -->
-<ruleset name="Ubuntu (partial)">
+<ruleset name="Ubuntu.com (partial)">
 
-	<target host="*.ubuntu.com" />
-		<!--
-			Avoid false/broken MCB:
-							-->
-		<exclusion pattern="^http://developer\.ubuntu\.com/+(?!favicon\.ico|wp-content/|wp-includes/)" />
-	<target host="ubuntuone.com" />
-	<target host="www.ubuntuone.com" />
+	<!--	Direct rewrites:
+					-->
+	<target host="ubuntu.com" />
+	<target host="apps.ubuntu.com" />
+	<target host="assets.ubuntu.com" />
+	<target host="cloud-images.ubuntu.com" />
+	<target host="community.ubuntu.com" />
+	<target host="design.ubuntu.com" />
+	<target host="developer.ubuntu.com" />
+	<target host="myapps.developer.ubuntu.com" />
+	<target host="errors.ubuntu.com" />
+	<target host="help.ubuntu.com" />
+	<target host="insights.ubuntu.com" />
+	<target host="lists.ubuntu.com" />
+	<target host="maas.ubuntu.com" />
+	<target host="one.ubuntu.com" />
+	<target host="paste.ubuntu.com" />
+	<target host="patches.ubuntu.com" />
+	<target host="jenkins.qa.ubuntu.com" />
+	<target host="uds.ubuntu.com" />
+	<target host="uec-images.ubuntu.com" />
+	<target host="unity.ubuntu.com" />
+	<target host="wiki.ubuntu.com" />
+
+	<!--	Complications:
+				-->
+	<target host="shop.ubuntu.com" />
+
+		<test url="http://community.ubuntu.com/community-structure/" />
+		<test url="http://community.ubuntu.com/contribute/" />
+		<test url="http://community.ubuntu.com/help-information/" />
+		<test url="http://community.ubuntu.com/favicon.ico" />
+		<test url="http://community.ubuntu.com/wp-content/themes/ubuntu-community-theme/library/images/logo-ubuntu_su-orange-hex.png" />
 
 
-	<securecookie host="^(?:apps|login|pay|jenkins\.qa|wiki)\.ubuntu\.com$" name=".+" />
+	<securecookie host="." name="^_(?:_utm|gat?$)" />
+	<securecookie host="^\w" name="." />
 
-
-	<rule from="^http://(apps|assets|cloud|community|(?:myapps\.)?developer|fridge|help|juju|lists|login|maas|one|patches|pay|jenkins\.qa|uds|uec-images|wiki)\.ubuntu\.com/"
-		to="https://$1.ubuntu.com/" />
 
 	<rule from="^http://shop\.ubuntu\.com/"
 		to="https://shop.canonical.com/" />
 
-	<rule from="^http://(www\.)?ubuntuone\.com/"
-		to="https://$1ubuntuone.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -7,47 +7,105 @@
 		- unbounce.wpengine.netdna-cdn.com
 
 
-	Problematic subdomains:
+	Nonfunctional hosts in *unbounce.com: ᶜ
 
-		- (www.)	(wpengine)
-		- assets	(amazonaws)
+		- documentation ʰ
+		- ecourses ᵈ
+		- inside ʰ
+		- unblog ᵈ
+		- workshops ʰ
+
+	ᵈ Dropped
+	ʰ Redirects to http
 
 
-	Partially covered domains:
+	Problematic hosts in *unbounce.com: ᶜ
 
-		- (www.)unbounce.com	(→ ubounce.wpengine.com)
+		- community ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
 
 
-	Fully covered domains:
+	These altnames do not exist:
 
-		- ubounce.wpengine.netdna-cdn.com	(→ ubounce.wpengine.com)
+		- www.api-interest.unbounce.com
+		- www.get.unbounce.com
 
-		- unbounce.com subdomains:
 
-			- app
-			- assets		(→ s3.amazonaws.com)
-			- go
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- unbounce.com
+		- .unbounce.com
+		- api-interest.unbounce.com
+		- careers.unbounce.com
+		- get.unbounce.com
+		- www.unbounce.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on ^ from $self * ˢ
+		- Image on careers, get from d9hhrg4mnvzow.cloudfront.net ˢ
+		- favicon on get from ubounce.wpengine.netdna-cdn.com ˢ
+
+	* Only fonts
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Unbounce (partial)">
+<ruleset name="Unbounce.com">
 
-	<target host="ubounce.wpengine.netdna-cdn" />
+	<!--	Direct rewrites:
+				-->
 	<target host="unbounce.com" />
-	<target host="*.unbounce.com" />
-		<exclusion pattern="^http://(?:www\.)?ubounce\.com/(?!\?mcsf_action=main_css|photos/|wp-content/)" />
+	<target host="academy.unbounce.com" />
+	<target host="api.unbounce.com" />
+	<target host="api-interest.unbounce.com" />
+	<target host="app.unbounce.com" />
+	<target host="assets.unbounce.com" />
+	<target host="builder-assets.unbounce.com" />
+	<target host="careers.unbounce.com" />
+	<!--target host="community.unbounce.com" /-->
+	<target host="get.unbounce.com" />
+	<target host="go.unbounce.com" />
+	<target host="www.unbounce.com" />
 
+		<test url="http://unbounce.com/blog/" />
+		<test url="http://unbounce.com/features/" />
+		<test url="http://www.unbounce.com/partner/" />
+		<test url="http://www.unbounce.com/pricing/" />
+
+		<test url="http://builder-assets.unbounce.com/published/jquery.ubpoverlay-63159c9.z.css" />
+
+		<!--	$ 404s, so:
+					-->
+		<test url="http://get.unbounce.com/api-access/" />
+
+
+	<!--	Complications:
+				-->
+	<target host="ubounce.wpengine.netdna-cdn.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^unbounce\.com$" name="^(?:_icl_current_language$|X-Mapping-)" /-->
+	<!--securecookie host="^\.unbounce\.com$" name="^ubvt$" /-->
+	<!--securecookie host="^(?:api-interest|careers|get)\.unbounce\.com$" name="^(?:ubpv|ubvs)$" /-->
+	<!--securecookie host="^www\.unbounce\.com$" name="^X-Mapping-" /-->
 
 	<!--securecookie host="^\.unbounce\.com$" name="^_lp-webapp_session$" /-->
-	<securecookie host="^go\.unbounce\.com$" name=".+" />
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?ubounce(?:\.wpengine\.netdna-cdn)?\.com/"
+	<rule from="^http://unbounce\.wpengine\.netdna-cdn\.com/"
 		to="https://unbounce.wpengine.com/" />
 
-	<rule from="^http://(app|go)\.unbounce\.com/"
-		to="https://$1.unbounce.com/" />
+		<test url="http://unbounce.wpengine.netdna-cdn.com/wp-content/themes/unbounce2015/assets/img/arrow_homepage.png" />
 
-	<rule from="^http://assets\.unbounce\.com/"
-		to="https://s3.amazonaws.com/assets.unbounce.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

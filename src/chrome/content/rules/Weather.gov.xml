@@ -1,0 +1,83 @@
+<!--
+	For other U.S. government coverage, see US-government.xml.
+
+
+	Nonfunctional hosts in *weather.gov:
+
+		- airquality ᵈ
+		- cell ᵈ
+		- digital ⁵
+		- espotter ᵈ
+		- forecasts ʳ
+		- graphical ⁵
+		- marine ᵈ
+		- mobile ᵈ
+		- ndfd ʳ
+		- preview ᵈ
+		- radar ⁵
+		- www.srh ᵈ
+		- tadd ʳ
+		- w1 ⁵
+		- w2 ᵈ
+		- water ᵈ
+
+	⁵ 504
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *weather.gov:
+
+		- ^ ᵐ
+		- alerts ᶜ
+		- apps ᵉ
+		- forecast A
+		- nws ⁴ ᵉ
+		- ocwws ᵉ
+		- products ᵉ
+		- ptwc ᵐ
+		- www A
+
+	⁴ >= 1 page 404s
+	ᴬ Akamai / mismatched
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵉ Expired
+	ᵐ Mismatched
+
+
+	These altnames do not exist:
+
+		- www.apps.weather.gov
+		- ucc.weather.gov
+		- www.ucc.weather.gov
+
+
+	Insecure cookies are set for these hosts:
+
+		- apps.weather.gov
+		- ocwws.weather.gov
+
+-->
+<ruleset name="Weather.gov (partial)">
+
+	<!--target host="alerts.weather.gov" /-->
+	<target host="nwschat.weather.gov" />
+	<target host="ra4-gifs.weather.gov" />
+	<target host="vpn.weather.gov" />
+
+		<!--	404:
+				-->
+		<test url="http://nws.weather.gov/nthmp/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:app|ocww)s\.weather\.gov$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

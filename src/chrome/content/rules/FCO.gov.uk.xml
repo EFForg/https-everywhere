@@ -1,0 +1,116 @@
+<!--
+	Foreign & Commonwealth Office
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *fco.gov.uk:
+
+		- blogs *
+
+	* Dropped
+
+
+	Problematic hosts in *fco.gov.uk:
+
+		- (www.)? *
+		- centralcontent *
+		- ukinusa *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.visa4uk.fco.gov.uk
+
+-->
+<ruleset name="FCO.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.visa4uk.fco.gov.uk" />
+	<target host="web-analytics.fco.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="fco.gov.uk" />
+	<target host="centralcontent.fco.gov.uk" />
+	<target host="ukinusa.fco.gov.uk" />
+	<target host="www.fco.gov.uk" />
+
+		<!--	/(?!/*($|\?|resources/)) 404s:
+						-->
+		<exclusion pattern="^http://(?:centralcontent\.|www\.)?fco\.gov\.uk/(?!/*(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://centralcontent.fco.gov.uk/resources/en/pdf/central-content-pdfs/bno-b-form.pdf" />
+			<test url="http://centralcontent.fco.gov.uk/resources/en/pdf/electoral-assistance-full" />
+			<test url="http://centralcontent.fco.gov.uk/resources/en/pdf/human-rights-reports/human-rights-report-2009" />
+			<test url="http://www.fco.gov.uk/atas" />
+			<test url="http://www.fco.gov.uk/directory/" />
+			<test url="http://www.fco.gov.uk/fgm" />
+			<test url="http://www.fco.gov.uk/travel" />
+
+			<!--	-ve:
+					-->
+			<test url="http://fco.gov.uk//?foo" />
+			<test url="http://centralcontent.fco.gov.uk//?foo" />
+			<test url="http://www.fco.gov.uk//?foo" />
+
+		<exclusion pattern="^http://ukinusa\.fco\.gov\.uk/(?!/*(?:$|\?|(?:houston|seattle)(?:$|[?/])))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://ukinusa.fco.gov.uk/home.asp" />
+			<test url="http://ukinusa.fco.gov.uk/home.aspx" />
+			<test url="http://ukinusa.fco.gov.uk/home.htm" />
+			<test url="http://ukinusa.fco.gov.uk/home.php" />
+			<test url="http://ukinusa.fco.gov.uk/index.asp" />
+			<test url="http://ukinusa.fco.gov.uk/index.aspx" />
+			<test url="http://ukinusa.fco.gov.uk/index.htm" />
+			<test url="http://ukinusa.fco.gov.uk/index.html" />
+			<test url="http://ukinusa.fco.gov.uk/index.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://ukinusa.fco.gov.uk/?" />
+			<test url="http://ukinusa.fco.gov.uk/houston" />
+			<test url="http://ukinusa.fco.gov.uk/houston/" />
+			<test url="http://ukinusa.fco.gov.uk/seattle" />
+			<test url="http://ukinusa.fco.gov.uk/seattle/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.visa4uk\.fco\.gov\.uk$" name="^(?:TS[\da-f]{8}(?:_\d+)?|V4CookieInfo)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	\d+ is unpredictable :(
+					-->
+	<!--rule from="^http://centralcontent\.fco\.gov\.uk/resources/en/pdf/([\w-]+)$"
+		to="https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/\d+/$1.pdf" /-->
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://(?:centralcontent\.|www\.)?fco\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/foreign-commonwealth-office" />
+
+	<rule from="^http://ukinusa\.fco\.gov\.uk/houston.*"
+		to="https://www.gov.uk/government/world/organisations/british-consulate-general-houston" />
+
+	<rule from="^http://ukinusa\.fco\.gov\.uk/seattle.*"
+		to="https://www.gov.uk/government/world/organisations/british-consulate-general-san-francisco" />
+
+	<!--	Redirect drops args and forward slash:
+						-->
+	<rule from="^http://ukinusa\.fco\.gov\.uk/.*"
+		to="https://www.gov.uk/government/world/usa" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

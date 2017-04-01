@@ -1,24 +1,58 @@
+<!--
+	Insecure cookies are set for these domains and hosts:
+
+		- .rtbf.br
+		- boutique.rtbf.be
+		- www.rtbf.be
+
+-->
 <ruleset name="Rtbf.be Belgian Television">
 
-  <target host="rtbf.be" />
-  <target host="*.rtbf.be" />
+	<!--	Direct rewrites:
+				-->
+	<target host="rtbf.be" />
+	<target host="boutique.rtbf.be" />
+	<target host="podcasting.rtbf.be" />
 
-  <rule from="^http://(www\.)?rtbf\.be/"
-        to="https://www.rtbf.be/" />
+	<target host="ds.static.rtbf.be" />
+	<target host="ssl-ds.static.rtbf.be" />
+	<target host="ssl-sgc.static.rtbf.be" />
+	<target host="ssl-www.static.rtbf.be" />
 
-  <rule from="^http://www\.static\.rtbf\.be/" 
-        to="https://ssl-www.static.rtbf.be/" />
-  
-  <rule from="^http://sgc\.static\.rtbf\.be/" 
-        to="https://ssl-sgc.static.rtbf.be/" />
-  
-  <rule from="^http://ds\.static\.rtbf\.be/" 
-        to="https://ds.static.rtbf.be/" />
-  
-  <rule from="^http://ds[1-5]\.ds\.static\.rtbf\.be/" 
-        to="https://ssl-ds.static.rtbf.be/" />
-  
-  <rule from="^http://rss\.rtbf\.be/"
-        to="https://ssl-ds.static.rtbf.be/" />
+	<target host="www.rtbf.be" />
+
+	<!--	Complications:
+				-->
+	<target host="rss.rtbf.be" />
+
+	<target host="ds1.static.rtbf.be" />
+	<target host="ds2.static.rtbf.be" />
+	<target host="ds3.static.rtbf.be" />
+	<target host="ds4.static.rtbf.be" />
+	<target host="ds5.static.rtbf.be" />
+	<target host="sgc.static.rtbf.be" />
+	<target host="www.static.rtbf.be" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.rtbf\.br$" name="^rtbf_internal$" /-->
+	<!--securecookie host="^boutique\.rtbf\.be$" name="^symfony$" /-->
+	<!--securecookie host="^www\.rtbf\.br$" name="^(?:PHPSESSID|rtbfEmbedvolume)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://(?:rss|ds\d\.static)\.rtbf\.be/"
+		to="https://ssl-ds.static.rtbf.be/" />
+
+	<rule from="^http://sgc\.static\.rtbf\.be/"
+		to="https://ssl-sgc.static.rtbf.be/" />
+
+	<rule from="^http://www\.static\.rtbf\.be/"
+		to="https://ssl-www.static.rtbf.be/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

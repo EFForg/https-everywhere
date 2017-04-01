@@ -1,0 +1,42 @@
+<!--
+	CDN buckets:
+
+		- jmldirect.uat.venda.com
+
+
+	jmldirect.uat.venda.com: self-signed
+
+
+	Mixed content:
+
+		- Images, from:
+
+			- $self *
+			- jmldirect.uat.venda.com *
+
+	* Secured by us
+
+-->
+<ruleset name="JML Direct.com">
+
+	<target host="jmldirect.com" />
+	<target host="*.jmldirect.com" />
+	<target host="jmldirect.uat.venda.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.jmldirect\.com$" name="^device$" /-->
+	<!--securecookie host="^www\.jmldirect\.com$" name="^quench$" /-->
+	<!--securecookie host="^\.www\.jmldirect\.com$" name="^SID$" /-->
+
+	<securecookie host="^(?:\.?www)?\.jmldirect\.com$" name=".+" />
+
+
+	<rule from="^http://(www\.)?jmldirect\.com/"
+		to="https://$1jmldirect.com/" />
+
+	<rule from="^http://jmldirect\.uat\.venda\.com/content/"
+		to="https://www.jmldirect.com/content/" />
+
+</ruleset>

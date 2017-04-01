@@ -1,0 +1,74 @@
+<!--
+	For rules causing false/broken MCB, see tribepad.com-falsemixed.xml.
+
+
+	CDN buckets:
+
+		- tribepad-manual.s3.amazonaws.com
+
+
+	^tribepad.com: Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- support.tribepad.com
+		- tracking.tribepad.com
+		- www.tribepad.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+
+			- support, www from fonts.googleapis.com ˢ
+			- support from tribepad-manual.s3.amazonaws.com ˢ
+			- www from $self ˢ
+
+		- Images on support, www from www.tribepad.com ˢ
+		- Bug on www from www.lead-analytics-1000.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="TribePad.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="cdn-1.tribepad.com" />
+	<target host="cdn-2.tribepad.com" />
+	<target host="cdn-3.tribepad.com" />
+	<target host="support.tribepad.com" />
+	<target host="tracking.tribepad.com" />
+	<!--target host="www.tribepad.com" /-->
+
+		<test url="http://cdn-1.tribepad.com/g4s/images/IndImgGal.png" />
+		<test url="http://cdn-2.tribepad.com/g4s/images/bg_top_menu_li-1.png" />
+		<test url="http://cdn-3.tribepad.com/g4s/images/bg_bottom.jpg" />
+
+		<!--	Mixed content:
+					-->
+		<!--test url="http://support.tribepad.com/manual/" /-->
+
+	<!--	Complications:
+				-->
+	<!--target host="tribepad.com" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:support|www)\.tribepad\.com$" name="^(?:PHPSESSID$|X-Mapping-)" /-->
+	<!--securecookie host="^tracking\.tribepad\.com$" name="^X-Mapping-" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--rule from="^http://tribepad\.com/"
+		to="https://www.tribepad.com/" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

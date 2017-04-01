@@ -1,0 +1,98 @@
+<!--
+	NB: autodiscover & autodiscover.student are rewritten
+	the same location ?=> fetch check failure
+
+	Oaklands College
+
+
+	Nonfunctional hosts in *oaklands.ac.uk:
+
+		- alumni ʳ
+		- learn ᵈ
+		- m ᵃ
+		- oaklearn ᵈ
+		- proportal ᵈ
+		- skillbuilder ᵈ
+		- webcams ᵈ
+		- wolves ᶠ
+
+	ᵃ Shows another domain
+	ᵈ Dropped
+	ᶠ Handshake fails
+	ʳ Refused
+
+
+	Problematic hosts in *oaklands.ac.uk:
+
+		- ^ ᵈ
+		- autodiscover *
+		- autodiscover.student *
+
+	* Redirect differs
+	ᵈ Dropped, preemptable redirect
+
+
+	Partially covered hosts in *oaklands.ac.uk:
+
+		- proportal *	(→ portal.oaklands.ac.uk)
+
+	* Not all paths redirect
+
+-->
+<ruleset name="Oaklands.ac.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="cas.oaklands.ac.uk" />
+	<target host="portal.oaklands.ac.uk" />
+	<target host="webmail.oaklands.ac.uk" />
+	<target host="www.oaklands.ac.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="oaklands.ac.uk" />
+	<target host="autodiscover.oaklands.ac.uk" />
+	<target host="proportal.oaklands.ac.uk" />
+	<target host="autodiscover.student.oaklands.ac.uk" />
+
+		<!--	\w$ 404s:
+					-->
+		<exclusion pattern="^http://proportal\.oaklands\.ac\.uk/(?!/*(?:$|\?))" />
+
+			<!--	See blow respective rule for negative cases.
+				
+				+ve:
+					-->
+			<test url="http://proportal.oaklands.ac.uk/default.aspx" />
+			<test url="http://proportal.oaklands.ac.uk/favicon.ico" />
+			<test url="http://proportal.oaklands.ac.uk/index.htm" />
+			<test url="http://proportal.oaklands.ac.uk/index.html" />
+			<test url="http://proportal.oaklands.ac.uk/index.php" />
+
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^(?!proportal\.)\w" name="." />
+
+
+	<rule from="^http://oaklands\.ac\.uk/"
+		to="https://www.oaklands.ac.uk/" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://autodiscover(?:\.student)?\.oaklands\.ac\.uk/.*"
+		to="https://cas.oaklands.ac.uk/owa/auth/logon.aspx?url=https%3a%2f%2fcas.oaklands.ac.uk%2fowa&amp;reason=0" />
+
+		<test url="http://autodiscover.oaklands.ac.uk/default.aspx" />
+		<test url="http://autodiscover.student.oaklands.ac.uk/index.htm" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://proportal\.oaklands\.ac\.uk/.*"
+		to="https://portal.oaklands.ac.uk/dana/home/launch.cgi?url=http%3A%2F%2Fproportal.oaklands.ac.uk" />
+
+		<test url="http://proportal.oaklands.ac.uk/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,27 +1,51 @@
 <!--
+	Other Phoronix Media rulesets:
+
+		- OpenBenchmarking.org.xml
+
+
 	Nonfunctional:
 
-		- (www.)phoronix.com	(ssl_error_rx_record_too_long)
+		- (www.)phoronix.net ¹
+		- (www.)phoronix-media.com ¹
+		- (www.)phoromatic.com ¹
+		- (www.)phoronix-test-suite.com ¹
+
+	¹ Plaintext reply
+
+
+	Insecure cookies are set for these domains:
+
+		- .phoronix.com
+
+
+	Mixed content:
+
+		- css on (www.)? from fonts.googleapis.com ²
+
+	² Secured by us
 
 -->
-<ruleset name="Phoronix Media (partial)" platform="mixedcontent">
+<ruleset name="Phoronix">
 
-	<target host="openbenchmarking.org" />
-	<target host="www.openbenchmarking.org" />
-	<target host="phoromatic.com" />
-	<target host="www.phoromatic.com" />
-
-
-	<securecookie host="^openbenchmarking\.org$" name=".*" />
-	<securecookie host="^phoromatic\.com$" name=".*" />
+	<target host="phoronix.com" />
+	<target host="www.phoronix.com" />
+  	<target host="phoronix.net"/>
+  	<target host="www.phoronix.net" />
 
 
-	<!--	Michael has noticed our shenanigans and disabled https for pages (unless you pay up).
-		https://trac.torproject.org/projects/tor/ticket/5728	-->
-	<rule from="^http://(www\.)?openbenchmarking\.org/(ads/|(?:create/comment/|result/)?css/|embed\.php|favicon\.ico|s/css/)"
-		to="https://$1openbenchmarking.org/$2" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.phoronix\.com$" name="^phx(?:lastactivity|sessionhash)$" /-->
 
-	<rule from="^http://(?:www\.)?phoromatic\.com/"
-		to="https://phoromatic.com/" />
+	<!--	Breaks forum:
+				-->
+	<!--securecookie host="." name="." /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

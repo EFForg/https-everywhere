@@ -10,23 +10,16 @@
 
 		- www.eyeblaster-ds.com.edgesuite.net
 
-			- a50.g2.akamai.net
 			- ds.serving-sys.com
-
-		- as.serving-sys-int.com.edgesuite.net
-
-			- a1452.b.akamai.net
 
 		- activity.serving-sys.com.edgekey.net
 		- secure-ds.serving-sys.com.edgekey.net
-		- secure-ds.serving-sys-int.com.edgekey.net
 
 
 	Problematic domains:
 
 		- activity.serving-sys.com	(403; mismatched, CN: platform.mediamind.com)
 		- ds.serving-sys.com *
-		- as.serving-sys-int.com *
 
 	* Works, akamai
 
@@ -36,36 +29,43 @@
 		- serving-sys.com subdomains:
 
 			- activity	(→ bs)
-			- as		(→ akamai)
 			- bs
 			- ds		(→ akamai)
 			- secure-ds
 
-		- secure-ds.serving-sys-int.com
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .serving-sys.com
+		- bs.serving-sys.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="serving-sys.com (partial)">
 
-	<target host="*.serving-sys.com" />
-	<target host="*.serving-sys-int.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="bs.serving-sys.com" />
+	<target host="secure-ds.serving-sys.com" />
 
+	<!--	Special cases:
+				-->
+	<target host="activity.serving-sys.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.serving-sys\.com$" name="^(ActivityInfo2|eyeblaster|u2)$" /-->
+	<!--securecookie host="^bs\.serving-sys\.com$" name="(?:S_\d+|r1)$" /-->
 
 	<securecookie host="^bs\.serving-sys\.com$" name=".*" />
 
 
-	<rule from="^http://(?:activity|bs)\.serving-sys\.com/"
+	<rule from="^http://activity\.serving-sys\.com/"
 		to="https://bs.serving-sys.com/" />
 
-	<rule from="^http://ds\.serving-sys\.com/"
-		to="https://a248.e.akamai.net/f/50/1/5m/ds.serving-sys.com/" />
-
-	<rule from="^http://secure-ds\.serving-sys\.com/"
-		to="https://secure-ds.serving-sys.com/" />
-
-	<rule from="^http://as\.serving-sys-int\.com/"
-		to="https://a248.e.akamai.net/f/1452/7592/10/as.serving-sys-int.com/" />
-
-	<rule from="^http://secure-ds\.serving-sys-int\.com/"
-		to="https://secure-ds.serving-sys-int.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

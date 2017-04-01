@@ -8,62 +8,108 @@
 
 		- cardiff.ac.uk subdomains:
 
-			- $
+			- ^
 			- courses	(times out)
 			- events	(ssl_error_rx_record_too_long)
+			- jobs ʳ
 			- librarysearch	(http & https data differ)
 			- www		(401)
 
 		- cf.ac.uk subdomains:
 
 			- cymraeg.cs		(cert: www.cs; redirects there)
+			- docs.cs		(redirects to http, valid cert)
 			- dogfennaeth.cs	(cert: www.cs; redirects there)
 			- (www.)engineering
 			- innovation.engineering
 			- news.engineering
 			- (www.)e-shop
 			- www.mec		(!www doesn't exist)
+			- www		401
+
+	ʳ Refused
+
+
+	Problematic domains:
+
+		- in *cardiff.ac.uk:
+
+			- www.astro ¹
+			- learningcentral ¹
+			- surveys ¹
+
+		- in *cf.ac.uk:
+
+			- cardiffnetwork ¹
+			- cs ¹
+			- docs.cs ¹
+			- engin
+			- www.law ³
+
+	¹ Mismatched
+	³ Self-signed
+
+
+	Mixed content:
+
+		- Images on sites from $self
+		- Bugs on sites from www.google.com *
+
+	* Secured by us
+
 -->
 <ruleset name="Cardiff University (partial)">
 
-	<target host="*.cardiff.ac.uk" />
-	<target host="www.*.cardiff.ac.uk" />
-	<target host="*.cf.ac.uk" />
-	<target host="www.*.cf.ac.uk" />
-	<target host="*.cs.cf.ac.uk" />
-
-
-	<!---	Avoid cross-domain cookies.	-->
-	<securecookie host="^\w[\w\.]+\.c(ardif?)f\.ac\.uk$" name=".*" />
-
-
-	<!--	- Cert only matches www.astro.cf
-		- Data appear identical for cardiff & cf
-		- !www doesn't exist for either
+	<!--	Direct rewrites:
 				-->
-	<rule from="^https?://www\.astro\.c(?:ardif)?f\.ac\.uk/"
-		to="https://www.astro.cf.ac.uk/" />
+	<target host="intranet.cardiff.ac.uk" />
+	<target host="library.cardiff.ac.uk" />
+	<target host="sites.cardiff.ac.uk" />
+	<target host="www.surveys.cardiff.ac.uk" />
 
-	<rule from="^http://library\.cardiff\.ac\.uk/"
-		to="https://library.cardiff.ac.uk/" />
+	<target host="www.astro.cf.ac.uk" />
+	<target host="cardiffmail.cf.ac.uk" />
+	<target host="www.cardiffnetwork.cf.ac.uk" />
+	<target host="claws.cf.ac.uk" />
+	<target host="webmail.cs.cf.ac.uk" />
+	<target host="www.cs.cf.ac.uk" />
+	<target host="www.engin.cf.ac.uk" />
+	<target host="lawstudent.cf.ac.uk" />
+	<target host="learningcentral.cf.ac.uk" />
+	<target host="portal.cf.ac.uk" />
+	<target host="pwm-mwe.cf.ac.uk" />
+	<target host="static.cf.ac.uk" />
 
-	<!--	Cert only matches www.surveys	-->
-	<rule from="^https?://(?:www\.)?surveys\.cardiff\.ac\.uk/"
-		to="https://www.surveys.cardiff.ac.uk/" />
+	<!--	Complications:
+				-->
+	<target host="www.astro.cardiff.ac.uk" />
+	<target host="learningcentral.cardiff.ac.uk" />
+	<target host="surveys.cardiff.ac.uk" />
 
-	<rule from="^http://(cardiffmail|claws|webmail\.cs|lawstudent|portal|pwm-mwe|static)\.cf\.ac\.uk/"
+	<target host="cardiffnetwork.cf.ac.uk" />
+	<target host="cs.cf.ac.uk" />
+	<target host="engin.cf.ac.uk" />
+
+		<!--	Mixed images:
+					-->
+		<test url="http://sites.cardiff.ac.uk/events/" />
+
+
+	<!---	Avoiding wildcard cookies:
+						-->
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://(www\.astro|learningcentral)\.cardiff\.ac\.uk/"
 		to="https://$1.cf.ac.uk/" />
 
-	<!--	- Cert doesn't match //cardiffnetwork
-		- Cert doesn't match //cs
-		- //engin doesn't work over https
-		- //engin redirects to www.engin over http
-				-->
-	<rule from="^https?://(?:www\.)?(cardiffnetwork|cs|engin)\.cf\.ac\.uk/"
+	<rule from="^http://surveys\.cardiff\.ac\.uk/"
+		to="https://www.surveys.cardiff.ac.uk/" />
+
+	<rule from="^http://(cardiffnetwork|cs|engin)\.cf\.ac\.uk/"
 		to="https://www.$1.cf.ac.uk/" />
 
-	<!--	Cert is only valid for cf.	-->
-	<rule from="^https?://learningcentral\.c(?:ardif)?f\.ac\.uk/"
-		to="https://learningcentral.cf.ac.uk/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

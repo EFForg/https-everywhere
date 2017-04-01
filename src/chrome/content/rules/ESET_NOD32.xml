@@ -1,17 +1,51 @@
 <!--
 	For other ESET coverage, see Eset.xml.
 
+
+	Nonfunctional hosts in *esetnod32.ru:
+
+		- www.startpack *
+		- v2 *
+
+	* Refused
+
+
+	^esetnod32.ru: Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .esetnod32.ru
+		- shop.esetnod32.ru
+		- .shop.esetnod32.ru
+
 -->
-<ruleset name="ESET NOD32">
+<ruleset name="ESET NOD32.ru (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="shop.esetnod32.ru" />
+	<target host="www.esetnod32.ru" />
+
+	<!--	Complications:
+				-->
 	<target host="esetnod32.ru" />
-	<target host="*.esetnod32.ru" />
 
 
-	<securecookie host="^\.esetnod32\.ru$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.esetnod32\.ru$" name="^PHPSESSID" /-->
+	<!--securecookie host="^shop\.esetnod32\.ru$" name="^BITRIX_SM_(LOGIN|SALEUID|SOUND_LOGIN_PLAYED|UIDH)$" /-->
+	<!--securecookie host="^\.shop\.esetnod32\.ru$" name="^(BITRIX_SM_(SALEUID|UIDH)|RMSESSID)$" /-->
+
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\.shop\.esetnod32\.ru$" name="." />
 
 
-	<rule from="^http://(www\.)?esetnod32\.ru/"
-		to="https://$1esetnod32.ru/" />
+	<rule from="^http://esetnod32\.ru/"
+		to="https://www.esetnod32.ru/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -4,51 +4,52 @@
 		- Broadcom_Foundation.org.xml
 
 
-		- broadcom.jobs2web.com
+	Nonfunctional hosts in *broadcom.com:
 
-			- jobs
+		- blog ¹
+		- investor ²
+		- websearch ³
 
-
-	Nonfunctional subdomains:
-
-		- investor	(cert: *.shareholder.com; 403)
-		- websearch	(cert: foo.ent.google.com, expired, self-signed; redirects to http)
-
-
-	Problematic subdomains:
-
-		- jobs		(works; mismatched, CN: *.jobs2web.com)
+	¹ Refused
+	² Dropped
+	³ Redirects to http
 
 
-	Partially covered subdomains:
+	Insecure cookies are set for these hosts:
 
-		- jobs		(→ broadcom.jobs2web.com)
+		- community.broadcom.com
+		- jobs.broadcom.com
+		- www.broadcom.com
 
 
 	Mixed content:
 
-		- Images on www from jobs *
+		- Images, on:
 
-	* Secured by us
+			- community from ^broadcom.com ˢ
+			- community from www.broadcom.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Broadcom">
+<ruleset name="Broadcom.com (partial)">
 
 	<target host="broadcom.com" />
-	<target host="*.broadcom.com" />
+	<target host="community.broadcom.com" />
+	<target host="jobs.broadcom.com" />
+	<target host="www.broadcom.com" />
 
 
-	<securecookie host="^blog\.broadcom\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^community\.broadcom\.com$" name="^(?:BIGipServer|jive\.login\.ts$|jive\.security\.context$)" /-->
+	<!--securecookie host="^jobs\.broadcom\.com$" name="^(JSESSIONID|PERSIST)$" /-->
+	<!--securecookie host="^www\.broadcom\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<!--	Cert only matches www.	-->
-	<rule from="^https?://(?:www\.)?broadcom\.com/"
-		to="https://www.broadcom.com/" />
-
-	<rule from="^http://blog\.broadcom\.com/"
-		to="https://blog.broadcom.com/" />
-
-	<rule from="^http://jobs\.broadcom\.com/(css|sites|view)/"
-		to="https://broadcom.jobs2web.com/$1/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

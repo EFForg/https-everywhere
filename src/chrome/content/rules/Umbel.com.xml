@@ -1,0 +1,56 @@
+<!--
+	CDN buckets:
+
+		- sitemedia-umbel.netdna-ssl.com
+
+
+	api: Loops
+
+
+	^: dropped
+
+
+	Fully covered hosts:
+
+		- (www.)	(^ -> www)
+		- tags.api
+		- audience
+		- [a-z]{16}.capture
+		- media
+
+-->
+<ruleset name="Umbel.com">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="api.umbel.com" /-->
+	<target host="tags.api.umbel.com" />
+	<target host="audience.umbel.com" />
+	<target host="*.capture.umbel.com" />
+	<target host="media.umbel.com" />
+	<target host="www.umbel.com" />
+
+	<!--	Complications:
+				-->
+	<target host="umbel.com" />
+
+		<!--	Redirect loop:
+					-->
+		<!--exclusion pattern="^http://api\.umbel\.com/$" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(audience|www)\.umbel\.com$" name="^csrftoken$" /-->
+	<!--securecookie host="^audience\.umbel\.com$" name="^sessionid$" /-->
+
+	<securecookie host="^(?:audience|www)\.umbel\.com$" name=".+" />
+
+
+	<rule from="^http://umbel\.com/"
+		to="https://www.umbel.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

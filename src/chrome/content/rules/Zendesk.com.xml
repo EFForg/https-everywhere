@@ -1,4 +1,9 @@
 <!--
+	Other Zendesk rulesets:
+
+		- Zdassets.com.xml
+
+
 	CDN buckets:
 
 		- s3.amazonaws.com/zd-assets/ | d16cvnquvjw7pr.cloudfront.net
@@ -14,36 +19,72 @@
 		- widgets/
 
 
+	Problematic domains:
+
+		- cdn.zendesk.com *
+		- hello.zendesk.com *
+		- app.hello.zendesk.com *
+		- radar.zendesk.com *
+
+	* Mismatched
+
 	Fully covered domains:
 
-		- p1.zdassets.com
+		- p6assets.zendesk.com
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- www from s3.amazonaws.com
+			- www from d26a57ydsghvgx.cloudfront.net
 
 -->
-<ruleset name="Zendesk (partial)" platform="mixedcontent">
+<ruleset name="Zendesk.com (partial)">
 
-	<target host="p1.zdassets.com" />
 	<target host="zendesk.com" />
 	<target host="*.zendesk.com" />
-		<!--
-			https://trac.torproject.org/projects/tor/ticket/8198
-								-->
-		<exclusion pattern="^http://(?:video|developer)\." />
-		<!--
-			Redirects to http:
-						-->
-		<exclusion pattern="^http://[\w-]+\.zendesk\.com/forums(?:$|\?)" />
 
+		<exclusion pattern="^http://hello\.zendesk\.com/" />
+		<test url="http://hello.zendesk.com/" />
+
+		<!-- See https://github.com/EFForg/https-everywhere/issues/9159 -->
+		<exclusion pattern="^http://app\.hello\.zendesk\.com/" />
+		<test url="http://app.hello.zendesk.com/" />
+
+		<exclusion pattern="^http://radar\.zendesk\.com/" />
+		<test url="http://radar.zendesk.com/" />
+
+		<exclusion pattern="^http://video\.zendesk\.com/" />
+		<test url="http://video.zendesk.com/" />
+
+		<!--	Direct rewrites:
+					-->
+		<test url="http://developer.zendesk.com/" />
+		<test url="http://support.zendesk.com/" />
+		<test url="http://www.zendesk.com/" />
+
+		<!--	Special cases:
+					-->
+		<test url="http://cdn.zendesk.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.zendesk\.com$" name="^(__cfduid|__qca|cf_clearance)$" /-->
+	<!--securecookie host="^p6assets\.zendesk\.com$" name="^(_zendesk_session|_zendesk_shared_session)$" /-->
 
 	<!--securecookie host="^(.*\.)?zendesk\.com$" name=".+" /-->
 
+	<securecookie host="^\.zendesk\.com$" name="^(?:__cfduid|__qca|cf_clearance)$" />
+	<securecookie host="^p\dassets\.zendesk\.com$" name=".+" />
 
-	<rule from="^http://p1\.zdassets\.com/"
-		to="https://p1.zdassets.com/" />
 
 	<rule from="^http://cdn\.zendesk\.com/"
 		to="https://d16cvnquvjw7pr.cloudfront.net/" />
 
-	<rule from="^http://([\w-]+\.)?zendesk\.com/"
-		to="https://$1zendesk.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

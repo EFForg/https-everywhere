@@ -1,0 +1,47 @@
+<!--
+	CDN buckets:
+
+		- nvcdn.msnbc.com.edgesuite.net
+
+			- nvcdn
+
+
+	Nonfunctional subdomains:
+
+		- info *
+
+	* Redirects to http
+
+
+	www: some pages redirect to http.
+
+
+	Problematic subdomains:
+
+		- nvcdn.msnbc.com *
+
+	* Works, akamai
+
+-->
+<ruleset name="MSNBC.com (partial)">
+
+	<target host="msnbc.com" />
+	<target host="www.msnbc.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.msnbc\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.msnbc\.com/+(?!favicon\.ico|sites/)" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<!--exclusion pattern="^http://nvcdn\.msnbc\.com/+(?!_sites/)" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

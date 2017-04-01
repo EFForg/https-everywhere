@@ -1,73 +1,104 @@
 <!--
-	For other Oracle coverage, see Oracle.xml.
-
-
-	For problematic rules, see Linksys-problematic.xml.
+	For other Cisco coverage, see Cisco.xml.
 
 
 	CDN buckets:
 
+		- cache-www.linksys.com.s3.amazonaws.com
 		- downloads.linksys.com.edgesuite.net
-
-		- linksys.lithium.com
-
-			- community
+		- linksys.lithium.com	← community
 
 		- linksys-content.vcommerce.com
 
 			- 403; mismatched, CN: support3.cdnetworks.net
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *linksys.com:
 
-		- m		(shows another domain; mismatched, CN: www.linksysbycisco.com)
+		- m ᵃ		(CN: www.linksysbycisco.com)
 
-
-	Problematic subdomains:
-
-		- ^		(mismatched, CN: homesupport.cisco.com)
-		- downloads	(works, akamai)
+	ᵃ Shows another domain
 
 
-	Partially covered subdomains:
+	Problematic hosts in *linksys.com:
 
-		- store		(some pages redirect to http)
+		- cache-www ¹
+		- downloads	(akamai)
 
-
-	Fully covered subdomains:
-
-		- (www.)	(^ → www)
-		- community
-		- support
+	¹ AmazonAWS
 
 
-	Observed cookie domains:
+	www.linksys.com: Some pages redirect to http
 
-		- community
+
+	^linksys.com: Refused over https, reset over http
+
+
+	Insecure cookies are set for these hosts:
+
+		- community.linksys.com
+		- store.linksys.com
+		- support.linksys.com
+		- www.linksys.com
 
 
 	downloads serves mixed images on www and
 	support, but no scripts nor stylesheets.
 
 -->
-<ruleset name="Linksys (partial)">
+<ruleset name="Linksys.com (partial)">
 
-	<target host="linksys.com" />
-	<target host="*.linksys.com" />
-		<exclusion pattern="^http://store\.linksys\.com/(?!\w+\.css$|css/|imagecache/|images/|moduleimages/)" />
-	<target host="linksys-content.vcommerce.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="community.linksys.com" />
+	<target host="store.linksys.com" />
+	<target host="support.linksys.com" />
+	<target host="www.linksys.com" />
+
+	<!--	Complications:
+				-->
+	<target host="cache-www.linksys.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.linksys\.com/us/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.linksys\.com/+(?!.+\.(?:jpg|png|svg)(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.linksys.com/hu/p/P-WRT1200AC/" />
+			<test url="http://www.linksys.com/id/for-business/" />
+			<test url="http://www.linksys.com/us/" />
+			<test url="http://www.linksys.com/us/c/wireless-routers/" />
+			<test url="http://www.linksys.com/us/shop-linksys/" />
+			<test url="http://www.linksys.com/us/support/" />
+			<test url="http://www.linksys.com/us/wireless-routers/c/ac-wireless-routers/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.linksys.com/_ui/linksys/img/brand/linksys-logo-white.svg" />
 
 
-	<securecookie host="^.*\.linksys\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.linksys\.com$" name="^_gat?$" /-->
+	<!--securecookie host="store\.linksys\.com$" name="^_hybris\.tenantID_$" /-->
+	<!--securecookie host="^community\.linksys\.com$" name="^LithiumUser(?:Info|Secure)$" /-->
+	<!--securecookie host="^support\.linksys\.com$" name="^(?:_hybris\.tenantID_$|BIGipServer|JSESSION$)" /-->
+	<!--securecookie host="^www\.linksys\.com$" name="^_hybris\.tenantID_$" /-->
+
+	<!--securecookie host="." name="." /-->
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^(?!www\.linksys\.com$)\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?linksys\.com/"
-		to="https://www.linksys.com/" />
+	<rule from="^http://cache-www\.linksys\.com/"
+		to="https://cache-www.linksys.com.s3.amazonaws.com/cache-www.linksys.com/" />
 
-	<rule from="^http://(community|store|support)\.linksys\.com/"
-		to="https://$1.linksys.com/" />
-
-	<rule from="^http://linksys-content\.vcommerce\.com/"
-		to="https://store.linksys.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

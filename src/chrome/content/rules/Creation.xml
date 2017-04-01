@@ -1,22 +1,42 @@
 <!--
-	Problematic subdomains:
+	Problematic hosts in *creation.co.uk:
 
-		- ^	(cert only matches www)
+		- (www.)? ᶜ
+		- managemyaccount ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- credit-card-asda-payments.creation.co.uk
+		- managemyaccount.creation.co.uk
+		- www.creation.co.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Creation">
+<ruleset name="Creation.co.uk (partial)">
 
-	<target host="creation.co.uk" />
-	<target host="*.creation.co.uk" />
+	<!--target host="creation.co.uk" /-->
+	<target host="apply.creation.co.uk" />
+	<target host="credit-card-asda-payments.creation.co.uk" />
+	<target host="myaccount.creation.co.uk" />
+	<!--target host="managemyaccount.creation.co.uk" /-->
+	<!--target host="www.creation.co.uk" /-->
 
 
-	<securecookie host="^.+\.creation\.co\.uk$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^credit-card-asda-payments\.creation\.co\.uk$" name="^(?:ASP\.NET_SessionId|PaymentSession)$" /-->
+	<!--securecookie host="^managemyaccount\.creation\.co\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^www\.creation\.co\.uk$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\." name="^_ga" />
+	<securecookie host="^(?!\.creation\.co\.uk$)." name="." />
 
 
-	<rule from="^https?://(?:www\.)?creation\.co\.uk/"
-		to="https://www.creation.co.uk/" />
-
-	<rule from="^http://(apply|credit-card-asda-payments|(?:manage)?myaccount)\.creation\.co\.uk/"
-		to="https://$1.creation.co.uk/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

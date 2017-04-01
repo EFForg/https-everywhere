@@ -1,4 +1,9 @@
 <!--
+	Other Stella & Dot rulesets:
+
+		- stelladotcdn.com.xml
+
+
 	CDN buckets:
 
 		- com.stelladot.static.s3.amazonaws.com
@@ -8,38 +13,96 @@
 			- s3static.stelladotcdn.com
 
 
-	Problematic domains:
+	Problematic hosts in *stelladot.com:
 
-		- s3static.stelladotcdn.com	(mismatched, CN: *.test.edgekey.net)
+		- blog ᵐ
+
+	ᵐ Mismatched
 
 
-	Fully covered domains:
+	Insecure cookies are set for these domains and hosts:
 
-		- stelladot.com subdomains:
+		- .stelladot.com
+		- lounge.stelladot.com
+		- www.stelladot.com
 
-			- (www.)
-			- lounge
-			- shop
-			- stylewatch
-			- stylistlounge
 
-		- s3static.stelladotcdn.com	(→ s3.amazonaws.com)
+	Mixed content:
+
+		- css on www from assets.stelladot.com ˢ
+
+		- Images, on:
+
+			- www from shop.stelladot.com ˢ
+			- www from s3static.stelladotcdn.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Stella &amp; Dot">
+<ruleset name="Stella Dot.com (partial)">
 
 	<target host="stelladot.com" />
-	<target host="*.stelladot.com" />
-	<target host="s3static.stelladotcdn.com" />
+	<target host="assets.stelladot.com" />
+	<target host="lounge.stelladot.com" />
+	<target host="shop.stelladot.com" />
+	<target host="stylewatch.stelladot.com" />
+	<target host="stylistlounge.stelladot.com" />
+	<target host="www.stelladot.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.stelladot\.com/$" /-->
+		<!--
+			Mixed css:
+					-->
+		<!--exclusion pattern="^http://www\.stelladot\.com/help$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?stelladot\.com/(?!/*(?:bootstrap/|bootstrap-select/|common/|favicon\.ico|images/|minify/|sdrand/|shop/account(?:create|login|forgot)(?:$|[?/])))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.stelladot.com/about/listings" />
+			<test url="http://www.stelladot.com/affiliates" />
+			<test url="http://www.stelladot.com/connect/stylist" />
+			<test url="http://www.stelladot.com/events" />
+			<test url="http://www.stelladot.com/help" />
+			<test url="http://www.stelladot.com/help/privacypolicy" />
+			<test url="http://www.stelladot.com/lastylist" />
+			<test url="http://www.stelladot.com/shop" />
+			<test url="http://www.stelladot.com/stylist" />
+			<test url="http://www.stelladot.com/trunkshow/faqs" />
+
+			<!--	-ve:
+					-->
+			<test url="http://stelladot.com/common/bootstrap-select/bootstrap-select.css" />
+			<test url="http://stelladot.com/common/bootstrap/css/bootstrap.css" />
+			<test url="http://stelladot.com/common/images/logo-color.svg" />
+			<test url="http://stelladot.com/common/minify/?f=/css/ts.css,/common/css/trunkshows/rsvpstatus.css,/common/css/trunkshows/invitations.css,/common/_compiled/css/trunkshows/invite-header.css,/common/_compiled/css/trunkshows/email-settings.css,/common/css/trunkshows/selectstyle.css" />
+			<test url="http://stelladot.com/common/webfonts/proximaNova/proximanova_regular_macroman/ProximaNova-Reg-webfont.ttf" />
+			<test url="http://www.stelladot.com/favicon.ico" />
+			<test url="http://www.stelladot.com/images/mobile-icon-bag.png" />
+			<test url="http://www.stelladot.com/sdrand/01558cca91a78138e3d95894437fbcd3ca18271c//common/css/ui-stelladot/jquery-ui-1.8.9.custom.css" />
+			<test url="http://www.stelladot.com/shop/account/create" />
+			<test url="http://www.stelladot.com/shop/account/forgot" />
+			<test url="http://www.stelladot.com/shop/account/login" /><!--	mixed images -->
+
+		<test url="http://assets.stelladot.com/website-assets/NA/site/corp/css/global-cms.css" />
+		<test url="http://shop.stelladot.com/style/media/catalog/product/cache/0/image/450x682/9df78eab33525d08d6e5fb8d27136e95/r/1/r157g_engravable_signet_ring_engraved_hero_5.jpg" />
 
 
-	<securecookie host=".*\.stelladot\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.stelladot\.com$" name="^(?:frontend|locale)$" /-->
+	<!--securecookie host="^(?:lounge|www)\.stelladot\.com$" name="^PHPSESSID$" /-->
+
+	<!--securecookie host="." name="." /-->
+	<securecookie host="." name="^optimizely" />
+	<securecookie host="^[^.sw]" name="." />
 
 
-	<rule from="^http://((?:(?:stylist)?lounge|shop|stylewatch|www)\.)?stelladot\.com/"
-		to="https://$1stelladot.com/" />
-
-	<rule from="^http://s3static\.stelladotcdn\.com/"
-		to="https://s3.amazonaws.com/com.stelladot.static/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

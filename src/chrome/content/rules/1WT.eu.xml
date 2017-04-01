@@ -1,34 +1,47 @@
 <!--
-	Problematic subdomains:
+	Problematic hosts in *1wt.eu:
 
-		- static	(works; expired 2013-07-21, self-signed, mismatched, CN: www.formilux.org)
-		- www		(mismatched, CN: demo.1wt.eu)
+		- ^ ¹
+		- demo ¹
+		- haproxy ¹ ² ³
+		- static ¹ ² ³
+		- www ¹ ²
 
-
-	Fully covered subdomains:
-
-		- (www.)	(www → ^)
-		- demo
-		- static	(→ ^)
+	¹ Expired
+	² Mismatched
+	³ Self-signed
 
 
 	Mixed content:
 
-		- Images, on ^ from:
-
-			- static *
-			- www6
+		- Images on ^ from static.1wt.eu *
+		- Image on ^ from www6.1wt.eu
 
 	* Secured by us
 
 -->
-<ruleset name="1WT.eu">
+<ruleset name="1WT.eu (partial)" default_off="expired">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="1wt.eu" />
-	<target host="*.1wt.eu" />
+	<target host="demo.1wt.eu" />
+
+	<!--	Complications:
+				-->
+	<target host="static.1wt.eu" />
+	<target host="www.1wt.eu" />
 
 
-	<rule from="^http://(?:(demo\.)|static\.|www\.)?1wt\.eu/"
-		to="https://$11wt.eu/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^haproxy\.1wt\.eu$" name="^sid$" /-->
+
+
+	<rule from="^http://(?:static|www)\.1wt\.eu/"
+		to="https://1wt.eu/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

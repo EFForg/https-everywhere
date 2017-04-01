@@ -8,32 +8,77 @@
 		- viber.kayako.com
 
 			- helpme.viber.com
-			- support.viber.com
 
 
-	Problematic sudomains:
+	Nonfunctional hosts in *viber.com;
 
-		- ^		(times out)
+		- chats ʰ
+		- www.chats ᵈ
+
+	ᵈ Dropped
+	ʰ Redirects to http
+
+
+	Problematic hosts in *viber.com:
+
+		- ^ ʳ
 		- kayako.cdn	(cloudfront)
 		- helpme *
-		- support *
 
 	* Shows cishelp.kayako.com; mismatched. CN: *.kayako.com
+	ʳ Refused
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .viber.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Viber (partial)">
+<ruleset name="Viber.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="account.viber.com" />
+
+	<target host="chats.cdn.viber.com" />
+	<target host="pg-vb.cdn.viber.com" />
+	<target host="share.cdn.viber.com" />
+	<target host="vbd.cdn.viber.com" />
+
+	<target host="support.viber.com" />
+	<target host="www.viber.com" />
+
+		<test url="http://chats.cdn.viber.com/static/20160210113655/images/ddc6272.png" />
+		<test url="http://pg-vb.cdn.viber.com/icons/23983082a01646372324c3bfa57abed85bc4271a5a29523337ef5cc76ed2abb7.jpg" />
+		<test url="http://share.cdn.viber.com/pg_download?id=23983082a01646372324c3bfa57abed85bc4271a5a29523337ef5cc76ed2abb7&amp;filetype=jpg&amp;type=icon" />
+		<test url="http://vbd.cdn.viber.com/sites/default/files/cdn/css/https/css_lhZ2r95cVv6XPZeCq2neqJ2WkJfOx4FGwB5NFslhk94.css" />
+
+	<!--	Complications:
+				-->
 	<target host="viber.com" />
-	<target host="*.viber.com" />
+	<target host="helpme.viber.com" />
 
 
-	<rule from="^http://(?:www\.)?viber\.com/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.viber\.com$" name="^language$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://viber\.com/"
 		to="https://www.viber.com/" />
 
 	<!--rule from="^http://kayako\.cdn\.viber\.com/"
 		to="https://d2jlvwphuziop7.cloudfront.net/" /-->
 
-	<rule from="^http://(?:helpme|support)\.viber\.com/"
+	<rule from="^http://helpme\.viber\.com/"
 		to="https://viber.kayako.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

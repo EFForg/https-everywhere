@@ -1,22 +1,33 @@
 <!--
-	\w\w in \w\w.search.etargetnet.com: country codes
+	Other Etarget rulesets:
+
+		- Etarget.hu.xml
+		- Etarget.ro.xml
+		- Etarget.sk.xml
+		- Etarget_net.com.xml
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.etarget.cz
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Etarget (partial)">
+<ruleset name="Etarget.cz">
 
-	<target host="etarget.*" />
-	<target host="www.etarget.*" />
-	<target host="search.etargetnet.com" />
-	<target host="*.search.etargetnet.com" />
+	<target host="etarget.cz" />
+	<target host="www.etarget.cz" />
 
 
-	<securecookie host="^(?:www\.)?etarget\.\w\w$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.etarget\.cz$" name="^SESS$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(www\.)?etarget\.(cz|hu|ro|sk)/"
-		to="https://$1etarget.$2/" />
-
-	<rule from="^http://(\w\w\.)?search\.etargetnet\.com/"
-		to="https://$1search.etargetnet.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

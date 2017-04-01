@@ -1,0 +1,98 @@
+<!--
+	Wealden District Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *wealden.gov.uk:
+
+		- communitystrategy ⁴
+
+	⁴ 404
+
+
+	Problematic hosts in *wealden.gov.uk:
+
+		- ^ ᵐ
+		- consult ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.wealden.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images on secure from www.wealden.gov.uk ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Wealden.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="secure.wealden.gov.uk" />
+	<target host="www.wealden.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="wealden.gov.uk" />
+	<target host="consult.wealden.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.wealden\.gov\.uk/(?:aelive\.aspx\?sitearea=&amp;pagename=requestpassword|home/home\.aspx)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?wealden\.gov\.uk/(?!/*(?:(?:Wealden)?Login\.aspx|favicon\.ico|web/StyleSheets/|web/multimediafiles/|Upload/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.wealden.gov.uk/DisplayAllEvents.aspx" />
+			<test url="http://www.wealden.gov.uk/Wealden/Leisure/Leisure.aspx" />
+			<test url="http://www.wealden.gov.uk/Wealden/Site_Map.aspx" />
+			<test url="http://www.wealden.gov.uk/aelive.aspx?sitearea=&amp;pagename=requestpassword" />
+			<test url="http://www.wealden.gov.uk/council.aspx" />
+			<test url="http://www.wealden.gov.uk/home/home.aspx" />
+			<test url="http://www.wealden.gov.uk/housing" />
+
+			<!--	-ve:
+					-->
+			<test url="http://wealden.gov.uk/Upload/home-icon.png" />
+			<test url="http://www.wealden.gov.uk/Login.aspx" />
+			<test url="http://www.wealden.gov.uk/WealdenLogin.aspx" />
+			<test url="http://www.wealden.gov.uk/favicon.ico" />
+			<test url="http://www.wealden.gov.uk/web/StyleSheets/print_tube.css" />
+			<test url="http://www.wealden.gov.uk/web/multimediafiles/cleanforthequeen_med_land.jpg" />
+
+		<!--	Mixed images:
+					-->
+		<!--test url="http://secure.wealden.gov.uk/WealdenPortal/AboutWealden247.aspx" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.wealden\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^(?!www\.)\w" name="." />
+
+
+	<rule from="^http://wealden\.gov\.uk/"
+		to="https://www.wealden.gov.uk/" />
+
+	<rule from="^http://consult\.wealden\.gov\.uk/"
+		to="https://wealden-consult.objective.co.uk/" />
+
+		<test url="http://consult.wealden.gov.uk/portal/contact_us" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

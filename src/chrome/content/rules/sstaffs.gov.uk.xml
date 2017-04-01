@@ -1,0 +1,53 @@
+<!--
+	South Staffordshire District Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *sstaffs.gov.uk:
+
+		- (www.)? ᵈ
+		- lsp ᵈ
+		- www2 ᵈ
+
+	ᵈ Dropped
+
+
+	Insecure cookies are set for these hosts:
+
+		- services.sstaffs.gov.uk
+
+
+	Mixed content:
+
+		- Images on services from www.sstaffs.gov.uk ᵈ
+
+	ᵈ Unsecurable <= dropped
+
+-->
+<ruleset name="SStaffs.gov.uk (partial)">
+
+	<target host="apps.sstaffs.gov.uk" />
+	<target host="licensing.sstaffs.gov.uk" />
+	<target host="services.sstaffs.gov.uk" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://services.sstaffs.gov.uk/cmis/Committees.aspx" /-->
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://apps.sstaffs.gov.uk/sscwebviewer" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^services\.sstaffs\.gov\.uk$" name="^(?:\.ASPXANONYMOUS|ASP\.NET_SessionId|language)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

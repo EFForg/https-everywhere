@@ -1,20 +1,18 @@
 <!--
-	For rules causing false/broken MCB, see Samsung-falsemixed.xml.
-
-
 	Other Samsung rulesets:
 
 		- AllShare_Play.xml
-		- ChatON.xml
 		- Samsung_Apps.xml
+		- Samsung_CN.xml
 		- Samsung_Direct.xml
-		- Samsung_LFD.xml
+		- Samsung_Indiaestore.xml
+		- Samsung_Fire.xml
+		- Samsung_Knox.xml
 		- Samsung_mySingle.xml
+		- Samsung_Sem.xml
 		- Samsung_Techwin.xml
 
-
 	samsungbarbarian.appspot.com
-
 
 	Nonfunctional domains:
 
@@ -28,57 +26,42 @@
 
 	* Times out
 
-
 	Problematic domains:
-
-		- (www.)samsung.cn	(cert only matches samsung.com.cn)
-
+	
 		- samsung.com subdomains:
 
-			- ^		(times out)
+			- ^		(Too many redirects)
 			- chaton	(akamai)
 			- nmetrics	(mismatched, CN: *.112.2o7.net)
 			- shop.us	(some paths redirect to http)
-
+			- smm	(mismatched)
+			- stg-account	(MCB at https://stg-account.samsung.com/membership/service/getServieInfoList.do and break the auto recirect for https://stg-account.samsung.com/membership/signUp.do and so on.)
 
 	Partially covered samsung.com subdomains:
-
+		- apps	(redirects to main page of sumsung by country)
 		- opensource	(at least some pages redirect to http)
 		- shop.us	(display cart requests redirect to http)
 
-
 	Fully covered domains:
-
-		- samsung.cn subdomains:
-
-			- (www.)	(→ samsung.com.cn)
-			- content
-			- img.content
-			- pub.content
 
 		- samsung.com subdomains:
 
 			- (www.)	(^ → www)
 			- account
 			- allshareplay
-			- apps
-			- chaton	(→ web.samsungchaton.com)
 			- content
-			- img.content
-			- pub.content
 			- findmymobile
-			- findmymobile2
 			- images
 			- nmetrics	(→ samsung-com.112.2o7.net)
 			- smetrics
 			- secureus
-			- smm
-			- stg-account
 			- support-cn
 			- us
 
-		- (www.)samsung.com.cn
+	Insecure cookies are set for these domains:
 
+		- .samsung.com
+		- apps.samsung.com
 
 	Mixed content:
 
@@ -86,44 +69,104 @@
 
 	* Secured by us
 
-
-	NB: We secure all resources, and thus
-	-falsemixed should be merged for Ffx 24.
-
+	Not exist:
+		allshareplay.samsung.com
+		chaton.samsung.com
+		img.content.samsung.com
+		pub.content.samsung.com
+		findmymobile2.samsung.com
+		web.samsungchaton.com
 -->
-<ruleset name="Samsung (partial)">
 
-	<target host="samsung.cn" />
-	<target host="*.samsung.cn" />
-	<target host="samsung.com" />
-	<target host="*.samsung.com" />
-		<!--exclusion pattern="^http://opensource\.samsung\.com/+($|\?|community/(ajax/|community/|community\.do|guest/|proj/)|iframeMain\.do|reception/receptionSub\.do|reception\.do)" /-->
-		<exclusion pattern="^http://opensource\.samsung\.com/(?!community/(?:css/|images/|img2?/|img_model/|js2?/|org\.ditchnet\.taglib/|repository/|scmShowFileRevision(?:$|\?)|stylesheet/|usageStatistics\.do|wikiTreeMessage(?:$|\?))|css/|img/|js/)" />
-		<exclusion pattern="^http://shop\.us\.samsung\.com/store\?[aA]ction=[dD]isplay[dD][rR][cC]art[sS]ummary" />
-	<target host="samsung.com.cn" />
-	<target host="www.samsung.com.cn" />
+<ruleset name="Samsung.com (partial)">
 
-
-	<securecookie host="^\.samsung\.cn$" name=".+" />
-	<securecookie host="^(?!shop\.us\.).*\.samsung\.com$" name=".+" />
-
-
-	<rule from="^http://(img\.|pub\.)?content\.samsumg\.cn/"
-		to="https://$1content.samsung.cn/" />
-
-	<rule from="^http://(?:www\.)?samsung\.com/"
-		to="https://www.samsung.com/" />
-
-	<rule from="^http://chaton\.samsung\.com/"
-		to="https://web.samsungchaton.com/" />
-
-	<rule from="^http://nmetrics\.samsung\.com/"
-		to="https://samsung-com.112.2o7.net/" />
-
-	<rule from="^http://((?:stg-)?account|allshareplay|apps|(?:img\.|pub\.)?content|findmymobile2?|images|opensource|secureus|smetrics|smm|support-cn|us|shop\.us)\.samsung\.com/"
+	<target host="account.samsung.com" />
+		<test url="http://account.samsung.com/membership/service/getServieInfoList.do/" />
+	<target host="cdn.samsung.com" />
+		<test url="http://cdn.samsung.com/common/next/css/apps/mobile/barshade.css" />
+	<target host="displaysolutions.samsung.com" />
+		<test url="http://displaysolutions.samsung.com/static/css/base.css" />
+	<target host="help.content.samsung.com" />
+		<test url="http://help.content.samsung.com/csweb/main/main.do" />
+	<target host="findmymobile.samsung.com" />
+		<test url="http://findmymobile.samsung.com/img/favicon02.ico/" />
+	<target host="images.samsung.com" />
+		<test url="http://images.samsung.com/" />
+	<target host="link.samsung.com" />
+		<test url="http://link.samsung.com/" />
+	<target host="secureus.samsung.com" />
+		<test url="http://secureus.samsung.com/us/mobile/galaxy-tab/SM-T810NZWEXAR" />
+	<target host="smetrics.samsung.com" />
+		<test url="http://smetrics.samsung.com/" />
+	<target host="support-cn.samsung.com" />
+		<test url="http://support-cn.samsung.com/cn/common/css/local_global_common.css" />
+	<target host="us.samsung.com" />
+		<test url="http://us.samsung.com/us/index.jsp" />
+	<target host="shop.us.samsung.com" />
+		<test url="http://shop.us.samsung.com/store?Action=DisplayDrcartSummary" />
+	
+	<rule from="^http://(account|cdn|displaysolutions|help\.content|findmymobile|images|link|secureus|smetrics|support-cn|us|shop\.us)\.samsung\.com/"
 		to="https://$1.samsung.com/" />
 
-	<rule from="^http://(www\.)?samsung\.(?:com\.)?cn/"
-		to="https://$1samsung.com.cn/" />
 
+	<target host="nmetrics.samsung.com" />
+	<rule from="^http://nmetrics\.samsung\.com/"
+		to="https://samsung-com.112.2o7.net/" />
+		<test url="http://nmetrics.samsung.com/b/ss/sssamsung4in" />
+
+
+	<target host="opensource.samsung.com" />
+
+	<rule from="^http://opensource\.samsung\.com/" to="https://opensource.samsung.com/" />
+
+	<exclusion pattern="^http://opensource\.samsung\.com/(ajax|community\.do|images|org\.ditchnet\.taglib|popup|scmShowFileRevision|stylesheet|usageStatistics|wikiTreeMessage)?$" />
+		<test url="http://opensource.samsung.com/" />
+		<test url="http://opensource.samsung.com/ajax" />
+		<test url="http://opensource.samsung.com/community.do" />
+		<test url="http://opensource.samsung.com/images" />
+		<test url="http://opensource.samsung.com/org.ditchnet.taglib" />
+		<test url="http://opensource.samsung.com/popup" />
+		<test url="http://opensource.samsung.com/scmShowFileRevision" />
+		<test url="http://opensource.samsung.com/stylesheet" />
+		<test url="http://opensource.samsung.com/usageStatistics" />
+		<test url="http://opensource.samsung.com/wikiTreeMessage" />	
+
+	<exclusion pattern="^http://opensource\.samsung\.com/reception(\.do)?/$" />
+		<test url="http://opensource.samsung.com/reception/" />
+		<test url="http://opensource.samsung.com/reception.do/" />
+
+		<!--	To https	-->
+		<test url="http://opensource.samsung.com/community/" />
+		<test url="http://opensource.samsung.com/css/" />
+		<test url="http://opensource.samsung.com/css/genUsersDefault.css" />
+		<test url="http://opensource.samsung.com/img/favicon_ico02.ico" />
+		<test url="http://opensource.samsung.com/img/" />
+		<test url="http://opensource.samsung.com/img2/" />
+		<test url="http://opensource.samsung.com/img_model" />
+		<test url="http://opensource.samsung.com/js" />
+		<test url="http://opensource.samsung.com/js2" />
+		<test url="http://opensource.samsung.com/reception/receptionSub" />
+		<test url="http://opensource.samsung.com/reception/receptionSub.do" />
+		<test url="http://opensource.samsung.com/reception/receptionSub.do?method=search&amp;searchValue=SM-N9005" />
+
+
+	<target host="www.samsung.com" />
+
+	<exclusion pattern="^http://www\.samsung\.com/$" />
+
+	<!-- Support page FAQ and other features are broken. Also, their i18n is a lie.
+		Github issue: https://github.com/EFForg/https-everywhere/issues/309 -->
+	<!--	MCB : https://www.samsung.com/cn|tw|us|.*/apps/mobile/	-->	
+
+	<rule from="^http://www\.samsung\.com/(.+)\.(css|gif|ico|js|png|svg|woff)$"
+		to="https://www.samsung.com/$1.$2" />
+		<test url="http://www.samsung.com/cn/common/css/home.css" />
+		<test url="http://www.samsung.com/common/next/css/navigation.css" />
+		<test url="http://www.samsung.com/common/img/bg-navigation.gif" />
+		<test url="http://www.samsung.com/common/next/img/favicon.ico" />
+		<test url="http://www.samsung.com/common/js/dist/smg.new.common.min.js" />
+		<test url="http://www.samsung.com/common/img/nav-ir.png" />
+		<test url="http://www.samsung.com/common/img/ico-search.svg" />
+		<test url="http://www.samsung.com/common/next/font/samsungIcon.woff" />
+	
 </ruleset>

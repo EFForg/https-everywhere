@@ -1,30 +1,92 @@
 <!--
-	Problematic subdomains:
+	For rules subject to CAcert, see CCC.de-cacert.xml.
 
-		- ^			(cert only matches www)
-		- chaosradio *
-		- blog.chaosradio *
-		- dasalte		(revoked)
-		- ds			(different data)
-		- static.media		(works; mismatched, CN: media.koeln.ccc.de)
+	Other CCC rulesets:
 
-	* Works; mismatched, CN: wiki.chaosradio.ccc.de
+		- C3VOC.de.xml
+		- CCCv.de.xml
+
+
+	Nonfunctional hosts in *ccc.de:
+
+		- dasalte ¹
+		- halfnarp.events ²
+		- streaming.media ²
+		- wahlcomputer ²
+
+	¹ Shows wuppa
+	² Refused
+
+
+	Problematic hosts in *ccc.de:
+
+		- ds ¹
+		- dsrad ¹
+		- berlin.ftp.media ²
+		- wuppa ¹
+
+	¹ Expired
+	² Works; mismatched, CN: media.koeln.ccc.de
+
+
+	Insecure cookies are set for these hosts:
+
+		- frab.camp.ccc.de
+		- hannover.ccc.de
+		- tickets.events.ccc.de
 
 -->
-<ruleset name="ccc.de (CAcert)" platform="cacert">
+<ruleset name="ccc.de (partial)">
 
 	<target host="ccc.de" />
-	<target host="*.ccc.de" />
-		<exclusion pattern="^http://(?:(?:blog\.)?chaosradio|desalte|ds)\.ccc\.de/" />
+	<target host="events.ccc.de" />
+	<target host="rad1o.badge.events.ccc.de" />
+	<target host="frab.camp.ccc.de" />
+	<target host="tickets.events.ccc.de" />
+	<target host="media.ccc.de" />
+	<target host="abmahnbeantworter.ccc.de" />
+
+	<target host="api.media.ccc.de" />
+	<target host="cdn.media.ccc.de" />
+	<target host="static.media.ccc.de" />
+	<target host="streaming.media.ccc.de" />
+
+	<target host="ftp.darmstadt.ccc.de" />
+
+	<target host="www.ccc.de" />
+
+	<!--target host="*.ccc.de" /-->
+
+		<!--exclusion pattern="^http://(?:desalte|ds|dsrad|wahlcomputer|wuppa)\.ccc\.de/" /-->
+
+			<!--test url="http://desalte.ccc.de/" /-->
+			<!--test url="http://ds.ccc.de/" /-->
+			<!--test url="http://dsrad.ccc.de/" /-->
+			<!--test url="http://wahlcomputer.ccc.de/" /-->
+			<!--test url="http://wuppa.ccc.de/" /-->
+
+		<!--test url="http://blog.chaosradio.ccc.de/" /-->
+		<!--test url="http://wiki.chaosradio.ccc.de/" /-->
+		<!--test url="http://www.hamburg.ccc.de/" /-->
+		<!--test url="http://web.jabber.ccc.de/" /-->
+		<!--test url="http://media.ccc.de/" /-->
+		<!--test url="http://api.media.ccc.de/" /-->
+		<!--test url="http://cdn.media.ccc.de/" /-->
+		<!--test url="http://static.media.ccc.de/" /-->
+		<!--test url="http://ffhh.pads.ccc.de/" /-->
 
 
-	<rule from="^http://ccc\.de/"
-		to="https://www.ccc.de/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^frab\.camp\.ccc\.de$" name="^_frab_session$" /-->
+	<!--securecookie host="^tickets\.events\.ccc\.de$" name="^csrftoken$" /-->
+	<!--securecookie host="^hannover\.ccc\.de$" name="^(?:_gitlab_session|request_method)$" /-->
 
-	<rule from="^http://static\.media\.ccc\.de/"
-		to="https://media.ccc.de/" />
+	<!--securecookie host="^(?:svn\.berlin|tickets\.events|hannover)\.ccc\.de$" name=".+" /-->
+	<securecookie host="^\w" name="." />
 
-	<rule from="^http://([^/:@\.]+)\.ccc\.de/"
-		to="https://$1.ccc.de/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

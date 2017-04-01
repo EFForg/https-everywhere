@@ -1,19 +1,55 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *puppetlabs.com:
 
-		- info	(redirects to app-h.marketo.com; mismatched, CN: *.marketo.com)
+		- info *
+
+	* Marketo
 
 -->
-<ruleset name="Puppet Labs">
+<ruleset name="Puppet Labs.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="puppetlabs.com" />
-	<target host="*.puppetlabs.com" />
+	<target host="ask.puppetlabs.com" />
+	<target host="docs.puppetlabs.com" />
+	<target host="forge.puppetlabs.com" />
+	<target host="forgeapi.puppetlabs.com" />
+	<target host="forgestaging.puppetlabs.com" />
+	<target host="forgestagingapi.puppetlabs.com" />
+	<target host="projects.puppetlabs.com" />
+	<target host="tickets.puppetlabs.com" />
+	<target host="www.puppetlabs.com" />
+
+	<!--	Special cases:
+				-->
+	<target host="info.puppetlabs.com" />
+
+		<exclusion pattern="^http://info\.puppetlabs\.com/(?!css/|images/|js/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://info.puppetlabs.com/download-puppet-open-source.html" />
+			<test url="http://info.puppetlabs.com/vmware-integration-notification.html" />
+			<test url="http://info.puppetlabs.com/webinars.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://info.puppetlabs.com/css/mktLPSupport.css" />
+			<test url="http://info.puppetlabs.com/rs/puppetlabs/images/logo_lg.png" />
 
 
-	<rule from="^http://((?:docs|forge|projects|www)\.)?puppetlabs\.com/"
-		to="https://$1puppetlabs.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^tickets\.puppetlabs\.com$" name="^(JSESSIONID|atlassian\.xsrf\.token)$" /-->
 
-	<rule from="^http://info\.puppetlabs\.com/(cs|image|r)s/"
-		to="https://na-h.puppetlabs.com/$1s/" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://info\.puppetlabs\.com/"
+		to="https://na-h.marketo.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

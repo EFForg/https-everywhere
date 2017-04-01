@@ -1,5 +1,5 @@
 <!--
-	For other Attachmate Group coverage, see Attachmate-Group.xml.
+	For other Micro Focus coverage, see Micro_Focus.com.xml.
 
 
 	CDN buckets:
@@ -8,39 +8,46 @@
 		- suse-studio-users.1598176.n2.nabble.com
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *suse.com:
 
-		- users.suse.com	(refused)
-		- blog.susestudio.com	(interrupted; hosted on google)
+		- users ʳ
+
+	ʳ Refused
 
 
-	Problematic domains:
+	^suse.com: Refused
 
-		- www.expandedsupport.com	(cert only matches ^expandedsupport.com)
-		^	(times out)
+
+	Insecure cookies are set for these domains:
+
+		- .suse.com
 
 -->
-<ruleset name="SUSE (partial)">
+<ruleset name="SUSE.com (partial)">
 
-	<target host="expandedsupport.com" />
-	<target host="www.expandedsupport.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="bugzilla.suse.com" />
+	<target host="forums.suse.com" />
+	<target host="hackweek.suse.com" />
+	<target host="www.suse.com" />
+
+	<!--	Complications:
+				-->
 	<target host="suse.com" />
-	<target host="*.suse.com" />
-	<target host="susestudio.com" />
-	<target host="*.susestudio.com" />
 
 
-	<securecookie host="^expandedsupport\.com$" name=".+" />
-	<securecookie host="^\.?suse(?:studio)?\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.suse\.com$" name="^(?:ZNPCQ003-\d+|bb_(?:lastactivity|lastvisit|session_hash)|lb_suse)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:www\.)?expandedsupport\.com/"
-		to="https://expandedsupport.com/" />
-
-	<rule from="^https?://(?:www\.)?suse\.com/"
+	<rule from="^http://suse\.com/"
 		to="https://www.suse.com/" />
 
-	<rule from="^http://(www\.)?susestudio\.com/"
-		to="https://$1susestudio.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

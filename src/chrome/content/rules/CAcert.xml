@@ -1,13 +1,28 @@
 <ruleset name="CACert.org (CAcert)" platform="cacert">
-  <target host="cacert.org" />
-  <target host="*.cacert.org" />
+	<target host=             "cacert.org" />
+	<target host=        "blog.cacert.org" />
+	<target host=        "bugs.cacert.org" />
+	<target host=        "l10n.cacert.org" />
+	<target host="translations.cacert.org" />
+	<target host=        "wiki.cacert.org" />
+	<target host=         "www.cacert.org" />
+	<target host=             "cacert.net" />
+	<target host=         "www.cacert.net" />
+	<target host=             "cacert.com" />
+	<target host=         "www.cacert.com" />
 
-  <!-- this currently errs on the side of not breaking things over security -->
-  <exclusion pattern="\.crt" />
-  <exclusion pattern="\.crl" />
-  <exclusion pattern="ocsp\." />
-  <exclusion pattern="^http://cats\.cacert\.org/"/>
+	<securecookie host="^\w+\.cacert\.org$" name=".+" />
 
-  <rule from="^http://cacert\.org/" to="https://www.cacert.org/"/>
-  <rule from="^http://([^/:@\.]+)\.cacert\.org/" to="https://$1.cacert.org/"/>
+	<!-- this currently errs on the side of not breaking things over security -->
+	<exclusion pattern="\.crt" />
+	<test url="http://www.cacert.org/certs/root.crt" />
+	<exclusion pattern="\.crl" />
+	<test url="http://crl.cacert.org/revoke.crl" />
+	<!-- client certificate required, but ruleset checker doesn't have any -->
+	<!--   cats.cacert.org -->
+	<!--   ocsp.cacert.org -->
+	<!-- secure.cacert.org -->
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

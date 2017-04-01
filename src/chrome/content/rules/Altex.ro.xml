@@ -1,0 +1,60 @@
+<!--
+	CDN buckets:
+
+		- d2qpxedcu5ji30.cloudfront.net ← cdn.altex.ro
+
+
+	Nonfunctional hosts in *altex.ro:
+
+		- admin *
+
+	* Plaintext reply
+
+
+	Problematic hosts in *altex.ro:
+
+		- cdn *
+
+	* Cloudfront/mismatched
+
+
+	Mixed content:
+
+		- css on www from cdn.altex.ro *
+
+		- Images, on:
+		
+			- www from admin.altex.ro
+			- www from cdn.altex.ro *
+
+	* Secured by us
+
+-->
+<ruleset name="Altex.ro (false MCB)" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="altex.ro" />
+	<target host="www.altex.ro" />
+
+	<!--	Complications:
+				-->
+	<target host="cdn.altex.ro" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.altex\.ro$" name="^frontend$" /-->
+	<!--securecookie host="^www\.altex\.ro$" name="^uid$" /-->
+
+	<securecookie host="^\." name="^_gat$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://cdn\.altex\.ro/"
+		to="https://d2qpxedcu5ji30.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

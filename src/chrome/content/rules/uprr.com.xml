@@ -1,0 +1,122 @@
+<!--
+	For rules causing false/broken MCB, see uprr.com-falsemixed.xml.
+
+	For other Union Pacific Railroad Company coverage, see up.com.xml.
+
+
+	Problematic hosts in *uprr.com:
+
+		- ^ ʳ
+		- v0g.prod-e.web.apps ᵐ
+		- dx01.my ˣ
+
+		- v007.ax2600ab.omdx ᵐ
+		- v015.ax2600ab.omdx ᵐ
+		- v034.ax2600ab.omdx ᵐ
+
+		- v007.ax2600ab.omhq ᵐ
+		- v034.ax2600ab.omhq ᵐ
+		- v084.ax2600ab.omhq ᵐ
+		- streamline ʳ
+
+	ᵐ Mismatched
+	ʳ Refused, preemptable redirect
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .uprr.com
+		- suppliers.www.uprr.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+
+			- dx01.my from my.uprr.com ˢ
+			- dx01.my from c01.my.uprr.com ˢ
+
+		- Images, on:
+
+			- dx01.my from my.uprr.com ˢ
+			- dx01.my from c01.my.uprr.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="UPrr.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="e.uprr.com" />
+	<target host="my.uprr.com" />
+
+	<target host="c01.my.uprr.com" />
+	<target host="c02.my.uprr.com" />
+	<!--target host="dx01.my.uprr.com" /-->
+
+	<target host="www.streamline.uprr.com" />
+	<target host="www.uprr.com" />
+
+	<target host="employees.www.uprr.com" />
+	<target host="foreignrr.www.uprr.com" />
+	<target host="jobs.www.uprr.com" />
+	<target host="leaves.www.uprr.com" />
+	<target host="retirees.www.uprr.com" />
+	<target host="sapext.www.uprr.com" />
+	<target host="suppliers.www.uprr.com" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://suppliers.www.uprr.com/srmt/registration/index.cfm" /-->
+
+	<!--	Complications:
+				-->
+	<target host="uprr.com" />
+	<target host="v0g.prod-e.web.apps.uprr.com" />
+
+	<target host="v007.ax2600ab.omdx.uprr.com" />
+	<target host="v015.ax2600ab.omdx.uprr.com" />
+	<target host="v034.ax2600ab.omdx.uprr.com" />
+
+	<target host="v007.ax2600ab.omhq.uprr.com" />
+	<target host="v034.ax2600ab.omhq.uprr.com" />
+	<target host="v084.ax2600ab.omhq.uprr.com" />
+
+	<target host="streamline.uprr.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.uprr\.com$" name="^(?:SMDOMINODATA|wt_up)$" /-->
+	<!--securecookie host="^suppliers\.www\.uprr\.com$" name="^(?:CFID|CFTOKEN|JSESSIONID|UP_CFCLUSTER)$" /-->
+
+	<securecookie host="^\." name="^wt_up$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://(streamline\.)?uprr\.com/"
+		to="https://www.$1uprr.com/" />
+
+	<rule from="^http://v0g\.prod-e\.web\.apps\.uprr\.com/"
+		to="https://www.up.com/" />
+
+	<rule from="^http://v007\.ax2600ab\.om(?:dx|hq)\.uprr\.com/"
+		to="https://www.upds.com/" />
+
+	<rule from="^http://v015\.ax2600ab\.omdx\.uprr\.com/"
+		to="https://www.unionpacific.jobs/" />
+
+	<rule from="^http://v034\.ax2600ab\.om(?:dx|hq)\.uprr\.com/"
+		to="https://www.unionpacific.jobs/" />
+
+	<rule from="^http://v084\.ax2600ab\.omhq\.uprr\.com/"
+		to="https://www.streamline.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

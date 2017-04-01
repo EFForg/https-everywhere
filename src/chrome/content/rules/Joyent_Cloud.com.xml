@@ -1,0 +1,43 @@
+<!--
+	For other Joyent coverage, see Joyent.xml.
+
+
+	Nonfunctional hosts in *joyentcloud.com:
+
+		- ^ ¹
+		- staging ²
+
+	¹ Refused
+	² Plaintext reply
+
+
+	Problematic hosts in *joyentcloud.com:
+
+		- wiki *
+
+	* Mismatched
+
+-->
+<ruleset name="Joyent Cloud.com (partial)">
+
+	<target host="*.joyentcloud.com"/>
+
+		<test url="http://api.joyentcloud.com/" />
+		<test url="http://api.joyentcloud.com//" />
+		<test url="http://us-west-1.api.joyentcloud.com/" />
+		<test url="http://my.joyentcloud.com/" />
+		<test url="http://www.joyentcloud.com/" />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://www\.joyentcloud\.com/+"
+		to="https://www.joyent.com/" />
+
+		<test url="http://www.joyentcloud.com/?" />
+
+	<rule from="^http://((?:[\w-]+\.)?api|my)\.joyentcloud\.com/"
+		to="https://$1.joyentcloud.com/"/>
+
+</ruleset>

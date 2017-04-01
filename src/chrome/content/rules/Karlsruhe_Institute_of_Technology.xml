@@ -1,19 +1,109 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://uni-karlsruhe.de/ => https://www.uni-karlsruhe.de/: (6, 'Could not resolve host: uni-karlsruhe.de')
 	For problematic rules, see Karlsruhe_Institute_of_Technology-problematic.xml.
 
+
+	Nonfunctional domains:
+
+		- rz.uni-karlsruhe.de *
+
+	* Refused
+
+
+	Problematic domains:
+
+		- kit.edu subdomains:
+
+			- ^ ¹
+			- bibliothek ¹
+			- blog.bibliothek ²
+			- (www.)cs ³
+			- informatik ¹
+			- innovation ¹
+			- lists ¹
+			- ptka ¹
+			- rsm ¹
+			- scc ¹
+
+		- www.rz.uni-karlsruhe.de ⁴
+
+	¹ Cert only matches www.foo
+	² Mixed css
+	³ Mismatched, CN: www.informatik.kit.edu
+	⁴ Mismatched, CN: www.scc.kit.edu
+
+
+	Partially covered domains:
+
+		- blog.bibliothek.kit.edu *
+
+	* Avoiding broken MCB
+
+
+	Fully covered domains:
+
+		- kit.edu subdomains:
+
+			- (www.)		(^ → www)
+			- (www.)bibliothek	(^ → www)
+			- (www.)cs		(→ www.informatik)
+			- (www.)informatik	(^ → www)
+			- (www.)innovation	(^ → www)
+			- intranet
+			- (www.)lists		(^ → www)
+			- (www.)ptka		(^ → www)
+			- (www.)rsm		(^ → www)
+			- (www.)scc		(^ → www)
+			- wsm10.scc
+			- idp.scc
+			- stadium
+			- ilias.stadium
+
+		- uni-karlsruhe.de subdomains:
+
+			- mensa.akk
+			- www.rz	(→ www.scc.kit.edu)
+			- www.ubka
+
+
+	Mixed content:
+
+		- css on blog.bibliothek from $self ¹
+
+		- Images, on:
+
+			- blog.bibliothek from $self ¹
+			- blog.bibliothek from www.ubka.uni-karlsruhe.de ¹
+			- www.informatik from www-gf.ira.uka.de ²
+			- www.ptka from wsm10.scc ¹
+			- www from $self ¹
+
+			- www.ubka.uni-karlsruhe.de from $self ¹
+
+		- Bug on www.bibliothek from dbspixel.hbz-nrw.de ¹
+
+	¹ Secured by us
+	² Unsecurable <= refused
+
 -->
-<ruleset name="Karlsruhe Institute of Technology (partial)">
+<ruleset name="Karlsruhe Institute of Technology (partial)" default_off='failed ruleset test'>
 
 	<target host="kit.edu" />
 	<target host="*.kit.edu" />
-	<target host="www.*.kit.edu" />
-	<target host="idp.scc.kit.edu" />
-	<target host="ilias.stadium.kit.edu" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://blog\.bibliothek\.kit\.edu/+(?!\w+/wp-(?:content|includes)/)" />
+
 	<target host="uni-karlsruhe.de" />
 	<target host="*.uni-karlsruhe.de" />
-	<target host="www.*.uni-karlsruhe.de" />
-	<target host="mensa.akk.uni-karlsruhe.de" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.bibliothek|www\.informatik|www\.innovation|www\.intl|www\.ptka|www\.rsm|www\.scc|www)\.kit\.edu$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^wsm10\.scc\.kit\.edu$" name="^ASPSESSIONID[A-Z]{8}$" /-->
 
 	<securecookie host="^.+\.kit\.edu$" name=".+" />
 
@@ -21,33 +111,42 @@
 	<!--	- Self-signed
 		- Redirects like so
 					-->
-	<rule from="^https?://(?:www\.)?alumni\.kit\.edu/"
+	<rule from="^http://(?:www\.)?alumni\.kit\.edu/"
 		to="https://www.rsm.kit.edu/" />
 
-	<!--	- ^kit.edu: cert only matches www
-		- ^bibliothek, ^pst, ^radio, ^rsm, & ^scc: self-signed
+	<!--	^pst, ^radio: self-signed
 					-->
-	<rule from="^https?://(?:www\.)?((?:bibliothek|pst|radio|rsm|scc)\.)?kit\.edu/"
+	<rule from="^http://(?:www\.)?((?:bibliothek|informatik|innovation|lists|pst|ptka|radio|rsm|scc)\.)?kit\.edu/"
 		to="https://www.$1kit.edu/" />
 
 	<!--	^stiftung.kit.edu doesn't exist.
 							-->
-	<rule from="^http://((?:campus|owa|idp\.scc|(?:ilias\.)?stadium|www\.stiftung)\.)?kit\.edu/"
-		to="https://$1kit.edu/" />
+	<rule from="^http://(blog\.bibliothek|campus|(?:jplag|svn)\.ipd|intranet|owa|(?:idp|wsm10)\.scc|(?:ilias\.)?stadium|www\.stiftung)\.kit\.edu/"
+		to="https://$1.kit.edu/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://(?:www\.)?cs\.kit\.edu/+"
+		to="https://www.informatik.kit.edu/" />
 
 	<!--	- CN: www.kit.edu
 		- ^zib doesn't exist
 		- Redirects like so
 					-->
-	<rule from="^https?://www\.zib\.kit\.edu/(?:.*)"
+	<rule from="^http://www\.zib\.kit\.edu/(?:.*)"
 		to="https://www.kit.edu/studieren/3052.php" />
 
-	<!--	^uni-karlsruhe, ^ubka, & zvw: self-signed.
+	<!--	^uni-karlsruhe & zvw: self-signed.
 					-->
-	<rule from="^https?://(?:www\.)?(ubka\.|zvw\.)?uni-karlsruhe\.de/"
+	<rule from="^http://(?:www\.)?(zvw\.)?uni-karlsruhe\.de/"
 		to="https://www.$1uni-karlsruhe.de/" />
 
-	<rule from="^http://mensa\.akk\.uni-karlsruhe\.de/"
-		to="https://mensa.akk.uni-karlsruhe.de/" />
+	<rule from="^http://(mensa\.akk|www\.ubka)\.uni-karlsruhe\.de/"
+		to="https://$1.uni-karlsruhe.de/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://www\.rz\.uni-karlsruhe\.de/+"
+		to="https://www.scc.kit.edu/" />
 
 </ruleset>

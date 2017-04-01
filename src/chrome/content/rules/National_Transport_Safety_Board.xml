@@ -1,17 +1,38 @@
 <!--
+	National Transport Safety Board
+
 	For other U.S. government coverage, see US-government.xml.
 
 
-	Cert only matches www
+	Nonfunctional hosts in *ntsb.gov:
+
+		- (www.)? ᵈ
+		- dms ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *ntsb.gov:
+
+		- foiarequest ᶜ ᵉ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵉ Expired
 
 -->
-<ruleset name="National Transport Safety Board">
+<ruleset name="NTSB.gov (partial)">
 
-	<target host="ntsb.gov" />
-	<target host="www.ntsb.gov" />
+	<target host="app.ntsb.gov" />
 
 
-	<rule from="^https?://(?:www\.)?ntsb\.gov/"
-		to="https://www.ntsb.gov/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^foiarequest\.ntsb\.gov$" name="^(?:APP_UniqueIdentifier|ASP\.NET_SessionId)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,19 +1,26 @@
 <!--
-	Problematic subdomains:
+	Insecure cookies are set for these domains:
 
-		- (www.)	(mismatched, CN: secure.medleyads.com)
+		- .medleyads.com
 
 -->
 <ruleset name="medleyads.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="medleyads.com" />
-	<target host="*.medleyads.com" />
+	<target host="secure.medleyads.com" />
+	<target host="www.medleyads.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.medleyads\.com$" name="^(adgroups|mad_uid|sg_\d+|si_\d+)$" /-->
 
 	<securecookie host="^\.medleyads\.com$" name=".+" />
 
 
-	<rule from="^https?://(?:secure\.|www\.)?medleyads\.com/"
-		to="https://secure.medleyads.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

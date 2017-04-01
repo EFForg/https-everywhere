@@ -8,40 +8,67 @@
 			- www.smugmug.com
 
 
+	Nonfunctional subdomains:
+
+		- help *
+
+	* Desk.com
+
+
 	Problematic subdomains:
 
-		- ^	(works; mismatched, self-signed, CN: *.smugmug.com)
-		- cdn *
-		- www *
+		- ^ ¹ ² ³
 
-	* Works, akamai
-
-
-	Partially covered subdomains:
-
-		- (www.)	(pages redirect back to http://www)
+	¹ Expired
+	² Mismatched, CN: secure.smugmug.com
+	³ Server sends no certificate chain, see https://whatsmychaincert.com
 
 
 	Fully covered subdomains:
 
-		- cdn	(→ akamai & secure)
+		- (www.)	(^ → www)
+		- dance
+		- cdn
 		- secure
+
+
+	Insecure cookies are set for these domains:
+
+		- .smugmug.com
+
+
+	Mixed content:
+
+		- Images on dance from $self *
+
+	* Secured by us
 
 -->
 <ruleset name="SmugMug.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="cdn.smugmug.com" />
+	<target host="dance.smugmug.com" />
+	<target host="secure.smugmug.com" />
+	<target host="www.smugmug.com" />
+
+	<!--	Complications:
+				-->
 	<target host="smugmug.com" />
-	<target host="*.smugmug.com" />
 
 
-	<!--	Perhaps some css can be rewritten to
-		akamai safely, but remain cautious until
-		we've explicitly tested doing so.
-							-->
-	<rule from="^http://(cdn\.|www\.)?smugmug\.com/(?=favicon\.ico|img/)"
-		to="https://a248.e.akamai.net/f/539/9092/8m/$1smugmug.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.smugmug\.com$" name="^(?:__cfduid|_ss|SMSESS|cf_clearance)$" /-->
 
-	<rule from="^http://(?:cdn|secure)\.smugmug\.com/"
-		to="https://secure.smugmug.com/" />
+	<securecookie host="^\.smugmug\.com$" name="^(?:__cfduid|cf_clearance)$" />
+
+
+	<rule from="^http://smugmug\.com/"
+		to="https://www.smugmug.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

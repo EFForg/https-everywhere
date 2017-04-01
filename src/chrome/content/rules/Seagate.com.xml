@@ -1,4 +1,9 @@
 <!--
+	Other Seagate rulesets:
+
+		- Xyratex.com.xml
+
+
 	CDN buckets:
 
 		- seagatewtb.force.com
@@ -8,17 +13,17 @@
 			- wheretobuy
 
 		- stx.lithium.com
-
-			- forums
-
 		- seagate.my.salesforce.com
 
 
 	Nonfunctional subdomains:
 
+		- annualreport ¹
+		- blog *
 		- freeagent *
 		- samsunghdd *
 
+	¹ Redirects to http
 	* Refused
 
 
@@ -26,7 +31,8 @@
 
 		- ^		(mismatched, CN: www.seagate.com)
 		- drive		(works; mismatched, CN: secure.eloqua.com)
-		- forums	(refused)
+		- community *
+		- forums	(redirects to http)
 		- knowledge *
 		- support2 *
 		- wheretobuy *
@@ -34,49 +40,162 @@
 	* Nismatched, CN: slotmatching4.salesforce.com
 
 
-	Partially covered subdomains:
+	These altnames don't exist:
 
-		- (www.) *	(^ → www)
-		- knowledge **
-		- shop *
-		- support2 **
-		- origin-www *
-
-	* Some pages redirect to http
-	** → seagatewtb.secure.force.com, $ differs from seagatewtb
+		- login.okla.seagate.com
+		- www.okla.seagate.com
+		- wwwlacie1.okla.seagate.com
+		- wwwlacie2.okla.seagate.com
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains and hosts:
 
-		- direct
-		- forums	(→ stx.i.lithium.com)
-		- services
-		- store
-		- wheretobuy	(→ seagatewtb.secure.force.com)
+		- .seagate.com
+		- partnerreg.seagate.com
+		- shop.seagate.com
+		- wwwlacie.seagate.com
 
 -->
 <ruleset name="Seagate.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="apps1.seagate.com" />
+	<target host="direct.seagate.com" />
+	<target host="gro.seagate.com" />
+	<target host="is.seagate.com" />
+	<target host="jobs.seagate.com" />
+	<target host="myportal.seagate.com" />
+	<target host="newstuff.seagate.com" />
+	<target host="origin-www.seagate.com" />
+	<target host="partnerreg.seagate.com" />
+	<target host="reliability.seagate.com" />
+	<target host="reseller.seagate.com" />
+	<target host="rss.seagate.com" />
+	<target host="sata.seagate.com" />
+	<target host="services.seagate.com" />
+	<target host="shop.seagate.com" />
+	<target host="spp.seagate.com" />
+	<target host="sso.seagate.com" />
+	<target host="store.seagate.com" />
+	<target host="www.seagate.com" />
+	<target host="wwwlacie.seagate.com" />
+
+	<!--	Complications:
+				-->
 	<target host="seagate.com" />
-	<target host="*.seagate.com" />
-		<exclusion pattern="^http://(?:origin-www\.|www\.)?seagate\.com/(?!files/|javascript/|ww/)" />
-		<exclusion pattern="^http://(?:knowledge|support2)\.seagate\.com/(?!faces/|jslibrary/|resource/|sCSS/|s\.gif|static/)" />
-		<exclusion pattern="^http://shop\.seagate\.com/(?!store/sgateus/DisplayPage/id\.DRCartSummaryJSONPage/output\.json/)" />
+	<!--target host="community.seagate.com" /-->
+	<!--target host="forums.seagate.com" /-->
+	<target host="knowledge.seagate.com" />
+	<target host="support2.seagate.com" />
+	<target host="wheretobuy.seagate.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:gro|newstuff|origin-www|reliability|rss|sata|www)\.seagate\.com/(?:$|consumer-login/$)" /-->
+		<!--exclusion pattern="^http://annualreport\.seagate\.com/$" /-->
+		<!--exclusion pattern="^http://www\.seagate\.com/www-content/forms/(?:opt-in-xyratex|slide-out-opt-in)/_shared/" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(?:gro|newstuff|origin-www|reliability|rss|sata|www)\.seagate\.com/+(?!files/|javascript/|sites/|ww/)" /-->
+		<!--
+			https://github.com/EFForg/https-everywhere/issues/3860
+
+			Breaks scripted search:
+						-->
+		<!--exclusion pattern="^http://www\.seagate\.com/ww/universal/display-views/DV166-serial-number-transaction\.jsp" /-->
+		<!--
+			...more conservatively:
+						-->
+		<!--exclusion pattern="^http://www\.seagate\.com/ww/universal/(?!css/|images/)" /-->
+		<!--
+			In sum:
+				-->
+		<exclusion pattern="^http://(?:gro|newstuff|origin-www|reliability|rss|sata|www)\.seagate\.com/+(?!files/|javascript/|sites/|ww/+(?!universal/+(?!css/images/)))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://gro.seagate.com/consumer-login/" />
+			<test url="http://newstuff.seagate.com/consumer-login/" />
+			<test url="http://newstuff.seagate.com/support" />
+			<test url="http://newstuff.seagate.com/support/downloads" />
+			<test url="http://origin-www.seagate.com/consumer-login/" />
+			<test url="http://reliability.seagate.com/consumer-login/" />
+			<test url="http://rss.seagate.com/consumer-login/" />
+			<test url="http://sata.seagate.com/consumer-login/" />
+			<test url="http://www.seagate.com/articles/" />
+			<test url="http://www.seagate.com/consumer-login/" />
+			<test url="http://www.seagate.com/contacts/" />
+			<test url="http://www.seagate.com/investors/" />
+			<test url="http://www.seagate.com/store/" />
+			<test url="http://www.seagate.com/support/by-topic/downloads/" />
+			<test url="http://www.seagate.com/ww/universal/display-views/DV166-serial-number-transaction.jsp?sn=9VS2JACC&amp;langId=en_US&amp;callType=post" />
+			<test url="http://www.seagate.com/www-content/forms/opt-in-xyratex/_shared/xyratex_optin.css" />
+			<test url="http://www.seagate.com/www-content/forms/slide-out-opt-in/_shared/images/modal-btn-close.png" />
+
+			<!--	-ve:
+					-->
+			<test url="http://gro.seagate.com/files/www-content/homepage/homepage_2014/_shared/images/home-tile-4.jpg" />
+			<test url="http://gro.seagate.com/sites/styles/vgn-ext-templating-delivery.css" />
+			<test url="http://gro.seagate.com/ww/universal/images/stx-staticlogo-drk-nopad-150x36.png" />
+			<test url="http://newstuff.seagate.com/files/www-content/homepage/homepage_2014/_shared/images/home-tile-4.jpg" />
+			<test url="http://newstuff.seagate.com/sites/styles/vgn-ext-templating-delivery.css" />
+			<test url="http://newstuff.seagate.com/ww/universal/images/stx-staticlogo-drk-nopad-150x36.png" />
+			<test url="http://origin-www.seagate.com/ww/universal/css/stx-bootstrap-legacy-header-footer.css?v=" />
+			<test url="http://reliability.seagate.com/files/www-content/homepage/homepage_2014/_shared/images/home-tile-4.jpg" />
+			<test url="http://reliability.seagate.com/sites/styles/vgn-ext-templating-delivery.css" />
+			<test url="http://reliability.seagate.com/ww/universal/images/stx-staticlogo-drk-nopad-150x36.png" />
+			<test url="http://rss.seagate.com/files/www-content/homepage/homepage_2014/_shared/images/home-tile-4.jpg" />
+			<test url="http://rss.seagate.com/sites/styles/vgn-ext-templating-delivery.css" />
+			<test url="http://rss.seagate.com/ww/universal/images/stx-staticlogo-drk-nopad-150x36.png" />
+			<test url="http://sata.seagate.com/files/www-content/homepage/homepage_2014/_shared/images/home-tile-4.jpg" />
+			<test url="http://sata.seagate.com/sites/styles/vgn-ext-templating-delivery.css" />
+			<test url="http://sata.seagate.com/ww/universal/images/stx-staticlogo-drk-nopad-150x36.png" />
+			<test url="http://www.seagate.com/files/www-content/homepage/_shared/images/stx-shopTILE.jpg" />
+			<test url="http://www.seagate.com/ww/universal/images/stx-staticlogo-drk-nopad-150x36.png" />
+
+		<exclusion pattern="^http://(?:knowledge|support2)\.seagate\.com/+(?!faces/|jslibrary/|resource/|sCSS/|s\.gif|static/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://knowledge.seagate.com/articles/en_US/FAQ/196315en" />
+			<test url="http://knowledge.seagate.com/articles/en_US/FAQ/207691en" />
+			<test url="http://knowledge.seagate.com/consumer-login/" />
+			<test url="http://knowledge.seagate.com/partners/" />
+			<test url="http://support2.seagate.com/consumer-login/" />
+			<test url="http://support2.seagate.com/partners/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://knowledge.seagate.com/s.gif" />
+			<test url="http://support2.seagate.com/img/bgButton.gif" />
+			<test url="http://support2.seagate.com/s.gif" />
+			<test url="http://support2.seagate.com/sCSS/34.0/sprites/1438195776000/Theme3/default/base/elements.css" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.seagate\.com$" name="^(?:CFTOKEN|ecommLocaleCookie|ecommSessionCookie|permanentLocaleCookie|stxEdgescape|userSelectedLocaleCookie)$" /-->
+	<!--securecookie host="^partnerreg\.seagate\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^shop\.seagate\.com$" name="^(?:JSESSIONID|VISITOR_ID|X-DR-CURRENCY|X-DR-LOCALE|X-DR-THEME)$" /-->
+	<!--securecookie host="^wwwlacie\.seagate\.com$" name="(?:CFID|CFTOKEN|ROUTEID|wwwlacie_prod)$" /-->
+
+	<securecookie host="^(?:apps1|partnerreg|services|shop|wwwlacie)\.seagate\.com$" name=".+" />
 
 
-	<securecookie host="^(?:apps1|partnerreg|services)\.seagate\.com$" name=".+" />
-
-
-	<rule from="^http://(?:www\.)?seagate\.com/"
+	<rule from="^http://seagate\.com/"
 		to="https://www.seagate.com/" />
 
-	<rule from="^http://(apps1|direct|origin-www|partnerreg|reseller|services|shop|spp|sso|store)\.seagate\.com/"
-		to="https://$1.seagate.com/" />
+	<!--rule from="^http://community\.seagate\.com/"
+		to="https://???.secure.force.com/" /-->
 
-	<rule from="^http://forums\.seagate\.com/"
-		to="https://stx.i.lithium.com/" />
+	<!--rule from="^http://forums\.seagate\.com/"
+		to="https://???.secure.force.com/" /-->
 
 	<rule from="^http://(?:knowledge|support2|wheretobuy)\.seagate\.com/"
 		to="https://seagatewtb.secure.force.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

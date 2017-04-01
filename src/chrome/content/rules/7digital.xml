@@ -1,52 +1,48 @@
 <!--
+	Other 7digital rulesets:
+
+		- 7static.com.xml
+
+
 	CDN buckets:
 
 		- orig-10003.7digital.cotcdn.net
-
 		- orig-10010.7digital.cotcdn.net
-
-			- cdn22
-
 		- orig-10012.7digital.cotcdn.net
-
-			- css.cdn
-
 		- cdn.7static.com.global.prod.fastly.net
 
-			- cdn
+
+	Nonfunctional hosts in *7digital.com:
+
+		- about ¹
+		- developers ¹
+		- help ²
+
+	¹ Refused
+	² Zendesk
 
 
-	Problematic domains:
-
-		- 7digital.com
-
-		- 7static.com subdomains:
-
-			- cdn.7static.com		(mismatched, CN: *.a.ssl.fastly.net)
-			- css.cdn.7static.com *
-			- cdn22 *
-
-	* Reset
-
-
-	Partially covered domains:
-
-		- cdn.7static.com	(static/img/ redirects back)
+	^7digital.com: Dropped
 
 -->
-<ruleset name="7digital (partial)">
+<ruleset name="7digital.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="api.7digital.com" />
+	<target host="css-cdn.7digital.com" />
+	<target host="us.7digital.com" />
+	<target host="www.7digital.com" />
+
+	<!--	Complications:
+				-->
 	<target host="7digital.com" />
-	<target host="*.7digital.com" />
-		<exclusion pattern="^https?://(?:us\.|www\.)?7digital\.com/(?!(?:help|sign(?:in|up))(?:$|\?|/)|s/|static/)" />
-		<exclusion pattern="^https?://cdn\.7static\.com/static/img/" />
-	<target host="*.7static.com" />
 
 
-	<rule from="^https?://(?:(?:css\.)?cdn(?:22)?\.|www\.)?7(?:digital|static)\.com/"
+	<rule from="^http://7digital\.com/"
 		to="https://www.7digital.com/" />
 
-	<rule from="^http://(api|us)\.7digital\.com/"
-		to="https://$1.7digital.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

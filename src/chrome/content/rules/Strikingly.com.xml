@@ -1,0 +1,74 @@
+<!--
+	Other Strikingly rulesets:
+
+		- Strikingly_CDN.com.xml
+
+
+	Nonfunctional hosts in *strikingly.com:
+
+		- blog *
+
+	* WP Engine
+
+
+	Problematic hosts in *strikingly.com:
+
+		- assets **
+		- support *
+		- www **
+
+	* Mismatched
+	** Breaks login and dashboard; see https://github.com/EFForg/https-everywhere/issues/6865
+
+
+	Fully covered hosts in *strikingly.com:
+
+		- ^
+		- b
+
+
+	Unsecurable cookies are set for these hosts:
+
+		- www.strikingly.com
+
+-->
+<ruleset name="Strikingly.com (partial)">
+
+	<target host="strikingly.com" />
+	<target host="assets.strikingly.com" />
+	<target host="b.strikingly.com" />
+	<target host="www.strikingly.com" />
+
+	<!-- The following exclusions serve to fix various issues regarding logging in
+	     to the site and having the dashboard properly displayed; see
+	     https://github.com/EFForg/https-everywhere/issues/6865 for further details:
+											-->
+	<exclusion pattern="http://assets\.strikingly\.com/assets/[\w\d/-]+\.js$" />
+
+		<test url="http://assets.strikingly.com/assets/application-362e8a18a2ddf1c67eaad35ce6fb569c.js" />
+		<test url="http://assets.strikingly.com/assets/v4/webpack_bridge-app-bundle-66d6f9a0908a285fd9fc64f5ee7d9565.js" />
+
+	<exclusion pattern="^http://www\.strikingly\.com/a/t/pages/listing\.html$" />
+
+		<test url="http://www.strikingly.com/a/t/pages/listing.html" />
+
+	<exclusion pattern="^http://www\.strikingly\.com/r/v1" />
+
+		<test url="http://www.strikingly.com/r/v1/sites" />
+		<test url="http://www.strikingly.com/r/v1/users/me/email_settings" />
+
+	<exclusion pattern="^http://www\.strikingly\.com/s" />
+
+		<test url="http://www.strikingly.com/s/login" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.strikingly\.com$" name="^(_bobcat_session|XSRF-TOKEN|locale)$" /-->
+	<!--securecookie host="^www\.strikingly\.com$" name=".+" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

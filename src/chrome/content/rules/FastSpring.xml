@@ -6,18 +6,42 @@
 
 		- dcnz2rrcot657.cloudfront.net
 		- dxezhqhj7t42i.cloudfront.net
+		- resource.fastspring.com.s3.amazonaws.com
+
+
+	(www.)?fastspring.com: Refused
+
+
+	Problematic hosts in *fastspring.com:
+
+		- info ᵐ	(Hubspot)
+		- resource ᵐ	(AmazonAWS)
+
+	ᵐ Mismatched
 
 -->
-<ruleset name="FastSpring">
+<ruleset name="FastSpring (partial)">
 
-	<target host="fastspring.com" />
-	<target host="*.fastspring.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="sites.fastspring.com" />
+	<target host="springboard.fastspring.com" />
+
+	<!--	Complications:
+				-->
+	<target host="resource.fastspring.com" />
 
 
-	<securecookie host="^.*\.fastspring\.com$" name=".*" />
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://((?:resource|sites|springboard|www)\.)?fastspring\.com/"
-		to="https://$1fastspring.com/" />
+	<rule from="^http://resource\.fastspring\.com/"
+		to="https://s3.amazonaws.com/resource.fastspring.com/" />
+
+		<test url="http://resource.fastspring.com/app/store/style/base.css" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

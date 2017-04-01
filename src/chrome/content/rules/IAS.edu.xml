@@ -21,41 +21,54 @@
 	* Works, cert only matches www.foo
 
 
-	Partially covered subdomains:
-
-		- (www.)hs *	(^ → www)
-		- morals *
-		- (www.)sss *	(^ → www)
-
-	* $ redirects to http
-
-
 	Fully covered subdomains:
 
 		- (www.)
 		- (www.)admin	(^ → www)
 		- crossroads
+		- (www.)hs	(^ → www)
 		- (www.)math	(^ → www)
 		- mail.math
+		- morals
 		- pcmi
+		- security
 		- sig
 		- (www.)sns	(^ → www)
+		- (www.)sss	(^ → www)
 
 -->
 <ruleset name="IAS.edu (partial)">
 
+	<target host="admin.ias.edu" />
+	<target host="www.admin.ias.edu" />
+	<target host="hs.ias.edu" />
+	<target host="www.hs.ias.edu" />
+	<target host="math.ias.edu" />
+	<target host="www.math.ias.edu" />
+	<target host="sns.ias.edu" />
+	<target host="www.sns.ias.edu" />
+	<target host="sss.ias.edu" />
+	<target host="www.sss.ias.edu" />
+
+	<target host="springdale.math.ias.edu" />
+
 	<target host="ias.edu" />
-	<target host="*.ias.edu" />
-		<exclusion pattern="^http://(?:(?:www\.)?(?:h|ss)|moral)s\.ias\.edu/(?!files/|sites/)" />
+	<target host="crossroads.ias.edu" />
+	<target host="mail.math.ias.edu" />
+	<target host="morals.ias.edu" />
+	<target host="pcmi.ias.edu" />
+	<target host="security.ias.edu" />
+	<target host="sig.ias.edu" />
+	<target host="www.ias.edu" />
 
 
 	<securecookie host="^(?:\.math|\.mail\.math|\.pcmi|sig|\.sns|www)\.ias\.edu$" name=".+" />
 
 
-	<rule from="^http://((?:crossroads|mail\.math|morals|pcmi|sig|www)\.)?ias\.edu/"
-		to="https://$1ias.edu/" />
-
-	<rule from="^http://(?:www\.)?(admin|hs|math|s[ns]s)\.ias\.edu/"
+	<rule from="^http://(admin|hs|math|s[ns]s)\.ias\.edu/"
 		to="https://www.$1.ias.edu/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

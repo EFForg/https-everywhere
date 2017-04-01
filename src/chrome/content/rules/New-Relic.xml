@@ -1,4 +1,10 @@
 <!--
+	Other New Relic rulesets:
+
+		- NR-assets.net.xml
+		- NR-data.net.xml
+
+
 	CDN buckets:
 
 		- rewrelic.statuspage.io
@@ -12,45 +18,86 @@
 
 	Problematic subdomains:
 
-		- status	(mismatched, CN: *.statuspage.io)
+		- blog-static *
+		- get *
+
+	* NetDNA
 
 
-	Partially covered subdomains:
+	Fully covered domains:
 
-		- blog		($ redirects to http)
+		- blog-assets.newrelic.com	(→ blog)
 
--->
-<ruleset name="New Relic (partial)">
-
-	<target host="newrelic.com" />
-	<target host="*.newrelic.com" />
-		<exclusion pattern="^http://blog\.newrelic\.com/(?!wp-(?:admin(?:$|[?/])|content/|includes/|login\.php))" />
-		<exclusion pattern="^http://blog-assets\.newrelic\.com/.*" />
-
-
-	<securecookie host="^(?:.*\.)?newrelic\.com$" name=".+" />
-
-
-	<rule from="^http://status\.newrelic\.com/"
-		to="https://newrelic.statuspage.io/" />
-
-	<!--	Encountered subdomains:
+		- [\w-]+.newrelic.com:
 
 			- beacon
 			- beacon-[1-4]
+			- blog
+			- discuss
+			- docs
 			- js-agent
+			- login
 			- rpm
 			- rpm-images
 			- rpm-instart
 			- staging
 			- staging-beacon-1
+			- staging-discuss
+			- status
 			- support
-
-				- hosted on Zendesk, but cert matches.
-
+			- trust
+			- try
 			- www
-				-->
-	<rule from="^http://([\w-]+\.)?newrelic\.com/"
-		to="https://$1newrelic.com/" />
+
+
+	Insecure cookies are set for these hosts:
+
+		- rpm.newrelic.com
+		- try.newrelic.com
+
+
+	Mixed content:
+
+		- css on blog from fonts.googleapis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="New Relic.com">
+
+	<target host="newrelic.com" />
+	<target host="*.newrelic.com" />
+
+		<exclusion pattern="^http://get\.newrelic\.com" />
+
+			<test url="http://get.newrelic.com/" />
+
+		<exclusion pattern="^http://(?:[^./]+\.){2,}newrelic\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.newrelic.com/" />
+			<test url="http://exists.not.newrelic.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^rpm\.newrelic\.com$" name="^omniauth\.states$" /-->
+	<!--securecookie host="^try\.newrelic\.com$" name="^BIGipServer" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://blog-assets\.newrelic\.com/"
+		to="https://blog.newrelic.com/" />
+
+		<test url="http://blog-assets.newrelic.com/wp-includes/js/jquery/jquery.js" />
+
+	<rule from="^http:"
+		to="https:" />
+
+		<test url="http://docs.newrelic.com/" />
+		<test url="http://rpm.newrelic.com/" />
+		<test url="http://www.newrelic.com/" />
 
 </ruleset>

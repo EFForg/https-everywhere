@@ -1,0 +1,78 @@
+<!--
+	Nonfunctional hosts in *captora.com:
+
+		- digitalmarketing ᵃ
+
+	ᵃ Marketo / shows another domain
+
+
+	Problematic hosts in *captora.com:
+
+		- resources ᵐ
+
+	ᵐ Uberflip / mismatched
+
+
+	Mixed content:
+
+		- Images, on:
+		
+			- blog, www from www.captora.com ˢ
+			- blog from blakebrysha.com
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Captora.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="captora.com" />
+	<target host="app.captora.com" />
+	<target host="cdn.captora.com" />
+	<target host="www.captora.com" />
+
+	<!--	Complications:
+				-->
+	<target host="digitalmarketing.captora.com" />
+	<target host="resources.captora.com" />
+
+		<exclusion pattern="^http://digitalmarketing\.captora\.com/(?!/*(?:$|\?|css/|rs/|images/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://digitalmarketing.captora.com/4-Trends-in-Paid-Search-Strategy_4-Trends-in-Paid-Search-Strategy.html" />
+			<test url="http://digitalmarketing.captora.com/ABMTOFU-Webinar-1072015_Registration-Landing-Page.html" />
+			<test url="http://digitalmarketing.captora.com/CMOGuideToGrowthMarketing.html" />
+			<test url="http://digitalmarketing.captora.com/Content-ROI-ebook-Download.html" />
+			<test url="http://digitalmarketing.captora.com/Marketo-Summit-2016_Meeting-Request-LP.html" />
+			<test url="http://digitalmarketing.captora.com/Organic_Registration-Page.html" />
+			<test url="http://digitalmarketing.captora.com/Revenue-Roundtable-Boston-Registration-Page.html" />
+			<test url="http://digitalmarketing.captora.com/You-Do-The-Math-Infographic_You-Do-The-Math-Infographic-2.html" />
+
+
+	<securecookie host="^(?!digitalmarketing\.)\w" name="." />
+
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://digitalmarketing\.captora\.com/+(?:\?.*)?$"
+		to="https://captora.com/" />
+
+		<test url="http://digitalmarketing.captora.com/?" />
+
+	<rule from="^http://digitalmarketing\.captora\.com/"
+		to="https://na-sj09.marketo.com/" />
+
+		<test url="http://digitalmarketing.captora.com/css/mktLPSupportCompat.css" />
+		<test url="http://digitalmarketing.captora.com/rs/719-TVA-959/images/arrow_green.png" />
+
+	<rule from="^http://resources\.captora\.com/"
+		to="https://captora.uberflip.com/" />
+
+		<test url="http://resources.captora.com/h/i/215249913-the-ultimate-a-to-z-guide-to-content-types" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

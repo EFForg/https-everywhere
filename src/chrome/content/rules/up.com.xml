@@ -1,0 +1,61 @@
+<!--
+	Union Pacific Railroad Company
+
+	Other Union Pacific Railroad Company rulesets:
+
+		- streamline.com.xml
+		- unionpacific.jobs.xml
+		- up.jobs.xml
+		- upds.com.xml
+		- uprr.com.xml
+
+
+	Problematic hosts in *up.com:
+
+		- ^ ʳ
+		- m *
+
+	* gateres($|\?) differs from http
+	ʳ Refused, preemptable redirect
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.up.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="UP.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.up.com" />
+
+	<!--	Complications:
+				-->
+	<target host="up.com" />
+	<target host="m.up.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.up\.com$" name="^IDCCS_SESSIONID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://up\.com/"
+		to="https://www.up.com/" />
+
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://m\.up\.com/gateres(?:\?.*)?$"
+		to="https://m.up.com/c02/wet-mobile/jas/index?command=gateTrace" />
+
+		<test url="http://m.up.com/gateres" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

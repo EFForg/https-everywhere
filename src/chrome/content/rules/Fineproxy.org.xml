@@ -2,29 +2,63 @@
 	For problematic rules, see Fineproxy.org-problematic.xml.
 
 
+	Nonfunctional hosts in *fineproxy.org:
+
+		- vpn *
+
+	* Shows another domain
+
+
 	Problematic subdomains:
 
 		- billingproxy	(self-signed)
+		- www ¹ ²
+
+	¹ Self-signed
+	² Mismatched
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains:
 
-		- (www.)
-		- buy
-		- forum
-		- vpn
+		- .fineproxy.org
+
+
+	Mixed content:
+
+		- css, on:
+
+			- ^ from $self *
+			- forum from futbolki3d.org
+
+		- Images on forum from futbolki3d.org
+
+	* Secured by us
 
 -->
-<ruleset name="Fineproxy.org (partial)">
+<ruleset name="Fineproxy.org (partial)" platform="mixedcontent">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="fineproxy.org" />
-	<target host="*.fineproxy.org" />
+	<target host="buy.fineproxy.org" />
+	<target host="forum.fineproxy.org" />
 
+	<!--	Complications:
+				-->
+	<target host="www.fineproxy.org" />
+
+
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.fineproxy\.org$" name="^(?:__cfduid|cf_clearance)$" /-->
 
 	<securecookie host="^\.(?:forum\.)?fineproxy\.org$" name=".+" />
 
 
-	<rule from="^http://((?:buy|forum|vpn|www)\.)?fineproxy\.org/"
-		to="https://$1fineproxy.org/" />
+	<rule from="^http://www\.fineproxy\.org/"
+		to="https://fineproxy.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

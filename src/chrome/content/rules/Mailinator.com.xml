@@ -7,15 +7,20 @@
 
 -->
 <ruleset name="Mailinator.com">
-
 	<target host="mailinator.com" />
-	<target host="www.mailinator.com" />
-
+	<target host="*.mailinator.com" />
 
 	<securecookie host="^(?:www\.)?mailinator\.com$" name=".+" />
 
-
 	<rule from="^http://(www\.)?mailinator\.com/"
-		to="https://$1mailinator.com/" />
+			to="https://$1mailinator.com/" />
+		<test url="http://mailinator.com/" />
+		<test url="http://www.mailinator.com/" />
 
+	<!-- foo.mailinator.com -> https://www.mailinator.com/inbox.jsp?to=foo -->
+	<rule from="^http://([\w-]+)\.mailinator\.com/"
+			to="https://www.mailinator.com/inbox.jsp?to=$1" />
+		<test url="http://foo.mailinator.com/" />
+		<test url="http://bar.mailinator.com/" />
+		<test url="http://foobar.mailinator.com/" />
 </ruleset>

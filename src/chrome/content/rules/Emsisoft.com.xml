@@ -1,7 +1,40 @@
-<ruleset name="Emsisoft">
+<!--
+	Mixed content:
+
+		- Images on support from $self *
+
+	* Secured by us
+
+
+	Problematic subdomains:
+
+		- changeblog *
+
+	$ redirects to blog
+
+-->
+<ruleset name="Emsisoft (partial)">
 	<target host="emsisoft.com" />
-	<target host="www.emsisoft.com" />
-	<rule from="^http://www\.emsisoft\.com/" to="https://www.emsisoft.com/"/>
-	<rule from="^http://emsisoft\.com/" to="https://www.emsisoft.com/"/>
+	<target host="*.emsisoft.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://blog\.emsisoft\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:blog|changeblog)\.emsisoft\.com/+(?!wp-content/|wp-includes/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^cc\.emsisoft\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^support\.emsisoft\.com$" name="^session_id$" /-->
+	<!--securecookie host="^www\.emsisoft\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^(?:support|www)\.emsisoft\.com$" name=".+" />
+
+
+	<rule from="^http://((?:blog|cc|changeblog|support|www)\.)?emsisoft\.com/" to="https://$1emsisoft.com/"/>
 </ruleset>
 

@@ -1,15 +1,54 @@
-<!--	Bucket at s3.amazonaws.com/fontdeck/
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/fontdeck/
+
+
+	Nonfunctional subdomains:
+
+		- blog *
+
+	* Tumblr
+
+
+	www: cert only matches ^fontdeck.com
+
 -->
-<ruleset name="Fontdeck (partial)">
+<ruleset name="Fontdeck.com (partial)">
 
-	<target host="fontdeck.com"/>
-	<target host="f.fontdeck.com"/>
-	<target host="www.fontdeck.com"/>
+	<target host="fontdeck.com" />
+	<target host="f.fontdeck.com" />
+	<target host="www.fontdeck.com" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="http://fontdeck\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="http://fontdeck\.com/(?!images/|login$|register$|stylesheets/)" />
 
-	<rule from="^http://(www\.)?fontdeck\.com/(images/|login$|register$|stylesheets/)"
-		to="https://fontdeck.com/$2"/>
+			<!--	+ve:
+					-->
+			<test url="http://fontdeck.com/about" />
+			<test url="http://fontdeck.com/contact" />
+			<test url="http://fontdeck.com/foundries" />
+			<test url="http://fontdeck.com/showcase" />
+			<test url="http://fontdeck.com/support" />
+			<test url="http://fontdeck.com/typefaces" />
 
-	<rule from="^http://f\.fontdeck\.com/"
-		to="https://f.fontdeck.com/"/>
+			<!--	-ve:
+					-->
+			<test url="http://www.fontdeck.com/login" />
+			<test url="http://www.fontdeck.com/register" />
+			<test url="http://www.fontdeck.com/images/logos/print-logo.png" />
+			<test url="http://www.fontdeck.com/stylesheets/core.css" />
+
+
+	<rule from="^http://www\.fontdeck\.com/"
+		to="https://fontdeck.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

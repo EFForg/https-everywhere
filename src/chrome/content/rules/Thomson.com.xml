@@ -1,0 +1,77 @@
+<!--
+	For other Thomson Reuters coverage, see Thomson-Reuters.xml.
+
+
+	Nonfunctional hosts in *thomson.com:
+
+		- dashboard.compumark ʳ
+
+	ʳ Refused
+
+
+	Problematic hosts in *thomson.com:
+
+		- myaccount.west ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- managementconsole.thomson.com
+		- peermonitor.thomson.com
+		- safe.thomson.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Thomson.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="managementconsole.thomson.com" />
+	<target host="peermonitor.thomson.com" />
+	<target host="safe.thomson.com" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://peermonitor.thomsonreuters.com/PrivateRatesAdmin/updatepassword.jsp" /-->
+		<!--test url="http://safe.thomson.com/auth/router?action=Login&amp;TARGET=$SM$https%3a%2f%2fsafe%2ethomson%2ecom%2fSAML2%2fsso%2fSAML2Service" /-->
+
+	<!--	Complications:
+				-->
+	<target host="myaccount.west.thomson.com" />
+
+		<exclusion pattern="^http://myaccount\.west\.thomson\.com/(?!/*(?:$|\?|myaccount/default\.aspx))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://myaccount.west.thomson.com/default.asp" />
+			<test url="http://myaccount.west.thomson.com/default.aspx" />
+			<test url="http://myaccount.west.thomson.com/favicon.ico" />
+			<test url="http://myaccount.west.thomson.com/index.htm" />
+			<test url="http://myaccount.west.thomson.com/index.html" />
+			<test url="http://myaccount.west.thomson.com/index.php" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^managementconsole\.thomson\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^peermonitor\.thomson\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^safe\.thomson\.com$" name="^(BIGipServerSAFE-443|JSESSIONID|safe2\.protectionlevel|safe2\.target)$" /-->
+
+	<!--securecookie host="^images\.west\.thomson\.com$" name="." /-->
+	<securecookie host="^(?!myaccount\.west\.)\w" name="." />
+
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://myaccount\.west\.thomson\.com/.*"
+		to="https://myaccount.thomsonreuters.com/westlaw" />
+
+		<test url="http://myaccount.west.thomson.com/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

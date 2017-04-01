@@ -1,16 +1,61 @@
 <!--
 	For other Oracle coverage, see Oracle.xml.
 
+
+	Nonfunctional hosts in *java.net:
+
+		- openjdk *
+
+	* Refused
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .java.net
+		- home.java.net
+		- jax-rs-spec.java.net
+		- jsr311.java.net
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- home from $self *
+			- jax-rs-spec from jersey.java.net *
+
+	* Secured by us
+
 -->
 <ruleset name="Java.net (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="java.net" />
+	<target host="asset-0.java.net" />
+	<target host="asset-1.java.net" />
+	<target host="asset-2.java.net" />
+	<target host="asset-3.java.net" />
+	<target host="glassfish.java.net" />
+	<target host="home.java.net" />
+	<target host="jax-rs-spec.java.net" />
+	<target host="jersey.java.net" />
+	<target host="jsr311.java.net" />
 	<target host="wiki.openjdk.java.net" />
+	<target host="tyrus.java.net" />
+	<target host="www.java.net" />
 
 
-	<securecookie host="^wiki\.openjdk\.java\.net$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.java\.net$" name="^SESS[0-9a-f]{32}$" /-->
+	<!--securecookie host="^(jax-rs-spec|jsr311)?\.java\.net$" name="^_junction2_session$" /-->
+	<!--securecookie host="^home\.java\.net$" name="^poll-\d+$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://wiki\.openjdk\.java\.net/"
-		to="https://wiki.openjdk.java.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

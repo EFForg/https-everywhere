@@ -1,19 +1,56 @@
 <!--
-	Nonfunctional subdomains:
+	European Space Agency
+
+
+	Nonfunctional hosts in *esa.int:
 
 		- blogs		(refused)
+		- sci ²
+
+	² Reset
 
 
-	Some pages redirect to http
+	Some pages redirect to http.
 
 -->
-<ruleset name="European Space Agency (partial)">
+<ruleset name="ESA.int (partial)">
 
-	<target host="esa.int" />
+	<!--	Direct rewrites:
+				-->
+	<target host="eo-sso-idp.eo.esa.int" />
+	<target host="eogrid.esrin.esa.int" />
 	<target host="www.esa.int" />
 
+	<!--	Complications:
+				-->
+	<target host="esa.int" />
 
-	<rule from="^http://(?:www\.)?esa\.int/(extension|var)/"
-		to="https://www.esa.int/$1/" />
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.esa\.int/ESA$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.esa\.int/(?!extension/|var/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.esa.int/ESA" />
+			<test url="http://www.esa.int/Education" />
+			<test url="http://www.esa.int/For_Media" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.esa.int/extension/esa_ext/design/esn2/images/layout/social/views.png" />
+
+
+	<securecookie host="^(?!www\.)\w" name="." />
+
+
+	<rule from="^http://esa\.int/"
+		to="https://www.esa.int/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

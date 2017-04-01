@@ -1,37 +1,128 @@
 <!--
 	Other Comcast rulesets:
 
+		- Comcast.net.xml
+		- internetessentials.com.xml
 		- Fandango.xml
+		- xfinity.com.xml
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *comcast.com:
 
+		- cbcommunity ᶠ
+		- corporate ⁵
+		- redir ᵈ
+
+	⁵ 504
+	ᵈ Dropped
+	ᶠ Handshake fails
+
+
+	Problematic hosts in *comcast.com:
+
+		- ^ ᵈ
+		- forums.businesshelp ʳ ˣ
+		- forums ᵐ
+		- jobs ᵐ ˢ
+		- sitesearch ᴬ
+		- store ᵈ
+
+	ᴬ Akamai / mismatched
+	ᵈ Dropped
+	ᵐ Mismatched
+	ʳ Refused
+	ˢ Self-signed
+	ˣ Mixed css on comcastbc.i.lithium.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .comcast.com
 		- business.comcast.com
-		- corporate.comcast.com		(504, akamai)
+		- cdn.business.comcast.com
+		- business2.comcast.com
+		- businesshelp.comcast.com
+		- cdn.comcast.com
+		- customer.comcast.com
+		- cdn.pdc.comcast.com
+
+		- cdn.stg.comcast.com
+		- cdn.ch2.stg.comcast.com
+		- www.stg.comcast.com
+
+		- upware.comcast.com
+		- cdn.wcdc.comcast.com
+		- www.comcast.com
 
 
-	Problematic domains:
+	Mixed content:
 
-		- comcast.com	(cert only matches www)
+		- Images on businesshelp from media2.comcast.net ᵐ
+
+	ᵐ Not secured by us <= mismatched
 
 -->
-<ruleset name="Comcast (partial)">
+<ruleset name="Comcast.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="business.comcast.com" />
+	<target host="cdn.business.comcast.com" />
+	<target host="business2.comcast.com" />
+	<target host="businesshelp.comcast.com" />
+	<target host="cdn.comcast.com" />
+	<target host="customer.comcast.com" />
+	<target host="cdn.pdc.comcast.com" />
+
+	<target host="cdn.stg.comcast.com" />
+	<target host="cdn.ch2.stg.comcast.com" />
+	<target host="www.stg.comcast.com" />
+
+	<target host="upware.comcast.com" />
+	<target host="cdn.wcdc.comcast.com" />
+	<target host="accesspass.wifi.comcast.com" />
+	<target host="www.comcast.com" />
+
+	<!--	Complications:
+				-->
 	<target host="comcast.com" />
-	<target host="*.comcast.com" />
-	<target host="home.comcast.net" />
+	<!--target host="forums.businesshelp.comcast.com" /-->
+	<target host="forums.comcast.com" />
+	<target host="store.comcast.com" />
 
 
-	<securecookie host="^(?:customer|www)\.comcast\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.comcast\.com$" name="^(?:BSD|PSC|SH?C|cc)$" /-->
+	<!--securecookie host="^business\.comcast\.com$" name="^(?:ASP\.NET_SessionId|ISPCookie|TrafficSplitterUser)$" /-->
+	<!--securecookie host="^cdn\.business\.comcast\.com$" name="^ADRUM_BT[1a]$" /-->
+	<!--securecookie host="^business2\.comcast\.com$" name="(?:-prd_\w\w$|^__RequestVerificationToken|^ADRUM_BT[1a]|^ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^(?:businesshelp|cdn|cdn\.pdc|cdn\.stg|cdn\.ch2\.stg|www\.stg|cdn\.wcdc)\.comcast\.com$" name="(?:-prd_\w\w$|^ADRUM_BT[1a]|^ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^(?:customer|www)\.comcast\.com$" name="-prd_po$" /-->
+	<!--securecookie host="^upware\.comcast\.com$" name="^AWSELB$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?comcast\.com/"
+	<rule from="^http://comcast\.com/"
 		to="https://www.comcast.com/" />
 
-	<rule from="^http://customer\.comcast\.com/"
-		to="https://customer.comcast.com/" />
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://forums\.comcast\.com/+"
+		to="https://forums.xfinity.com/" />
 
-	<rule from="^http://home\.comcast\.net/"
-		to="https://home.comcast.net/" />
+		<test url="http://forums.comcast.com/index.htm" />
+
+	<rule from="^http://store\.comcast\.com/"
+		to="https://securestore.xfinity.com/" />
+
+	<!--rule from="^http://forums\.businesshelp\.comcast\.com/"
+		to="https://comcastbc.i.lithium.com/" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

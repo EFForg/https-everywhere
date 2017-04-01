@@ -6,50 +6,61 @@
 
 	Nonfunctional subdomains:
 
+		- blog ³
 		- chat
-		- download	(cert: edgecastcdn.net; 504)
-		- forum
+		- download *
+		- i3 ¹
 		- kb
+		- sp ³
+		- store ³
+		- forum.sp ³
+		- kb.sp ³
+		- www.sp ²
+
+	* 504; mismatched, CN: edgecastcdn.net
+	¹ Mismatch
+	² Expired
+	³ Refused
+
+
+	Problematic hosts in *parallels.com:
+
+		- blogs ¹
+		- spblog ³
+
+	¹ Refused
+	³ Squarespace
+
+
+	Insecure cookies are set for these domains:
+
+		- .parallels.com
+		- spblog.parallels.com
 
 -->
-<ruleset name="Parallels (partial)">
+<ruleset name="Parallels.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="parallels.com" />
-	<target host="*.parallels.com" />
-	<target host="psoft.net" />
-	<target host="*.psoft.net" />
+	<target host="forum.parallels.com" />
+	<target host="www.parallels.com" />
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.parallels\.com$" name="^SS_MID$" /-->
+	<!--securecookie host="^spblog\.parallels\.com$" name="^(JSESSIONID|crumb)$" /-->
 
 	<!--	Tracking cookies:
 					-->
 	<securecookie host="^\.parallels\.com$" name="^s_\w+$" />
-	<securecookie host="^store\.parallels\.com$" name=".*" />
-	<securecookie host="^\w+\.psoft\.com$" name=".*" />
+	<securecookie host="^store\.parallels\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?parallels\.com/(favicon\.ico|file(?:admin|s)/|r/|typo3(?:conf|temp)/)"
-		to="https://$1parallels.com/$2" />
+	<!--rule from="^http://blogs\.parallels\.com/"
+		to="https://parallelsblog.squarespace.com/" /-->
 
-	<rule from="^http://blogs\.parallels\.com/"
-		to="https://parallelsblog.squarespace.com/" />
-
-	<!--	EdgeCast	-->
-	<rule from="^http://i3\.parallels\.com/"
-		to="https://www.parallels.com/" />
-
-	<!--	hosted by Digital River		-->
-	<rule from="^http://store\.parallels\.com/"
-		to="https://store.parallels.com/" />
-
-	<!--	- Cert: license.psoft.com
-		- Expired
-		- Shows license's data over https
-		- Redirects like so over http
-			-->
-	<rule from="^http://(?:www\.)?psoft\.com/"
-		to="https://www.parallels.com/psoft" />
-
-	<rule from="^http://my\.psoft\.com/"
-		to="https://my.psoft.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

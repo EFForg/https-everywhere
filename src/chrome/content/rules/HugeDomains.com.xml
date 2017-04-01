@@ -1,15 +1,39 @@
 <!--
 	Some pages redirect to http.
 
+
+	Insecure cookies are set for these domains and hosts:
+
+		- hugedomains.com
+		- .hugedomains.com
+		- www.hugedomains.com
+
 -->
 <ruleset name="HugeDomains.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="hugedomains.com" />
-	<target host="*.hugedomains.com" />
-		<exclusion pattern="^http://(?:www\.)?hugedomains\.com/domain_profile\.cfm" />
+	<target host="static.hugedomains.com" />
+	<target host="www.hugedomains.com" />
+
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://www\.hugedomains\.com/domain_profile\.cfm" />
+
+			<test url="http://www.hugedomains.com/domain_profile.cfm?d=" />
 
 
-	<rule from="^http://(static\.|www\.)?hugedomains\.com/"
-		to="https://$1hugedomains.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^hugedomains\.com$" name="^(?:CFID|CFTOKEN|FWO|HD|PV|SHOPPINGCART)$" /-->
+	<!--securecookie host="^\.hugedomains\.com$" name="^BTP$" /-->
+	<!--securecookie host="^hugedomains\.com$" name="^(?:FWO|PV|REFLOC|SHOPPINGCART)$" /-->
+
+	<securecookie host="^hugedomains\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -10,13 +10,16 @@
 
 	Nonfunctional subdomains:
 
-		- blog	(times out)
+		- blog *
+
+	* Dropped
 
 
 	Problematic subdomains:
 
-		- ^	(cert only matches www)
-		- cf	(cloudfront)
+		- cf *
+
+	* cloudfront
 
 
 	Some pages redirect to http.
@@ -26,12 +29,20 @@
 
 	<target host="kununu.com" />
 	<target host="*.kununu.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.kununu\.com/($|\?|jobs$|jobs/de$|kununu$|sitemap$|unternehmen$|unternehmen/hilfe$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://www\.kununu\.com/(?!bewerten|css/|favicon\.ico|index/captcha/|info$|info/kontakt|info/presse$|info/ueber|login\?|meinkununu$|register$|sc\.css|user/login$|user/logout$)" /-->
 
 
-	<rule from="^https?://(?:www\.)?kununu\.com/(bewerten|css/|meinkununu|sc\.css|unternehmen)"
-		to="https://www.kununu.com/$1" />
+	<rule from="^http://(www\.)?kununu\.com/(?=(?:bewerten|info|login|meinkununu|register|user/(?:login|logout))(?:$|[?/])|css/|favicon\.ico|index/captcha/|sc\.css)"
+		to="https://$1kununu.com/" />
 
-	<rule from="^https?://cf\.kununu\.com/"
+	<rule from="^http://cf\.kununu\.com/"
 		to="https://dt75rt3oyihg4.cloudfront.net/" />
 
 </ruleset>

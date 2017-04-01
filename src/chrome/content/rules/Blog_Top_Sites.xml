@@ -4,23 +4,33 @@
 		- blogtopsites.s3.amazonaws.com
 
 
+	Insecure cookies are set for these domains:
+
+		- .blogtopsites.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
 	Mixed content:
 
-		- Images on www from blogtopsites.s3.amazonaws.com *
+		- Images on www from blogtopsites.s3.amazonaws.com ˢ
 
-	* Secured by us
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Blog Top Sites.com">
+<ruleset name="Blog Top Sites.com" default_off="expired">
 
 	<target host="blogtopsites.com" />
-	<target host="*.blogtopsites.com" />
+	<target host="www.blogtopsites.com" />
 
 
-	<securecookie host="^\.blogtopsites\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.blogtopsites\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(www\.)?blogtopsites\.com/"
-		to="https://$1blogtopsites.com/" />
-
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

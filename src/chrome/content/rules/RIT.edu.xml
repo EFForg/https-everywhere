@@ -1,0 +1,211 @@
+<!--
+	Rochester Institute of Technology
+
+
+	Nonfunctional hosts in *rit.edu:
+
+		- campuslife ¹
+		- cias-helpdesk ¹
+		- computing.cis ²
+		- trouble.cis ²
+		- events ¹
+		- infoguides ¹
+		- magic ¹
+		- wally ¹
+		- whatsinaname ¹
+
+	¹ Refused
+	² Shows ^cis.rit.edu
+
+
+	Problematic hosts in *rit.edu:
+
+		- ^ ¹
+		- www.cias ²
+		- dirs.cis ³
+		- entrepreneurship ⁴
+		- thewallacecenter ¹
+
+	¹ Refused
+	² 404
+	³ Shows ^cis.rit.edu
+	⁴ Redirects to www.rit.edu
+
+
+	Fully covered hosts in *rit.edu:
+
+		- (www.)?		(^ → www)
+		- footprints02.main.ad
+		- shibboleth.main.ad
+		- albert
+		- artoncampus
+
+		- cias
+		- checkout.cias
+		- inside.cias
+		- request.cias
+
+		- (www.)?cis
+		- dirs.cis		(→ www.cis.rit.edu)
+		- greek
+		- ill
+		- library
+		- my
+		- ntid
+		- apps.ntid
+		- portal
+		- resnet
+		- start
+		- studyabroad
+		- thelink
+		- thewallacecenter	(→ wallacecenter.rit.edu)
+		- wallacecenter
+		- wiki
+
+
+	These altnames don't exist:
+
+		- www.albert.rit.edu
+		- www.ill.rit.edu
+		- www.start.rit.edu
+		- www.wiki.rit.edu
+
+
+	Insecure cookies are set for these hosts and domains:
+
+		- .rit.edu
+		- footprints02.main.ad.rit.edu
+		- albert.rit.edu
+		- artoncampus.rit.edu
+		- cias.rit.edu
+		- checkout.cias.rit.edu
+		- start.rit.edu
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- artoncampus from $self
+			- library, www from www.rit.edu
+			- wallacecenter from $self
+
+		- favicon on artoncampus from $self
+
+-->
+<ruleset name="RIT.edu (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="footprints02.main.ad.rit.edu" />
+	<target host="shibboleth.main.ad.rit.edu" />
+	<target host="albert.rit.edu" />
+
+	<target host="cias.rit.edu" />
+	<target host="checkout.cias.rit.edu" />
+	<target host="inside.cias.rit.edu" />
+	<target host="request.cias.rit.edu" />
+
+	<target host="cis.rit.edu" />
+	<target host="artoncampus.rit.edu" />
+	<target host="www.cis.rit.edu" />
+
+	<target host="greek.rit.edu" />
+	<target host="ill.rit.edu" />
+	<target host="library.rit.edu" />
+	<target host="my.rit.edu" />
+	<target host="ntid.rit.edu" />
+	<target host="apps.ntid.rit.edu" />
+	<target host="www.ntid.rit.edu" />
+	<target host="portal.rit.edu" />
+	<target host="resnet.rit.edu" />
+	<target host="ritpress.rit.edu" />
+	<target host="start.rit.edu" />
+	<target host="studyabroad.rit.edu" />
+	<target host="thelink.rit.edu" />
+	<target host="wallacecenter.rit.edu" />
+	<target host="wiki.rit.edu" />
+	<target host="www.rit.edu" />
+
+	<!--	Complications:
+				-->
+	<target host="rit.edu" />
+	<target host="dirs.cis.rit.edu" />
+	<target host="thewallacecenter.rit.edu" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.ntid\.rit\.edu/nce/$" /-->
+		<!--exclusion pattern="^http://ritpress\.rit\.edu/$" /-->
+		<!--exclusion pattern="^http://saunders\.rit\.edu/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.ntid\.rit\.edu/(?!$|sites/)" />
+		<exclusion pattern="^http://ritpress\.rit\.edu/+(?!misc/|modules/|sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.ntid.rit.edu/about" />
+			<test url="http://www.ntid.rit.edu/contact" />
+			<test url="http://www.ntid.rit.edu/giving" />
+			<test url="http://www.ntid.rit.edu/nce" />
+			<test url="http://www.ntid.rit.edu/studentlife/activities" />
+
+			<test url="http://ritpress.rit.edu/about-us.html" />
+			<test url="http://ritpress.rit.edu/contact" />
+			<test url="http://ritpress.rit.edu/ordering.html" />
+			<test url="http://ritpress.rit.edu/publications" />
+			<test url="http://ritpress.rit.edu/subject/rit" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.ntid.rit.edu/sites/default/files/css_injector_10.css" />
+
+			<test url="http://ritpress.rit.edu/misc/feed.png" />
+			<test url="http://ritpress.rit.edu/modules/node/node.css" />
+			<test url="http://ritpress.rit.edu/sites/all/modules/cck/modules/fieldgroup/fieldgroup.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.rit\.edu$" name="^(III_EXPT_FILE|III_SESSION_ID|RITApache|SESSION_LANGUAGE)$" /-->
+	<!--securecookie host="^footprints02\.main\.ad\.rit\.edu$" name="^_shibstate_\d+_[\da-f]+$" /-->
+	<!--securecookie host="^albert\.rit\.edu$" name="^SESSION_SCOPE$" /-->
+	<!--securecookie host="^artoncampus\.rit\.edu$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^cias\.rit\.edu$" name="^csrftoken$" /-->
+	<!--securecookie host="^checkout\.cias\.rit\.edu$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^start\.rit\.edu$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\.rit\.edu$" name="^RITApache$" />
+	<securecookie host="^(?:footprints02\.main\.ad|albert|artoncampus|cias|checkout\.cias|start)\.rit\.edu$" name=".+" />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://rit\.edu/+"
+		to="https://www.rit.edu/" />
+
+		<test url="http://rit.edu//favicon.ico" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://dirs\.cis\.rit\.edu/+"
+		to="https://www.cis.rit.edu/remote-sensing/" />
+
+		<test url="http://dirs.cis.rit.edu//" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://thewallacecenter\.rit\.edu/+"
+		to="https://wallacecenter.rit.edu/" />
+
+		<test url="http://thewallacecenter.rit.edu//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

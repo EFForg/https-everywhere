@@ -1,24 +1,36 @@
 <!--
-	Problematic subdomains:
+	Other Gemius rulesets:
 
-		- ^	(cert only matches *.gemius.pl)
+		- Gemius.com.xml
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .hit.gemius.pl
+		- www.gemius.pl
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Gemius">
+<ruleset name="Gemius.pl">
 
 	<target host="gemius.pl" />
-	<target host="*.gemius.pl" />
+	<target host="*.hit.gemius.pl" />
+	<target host="www.gemius.pl" />
+
+		<test url="http://mailua.hit.gemius.pl/redot.gif" />
+		<test url="http://yandexgaua.hit.gemius.pl/redot.gif" />
 
 
-	<securecookie host="^(?:\.hit|www)\.gemius\.pl$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.hit\.gemius\.pl$" name="^Gtest$" /-->
+	<!--securecookie host="^www\.gemius\.pl$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^(?!\.gemius\.pl$)." name="." />
 
 
-	<rule from="^http://(?:www\.)?gemius\.pl/"
-		to="https://www.gemius.pl/" />
-
-	<!--	Web bugs:
-				-->
-	<rule from="^http://([^@:/]+)\.hit\.gemius\.pl/"
-		to="https://$1.hit.gemius.pl/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

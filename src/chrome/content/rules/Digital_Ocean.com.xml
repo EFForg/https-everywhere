@@ -1,20 +1,44 @@
 <!--
-	Fully covered subdomains:
+	Insecure cookies are set for these domains and hosts:
 
-		- (www.)
-		- cloud
+		- .digitalocean.com
+		- status.digitalocean.com
 
 -->
 <ruleset name="Digital Ocean.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="digitalocean.com" />
-	<target host="*.digitalocean.com" />
+	<target host="api.digitalocean.com" />
+	<target host="cloud.digitalocean.com" />
+	<target host="developers.digitalocean.com" />
+	<target host="status.digitalocean.com" />
+	<target host="www.digitalocean.com" />
 
 
-	<securecookie host="^(?:cloud|www)?\.digitalocean\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.digitalocean\.com$" name="^(__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^status\.digitalocean\.com$" name="^_status_session$" /-->
+	<!--securecookie host="^status\.digitalocean\.com$" name="^_status_session$" /-->
+
+	<securecookie host="^(?!\.cloud\.)." name="." />
+	<!--
+		https://github.com/EFForg/https-everywhere/issues/3697
+
+		e.g. "Wed Dec 30 2015 13:56:15 GMT-0500 (Eastern Standard Time)"
+
+		Securing this cookie breaks user sessions. Presumably a script attempts to read
+		it and sets another when it can't and eventually requests become bigger than the
+		server is configured to accept.
+
+		[note to the uninitiated: "(?!" means "not followed by"]
+											-->
+	<securecookie host="^\.cloud\." name="^(?!(?:[A-Z][a-z]{2}\ ){2}\d\d\ \d{4}\ \d\d:\d\d:\d\d\ [A-Z]{3}[+-]\d{4}\ \([\w\ ]+\)$)." />
 
 
-	<rule from="^http://(cloud\.|www\.)?digitalocean\.com/"
-		to="https://$1digitalocean.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

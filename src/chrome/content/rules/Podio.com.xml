@@ -1,0 +1,65 @@
+<!--
+	For other Citrix coverage, see Citrix.xml.
+
+
+	CDN buckets:
+
+		- d29j36x8cgfa9r.cloudfront.net
+		- dgyqr055mfays.cloudfront.net
+
+
+	Nonfunctional hosts in *podio.com:
+
+		- engineering *
+
+	* Refused
+
+
+	Problematic hosts in *podio.com:
+
+		- status *
+
+	* StatusPage.io/mismatched
+
+-->
+<ruleset name="Podio.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="podio.com" />
+	<target host="blog.podio.com" />
+	<target host="company.podio.com" />
+	<target host="developers.podio.com" />
+	<target host="help.podio.com" />
+	<target host="www.podio.com" />
+
+	<!--	Complications:
+				-->
+	<target host="status.podio.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://blog\.podio\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://blog\.podio\.com/+(?!wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://blog.podio.com/2012/02/27/zendesk/" />
+			<test url="http://blog.podio.com/author/sharif/" />
+			<test url="http://blog.podio.com/de/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://blog.podio.com/wp-content/themes/podionew/common/modules/icons/png/podio.png" />
+
+
+	<rule from="^http://status\.podio\.com/"
+		to="https://podio.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

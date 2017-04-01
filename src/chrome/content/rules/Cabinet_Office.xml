@@ -2,24 +2,165 @@
 	For other UK government coverage, see GOV.UK.xml.
 
 
-	Problematic domains:
+	Nonfunctional hosts in *cabinetoffice.gov.uk:
 
-		- www.cabinet-office.gov.uk
-		- (www.)cabinetoffice.gov.uk	(mismatched, CN: *.yottaa.net)
+		- europeanmemoranda ⁴
+		- admin.europeanmemoranda ⁴
+		- gps ᵈ
+		- www.redtapechallenge ᵈ
+		- rnn ᵈ
+		- update ᵈ
+
+	⁴ 404
+	ᵈ Dropped
+
+
+	Problematic hosts in *cabinetoffice.gov.uk:
+
+		- ccs ᵐ
+		- ccs-agreements ᵉ ᵐ
+		- communitylife ᵐ
+		- digital ᵐ
+		- blog.digital ᵐ
+		- solutions-exchange ᵉ
+		- mutuals ᵐ
+		- www.openpublicservices ᵐ
+		- pm ᵈ
+		- procurement ᵐ
+		- (www.)?publications ᵐ
+		- transactionsexplorer ᵐ
+		- www ᵐ
+
+	ᵈ Dropped
+	ᵉ Expired
+	ᵐ Mismatched
+
+
+	^cabinetoffice.gov.uk doesn't exist.
+
+
+	Insecure cookies are set for these hosts:
+
+		- publicappointments.cabinetoffice.gov.uk
+		- umbr3.cabinetoffice.gov.uk
 
 -->
-<ruleset name="Cabinet Office">
+<ruleset name="Cabinet Office.gov.uk (partial)">
 
-	<target host="cabinetoffice.gov.uk" />
-	<target host="*.cabinetoffice.gov.uk" />
-	<target host="www.cabinet-office.gov.uk" />
-	<target host="s-ff0102-4f9172bc8a1062097406d809-0.yottaa.net" />
+	<!--	Direct rewrites:
+				-->
+	<target host="gpsfleetportal.cabinetoffice.gov.uk" />
+	<target host="publicappointments.cabinetoffice.gov.uk" />
+	<target host="umbr3.cabinetoffice.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="ccs.cabinetoffice.gov.uk" />
+	<target host="communitylife.cabinetoffice.gov.uk" />
+	<target host="digital.cabinetoffice.gov.uk" />
+	<target host="blog.digital.cabinetoffice.gov.uk" />
+	<target host="gps.cabinetoffice.gov.uk" />
+	<target host="mutuals.cabinetoffice.gov.uk" />
+	<target host="www.openpublicservices.cabinetoffice.gov.uk" />
+	<target host="pm.cabinetoffice.gov.uk" />
+	<target host="publications.cabinetoffice.gov.uk" />
+	<target host="www.publications.cabinetoffice.gov.uk" />
+	<target host="transactionsexplorer.cabinetoffice.gov.uk" />
+	<target host="update.cabinetoffice.gov.uk" />
+	<target host="www.cabinetoffice.gov.uk" />
+
+		<!--	/+[^?]+ 404s:
+					-->
+		<exclusion pattern="^http://(?:ccs|communitylife|gps|mutuals|www\.openpublicservices|(?:www\.)?publications|transactionsexplorer|update|www)\.cabinetoffice\.gov\.uk/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://ccs.cabinetoffice.gov.uk/index.htm" />
+			<test url="http://communitylife.cabinetoffice.gov.uk/index.htm" />
+			<test url="http://gps.cabinetoffice.gov.uk/index.htm" />
+			<test url="http://mutuals.cabinetoffice.gov.uk/index.htm" />
+			<test url="http://www.openpublicservices.cabinetoffice.gov.uk/index.htm" />
+			<test url="http://publications.cabinetoffice.gov.uk/index.htm" />
+			<test url="http://www.publications.cabinetoffice.gov.uk/index.htm" />
+			<test url="http://transactionsexplorer.cabinetoffice.gov.uk/index.htm" />
+			<test url="http://update.cabinetoffice.gov.uk/index.htm" />
+			<test url="http://update.cabinetoffice.gov.uk//index.htm" />
+			<test url="http://www.cabinetoffice.gov.uk/index.htm" />
+			<test url="http://www.cabinetoffice.gov.uk//index.htm" />
+
+			<!--	-ve:
+					-->
+			<test url="http://communitylife.cabinetoffice.gov.uk//" />
+			<test url="http://communitylife.cabinetoffice.gov.uk/?" />
+			<test url="http://mutuals.cabinetoffice.gov.uk/?" />
+			<test url="http://www.openpublicservices.cabinetoffice.gov.uk/?" />
+			<test url="http://transactionsexplorer.cabinetoffice.gov.uk/?" />
+			<test url="http://update.cabinetoffice.gov.uk//" />
+			<test url="http://www.cabinetoffice.gov.uk/?" />
+			<test url="http://www.cabinetoffice.gov.uk//" />
 
 
-	<rule from="^https?://(?:update\.|www\.)?cabinet-?office\.gov\.uk/"
-		to="https://update.cabinetoffice.gov.uk/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^publicappointments\.cabinetoffice\.gov\.uk$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^umbr3\.cabinetoffice\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
 
-	<rule from="^http://s-ff0102-4f9172bc8a1062097406d809-0\.yottaa\.net/"
-		to="https://s-ff0102-4f9172bc8a1062097406d809-0.yottaa.net/" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://(?:cc|gp)s\.cabinetoffice\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/crown-commercial-service" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://communitylife\.cabinetoffice\.gov\.uk/.*"
+		to="https://www.gov.uk/government/collections/community-life-survey" />
+
+	<!--	Redirect keeps forward slash, path, and args:
+								-->
+	<rule from="^http://digital\.cabinetoffice\.gov\.uk/"
+		to="https://gds.blog.gov.uk/" />
+
+	<!--	Redirect keeps forward slash, path, and args:
+								-->
+	<rule from="^http://blog\.digital\.cabinetoffice\.gov\.uk/"
+		to="https://alphagov.wordpress.com/" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://mutuals\.cabinetoffice\.gov\.uk/.*"
+		to="https://www.gov.uk/government/groups/mutuals-information-service" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://www\.openpublicservices\.cabinetoffice\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/open-public-services" />
+
+	<!--	Redirect drops forward slash and path, but not args:
+									-->
+	<rule from="^http://pm\.cabinetoffice\.gov\.uk/[^?]*"
+		to="https://www.gov.uk/government/history/past-prime-ministers/margaret-thatcher" />
+
+		<test url="http://pm.cabinetoffice.gov.uk/index.htm" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://(?:www\.)?publications\.cabinetoffice\.gov\.uk/.*"
+		to="https://www.gov.uk/government/publications?departments%5B%5D=cabinet-office" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://transactionsexplorer\.cabinetoffice\.gov\.uk/.*"
+		to="https://www.gov.uk/performance/transactions-explorer" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://(?:update|www)\.cabinetoffice\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/cabinet-office" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

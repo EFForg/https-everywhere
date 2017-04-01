@@ -1,17 +1,67 @@
 <!--	Problematic subdomains:
 	links	(unable to connect)
 
+	For rules causing false/broken MCB, see govdelivery.com-falsemixed.xml.
+
 	See also GovDelivery-mismatches.xml
+
+
+	Problematic hosts in *govdelivery.com:
+
+		- usodep.blogs ˣ
+		- usodep.stage-blogs ᵉ
+
+	ᵉ Expired
+	ˣ Mixed css
+
+
+	These altnames do not exist:
+
+		- test.govdelivery.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- usodep.blogs from d140q24ubocq3n.cloudfront.net ˢ
+			- usodep.blogs, dev, www from fonts.googleapis.com ˢ
+
+		- Images, on:
+
+			- usodep.blogs from d140q24ubocq3n.cloudfront.net ˢ
+			- usodep.blogs from usodep.stage-blogs.govdelivery.com ᵉ
+
+		- Bug on usodep.blogs from c.statcounter.com ˢ
+
+	ᵉ Not secured by us <= expired
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
 -->
-<ruleset name="GovDelivery (partial)">
+<ruleset name="GovDelivery.com (partial)">
 
-	<target host="*.govdelivery.com"/>
+	<!--	Direct rewrites:
+				-->
+	<target host="govdelivery.com"/>
+	<target host="admin.govdelivery.com"/>
+	<!--target host="usodep.blogs.govdelivery.com"/-->
+	<target host="content.govdelivery.com"/>
+	<target host="demos.govdelivery.com"/>
+	<target host="dev.govdelivery.com"/>
+	<target host="public.govdelivery.com"/>
+	<target host="public-dc2.govdelivery.com"/>
+	<target host="service.govdelivery.com"/>
+	<target host="subscriberhelp.govdelivery.com" />
+	<target host="www.govdelivery.com"/>
+
 		<!--	exclude subdomains handled in mismatches	-->
-		<exclusion pattern="^http://(content-public-dc2|direct|media)\."/>
+		<!--exclusion pattern="^http://(?:content-public-dc2|direct|media)\."/-->
 
-	<securecookie host="(.*\.)?govdelivery\.com$" name=".*"/>
 
-	<rule from="^http://(public(-dc2)?|service|www)\.govdelivery\.com/"
-		to="https://$1.govdelivery.com/"/>
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

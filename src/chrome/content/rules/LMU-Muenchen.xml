@@ -1,9 +1,42 @@
+<!--
+	Ludwig-Maximilians-Universitaet Muenchen
+
+
+	These altnames don't exist:
+
+		- uni-muenchen.de
+		- en.uni-muenchen.de
+		- portal.uni-muenchen.de
+
+
+	Mixed content:
+
+		- Images on www.en from www *
+
+		- Bug on www.en from www.google.com *
+
+	* Secured by us
+
+-->
 <ruleset name="LM Uni Muenchen">
-  <target host="uni-muenchen.de"/>
-  <target host="*.uni-muenchen.de"/>
 
-  <securecookie host="^(.*\.)?uni-muenchen\.de$" name=".*" />
+	<target host="*.uni-muenchen.de" />
 
-  <rule from="^http://(?:www\.)?uni-muenchen\.de/" to="https://www.uni-muenchen.de/"/>
-  <rule from="^http://uni-muenchen\.de/" to="https://www.uni-muenchen.de/"/>
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^(cms-static|www\.en|login\.portal)\.uni-muenchen\.de$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^login\.portal\.uni-muenchen\.de$" name="^_idp_authn_lc_key$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^www.portal.uni-muenchen.de$" name="^_shibstate_\d{10}_\w{4}$" /-->
+	<!--securecookie host="^www\.uni-muenchen\.de$" name="^JSESSIONID$" /-->
+
+	<securecookie host=".*\.uni-muenchen\.de$" name=".+" />
+
+
+	<rule from="^http://(cms-static|www\.en|(?:login|www)\.portal|www)\.uni-muenchen\.de/"
+		to="https://$1.uni-muenchen.de/" />
+
 </ruleset>

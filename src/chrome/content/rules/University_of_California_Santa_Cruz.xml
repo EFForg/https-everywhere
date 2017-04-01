@@ -1,98 +1,202 @@
 <!--
+	University of California, Santa Cruz
+
+
 	CDN buckets:
 
-		- edge.live.getpantheon.com
-
-			- maps
-
+		- edge.live.getpantheon.com	← maps
 		- ucsc.service-now.com
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *ucsc.edu:
 
-		- (www.) *
+		- (www.)? ʰ
+		- 50years *
+		- academicaffairs ʰ
 		- admissions *
 		- advising *
+		- alumni ʰ
 		- bas-04	(prints default page; mismatched, CN: bas-01.ucsc.edu)
-		- events *
+		- blast ʰ
+		- calstar ʰ
+		- careers ʰ
+		- ches ʰ
+		- currents ʰ
 		- financialaid *
-		- its *
+		- foundation ʰ
+		- giving ʰ
+		- its ʰ
 		- maps-dev-d7	(shows clery-dev, valid cert)
 		- microbes	(shows archaea; expired 2009-02-12, CN: localhost.localdomain)
-		- news *
+		- news ʰ
 		- opers1 *
 		- police *
+		- pps		(403)
+		- purchasing *
 		- reg *
-		- registrar *
+		- reg ʰ
+		- registrar ʰ
+		- review ʰ
 		- risk *
 		- sbs *
 		- seymourcenter		(shows keys.pbsci; mismatched, CN: keys.pbsci.ucsc.edu)
+		- shr ʰ
 		- (www.)ssrc *
 		- ssrc.soe *
-		- static *
 		- studentservices *
 		- tobaccofree *
+		- www1 ʰ
 
+	ʰ Redirects to http
 	* Refused
 
 
-	Problematic subdomains:
+	Problematic hosts in *ucsc.edu:
 
 		- archaea		(works; expired 2009-02-12, CN: localhost.localdomain)
+		- cruzbuy ᵐ
+		- cruzpay ᵐ
 		- email			(interrupted)
 		- hgdownload.cse	(works; CN: hgdownload)
-		- itrequest		(refused)
+		- itrequest ʰ
+		- guides.library ᵐ
 		- maps			(works; mismatched, CN: *.gotpantheon.com)
+		- oca ᵐ
 		- keys.pbsci		(works, self-signed)
 		- physicalsecurity	(works, self-signed)
+		- planning ˣ
 		- soe			(refused)
 		- ugr			(mismatched, CN: *.soe.ucsc.edu)
+		- www2			(Data differ between http and https)
+
+	ʰ Redirects to http
+	ᵐ Mismatched
+	ˣ Mixed css
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains and hosts:
 
-		- clery-dev
-		- cruzid
-		- cancer2.cse
-		- genome-cancer.cse
-		- email		(→ mail.google.com)
-		- (www.)genome
-		- genome-cancer
-		- itrequest		(→ ucsc.service-now.com)
-		- its-proposals-dev
-		- my
-		- (www.)soe	(^ → www)
-		- cbse.soe
-		- cs.soe
-		- ugr.ue
-		- ugr		(→ ugr.eu)
-		- www1
+		- .ucsc.edu
+		- cruzcat.ucsc.edu
+		- divdata.ucsc.edu
+		- ecommons.ucsc.edu
+
+
+	Mixed content:
+
+		- css, on:
+
+			- planning from www.ucsc.edu ʰ
+			- planning from www1.ucsc.edu ʰ
+
+		- Image on planning from $self ˢ
+
+	ʰ Unsecurable <= redirects to http
+	ˢ Secured by us
 
 -->
-<ruleset name="University of California, Santa Cruz (partial)">
+<ruleset name="UCSC.edu (partial)">
 
-	<target host="*.ucsc.edu" />
+	<!--	Direct rewrites:
+				-->
+	<target host="clery-dev.ucsc.edu" />
+	<target host="cruzcat.ucsc.edu" />
+	<target host="cruzid.ucsc.edu" />
+	<target host="cancer2.cse.ucsc.edu" />
+	<target host="genome-cancer.cse.ucsc.edu" />
+	<target host="divdata.ucsc.edu" />
+	<target host="ecommons.ucsc.edu" />
+	<target host="events.ucsc.edu" />
+	<target host="financial.ucsc.edu" />
+	<target host="genome.ucsc.edu" />
+	<target host="www.genome.ucsc.edu" />
+	<target host="genome-cancer.ucsc.edu" />
+	<target host="its-prod-www2-1.ucsc.edu" />
+	<target host="its-prod-www2-2.ucsc.edu" />
+	<target host="its-proposals-dev.ucsc.edu" />
+	<target host="library.ucsc.edu" />
+	<target host="my.ucsc.edu" />
+	<target host="login.oca.ucsc.edu" />
+	<target host="www.oca.ucsc.edu" />
+	<!--target host="planning.ucsc.edu" /-->
 
+	<target host="cbse.soe.ucsc.edu" />
+	<target host="classes.soe.ucsc.edu" />
+	<target host="courses.soe.ucsc.edu" />
+	<target host="cs.soe.ucsc.edu" />
+	<target host="gsrce.soe.ucsc.edu" />
+	<target host="intranet.soe.ucsc.edu" />
+	<target host="support.soe.ucsc.edu" />
+	<target host="users.soe.ucsc.edu" />
+	<target host="www.soe.ucsc.edu" />
+
+	<target host="static.ucsc.edu" />
+	<target host="ugr.ue.ucsc.edu" />
+	<target host="wcms-prod-web-3.ucsc.edu" />
+	<target host="wcms-prod-web-4.ucsc.edu" />
+
+	<!--	Complications:
+				-->
+	<target host="cruzbuy.ucsc.edu" />
+	<target host="cruzpay.ucsc.edu" />
+	<target host="email.ucsc.edu" />
+	<target host="itrequest.ucsc.edu" />
+	<target host="oca.ucsc.edu" />
+	<target host="soe.ucsc.edu" />
+	<target host="ugr.ucsc.edu" />
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://planning.ucsc.edu/wasc/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.ucsc\.edu$" name="^(?:III_EXPT_FILE|III_SESSION_ID|SESSION_LANGUAGE)$" /-->
+	<!--securecookie host="^cruzcat\.ucsc\.edu$" name="^SESSION_SCOPE$" /-->
+	<!--securecookie host="^divdata\.ucsc\.edu$" name="^_shibstate_\d+_[\da-f]+$" /-->
+	<!--securecookie host="^ecommons\.ucsc\.edu$" name="^ROUTEID$" /-->
 
 	<!--securecookie host="^\.ucsc\.edu$" name="^(?:ais-prod-dmz-4-1610-PORTAL-PSJSESSIONID|SESS\w{32})$" /-->
-	<securecookie host="^(?:cruzid|(?:cancer2|genome-cancer)\.cse|www1)\.ucsc\.edu$" name=".+" />
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(clery-dev|cruzid|(?:cancer2|genome-cancer)\.cse|(?:www\.)?genome|genome-cancer|its-proposals-dev|my|(?:cbse|cs)\.soe|ugr\.ue|www1)\.ucsc\.edu/"
-		to="https://$1.ucsc.edu/" />
+	<!--	Redirect drops forward
+		slash, path, and args:
+					-->
+	<rule from="^http://cruzbuy\.ucsc\.edu/.*"
+		to="https://financial.ucsc.edu/Pages/Launch_CruzBuy.aspx" />
+
+		<test url="http://cruzbuy.ucsc.edu/Default.aspx" />
+
+	<!--	Redirect drops forward
+		slash, path, and args:
+					-->
+	<rule from="^http://cruzpay\.ucsc\.edu/.*"
+		to="https://financial.ucsc.edu/Pages/Launch_CruzPay.aspx" />
+
+		<test url="http://cruzpay.ucsc.edu/Default.aspx" />
 
 	<!--	Server drops path:
 					-->
 	<rule from="^http://email\.ucsc\.edu/.*"
 		to="https://mail.google.com/a/ucsc.edu" />
 
-	<rule from="^http://(?:www\.)?soe\.ucsc\.edu/"
-		to="https://www.soe.ucsc.edu/" />
+		<test url="http://email.ucsc.edu/default.aspx" />
+
+	<rule from="^http://itrequest\.ucsc\.edu/[^?]*"
+		to="https://ucsc.service-now.com/ess/" />
+
+		<test url="http://itrequest.ucsc.edu/index.htm" />
+
+	<rule from="^http://(oca|soe)\.ucsc\.edu/"
+		to="https://www.$1.ucsc.edu/" />
 
 	<rule from="^http://ugr\.ucsc\.edu/"
 		to="https://ugr.ue.ucsc.edu/" />
 
-	<rule from="^http://itrequest\.ucsc\.edu/[^\?]*(\?.*)?"
-		to="https://ucsc.service-now.com/ess/$1" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

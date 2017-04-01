@@ -1,32 +1,39 @@
 <!--
-	Fully covered subdomains:
+	Nonfunctional hosts in *cru.fr:
 
-		- git		(→ git.renater.fr)
-		- listes
-		- sourcesup	(→ sourcesup.renater.fr)
-		- subversion
-		- svn
-		- www
+		- groupware *
+
+	* Plaintext reply
 
 
 	^cru.fr does not exist
 
 -->
-<ruleset name="cru.fr">
+<ruleset name="cru.fr (partial)">
 
-	<target host="*.cru.fr" />
+	<!--	Direct rewrites:
+				-->
+	<target host="listes.cru.fr" />
+	<target host="subversion.cru.fr" />
+	<target host="svn.cru.fr" />
+	<target host="www.cru.fr" />
+
+	<!--	Complications:
+				-->
+	<target host="git.cru.fr" />
+	<target host="sourcesup.cru.fr" />
 
 
-	<securecookie host="^www\.cru\.fr$" name=".+" />
+	<securecookie host="^\w" name="." />
 
-
-	<rule from="^http://(listes|subversion|svn|www)\.cru\.fr/"
-		to="https://$1.cru.fr/" />
 
 	<!--	Works over https, but redirects
 		like so over http:
 					-->
 	<rule from="^http://(git|sourcesup)\.cru\.fr/"
 		to="https://$1.renater.fr/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

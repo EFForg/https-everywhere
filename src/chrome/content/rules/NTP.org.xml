@@ -3,15 +3,46 @@
 
 		- (www.)	(ssl_error_rx_record_too_long)
 
+
+	Problematic hosts in *ntp.org:
+
+		- support *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- bugs.ntp.org
+		- support.ntp.org
+
+
+	Mixed content:
+
+		- Bugs, on:
+
+			- support from c.gigcount.com
+			- support from www.ipligence.com
+
 -->
 <ruleset name="NTP.org (partial)" platform="cacert">
 
-	<target host="support.ntp.org" />
+	<!--	Direct rewrites:
+				-->
+	<target host="bugs.ntp.org" />
 	<target host="lists.ntp.org" />
+	<!--target host="support.ntp.org" /-->
 
-	<securecookie host="^(?:support|lists)\.ntp\.org$" name=".*" />
 
-	<rule from="^http://(support|lists)\.ntp\.org/"
-		to="https://$1.ntp.org/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^bugs\.ntp\.org$" name="^DEFAULTFORMAT$" /-->
+	<!--securecookie host="^support\.ntp\.org$" name="^TWIKISID$" /-->
+
+	<securecookie host="^(?:support|lists)\.ntp\.org$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

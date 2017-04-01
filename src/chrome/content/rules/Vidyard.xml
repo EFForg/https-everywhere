@@ -1,26 +1,31 @@
 <!--
-	blog is handled in Posterous-clients.xml.
+	Mixed content:
 
+		- css on www from fonts.googleapis.com *
+		- Images on www from $self *
 
-	Problematic subdomains:
-
-		- (www.)	(mismatched, CN: *.heroku.com)
-		- blog		(works, mismatched, CN: *.posterous.com)
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Vidyard (partial)">
+<ruleset name="Vidyard.com">
 
 	<target host="vidyard.com" />
-	<target host="*.vidyard.com" />
+	<target host="assets.vidyard.com" />
+	<target host="blog.vidyard.com" />
+	<target host="cdn.vidyard.com" />
+	<target host="embed.vidyard.com" />
+	<target host="play.vidyard.com" />
+	<target host="secure.vidyard.com" />
+	<target host="www.vidyard.com" />
+
+		<test url="http://assets.vidyard.com/assets/manifest_hub_layout_dull_silence-1e0ec1956ccb20340d4be19c984e4dd67fa7338a358ceba81afa464bc9269592.css" />
+		<test url="http://cdn.vidyard.com/thumbnails/custom/68dd6a4a-6853-4f49-adc3-4e7693bea853.jpg" />
 
 
-	<securecookie host="^seure\.vidyard\.com$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^https?://(?:secure\.|www\.)?vidyard\.com/"
-		to="https://secure.vidyard.com/" />
-
-	<rule from="^http://(embed|play)\.vidyard\.com/"
-		to="https://$1.vidyard.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

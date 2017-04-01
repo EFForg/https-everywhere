@@ -12,31 +12,43 @@
 			- www.engadget.com
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *engadget.com:
 
-		- ^ ¹
-		- alt ²
-		- hd ²
-		- mobile ²
-		- www ²
+		- alt ¹
+		- de ¹
+		- hd ¹
+		- m ¹
+		- mobile ¹
 
 	¹ Refused
-	² Redirects to http, valid cert
 
 
-	Mixed content:
-
-		- css on profiles from fonts.googleapis.com *
-
-	* Secured by us
+	^engadget.com: Refused
 
 -->
 <ruleset name="Engadget.com (partial)">
 
-	<target host="profiles.engadget.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="www.engadget.com" />
+
+	<!--	Complications:
+				-->
+	<target host="engadget.com" />
 
 
-	<rule from="^http://profiles\.engadget\.com/"
-		to="https://profiles.engadget.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.engadget\.com$" name="^gdgt_edition$" /-->
+
+	<securecookie host="^\." name="^gdgt_edition$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://engadget\.com/"
+		to="https://www.engadget.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,41 @@
+<!--
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .getapp.com
+		- fr.getapp.com
+		- lab.getapp.com
+		- www.getapp.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- favicon on lab from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="GetApp.com">
+
+	<target host="getapp.com" />
+	<target host="assets.getapp.com" />
+	<target host="fr.getapp.com" />
+	<target host="lab.getapp.com" />
+	<target host="www.getapp.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.getapp\.com$" name="^(?:__cfduid|cf_clearance|gauid)$" /-->
+	<!--securecookie host="^(?:fr|www)\.getapp\.com$" name="^getapp\.session$" /-->
+	<!--securecookie host="^lab\.getapp\.com$" name="^X-Mapping-" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid$|_gat?$|_gat_|cf_clearance$)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

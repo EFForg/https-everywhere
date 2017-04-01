@@ -1,67 +1,64 @@
 <!--
-	For problematic rules, see CCS-problematic.xml.
-
-
 	For other Foot Locker coverage, see Foot_Locker_Inc.xml.
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *ccs.com:
 
-		- dailysweeps
+		- blog ʳ
+		- dailysweeps ʳ
+		- ebm.e ʳ
+		- f.e ʳ
+		- jobs ʳ
+		- reviews ʳ
 
-
-	Problematic subdomains:
-
-		- ^		(mismatched)
-		- blog		(works, mismatched, CN: www.webhero.com)
-		- ebm.e		(mismatched, CN: ebm.cheetahmail.com)
-		- f.e		(mismatched, CN: *.chtah.com)
-		- jobs *
-		- reviews *
+	ʳ Refused
 
 
-	* Works, akamai
+	^ccs.com: Refused
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains and hosts:
 
-		- (www.)	(^ → www)
-		- ebm.e		(→ ebm.cheetahmail.com)
-		- f.e		(→ f.chtah.com)
-		- images
-		- m
-		- shop
-
-
-	Targets solely for wildcard cookies:
-
-		- *.shop.ccs.com
-
-
-	Mixed data are only images and so shouldn't be a problem.
+		- .ccs.com
+		- shop.ccs.com
+		- .shop.ccs.com
 
 -->
-<ruleset name="CCS (partial)">
+<ruleset name="CCS.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="images.ccs.com" />
+	<target host="m.ccs.com" />
+	<target host="shop.ccs.com" />
+	<target host="www.ccs.com" />
+
+	<!--	Complications:
+				-->
 	<target host="ccs.com" />
-	<target host="*.ccs.com" />
-	<target host="*.e.ccs.com" />
-	<target host="*.shop.ccs.com" />
+	<target host="ebm.e.ccs.com" />
+	<target host="f.e.ccs.com" />
 
 
-	<securecookie host="^.*\.ccs\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.ccs\.com$" name="^(?:incap_ses_\d+_\d+|nlbi_\d+|visid_incap_\d+)$" /-->
+	<!--securecookie host="^shop\.ccs\.com$" name="^___utmv[abm]\w+$" /-->
+	<!--securecookie host="^\.shop\.ccs\.com$" name="^(?:GEOBANNERS|frontend)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^https?://(?:www\.)?ccs\.com/"
+	<rule from="^http://ccs\.com/"
 		to="https://www.ccs.com/" />
 
-	<rule from="^https?://ebm\.e\.ccs\.com/"
+	<rule from="^http://ebm\.e\.ccs\.com/"
 		to="https://ebm.cheetahmail.com/" />
 
-	<rule from="^https?://f\.e\.ccs\.com/"
+	<rule from="^http://f\.e\.ccs\.com/"
 		to="https://f.chtah.com/" />
 
-	<rule from="^http://(images|m|shop)\.ccs\.com/"
-		to="https://$1.ccs.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

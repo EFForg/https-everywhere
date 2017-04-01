@@ -1,124 +1,124 @@
 <!--
 	Other Amazon rulesets:
 
-		- Amazon-Associates.xml
+		- 6PM.com.xml
+		- AWS_Trust.com.xml
+		- AbeBooks.co.uk.xml
+		- AbeBooks.xml
+		- Amazon-Adsystem.com.xml
+		- Amazon.jobs.xml
 		- AmazonAWS.xml
-		- Amazon_EU.xml
-		- Amazon_JP.xml
+		- AmazonSupply.com.xml
+		- Amazon_Trust.com.xml
+		- Amazon_blogs.com.xml
+		- Assoc-Amazon.ca.xml
+		- Assoc-Amazon.co.jp.xml
+		- Assoc-Amazon.co.uk.xml
+		- Assoc-Amazon.com.xml
+		- Assoc-Amazon.de.xml
+		- Assoc-Amazon.fr.xml
+		- BeautyBar.com.xml
+		- ComiXology.com.xml
+		- CreateSpace.xml
+		- Images-CreateSpace.com.xml
+		- Junglee.com.xml
+		- MTurk.com.xml
+		- Soap.com.xml
+		- TenMarks.com.xml
+		- amazon.ca.xml
+		- amazon.cn.xml
+		- amazon.co.jp.xml
+		- amazon.co.uk.xml
+		- amazon.com.au.xml
+		- amazon.com.br.xml
+		- amazon.com.mx.xml
+		- amazon.de.xml
+		- amazon.es.xml
+		- amazon.fr.xml
+		- amazon.in.xml
+		- amazon.it.xml
+		- amazon.nl.xml
+		- casa.com.xml
+		- diapers.com.xml
+		- eastdane.com.xml
+		- q-assets.com.xml
+		- quidsi.com.xml
+		- shopbop.com.xml
+		- wag.com.xml
+		- yoyo.com.xml
 
-
-	This rule is off by default because it caused so many aspects of the
-	Amazon site to break; see the mailing list archives for details.
-	Currently being fixed...
 
 	Amazon appears to operate in 7 countries, and does not hold the domains
 	for some others, like .se or .be.  In other cases there is an http-only site
 	that redirects to one of these 7 countries.
 
 
-	amazon.com:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
-		Does work:
+		- .amazon.com
+		- www.amazon.com
 
-			- ap/		(appears to be purchase-management related)
-			- ([\w-]+/)?dp/	(i.e. dp/ possibly preceeded by title)
-			- e/\w{10,10}/	(i.e. e/ followed by ASIN)
-			- gp/cart
-			- gp/css
-			- gp/feature.html
-			- gp/redirect.html
-			- gp/registry/wishlist
-
-		Doesn't work:
-
-			- $			(i.e. homepage)
-			- ([\w-]+/)?b/	 	(i.e. b/ preceeded by category)
-			- exec/obidos/ASIN/
-			- ([\w-]+/)gp/		(i.e. gp/ possibly preceeded by title)
-			- gp/goldbox($|\?)
-			- gp/kindle/pc($|\?)
-			- gp/pdp/profile($|\?)
-			- gp/product/
-			- gp/richpub/syltguides/byauthor($|\?)
-			- Help/
-			- l/
-			- s/
-
-
-	amazon.cn:
-
-		Doesn't work:
-
-			- Everything?
-
-	amazon.ca:
-
-		Does work:
-
-			everything except...
-
-		Doesn't work:
-
-			/mn/search/
-				
-
-	Partially covered domains:
-
-		- askville.amazon.com	(pages redirect to SendToHttp.do)
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Amazon (broken)" default_off="breaks Look Inside the Book">
+<ruleset name="Amazon.com">
 
-	<target host="amazon.ca" />
-	<target host="www.amazon.ca" />
 	<target host="amazon.com" />
-	<target host="askville.amazon.com" />
-		<exclusion pattern="^http://askville\.amazon\.com/(?!css/)" />
+	<target host="advertising.amazon.com" />
+	<target host="affiliate-program.amazon.com" />
+	<target host="authorcentral.amazon.com" />
+	<target host="catalyst.amazon.com" />
+	<target host="coursematerials.amazon.com" />
 	<target host="developer.amazon.com" />
+	<target host="kdp.amazon.com" />
+	<target host="kindlescout.amazon.com" />
 	<target host="local.amazon.com" />
+	<target host="payments.amazon.com" />
+	<target host="pda-bes.amazon.com" />
+	<target host="rcm.amazon.com" />
+	<target host="sellercentral.amazon.com" />
+	<target host="services.amazon.com" />
+	<target host="smile.amazon.com" />
+	<target host="storywriter.amazon.com" />
+	<target host="studios.amazon.com" />
+	<target host="uedata.amazon.com" />
+	<target host="vendorexpress.amazon.com" />
+	<target host="videodirect.amazon.com" />
+	<target host="whispercast.amazon.com" />
+	<target host="widgets.amazon.com" />
+	<target host="ws.amazon.com" />
 	<target host="www.amazon.com" />
-		<!--
-			These pages don't work on .com:
-							-->
-		<exclusion pattern="^http://www\.amazon\.com/(?:$|\?|exec/obidos/|gp/(?:(?:goldbox|kindle/pc|pdp/profile|richpub/syltguides/byauthor)(?:$|\?)|product/)|l/|(?:[\w\-]+/)?(?:b|dp|Help)/)" />
-		<!--
-			- ajaxv2: Breaks adding to basket for products with options
-			- dynamic-update: Breaks image zoom
-								-->
-		<exclusion pattern="^http://(?:www\.)?amazon\.com/gp/twister/(?:ajaxv2|dynamic-update/)" />
-		<!--
-			Search redirects to http, for all sites.
+
+		<!--	Amazon has a history of breaking us soon after
+			adding rulesets, so these are here to detect that.
 									-->
-		<exclusion pattern="^http://www\.amazon\.[\w\.]+/(?:gp/search\?|mn/search(?:$|\?)|s(?:/|\?rh=))" />
+		<test url="http://www.amazon.com/-/e/B001JS3S9M" />
+		<test url="http://www.amazon.com/-/e/B01FBTO1GI" />
+		<test url="http://www.amazon.com//e/B00T41GEFQ" />
+		<test url="http://www.amazon.com/Chris-Kennedy/e/B00E4MIJA8" />
+		<test url="http://www.amazon.com/Francis-H-Powell/e/B00WSWYVNK" />
+		<test url="http://www.amazon.com/International-Shipping-Direct/b/?node=230659011" />
+		<test url="http://www.amazon.com/J.K.-Rowling/e/B000AP9A6K/" />
+		<test url="http://www.amazon.com/Joey-Reghitto/e/B01DJH2WRE" />
+		<test url="http://www.amazon.com/Mary-Bartnikowski/e/B001KJ3QOC" />
+		<test url="http://www.amazon.com/Pattern-Recognition-William-Gibson-ebook/dp/B000OCXGVY" />
+		<test url="http://www.amazon.com/b?node=14047587011" />
+		<test url="http://www.amazon.com/business/" />
+		<test url="http://www.amazon.com/gift-cards/b/?node=2238192011" />
+		<test url="http://www.amazon.com/gp/browse.html?node=14048078011" />
+		<test url="http://www.amazon.com/s/?rh=i%3Agift-cards" />
 
 
-	<!--	Verified as working for UK, ca appears to function identically.
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.amazon\.com$" name="^(?:kdp-lc-main|session-id|session-id-time|session-token|skin|ubid-main|x-wl-uid)$" /-->
+	<!--securecookie host="^www\.amazon\.com$" name="^x-amz-captcha-[12]$" /-->
 
-		Unfortunately, navigating to an unsecured page wipes one's shopping basket :(
-			This is problem with our handling of secure cookies, wherein we treat
-		secure and non-secure cookies with the same ID as one cookie, instead of two.
-			If our handling were correct, this securecookie rule would have only
-		one problem, namely that basket information would be missing on search pages.
-
-	<securecookie host="^(www)?\.amazon\.ca$" name=".+" />
-
-		These cookies are set all over .com:
-
-	<securecookie host="^\.amazon\.com$" name="^session-id(-time)?$" />
-
-		These cookies are set by gp/cart/view.html
-
-	<securecookie host="\.amazon\.com$" name="^(session-token|ubid-main)$"/-->
-	<securecookie host="^local\.amazon\.com$" name=".+" />
+	<securecookie host="." name="^(?:aps-trtmnt$|s_v)" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?amazon\.c(a|om)/mn/search/uedata/"
-		to="https://www.amazon.c$1/uedata/" />
-
-	<rule from="^http://(?:www\.)?amazon\.c(a|om)/"
-		to="https://www.amazon.c$1/" />
-
-	<rule from="^http://(askville|developer|local)\.amazon\.com/"
-		to="https://$1.amazon.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

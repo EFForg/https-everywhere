@@ -1,31 +1,28 @@
 <!--
-	For other Samsung coverage, see Samsung.xml.
-
-
-	Problematic subdomains:
-
-		- ^	(cert only matches *.allshareplay.com)
-
-
-	Fully covered subdomains:
-
-		- (www.)	(^ → www)
-		- m
-
+	For other Samsung coverage, see Samsung.com.xml.
+	
+	Mismatch:
+		sw.*
 -->
-<ruleset name="AllShare Play">
+
+<ruleset name="AllShare_Play">
 
 	<target host="allshareplay.com" />
-	<target host="*.allshareplay.com" />
-
-
-	<securecookie host="^.*\.allshareplay\.com$" name=".+" />
-
-
-	<rule from="^https?://(?:www\.)?allshareplay\.com/"
-		to="https://www.allshareplay.com/" />
-
-	<rule from="^http://(fwk|m)\.allshareplay\.com/"
-		to="https://$1.allshareplay.com/" />
-
+	<target host="www.allshareplay.com" />
+	<target host="fwk.allshareplay.com" />
+	<target host="m.allshareplay.com" />
+		<test url="http://m.allshareplay.com/pc/main/photoAlbumCreate.html" />
+	<!--	403 in https://m.allshareplay.com/$	-->
+	<exclusion pattern="^http://m\.allshareplay\.com/$" />
+		<test url="http://m.allshareplay.com/" />
+	
+	<!--	403 in https://allshareplay.com/$	-->
+	<rule from="^http://allshareplay\.com/$"
+		to="https://link.samsung.com/" />
+		<test url="http://allshareplay.com/" />
+		
+	<rule from="^http:" to="https:" />
+		<test url="http://www.allshareplay.com/pc/common/css/camera.css" />
+		<test url="http://m.allshareplay.com/pc/error/underconstruction.html" />
+		
 </ruleset>

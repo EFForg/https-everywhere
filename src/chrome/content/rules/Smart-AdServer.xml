@@ -13,43 +13,46 @@
 
 		- (www.)
 
-
-	Fully covered domains:
-
-		- ced.sascdn.com	(→ im2.smartadserver.com)
-
-		- smartadserver.com subdomains:
-
-			- akamai	(→ im2)
-			- diff
-			- im2
-			- manage
-			- managebeta
-			- www4
-
 -->
-<ruleset name="Smart AdServer (partial)">
+<ruleset name="Smart AdServer.com (partial)" >
 
 	<target host="ced.sascdn.com" />
+	<target host="static.sascdn.com" />
 	<target host="smartadserver.com" />
-	<target host="*.smartadserver.com" />
+
+	<target host="diff.smartadserver.com" />
+	<target host="diff3.smartadserver.com" />
+	<target host="im2.smartadserver.com" />
+	<target host="manage.smartadserver.com" />
+	<target host="managebeta.smartadserver.com" />
+	<target host="ww251.smartadserver.com" />
+	<target host="ww690.smartadserver.com" />
+	<target host="www.smartadserver.com" />
+	<target host="www3.smartadserver.com" />
+	<target host="www4.smartadserver.com" />
+	<target host="www7.smartadserver.com" />
+	<target host="www84.smartadserver.com" />
 
 
 	<!--	Wildcard cookies set by web bugs:
 							-->
-	<securecookie host="^\.smartadserver\.com$" name="^(?:pdomid|pbw|pid|sasd2?|TestIfCookieP?|vs)" />
-	<securecookie host="^(?:diff|im2|manage|www)\.smartadserver\.com$" name=".+" />
+	<securecookie host="^\." name="^(?:pdomid|pbw|pid|sasd2?|TestIfCookieP?|vs)$" />
+	<securecookie host="^(?:diff3?|im2|manage|www)\.smartadserver\.com$" name="." />
 
 
-	<!--	every https URL redirects to shim.gif	-->
-	<rule from="^http://(?:www\.)?smartadserver\.com/(images/)?shim\.gif$"
-		to="https://www.smartadserver.com/$1shim.gif"/>
+	<rule from="^http://(?:www\.)?smartadserver\.com/"
+		to="https://www.smartadserver.com/" />
 
-	<!--	cert: Akamai.  Appears to be the same as above.	-->
-	<rule from="^http://(?:ced\.sascdn|akamai\.smartadserver)\.com/"
-		to="https://im2.smartserver.com/"/>
+		<!--	every https URL redirects to shim.gif	-->
+		<exclusion pattern="^http://(?:www\.)?smartadserver\.com/(?!(?:images/)?shim\.gif$)" />
 
-	<rule from="^http://(diff|im2|manage(?:beta)?|www4?)\.smartadserver\.com/"
-		to="https://$1.smartadserver.com/" />
+			<!--	+ve:
+					-->
+			<test url="http://smartadserver.com/contact" />
+			<test url="http://smartadserver.com/jobs" />
+			<test url="http://www.smartadserver.com/privacy-policy" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

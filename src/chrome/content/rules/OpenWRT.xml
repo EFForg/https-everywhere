@@ -1,46 +1,44 @@
 <!--
-	For problematic rules, see OpenWRT-mismatches.xml.
+	Nonfunctional hosts in *openwrt.org:
 
+		- kamikaze ¹
+		- buildbot.openwrt.org:8010 ²
 
-	Nonfunctional subdomains:
+	¹ Shows www.openwrt.org
+	² Only using http
 
-		- downloads *
-		- git		(refused)
-		- kamikaze *
+	Insecure cookies are set for these hosts:
 
-	* Shows www; mismatched, CN: www.openwrt.org
-
-
-	Problematic subdomains:
-
-		- wiki	(works; mismatched, CN: subsignal.org)
-
-
-	Fully covered subdomains:
-
-		- (www.)
-		- dev
-		- forum
-		- lists
+		- openwrt.org
+		- forum.openwrt.org
+		- wiki.openwrt.org
 
 -->
-<ruleset name="OpenWRT (partial)">
+<ruleset name="OpenWRT.org">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="openwrt.org" />
-	<target host="*.openwrt.org" />
+	<target host="dev.openwrt.org" />
+	<target host="downloads.openwrt.org" />
+	<target host="forum.openwrt.org" />
+	<target host="git.openwrt.org" />
+	<target host="lists.openwrt.org" />
+	<target host="mirror2.openwrt.org" />
+	<target host="wiki.openwrt.org" />
+	<target host="www.openwrt.org" />
 
 
-	<securecookie host="^(?:.*\.)?openwrt\.org$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(forum\.)?openwrt\.org$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^wiki\.openwrt\.org$" name="^bb2_screener_$$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://openwrt\.org/"
-		to="https://openwrt.org/" />
-
-	<rule from="^http://(dev|forum|lists|www)\.openwrt\.org/"
-		to="https://$1.openwrt.org/" />
-
-	<rule from="^https?://wiki\.openwrt\.org/lib/tpl/ameoto/images/(bg(?:-2)?|footer|openwrt-logo)\.png$"
-		to="https://openwrt.org/.styles/img/$1.png" />
+	<rule from="^http:"
+		to="https:" />
 
 
 </ruleset>

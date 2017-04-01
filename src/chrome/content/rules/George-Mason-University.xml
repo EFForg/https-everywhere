@@ -1,4 +1,7 @@
+
 <!--
+	George Mason University
+
 	Other George Mason University rulesets:
 
 		- Mercatus-Center.xml
@@ -6,25 +9,146 @@
 
 	Nonfunctional subdomains:
 
+		- ofpslive ¹
 		- wireless	(shows www, mismatched)
+
+	¹ 403
+
+
+	Problematic subdomains:
+
+		- spgia *
+		- today ²
+
+	* Mismatched
+	² Mixed css
 
 
 	Partially covered domains:
 
 		- mason		($ prints "/opt/shtdocs works!")
+		- ulife ²
+
+	² Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- (www.)?	(^ → www)
+		- chnm
+		- eagle
+		- getconnected
+		- itservices
+		- login
+		- mlpassword
+		- password
+		- peoplefinder
+		- policy
+		- si
+		- welcomeweek
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .gmu.edu
+		- eagle.gmu.edu
+		- peoplefinder.gmu.edu
+
+
+	Mixed content:
+
+		- Fonts on itservices from themes.googleusercontent.com
+
+		- Images, on:
+
+			- today from $self
+			- today from l.yimg.com
+			- welcomeweek from $self
+
+		- favicon on ulassessment from gmu.edu
+
+		- Ads/bugs, on:
+
+			- ulassessmen from image.exct.net
+			- si from www.facebook.com
 
 -->
-<ruleset name="George Mason University (partial)" platform="mixedcontent">
+<ruleset name="GMU.edu (partial)">
 
 	<target host="gmu.edu"/>
-	<target host="*.gmu.edu"/>
-		<exclusion pattern="^http://mason\.gmu\.edu/(?!~)" />
+	<target host="chnm.gmu.edu"/>
+	<target host="eagle.gmu.edu" />
+	<target host="getconnected.gmu.edu" />
+	<target host="itservices.gmu.edu"/>
+	<target host="login.gmu.edu" />
+	<target host="mason.gmu.edu"/>
+	<target host="mlpassword.gmu.edu" />
+	<target host="password.gmu.edu" />
+	<target host="peoplefinder.gmu.edu" />
+	<target host="policy.gmu.edu"/>
+	<target host="si.gmu.edu"/>
+	<target host="today.gmu.edu" />
+	<target host="ulassessment.gmu.edu" />
+	<target host="ulife.gmu.edu"/>
+	<target host="welcomeweek.gmu.edu" />
 	<target host="www.gmu.edu"/>
+
+		<exclusion pattern="^http://mason\.gmu\.edu/(?!~)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://mason.gmu.edu//" />
+
+			<!--	-ve:
+					-->
+			<test url="http://mason.gmu.edu/~iacs/" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://today\.gmu\.edu/+(?!css/|images/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://today.gmu.edu/announcements/" />
+			<test url="http://today.gmu.edu/rss.php" />
+			<test url="http://today.gmu.edu/request.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://today.gmu.edu/images/header.gif" />
+			<test url="http://today.gmu.edu/css/today_mason.css" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://ulife\.gmu\.edu/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://ulife\.gmu\.edu/+(?!wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://ulife.gmu.edu/blog/" />
+			<test url="http://ulife.gmu.edu/calendar/" />
+			<test url="http://ulife.gmu.edu/home/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://ulife.gmu.edu/wp-content/themes/kuma-cub/images/ul_title.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.gmu\.edu$" name="^people_finder$" /-->
+	<!--securecookie host="^(eagle|peoplefinder)\.gmu\.edu$" name="people_finder_number_results$" /-->
+
+	<securecookie host="^(?:eagle|peoplefinder)\.gmu\.edu$" name=".+" />
+
 
 	<rule from="^http://gmu\.edu/"
 		to="https://www.gmu.edu/"/>
 
-	<rule from="^http://(chnm|mason|www)\.gmu\.edu/"
-		to="https://$1.gmu.edu/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

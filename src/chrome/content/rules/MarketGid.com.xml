@@ -1,0 +1,71 @@
+<!--
+	Other MarketGid rulesets:
+
+		- MGID.com
+
+
+	Nonfunctional subdomains:
+
+		- (www.)? ¹
+		- goods ²
+		- news ³
+
+	¹ Redirects to http
+	² Dropped
+	³ Shows default page
+
+
+	Fully covered subdomains:
+
+		- a
+		- dashboard
+		- my
+		- tools
+		- usr
+
+
+	Insecure cookies are set for these domains:
+
+		- .marketgid.com
+		- dashboard.marketgid.com
+		- tools.marketgid.com
+		- .www.marketgid.com
+
+
+	Mixed content:
+
+		- Image on usr from tools ¹
+
+		- Bugs, on:
+
+			- usr from img.dt00.net ¹
+			- usr from c.bigmir.net ²
+			- usr from i.bigmir.net ¹
+			- usr from counter.rambler.ru ¹
+			- usr from top100-images.rambler.ru ¹
+
+	¹ Secured by us
+	² Unsecurable <= reset
+
+-->
+<ruleset name="MarketGid.com (partial)">
+
+	<target host="*.marketgid.com" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?marketgid\.com/($|favicon\.ico|fonts/|images/|styles/)" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^(?:\.www)?\.marketgid\.com$" name="^httpsReferer$" />
+	<!--securecookie host="^(dashboard|tools)\.marketgid\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^(?:dashboard|tools)\.marketgid\.com$" name=".+" />
+
+
+	<rule from="^http://(a|dashboard|my|tools|usr)\.marketgid\.com/"
+		to="https://$1.marketgid.com/" />
+
+</ruleset>

@@ -1,10 +1,28 @@
-<ruleset name="SecureList">
-  <target host="securelist.com" />
-  <target host="www.securelist.com" />
+<!--
+	Insecure cookie are set for these hosts: ᶜ
 
-  <securecookie host="^(.+\.)?securelist\.com$" name=".*"/>
+		- securelist.com
+		- www.securelist.com
 
-	<!--	Cert only matches www.
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="SecureList.com">
+
+	<target host="securelist.com" />
+	<target host="apt.securelist.com" />
+	<target host="cdn.securelist.com" />
+	<target host="www.securelist.com" />
+
+
+	<!--	Not secured by server:
 					-->
-  <rule from="^https?://(?:www\.)?securelist\.com/" to="https://www.securelist.com/"/>
+	<!--securecookie host="^(?:www\.)?securelist\.com$" name="^X-Mapping-" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

@@ -1,16 +1,63 @@
+<!--
+	Nonfunctional hosts in *vevo.com:
+
+		- comingsoon *
+
+	* Refused
+
+	Problematic hosts in *vevo.com:
+
+		- cache ¹
+		- go ²
+		- img.cache ¹
+
+	¹ Mismatched, CN: a248.e.akamai.net
+	² Mismatched, CN: *.awe.sm
+
+	Problematic hosts in *vevocdn.com:
+
+		- aws-cache *
+
+	* Mismatched, CN: *.vevo.com
+-->
 <ruleset name="VEVO">
-
 	<target host="vevo.com" />
-	<target host="*.vevo.com" />
+	<target host="apiv2.vevo.com" />
+	<target host="aws-cache.vevo.com" />
+	<target host="blog.vevo.com" />
+	<target host="cache.vevo.com" />
 	<target host="img.cache.vevo.com" />
+	<target host="fw.vevo.com" />
+	<target host="h264-aws.vevo.com" />
+	<target host="m.vevo.com" />
+	<target host="o.vevo.com" />
+	<target host="s.vevo.com" />
+	<target host="scache.vevo.com" />
+	<target host="workitout.vevo.com" />
+	<target host="www.vevo.com" />
+	<target host="aws-cache.vevocdn.com" />
 
+	<test url="http://scache.vevo.com/Content/VevoImages/artist/62AE5CCE473B998AFD2DB55B659E23E32013167114452900.jpg?width=98&amp;height=98&amp;resize=round" />
 
-	<rule from="^https?://(?:www\.)?vevo\.com/"
-		to="https://www.vevo.com/" />
-
-	<!--	cache, img.cache: Akamai
-					-->
-	<rule from="^https?://(?:img\.|s)?cache\.vevo\.com/"
+	<rule from="^http://cache\.vevo\.com/"
 		to="https://scache.vevo.com/" />
 
+	<!-- www.vevo.com makes relative references to //img.cache.vevo.com/ -->
+	<rule from="^https?://img\.cache\.vevo\.com/"
+		to="https://scache.vevo.com/" />
+
+		<test url="https://img.cache.vevo.com/" />
+		<test url="http://img.cache.vevo.com/Content/VevoImages/artist/62AE5CCE473B998AFD2DB55B659E23E32013167114452900.jpg?width=98&amp;height=98&amp;resize=round" />
+		<test url="https://img.cache.vevo.com/Content/VevoImages/artist/62AE5CCE473B998AFD2DB55B659E23E32013167114452900.jpg?width=98&amp;height=98&amp;resize=round" />
+
+	<!-- www.vevo.com makes relative references to //aws-cache.vevocdn.com/ -->
+	<rule from="^https?://aws-cache\.vevocdn\.com/"
+		to="https://aws-cache.vevo.com/" />
+
+		<test url="https://aws-cache.vevocdn.com/" />
+		<test url="http://aws-cache.vevocdn.com/assets/images/57598f48-11cc-47c0-9496-0c3c0a0b0d7b.png?width=281&amp;height=159&amp;resize=fill" />
+		<test url="https://aws-cache.vevocdn.com/assets/images/57598f48-11cc-47c0-9496-0c3c0a0b0d7b.png?width=281&amp;height=159&amp;resize=fill" />
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

@@ -3,20 +3,24 @@ window.addEventListener("load", function load(event) {
   // need to wrap migratePreferences in another callback so that notification
   // always displays on browser restart
   window.removeEventListener("load", load, false);
-  gBrowser.addEventListener("DOMContentLoaded", migratePreferences, true);
+  if (gBrowser) {
+    gBrowser.addEventListener("DOMContentLoaded",
+      migratePreferences.bind(null, gBrowser),
+      true);
+  }
 }, false);
 
 const CI = Components.interfaces;
 const CC = Components.classes;
 
 // LOG LEVELS ---
-VERB=1;
-DBUG=2;
-INFO=3;
-NOTE=4;
-WARN=5;
+let VERB=1;
+let DBUG=2;
+let INFO=3;
+let NOTE=4;
+let WARN=5;
 
-HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
+let HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
                       .getService(Components.interfaces.nsISupports)
                       .wrappedJSObject;
 
@@ -38,6 +42,11 @@ httpsEverywhere.toolbarButton = {
   COUNTER_PREF: "extensions.https_everywhere.show_counter",
 
   /**
+   * Name of preference for whether HTTP Nowhere is on.
+   */
+  HTTP_NOWHERE_PREF: "extensions.https_everywhere.http_nowhere.enabled",
+
+  /**
    * Used to determine if a hint has been previously shown.
    * TODO: Probably extraneous, look into removing
    */
@@ -53,34 +62,54 @@ httpsEverywhere.toolbarButton = {
 
     var tb = httpsEverywhere.toolbarButton;
 
-    // make sure icon is proper color during init
-    tb.changeIcon();
-
     // make sure the checkbox for showing counter is properly set
     var showCounter = tb.shouldShowCounter();
     var counterItem = document.getElementById('https-everywhere-counter-item');
-    counterItem.setAttribute('checked', showCounter ? 'true' : 'false');
+    if (counterItem) {
+      counterItem.setAttribute('checked', showCounter ? 'true' : 'false');
+    }
 
-    // show ruleset counter when a tab is changed
-    tb.updateRulesetsApplied();
-    gBrowser.tabContainer.addEventListener(
-      'TabSelect', 
-      tb.updateRulesetsApplied, 
-      false
-    );
+    // make sure UI for HTTP Nowhere mode is properly set
+    var httpNowhereItem = document.getElementById('http-nowhere-item');
+    var showHttpNowhere = tb.shouldShowHttpNowhere();
+    var toolbarbutton = document.getElementById('https-everywhere-button');
+    if (httpNowhereItem) {
+      httpNowhereItem.setAttribute('checked', showHttpNowhere ? 'true' : 'false');
+    }
+    if (toolbarbutton) {
+      toolbarbutton.setAttribute('http_nowhere',
+                                 showHttpNowhere ? 'true' : 'false');
+    }
 
-    // hook event for when page loads
-    var onPageLoad = function() {
-      // Timeout is used for a number of reasons.
-      // 1) For Performance since we want to defer computation.
-      // 2) Sometimes the page is loaded before all applied rulesets are
-      //    calculated; in such a case, a half-second wait works.
-      setTimeout(tb.updateRulesetsApplied, 500);
-    };
+    // Make icon state match current status and tab.
+    tb.updateIconState();
 
-    var appcontent = document.getElementById('appcontent');
-    if (appcontent) {
-      appcontent.addEventListener('load', onPageLoad, true);
+    // There is no gBrowser object on Android. Instead Android uses the
+    // window.BrowserApp object:
+    // https://developer.mozilla.org/en-US/Add-ons/Firefox_for_Android/API/BrowserApp
+    if (gBrowser) {
+      gBrowser.tabContainer.addEventListener(
+        'TabSelect',
+        tb.updateIconState,
+        false
+      );
+
+      // add listener for top-level location change across all tabs
+      let httpseProgressListener = {
+        onLocationChange: function(aBrowser, aWebProgress, aReq, aLoc) {
+          HTTPSEverywhere.log(DBUG, "Got on location change!");
+          HTTPSEverywhere.resetApplicableList(aBrowser);
+        },
+        onStateChange: function(aBrowser, aWebProgress, aReq, aFlags, aStatus) {
+          if ((gBrowser.selectedBrowser === aBrowser) &&
+              (aFlags & CI.nsIWebProgressListener.STATE_STOP) &&
+              aWebProgress.isTopLevel) {
+            HTTPSEverywhere.log(DBUG, "Got on state change");
+            tb.updateIconState();
+          }
+        }
+      };
+      gBrowser.addTabsProgressListener(httpseProgressListener);
     }
 
     // decide whether to show toolbar hint
@@ -89,14 +118,19 @@ httpsEverywhere.toolbarButton = {
         || !Services.prefs.getBoolPref(hintPref)) { 
       // only run once
       Services.prefs.setBoolPref(hintPref, true);
-      gBrowser.addEventListener("DOMContentLoaded", tb.handleShowHint, true);
+      // gBrowser unavailable on Android, see above.
+      if (gBrowser) {
+        gBrowser.addEventListener("DOMContentLoaded",
+          tb.handleShowHint.bind(null, gBrowser),
+          true);
+      }
     }
   },
 
   /**
    * Shows toolbar hint if previously not shown.
    */
-  handleShowHint: function() {
+  handleShowHint: function(gBrowser) {
     var tb = httpsEverywhere.toolbarButton;
     if (!tb.hintShown){
       tb.hintShown = true;
@@ -105,49 +139,51 @@ httpsEverywhere.toolbarButton = {
       var strings = document.getElementById('HttpsEverywhereStrings');
       var msg = strings.getString('https-everywhere.toolbar.hint');
       var hint = nBox.appendNotification(
-        msg, 
-        'https-everywhere', 
-        'chrome://https-everywhere/skin/https-everywhere-24.png', 
+        msg,
+        'https-everywhere',
+        'chrome://https-everywhere/skin/icon-active-24.png',
         nBox.PRIORITY_WARNING_MEDIUM,
-	[],
-	function(action) {
-	  // see https://developer.mozilla.org/en-US/docs/XUL/Method/appendNotification#Notification_box_events
-	  gBrowser.selectedTab = gBrowser.addTab(faqURL);
-	}
-      );
+        [
+          { accessKey: 'F',
+            callback: function(ntf, btn) {
+                // see https://developer.mozilla.org/en-US/docs/XUL/Method/appendNotification#Notification_box_events
+                gBrowser.selectedTab = gBrowser.addTab(faqURL);
+            },
+            label: 'FAQ…',
+          }
+        ]);
     }
     gBrowser.removeEventListener("DOMContentLoaded", tb.handleShowHint, true);
   },
 
-  /**
-   * Changes HTTPS Everywhere toolbar icon based on whether HTTPS Everywhere
-   * is enabled or disabled.
-   */
-  changeIcon: function() {
-    var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
-
-    var toolbarbutton = document.getElementById('https-everywhere-button');
-    if (enabled) {
-      toolbarbutton.setAttribute('status', 'enabled');
-    } else {
-      toolbarbutton.setAttribute('status', 'disabled');
+  selectedBrowser: function() {
+    // gBrowser is unavailable on Android, see above.
+    if (window.gBrowser) {
+      return window.gBrowser.selectedBrowser;
+    } else if (window.BrowserApp) {
+      return window.BrowserApp.selectedBrowser;
     }
   },
 
   /**
    * Update the rulesets applied counter for the current tab.
    */
-  updateRulesetsApplied: function() {
+  updateIconState: function() {
     var toolbarbutton = document.getElementById('https-everywhere-button');
-    var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
-    var showCounter = httpsEverywhere.toolbarButton.shouldShowCounter();
-    if (!enabled || !showCounter) { 
-      toolbarbutton.setAttribute('rulesetsApplied', 0);
+    if (!toolbarbutton) {
       return;
     }
 
-    var domWin = content.document.defaultView.top;
-    var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
+    var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
+    var blocking = httpsEverywhere.toolbarButton.shouldShowHttpNowhere();
+    var showCounter = httpsEverywhere.toolbarButton.shouldShowCounter();
+
+    var browser = httpsEverywhere.toolbarButton.selectedBrowser();
+    if (!browser) {
+      return;
+    }
+
+    var alist = HTTPSEverywhere.getExpando(browser,"applicable_rules");
     if (!alist) {
       return;
     }
@@ -166,8 +202,26 @@ httpsEverywhere.toolbarButton = {
       }
     }
 
-    toolbarbutton.setAttribute('rulesetsApplied', counter);
-    HTTPSEverywhere.log(INFO, 'Setting icon counter to: ' + counter);
+    // inactive: extension is enabled, but no rules were triggered on this page.
+    // active: extension is enabled and rewrote URLs on this page.
+    // blocking: extension is in "block all HTTP requests" mode.
+    // disabled: extension is disabled.
+    var iconState = 'inactive';
+    if (!enabled) {
+      iconState = 'disabled';
+    } else if (blocking) {
+      iconState = 'blocking';
+    } else if (counter) {
+      iconState = 'active';
+    }
+    toolbarbutton.setAttribute('state', iconState);
+    if (!showCounter) {
+      toolbarbutton.setAttribute('rulesetsApplied', 0);
+    } else {
+      toolbarbutton.setAttribute('rulesetsApplied', counter);
+    }
+
+    HTTPSEverywhere.log(INFO, 'Setting icon state to: ' + iconState + '[' + counter + ']');
   },
 
   /**
@@ -181,9 +235,19 @@ httpsEverywhere.toolbarButton = {
 
     var prefExists = sp.getPrefType(tb.COUNTER_PREF);
 
-    // the default behavior is to show the rulesets applied counter.
-    // if no preference exists (default) or its enabled, show the counter
-    return !prefExists || sp.getBoolPref(tb.COUNTER_PREF);
+    // the default behavior is to hide the rulesets applied counter.
+    return prefExists && sp.getBoolPref(tb.COUNTER_PREF);
+  },
+
+  /**
+   * Gets whether to show HTTP Nowhere UI.
+   *
+   * @return {boolean}
+   */
+  shouldShowHttpNowhere: function() {
+    var tb = httpsEverywhere.toolbarButton;
+    var sp = Services.prefs;
+    return sp.getBoolPref(tb.HTTP_NOWHERE_PREF);
   },
 
   /**
@@ -197,9 +261,23 @@ httpsEverywhere.toolbarButton = {
     var showCounter = tb.shouldShowCounter();
     sp.setBoolPref(tb.COUNTER_PREF, !showCounter);
 
-    tb.updateRulesetsApplied();
-  }
+    tb.updateIconState();
+  },
 
+  /**
+   * Toggles whether HTTP Nowhere mode is active, updates the toolbar icon.
+   */
+  toggleHttpNowhere: function() {
+    HTTPSEverywhere.toggleHttpNowhere();
+    reload_window();
+  },
+
+  /**
+   * Resets all rules to their default state.
+   */
+  resetToDefaults: function() {
+    HTTPSEverywhere.https_rules.resetRulesetsToDefaults()
+  }
 };
 
 function https_everywhere_load() {
@@ -246,20 +324,20 @@ function stitch_context_menu2() {
 var rulesetTestsMenuItem = null;
 
 function show_applicable_list(menupopup) {
-  var domWin = content.document.defaultView.top;
-  if (!(domWin instanceof CI.nsIDOMWindow)) {
-    alert(domWin + " is not an nsIDOMWindow");
-    return null;
+  var browser = httpsEverywhere.toolbarButton.selectedBrowser();
+  if (!browser) {
+    HTTPSEverywhere.log(WARN, "No browser for applicable list");
+    return;
   }
 
-  var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
+  var alist = HTTPSEverywhere.getExpando(browser,"applicable_rules");
   var weird=false;
-  
+
   if (!alist) {
     // This case occurs for error pages and similar.  We need a dummy alist
     // because populate_menu lives in there.  Would be good to refactor this
     // away.
-    alist = new HTTPSEverywhere.ApplicableList(HTTPSEverywhere.log, document, domWin);
+    alist = new HTTPSEverywhere.ApplicableList(HTTPSEverywhere.log, browser.currentURI);
     weird = true;
   }
   alist.populate_menu(document, menupopup, weird);
@@ -279,45 +357,36 @@ function show_applicable_list(menupopup) {
     if(!menupopup.contains(rulesetTestsMenuItem)) 
       menupopup.appendChild(rulesetTestsMenuItem);
   }
-  
 }
 
 function toggle_rule(rule_id) {
   // toggle the rule state
   HTTPSEverywhere.https_rules.rulesetsByID[rule_id].toggle();
-  var domWin = content.document.defaultView.top;
-  /*if (domWin instanceof CI.nsIDOMWindow) {
-    var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
-    if (alist) alist.empty();
-  }*/
   reload_window();
 }
 
 function reload_window() {
-  var domWin = content.document.defaultView.top;
-  if (!(domWin instanceof CI.nsIDOMWindow)) {
-    HTTPSEverywhere.log(WARN, domWin + " is not an nsIDOMWindow");
-    return null;
+  var browser = httpsEverywhere.toolbarButton.selectedBrowser();
+  if (browser) {
+    browser.reload();
   }
-  try {
-    var webNav =  domWin.QueryInterface(CI.nsIInterfaceRequestor)
-                        .getInterface(CI.nsIWebNavigation)
-                        .QueryInterface(CI.nsIDocShell);
-  } catch(e) {
-    HTTPSEverywhere.log(WARN,"failed to get webNav");
-    return null;
-  }
-  // This choice of flags comes from NoScript's quickReload function; not sure
-  // if it's optimal
-  webNav.reload(webNav.LOAD_FLAGS_CHARSET_CHANGE);  
 }
 
 function toggleEnabledState(){
-	HTTPSEverywhere.toggleEnabledState();
-	reload_window();	
+  HTTPSEverywhere.toggleEnabledState();
+  reload_window();
+  toggleEnabledUI();
+}
 
-  // Change icon depending on enabled state
-  httpsEverywhere.toolbarButton.changeIcon();
+function toggleEnabledUI() {
+  // Add/remove menu items depending on whether HTTPS-E is enabled
+  var items = document.querySelectorAll(".hide-on-disable");
+  var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
+  for (let i = 0; i < items.length; i++) {
+    items[i].hidden = !enabled;
+  }
+
+  httpsEverywhere.toolbarButton.updateIconState();
 }
 
 function open_in_tab(url) {
@@ -327,14 +396,18 @@ function open_in_tab(url) {
   recentWindow.delayedOpenTab(url, null, null, null, null);
 }
 
+function httpse_chrome_opener(url, prefs) {
+  HTTPSEverywhere.chrome_opener(url, prefs);
+}
+
 // hook event for showing hint
 HTTPSEverywhere.log(DBUG, 'Adding listener for toolbarButton init.');
 window.addEventListener("load", httpsEverywhere.toolbarButton.init, false);
 
-function migratePreferences() {
+function migratePreferences(gBrowser) {
   gBrowser.removeEventListener("DOMContentLoaded", migratePreferences, true);
   let prefs_version = HTTPSEverywhere.prefs.getIntPref("prefs_version");
-  
+
   // first migration loses saved prefs
   if(prefs_version == 0) {
     try {
@@ -355,7 +428,7 @@ function migratePreferences() {
         nBox.appendNotification(
           msg, 
           'https-everywhere-migration0', 
-          'chrome://https-everywhere/skin/https-everywhere-24.png', 
+          'chrome://https-everywhere/skin/icon-active-24.png', 
           nBox.PRIORITY_WARNING_MEDIUM
         );
       }
@@ -366,4 +439,3 @@ function migratePreferences() {
     HTTPSEverywhere.prefs.setIntPref("prefs_version", prefs_version+1);
   }
 }
-

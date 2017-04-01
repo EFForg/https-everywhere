@@ -1,30 +1,48 @@
 <!--
-	Nonfunctional domains:
+	CDN buckets:
+
+		- imh01-inmotionhosting1.netdna-ssl.com
+
+
+	Nonfunctional hosts in *inmotionhosting.com:
 
 		- inc02	(404 when rewritten to secure1 or www)
 
--->
-<ruleset name="InMotion Hosting">
 
-	<target host="chatwithourteam.com" />
-	<target host="www.chatwithourteam.com" />
-	<!--	* for cross-domain cookie	-->
-	<target host="*.www.chatwithourteam.com" />
+	Problematic hosts in *inmotionhosting.com:
+
+		- secure2102 ᵐ
+
+	ᵐ Mismatched
+
+
+	Mixed content:
+
+		- Ads on (www.)?secure from ad-srv1.inmotionhosting.com ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="InMotion Hosting.com">
+
 	<target host="inmotionhosting.com" />
 	<target host="*.inmotionhosting.com" />
-	<target host="www.*.inmotionhosting.com" />
+
+		<test url="http://ad-srv1.inmotionhosting.com/www/delivery/avw.php?zoneid=1&amp;cb=&amp;n=" />
+		<test url="http://secure1.inmotionhosting.com/" />
+		<test url="http://www.secure1.inmotionhosting.com/" />
+		<test url="http://www.inmotionhosting.com/" />
 
 
-	<securecookie host="^(.*\.)?(chatwithourteam|inmotionhosting)\.com$" name=".*" />
+	<securecookie host="." name="." />
 
-
-	<rule from="^http://(www\.)?chatwithourteam\.com/"
-		to="https://$1chatwithourteam.com/" />
-
-	<rule from="^http://((?:www\.)?secure\d{1,3}\.|www\.)?inmotionhosting\.com/"
-		to="https://$1inmotionhosting.com/" />
 
 	<rule from="^http://img0\d\.inmotionhosting\.com/"
 		to="https://secure1.inmotionhosting.com/" />
+
+		<test url="http://img01.inmotionhosting.com/_img/head_logo.gif" />
+
+	<rule from="^http://((?:ad-srv1|(?:www\.)?secure\d{1,3}|www)\.)?inmotionhosting\.com/"
+		to="https://$1inmotionhosting.com/" />
 
 </ruleset>

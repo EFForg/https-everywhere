@@ -1,32 +1,7 @@
 <!--
-	Problematic domains:
+	Insecure cookies are set for these domains:
 
-		- sie	(shows security)
-
-
-	Fully covered subdomains:
-
-		- (www.)
-		- bind10
-		- confluence
 		- kb
-		- store
-
-
-	Observed cookie domains:
-
-		- bind10
-		- bindforum
-		- confluence
-		- dhcpforum
-		- dlv
-		- kb
-		- lists
-		- security
-		- sie	(→ security)
-		- sns
-		- store
-		- support
 
 
 	Mixed content:
@@ -36,19 +11,32 @@
 	* Secured by us
 
 -->
-<ruleset name="ISC">
+<ruleset name="ISC.org">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="isc.org" />
-	<target host="*.isc.org" />
+	<target host="bind10.isc.org" />
+	<target host="bindforum.isc.org" />
+	<target host="confluence.isc.org" />
+	<target host="dhcpforum.isc.org" />
+	<target host="dlv.isc.org" />
+	<target host="kb.isc.org" />
+	<target host="lists.isc.org" />
+	<target host="sns.isc.org" />
+	<target host="store.isc.org" />
+	<target host="support.isc.org" />
+	<target host="www.isc.org" />
 
 
-	<securecookie host=".+\.isc\.org$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^kb\.isc\.org$" name="^KMPSESS$" /-->
+
+	<securecookie host=".\.isc\.org$" name="." />
 
 
-	<rule from="^http://((?:bind10|bindforum|confluence|dhcpforum|dlv|kb|lists|security|sns|store|support|www)\.)?isc\.org/"
-		to="https://$1isc.org/" />
-
-	<rule from="^http://sie\.isc\.org/"
-		to="https://security.isc.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

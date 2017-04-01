@@ -1,6 +1,4 @@
 <!--
-	For problematic rules, see Kinja-problematic.xml.
-
 	For other Gawker coverage, see Gawker.xml.
 
 
@@ -8,42 +6,117 @@
 
 		- a.prod.fastly.net
 
-			- *.kinja.com :
-
 			- api
 			- front
 			- gawker
 			- legal
-			- neetzanz
 			- www
 
-			- i.kinja-img.com
 
+	Insecure cookies are set for these hosts: ᶜ
 
-	Problematic domains:
+		- kinja.com
+		- (column_name).kinja.com
+		- www.kinja.com
 
-		- kinja.com subdomains:
-
-		- (www.) *
-		- front *
-		- gawker *
-		- legal
-		- neetzanz *
-
-		- i.kinja-img.com *
-
-	* Works, mismatched, CN: *.a.ssl.fastly.net
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	api sets KinjaToken wildcard cookie on whichever domain it is loaded from.
 
+
+	Mixed content:
+
+		- Bug on ^, (column_name) from b.scorecardresearch.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
 -->
-<ruleset name="Kinja (partial)">
+<ruleset name="Kinja.com (partial)">
 
-	<target host="api.kinja.com" />
+	<target host="kinja.com" />
+	<target host="*.kinja.com" />
+
+		<exclusion pattern="^http://(?:[^./]+\.){2,}kinja\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.kinja.com/" />
+			<test url="http://exists.not.kinja.com/" />
+
+		<test url="http://aerokel.kinja.com/" />
+		<test url="http://amm0nyc.kinja.com/" />
+		<test url="http://api.kinja.com/" />
+		<test url="http://artclub.kinja.com/" />
+		<test url="http://ashleyfeinberg.kinja.com/" />
+		<test url="http://askfortask.kinja.com/" />
+		<test url="http://backtalk.kinja.com/" />
+		<test url="http://bengm225.kinja.com/" />
+		<test url="http://bratkneed.kinja.com/" />
+		<test url="http://co-op.kinja.com/" />
+		<test url="http://deadkitten.kinja.com/" />
+		<test url="http://deals.kinja.com/" />
+		<test url="http://delta.kinja.com/" />
+		<test url="http://eisenbolan.kinja.com/" />
+		<test url="http://falsoman.kinja.com/" />
+		<test url="http://forgotmymantra.kinja.com/" />
+		<test url="http://fourfingerwu.kinja.com/" />
+		<test url="http://front.kinja.com/" />
+		<test url="http://gawker.kinja.com/" />
+		<test url="http://gear.kinja.com/" />
+		<test url="http://hackerspace.kinja.com/" />
+		<test url="http://hardcelery.kinja.com/" />
+		<test url="http://hommmer.kinja.com/" />
+		<test url="http://hypemachine.kinja.com/" />
+		<test url="http://inproduction.kinja.com/" />
+		<test url="http://io9.kinja.com/" />
+		<test url="http://jdrentarol.kinja.com/" />
+		<test url="http://jezebel.kinja.com/" />
+		<test url="http://kinjaroundup.kinja.com/" />
+		<test url="http://kocomedy.kinja.com/" />
+		<test url="http://legal.kinja.com/" />
+		<test url="http://lifehacker.kinja.com/" />
+		<test url="http://liptakaa.kinja.com/" />
+		<test url="http://liveandletdiecast.kinja.com/" />
+		<test url="http://lizzhaa.kinja.com/" />
+		<test url="http://mack41.kinja.com/" />
+		<test url="http://neetzanz.kinja.com/" />
+		<test url="http://nomiskye.kinja.com/" />
+		<test url="http://observationdeck.kinja.com/" />
+		<test url="http://onceasoroksari.kinja.com/" />
+		<test url="http://orlove.kinja.com/" />
+		<test url="http://paleofuture.kinja.com/" />
+		<test url="http://panchovilleneuve.kinja.com/" />
+		<test url="http://planelopnik.kinja.com/" />
+		<test url="http://playboysfw.kinja.com/" />
+		<test url="http://powderroom.kinja.com/" />
+		<test url="http://remusshepherd.kinja.com/" />
+		<test url="http://roadtrippers.kinja.com/" />
+		<test url="http://shiryu.kinja.com/" />
+		<test url="http://skociainszajd.kinja.com/" />
+		<test url="http://sumit.kinja.com/" />
+		<test url="http://szielins.kinja.com/" />
+		<test url="http://terrortola.kinja.com/" />
+		<test url="http://theperfectline.kinja.com/" />
+		<test url="http://thesaladbowl.kinja.com/" />
+		<test url="http://thesmokingtire.kinja.com/" />
+		<test url="http://tom.kinja.com/" />
+		<test url="http://vampireparty.kinja.com/" />
+		<test url="http://weirdspinach.kinja.com/" />
+		<test url="http://whitenoise.kinja.com/" />
+		<test url="http://workingtitleinprogress.kinja.com/" />
+		<test url="http://www.kinja.com/" />
+		<test url="http://zgirskaa.kinja.com/" />
 
 
-	<rule from="^http://api\.kinja\.com/"
-		to="https://api.kinja.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:(column_name)\.|www\.)?kinja\.com$" name="^geocc$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

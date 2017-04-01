@@ -1,0 +1,47 @@
+<!--
+	Insecure cookies are set for these hosts:
+
+		- myshp.suttonhousingpartnership.org.uk
+
+-->
+<ruleset name="Sutton Housing Partnership.org.uk (partial)">
+
+	<target host="suttonhousingpartnership.org.uk" />
+	<target host="myshp.suttonhousingpartnership.org.uk" />
+	<target host="www.suttonhousingpartnership.org.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?suttonhousingpartnership\.org\.uk/(?:AboutUs/PrivacyStatement|HowDoI/ContactSomeone|YourRent/Money-Advice-and-Information/ManagingYourMoney/Managing-Your-Money|sitemap)\.aspx" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?suttonhousingpartnership\.org\.uk/(?!/*(?:Document|Image|SiteElement)s/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.suttonhousingpartnership.org.uk/AboutUs/PrivacyStatement.aspx" />
+			<test url="http://www.suttonhousingpartnership.org.uk/HowDoI/ContactSomeone.aspx" />
+			<test url="http://www.suttonhousingpartnership.org.uk/YourRent/Money-Advice-and-Information/ManagingYourMoney/Managing-Your-Money.aspx" />
+			<test url="http://www.suttonhousingpartnership.org.uk/sitemap.aspx" />
+
+			<!--	-ve:
+					-->
+			<!--test url="http://suttonhousingpartnership.org.uk/Documents/AboutUs/SHPmap.pdf" /-->
+			<test url="http://suttonhousingpartnership.org.uk/Images/Logos/Disabled-Icon150x115.png" />
+			<test url="http://www.suttonhousingpartnership.org.uk/SiteElements/Images/VDivide.gif" />
+			<test url="http://www.suttonhousingpartnership.org.uk/SiteElements/Styles/500-Print.css" />
+
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^myshp\.suttonhousingpartnership\.org\.uk$" name="^(?:CFID|CFTOKEN|JSESSIONID)$" /-->
+
+	<securecookie host="^(?!www\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

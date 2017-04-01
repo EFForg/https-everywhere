@@ -1,7 +1,4 @@
 <!--
-	For problematic rules, see Xbox-problematic.xml.
-
-
 	For other Microsoft coverage, see Microsoft.xml.
 
 
@@ -15,60 +12,160 @@
 		- xbox.com subdomains:
 
 			- ^		(times out)
+			- forums **
 			- gamercard *
 			- gearsofwar
 			- marketplace **
-			- news		(times out)
+			- news *
+			- sonos ⁴
 			- tiles *
 			- www **
 
-		- compass.xboxlive.com	(404; mismatched, CN: *.hs.llnwd.net)
 		- press.xbox360.com
 
 	* 504, akamai
 	** Redirects to http, valid cert
+	⁴ Differs from http
 
 
-	Problematic domains:
+	Problematic hosts in *xbox.com:
 
-		- xbox.com subdomains:
+		- compass ¹
+		- feedback ²
+		- nxeassets *
+		- o		(mismatched, CN: *.112.2o7.net)
+		- piflc		(works, mismatched, CN: *.xboxlive.com)
 
-			- nxeassets *
-			- o		(mismatched, CN: *.112.2o7.net)
-			- piflc		(works, mismatched, CN: *.xboxlive.com)
-
-		- avatar.xboxlive.com *
-
+	¹ 400
+	² Mismatched
 	* Works, akamai
 
 
-	Partially covered domains:
+	Partially covered hosts in *xbox.com:
 
-		- rewards.xbox.com *
-		- support.xbox.com *
+		- rewards *
 
 	* Some pages redirect to http
 
+
+	Fully covered subdomains:
+
+		- account
+		- c
+		- compass	(→ compass-ssl.xbox.com)
+		- compass-ssl
+		- feedback	(→ feedbacklogin.xbox.com)
+		- feedbacklogin
+		- halo
+		- help
+		- live
+		- music
+		- music-cache
+		- musictemp
+		- myservice
+		- nxeassets	(→ nxeassets-ssl.xbox.com)
+		- nxeassets-ssl
+		- o		(→ xbox-com.112.2o7.net)
+		- s
+		- service
+		- support
+
+
+	solutions: Reset over http, handshake fails over http
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .xbox.com
+		- music.xbox.com
+
+
+	Mixed content:
+
+		- Image on support from compass.xboxlive.com *
+
+	* Secured by us
+
 -->
-<ruleset name="Xbox (partial)">
+<ruleset name="Xbox.com (partial)">
 
-	<target host="*.xbox.com" />
-		<exclusion pattern="^http://support\.xbox\.com/(?:en-US/)?(?:$|\?)" />
-		<exclusion pattern="^http://rewards\.xbox\.com/(?!join-now|(?:localized_)?media/)" />
-	<target host="piflc.xboxlive.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="account.xbox.com" />
+	<target host="c.xbox.com" />
+	<target host="compass-ssl.xbox.com" />
+	<target host="feedbacklogin.xbox.com" />
+	<target host="halo.xbox.com" />
+	<target host="help.xbox.com" />
+	<target host="live.xbox.com" />
+	<target host="music.xbox.com" />
+	<target host="music-cache.xbox.com" />
+	<target host="musictemp.xbox.com" />
+	<target host="myservice.xbox.com" />
+	<target host="nxeassets-ssl.xbox.com" />
+	<target host="rewards.xbox.com" />
+	<target host="s.xbox.com" />
+	<target host="service.xbox.com" />
+	<target host="support.xbox.com" />
 
+	<!--	Complications:
+				-->
+	<target host="compass.xbox.com" />
+	<target host="feedback.xbox.com" />
+	<target host="nxeassets.xbox.com" />
+	<target host="o.xbox.com" />
+	<target host="piflc.xbox.com" />
+
+		<!--	Redirects to http:
+					-->
+		<!--exclusion pattern="^http://forums\.xbox\.com/($|\?|shell/)" /-->
+		<!--exclusion pattern="^http://marketplace.xbox.com/((en-US/)?($|\?)|Product/[\w-]+/[\da-f-]+/|Shell/)" /-->
+		<!--exclusion pattern="^http://rewards\.xbox\.com/($|\?)" /-->
+		<!--exclusion pattern="^http://www\.xbox\.com/((en-US/)?($|\?)|Content/|en-US/global-resources/css/|shell/)" /-->
+
+		<!--	Exceptions:
+					-->
+		<exclusion pattern="^http://rewards\.xbox\.com/(?!css/|favicon\.ico|join-now|(?:localized_)?media/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://rewards.xbox.com/faq/" />
+			<test url="http://rewards.xbox.com/get-yours/promotion/binge/" />
+			<test url="http://rewards.xbox.com/mymissions/" />
+			<test url="http://rewards.xbox.com/myrewards/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://rewards.xbox.com/dynamic/css/welcome.css/" />
+			<test url="http://rewards.xbox.com/favicon.ico" />
+			<test url="http://rewards.xbox.com/media/images/img_header_logo.png" />
+			<test url="http://rewards.xbox.com/join-now/" />
+
+		<test url="http://support.xbox.com/en-US/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.xbox\.com$" name="^(ASP\.NET_SessionId|s_vi)$" /-->
+	<!--securecookie host="^music\.xbox\.com$" name="^XBXWebMusicSessionId$" /-->
 
 	<securecookie host="^\.xbox\.com$" name="^s_vi$" />
-	<securecookie host="^(?:help|live|myservice)\.xbox\.com$" name=".+" />
+	<securecookie host="^(?:help|live|music|myservice)\.xbox\.com$" name=".+" />
 
 
-	<rule from="^http://(c|halo|help|live|(?:my)?service|retailer|rewards|solutions|support)\.xbox\.com/"
-		to="https://$1.xbox.com/" />
+	<rule from="^http://(compas|nxeasset)s\.xbox\.com/"
+		to="https://$1s-ssl.xbox.com/" />
 
-	<rule from="^https?://o\.xbox\.com/"
+	<rule from="^http://feedback\.xbox\.com/"
+		to="https://feedbacklogin.xbox.com/" />
+
+	<rule from="^http://o\.xbox\.com/"
 		to="https://xbox-com.112.2o7.net/" />
 
-	<rule from="^https?://piflc\.xbox(?:live)?\.com/"
+	<rule from="^http://piflc\.xbox\.com/"
 		to="https://piflc.xboxlive.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

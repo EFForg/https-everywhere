@@ -1,12 +1,45 @@
-<ruleset name="Spiderweb Software">
+<!--
+	Problematic domains:
+
+		- www.spiderwebsoftware.com ᵐ
+		- (www.)?spidweb.com ᵐ
+
+	ᵐ Mismatched
+
+
+	Mixed content:
+
+		- css from www.spiderwebsoftware.com ˢ
+		- favicon from www.spiderwebsoftware.com ˢ
+		- Bug from chiclet.ymlp.com ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Spiderweb Software" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="spiderwebsoftware.com" />
+
+	<!--	Complications:
+				-->
 	<target host="www.spiderwebsoftware.com" />
+
 	<target host="spidweb.com" />
 	<target host="www.spidweb.com" />
 
-	<securecookie host="^(www\.)?spiderwebsoftware\.com$"
-			name=".+" />
 
-	<rule from="^http://(www\.)?(spidweb|spiderwebsoftware)\.com/"
-		to="https://$1spiderwebsoftware.com/" />
+	<securecookie host="^\w"
+			name="." />
+
+	<test url="http://www.spiderwebsoftware.com/" />
+	<test url="http://spidweb.com/" />
+	<test url="http://www.spidweb.com/" />
+
+	<rule from="^http://(?:(?:www\.)?spidweb|www\.spiderwebsoftware)\.com/"
+		to="https://spiderwebsoftware.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

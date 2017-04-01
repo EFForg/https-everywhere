@@ -1,0 +1,122 @@
+<!--
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *environment-agency.gov.uk:
+
+		- apps ᵃ
+		- epr ᵈ
+		- evidence ʳ
+		- maps ᵈ
+		- riverconditions ʳ
+		- science ʳ
+		- watermaps ʳ
+
+	ᵃ /[?/]$ redirects to 200 "experiencing technical issues"
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *environment-agency.gov.uk:
+
+		- ^ ᵃ
+		- aka-publications ᵐ
+		- cdn ᵐ
+		- npwd ᶜ
+		- publications ᵉ
+		- www ᵐ
+		- www2 ᵐ
+
+	ᵃ Shows another domain
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵉ Expired
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *environment-agency.gov.uk:
+
+		- (www.)? *
+		- aka-publications *
+		- cdn *
+		- publications *
+		- www2 *
+
+	* Not all paths redirect predictably
+
+
+	Insecure cookies are set for these hosts:
+
+		- consult.environment-agency.gov.uk
+		- flycapture.environment-agency.gov.uk
+		- flycapturetest.environment-agency.gov.uk
+		- fwd.environment-agency.gov.uk
+		- hwreg.environment-agency.gov.uk
+		- gor.environment-agency.gov.uk
+		- npwd.environment-agency.gov.uk
+		- piedc.environment-agency.gov.uk
+
+-->
+<ruleset name="Environment-Agency.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="cca.environment-agency.gov.uk" />
+	<target host="consult.environment-agency.gov.uk" />
+	<target host="euets.environment-agency.gov.uk" />
+	<target host="flycapture.environment-agency.gov.uk" />
+	<target host="flycapturetest.environment-agency.gov.uk" />
+	<target host="fwd.environment-agency.gov.uk" />
+	<target host="gor.environment-agency.gov.uk" />
+	<target host="hwreg.environment-agency.gov.uk" />
+	<target host="learning.environment-agency.gov.uk" />
+	<!--target host="npwd.environment-agency.gov.uk" /-->
+	<target host="piedc.environment-agency.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="environment-agency.gov.uk" />
+	<target host="aka-publications.environment-agency.gov.uk" />
+	<target host="cdn.environment-agency.gov.uk" />
+	<target host="publications.environment-agency.gov.uk" />
+	<target host="www.environment-agency.gov.uk" />
+	<target host="www2.environment-agency.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^consult\.environment-agency\.gov\.uk$" name="^(?:JSESSION|Server)ID$" /-->
+	<!--securecookie host="^fwd\.environment-agency\.gov\.uk$" name="^(?:Apache|JSESSIONID)$" /-->
+	<!--securecookie host="^(?:flycapture|flycapturetest|gor|hwreg)\.environment-agency\.gov\.uk$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^npwd\.environment-agency\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^piedc\.environment-agency\.gov\.uk$" name="^JSESSIONID" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://(?:(?:(?:aka-)?publications|cdn|www2?)\.)?environment-agency\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/environment-agency" />
+
+		<!--	/*\w does not redirect predictably:
+								-->
+		<exclusion pattern="^http://(?:(?:(?:aka-)?publications|cdn|www2?)\.)?environment-agency\.gov\.uk/(?!/*(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://aka-publications.environment-agency.gov.uk/ms/C3cDx1" />
+			<test url="http://aka-publications.environment-agency.gov.uk/ms/ckpq1h" />
+			<test url="http://cdn.environment-agency.gov.uk/lit_6700_ed6a43.pdf" />
+			<test url="http://cdn.environment-agency.gov.uk/sts66-e-e.pdf" />
+			<test url="http://publications.environment-agency.gov.uk/PDF/GEHO0412BUMR-E-E.pdf" />
+			<test url="http://publications.environment-agency.gov.uk/ms/BS0Ak7" />
+			<test url="http://publications.environment-agency.gov.uk/ms/C0coN3" />
+			<test url="http://publications.environment-agency.gov.uk/ms/b4zfa6" />
+			<test url="http://publications.environment-agency.gov.uk/ms/egkrjm" />
+			<test url="http://www2.environment-agency.gov.uk/epr/search.asp" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

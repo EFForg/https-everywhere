@@ -7,29 +7,57 @@
 
 	Problematic subdomains:
 
-		- hs1[0-3]	(redirects to http; mismatched, CN: *.hs.fi)
-		- is12	(redirects to www.iltasanomat.fi; mismatched, CN: www.iltasanomat.fi)
-
-
-	Fully covered subdomains:
-
-		- files
-		- hs1[0-3]	(→ www.hs.fi)
-		- is12	(→ www.iltasanomat.fi)
+		- is12 (breaks static content on www.iltasanomat.fi)
+		- hs1[0-3] (redirects to http; mismatched, CN: *.hs.fi)
 
 -->
 <ruleset name="SNstatic.fi">
 
-	<target host="*.snstatic.fi" />
+	<!--	Direct rewrites:
+				-->
+	<target host="files.snstatic.fi" />
+	<target host="ko.snstatic.fi" />
+	<target host="ot11.snstatic.fi" />
+	<target host="ot12.snstatic.fi" />
+
+		<test url="http://files.snstatic.fi/hs/img/hsi-facebook.png" />
+		<test url="http://ko.snstatic.fi/hise-is-300/css/5679a2a4.css" />
+		<test url="http://ko.snstatic.fi/hise-is-300/image/e9b3738b.svg" />
+		<test url="http://ot11.snstatic.fi/sites/default/files/styles/some-sidebar-lift/public/imagecache/ext/ff/b6/a5/ffb6a55b3071b93f4d6926a0613e5b043980c32b.jpg" /><!--	407 -->
+		<test url="http://ot12.snstatic.fi/sites/default/files/styles/article_sidebar/public/imgs/article/keskittymisjuttu.jpeg" /><!--	7459 -->
+
+	<!--	Complications:
+				-->
+	<target host="hs10.snstatic.fi" />
+	<target host="hs11.snstatic.fi" />
+	<target host="hs12.snstatic.fi" />
+	<target host="hs13.snstatic.fi" />
+	<target host="is20.snstatic.fi" />
+
+		<!--	Avoid potential XHR problems:
+							-->
+		<exclusion pattern="^http://.+\.snstatic\.fi/.+\.js(?:on)?(?:$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://files.snstatic.fi/hs/js/common-functions.js" />
+			<test url="http://files.snstatic.fi/hs/js/hs-46-top-element-events.js" />
+			<test url="http://files.snstatic.fi/hs/favicons/hsfi/manifest.json" />
+			<test url="http://files.snstatic.fi/HS/js/jstorage.min.js" />
+			<test url="http://files.snstatic.fi/HS/js/jquery-ui-1.9.1.custom.min.js" />
+			<test url="http://files.snstatic.fi/HS/js/jquery-1.9.1.min.js" />
+			<test url="http://files.snstatic.fi/HS/js/head.min.js" />
 
 
-	<rule from="^http://files\.snstatic\.fi/"
-		to="https://files.snstatic.fi/" />
+	<rule from="^http://is20\.snstatic\.fi/"
+		to="https://www.iltasanomat.fi/" />
 
 	<rule from="^http://hs1[0-3]\.snstatic\.fi/"
 		to="https://www.hs.fi/" />
 
-	<rule from="^http://is12\.snstatic\.fi/"
-		to="https://www.iltasanomat.fi/" />
+		<test url="http://hs11.snstatic.fi/webkuva/oletus/60/1305620265306" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

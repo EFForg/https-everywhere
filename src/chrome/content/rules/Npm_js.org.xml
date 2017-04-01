@@ -2,31 +2,43 @@
 	For other Joyent coverage, see Joyent.xml.
 
 
-	Problematic subdomains:
+	Nonfunctional hosts in *npmjs.org:
+
+		- blog *
+
+	* Tumblr
+
+
+	Problematic hosts in *npmjs.org:
 
 		- couch *
-		- registry	(works, self-signed)
 		- scratch *
+		- status ⁵
 
 	* Works; mismatched, CN: registry.npmjs.org
+	⁵ StatusPage
 
 -->
 <ruleset name="npm js.org (partial)">
 
-	<target host="packages.nodejs.org" />
-	<target host="npm.im" />
-	<target host="www.npm.im" />
+	<!--	Direct rewrites:
+				-->
 	<target host="npmjs.org" />
+	<target host="registry.npmjs.org" />
 	<target host="www.npmjs.org" />
 
+	<!--	Special cases:
+				-->
+	<target host="status.npmjs.org" />
 
-	<securecookie host="^npmjs\.org$" name=".+" />
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://packages\.nodejs\.org/"
-		to="https://packages.nodejs.org/" />
+	<rule from="^http://status\.npmjs\.org/"
+		to="https://npmjs.statuspage.io/" />
 
-	<rule from="^http://(www\.)?npm(\.im|js\.org)/"
-		to="https://$1npm$2/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

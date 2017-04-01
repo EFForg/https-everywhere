@@ -1,20 +1,34 @@
 <!--
-	Problematic subdomains:
+	^sympa.org: Mismatched
 
-		- ^	(mismatched, CN: federation.renater.fr)
-		- demo	(works; mismatched, CN: listes.cru.fr)
+
+	Mixed content:
+
+		- Images on demo, www from www.sympa.org *
+		- Bug on www from www.cru.fr *
+
+	* Secured by us
 
 -->
-<ruleset name="Sympa.org (partial)">
+<ruleset name="Sympa.org">
 
-	<target host="sympa.org" />
+	<!--	Direct rewrites:
+				-->
+	<target host="demo.sympa.org" />
 	<target host="www.sympa.org" />
 
+	<!--	Complications:
+				-->
+	<target host="sympa.org" />
 
-	<securecookie host="^www\.sympa\.org$" name=".+" />
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?sympa\.org/"
+	<rule from="^http://sympa\.org/"
 		to="https://www.sympa.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

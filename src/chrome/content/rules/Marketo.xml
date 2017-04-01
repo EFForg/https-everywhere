@@ -2,80 +2,146 @@
 	Other Marketo rulesets:
 
 		- Crowd-Factory.xml
+		- Marketo.net.xml
 		- Mktoresp.com.xml
 
 
-	Problematic domains:
+	Nonfunctional hosts in *marketo.com:
 
-		- marketo.com *
-		- (www.)marketo.net *
+		- blog ¹
+		- developers ¹
+		- launchpoint ¹
+		- pages2 ²
 
-	* Cert only matches *.marketo.com
-
-
-	Fully covered domains:
-
-		- marketo.com subdomains:
-
-			- (www.)	(^ → www)
-			- app
-
-			- app-\w+:
-
-				- -[a-q]
-				- -abk
-				- -lon02
-				- -sj\d
-				- -sj[fhn]
-
-			- b2c-mlm
-			- blog
-			- micro
-			- munchkin	(→ munchkin.marketo.net)
-
-			- na-\w+:
-
-				- -[a-df-q]
-				- -abk
-				- -lon02
-				- -sj0\d
-				- -sj[fhn]
-
-		- marketo.net subdomains:
-
-			- (www.)	(→ www.marketo.com)
-			- app		(→ app-a.marketo.com)
-			- munchkin
-			- ssl-munchkin
+	¹ Redirects to http
+	² 404
 
 
-	munchkin sets a "_mkto_trk" wildcard cookie on whichever domain it is
-	loaded from.
+	Fully covered hosts in *marketo.com:
+
+		- (www.)?
+		- app
+
+		- app-\w+:
+
+			- -[a-q]
+			- -ab01
+			- -ab[ak]
+			- -lon0[23]
+			- -nation
+			- -sj\d
+			- -sj[fghlnp]
+
+		- b2c-mlm
+		- community
+		- fr
+		- micro
+
+		- na-\w+:
+
+			- -[a-df-q]
+			- -ab01
+			- -ab[ak]
+			- -lon0[23]
+			- -sj0\d
+			- -sj[fhlnp]
+
+		- (www.)?nation
+		- app-www.nation
+		- summit
+		- support
+
+
+	Insecure cookies are set for these hosts:
+
+		- app-\w+.marketo.com
+		- blog.marketo.com
+		- developers.marketo.com
+		- fr.marketo.com
+		- launchpoint.marketo.com
+		- nation.marketo.com
+		- app-www.nation.marketo.com
+		- www.nation.marketo.com
+		- summit.marketo.com
+		- www.marketo.com
+
+
+	Mixed content:
+
+		- Videos on fr from [\da-f-]+.r\d+.cf\d.rackcdn.com *
+		- Images on www from $self *
+
+	* Secured by us
 
 -->
-<ruleset name="Marketo">
+<ruleset name="Marketo.com (partial)">
 
 	<target host="marketo.com" />
 	<target host="*.marketo.com" />
-	<target host="marketo.net" />
-	<target host="*.marketo.net" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://blog\.marketo\.com/($|\?source=|favicon\.ico|wp-content/)" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://developers\.marketo\.com/(?:$|assets/|favicon\.ico|foundationforms/|themes/)" /-->
+
+		<test url="http://app-ab01.marketo.com/" />
+		<test url="http://app-aba.marketo.com/" />
+		<test url="http://app-abk.marketo.com/" />
+		<test url="http://app-nation.marketo.com/" />
+		<test url="http://b2c-mlm.marketo.com/" />
+		<test url="http://b2c-msm.marketo.com/" />
+		<test url="http://community.marketo.com/" />
+		<test url="http://fr.marketo.com/" />
+		<test url="http://micro.marketo.com/" />
+		<test url="http://na-ab01.marketo.com/" />
+		<test url="http://nation.marketo.com/" />
+		<test url="http://app-www.nation.marketo.com/" />
+		<test url="http://www.nation.marketo.com/" />
+		<test url="http://summit.marketo.com/" />
+		<test url="http://support.marketo.com/" />
+		<test url="http://www.marketo.com/" />
 
 
-	<securecookie host="^(?:.*\.)?marketo\.(?:com|net)$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^app-(?!nation\.)\w+\.marketo\.com$" name="^BIGipServer[\w-]+$" /-->
+	<!--securecookie host="^(?:app-|app-www\.|www\.)?nation\.marketo\.com$" name="^BIGipServer" /-->
+	<!--securecookie host="^(blog|developers|fr|launchpoint|summit|support|www)\.marketo\.com$" name="^bIPs$" /-->
+
+	<!--	https://github.com/EFForg/https-everywhere/issues/1179
+
+		This seems to break login:
+						-->
+	<!--securecookie host="^\.marketo\.com$" name="^rememberUserId$" /-->
+
+	<securecookie host="." name="^(?!rememberUserId$).+" />
 
 
-	<rule from="^http://(?:www\.)?marketo\.(?:com|net)/"
+	<!--	Redirect drops slash and args:
+						-->
+	<rule from="^http://pages2\.marketo\.com/+(?:\?.*)?$"
 		to="https://www.marketo.com/" />
 
-	<rule from="^http://(app(?:-\w+)?|b2c-mlm|blog|micro|na-\w+)\.marketo\.com/"
-		to="https://$1.marketo.com/" />
+		<test url="http://pages2.marketo.com/" />
+		<test url="http://pages2.marketo.com/?" />
+		<test url="http://pages2.marketo.com/?foo" />
+		<test url="http://pages2.marketo.com//" />
+		<test url="http://pages2.marketo.com//?" />
 
-	<!--	Server redirects as so:
-					-->
-	<rule from="^http://app\.marketo\.net/"
-		to="https://app-a.marketo.com/" />
+	<rule from="^http://pages2\.marketo\.com/(?=css/|images/|js/|rs/)"
+		to="https://pages2.marketo.com/" />
 
-	<rule from="^http://(ssl-)?munchkin\.marketo\.(?:com|net)/"
-		to="https://$1munchkin.marketo.net/" />
+		<test url="http://pages2.marketo.com/css/mktLPSupportCompat.css" />
+		<test url="http://pages2.marketo.com/images/forms/backRequiredGray.gif" />
+		<test url="http://pages2.marketo.com/rs/marketob2/images/Marketing-First-Footer.gif" />
+		<test url="http://pages2.marketo.com/rs/marketob2/images/demo-video-no-play-button.jpg" />
+		<test url="http://pages2.marketo.com/rs/marketob2/images/logo_marketo_new.png" />
+		<test url="http://pages2.marketo.com/rs/marketob2/images/marketo-website-footer-lp-2.gif" />
+
+	<rule from="^http://((?:app|app-\w+|b2c-mlm|b2c-msm|community|fr|micro|na-\w+|nation|(?:app-)?www\.nation|summit|support|www)\.)?marketo\.com/"
+		to="https://$1marketo.com/" />
 
 </ruleset>

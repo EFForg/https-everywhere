@@ -1,0 +1,72 @@
+<!--
+	East Hampshire District Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *easthants.gov.uk:
+
+		- localplan ᶠ
+		- maps ᶠ
+
+	ᶠ Handshake fails
+
+
+	Problematic hosts in *easthants.gov.uk:
+
+		- planningpublicaccess ᶜ
+		- secure ʷ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ʷ Configured for <= ssl3 only
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .easthants.gov.uk
+		- vmpforms.easthants.gov.uk
+
+-->
+<ruleset name="East Hants.gov.uk (partial)">
+
+	<target host="easthants.gov.uk" />
+	<target host="openaccess.easthants.gov.uk" />
+	<!--target host="planningpublicaccess.easthants.gov.uk" /-->
+	<target host="vmpforms.easthants.gov.uk" />
+	<target host="www.easthants.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.easthants\.gov\.uk/(?:$|council-office-opening-hours$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.easthants\.gov\.uk/+(?!misc/|modules/|sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.easthants.gov.uk/cookies" />
+			<test url="http://www.easthants.gov.uk/council-office-opening-hours" />
+			<test url="http://www.easthants.gov.uk/flooding" />
+			<test url="http://www.easthants.gov.uk/transport" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.easthants.gov.uk/misc/menu-leaf.png" />
+			<test url="http://www.easthants.gov.uk/modules/node/node.css" />
+			<test url="http://www.easthants.gov.uk/sites/all/modules/extlink/extlink.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.easthants\.gov\.uk$" name="^citrix_ns_id$" /-->
+	<!--securecookie host="^vmpforms\.easthants\.gov\.uk$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+
+	<securecookie host="^\." name="^citrix_ns_id$" />
+	<securecookie host="^(?!www\.)?\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,51 @@
+<!--
+	Problematic hosts in *hacdc.org:
+
+		- api ¹
+		- wiki ²
+
+	¹ Self-signed
+	² Mixed iframe
+
+
+	Insecure cookies are set for these hosts:
+
+		- wiki.hacdc.org
+
+
+	Mixed content:
+
+		- iframe on wiki from www.google.com ¹
+		- css on www from cdnjs.cloudflare.com ¹
+
+		- Images, on:
+
+			- www from i.creativecommons.org ¹
+			- www from api.hacdc.org ²
+			- www from www.hacdc.org ¹
+
+	¹ Secured by us
+	² Not secured by us <= self-signed
+
+-->
+<ruleset name="HacDC.org (partial)" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="hacdc.org" />
+	<!--target host="api.hacdc.org" /-->
+	<target host="wiki.hacdc.org" />
+	<target host="www.hacdc.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^wiki\.hacdc\.org$" name="^hacdc_wiki_session$" /-->
+
+	<securecookie host="^wiki\.hacdc\.org$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -6,21 +6,57 @@
 
 	Problematic domains:
 
-		- cduniverse.com	(cert only matches www)
 		- i.cduniverse.ws	(cert only matches .com)
+
+
+	Partially covered domains:
+
+		- (www.)cduniverse.com *
+		- g.cduniverse.com *
+
+	* Some pages redirect to http
+
+
+	Fully covered domains:
+
+		- c3.cduniverse.ws
+		- i.cduniverse.ws	(→ www.cduniverse.ws)
 
 -->
 <ruleset name="CD Universe (partial)">
 
 	<target host="cduniverse.com" />
-	<target host="www.cduniverse.com" />
-	<target host="i.cduniverse.ws" />
+	<target host="*.cduniverse.com" />
+		<!--
+			Redirect to http:
+						-->
+		<exclusion pattern="^http://g\.cduniverse\.com/Default\.asp" />
+		<!--exclusion pattern="^http://www\.cduniverse\.com/(a|browsecat|charts|checkout/cart|default|giftcert/giftcertmain|help/help|lyrics|partner/(email/affmp3email|partner|partner_commission|partner_datafeed|partner_faq|partner_glossary|partnerhowto|partner_reportshelp|partner_webservices)|productinfo|promo/feature|sresult)\.asp" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.cduniverse\.com/(?!checkout/(?:account|allorderdisp|changepassword|orderstatus)\.asp|favicon\.ico|FooterIFrame\.asp|footer/footermusic\.html|help/contact\.asp|(?:\w+/)?images/|login\.asp|partner/(?:menu|partner)form\.asp|stylesheet\.css|wishlist\.asp)" />
+		<!--exclusion pattern="^http://g\.cduniverse\.com/(?!images/)" /-->
+	<target host="*.cduniverse.ws" />
 
 
-	<rule from="^https?://(?:www\.)?cduniverse\.com/(checkout/account\.asp|FooterIFrame\.asp|(?:\w+/)?images/|login\.asp)"
-		to="https://www.cduniverse.com/$1" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.cduniverse\.com$" name="^(SDataP|SDataS|SKey)$" /-->
+	<!--securecookie host="^(g|www)\.cduniverse\.com$" name="^ShipPrefs$" /-->
+	<!--securecookie host="^www\.cduniverse\.com$" name="^(HTSearchInfoFocusCtrl|TabsSeen|refcode)$" /-->
 
-	<rule from="^https?://i\.cduniverse\.ws/"
+
+	<securecookie host="^g\.cduniverse\.com$" name=".+" />
+
+
+	<rule from="^http://(g\.|www\.)?cduniverse\.com/"
+		to="https://$1cduniverse.com/" />
+
+	<rule from="^http://c3\.cduniverse\.ws/"
+		to="https://c3.cduniverse.ws/" />
+
+	<rule from="^http://i\.cduniverse\.ws/"
 		to="https://www.cduniverse.com/" />
 
 </ruleset>

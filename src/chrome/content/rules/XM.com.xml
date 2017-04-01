@@ -1,51 +1,48 @@
 <!--
 	XEMarkets
 
+	Other XEMarkets rulesets:
+
+		- XM-CDN.com.xml
+
 
 	CDN buckets:
 
 		- 516e0f094ba8bcd6f737-06236ff1a8d1cb70b4d1d2dfd24a568e.ssl.cf1.rackcdn.com
 
 
-	Problematic subdomains:
-
-		- ^	(works, cert only matches www)
+	^xm.com: Refused
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains:
 
-		- (www.)	(^ → www)
-		- bo
-		- my
-
-
-	Mixed content:
-
-		- css on www from www *
-
-	* Secured by us, negligible (no?) effect
-
-
-	Observed cookie domains:
-
-		- .
-		- bo
-		- my
+		- .xm.com
 
 -->
 <ruleset name="XM.com">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="bo.xm.com" />
+	<target host="my.xm.com" />
+	<target host="www.xm.com" />
+
+	<!--	Complications:
+				-->
 	<target host="xm.com" />
-	<target host="*.xm.com" />
 
 
-	<securecookie host=".*\.xm\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.xm\.com$" name="^xmcntr$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:www\.)?xm\.com/"
+	<rule from="^http://xm\.com/"
 		to="https://www.xm.com/" />
 
-	<rule from="^http://(bo|my)\.xm\.com/"
-		to="https://$1.xm.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

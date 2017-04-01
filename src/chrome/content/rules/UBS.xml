@@ -1,13 +1,20 @@
 <!--
 	Nonfunctional ubs.com subdomains:
 
+		- connect ³
 		- financialservicesinc		(times out)
 		- (www.)ibb			(reset)
+		- www1 ³
+		- www2 ³
+	³ Refused
 
 
 	Problematic ubs.com subdomains:
 
 		- ^
+		- ebanking-us *
+
+	* Mismatched
 
 
 	Partially covered ubs.com subdomains:
@@ -23,9 +30,8 @@
 			- apps
 			- apps[12]
 			- assetgateway
-			- connect
 			- connect-ch
-			- connect-ch1
+			- connect-ch[12]
 			- clientlogin.ibb
 			- clientportal.ibb
 
@@ -33,6 +39,7 @@
 
 				- ebanking-asia1
 				- ebanking-au
+				- ebanking-ch
 				- ebanking-de
 				- ebanking-de1
 				- ebanking-es
@@ -40,45 +47,105 @@
 				- ebanking-it
 				- ebanking-it[12]?
 
-			- ebanking-us
 			- grs
 			- jobs
-			- onesource
+			- m
+			- neo
 			- onlineservices
+			- privatebank-us
+			- quotes-global
+			- quotes-global2
+			- quotes-public
+			- quotes-public1
+			- realty
 			- sbms
 			- sbms[12]
 			- secure
 			- www
-			- www[12]
 
 		- www.ubs-static.com		(^ doesn't exist)
 
 
-	Targets solely for wildcard cookies:
+	Insecure cookies are set for these domains:
 
-		- *.www.ubs.com
+		- apps1.ubs.com
+		- ebanking-ch2.ubs.com
+		- www.ubs.com
 
 -->
-<ruleset name="UBS (partial)">
-
+<ruleset name="UBS.com (partial)">
 	<target host="ubs.com" />
 	<target host="*.ubs.com" />
 	<target host="*.ibb.ubs.com" />
-		<exclusion pattern="^http://keyinvest\.ibb\.ubs\.com/(?!images/|styles/)" />
-	<target host="*.www.ubs.com" />
-	<target host="www.ubs-static.com" />
 
+		<exclusion pattern="^http://ebanking-us\.ubs\.com/" />
+
+			<test url="http://ebanking-us.ubs.com/" />
+
+		<exclusion pattern="^http://keyinvest\.ibb\.ubs\.com/(?!images/|styles/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://keyinvest.ibb.ubs.com/k2/DE/de/tiles/overview.ki?1=overview" />
+			<test url="http://keyinvest.ibb.ubs.com/k2/ES/en/tiles/overview.ki?1=overview" />
+
+			<!--	-ve:
+					-->
+			<test url="http://keyinvest.ibb.ubs.com/images/domicile/ubs_logo_investment_research.gif" />
+
+	<test url="http://ubs.com/" />
+	<test url="http://www.ubs.com/" />
+	<test url="http://ubs.com/" />
+	<test url="http://apps.ubs.com/" />
+	<test url="http://apps1.ubs.com/" />
+	<test url="http://apps2.ubs.com/" />
+	<test url="http://assetgateway.ubs.com/" />
+	<test url="http://connect-ch.ubs.com/" />
+	<test url="http://connect-ch1.ubs.com/" />
+	<test url="http://connect-ch2.ubs.com/" />
+	<test url="http://ebanking-asia1.ubs.com/" />
+	<test url="http://ebanking-au.ubs.com/" />
+	<test url="http://ebanking-ch.ubs.com/" />
+	<test url="http://ebanking-de.ubs.com/" />
+	<test url="http://ebanking-de1.ubs.com/" />
+	<test url="http://ebanking-es.ubs.com/" />
+	<test url="http://ebanking-es1.ubs.com/" />
+	<test url="http://ebanking-es2.ubs.com/" />
+	<test url="http://ebanking-it.ubs.com/" />
+	<test url="http://ebanking-it1.ubs.com/" />
+	<test url="http://ebanking-it2.ubs.com/" />
+	<test url="http://grs.ubs.com/" />
+	<test url="http://clientlogin.ibb.ubs.com/" />
+	<test url="http://clientportal.ibb.ubs.com/" />
+	<test url="http://keyinvest.ibb.ubs.com/" />
+	<test url="http://jobs.ubs.com/" />
+	<test url="http://m.ubs.com/" />
+	<test url="http://neo.ubs.com/" />
+	<test url="http://onlineservices.ubs.com/" />
+	<test url="http://privatebank-us.ubs.com/" />
+	<test url="http://quotes-global.ubs.com/" />
+	<test url="http://quotes-global2.ubs.com/" />
+	<test url="http://quotes-public.ubs.com/" />
+	<test url="http://quotes-public1.ubs.com/" />
+	<test url="http://realty.ubs.com/" />
+	<test url="http://sbms.ubs.com/" />
+	<test url="http://sbms1.ubs.com/" />
+	<test url="http://sbms2.ubs.com/" />
+	<test url="http://secure.ubs.com/" />
+	<test url="http://www.ubs.com/" />
+	
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^apps1\.ubs\.com$" name="^ClntPRF1$" /-->
+	<!--securecookie host="^ebanking-ch2\.ubs\.com$" name="^ClntPRU4$" /-->
+	<!--securecookie host="^www\.ubs\.com$" name="^(NavLB_APPS_PROD|NavLB_COCH|NavLB_EBCH|NavLB_PQ|NavLB_QG|language)$" /-->
 
 	<securecookie host="^.*\.ubs\.com$" name=".+" />
 
-
-	<rule from="^https?://ubs\.com/"
+	<rule from="^http://ubs\.com/"
 		to="https://www.ubs.com/" />
 
-	<rule from="^http://(apps[12]?|assetgateway|connect(?:-ch1?)?|ebanking-\w+|grs|(?:client(?:login|portal)|keyinvest)\.ibb|jobs|onesource|onlineservices|sbms[12]?|secure|www[12]?)\.ubs\.com/"
+	<rule from="^http://(apps[12]?|assetgateway|connect-ch[12]?|ebanking-\w+|grs|(?:client(?:login|portal)|keyinvest)\.ibb|jobs|m|neo|onlineservices|privatebank-us|quotes-global2?|quotes-public1?|realty|sbms[12]?|secure|www)\.ubs\.com/"
 		to="https://$1.ubs.com/" />
-
-	<rule from="^http://www\.ubs-static\.com/"
-		to="https://www.ubs-static.com/" />
-
 </ruleset>

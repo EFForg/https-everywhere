@@ -2,7 +2,13 @@
 	CDN buckets:
 
 		- landing.newsinc.com.s3.amazonaws.com | landing.newsinc.com.edgesuite.net
+
+			- a1742.g1.akamai.net
+
 		- assets.newsinc.com.s3.amazonaws.com | assets.newsinc.com.edgesuite.net
+
+			- a1683.g.akamai.net
+
 		- widget.newsinc.com.s3.amazonaws.com
 
 		- dme-prod-1955759440.us-east-1.elb.amazonaws.com
@@ -18,7 +24,6 @@
 		- control **
 		- dashboard **
 		- dmeserv	(503, akamai)
-		- embed *
 		- pp-serve *
 
 	* Refused
@@ -27,22 +32,51 @@
 
 	Problematic subdomains:
 
+		- assets ¹
 		- autodiscover	(refused)
+		- landing ¹
+		- widget ³
+
+	¹ Works, akamai
+	³ amazonaws
 
 
 	Fully covered subdomains:
 
 		- assets	(→ s3.amazonaws.com)
 		- autodiscover	(→ autodiscover-s.outlook.com)
+		- embed
 		- landing	(→ s3.amazonaws.com)
+		- launch
 		- mail
 		- mailfire
 		- widget	(→ s3.amazonaws.com)
 
+
+	Mixed content:
+
+		- css on embed from assets *
+
+		- Web bugs on embed from pixel.quantcast.com *
+
+	* Secured by us
+
 -->
 <ruleset name="News Distribution Network (partial)">
 
-	<target host="*.newsinc.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="embed.newsinc.com" />
+	<target host="mail.newsinc.com" />
+	<target host="launch.newsinc.com" />
+	<target host="mailfire.newsinc.com" />
+
+	<!--	Complications:
+				-->
+	<target host="assets.newsinc.com" />
+	<target host="autodiscover.newsinc.com" />
+	<target host="landing.newsinc.com" />
+	<target host="widget.newsinc.com" />
 
 
 	<securecookie host="^mail(?:fire)?\.newsinc\.com$" name=".+" />
@@ -54,7 +88,7 @@
 	<rule from="^http://autodiscover\.newsinc\.com/"
 		to="https://autodiscover-s.outlook.com/" />
 
-	<rule from="^http://(mail|mailfire)\.newsinc\.com/"
-		to="https://$1.newsinc.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

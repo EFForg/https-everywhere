@@ -1,16 +1,36 @@
 <!--
-	Problematic subdomains:
+	For other Dell coverage, see Dell.xml.
 
-		- ^	(cert only matches *.quest.com)
+
+	^quest.com: Mismatched
+
+
+	Mixed content:
+
+		- css on www from software.dell.com *
+		- Images on www from software.dell.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Quest.com (partial)">
+<ruleset name="Quest.com" platform="mixedcontent">
 
-	<target host="quest.com" />
+	<!--	Direct rewrites:
+				-->
 	<target host="www.quest.com" />
 
+	<!--	Complications:
+				-->
+	<target host="quest.com" />
 
-	<rule from="^http://(?:www\.)?quest\.com/(common/|css/|documents/|js/|(?:Script|Web)Resource\.axd|shared/)"
-		to="https://www.quest.com/$1" />
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://quest\.com/"
+		to="https://www.quest.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

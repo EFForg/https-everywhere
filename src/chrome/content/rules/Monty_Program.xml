@@ -1,4 +1,7 @@
 <!--
+	For other MariaDB Corporation coverage, see MariaDB.com.xml
+
+
 	Other Monty Program rulesets:
 
 		- AskMonty.xml
@@ -7,16 +10,36 @@
 
 	Problematic subdomains:
 
-		- www	(redirects to blog.mariadb.org over https)
+		- (www.)? ¹
+		- blog ¹ ²
+
+	¹ Expired
+	² Server sends no certificate chain, see https://whatsmychaincert.com
 
 -->
-<ruleset name="Monty Program">
+<ruleset name="Monty Program.com">
 
+	<!--	Complications:
+				-->
 	<target host="montyprogram.com" />
-	<target host="*.montyprogram.com" />
+	<target host="blog.montyprogram.com" />
+	<target host="www.montyprogram.com" />
 
 
-	<rule from="^https?://(?:(blog\.)|www\.)?montyprogram\.com/"
-		to="https://$1montyprogram.com/" />
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://(?:www\.)?montyprogram\.com/+"
+		to="https://mariadb.com/" />
+
+		<test url="http://montyprogram.com//" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://blog\.montyprogram\.com/+"
+		to="https://mariadb.com/blog/" />
+
+		<test url="http://blog.montyprogram.com//" />
 
 </ruleset>

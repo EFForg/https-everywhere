@@ -1,0 +1,152 @@
+<!--
+	For rules covering resources which do not secure
+	mixed content, see kmd.dk-resources.xml.
+
+
+	Nonfunctional hosts in *kmd.dk:
+
+		- (www.)? ᵈ
+		- accessdenied ᵈ
+		- ftp.edi ᵈ
+		- www.kompetenceportalen ʳ
+		- navhelp ʳ
+		- vurdering ᶠ
+		- webgis ᵈ
+
+	ᵈ Dropped
+	ᶠ Handshake failed
+	ʳ Refused
+
+
+	Problematic hosts in *kmd.dk:
+
+		- publikationer ᵐ
+
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *kmd.dk:
+
+		- event ʰ
+
+	ʰ Some pages redirect to http
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- event.kmd.dk
+		- kigo3kombit.kmd.dk
+		- esbjerg.kmdcareborgerportal.kmd.dk
+		- minforsyning.kmd.dk
+		- minforsyningplugin.kmd.dk
+		- publikationer.kmd.dk
+		- vokal.kmd.dk
+		- vvsdialog.kmd.dk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="KMD.dk (partial)">
+
+	<target host="event.kmd.dk" />
+	<target host="kigo3kombit.kmd.dk" />
+	<target host="esbjerg.kmdcareborgerportal.kmd.dk" />
+	<target host="minforsyning.kmd.dk" />
+	<target host="minforsyningplugin.kmd.dk" />
+	<target host="vokal.kmd.dk" />
+	<target host="vvsdialog.kmd.dk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://event\.kmd\.dk/(event_name)(?:$|/(?:program|arrangementet)\.html)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://event\.kmd\.dk/(?!/*(?:$|\?|css/|js/|[^/]+/(?:eksternt-login|sign-up|tilmelding)\.html))" /-->
+		<!--
+			Avoid possible XHR problems:
+							-->
+		<!--exclusion pattern="^http://event\.kmd\.dk/.+\.js(?:$|\?)" /-->
+		<!--
+			In combination:
+					-->
+		<!--exclusion pattern="^http://event\.kmd\.dk/(?!(?!.+\.js(?:$|\?))/*(?:$|\?|css/|favicon\.ico|js/|[^/]+/(?:eksternt-login|sign-up|tilmelding)\.html))" /-->
+		<!--
+			Reduce non-Tor distinguishability:
+								-->
+		<exclusion pattern="^http://event\.kmd\.dk/(?!/*(?:$|\?|[^/]+/(?:eksternt-login|sign-up|tilmelding)\.html))" />
+
+			<!--	+ve:
+					-->
+			<!--
+			<test url="http://event.kmd.dk/CMResources/dist/translations/translations.lib.da.f408e66e719357a0f1df789712a7691f.js" />
+			<test url="http://event.kmd.dk/CMResources/dist/translations/translations.website.da.9c32a2aa9d17d9f2d7751b5cdd194682.js" />
+			<test url="http://event.kmd.dk/CMResources/jquery.sprintf-1.0.3.js" />
+			<test url="http://event.kmd.dk/CMResources/json2.min.js" />
+			<test url="http://event.kmd.dk/CMResources/modules/cmAjax.min-cmv9.0.6.js" />
+			<test url="http://event.kmd.dk/CMResources/modules/cmi18n/pluralrules/pluralrule-da.v1.0.js" />
+			<test url="http://event.kmd.dk/CMResources/modules/cmi18n/pluralrules/pluralrules-commons.v1.0.js" />
+			<test url="http://event.kmd.dk/CMResources/requirejs/require-2.1.11.min-cmv9.0.6.js" />
+			<test url="http://event.kmd.dk/CMResources/stacktrace.js" />
+			<test url="http://event.kmd.dk/FaellessprogKMDNexusAarhus" />
+			<test url="http://event.kmd.dk/FaellessprogKMDNexusAarhus/informationsmoede-om-faelles-sprog-iii-i-kmd-nexus.html" />
+			<test url="http://event.kmd.dk/FaellessprogKMDNexusAarhus/program.html" />
+			<test url="http://event.kmd.dk/SIEM" />
+			<test url="http://event.kmd.dk/SIEM/programme.html" />
+			<test url="http://event.kmd.dk/SIEM/programme.html?download=1" />
+			<test url="http://event.kmd.dk/SIEM/siem-is-not-enough.html" />
+			<test url="http://event.kmd.dk/faaindsigtmeddata1" />
+			<test url="http://event.kmd.dk/faaindsigtmeddata1/arrangementet.html" />
+			<test url="http://event.kmd.dk/faaindsigtmeddata1/program.html" />
+			<test url="http://event.kmd.dk/js/jquery/jquery-1.9.1.min.js" />
+			<test url="http://event.kmd.dk/js/jquery/jquery-ui-1.9.2.min.js" />
+			<test url="http://event.kmd.dk/js/jquery/jquery.json-2.2.min-cmv9.0.6.js" />
+			<test url="http://event.kmd.dk/js/jquery/jquery.tmpl.js" />
+			<test url="http://event.kmd.dk/js/modernizr.custom.58379.js" />
+			<test url="http://event.kmd.dk/js/poweredby.min-cmv9.0.6.js" />
+			<test url="http://event.kmd.dk/js/require.config-cmv9.0.6.js" />
+			<test url="http://event.kmd.dk/jsExceptionHandler/jsExceptionHandler-cmv9.0.6.js" />
+			-->
+			<test url="http://event.kmd.dk/kmdhindsgavlslot" />
+			<test url="http://event.kmd.dk/kmdhindsgavlslot/aarskonference-paa-hindsgavl-slot.html" />
+			<test url="http://event.kmd.dk/kmdhindsgavlslot/program.html" />
+			<test url="http://event.kmd.dk/kmdhindsgavlslot/program.html?download=1" />
+			<test url="http://event.kmd.dk/momentum1" />
+			<test url="http://event.kmd.dk/momentum1/arrangementet.html" />
+			<test url="http://event.kmd.dk/momentum1/download-materiale.html" />
+			<test url="http://event.kmd.dk/momentum1/program.html" />
+			<test url="http://event.kmd.dk/momentum1/program.html?download=1" />
+
+			<!--	-ve:
+					-->
+			<test url="http://event.kmd.dk/FaellessprogKMDNexusAarhus/eksternt-login.html" />
+			<test url="http://event.kmd.dk/FaellessprogKMDNexusAarhus/tilmelding.html" />
+			<test url="http://event.kmd.dk/SIEM/sign-up.html" />
+			<!--
+			<test url="http://event.kmd.dk/css/tabletMediaQuery-cmv9.0.6.css" />
+			-->
+			<test url="http://event.kmd.dk/faaindsigtmeddata1/eksternt-login.html" />
+			<test url="http://event.kmd.dk/faaindsigtmeddata1/tilmelding.html" />
+			<!--
+			<test url="http://event.kmd.dk/favicon.ico" />
+			<test url="http://event.kmd.dk/js/jquery/ui/smoothness/jquery.ui.theme.css" />
+			-->
+			<test url="http://event.kmd.dk/kmdhindsgavlslot/eksternt-login.html" />
+			<test url="http://event.kmd.dk/kmdhindsgavlslot/tilmelding.html" />
+			<test url="http://event.kmd.dk/momentum1/eksternt-login.html" />
+			<test url="http://event.kmd.dk/momentum1/tilmelding.html" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^esbjerg\.kmdcareborgerportal\.kmd\.dk$" name="^sp\d+\.fobs\.dk$" /-->
+	<!--securecookie host="^event\.kmd\.dk$" name="^(?:CFID|CFTOKEN|perseverantia)$" /-->
+	<!--securecookie host="^(?:kigo3kombit|minforsyning|minforsyningplugin|publikationer|vokal|vvsdialog)\.kmd\.dk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^(?!event\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -4,26 +4,56 @@
 
 	Nonfunctional subdomains:
 
-		- radar		(times out)
+		- answers ¹
+		- radar ²
+
+	¹ http reply
+	² Dropped
+
+
+	Partially covered subdomains:
+
+		- examples *
+
+	* At least some paths 404
+
+
+	Problematic subdomains:
+
+		- akamaicovers *
+
+	* Works, akamai
+
+
+	These altnames don't exist:
+
+		- www.examples.oreilly.com
+		- www.members.oreilly.com
 
 -->
 <ruleset name="O’Reilly Media (partial)">
 
 	<target host="*.oreilly.com" />
+		<!--exclusion pattern="^http://(answers|radar)\.oreilly\.com/" /-->
+		<!--
+			404s:
+				-->
+		<!--exclusion pattern="^http://examples\.oreilly\.com/\d+/" /-->
+		<!--
+			Exclusions:
+					-->
+		<exclusion pattern="^http://examples\.oreilly\.com/+(?!$)" />
+		<exclusion pattern="^http://shop\.oreilly\.com/(?!images/|includes/|mod/|text/)" />
 	<target host="cdn.oreillystatic.com" />
 
 
-  <!--
-  This was breaking the O'Reilly shopping cart...
-	<securecookie host="^shop\.oreilly\.com$" name=".*" />
-  -->
+	<!--	This was breaking the O'Reilly shopping cart...
+								-->
+	<!--securecookie host="^shop\.oreilly\.com$" name=".+" /-->
 
 
-	<rule from="^http://members\.oreilly\.com/"
-		to="https://members.oreilly.com/" />
-
-	<rule from="^http://shop\.oreilly\.com/(images|includes|mod|text)/"
-		to="https://shop.oreilly.com/$1/" />
+	<rule from="^http://(examples|members|shop)\.oreilly\.com/"
+		to="https://$1.oreilly.com/" />
 
 	<rule from="^http://cdn\.oreillystatic\.com/"
 		to="https://cdn.oreillystatic.com/" />

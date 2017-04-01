@@ -10,17 +10,103 @@
 		- cdn3.image.pornhub.phncdn.com.swiftcdn1.com
 			- cdn3.image.pornhub.phncdn.com
 
+
+	Nonfunctional hosts in *pornhub.com:
+
+		- de ʰ ᵀ
+		- es ʰ ᵀ
+		- feedback ³
+		- fr ʰ ᵀ
+		- img *
+		- it ʰ ᵀ
+		- pl ʰ ᵀ
+		- pt ʰ ᵀ
+		- store ʳ
+
+	³ 403
+	ᵀ Sets STS header => loops
+	* Dropped
+	ʰ Redirects to http
+	ʳ Refused
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .pornhub.com
+		- rt.pornhub.com
+		- www.pornhub.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- rt from cdn1b.static.pornhub.phncdn.com
+			- rt from i1.cdn2b.image.pornhub.phncdn.com
+
+		- JavaScript, on:
+			- ht from GoogleAPIs
 -->
-<ruleset name="PornHub (partial)">
+<ruleset name="PornHub.com (partial)">
 
 	<target host="pornhub.com" />
+	<target host="cdn-d-img.pornhub.com" />
+	<target host="cdn-d-ss.pornhub.com" />
+	<target host="cdn-d-static.pornhub.com" />
+	<target host="cdn-d-vid-public.pornhub.com" />
+	<target host="rt.pornhub.com" />
+	<target host="services.pornhub.com" />
 	<target host="www.pornhub.com" />
 
+		<!--	Redirect to http:
+						-->
+		<!--exclusion pattern="http://www\.pornhub\.com/+($|\?|create_account|login($|\?))" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="http://www\.pornhub\.com/+(favicon\.ico|insights($|[?/]))" /-->
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<!--exclusion pattern="http://www\.pornhub\.com/+insights(?!/wp-content|/wp-includes/)" /-->
+		<!--
+			In sum:
+				-->
+		<exclusion pattern="http://www\.pornhub\.com/(?!/*(?:favicon\.ico|insights(?:/wp-content|/wp-includes/)))" />
 
-	<securecookie host="^(?:www\.)?pornhub\.com$" name=".+" />
+			<!--	+ve:
+					-->
+			<test url="http://www.pornhub.com/categories" />
+			<test url="http://www.pornhub.com/create_account" />
+			<test url="http://www.pornhub.com/insights" />
+			<test url="http://www.pornhub.com/login" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.pornhub.com/favicon.ico" />
+			<test url="http://www.pornhub.com/insights/wp-content/thesis/skins/classic-r/css.css" />
+
+		<test url="http://cdn-d-img.pornhub.com/m=egZ88zjadqg/static/images/categories/88.jpg" />
+		<test url="http://cdn-d-static.pornhub.com/www-static/images/blank.gif" />
+
+		<!--
+		<test url="http://cdn-d-static.pornhub.com/www-static/images/categories_seeall.gif" />
+		-->
 
 
-	<rule from="^http://(www\.)?pornhub\.com/"
-		to="https://$1pornhub.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.pornhub\.com$" name="^(?:platform|userSession)$" /-->
+	<!--securecookie host="^(?:rt|www)\.pornhub\.com$" name="^RNLBSERVERID$" /-->
+
+	<!--securecookie host="^(?:www\.)?pornhub\.com$" name=".+" /-->
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^r" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

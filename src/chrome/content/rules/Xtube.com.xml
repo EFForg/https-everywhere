@@ -1,6 +1,100 @@
-<ruleset name="Xtube.com">
-  <target host="xtube.com" />
-  <target host="www.xtube.com" />
+<!--
+	CDN buckets:
 
-  <rule from="^http://(www\.)?xtube\.com/" to="https://www.xtube.com/" />
+		- cdn1.static.xtube.com.swiftcdn1.com
+
+
+	Nonfunctional hosts in *xtube.com:
+
+		- mobile ¹
+		- cdn[12].publicphoto ²
+		- cdn[12].static ²
+		- support ¹
+		- i0.cdn1.videothumbs ²
+
+	¹ Refused
+	² Dropped
+
+
+	Problematic hosts in *xtube.com:
+
+		- feedback *
+
+	* Uservoice
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- xtube.com
+		- .xtube.com
+		- feedback.xtube.com
+		- www.xtube.com
+
+
+	Mixed content:
+
+		- css from cdn1.static.xtube.com ¹
+
+		- Images, from:
+
+			-  cdn[12].publicphoto.xtube.com ²
+			-  cdn[12].static.xtube.com ¹
+			-  i\d.cdn1.videothumbs.xtube.com ²
+
+		- Ads from ss.phncdn.com ²
+
+	¹ Secured by us
+	² Unsecurable <= dropped
+
+-->
+<ruleset name="Xtube.com" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="xtube.com" />
+	<target host="www.xtube.com" />
+
+	<!--	Complications:
+				-->
+	<target host="cdn1.static.xtube.com" />
+	<target host="cdn2.static.xtube.com" />
+
+		<exclusion pattern="^http://cdn\d\.static\.xtube\.com/(?!img/|newcss/|newjs/|theme/|xtube/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://cdn1.static.xtube.com//" />
+			<test url="http://cdn1.static.xtube.com//?" />
+			<test url="http://cdn1.static.xtube.com/?" />
+			<test url="http://cdn2.static.xtube.com//" />
+			<test url="http://cdn2.static.xtube.com//?" />
+			<test url="http://cdn2.static.xtube.com/?" />
+
+			<!--	-ve:
+					-->
+			<test url="http://cdn1.static.xtube.com/img/interface/icons/icn-rate-on.gif" />
+			<test url="http://cdn1.static.xtube.com/newcss/mainstyle.css" />
+			<test url="http://cdn1.static.xtube.com/newjs/xjs/vendor/fancyBox-2.1.5/source/jquery.fancybox.css" />
+			<test url="http://cdn1.static.xtube.com/theme/v2/build/css/xtube.oldstyle.min.css?cb=" />
+			<test url="http://cdn1.static.xtube.com/ximg/categories/bdsm.jpg?cb=" />
+			<test url="http://cdn2.static.xtube.com/img/RTA_logo.png" />
+			<test url="http://cdn2.static.xtube.com/img/interface/icons/icn-rate-off.gif" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?xtube\.com$" name="^RNLBSERVERID$" /-->
+	<!--securecookie host="^\.xtube\.com$" name="^(IM_NUM|PHPSESSID|is_really_pc|split)$" /-->
+	<!--securecookie host="^feedback\.xtube\.com$" name="^(_session_id|_rf)$" /-->
+	<!--securecookie host="^www\.xtube\.com$" name="cookiesAccepted$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://cdn\d\.static\.xtube\.com/"
+		to="https://www.xtube.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

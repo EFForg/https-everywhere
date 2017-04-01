@@ -2,19 +2,62 @@
 	For other Gawker coverage, see Gawker.xml.
 
 
-	CN: *.a.ssl.fastly.net
+	Problematic hosts in *lifehacker.com:
+
+		- cache ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- lifehacker.com
+		- (column_name).lifehacker.com
+		- www.lifehacker.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mied content:
+
+		- Bug on ^, (column_name) from b.scorecardresearch.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Lifehacker.com" default_off="mismatched">
+<ruleset name="Lifehacker.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="lifehacker.com" />
-	<target host="*.lifehacker.com" />
+	<target host="afterhours.lifehacker.com" />
+	<target host="alanhenry.lifehacker.com" />
+	<target host="quickhacks.lifehacker.com" />
+	<target host="skillet.lifehacker.com" />
+	<target host="twocents.lifehacker.com" />
+	<target host="vitals.lifehacker.com" />
+	<target host="wayfarer.lifehacker.com" />
+	<target host="workshop.lifehacker.com" />
+	<target host="www.lifehacker.com" />
+
+	<!--	Complications:
+				-->
+	<target host="cache.lifehacker.com" />
 
 
-	<securecookie host="^\.?lifehacker\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:(column_name)\.|www\.)?lifehacker\.com$" name="^geocc$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:(cache\.)|www\.)?lifehacker\.com/"
-		to="https://$1lifehacker.com/" />
+	<rule from="^http://cache\.lifehacker\.com/"
+		to="https://cache.gawkerassets.com/" />
 
+		<test url="http://cache.lifehacker.com/assets/images/17/2011/06/1000-pc-maintenance-whitson.jpg" />
+		<test url="http://cache.lifehacker.com/assets/images/17/2011/08/1230-diy-rj-45-key-rack.jpg" />
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

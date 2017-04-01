@@ -1,11 +1,18 @@
 <!--
 	CDN buckets:
 
+		- developer-tripadvisor.s3.amazonaws.com
 		- www.jscache.com.edgesuite.net
 
 
 	Other TripAdvisor rulesets:
 
+		- t-analytics.com.xml
+		- tacdn.com.xml
+		- tripadvisor.ca.xml
+		- tripadvisor.co.nz.xml
+		- tripadvisor.co.uk.xml
+		- tripadvisorsupport.com.xml
 		- VirtualTourist.xml
 
 
@@ -30,42 +37,89 @@
 	Problematic domains:
 
 		- www.jscache.com	(redirects to http, akamai)
-		- tripadvisor.com	(cert only matches *.tripadvisor.com)
 
 
-	Partially covered subdomains:
+	Partially hosts in *tripadvisor.com:
 
-		- (www.)	(^ → www, some pages redirect to http)
+		- (www.)? ʰ
+		- cdn ʰ
+
+	ʰ Some pages redirect to http
 
 
-	Fully covered domains:
+	Mixed content:
 
-		- www.jscache.com	(→ c1.tacdn.com)
+		- Bug on www from b.scorecardresearch.com ˢ
+
+	ˢ Secured by us
 
 -->
-<ruleset name="TripAdvisor (partial)">
+<ruleset name="TripAdvisor.com (partial)">
 
-	<target host="www.jscache.com" />
-	<target host="c1.tacdn.com" />
-	<target host="www.t-analytics.com" />
 	<target host="tripadvisor.com" />
-	<target host="*.tripadvisor.com" />
+	<target host="cdn.tripadvisor.com" />
+	<target host="media-cdn.tripadvisor.com" />
+	<target host="remote.tripadvisor.com" />
+	<target host="www.tripadvisor.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:cdn|www)\.tripadvisor\.com/(?:$|ForumHome$|GetListedNew$|BusinessListings$|Hotels-g\d+-[\w-]+\.html|MediaKit$|PressCenter-c6-About_Us\.html|help$|reviewexpress$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:cdn\.|www\.)?tripadvisor\.com/(?!/*(?:favicon\.ico|img2?/|(?:Amex|GreenLeaders|Owners|Registration|RegistrationPage|ReviewExpress|TripAdvisorInsights|UserReview)(?:-[^/]*)?(?:$|\?)|TripAdvisorInsights/|pages/privacy\.html))" />
+
+			<!--	+ve: (quota: 21)
+						-->
+			<test url="http://cdn.tripadvisor.com/GetListedNew" />
+			<test url="http://www.tripadvisor.com/Attractions-g274707-Activities-Prague_Bohemia.html" />
+			<test url="http://www.tripadvisor.com/BusinessListings" />
+			<test url="http://www.tripadvisor.com/ForumHome" />
+			<test url="http://www.tripadvisor.com/GetListedNew" />
+			<test url="http://www.tripadvisor.com/Hotels" />
+			<test url="http://www.tripadvisor.com/Hotels-g293916-Bangkok-Hotels.html" />
+			<test url="http://www.tripadvisor.com/MediaKit" />
+			<test url="http://www.tripadvisor.com/PressCenter-c6-About_Us.html" />
+			<test url="http://www.tripadvisor.com/Rentals" />
+			<test url="http://www.tripadvisor.com/Restaurants" />
+			<test url="http://www.tripadvisor.com/TravelAdvisory" />
+			<test url="http://www.tripadvisor.com/TravelersChoice" />
+			<test url="http://www.tripadvisor.com/VacationRentalIdeas" />
+			<test url="http://www.tripadvisor.com/apps" />
+			<test url="http://www.tripadvisor.com/help" />
+			<test url="http://www.tripadvisor.com/help/greenleaders" />
+			<test url="http://www.tripadvisor.com/reviewexpress" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.tripadvisor.com/Amex" /><!--	mixed bug -->
+			<test url="http://www.tripadvisor.com/GreenLeaders" />
+			<test url="http://cdn.tripadvisor.com/UserReview" />
+			<test url="http://www.tripadvisor.com/Owners-t7" />
+			<test url="http://www.tripadvisor.com/Registration" />
+			<test url="http://www.tripadvisor.com/RegistrationPage-a_partnerKey.1-a_url." />
+			<test url="http://www.tripadvisor.com/ReviewExpress" />
+			<test url="http://www.tripadvisor.com/TripAdvisorInsights" />
+			<test url="http://www.tripadvisor.com/TripAdvisorInsights/ReviewExpress" />
+			<test url="http://www.tripadvisor.com/UserReview" />
+			<test url="http://www.tripadvisor.com/UserReview-e__2F__" />
+			<test url="http://www.tripadvisor.com/favicon.ico" />
+			<test url="http://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/s4.0-MCID-0.svg" />
+			<test url="http://www.tripadvisor.com/pages/privacy.html" /><!--	mixed bug -->
 
 
-	<securecookie host="^www\.t-analytics\.com$" name=".+" />
-	<securecookie host="^webmail\.tripadvisor\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.tripadvisor\.com$" name="^(CM|PassThruUrlArgs|ServerPool|TACds|TAReturnTo|TASession|TATravelInfo|TAUD|TAUnique)$" /-->
+
+	<!--	Set by badges:
+				-->
+	<securecookie host="^\.tripadvisor\.com$" name="^(?:ServerPool|TACds|TASession|TAUnique)$" />
+	<securecookie host="^(?!www\.)\w" name="." />
 
 
-	<rule from="^http://(?:www\.jscache|c1\.tacdn)\.com/"
-		to="https://c1.tacdn.com/" />
-
-	<rule from="^http://www\.t-analytics\.com/"
-		to="https://www.t-analytics.com/" />
-
-	<rule from="^http://(?:www\.)?tripadvisor\.com/(favicon\.ico|img/|Registration(?:$|\?))"
-		to="https://www.tripadvisor.com/$1" />
-
-	<rule from="^http://(cdn|media-cdn|remote|webmail)\.tripadvisor\.com/"
-		to="https://$1.tripadvisor.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

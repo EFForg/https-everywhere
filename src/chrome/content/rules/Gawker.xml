@@ -1,64 +1,84 @@
 <!--
 	Other Gawker rulesets:
-
 		- Deadspin.com.xml
+		- Gawker-labs.com.xml
 		- Gawkerassets.com.xml
 		- Gizmodo.com.xml
+		- Kinja.xml
+		- Kinja-img.com.xml
+		- Kinja-static.com.xml
 		- Io9.com.xml
 		- Jalopnik.com.xml
 		- Jezebel.com.xml
 		- Kotaku.com.xml
 		- Lifehacker.com.xml
 
-
 	CDN buckets:
-
 		- kinja.desk.com
-
 			- help.gawker.com
-
 		- a.prod.fastly.net
-
 			- api.gawker.com
 			- cache.gawker.com
 			- login.gawker.com
 
+	Mismatch:
+		- gawker.com
+		- www.gawker.com
+		- advertising.gawker.com
+		- antiviral.gawker.com
+		- blackbag.gawker.com
+		- cache.gawker.com
+		- defamer.gawker.com
+		- disputations.gawker.com
+		- dog.gawker.com
+		- domesticity.gawker.com
+		- drugs.gawker.com
+		- fortressamerica.gawker.com
+		- help.gawker.com
+		- internet.gawker.com
+		- justice.gawker.com
+		- morningafter.gawker.com
+		- phasezero.gawker.com
+		- rankings.gawker.com
+		- review.gawker.com
+		- sausage.gawker.com
+		- sonyhack.gawker.com
+		- thevane.gawker.com
+		- thewest.gawker.com
+		- tktk.gawker.com
+		- valleywag.gawker.com
 
-	Nonfunctional domains:
+	Closed:
+		- feeds.gawker.com
 
-		- advertising.gawker.com	(http reply)
-		- feeds.gawker.com		(interrupted)
+	Insecure cookies are set for these hosts: ᶜ
+		- gawker.com
+		- (column_name).gawker.com
+		- www.gawker.com
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
-
-	Problematic domains:
-
-		- (www.)gawker.com *
-		- api.gawker.com *
-		- cache.gawker.com *
-		- feeds.gawker.com	(interrupted)
-		- help.gawker.com	(desk.com)
-		- login.gawker.com *
-
-	* Works; mismatched, CN: *.a.ssl.fastly.net
-
+	Mixed content:
+		- Ads / bugs on ^, (column_name) from sb.scorecardresearch.com ˢ
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 -->
-<ruleset name="Gawker" default_off="mismatched">
+<ruleset name="Gawker.com">
+	<!--	Direct rewrites:	-->
+	<target host="api.gawker.com" />
+	<target host="legal.gawker.com" />
+	<target host="live.gawker.com" />
+	<target host="login.gawker.com" />
+	<target host="slow.gawker.com" />
 
-	<target host="gawker.com" />
-	<target host="*.gawker.com" />
-	<target host="cache.gawkerassets.com" />
+	<!--	Complications:	-->
+	<target host="feeds.gawker.com" />
 
 
-	<securecookie host="^(?:.*\.)?gawker\.com$" name=".+" />
+	<!--	Not secured by server:	-->
+	<!--securecookie host="^(column_name\.|www\.)?gawker\.com$" name="^geocc$" /-->
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:((?:api|cache|login)\.)|www\.)?gawker\.com/"
-		to="https://$1gawker.com/" />
-
-	<rule from="^http://help\.gawker\.com/images/"
-		to="https://d3jyn100am7dxp.cloudfront.net/images/" />
-
-	<rule from="^http://cache\.gawkerassets\.com/"
-		to="https://cache.gawkerassets.com/" />
-
+	<rule from="^http://feeds\.gawker\.com/"
+		to="https://feeds.feedburner.com/" />
+	<rule from="^http:"	to="https:" />
 </ruleset>

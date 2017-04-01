@@ -1,9 +1,16 @@
 <!--
+	For rules causing false/broken MCB, see washingtonpost.com-falsemixed.xml.
+
 	For problematic rules, see Washington-Post-Company-mismatches.xml.
+
+	slate.me and wapo.st are handled in Bit.ly_vanity_domains.xml.
 
 
 	Other Washington Post Company rulesets:
 
+		- CDN_Slate.com.xml
+		- PostPoints_Rewards.com.xml
+		- Slate.com.xml
 		- WaPo_Labs.com.xml
 		- Wash_Post.com.xml
 		- WP_digital.net.xml
@@ -26,7 +33,6 @@
 		- media[23]?.washingtonpost.com.edgesuite.net
 		- projects.washingtonpost.com.edgesuite.net
 		- www.washingtonpost.com.edgesuite.net
-
 		- knowmore.washingtonpost.com.inscname.net
 
 		- washingtonpost-001.inscname.net
@@ -40,125 +46,169 @@
 		- pqasb.pqarchiver.com/washingtonpost/
 
 
-	Problematic domains:
+	Nonfunctional hosts in *washingtonpost.com:
 
-		- help.washingtonpost.com		(works; mismatched, CN: *.parature.com)
-		- metrics.washingtonpost.com		(mismatched, CN: *.112.2o7.net)
-		- wp-eng-static.washingtonpost.com	(cloudfront)
-
-
-	Nonfunctional domains:
-
-		- www.slate.com *
-
-		- washingtonpost.com subdomains:
-
-			- ^			(refused)
-			- apps			(404; mismatched, CN: ssl001.insnw.net)
-			- css **
-			- img **
-			- js **
-			- knowmore		(404; mismatched, CN: ssl001.insnw.net)
-			- media **
-			- media2 *
-			- media3 **
-			- origin		(refused, redirects to www)
-			- projects **
-			- pwapi			(refused)
-			- www *
+		- feeds			Refused
+		- games ᵈ
+		- knowmore		(404)
+		- live			(404)
+		- media2 *
+		- origin		(refused, redirects to www)
+		- projects		404
+		- realestate		Dropped
+		- voices ᵗ
 
 	* 504, akamai
 	** 503, akamai
+	ᵈ Dropped
+	⁵ Redirects to http
+	ᵗ Reset
 
 
 	Problematic domains:
 
-		- (www.)wapo.st				(times out)
-		- findnsave.washingtonpost.com		(mismatched, CN: *.findnsave.com)
+		- (www.)?wapo.st	Handshake fails
+
+		- in *washingtonpost.com:
+
+			- findnsave		(mismatched, CN: *.findnsave.com)
+			- help			(works; mismatched, CN: *.parature.com)
+			- metrics		(mismatched, CN: *.112.2o7.net)
+			- wp-eng-static		(cloudfront)
+			- wpcomics ᵐ
+
 		- (www.)washingtonpostmedia.com		(mismatched, CN: washpost.com)
 		- (www.)washpostco.com			(akamai, mostly corporate-ir.net)
 
-
-	Partially covered domains:
-
-		- js.washintonpost.com	(→ ssl, ads 404)
+	ᵐ Mismatched
 
 
-	Fully covered domains:
+	Insecure cookies are set for these domains and hosts:
 
-		- wapo.st	(→ bit.ly)
-
-		- washingtonpost.com subdomains:
-
-			- account
-			- css ¹
-			- id
-			- metrics	(→ washingtonpost-com.112.2o7.net)
-			- ssl ²
-			- ssl1 ²
-			- subscription
-			- voices
-			- wp-eng-static		(→ d2t2kgdkdgawhh.cloudfront.net)
-
-	¹ → ssl.washingtonpost.com
-	² Server is configured for ssl3 only
+		- .washingtonpost.com
+		- account.washingtonpost.com
+		- id.washingtonpost.com
+		- postpoints.washingtonpost.com
+		- ssl1.washingtonpost.com
+		- subscribe.washingtonpost.com
+		- subscription.washingtonpost.com
+		- www.washingtonpost.com
 
 
-	www no longer works when rewritten to ssl.
+	Mixed content:
 
+		- css, on:
 
-	Observed cookie domains:
+			- postpoints from netdna.bootstrapcdn.com ¹
+			- nie from css.wpdigitalink.net ²
 
-		- .washingtonpost.com ¹
-		- account.washingtonpost.com ²
-		- findnsave.washingtonpost.com ¹
-		- .findnsave.washingtonpost.com ¹ ³
-		- id.washingtonpost.com ²
-		- knowmore.washingtonpost.com ⁴
+		- Font on syndication from img.wpdigital.net ¹
 
-	¹ We can't secure any of these as we have no method for
-	  forcing the secure attribute for cookies that are set
-	  from a domain that is also accessed via unencrypted http.
+		- Images, on:
 
-	² Secured by us
-	³ Tracking cookies
-	⁴ Not secured by us
+			- nie from www.washingtonpost.com ¹
+			- postpoints from wordpressmultisite.washingtonpost.com ¹
+			- postpoints from wordpressmultisite.wpprivate.com
+			- syndication from $self ¹
+			- www from commerce.washingtonpost.com ¹
+			- www from media.washingtonpost.com ¹
+			- www from media3.washingtonpost.com
+
+	¹ Secured by us
+	² Nonexistent, also requested from another source
 
 -->
-<ruleset name="Washington Post Company (unreliable)" default_off="needs testing">
+<ruleset name="Washington Post.com (partial)">
 
-	<target host="wapo.st" />
-	<target host="*.washingtonpost.com" />
-		<!--
-			404 when rewritten to ssl1.
+	<!--	Direct rewrites:
+				-->
+	<target host="washingtonpost.com" />
+	<target host="account.washingtonpost.com" />
+	<target host="advertising.washingtonpost.com" />
+	<target host="apps.washingtonpost.com" />
+	<target host="commerce.washingtonpost.com" />
+	<target host="css.washingtonpost.com" />
+	<target host="developer.washingtonpost.com" />
+	<target host="id.washingtonpost.com" />
+	<target host="images.washingtonpost.com" />
+	<target host="img.washingtonpost.com" />
+	<target host="js.washingtonpost.com" />
+	<target host="m.washingtonpost.com" />
+	<target host="media.washingtonpost.com" />
+	<target host="media3.washingtonpost.com" />
+	<target host="nie.washingtonpost.com" />
+	<target host="postpoints.washingtonpost.com" />
+	<target host="pwapi.washingtonpost.com" />
+	<target host="ssl.washingtonpost.com" />
+	<target host="ssl1.washingtonpost.com" />
+	<target host="subscribe.washingtonpost.com" />
+	<target host="syndication.washingtonpost.com" />
+	<target host="wordpressmultisite.washingtonpost.com" />
+
+	<!--	Complications:
+				-->
+	<target host="metrics.washingtonpost.com" />
+	<target host="wp-eng-static.washingtonpost.com" />
+	<target host="www.washingtonpost.com" />
+
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://www\.washingtonpost\.com/(?:sf/national/+[^/]|wp-srv/graphics/templates/mobile/css/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.washingtonpost.com/sf/national/2015/12/27/aianxiety/" />
+			<test url="http://www.washingtonpost.com/sf/national/?foo" />
+			<test url="http://www.washingtonpost.com/sf/national/wp-content/themes/enterprise-theme-nav/images/wp_logo_white.png" />
+			<test url="http://www.washingtonpost.com/wp-srv/graphics/templates/mobile/css/font-awesome-v4.2-min.css" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.washingtonpost.com/sf/national" />
+			<test url="http://www.washingtonpost.com/sf/national/" />
+
+		<test url="http://media.washingtonpost.com/wp-srv/css/layout/oring970.css" />
+		<test url="http://media3.washingtonpost.com/wpost/css/combo?context=wpost&amp;c=true&amp;m=false&amp;r=/3.0.0/twp.reset-3.0.0.css&amp;r=/3.0.0/twp.structure-3.0.0.css&amp;r=/3.0.0/twp.base-3.0.0.css&amp;r=/3.0.0/twp.modules-3.0.0.css" />
+
+
+	<!--	Not secured by server:
 							-->
-	<exclusion pattern="^https?://(?:js\.|www\.)?washingtonpost\.com/wp-srv/(?:ad|javascript|blogs)/" />
-
-
-	<!--	Could we secure any of these safely?
-							-->
-	<!--securecookie host="^\.washingtonpost\.com$" name="^(client_region|de|devicetype|galleryPlays|rpld0|rpld1|s_pers|s_sess|s_vi|wapo_last_ip|wapo_saved_ip|wapo_sess_id|wapo_vis_id|wp_pageview)$" /-->
-	<!--securecookie host=".*\.washingtonpost\.com$" name=".+" /-->
-	<securecookie host="^(?:account|id)\.washingtonpost\.com$" name=".+" />
+	<!--securecookie host="^\.washingtonpost\.com$" name="^(AWSELB|X-WP-Split|client_region|de|devicetype|galleryPlays|osfam|rpld0|rpld1|s_pers|s_sess|s_vi|wapo_last_ip|wapo_saved_ip|wapo_sess_id|wapo_vis_id|wp_pageview)$" /-->
+	<!--securecookie host="^account\.washingtonpost\.com$" name="^sto-id-\d+$" /-->
 	<!--securecookie host="^findnsave\.washingtonpost\.com$" name="^csrftoken$" /-->
-	<!--securecookie host="^\.findnsave\.washingtonpost\.com$" name=".+" /-->
 	<!--securecookie host="^knowmore.washingtonpost.com$" name="^wpni_poe$" /-->
-	<!--securecookie host="^www\.washingtonpost\.com$" name="^(backplane-channel|photoJSONAdConfig|wpni_poe)$" /-->
+	<!--securecookie host="^postpoints\.washingtonpost\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^ssl1\.washingtonpost\.com$" name="^sto-id-\d+$" /-->
+	<!--securecookie host="^subscribe\.washingtonpost\.com$" name="^sto-id-\d+$" /-->
+	<!--securecookie host="^subscription\.washingtonpost\.com$" name="^(?:JSESSIONID|sto-id-\d+)$" /-->
+	<!--securecookie host="^www\.washingtonpost\.com$" name="^(JROUTE|JSESSIONID|backplane-channel|photoJSONAdConfig|wpni_poe)$" /-->
 
+	<!--securecookie host="." name="." /-->
+	
+	<!-- CORS -->
+	<exclusion pattern="^http://www\.washingtonpost\.com/wp-srv/graphics/templates/mobile/" />
+		<test url="http://www.washingtonpost.com/wp-srv/graphics/templates/mobile/assets/fonts/webtype/Franklin-ITC-Pro-Bold/e9e4c4dc-e548-4fef-9aa1-80c9cd0f02ce-3.woff" />
+	<!-- Fix #4891 -->
+	<exclusion pattern="^http://js\.washingtonpost\.com/video/static/js/posttv/vendor/jw/jwplayer\.flash\.swf" />
+		<test url="http://js.washingtonpost.com/video/static/js/posttv/vendor/jw/jwplayer.flash.swf" />
+	
+	<securecookie host="^\w" name="." />
 
-	<rule from="^http://wapo\.st/"
-		to="https://bit.ly/" />
-
-	<rule from="^http://(account|id|ssl1?|subscription|voices)\.washingtonpost\.com/"
-		to="https://$1.washingtonpost.com/" />
-
-	<rule from="^http://(?:css|js|media)\.washingtonpost\.com/"
-		to="https://ssl.washingtonpost.com/" />
 
 	<rule from="^http://metrics\.washingtonpost\.com/"
-		to="https://washingtonpost-com.112.2o7.net/" />
+		to="https://washingtonpost.112.2o7.net/" />
 
 	<rule from="^http://wp-eng-static\.washingtonpost\.com/"
 		to="https://d2t2kgdkdgawhh.cloudfront.net/" />
+
+	<!--	Redirects to http first:
+					-->
+	<rule from="^http://www\.washingtonpost\.com/sf/national/?($|\?|#)"
+		to="https://www.washingtonpost.com/national/$1" />
+
+		<test url="http://www.washingtonpost.com/sf/national/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

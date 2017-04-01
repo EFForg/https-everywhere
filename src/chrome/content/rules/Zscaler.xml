@@ -1,5 +1,95 @@
-<ruleset name="Zscaler">
-  <target host="www.zscaler.com" />
+<!--
+	Nonfunctional hosts in *zscaler.com:
 
-  <rule from="^http://www\.zscaler\.com/" to="https://www.zscaler.com/"/>
+		- info ᴹ
+		- research ᴮ
+		- scrapbook ᴮ
+		- securitypreview ᵈ
+		- zap ʳ
+		- zulu ᵖ
+
+	ᴹ Marketo
+	ᴮ Blogger/handshake fails
+	ᵖ Plaintext reply
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *zscaler.com:
+
+		- blog ᵐ
+		- staging ᵐ ˢ
+
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.zscaler.com
+
+
+	Mixed content:
+
+		- css on blog from $self ᵐ
+		- Images on blog from $self ᵐ
+
+	ᵐ Not secured by us <= mismatched
+
+-->
+<ruleset name="Zscaler.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="zscaler.com" />
+	<target host="help.zscaler.com" />
+	<target host="trust.zscaler.com" />
+	<target host="www.zscaler.com" />
+	<target host="zmtr.zscaler.com" />
+
+	<!--	Complications:
+				-->
+	<target host="info.zscaler.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.zscaler\.com$" name="^(?:NO_CACHE|SimpleSAMLSessionID)$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^(?!info\.)\w" name="." />
+
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://info\.zscaler\.com/+(?:\?.*)?$"
+		to="https://www.zscaler.com/" />
+
+		<test url="http://info.zscaler.com/?foo" />
+		<test url="http://info.zscaler.com/?bar" />
+
+	<rule from="^http://info\.zscaler\.com/"
+		to="https://na-abm.marketo.com/" />
+
+		<exclusion pattern="^http://info\.zscaler\.com/+(?!$|\?|css/|images/|rs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://info.zscaler.com/GlobalStandardTemp.html" />
+			<test url="http://info.zscaler.com/GlobalStandardTemp.html?mkt_tok=" />
+			<test url="http://info.zscaler.com/IDCWebcastAug2012APAC.html" />
+			<test url="http://info.zscaler.com/IDCWebcastAug2012APAC.html?mkt_tok=" />
+			<test url="http://info.zscaler.com/UnsubscribePage.html" />
+			<test url="http://info.zscaler.com/UnsubscribePage.html?mkt_unsubscribe=1" />
+			<test url="http://info.zscaler.com/UnsubscribePage.html?mkt_unsubscribe=1&amp;mkt_tok=" />
+			<test url="http://info.zscaler.com/index.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://info.zscaler.com/css/mktLPSupport.css" />
+			<test url="http://info.zscaler.com/images/forms/backRequiredGray.gif" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

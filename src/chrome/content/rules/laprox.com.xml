@@ -1,0 +1,41 @@
+<!--
+	For other Laprox Group coverage, see laproxgroup.com.xml.
+
+
+	Problematic hosts in *laprox.com:
+
+		- (www.)? ᵐ ˢ
+		- downloads ᵐ ˢ
+		- support ˢ
+
+	ᵐ Mismatched
+	ˢ Self-signed
+
+-->
+<ruleset name="Laprox.com (partial)">
+
+	<!--	Complications:
+				-->
+	<target host="laprox.com" />
+	<target host="support.laprox.com" />
+	<target host="www.laprox.com" />
+
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://(?:support\.|www\.)?laprox\.com/.*"
+		to="https://laproxgroup.com/" />
+
+		<!--	\w$ does not redirect:
+						-->
+		<exclusion pattern="^http://(?:support\.|www\.)?laprox\.com/(?!/*(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://laprox.com/default.aspx" />
+			<test url="http://support.laprox.com/default.aspx" />
+			<test url="http://www.laprox.com/index.htm" />
+			<test url="http://www.laprox.com/index.html" />
+			<test url="http://www.laprox.com/index.php" />
+
+</ruleset>

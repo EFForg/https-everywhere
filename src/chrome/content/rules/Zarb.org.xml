@@ -15,7 +15,14 @@
 
 	Problematic subdomains:
 
-		- ^	(cert only matches www)
+		- ^ ¹
+		- plf ²
+		- rpm4 ²
+		- youri ²
+		- www ²
+
+	¹ Mismatched
+	² Self-signed
 
 
 	Fully covered subdomains:
@@ -28,17 +35,25 @@
 -->
 <ruleset name="zarb.org (partial)" default_off="self-signed">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="plf.zarb.org" />
+	<target host="rpm4.zarb.org" />
+	<target host="www.zarb.org" />
+	<target host="youri.zarb.org" />
+
+	<!--	Complications:
+				-->
 	<target host="zarb.org" />
-	<target host="*.zarb.org" />
 
 
 	<securecookie host="^www\.zarb\.org$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?zarb\.org/"
+	<rule from="^http://zarb\.org/"
 		to="https://www.zarb.org/" />
 
-	<rule from="^http://(plf|rpm4|youri)\.zarb\.org/"
-		to="https://$1.zarb.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

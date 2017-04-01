@@ -1,29 +1,89 @@
 <!--
-	Nonfunctional:
+	Nonfunctional hosts in *cpanel.net:
 
-		- docs		(http reply)
+		- httpupdate ²
+		- layer1 ²
+
+	² Refused
 
 
-	Fully covered subdomains:
+	Problematic hosts in *cpanel.net:
 
-		- (www.)
-		- forums
-		- manage2
-		- mt
-		- tickets
+		- applications *
+		- blogs *
+		- exams *
+		- go ²
+		- job.listings *
+
+	* Mismatched
+	² Insecure renegotiation
+
+
+	Insecure cookies are set for these hosts:
+
+		- documentation.cpanel.net
+		- exams.cpanel.net
+		- forums.cpanel.net
+		- job.listings.cpanel.net
+		- partnernoc.cpanel.net
+		- store.cpanel.net
+		- tickets.cpanel.net
+
+
+	Mixed content:
+
+		- css on job.listings from jobs.cpanel.com
+		- Images on job.listings from jobs.cpanel.com
+
+	* Secured by us
 
 -->
-<ruleset name="cPanel (partial)" platform="mixedcontent">
+<ruleset name="cPanel.net (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="cpanel.net" />
-	<target host="*.cpanel.net" />
-		<exclusion pattern="^http://docs\." />
+	<target host="docs.cpanel.net" />
+	<target host="documentation.cpanel.net" />
+	<target host="features.cpanel.net" />
+	<target host="forums.cpanel.net" />
+	<target host="go.cpanel.net" />
+	<target host="manage2.cpanel.net" />
+	<target host="mt.cpanel.net" />
+	<target host="partnernoc.cpanel.net" />
+	<target host="podcast.cpanel.net" />
+	<target host="security.cpanel.net" />
+	<target host="store.cpanel.net" />
+	<target host="tickets.cpanel.net" />
+	<target host="university.cpanel.net" />
+	<target host="verify.cpanel.net" />
+	<target host="videos.cpanel.net" />
+	<target host="www.cpanel.net" />
+
+	<!--	Complications:
+				-->
+	<target host="applications.cpanel.net" />
+	<target host="blogs.cpanel.net" />
 
 
-	<securecookie host="^(?:.*\.)?cpanel\.net$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^documentation\.cpanel\.net$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^(?:exams|forums|job\.listings)\.cpanel\.net$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^partnernoc\.cpanel\.net$" name="^PARTNERSID$" /-->
+	<!--securecookie host="^store\.cpanel\.net$" name="^CPSTORESESSID$" /-->
+	<!--securecookie host="^tickets\.cpanel\.net$" name="^TKTSCUSTSESSID$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://((forums|manage2|mt|tickets|www)\.)?cpanel\.net/"
-		to="https://$1cpanel.net/" />
+	<rule from="^http://applications\.cpanel\.net/"
+		to="https://applications.cpanel.com/" />
+
+	<rule from="^http://blogs\.cpanel\.net/"
+		to="https://blogs.cpanel.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

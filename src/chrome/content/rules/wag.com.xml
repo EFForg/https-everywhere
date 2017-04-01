@@ -1,0 +1,48 @@
+<!--
+	For other Amazon coverage, see Amazon.xml.
+
+
+	CDN buckets:
+
+		- wag.q-assets.com
+
+
+	^wag.com: Refused
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .wag.com
+		- www.wag.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Wag.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.wag.com" />
+
+	<!--	Complications:
+				-->
+	<target host="wag.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.wag\.com$" name="^(?:cookie-check|session-id|ubid-main)$" /-->
+	<!--securecookie host="^www\.wag\.com$" name="^(?:GEO_COUNTRYCODE|GEO_ZIPCODE|VISITOR_ID|cookie-check)$" /-->
+
+	<securecookie host="." name="^aps-trtmnt$" />
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://wag\.com/"
+		to="https://www.wag.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

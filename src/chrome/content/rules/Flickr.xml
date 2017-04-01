@@ -2,51 +2,67 @@
 	For other Yahoo coverage, see Yahoo.xml.
 
 
-	Problematic domains:
+	Mismatch:
+		- parkorbird.flickr.com
 
-		- flickr.com subdomains:
+	Timeout:
+		- blog.flickr.com (blog.flickr.net)
 
-			- ^
-			- api
-			- code
 
-		- blog.flickr.net *
-		- code.flickr.net *	
+	Insecure cookies are set for these domains and hosts: ᶜ
 
-	* Mismatched, handled in WordPress-blogs.xml
+		- .flickr.com
+		- www.flickr.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+	Note: current_identity (.flickr.com) is read
+	via script and so cannot be secured.
+
+		https://github.com/EFForg/https-everywhere/issues/239
+
+	other cookies also seem to need excluding. securecookie
+	requires work from someone with a Flickr account.
+
+		https://github.com/EFForg/https-everywhere/issues/728
 
 -->
-<ruleset name="Flickr (partial)">
+<ruleset name="Flickr.com">
 
-	<target host="flic.kr" />
 	<target host="flickr.com" />
-	<target host="*.flickr.com" />
-		<exclusion pattern="^http://api\.flickr.com/(?!services/)" />
-	<target host="*.staticflickr.com" />
+	<target host="www.flickr.com" />
+	<target host="api.flickr.com" />
+	<target host="blog.flickr.com" />
+	<target host="code.flickr.com" />
+	<target host="m.flickr.com" />
+	<target host="secure.flickr.com" />
+	<target host="static.flickr.com" />
+	<target host="*.static.flickr.com" />
+
+	<test url="http://farm1.static.flickr.com/" />
+	<test url="http://farm2.static.flickr.com/" />
+	<test url="http://farm3.static.flickr.com/" />
+	<test url="http://farm4.static.flickr.com/" />
+	<test url="http://farm5.static.flickr.com/" />
+	<test url="http://farm6.static.flickr.com/" />
+	<test url="http://farm7.static.flickr.com/" />
+	<test url="http://farm8.static.flickr.com/" />
+	<test url="http://farm9.static.flickr.com/" />
 
 
-	<securecookie host=".*\.flickr\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.flickr\.com$" name="^(BX|admsort|cookie_session|current_identity|density|ffs|fldetectedlang|flrb|flrbcr|flrbgdrp|flrbgmrp|flrbgrp|flrbp|flrbs|fltoto|just_registered|localization|memsort|modsort|photoPHS|photoPWS|vp|xb)$" /-->
+	<!--securecookie host="^www\.flickr\.com$" name="^(liqph|liqpw|ywandp)" /-->
+
+	<!-- https://github.com/EFForg/https-everywhere/issues/728
+	<securecookie host=".*\.flickr\.com$" name="^(?!current_identity$).+" />-->
 
 
-	<rule from="^http://flic\.kr/f/"
-		to="https://www.flickr.com/short_urls.gne?favorites=" />
+	<rule from="^http://blog\.flickr\.com/"
+		to="https://blog.flickr.net/" />
 
-	<rule from="^http://flic\.kr/p/"
-		to="https://www.flickr.com/photo.gne?short=" />
-
-	<rule from="^http://flic\.kr/ps/"
-		to="https://www.flickr.com/short_urls.gne?photostream=" />
-
-	<rule from="^http://flic\.kr/s/"
-		to="https://www.flickr.com/short_urls.gne?photoset=" />
-
-	<rule from="^http://(?:api\.|www\.)?flickr\.com/"
-		to="https://www.flickr.com/" />
-
-	<rule from="^http://s(ecure|tatic)\.flickr\.com/"
-		to="https://s$1.flickr.com/" />
-
-	<rule from="^http://farm(\d+)\.static(\.)?flickr\.com/"
-		to="https://farm$1.static$2flickr.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

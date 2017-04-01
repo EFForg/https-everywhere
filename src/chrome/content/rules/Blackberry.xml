@@ -1,30 +1,143 @@
 <!--
-	Problematic subdomains:
+	Nonfunctional hosts in *blackberry.com:
 
-		- ^		(cert only matches www)
-		- press *
-		- supportforums	(no https)
-		- us *
+		- demos ¹
+		- m ²
+		- support ³
 
-	* Works, akamai
+	¹ Dropped
+	² 504, Akamai
+	³ Salesforce
+
+
+	Problematic hosts in *blackberry.com:
+
+		- blogs ¹
+		- ca ²
+		- developerforums ³ ⁴
+		- docs ²
+		- na ²
+		- nl ²
+		- press ²
+		- us ²
+		- web ²
+
+	¹ WordPress
+	² Works, akamai
+	³ Mismatched
+	⁴ Self-signed
+
+
+	Insecure cookies are set for these hosts:
+
+		- developer.blackberry.com
+		- global.blackberry.com
+		- help.blackberry.com
+		- origin-www.blackberry.com
+		- partner.blackberry.com
+		- partners.blackberry.com
+		- supportforums.blackberry.com
+		- bdsc.webapps.blackberry.com
+		- beta.webapps.blackberry.com
+
+
+	Mixed content:
+
+		- Images, on :
+
+			- appworld from us.blackberry.com
+			- blogs from *.files.wordpress.com *
+			- supportforums from $self *
+
+		- favicon on supportforums from na.blackberry.com
+		- Bug on www from ehg-researchinmotion.hitbox.com
+
+	* Secured by us
 
 -->
-<ruleset name="Blackberry (partial)">
+<ruleset name="Blackberry.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="blackberry.com"/>
-	<target host="*.blackberry.com"/>
+	<target host="appworld.blackberry.com" />
+	<target host="blackberryid.blackberry.com" />
+	<target host="developer.blackberry.com" />
+	<target host="global.blackberry.com" />
+	<target host="help.blackberry.com" />
+	<target host="icc.blackberry.com" />
+	<target host="origin-www.blackberry.com" />
+	<target host="partner.blackberry.com" />
+	<target host="partners.blackberry.com" />
+	<target host="supportforums.blackberry.com" />
+	<target host="bdsc.webapps.blackberry.com" />
+	<target host="beta.webapps.blackberry.com" />
+	<target host="www.blackberry.com" />
 
+	<!--	Complications:
+				-->
+	<target host="developerforums.blackberry.com" />
+
+		<!--	200 redirect:
+					-->
+		<!--exclusion pattern="^http://www\.blackberry\.com/$" /-->
+		<!--
+			404:
+				-->
+		<!--exclusion pattern="^http://www\.blackberry\.com/(?:appworld/$|priv$|support/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?blackberry\.com/(?!(?:SRPAddressLookup|beta|businessbeta|training)/?$|jira(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.blackberry.com/appworld/" />
+			<test url="http://www.blackberry.com/bbmmeetings" />
+			<test url="http://www.blackberry.com/cloudservices" />
+			<test url="http://www.blackberry.com/experience" />
+			<test url="http://www.blackberry.com/graduate" />
+			<test url="http://www.blackberry.com/priv" />
+			<test url="http://www.blackberry.com/secusuite" />
+			<test url="http://www.blackberry.com/support/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.blackberry.com/SRPAddressLookup/" />
+			<test url="http://www.blackberry.com/beta/" />
+			<test url="http://www.blackberry.com/businessbeta/" />
+			<test url="http://www.blackberry.com/jira" />
+			<test url="http://www.blackberry.com/jira/secure/Dashboard.jspa" />
+			<test url="http://www.blackberry.com/training/" />
+
+		<test url="http://global.blackberry.com/en/support/blackberrytraining/blackberrytraining.html" />
+		<test url="http://global.blackberry.com/fr/smartphones/blackberry-priv/pre-register.html" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:developer|origin-developer|partner)\.blackberry\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^(?:developer|global|origin-developer|origin-www|partners?|(?:bdsc|beta)\.webapps)\.blackberry\.com$" name="^BIGipServer.*" /-->
+	<!--securecookie host="^global\.blackberry\.com$" name="^temptoken$" /-->
+	<!--securecookie host="^help\.blackberry\.com$" name="^helpbbcom\.savedLocale$" /-->
+	<!--securecookie host="^supportforums\.blackberry\.com$" name="^(?:LiSESSIONID|LithiumVisitor)$" /-->
 
 	<!--	Omniture tracking cookies:
 						-->
-	<securecookie host="^\.blackberry\.com$" name="^s_\w+$" />
-	<securecookie host="^.+\.blackberry\.com$" name=".+" />
+	<securecookie host="^\." name="^s_\w" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://((?:appworld|blackberryid|developer|global|www)\.)?blackberry\.com/"
-		to="https://$1blackberry.com/"/>
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://developerforums\.blackberry\.com/[^?]*"
+		to="https://supportforums.blackberry.com/t5/Developer-Support-Forums/ct-p/blackberrydev" />
 
-	<rule from="^https?://supportforums\.blackberry\.com/"
-		to="https://rim.i.lithium.com/" />
+		<test url="http://developerforums.blackberry.com/?" />
+		<test url="http://developerforums.blackberry.com/home" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

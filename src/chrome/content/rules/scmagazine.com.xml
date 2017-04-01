@@ -1,0 +1,70 @@
+<!--
+	For other Haymarket coverage, see Haymarket.xml.
+
+
+	CDN buckets:
+
+		- dw5yb2c18zulu.cloudfront.net	← media
+
+
+	Problematic hosts in *scmagazine.com:
+
+		- ^ ᵃ ᵐ
+		- media ᵐ
+		- outsidelens ᵐ
+
+	ᵃ Shows another domain, preemptable redirect
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.scmagazine.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- iframe on www from outsidelens.scmagazine.com
+
+		- Images, on:
+
+			- outsidelens from static.media.magnify.net.s3.amazonaws.com
+			- www from media.scmagazine.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="SC Magazine.com (partial)" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.scmagazine.com" />
+
+	<!--	Complications:
+				-->
+	<target host="scmagazine.com" />
+	<target host="media.scmagazine.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.scmagazine\.com$" name="^(?:ASP\.NET_SessionId|AWSELB|CustomModalRegistrationDelay2)$" /-->
+
+	<securecookie host="." name="^optimizely" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://scmagazine\.com/"
+		to="https://www.scmagazine.com/" />
+
+	<rule from="^http://media\.scmagazine\.com/"
+		to="https://dw5yb2c18zulu.cloudfront.net/" />
+
+		<test url="http://media.scmagazine.com/images/2012/07/02/oba_advertising_15_271149_272924.png" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

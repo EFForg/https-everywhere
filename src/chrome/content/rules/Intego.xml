@@ -1,27 +1,54 @@
 <!--
 	CDN buckets:
 
-		- d2peew1v0y8u0k.cloudfront.net
-			- assets.intego.com
+		- d2peew1v0y8u0k.cloudfront.net	← assets.intego.com
 
 
-	Nonfunctional subdomains:
+	Problematic hosts in *intego.com:
 
-		- (www.)
+		- assets ᵐ
+
+	ᵐ Cloudfront/mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .fp.intego.com
+		- www.intego.com
 
 -->
-<ruleset name="Intego (partial)">
+<ruleset name="Intego.com">
 
-	<target host="*.intego.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="intego.com" />
+	<target host="fp.intego.com" />
+	<target host="support.intego.com" />
+	<target host="www.intego.com" />
+
+	<!--	Complications:
+				-->
+	<target host="assets.intego.com" />
+
+		<!--	Sets cookie without secure:
+							-->
+		<!--test url="http://www.intego.com/intego-free-trial" /-->
 
 
-	<securecookie host="^support\.intego\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.fp\.intego\.com$" name="^ARRAffinity$" /-->
+	<!--securecookie host="^www\.intego\.com$" name="^fastsprint_user_country2$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\.fp\." name="." />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^https?://assets\.intego\.com/"
+	<rule from="^http://assets\.intego\.com/"
 		to="https://d2peew1v0y8u0k.cloudfront.net/" />
 
-	<rule from="^http://support\.intego\.com/"
-		to="https://support.intego.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

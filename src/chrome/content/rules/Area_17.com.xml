@@ -1,0 +1,51 @@
+<!--
+	Problematic hosts in *area17.com:
+
+		- ^ ¹
+		- assets ²
+
+	¹ Prints "area17-new"
+	² Cloudfront
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.area17.com
+
+
+	Mixed content:
+
+		- Images on www from assets.area17.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Area 17.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.area17.com" />
+
+	<!--	Complications:
+				-->
+	<target host="area17.com" />
+	<target host="assets.area17.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.area17\.com$" name="^_area17_redux$" /-->
+
+	<securecookie host="^www\.area17\.com$" name=".+" />
+
+
+	<rule from="^http://area17\.com/"
+		to="https://www.area17.com/" />
+
+	<rule from="^http://assets\.area17\.com/"
+		to="https://d6115e0oaclnc.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

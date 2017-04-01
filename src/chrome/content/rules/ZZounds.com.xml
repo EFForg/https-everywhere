@@ -1,0 +1,78 @@
+<!--
+	CDN buckets:
+
+		- cachepe.zzounds.com.cdngc.net
+
+			- c[1-4]
+			- cachepe
+
+		- zzz.m.netdna-cdn.com
+
+			- c[5-8]
+
+
+	Problematic hosts in *zzounds.com:
+
+		- c[1-4] *
+		- cachepe *
+
+	* 403; mismatched, CN: ( ssl.cdngc.net | support3.cdnetworks.net )
+
+
+	Fully covered hosts in *zzounds.com
+
+		- (www.)?
+
+		- c1		(→ c5)
+		- c2		(→ c6)
+		- c3		(→ c7)
+		- c4		(→ c8)
+
+		- c\d+:
+
+			- c[05-8]
+
+		- cachepe	(→ delivery)
+		- delivery
+
+-->
+<ruleset name="zZounds.com">
+
+	<target host="zzounds.com" />
+	<target host="*.zzounds.com" />
+
+		<test url="http://c0.zzounds.com/" />
+		<test url="http://c1.zzounds.com/" />
+		<test url="http://c2.zzounds.com/" />
+		<test url="http://c3.zzounds.com/" />
+		<test url="http://c4.zzounds.com/" />
+		<test url="http://c5.zzounds.com/" />
+		<test url="http://cachepe.zzounds.com/" />
+		<test url="http://delivery.zzounds.com/" />
+		<test url="http://www.zzounds.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^(?:delivery)?\.zzounds\.com$" name=".+" />
+
+
+	<rule from="^http://c1\.zzounds\.com/"
+		to="https://c5.zzounds.com/" />
+
+	<rule from="^http://c2\.zzounds\.com/"
+		to="https://c6.zzounds.com/" />
+
+	<rule from="^http://c3\.zzounds\.com/"
+		to="https://c7.zzounds.com/" />
+
+	<rule from="^http://c4\.zzounds\.com/"
+		to="https://c8.zzounds.com/" />
+
+	<rule from="^http://cachepe\.zzounds\.com/"
+		to="https://delivery.zzounds.com/" />
+
+	<rule from="^http://((?:c\d+|delivery|www)\.)?zzounds\.com/"
+		to="https://$1zzounds.com/" />
+
+</ruleset>

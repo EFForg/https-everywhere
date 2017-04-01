@@ -3,6 +3,7 @@
 
 		- thingiverse-production.s3.amazonaws.com
 		- s3.amazonaws.com/thingiverse-resources/
+		- thingiverse-production-new.s3.amazonaws.com
 
 
 	Nonfunctional subdomains:
@@ -12,14 +13,7 @@
 
 	Problematic subdomains:
 
-		- ^		(521)
 		- support	(mismatched, CN: *.tenderapp.com)
-
-
-	Fully covered subdomains:
-
-		- (www.)	(^ → www)
-		- support	(→ thingiverse.tenderapp.com)
 
 
 	Mixed content:
@@ -27,24 +21,37 @@
 		- Images, on:
 
 			- support from www *
-			- www from thingiverse-resources.s3.amazonaws.com *
+			- www from thingiverse-production-new.s3.amazonaws.com *
 
-	* Secured by us
+		- Bug on www from www.facebook.com *
+
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Thingiverse (partial)">
+<ruleset name="Thingiverse.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="thingiverse.com" />
-	<target host="*.thingiverse.com" />
+	<target host="www.thingiverse.com" />
+
+	<!--	Complications:
+				-->
+	<target host="support.thingiverse.com" />
 
 
-	<securecookie host="^(?:www)?\.thingiverse\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?thingiverse\.com$" name="^(?:AWSELB|PHPSESSID)$" /-->
+	<!--securecookie host="^\.thingiverse\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
 
+	<securecookie host="." name="." />
 
-	<rule from="^http://(?:www\.)?thingiverse\.com/"
-		to="https://www.thingiverse.com/" />
 
 	<rule from="^http://support\.thingiverse\.com/"
 		to="https://thingiverse.tenderapp.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

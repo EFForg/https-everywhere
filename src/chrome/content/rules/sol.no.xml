@@ -1,0 +1,44 @@
+<!--
+	Problematic hosts in *sol.no:
+
+		- siste ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- sol.no
+		- guru.sol.no
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bug on siste from eniro.tns-cs.net ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Sol.no (partial)">
+
+	<target host="sol.no" />
+	<target host="guru.sol.no" />
+	<target host="m.sol.no" />
+	<target host="www.sol.no" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^sol\.no$" name="^(?:SOL-User|auroraAB)$" /-->
+	<!--securecookie host="^guru\.sol\.no$" name="^express\.sid$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

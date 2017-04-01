@@ -1,33 +1,59 @@
 <!--
-	Nonfunctional domains:
+	For rules causing false/broken MCB, see etoro.com-falsemixed.xml.
 
-		- cdn.etoro.com	(400, CN: *.cotssl.net)
+	Other eToro rulesets:
+
+		- copy.me.xml
+		- etorostatic.com.xml
 
 
-	Problematic domains:
+	Problematic hosts in *etoro.com:
 
-		- etoro.com	(cert only matches www)
+		- cdn ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .etoro.com
+		- .help.etoro.com
+		- refererfriends.etoro.com
+		- www.etoro.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on help from www.nanorep.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="eToro (partial)" platform="mixedcontent">
+<ruleset name="eToro.com (partial)">
 
-	<target host="copy.me" />
-	<target host="*.copy.me" />
 	<target host="etoro.com" />
-	<target host="*.etoro.com" />
+	<target host="etorologsapi.etoro.com" />
+	<!--target host="help.etoro.com" /-->
+	<target host="maintenance.etoro.com" />
+	<target host="openbook.etoro.com" />
+	<target host="referfriends.etoro.com" />
+	<target host="s3.etoro.com" />
+	<target host="site.etoro.com" />
+	<target host="www.etoro.com" />
 
 
-	<securecookie host="^\.copy\.me$" name=".+" />
-	<securecookie host="^.*\.etoro\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.etoro\.com$" name="^(?:incap_ses_\d+|visid_incap)_\d+$" /-->
+	<!--securecookie host="^\.help\.etoro\.com$" name="^(?:REFERER|nrContext)$" /-->
+	<!--securecookie host="^(?:refererfriends|www)\.etoro\.com$" name="^(?:___utm[abm]\w+|PHPSESSID)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(www\.)?copy\.me/"
-		to="https://$1copy.me/" />
-
-	<rule from="^https?://(?:www\.)?etoro\.com/"
-		to="https://www.etoro.com/" />
-
-	<rule from="^http://(openbook|s3)\.etoro\.com/"
-		to="https://$1.etoro.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>	

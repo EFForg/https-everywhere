@@ -1,0 +1,78 @@
+<!--
+	For other Curse coverage, see Curse.xml.
+
+
+	Nonfunctional hosts in *bukkit.org:
+
+		- wiki ¹
+
+	¹ 521
+
+
+	Partially covered hosts in *bukkit.org:
+
+		- dev ʰ
+
+	ʰ Redirects to http
+
+
+	Insecure cookies are set for these domains:
+
+		- .bukkit.org
+
+
+	Mixed content:
+
+		- Images, on ^ from:
+
+			- bukkit.org ˢ
+			- forums.bukkit.org ˢ
+			- media-curse.cursecdn.com ˢ
+
+		- Bug on ^ from b.scorecardresearch.com ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Bukkit.org (partial)">
+
+	<target host="bukkit.org" />
+	<target host="dev.bukkit.org" />
+	<target host="forums.bukkit.org" />
+	<target host="www.bukkit.org" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://dev\.bukkit\.org/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://dev\.bukkit\.org/+(?!artisan/|favicon\.ico|media/)" />
+
+			<!--	ve:
+					-->
+			<test url="http://dev.bukkit.org/bukkit-plugins/" />
+			<test url="http://dev.bukkit.org/bukkit-plugins/jail/" />
+			<test url="http://dev.bukkit.org/bukkit-plugins/mobarena/" />
+			<test url="http://dev.bukkit.org/bukkit-plugins/tardis/" />
+
+			<!--	ve:
+					-->
+			<test url="http://dev.bukkit.org/artisan/gradient/vertical/100/ffffffff-ffffff00.png" />
+			<test url="http://dev.bukkit.org/artisan/icons/13/apps/internet-group-chat.png" />
+			<test url="http://dev.bukkit.org/favicon.ico" />
+			<test url="http://dev.bukkit.org/media/attachments/18/826/navigation-tab.png" />
+
+
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.bukkit\.org$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^(?!dev\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

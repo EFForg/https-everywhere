@@ -1,4 +1,9 @@
 <!--
+	Other Squarespace rulesets:
+
+		- Sqsp.com.xml
+
+
 	CDN buckets:
 
 		- s3.amazonaws.com/s3.media.squarespace.com/
@@ -7,34 +12,61 @@
 		- squarespace.cachefly.net
 			- squarespace.cachefly.net
 
+
+	Mixed content:
+
+		- Images on (client_subdomain).squarespace.com from $self *
+
+	* Secured by us
+
+
+	Clients have unique subdomains.
+
 -->
-<ruleset name="Squarespace (partial)">
+<ruleset name="Squarespace.com (partial)">
 
-	<target host="sqsp.com" />
-	<target host="*.sqsp.com" />
-	<target host="squarespace.com"/>
+	<target host="squarespace.com" />
 	<target host="*.squarespace.com" />
-	<target host="s3.media.squarespace.com" />
+
+		<!--	Direct rewrites:
+					-->
+		<test url="http://blog.squarespace.com/" />
+		<test url="http://developers.squarespace.com/" />
+		<test url="http://static.squarespace.com/" />
+		<test url="http://static1.squarespace.com/" />
+		<test url="http://www.squarespace.com/" />
+
+		<!--	Special cases:
+					-->
+		<test url="http://cachefly.squarespace.com/" />
+		<test url="http://s3.media.squarespace.com/" />
+
+		<!-- see https://github.com/EFForg/https-everywhere/issues/5622 and https://github.com/EFForg/https-everywhere/issues/8752 -->
+		<exclusion pattern="^http://static\.squarespace\.com/universal/scripts-compressed/\w+-\w{20}-min.js$" />
+		<test url="http://static.squarespace.com/universal/scripts-compressed/commerce-b058ae78ba10263f4ade-min.js" />
+		<test url="http://static.squarespace.com/universal/scripts-compressed/common-df74a0490af8af881a93-min.js" />
+		<test url="http://static.squarespace.com/universal/scripts-compressed/common-add104b2b7cce25eb854-min.js" />
+		<test url="http://static.squarespace.com/universal/scripts-compressed/slides-4f64e7da35a986c724d0-min.js" />
+
+		<!-- see https://github.com/EFForg/https-everywhere/issues/8251 -->
+		<exclusion pattern="^http://sg-links\.squarespace\.com" />
+
+		<test url="http://sg-links.squarespace.com/wf/click?upn=randomstring" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(client_subdomain)\.squarespace\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host=".*\.squarespace\.com$" name=".+" />
 
 
-	<securecookie host="^.*\.sq(?:sp|uarespace)\.com$" name=".+" />
-
-
-	<rule from="^http://(\w+\.)?sqsp\.com/"
-		to="https://$1sqsp.com/" />
-
-	<rule from="^http://((?:blog|developers|static|www)\.)?squarespace\.com/"
-		to="https://$1squarespace.com/" />
-
-	<rule from="^https?://cachefly\.squarespace\.com/"
+	<rule from="^http://cachefly\.squarespace\.com/"
 		to="https://squarespace.cachefly.net/" />
 
-	<rule from="^https?://s3\.media\.squarespace\.com/"
+	<rule from="^http://s3\.media\.squarespace\.com/"
 		to="https://s3.amazonaws.com/s3.media.squarespace.com/" />
 
-	<!--	Clients have unique subdomains.
-						-->
-	<rule from="^http://(\w+)\.squarespace\.com/(display/|favicon\.ico|layout/|picture/|storage/|universal/)"
-		to="https://$1.squarespace.com/$2" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

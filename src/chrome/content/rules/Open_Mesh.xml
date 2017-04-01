@@ -1,17 +1,34 @@
 <!--
-	Cert only matches *.open-mesh.org
+	^open-mesh.org: Cert only matches www.open-mesh.org
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.open-mesh.org
 
 -->
-<ruleset name="Open Mesh" platform="cacert">
+<ruleset name="Open-Mesh.org" platform="cacert">
 
-	<target host="open-mesh.org" />
+	<!--	Direct rewrites:
+				-->
 	<target host="www.open-mesh.org" />
 
+	<!--	Complications:
+				-->
+	<target host="open-mesh.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.open-mesh\.org$" name="^_redmine_default$" /-->
 
 	<securecookie host="^www\.open-mesh\.org$" name=".+" />
 
 
-	<rule from="^https?://(?:www\.)?open-mesh\.org/"
+	<rule from="^http://open-mesh\.org/"
 		to="https://www.open-mesh.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

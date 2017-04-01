@@ -1,8 +1,7 @@
 <!--
-	For other BBC coverage, see BBC.xml.
+	For rules causing false/broken MCB, see BBC.com-falsemixed.xml.
 
-	Note that sa is covered in BBC.xml so as to avoid
-	a separate -falsemixed ruleset for BBC.com.
+	For other BBC coverage, see BBC.xml.
 
 
 		- bbc.112.2o7.net
@@ -12,24 +11,34 @@
 
 	Problematic subdomains:
 
-		- ^	(redirects to http, valid cert)
 		- sa	(mismatched, CN: *.112.2o7.net)
 
 
 	Mixed content:
 
-		- css from www.bbc.co.uk *
+		- css on www from static.bbc.co.uk *
+		- Images from ichef.bbci.co.uk *
+		- favicon on www from www.bbc.co.uk *
+		- Web bugs on www from stats.bbc.co.uk *
 
 	* Secured by us in BBC.xml
 
 -->
-<ruleset name="BBC.com (false MCB)" platform="mixedcontent">
+<ruleset name="BBC.com (partial)">
 
-	<target host="bbc.com" />
-	<target host="www.bbc.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="ssl.bbc.com" />
+
+	<!--	Complications:
+				-->
+	<target host="sa.bbc.com" />
 
 
-	<rule from="^http://(?:www\.)?bbc\.com/"
-		to="https://www.bbc.com/" />
+	<rule from="^http://sa\.bbc\.com/"
+		to="https://bbc.112.2o7.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

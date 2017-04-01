@@ -4,22 +4,33 @@
 		- s3-us-west-2.amazonaws.com/s.cdpn.io/
 
 
-	Nonfunctional subdomains:
+	Insecure cookies are set for these hosts: ᶜ
 
-		- blog	(shows default Media Temple page)
+		- codepen.io
 
-
-	Some pages redirect to http.
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="CodePen.io (partial)">
+<ruleset name="CodePen.io">
 
 	<target host="codepen.io" />
-	<target host="*.codepen.io" />
-		<exclusion pattern="^http://(?:www\.)?codepen\.io/+(?!favicon\.ico|(?:login|signup)(?:$|[?/]))" />
+	<target host="assets.codepen.io" />
+	<target host="blog.codepen.io" />
+	<target host="s.codepen.io" />
+	<target host="www.codepen.io" />
+
+		<test url="http://assets.codepen.io/assets/editor/themes/twilight-ef6271c74416570a70e3cf4f6f5ab424.css" />
 
 
-	<rule from="^http://((?:assets|s|www)\.)?codepen\.io/"
-		to="https://$1codepen.io/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^codepen\.io$" name="^(?:_codepen_session|item_viewed)$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

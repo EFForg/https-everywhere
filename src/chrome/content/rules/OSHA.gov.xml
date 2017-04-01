@@ -1,10 +1,41 @@
-<ruleset name="US OSHA.gov">
-	<target host="osha.gov" />
+<!--
+	Occupational Safety & Health Administration
+
+	For other U.S. government coverage, see US-government.xml.
+
+
+	Problematic hosts in *osha.gov:
+
+		- ^ ᵖ
+		- m ᵐ
+
+	ᵐ Mismatched
+	ᵖ Plaintext reply, preemptable redirect
+
+
+	Mixed content:
+
+		- Images on www from www.dol.gov ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="US OSHA.gov (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="test.osha.gov" />
 	<target host="www.osha.gov" />
 
-	<rule from="^http://(?:www\.)?osha\.gov/" to="https://www.osha.gov/" />
+	<!--	Complications:
+				-->
+	<target host="osha.gov" />
 
-	<!-- Invoking https://osha.gov/ produces a certificate error, so
-	redirect https://osha.gov/ to https://www.osha.gov/ -->
-	<rule from="^https://osha\.gov/" to="https://www.osha.gov/" />
+
+	<rule from="^http://osha\.gov/"
+		to="https://www.osha.gov/" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

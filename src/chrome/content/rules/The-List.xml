@@ -1,17 +1,36 @@
 <!--
-	Nonfunctional subdomains:
+	The List
 
-		- files		(cert valid; 400)
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .list.co.uk
+		- shop.list.co.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="The List (partial)">
+<ruleset name="List.co.uk">
 
 	<target host="list.co.uk" />
+	<target host="edinburghfestival.list.co.uk" />
+	<target host="files.list.co.uk" />
+	<target host="film.list.co.uk" />
+	<target host="food.list.co.uk" />
+	<target host="shop.list.co.uk" />
 	<target host="www.list.co.uk" />
 
 
-	<!--	!www throws 400 over https.	-->
-	<rule from="^https?://(?:www\.)?list\.co\.uk/"
-		to="https://www.list.co.uk/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.list\.co\.uk$" name="^(?:COOKIE_NOTICE|JSESSIONID)$" /-->
+	<!--securecookie host="^shop\.list\.co\.uk$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\." name="^(?:COOKIE_NOTICE|JSESSIONID)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

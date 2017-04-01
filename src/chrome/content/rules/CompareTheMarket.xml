@@ -1,41 +1,82 @@
 <!--
-	Nonfunctional subdomains:
+	Other Compare the Market rulesets:
 
-		- careers	(shows default plesk page; expired 2011-09-30, CN: plesk)
-		- meerkat	(refused)
-
-
-	^ times out
+		- email-comparethemarket.com.xml
 
 
-	Fully covered domains:
+	Nonfunctional hosts in *comparethemarket.com:
 
-		- email-comparethemarket.com
+		- ^ ⁵
+		- broadband ⁴
+		- careers ʳ
+		- meerkat ʳ
+		- tech ᵈ
+		- techjobs ᵈ
 
-		- comparethemarket.com subdomains:
+	⁴ 403
+	⁵ 503
+	ᵈ Dropped
+	ʳ Refused
 
-			- (www.)	(^ → www)
-			- cdn
-			- contact
-			- quote
-			- rewards
-			- services
+
+	These altnames do not exist:
+
+		- www.mobilephones.comparethemarket.com
+		- www.m.quote.comparethemarket.com
+		- www.services.comparethemarket.com
+		- www.signin.comparethemarket.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .comparethemarket.com
+		- home.comparethemarket.com
+		- my.comparethemarket.com
+		- quote.comparethemarket.com
+		- signin.comparethemarket.com
+		- www.comparethemarket.com
 
 -->
-<ruleset name="Compare The Market" platform="mixedcontent">
+<ruleset name="Compare The Market.com (partial)">
 
-	<target host="email-comparethemarket.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="cdn.comparethemarket.com" />
+	<target host="contact.comparethemarket.com" />
+	<target host="home.comparethemarket.com" />
+	<target host="mobilephones.comparethemarket.com" />
+	<target host="my.comparethemarket.com" />
+	<target host="quote.comparethemarket.com" />
+	<target host="m.quote.comparethemarket.com" />
+	<target host="rewards.comparethemarket.com" />
+	<target host="services.comparethemarket.com" />
+	<target host="signin.comparethemarket.com" />
+	<target host="www.comparethemarket.com" />
+
+	<!--	Complications:
+				-->
 	<target host="comparethemarket.com" />
-	<target host="*.comparethemarket.com" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://home.comparethemarket.com/quote/begin-oauth" /-->
 
 
-	<securecookie host="^(?:.*\.|email-)?comparethemarket\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.comparethemarket\.com$" name="^(?:(?:__)?CTM\.ReferralCodeContext|CTMJourney|CTMMVT|CTMMVT_Session|my\.id)$" /-->
+	<!--securecookie host="^home\.comparethemarket\.com$" name="^home\.(:enquiry|quote)\.id$" /-->
+	<!--securecookie host="^my\.comparethemarket\.com$" name="^openid\.n\.\w+$" /-->
+	<!--securecookie host="^(?:quote|www)\.comparethemarket\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^signin\.comparethemarket\.com$" name="^(?:idsrv\.xsrf|SignInMessage\.[\da-f]{32})$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^https?://(?:www\.)?comparethemarket\.com/"
+	<rule from="^http://comparethemarket\.com/"
 		to="https://www.comparethemarket.com/" />
 
-	<rule from="^http://((?:cdn|contact|quote|rewards|services)\.|email-)comparethemarket\.com/"
-		to="https://$1comparethemarket.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,48 @@
+<!--
+	CDN buckets:
+
+		- asciinema-blog.herokuapp.com
+
+			- blog
+
+
+	Problematic subdomains:
+
+		- blog *
+
+	* Works; mismatched, CN: *.herokuapp.com
+
+-->
+<ruleset name="Asciinema.org (partial)">
+
+	<target host="asciinema.org" />
+	<target host="blog.asciinema.org" />
+	<target host="www.asciinema.org" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://blog\.asciinema\.org/+(?!css/|img/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://blog.asciinema.org//" />
+			<test url="http://blog.asciinema.org/index.xml" />
+			<test url="http://blog.asciinema.org/post/persona/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://blog.asciinema.org/css/site.css" />
+
+
+	<!--	Some of, but not all, secured by server:
+							-->
+	<securecookie host="^asciinema\.org$" name=".+" />
+
+
+	<rule from="^http://blog\.asciinema\.org/"
+		to="https://asciinema-blog.herokuapp.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

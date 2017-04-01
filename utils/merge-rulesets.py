@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 
 # Merge all the .xml rulesets into a single "default.rulesets" file -- this
 # prevents inodes from wasting disk space, but more importantly, works around
@@ -52,14 +52,16 @@ def rulesize():
   return len(open(rulesets_fn).read())
 
 def clean_up(rulefile):
-    """Remove extra whitespace and comments from a ruleset"""
+    """Remove extra whitespace, comments and tests from a ruleset"""
     comment_and_newline_pattern = re.compile(r"<!--.*?-->|\n|\r", flags=re.DOTALL)
     rulefile = comment_and_newline_pattern.sub('', rulefile)
-    to_and_from_pattern = re.compile(r'\s*(to=|from=)')
+    to_and_from_pattern = re.compile(r'\s*(from=)')
     rulefile = to_and_from_pattern.sub(r' \1', rulefile)
+    rulefile = re.sub(r'"\s*(to=)', r'" \1', rulefile)
     rulefile = re.sub(r">\s*<", r"><", rulefile)
     rulefile = re.sub(r"</ruleset>\s*", r"</ruleset>\n", rulefile)
     rulefile = re.sub(r"\s*(/>|<ruleset)", r"\1", rulefile)
+    rulefile = re.sub(r"<test.+?/>", r"", rulefile)
     return rulefile
 
 library = open(rulesets_fn,"w")

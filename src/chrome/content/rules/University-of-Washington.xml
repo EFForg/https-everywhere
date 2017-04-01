@@ -1,61 +1,227 @@
 <!--
+	University of Washington
+
 	For problematic rules, see University-of-Washington-self-signed.xml.
 
+	Other University of Washington rulesets:
 
-	Nonfunctional:
-
-		- (www.)uwb.edu			(reset)
-		- psc.apl.washington.edu
-		- oneswarm.cs.washington.edu
-		- uwmedicine.washington.edu	(reset)
+		- UW.edu.xml
+		- UWB.edu.xml
 
 
-	Partially covered subdomains:
+	Nonfunctional hosts in *washington.edu:
 
-		- digital.lib	(findingaids/view 404s)
+		- psc.apl ʳ
+		- www.bookstore ᵈ
+		- bio.cs	( 200 "Unimplemented")
+		- oneswarm.cs ʳ
+		- exp ᵖ
+		- hsl		Redirects to weblogin.washington.edu
+		- uwmedicine ʰ
+
+	ʳ Refused
+	ᵖ Shows default page
+	ᵈ Dropped
+	ʰ Handshake fails
 
 
-	Fully covered subdomains:
+	Problematic hosts in *washington.edu:
 
-		- sharemenot.cs
+		- carom.cac ᵘ
+		- careers ᵉ
+		- cs ᵐ
+		- dub ᶜ
+		- escience ʷ
+		- www.evedegree ᵐ
+		- hfs *
+		- goglobal ᵐ
+		- cloud.ihme ᶜ
+		- www.jsis ᵐ
+		- law ᵐ
+		- (www.)?me ᶜ
+		- www.onlinelearning ᵐ
+		- www.summer ᵐ
+
+	ᵘ Untrusted root
+	ᵉ Expired
+	ᵐ Mismatched
+	ᶜ Missing certificate chain
+	ʷ WP Engine/redirects to http
+	* 404
+
+
+	Partially covered hosts in *washington.edu:
+
+		- digital.lib *
+
+	* Findingaids/view 404s
+
+
+	Mixed content:
+
+		- css, on:
+
+			- depts from $self *
+			- sampa.cs, sharemenot.cs, events, (www.)?lib, www.summer from fonts.googleapis.com *
+			- www from depts.washington.edu *
+
+		- Images, on:
+
+			- depts from honors.uw.edu
+			- depts, evans, grail from $self *
+			- depts, mhcid from www.washington.edu *
+			- (www.)?grad from depts.washington.edu *
+			- mhcid from www.richaven.com
+			- mhcid from evans.uw.edu *
+
+		- favicon on sampa.cs from www.cs.washington.edu *
+		- Bug on dub from c10.statcounter.com *
+
+	* Secured by us
 
 -->
-<ruleset name="University of Washington (partial)">
+<ruleset name="Washington.edu (partial)">
 
-	<target host="uw.edu" />
-	<!--	* for cross-subdomain cookie.	-->
-	<target host="*.tacoma.uw.edu" />
-	<target host="*.uw.edu" />
+	<!--	Direct rewrites:
+				-->
 	<target host="washington.edu" />
-	<target host="cloud.ihme.washington.edu" />
+	<target host="admit.washington.edu" />
+	<target host="spotseeker.cac.washington.edu" />
+	<target host="courses.washington.edu" />
+
+	<target host="dada.cs.washington.edu" />
+	<target host="djw.cs.washington.edu" />
+	<target host="grail.cs.washington.edu" />
+	<target host="homes.cs.washington.edu" />
+	<target host="idl.cs.washington.edu" />
+	<target host="news.cs.washington.edu" />
+	<target host="norfolk.cs.washington.edu" />
+	<target host="sampa.cs.washington.edu" />
+	<target host="sharemenot.cs.washington.edu" />
+	<target host="syslab.cs.washington.edu" />
+	<target host="www.cs.washington.edu" />
+
+	<target host="dental.washington.edu" />
+	<target host="www.dental.washington.edu" />
+	<target host="depts.washington.edu" />
+	<!--target host="dub.washington.edu" /-->
+	<target host="www.ee.washington.edu" />
+	<target host="engr.washington.edu" />
+	<target host="www.engr.washington.edu" />
+	<target host="evans.washington.edu" />
+	<target host="faculty.washington.edu" />
+	<target host="online.gifts.washington.edu" />
+	<target host="grad.washington.edu" />
+	<target host="www.grad.washington.edu" />
+	<target host="inside.hfs.washington.edu" />
+	<target host="www.hfs.washington.edu" />
+	<!--target host="cloud.ihme.washington.edu" /-->
+	<target host="jsis.washington.edu" />
+	<target host="lib.law.washington.edu" />
+	<target host="www.law.washington.edu" />
+	<target host="lib.washington.edu" />
+	<target host="digital.lib.washington.edu" />
 	<target host="www.lib.washington.edu" />
-	<target host="*.washington.edu" />
-		<!--
-			News pages redirect to http:
-						-->
-		<exclusion pattern="^http://(?:www\.)?washington\.edu/news/(?:\d{4}/(?:\d\d/(?:\d\d/(?:[\w-]+/)?)?)?)?(?:\?.*)?$" />
-		<!--
-			404:
+	<target host="m.washington.edu" />
+	<!--target host="me.washington.edu" /-->
+	<!--target host="www.me.washington.edu" /-->
+	<target host="mhcid.washington.edu" />
+	<target host="mobile.washington.edu" />
+	<target host="myuw.washington.edu" />
+	<target host="staff.washington.edu" />
+	<target host="studyabroad.washington.edu" />
+	<target host="trip.washington.edu" />
+	<target host="weblogin.washington.edu" />
+	<target host="www.washington.edu" />
+
+	<!--	Complications:
+				-->
+	<target host="cs.washington.edu" />
+	<target host="hfs.washington.edu" />
+	<target host="www.jsis.washington.edu" />
+	<target host="law.washington.edu" />
+
+		<!--	https://github.com/EFForg/https-everywhere/issues/3651
+
+			Broken MCB:
+					-->
+		<exclusion pattern="http://(?:www\.)?washington\.edu/home/siteinfo/form" />
+
+			<!--	+ve:
+					-->
+			<test url="http://washington.edu/home/siteinfo/form/" />
+			<test url="http://www.washington.edu/home/siteinfo/form/" />
+
+		<!--	Avoid broken MCB:
+					-->
+		<exclusion pattern="^http://depts.washington.edu/gpss/(?!sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://depts.washington.edu/gpss/" />
+			<test url="http://depts.washington.edu/gpss/senate/officers" />
+
+			<!--	-ve:
+					-->
+			<test url="http://depts.washington.edu/gpss/sites/all/themes/gpss/uwprint.css" />
+
+		<!--	404:
 				-->
 		<exclusion pattern="^http://digital\.lib\.washington\.edu/findingaids/" />
 
+			<!--	+ve:
+					-->
+			<test url="http://digital.lib.washington.edu/findingaids/" />
 
-	<securecookie host="^cloud\.ihme\.washington\.edu$" name=".*" />
-	<securecookie host="^\.tacoma\.uw\.edu$" name=".*" />
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.ee\.washington\.edu/index\.html" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://www\.ee\.washington\.edu/+(?!favicon\.ico|images/|(?:about|class|faculty|people)(?:$|[?/]))" /-->
+		<!--
+			More generally:
+					-->
+		<exclusion pattern="^http://www\.ee\.washington\.edu/+(?![^/]+/|favicon\.ico)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.ee.washington.edu/index.html" />
+			<test url="http://www.ee.washington.edu/index.html?test" />
+			<test url="http://www.ee.washington.edu/legal.html" />
+			<test url="http://www.ee.washington.edu/legal.html?quota" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.ee.washington.edu/about/" />
+			<test url="http://www.ee.washington.edu/admissions/" />
+			<test url="http://www.ee.washington.edu/cgi-bin/research/colloquium/display.pl?id=257" />
+			<test url="http://www.ee.washington.edu/class/" />
+			<test url="http://www.ee.washington.edu/favicon.ico" />
+			<test url="http://www.ee.washington.edu/images/rebrand2010/ee_logo_name.gif" />
+			<test url="http://www.ee.washington.edu/news/" />
+			<test url="http://www.ee.washington.edu/people/" />
+			<test url="http://www.ee.washington.edu/people/faculty/index.html" />
+			<test url="http://www.ee.washington.edu/research/" />
+
+		<!--	Formerly redirected to http:
+							-->
+		<test url="http://www.washington.edu/news/2015/10/06/uw-climbs-to-no-11-in-u-s-news-global-university-rankings/" />
+		<test url="http://www.washington.edu/news/2015/10/15/affordable-camera-reveals-hidden-details-invisible-to-the-naked-eye/" />
 
 
-	<rule from="^http://(blogs\.|www\.(?:tacoma\.)?)?uw\.edu/"
-		to="https://$1uw.edu/" />
+	<securecookie host="^\." name="^__qca$" />
+	<securecookie host="^(?!depts\.|www\.ee\.)\w" name="." />
 
-	<!--	^tacoma: Cert only valid for www.tacoma.uw.edu.	-->
-	<rule from="^https?://tacoma\.uw\.edu/"
-		to="https://www.tacoma.uw.edu/" />
 
-	<rule from="^http://((?:courses|sharemenot\.cs|depts|faculty|cloud\.ihme|digital\.lib|myuw|staff|www(?:\.lib)?)\.)?washington\.edu/"
-		to="https://$1washington.edu/" />
+	<rule from="^http://(cs|hfs|law)\.washington\.edu/"
+		to="https://www.$1.washington.edu/" />
 
-	<!--	^lib: Cert is only valid for *.lib	-->
-	<rule from="^https?://lib\.washington\.edu/"
-		to="https://www.lib.washington.edu/" />
+	<rule from="^http://www\.jsis\.washington\.edu/"
+		to="https://jsis.washington.edu/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

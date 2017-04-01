@@ -1,0 +1,77 @@
+<!--
+	Other Laughing Squid rulesets:
+
+		- Laughing-Squid.xml
+
+
+	Nonfunctional hosts in *laughingsquid.com:
+
+		- links ʳ
+
+	ʳ Tumblr / refused
+
+
+	Problematic hosts in *laughingsquid.com:
+
+		- feeds ᶠ
+		- johnlaw ᵐ
+
+	ᶠ Feedburner / handshake fails
+	ᵐ Wordpress / mismatched
+
+
+	Partially covered hosts in *laughingsquid.com:
+
+		- links		(→ www.facebook.com)
+
+
+	Mixed content:
+
+		- Images on ^ from $self ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Laughing Squid.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="laughingsquid.com" />
+	<target host="store.laughingsquid.com" />
+	<target host="www.laughingsquid.com" />
+
+	<!--	Complications:
+				-->
+	<target host="feeds.laughingsquid.com" />
+	<target host="links.laughingsquid.com" />
+
+
+	<securecookie host="^\." name="^_(?:_qca|gat?)$" />
+	<securecookie host="^(?!links\.)\w" name="." />
+
+
+	<rule from="^http://feeds\.laughingsquid\.com/"
+		to="https://feeds.feedburner.com/" />
+
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://links\.laughingsquid\.com/facebook.*"
+		to="https://www.facebook.com/laughingsquid/#_=_" />
+
+		<exclusion pattern="^http://links\.laughingsquid\.com/(?!facebook(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://links.laughingsquid.com/email" />
+			<test url="http://links.laughingsquid.com/image/139926399428" />
+			<test url="http://links.laughingsquid.com/post/37348856236/candelier-gummy-bear-chandeliers" />
+
+			<!--	-ve:
+					-->
+			<test url="http://links.laughingsquid.com/facebook" />
+			<test url="http://links.laughingsquid.com/facebook?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

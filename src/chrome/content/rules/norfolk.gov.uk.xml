@@ -1,0 +1,94 @@
+<!--
+	Norfolk County Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *norfolk.gov.uk:
+
+		- (www.)?adulteducation ⁴
+		- (www.)?archives ᵃ
+		- (www.)?artlandish ᵃ
+		- (www.)?disruptions ᵃ
+		- (www.)?eficts ᵃ
+		- efs ᵃ
+		- egyptweb ᵃ
+		- elections ᵈ
+		- eplanning ᵃ
+		- (www.)?heritage ᵃ
+		- www.kict ᵃ
+		- www.localaccessforum ᵃ
+		- maps ᵈ
+		- (www.)?museums ᵃ
+		- (www.)?events.museums ʳ
+		- nfrs ᵃ
+		- (www.)?nscb ᵃ
+		- (www.)?pcbookings ᵃ
+		- (www.)?sandys ᵈ
+		- (www.)?schools ᵃ
+		- (www.)?s4s ᵃ
+		- (www.)?think ᵈ
+		- (www.)?whereilive ᵈ
+		- (www.)?yp2 ᵈ
+
+	⁴ 404
+	ᵃ Shows another domain
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *norfolk.gov.uk:
+
+		- digitallibrary ᵐ
+		- (www.)?ict ᶜ ᵐ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- csapps.norfolk.gov.uk
+		- enrol.norfolk.gov.uk
+		- esinet.norfolk.gov.uk
+		- www.esinet.norfolk.gov.uk
+		- online.norfolk.gov.uk
+
+-->
+<ruleset name="Norfolk.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.admissionsonline.norfolk.gov.uk" />
+	<target host="csapps.norfolk.gov.uk" />
+	<target host="enrol.norfolk.gov.uk" />
+	<target host="esinet.norfolk.gov.uk" />
+	<target host="www.esinet.norfolk.gov.uk" />
+	<target host="holdall.norfolk.gov.uk" />
+	<target host="online.norfolk.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="digitallibrary.norfolk.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:csapps|esinet|www\.esinet)\.norfolk\.gov\.uk$" name="^ASPSESSIONID[A-Z]$" /-->
+	<!--securecookie host="^enrol\.norfolk\.gov\.uk$" name="^(?:ASPSESSIONID[A-Z]|OnlineRegisterLogin)$" /-->
+	<!--securecookie host="^online\.norfolk\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops forward slash, path, and args:
+								-->
+	<rule from="^http://digitallibrary\.norfolk\.gov\.uk/.*"
+		to="https://norfolk.overdrive.com/" />
+
+		<test url="http://digitallibrary.norfolk.gov.uk/default.aspx" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

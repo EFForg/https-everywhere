@@ -1,0 +1,60 @@
+<!--
+	Nonfunctional subdomains:
+
+		- (www.) ¹
+		- docs ²
+		- registry ¹
+
+	¹ http reply
+	² Redirects to http
+
+
+	Fully covered subdomains:
+
+		- atlas
+		- bamboo
+		- crowd
+		- jira
+		- m2
+		- svn
+		- wiki
+
+
+	These altnames don't exist:
+
+		- eris.duraspace.org
+
+
+	Mixed content:
+
+		- Image on jira from testdrive.fedora-commons.org *
+
+	* Unsecurable
+
+-->
+<ruleset name="DuraSpace.org (partial)">
+
+	<target host="*.duraspace.org" />
+		<!--exclusion pattern="^http://(docs|registry|www)\.duraspace\.org/" /-->
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^crowd\.duraspace\.org$" name="^CROWDSESSIONID$" /-->
+	<!--securecookie host="^jira\.duraspace\.org$" name="^(JIRASESSIONID|atlassian\.xsrf\.token)" /-->
+	<!--securecookie host="^wiki\.duraspace\.org$" name="^CONFSESSIONID$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^bamboo\.duraspace\.org$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^bamboo\.duraspace\.org$" name=".+" />
+
+
+	<rule from="^http://(atlas|bamboo|crowd|jira|m2|svn|wiki)\.duraspace\.org/"
+		to="https://$1.duraspace.org/" />
+
+	<rule from="^http://scm\.duraspace\.org/+(?=$|\?)"
+		to="https://svn.duraspace.org/dspace/" />
+
+</ruleset>

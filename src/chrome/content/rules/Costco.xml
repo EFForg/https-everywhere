@@ -1,15 +1,65 @@
-<ruleset name="Costco">
+<!--
+	Other Costco rulesets:
 
+		- Costco-static.com.xml
+
+
+	^: mismatched, CN: www2.costco.com
+
+
+	Nonfunctional hosts in *costco.com:
+
+		- video *
+		- www2 ²
+
+	* Shows another domain
+	² Reset
+
+
+	Problematic hosts in *costco.com:
+
+		- shop *
+
+	* Akamai
+
+
+	These altnames don't exist:
+
+		- www.www2.costco.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.costco.com
+
+-->
+<ruleset name="Costco.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="customerservice.costco.com" />
+	<target host="www.costco.com" />
+
+	<!--	Complications:
+				-->
 	<target host="costco.com"/>
-	<target host="*.costco.com"/>
+	<!--target host="shop.costco.com" /-->
 
-	<securecookie host="^(.*\.)?costco\.com$" name=".*"/>
 
-	<rule from="^http://(shop\.|www\.)?costco\.com/"
-		to="https://$1costco.com/"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="www\.costco\.com$" name="^(JSESSIONID|WC_PERSISTENT)$" /-->
+
+	<securecookie host="^(?:.*\.)?costco\.com$" name=".*"/>
+
+	<rule from="^http://costco\.com/"
+		to="https://www.costco.com/"/>
 
 	<!-- The content of content and www are actually not identical. -->
-	<!-- <rule from="^https?://content\.costco\.com/"
+	<!-- <rule from="^http://content\.costco\.com/"
 		to="https://www.costco.com/"/> -->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

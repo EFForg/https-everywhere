@@ -1,17 +1,35 @@
 <ruleset name="Unbit.it (partial)" platform="mixedcontent">
 
-	<target host="unbit.it"/>
-	<target host="*.unbit.it"/>
+	<!--	Direct rewrites:
+				-->
+	<!--target host="unbit.it"/-->
+	<target host="projects.unbit.it"/>
+	<target host="wiki.unbit.it"/>
+	<target host="www.unbit.it"/>
+
+	<!--	Complications:
+				-->
+	<target host="www.projects.unbit.it"/>
+	<target host="www.wiki.unbit.it"/>
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://unbit\.it/($|css/|img/)" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://unbit.it/css/screen.css" /-->
+			<!--test url="http://unbit.it/img/logo_unbit_header.png" /-->
+
 		<!--	timeout		-->
-		<exclusion pattern="^http://(www\.)?packages\."/>
-	<target host="www.*.unbit.it"/>
+		<!--exclusion pattern="^http://(?:www\.)?packages\.unbit\.it/"/-->
 
-	<securecookie host="^(.*\.)?unbit\.it$" name=".*"/>
+	<securecookie host=".+\.unbit\.it$" name=".*"/>
 
-	<rule from="^http://(www\.)?unbit\.it/"
-		to="https://$1unbit.it/"/>
-
-	<rule from="^http://(?:www\.)?(wiki|projects)\.unbit\.it/"
+	<rule from="^http://www\.(projects|wiki)\.unbit\.it/"
 		to="https://$1.unbit.it/"/>
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

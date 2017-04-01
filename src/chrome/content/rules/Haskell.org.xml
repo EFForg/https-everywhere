@@ -1,30 +1,66 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *haskell.org:
 
+		- code *
 		- community *
-		- planet *
+		- industry *
 		- projects *
 
 	* Refused
 
 
+	Problematic hosts in *haskell.org:
+
+		- darcs ¹
+
+	¹ Expired 2014-10-15
+
+
 	Mixed content:
 
-		- Images, on www:
+		- Images, on:
 
-			- from ^ *
-			- i.imgur.com *
+			- wiki from ^haskell.org *
+			- wiki from i.imgur.com *
 
 	* Secured by us
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .haskell.org
+		- www.haskell.org
 
 -->
 <ruleset name="Haskell.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="haskell.org" />
-	<target host="*.haskell.org" />
+	<target host="blog.haskell.org" />
+	<target host="downloads.haskell.org" />
+	<target host="ghc.haskell.org" />
+	<target host="git.haskell.org" />
+	<target host="hackage.haskell.org" />
+	<target host="mail.haskell.org" />
+	<target host="monitor.haskell.org" />
+	<target host="phabricator.haskell.org" />
+	<target host="planet.haskell.org" />
+	<target host="status.haskell.org" />
+	<target host="wiki.haskell.org" />
+	<target host="www.haskell.org" />
 
 
-	<rule from="^http://(hackage\.|www\.)?haskell\.org/"
-		to="https://$1haskell.org/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.haskell\.org$" name="^(__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^www\.haskell\.org$" name="^_SESSION$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

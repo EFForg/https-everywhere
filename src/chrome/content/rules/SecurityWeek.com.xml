@@ -1,4 +1,20 @@
 <!--
+	Nonfunctional hosts in *securityweek.com:
+
+		- whitepapers *
+
+	* Shows default page
+
+
+	^securityweek.com: Mismatched
+	www.securityweek.com: Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these domains:
+
+		- .securityweek.com
+
+
 	Mixed content:
 
 		- Mixed script on www from securityweek.disqus.com
@@ -16,17 +32,29 @@
 	mixedcontent due to script from securityweek.disqus.com.
 
 -->
-<ruleset name="SecurityWeek.com" platform="mixedcontent">
+<ruleset name="SecurityWeek.com (partial)" platform="mixedcontent" default_off="missing certificate chain">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="www.securityweek.com" />
+
+	<!--	Complications:
+				-->
 	<target host="securityweek.com" />
-	<target host="*.securityweek.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.securityweek\.com$" name="^SESS[\da-f]{32}$" /-->
 
 	<securecookie host="^(?:www)?\.securityweek\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?securityweek\.com/"
-		to="https://$1securityweek.com/" />
+	<rule from="^http://securityweek\.com/"
+		to="https://www.securityweek.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
 

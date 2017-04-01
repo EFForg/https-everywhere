@@ -1,16 +1,41 @@
-<ruleset name="Imrworldwide.com">
+<!--
+	(www.)?imrworldwide.com does not exist.
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .imrworldwide.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="IMR Worldwide.com">
 
 	<target host="*.imrworldwide.com" />
 
 
+		<exclusion pattern="^http://(?!secure-\w+\.imrworldwide\.com/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.imrworldwide.com/" />
+			<test url="http://exists.not.imrworldwide.com/" />
+			<test url="http://www.imrworldwide.com/" />
+
+		<test url="http://secure-au.imrworldwide.com/cgi-bin/m" />
+		<test url="http://secure-dcr.imrworldwide.com/cgi-bin/m" />
+		<test url="http://secure-us.imrworldwide.com/cgi-bin/m" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.imrworldwide\.com$" name="^IMRID$" /-->
+
 	<!--	name="^(IMRID|V5)$"	-->
-	<securecookie host="^\.imrworldwide\.com$" name=".*" />
+	<securecookie host="^\.imrworldwide\.com$" name="." />
 
 
-	<!--	\w\w in secure-(\w\w) is a
-		country code, e.g. secure-us.
-						-->
-	<rule from="^http://secure-(\w\w)\.imrworldwide\.com/"
-		to="https://secure-$1.imrworldwide.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

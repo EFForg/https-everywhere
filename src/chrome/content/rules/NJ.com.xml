@@ -1,0 +1,97 @@
+<!--
+	CDN buckets:
+
+		- nj.fe-prod.vast.com
+
+			- autos
+
+		- hssn-prod.advance.net.edgesuite.net
+
+			- highschoolsports
+
+		- imgick-prod.advance.net.edgesuite.net
+
+		- mdw-prod.advance.net.edgesuite.net
+
+			- classifieds
+
+		- mt4-prod.advance.net.edgesuite.net
+
+			- media
+			- photos
+			- topics
+			- videos
+
+		- search-prod.advance.net.edgesuite.net
+
+		- www-prod.advance.net.edgesuite.net
+
+			- www
+
+		- njcom.findnsave.com
+
+
+	Nonfunctional subdomains:
+
+		- businessfinder ¹
+		- classifieds ²
+		- findnsave		(mismatched, CN: *.findnsave.com)
+		- foreclosures ¹
+		- highschoolsports ²
+		- imgick ²
+		- jobs ³
+		- photos ²
+		- realestate ²
+		- sections ⁴
+		- topics ²
+		- update ⁴
+		- videos ²
+		- www ²
+
+	¹ Redirects to http, valid cert
+	² 503, akamai
+	³ Redirects to http; mismatched, CN: sitemanager2.adicio.com
+	⁴ Dropped
+
+
+	Problematic subdomains:
+
+		- autos ¹
+		- media ²
+
+	¹ Works; mismatched, CN: *.vast.com
+	² Works, akamai
+
+
+	Mixed content:
+
+		- css, on:
+
+			- autos from media
+			- autos from fonts.googleapis.com *
+
+		- Images, on:
+
+			- autos from img.vast.com *
+			- autos and signup for media *
+
+	* Secured by us
+
+-->
+<ruleset name="NJ.com (partial)">
+
+	<target host="findnsave.nj.com" />
+	<target host="signup.nj.com" />
+		<!--
+			At least some stylesheets reference resources relative to root:
+											-->
+		<!--exclusion pattern="^http://media\.nj\.com/.+\.css($|\?)" /-->
+
+
+	<rule from="^http://findnsave\.nj\.com/(?=static/)"
+		to="https://njcom.findnsave.com/" />
+
+	<rule from="^http://signup\.nj\.com/"
+		to="https://signup.nj.com/" />
+
+</ruleset>

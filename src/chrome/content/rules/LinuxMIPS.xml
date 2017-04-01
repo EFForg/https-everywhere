@@ -1,14 +1,37 @@
-<ruleset name="LinuxMIPS" platform="cacert">
-
-	<target host="linux-mips.org"/>
-	<target host="www.linux-mips.org"/>
+<!--
+	NB: Server sends no certificate chain, see https://whatsmychaincert.com
 
 
-	<securecookie host="^www\.linux-mips\.org$" name=".*"/>
+	These altnames don't exist:
+
+		- linux-mips.org
 
 
-	<!--	!www doesn't work	-->
-	<rule from="^http://(?:www\.)?linux-mips\.org/"
-		to="https://www.linux-mips.org/"/>
+	Insecure cookies are set for these hosts:
+
+		- patchwork.linux-mips.org
+
+-->
+<ruleset name="Linux-MIPS.org (partial)" default_off="missing certificate chain">
+
+	<target host="bugs.linux-mips.org" />
+	<target host="cvs.linux-mips.org" />
+	<target host="eddie.linux-mips.org" />
+	<target host="ftp.linux-mips.org" />
+	<target host="git.linux-mips.org" />
+	<target host="mail.linux-mips.org" />
+	<target host="marvin.linux-mips.org" />
+	<target host="operation-cambridge.linux-mips.org" />
+	<target host="patchwork.linux-mips.org" />
+	<target host="www.linux-mips.org" />
+
+
+	<!--securecookie host="^patchwork\.linux-mips\.org$" name="^csrftoken$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

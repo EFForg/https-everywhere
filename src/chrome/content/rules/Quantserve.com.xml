@@ -9,8 +9,28 @@
 			- edge
 
 
+	edge.quantserve.com sets mc wildcard cookie
+	on whichever domain it is loaded from.
+
 	secure.quantserve.com sets __qca wildcard cookie
 	on whichever domain it is loaded from.
+
+
+	Fully covered subdomains:
+
+		- ^
+		- edge		(→ www)
+
+		- [^/:@\.]+:
+
+			- pixel
+			- secure
+			- www
+
+
+	Insecure cookies are set for these domains:
+
+		- .quantserve.com
 
 -->
 <ruleset name="Quantserve.com">
@@ -18,6 +38,14 @@
 	<target host="quantserve.com" />
 	<target host="*.quantserve.com" />
 
+		<test url="http://pixel.quantserve.com/" />
+		<test url="http://secure.quantserve.com/" />
+		<test url="http://www.quantserve.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.quantserve\.com$" name="^(d|mc)$" /-->
 
 	<!--
   Experiment: disable securecookies to see if it fixes 
@@ -31,7 +59,9 @@
 	<rule from="^http://edge\.quantserve\.com/"
 		to="https://www.quantserve.com/" />
 
-	<rule from="^http://([^/:@\.]+\.)?quantserve\.com/"
-		to="https://$1quantserve.com/" />
+		<test url="http://edge.quantserve.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

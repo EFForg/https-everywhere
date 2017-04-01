@@ -1,9 +1,33 @@
-<ruleset name="Coop.no">
-  <target host="www.coop.no" />
-  <target host="coop.no" />
-  <target host="www.coophotellkupp.com" />
-  <target host="coophotellkupp.no" />
+<!--
+	Other Coop Norge rulesets:
 
-  <rule from="^http://(www\.)?coop\.no/" to="https://coop.no/"/>
-  <rule from="^http://(www\.)?coophotellkupp\.com/" to="https://www.coophotellkupp.com/"/>
+		- coophotellkupp.com.xml
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- coop.no
+		- secure.coop.no
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Coop.no">
+
+	<target host="coop.no" />
+	<target host="secure.coop.no" />
+	<target host="www.coop.no" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^coop\.no$" name="^(?:\.ASPXANONYMOUS|ASP\.NET_SessionId|AnonymousKeyEsales|currentchain|currentstoreforchain_\d+)$" /-->
+	<!--securecookie host="^secure\.coop\.no$" name="^frontend$" /-->
+
+	<securecookie host="^\." name="^_ga" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

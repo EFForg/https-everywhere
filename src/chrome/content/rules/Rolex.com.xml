@@ -2,24 +2,39 @@
 	CDN buckets:
 
 		- content.rolex.com.edgesuite.net
-
-			- a343.b.akamai.net
-
 		- www.rolex.com.edgesuite.net
 
 
-	Nonfunctional subdomains:
-
-		- ^	(dropped)
-		- www	(shows maintenance notice, akamai)
+	^rolex.com: Mismatched
 
 -->
 <ruleset name="Rolex.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="content.rolex.com" />
+	<target host="pressroom.rolex.com" />
+	<target host="www.rolex.com" />
+
+		<test url="http://content.rolex.com/is/image/Rolex/?src=is%7BRolex%2Fshadow_cellini_time_39%3Flayer%3D1%26src%3D50754%26layer%3D2%26src%3D50166_g_39%26layer%3D3%26src%3D50064%7D&amp;$rv55-watch-grid$" />
+
+	<!--	Complications:
+				-->
+	<target host="rolex.com" />
 
 
-	<rule from="^http://content\.rolex\.com/"
-		to="https://a248.e.akamai.net/f/343/2577/59/content.rolex.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www)?\.rolex\.com$" name="^rlx-language$" /-->
+
+	<securecookie host="^\." name="^s_v" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://rolex\.com/"
+		to="https://www.rolex.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,84 @@
+<!--
+	London Borough of Croydon Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *croydon.gov.uk:
+
+		- maps ᵈ
+		- news ᵈ
+		- planning ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *croydon.gov.uk:
+
+		- ^ ᵈ
+		- jobs ᵈ
+		- secure ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵈ Dropped; preemptable redirect
+
+
+	These altnames do not exist:
+
+		- www.fpn.croydon.gov.uk
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- fpn.croydon.gov.uk
+		- getinvolved.croydon.gov.uk
+		- my.croydon.gov.uk
+		- .my.croydon.gov.uk
+		- secure.croydon.gov.uk
+
+-->
+<ruleset name="Croydon.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="fpn.croydon.gov.uk" />
+	<target host="getinvolved.croydon.gov.uk" />
+	<target host="my.croydon.gov.uk" />
+	<!--target host="secure.croydon.gov.uk" /-->
+	<target host="www.croydon.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="croydon.gov.uk" />
+	<target host="jobs.croydon.gov.uk" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://secure.croydon.gov.uk/eforms/ufsmain?formid=EXT_CS_FEEDBACK_PAGE&amp;USER_RATING=Average&amp;IDENTIFIER=Web&amp;URL_PAGE=https://my.croydon.gov.uk/User/Login?ReturnUrl=%2f" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:fpn|getinvolved)\.croydon\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^my\.croydon\.gov\.uk$" name="^(?:__RequestVerificationToken|ASP\.NET_SessionId|ai_session|ai_user)$" /-->
+	<!--securecookie host="^\.my\.croydon\.gov\.uk$" name="^ARRAffinity$" /-->
+	<!--securecookie host="^secure\.croydon\.gov\.uk$" name="^(?:ISAWPLB\{[\dA-F]+\}|JSESSIONID)$" /-->
+
+	<securecookie host="^\.my\." name="." />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://croydon\.gov\.uk/"
+		to="https://www.croydon.gov.uk/" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://jobs\.croydon\.gov\.uk/.*"
+		to="https://www.croydon.gov.uk/jobs" />
+
+		<test url="http://jobs.croydon.gov.uk/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -6,30 +6,52 @@
 			- static
 
 
-	Problematic subdomains:
+	Problematic hosts in *owncloud.com:
 
-		- static	(401; self-signed, CN: s1.hive01.com)
+		- static *
+
+	* 401; self-signed, CN: s1.hive01.com
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these hosts:
 
-		- (www.)
-		- static	(→ opendesktop.org)
+		- owncloud.com
+		- apps.owncloud.com
+
+
+	Mixed content:
+
+		- Image on apps from gnome-look.org *
+
+	Not secured by us <= mismatched
 
 -->
 <ruleset name="ownCloud.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="owncloud.com" />
-	<target host="*.owncloud.com" />
+	<target host="apps.owncloud.com" />
+	<target host="doc.owncloud.com" />
+	<target host="www.owncloud.com" />
+
+	<!--	Complications:
+				-->
+	<target host="static.owncloud.com" />
 
 
-	<securecookie host="^\.(?:www\.)?owncloud\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^owncloud\.com$" name="^_icl_current_language$" /-->
+	<!--securecookie host="^apps\.owncloud\.com$" name="^PHPSESSID$" /-->
 
+	<securecookie host="^\w" name="." />
 
-	<rule from="^http://(www\.)?owncloud\.com/"
-		to="https://$1owncloud.com/" />
 
 	<rule from="^http://static\.owncloud\.com/"
 		to="https://opendesktop.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

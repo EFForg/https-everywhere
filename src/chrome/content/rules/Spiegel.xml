@@ -14,31 +14,139 @@
 
 	Nonfunctional subdomains:
 
-		- forum
-		- tvprogramm
+		- orange *
+		- tvprogramm ¹
+		- werkstattvergleich ²
 		- wetter	(cert: plesk; shows default Parallels Plesk page)
 
+	* Shows www.spiegelgruppe.de
+	¹ Refused
+	² Redirects to hudson.fairgarage.de
+
+
+	Problematic hosts in spiegel.de:
+
+		- forum *
+		- shop *
+		- tippspiel ²
+		- wissen *
+
+	* Mismatched
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .spiegel.de
+		- abo.spiegel.de
+		- count.spiegel.de
+		- magazin.spiegel.de
+		- ophirum.spiegel.de
+
 -->
-<ruleset name="Spiegel (partial)">
+<ruleset name="Spiegel.de (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="spiegel.de" />
-	<target host="*.spiegel.de" />
+	<target host="abo.spiegel.de" />
+	<target host="count.spiegel.de" />
+	<target host="magazin.spiegel.de" />
+	<target host="ophirum.spiegel.de" />
+	<!--target host="tippspiel.spiegel.de" /-->
+	<target host="www.spiegel.de" />
+
+	<!--	Complications:
+				-->
+	<target host="cdn.spiegel.de" />
+	<target host="cdn1.spiegel.de" />
+	<target host="cdn2.spiegel.de" />
+	<target host="cdn3.spiegel.de" />
+	<target host="cdn4.spiegel.de" />
+	<target host="shop.spiegel.de" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://tippspiel\.spiegel\.de/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://tippspiel\.spiegel\.de/+(?!frontend/|img/)" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.spiegel\.de/index\.html" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://www\.spiegel\.de/(?!images/|layout/|pics/|static/|staticgen/)" /-->
+		<!--
+			exclude static/flash from rule above to
+			to make videos work properly
+								-->
+		<!--exclusion pattern="^http://www\.spiegel\.de/static/flash/" /-->
+		<!--
+			Combined:
+					-->
+		<exclusion pattern="^http://www\.spiegel\.de/(?!images/|layout/|pics/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.spiegel.de/impressum" />
+			<test url="http://www.spiegel.de/index.html" />
+			<test url="http://www.spiegel.de/international/europe/" />
+			<test url="http://www.spiegel.de/international/germany/spreepark-the-story-behind-defunct-berlin-amusement-park-a-922117.html" />
+			<test url="http://www.spiegel.de/international/world/" />
+			<test url="http://www.spiegel.de/static/flash/flashvideo/homadconfig.json" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.spiegel.de/images/image-429070-thumbsmall-mmtp.png" />
+			<test url="http://www.spiegel.de/layout/jscfg/http/global-V6-7.js" />
+			<test url="http://www.spiegel.de/pics/43/0,1020,308043,00.jpg" />
+			<test url="http://www.spiegel.de/static/sys/dimensionspixel.gif" />
 
 
-	<securecookie host="^(?:count|shop)\.spiegel\.de$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.spiegel\.de$" name="^_540p$" /-->
+	<!--securecookie host="^abo\.spiegel\.de$" name="^aboshop-common$" /-->
+	<!--securecookie host="^count\.spiegel\.de$" name="^NETMIND_SID$" /-->
+	<!--securecookie host="^magazin\.spiegel\.de$" name="^BIGipServer[\w~-]+$" /-->
+	<!--securecookie host="^ophirum\.spiegel\.de$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^(?:abo|count|magazin|ophirum)\.spiegel\.de$" name=".*" />
 
 
 	<!--	- Cert only matches www
 		- Unsupported paths redirect to http
 		- cdn\d?: Akamai
 				-->
-	<rule from="^http://(?:cdn\d?\.)?spiegel\.de/"
+	<rule from="^http://cdn\d?\.spiegel\.de/"
 		to="https://www.spiegel.de/" />
 
-	<rule from="^http://www\.spiegel\.de/(images/|img/|layout/|static/|staticgen/)"
-		to="https://www.spiegel.de/$1" />
+	<!--	Redirect drops path and forward slash...:
+							-->
+	<rule from="^http://shop\.spiegel\.de/[^?]*\??$"
+		to="https://www.amazon.de/b?ie=UTF8&amp;node=2478999031" />
 
-	<rule from="^http://(abo|count|shop|wissen)\.spiegel\.de/"
-		to="https://$1.spiegel.de/" />
+		<test url="http://shop.spiegel.de/shop/action/productDetails" />
+		<test url="http://shop.spiegel.de/shop/action/productDetails?" />
+		<test url="http://shop.spiegel.de/shop/action/quickSearch" />
+		<test url="http://shop.spiegel.de/shop/action/quickSearch?" />
+
+	<!--	...but not args:
+				-->
+	<rule from="^http://shop\.spiegel\.de/[^?]*\?"
+		to="https://www.amazon.de/b?ie=UTF8&amp;node=2478999031&amp;" />
+
+		<test url="http://shop.spiegel.de/shop/action/productDetails?foo" />
+		<test url="http://shop.spiegel.de/shop/action/productDetails?bar" />
+		<test url="http://shop.spiegel.de/shop/action/quickSearch?foo" />
+		<test url="http://shop.spiegel.de/shop/action/quickSearch?bar" />
+
+	<rule from="^http:"
+		to="https:" />
+	
 
 </ruleset>

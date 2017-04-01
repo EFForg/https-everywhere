@@ -1,0 +1,76 @@
+<!--
+	CDN buckets:
+
+		- exposure-media.s3.amazonaws.com
+		- d1dh4fomm3d62b.cloudfront.net
+		- exposure.imgix.net
+
+
+	Nonfunctional hosts in *exposure.co:
+
+		- changes *
+		- gettingstarted *
+
+	* Tumblr / refused
+
+
+	Problematic hosts in *exposure.co:
+
+		- support *
+
+	* Mismatched
+
+
+	Fully covered hosts in *exposure.co:
+
+		- (www.)?
+		- featured
+		- * ¹
+
+	¹ Per-account vhosts
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .exposure.co
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Exposure.co (partial)">
+
+	<target host="exposure.co" />
+	<target host="*.exposure.co" />
+
+		<exclusion pattern="^http://(?:[^./]+\.){2,}exposure\.co/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.exposure.co/" />
+			<test url="http://exists.not.exposure.co/" />
+
+		<exclusion pattern="^http://(?:changes|gettingstarted|support)\.exposure\.co/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://changes.exposure.co/" />
+			<test url="http://gettingstarted.exposure.co/" />
+			<test url="http://support.exposure.co/" />
+
+		<test url="http://charitywater.exposure.co/" />
+		<test url="http://featured.exposure.co/" />
+		<test url="http://wwf.exposure.co/" />
+		<test url="http://www.exposure.co/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.exposure\.co$" name="^_exposure_session$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

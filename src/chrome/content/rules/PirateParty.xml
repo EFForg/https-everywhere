@@ -1,140 +1,55 @@
 <!--
-	See PirateParty-mismatches for problematic rules.
+	See PirateParty-mismatches.xml for problematic rules.
+
+
+	Other rulesets:
+
+		- Junge-Piraten.de.xml
+		- Pirate_IRC.net.xml
+		- Pirate_Party.ca.xml
+		- Pirate_Party.org.au.xml
+		- Pirate_Party.org.uk.xml
+		- PiratePad.ca.xml
+		- Piraten-Oberpfalz.de.xml
+		- Piraten-Ufr.de.xml
+		- Piratenpartei.at.xml
+		- Piratenpartei.de.xml
+		- Piratenpartei-bayern.de.xml
+		- Pirati.cz.xml
+		- Piratpartiet.se.xml
+		- PPS.xml
+		- US_Pirates.org.xml
+		- Young-Pirates.Eu.xml
 
 
 	Nonfunctional domains:
 
-		- (www.)geenstijl.nl			(cert: registratie.powned.tv; shows that domain's data)
-		- (www.)piraten-media.de		(cert: cws-server14.de; "nicht über https verfügbar")
+		- (www.)geenstijl.nl			(mixed content)
+		- (www.)piraten-media.de		(times out)
 		- (www.)piraten-mond.de			(cert: *.piratenpartei-bayern.de; 404)
-		- (www.)piraten-oberfranken.de		(cert: piratenpartei-bayern.de; shows blank page)
-		- events.piratenpartei-bayern.de	(cert valid; 404)
-		- (www.)piraten-ufr.de			(cert: argon.cws-server.de; "nicht über https verfügbar")
+		- (www.)piraten-oberfranken.de	(cert: piratenpartei-bayern.de; shows blank page)
 		- (www.)pirateparty.is			(times out)
-		- (www.)pirateparty.org.au
-		- lists.pirateparty.org.au		(times out)
-		- shop.pirati.cz			(CN: *.bohemiasoft.com; 403)
-
-
-	Fully covered domains:
-
-		- (www.)pirati.cz
-		- forum.pirati.cz
-		- (www.)uspirates.org
-
-
-	Targets solely for wildcard cookies:
-
-		- *.forum.pirati.cz
 
 -->
-<ruleset name="Pirate Party" platform="mixedcontent">
+<ruleset name="Pirate Party">
 
-	<target host="junge-piraten.de" />
-	<target host="*.junge-piraten.de" />
-	<target host="partidopirata.es" />
-	<target host="www.partidopirata.es" />
-	<target host="piratenpartei.de" />
-	<target host="*.piratenpartei.de" />
-		<!--	handled in -mismatches	-->
-		<exclusion pattern="^http://(flaschenpost|ober(bayern|pfalz))\.piratenpartei\.de/" />
-	<target host="piratenpartei-bayern.de" />
-		<!--	homepage redirects to http	-->
-		<exclusion pattern="^http://piratenpartei-bayern\.de/$" />
-	<!--	* for cross-domain cookie	-->
-	<target host="*.piratenpartei-bayern.de" />
+	<!--	Direct rewrites:
+				-->
 	<target host="piratenpartij.nl" />
-	<target host="*.piratenpartij.nl" />
-	<target host="pirateparty.ca" />
-	<target host="www.pirateparty.ca" />
-	<target host="pirateparty.org.uk" />
-	<target host="*.pirateparty.org.uk" />
-		<!--	Many pages started redirecting to http =(	-->
-		<exclusion pattern="^http://www\.pirateparty\.org\.uk/(blog/|party/($|[a-ln-z]|membership/nidisclaimer/)|policies/|press/)" />
-	<target host="pirati.cz" />
-	<target host="*.pirati.cz" />
-	<target host="*.forum.pirati.cz" />
-	<target host="uspirates.org" />
-	<target host="*.uspirates.org" />
+	<target host="proxy.piratenpartij.nl" />
+	<target host="tpb.piratenpartij.nl" />
+	<target host="www.piratenpartij.nl" />
+
+	<!--	Complications:
+				-->
 	<target host="remixdepolitiek.nl" />
 	<target host="www.remixdepolitiek.nl" />
 
 
-	<securecookie host="^(.*\.)?junge-piraten\.de$" name=".*" />
-	<securecookie host="^(.*\.)?piratenpartei\.de$" name=".*" />
-	<!--	Cookies not needed for homepage.	-->
-	<securecookie host="^(.*\.)?piratenpartei-bayern\.de$" name=".*" />
-	<securecookie host="^www\.pirateparty\.ca$" name=".+" />
-	<securecookie host="^(.*\.)?pirateparty\.org\.uk$" name="^(phpbb|wiki).*$" />
-	<securecookie host="^(?:edinburgh|glasgow|manchester)\.pirateparty\.org\.uk$" name=".*" />
-	<securecookie host="^.+\.pirati\.cz$" name=".+" />
-	<securecookie host="^.+\.uspirates\.org$" name=".+" />
-
-
-	<!--	encountered:
-			- forum
-			- lists
-			- static
-			- stats
-			- wiki
-			- www		-->
-	<rule from="^http://(\w+\.)?junge-piraten\.de/"
-		to="https://$1junge-piraten.de/" />
-
-	<rule from="^https?://(?:www\.)?partidopirata\.es/"
-		to="https://www.partidopirata.es/" />
-
-	<rule from="^http://((?:forum|live|news|planet|wiki|www)\.)?piratenpartei\.de/"
-		to="https://$1piratenpartei.de/" />
-
-	<rule from="^http://(www\.)?piratenpartei-bayern\.de/"
-		to="https://$1piratenpartei-bayern.de/" />
-
-	<rule from="^https?://(?:www\.)?(?:piratenpartij|remixdepolitiek)\.nl/"
+	<rule from="^http://(?:www\.)?remixdepolitiek\.nl/"
 		to="https://www.piratenpartij.nl/"/>
 
-	<rule from="^http://tpb\.piratenpartij\.nl/"
-		to="https://tpb.piratenpartij.nl/" />
-
-	<!--	Insists on redirecting to http before redirecting to Spreadshirt.	-->
-	<rule from="^https?://(?:www\.)?pirateparty\.org\.uk/shop/"
-		to="https://ppuk.spreadshirt.co.uk/shop/" />
-
-	<!--
-		For .org.uk,
-
-			Works:
-
-				- $
-				- \w+
-				- accounts/register
-				- forum/
-				- images/
-				- media/
-				- party/how-we-work/constitution/$
-				- party/membership/$
-				- wiki/
-
-
-			Doesn't work:
-
-				- blog/$
-				- membership/nidisclaimer/$
-				- party/$
-				- party/people/
-				- policies/
-				- press/$
-						-->
-	<rule from="^https?://(?:www\.)?pirateparty\.(ca|org\.uk)/"
-		to="https://www.pirateparty.$1/" />
-
-	<rule from="^http://(edinburgh|glasgow|manchester|tpb)\.pirateparty\.org\.uk/"
-		to="https://$1.pirateparty.org.uk/" />
-
-	<rule from="^http://(forum\.|www\.)?pirati\.cz/"
-		to="https://$1pirati.cz/" />
-
-	<rule from="^http://(?:www\.)?uspirates\.org/"
-		to="https://uspirates.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,88 +1,142 @@
 <!--
+	For rules causing false/broken MCB, see ASUS.com-falsemixed.xml.
+
+
 	CDN buckets:
 
 		- dlcdnet.asus.com.edgesuite.net
-
-			- a1828.b.akamai.net
-
 		- eee.asus.com.edgesuite.net
 		- event.asus.com.edgesuite.net
 		- rog.asus.com.edgesuite.net
 		- support.asus.com.edgesuite.net
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *asus.com:
 
-		- csr *
-		- eee **
-		- event		(403, akamai)
-		- press *
-		- rog		(503, akamai)
-		- (www.)service	(refused)
-		- sonicmaster *
-		- support **
-		- zenbook ⁵
+		- advantage ²
+		- csr ¹
+		- eee ²
+		- event ³
+		- press ¹
+		- (www.)service ⁵
+		- sonicmaster ¹
+		- support ²
 
-	* 404, valid cert
-	** 404, akamai
-	⁵ Refused
-
-
-	Problematic subdomains:
-
-		- ^ *
-		- autodiscover *
-		- dlcdnet **
-		- mail *
-
-	* 404, valid cert
-	** Works, akamai
+	¹ 404, valid cert
+	² 404, akamai
+	³ 403/404, akamai
+	⁴ Shows empty tree, akamai
+	⁵ Dropped
 
 
-	Fully covered subdomains:
+	Problematic hosts in *asus.com:
 
-		- (www.)	(^ → www)
-		- autodiscover	(→ mymail)
-		- account
-		- dlcdnet	(→ akamai)
-		- mail		(→ mymail)
-		- mymail
-		- serviceshop
-		- vip
+		- autodiscover ¹
+		- dlcdnet ²
+		- rog ³
+
+	¹ 403, valid cert
+	² Works, akamai
+	³ Mixed css
 
 
-	Observed cookie domains:
+	Insecure cookies are set for these domains and hosts:
 
-		- account
-		- mymail
-		- press
-		- serviceshop
-		- sonicmaster
-		- vip
+		- .asus.com
+		- account.asus.com
+		- mymail.asus.com
+		- pcdiy.asus.com
+		- .rog.asus.com
+		- serviceshop.asus.com
+		- shop.asus.com
+		- vip.asus.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- rog from $self *
+			- rog, www from fonts.googleapis.com *
+
+		- Images on pcdiy, rog from $self *
+
+	* Secured by us
 
 -->
-<ruleset name="ASUS (partial)">
+<ruleset name="ASUS.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="asus.com" />
-	<target host="*.asus.com" />
-		<!--exclusion pattern="^http://(csr|eee|event|press|rog|sonicmaster|support|zenbook)\." /-->
+	<target host="account.asus.com" />
+	<target host="eshop.asus.com" />
+	<target host="mymail.asus.com" />
+	<target host="pcdiy.asus.com" />
+	<target host="rog.asus.com" />
+	<target host="serviceshop.asus.com" />
+	<target host="shop.asus.com" />
+	<target host="vip.asus.com" />
+	<target host="www.asus.com" />
+	<target host="zenbook.asus.com" />
 
+	<!--	Complications:
+				-->
+	<target host="autodiscover.asus.com" />
 
-	<securecookie host=".+\.asus\.com$" name=".+" />
+		<!--	Avoid broken MCB:
+					-->
+		<exclusion pattern="^http://rog\.asus\.com/+(?!wp-content/)" />
 
+			<!--	+ve:
+					-->
+			<test url="http://rog.asus.com/about-rog/" />
+			<test url="http://rog.asus.com/downloads/" />
+			<test url="http://rog.asus.com/forum/" />
 
-	<rule from="^http://(?:www\.)?asus\.com/"
-		to="https://www.asus.com/" />
+			<!--	-ve:
+					-->
+			<test url="http://rog.asus.com/wp-content/images/rog_logo.png" />
 
-	<rule from="^http://(account|mymail|serviceshop|vip)\.asus\.com/"
-		to="https://$1.asus.com/" />
+		<!--	404:
+				-->
+		<exclusion pattern="^http://www\.asus\.com/zenbook(?:$|[?/])" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.asus.com/zenbook" />
+			<test url="http://www.asus.com/zenbook/" />
+			<test url="http://www.asus.com/zenbook/global.html" />
+
+	<!-- Fix #4893 -->
+	<exclusion pattern="^http://www\.asus\.com/zentalk/" />
+		<test url="http://www.asus.com/zentalk/forum.php?gid=1" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.asus\.com$" name="^(?:_utpdm|frontend)$" /-->
+	<!--securecookie host="^(?:account|vip)\.asus\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^mymail\.asus\.com$" name="^(?:cadata|sessionid)$" /-->
+	<!--securecookie host="^pcdiy\.asus\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.rog\.asus\.com$" name="^bb_sessionhash$" /-->
+	<!--securecookie host="^serviceshop\.asus\.com$" name="^(?:ASP\.NET_SessionId|ISAWPLB\{[\dA-F]{8}-(?:[\dA-F]-){3}[\dA-F]{8}\})$" /-->
+	<!--securecookie host="^shop\.asus\.com$" name="^BIGipServer" /-->
+
+	<securecookie host="^\.asus\.com$" name="^frontend$" />
+	<securecookie host="^\w" name="." />
+
 
 	<!--	Server drops path:
 					-->
-	<rule from="^http://(?:autodiscover|mail)\.asus\.com/.*"
+	<rule from="^http://autodiscover\.asus\.com/.*"
 		to="https://mymail.asus.com/owa/" />
 
-	<rule from="^http://dlcdnet\.asus\.com/"
-		to="https://a248.e.akamai.net/f/1828/2290/9f/dlcdnet.asus.com/" />
+		<test url="http://autodiscover.asus.com//index.aspx" />
+		
+	<rule from="^http://shop\.asus\.com/"
+		to="https://eshop.asus.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

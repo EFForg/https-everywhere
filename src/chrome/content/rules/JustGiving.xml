@@ -1,16 +1,127 @@
-<ruleset name="JustGiving">
+<!--
+	For rules causing false/broken MCB, see justgiving.com-falsemixed.xml.
 
+
+	CDN buckets:
+
+		- marketo.justgiving.com.s3-external-3.amazonaws.com
+		- jg-cdn-com.s3-website-eu-west-1.amazonaws.com
+
+
+	Nonfunctional subdomains:
+
+		- pages ²
+
+	² Marketo, redirects to app-lon02
+
+
+	Problematic subdomains:
+
+		- apimanagement ᵐ
+		- blog ˣ
+		- marketo *
+		- tech ˣ
+
+	* AmazonAWS / mismatched
+	ᵐ Mismatched
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Mixed content:
+
+		- css, on:
+
+			- blog from fonts.googleapis.com ˢ
+			- blog, tech from $self ˢ
+
+		- Images, on:
+
+			- about, www from jg-cdn-com.s3-website-eu-west-1.amazonaws.com
+			- blog, tech from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="JustGiving.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="justgiving.com" />
-	<target host="*.justgiving.com" />
+	<target host="about.justgiving.com" />
+	<target host="api.justgiving.com" />
+	<!--target host="blog.justgiving.com" /-->
+	<target host="chrome.justgiving.com" />
+	<target host="crowdfunding.justgiving.com" />
+	<target host="developer.justgiving.com" />
+	<target host="images.justgiving.com" />
+	<!--target host="tech.justgiving.com" /-->
+	<target host="www.justgiving.com" />
+
+	<!--	Complications:
+				-->
+	<target host="marketo.justgiving.com" />
+	<target host="pages.justgiving.com" />
+
+		<!--	References resources relative to root:
+								-->
+		<exclusion pattern="^http://marketo\.justgiving\.com/css/marketo-2\.css" />
+
+			<!--	+ve:
+					-->
+			<test url="http://marketo.justgiving.com/css/marketo-2.css" />
+
+		<exclusion pattern="^http://pages\.justgiving\.com/(?!/*(?:$|\?|css/|images/|rs/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://pages.justgiving.com/Christmas2015.html" />
+			<test url="http://pages.justgiving.com/causes-ie.html" />
+			<test url="http://pages.justgiving.com/company-signup" />
+			<test url="http://pages.justgiving.com/developer" />
+			<test url="http://pages.justgiving.com/developer-apps.html" />
+			<test url="http://pages.justgiving.com/favicon.ico" />
+			<test url="http://pages.justgiving.com/index.html" />
+			<test url="http://pages.justgiving.com/login_request.html" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://chrome.justgiving.com/jstest/false" /-->
+
+		<test url="http://images.justgiving.com/image/8a05a0d6-9815-40a0-97fe-f8e938332dd5.jpg?template=homepagecard&amp;imagetype=frpphoto&amp;trymigrate=true&amp;sourcepath=112013" />
+
+		<!--	Mixed images:
+					-->
+		<!--test url="http://www.justgiving.com/corporate-fundraising" /-->
 
 
-	<securecookie host="^(?:apimanagement|www)?\.justgiving\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.justgiving\.com$" name="^(ASP\.NET_SessionId|DiagnosticsId|JGAnalytics|JGABID|logged_in_guid)$" /-->
+	<!--securecookie host="^apimanagement\.justgiving\.com$" name="^_system_session$" /-->
+	<!--securecookie host="^chrome\.justgiving\.com$" name="^jstest$" /-->
+	<!--securecookie host="^www\.justgiving\.com$" name="^COOKIE_PREFERENCES$" /-->
+
+	<securecookie host="^(?!pages\.)." name="." />
 
 
-	<rule from="^https?://justgiving\.com/"
-		to="https://www.justgiving.com/" />
+	<rule from="^http://marketo\.justgiving\.com/"
+		to="https://s3-eu-west-1.amazonaws.com/marketo.justgiving.com/" />
 
-	<rule from="^http://(apimanagement|secure|www)\.justgiving\.com/"
-		to="https://$1.justgiving.com/" />
+		<test url="http://marketo.justgiving.com/images/ReasonsFB.jpg" />
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://pages\.justgiving\.com/+(?:\?.*)?$"
+		to="https://justgiving.com/" />
+
+		<test url="http://pages.justgiving.com/?" />
+
+	<rule from="^http://pages\.justgiving\.com/"
+		to="https://na-lon02.marketo.com/" />
+
+		<test url="http://pages.justgiving.com/css/mktLPSupport.css" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -2,24 +2,62 @@
 	For problematic rules, see Provide-Support-mismatches.xml.
 
 
-	Nonfunctional subdomains:
+	Insecure cookies are set for these domains: ᶜ
 
-		- messenger	(redirects to http, valid cert)
+		- .providesupport.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Provide Support (partial)">
+<ruleset name="Provide Support.com (partial)">
 
 	<target host="providesupport.com" />
-	<target host="*.providesupport.com" />
+	<target host="admin1.providesupport.com" />
+	<target host="admin2.providesupport.com" />
+	<target host="admin3.providesupport.com" />
+	<target host="admin4.providesupport.com" />
+	<target host="image.providesupport.com" />
+	<target host="messenger.providesupport.com" />
+	<target host="messenger1.providesupport.com" />
+	<target host="messenger2.providesupport.com" />
+	<target host="messenger3.providesupport.com" />
+	<target host="messenger4.providesupport.com" />
+	<target host="www.providesupport.com" />
+
+		<!--	Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.providesupport\.com/(?:$|password-recovery-form\.html|signup/index\.html)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.providesupport\.com/(?!s/|view/my-account/affiliate/referrals(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.providesupport.com/downloads/index.html" />
+			<test url="http://www.providesupport.com/manual/index.html" />
+			<test url="http://www.providesupport.com/password-recovery-form.html" />
+			<test url="http://www.providesupport.com/signup/index.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.providesupport.com/s/9co5z1/root/images/flags/default-flag.png" />
+			<test url="http://www.providesupport.com/view/my-account/affiliate/referrals" />
+
+		<test url="http://messenger.providesupport.com/messenger/djoser.html" />
+		<test url="http://messenger3.providesupport.com/view/module/network/check-frame.html" />
+		<test url="http://messenger3.providesupport.com/view/module/network/send-frame.html" />
 
 
-	<securecookie host="^image\.providesupport\.com$" name=".*" />
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.providesupport\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^image\." name="." />
 
 
-	<rule from="^http://((?:admin2|image|messenger\d)\.)?providesupport\.com/"
-		to="https://$1providesupport.com/" />
-
-	<rule from="^http://www\.providesupport\.com/s/"
-		to="https://www.providesupport.com/s/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

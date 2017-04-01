@@ -1,28 +1,61 @@
 <!--
-	Problematic subdomains:
-
-		- cs	(cert only matches www.cs)
+	University of Kent
 
 
-	Fully covered subdomains:
+	Problematic hosts in *kent.ac.uk:
 
-		- (www.)
-		- blogs
-		- (www.)cs	(^ → www)
-		- sds
-		- static
+		- cs *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains:
+
+		- .kent.ac.uk
 
 -->
-<ruleset name="University of Kent (partial)">
+<ruleset name="Kent.ac.uk (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="kent.ac.uk" />
-	<target host="*.kent.ac.uk" />
+	<target host="blogs.kent.ac.uk" />
+	<target host="owa.connect.kent.ac.uk" />
+	<target host="www.cs.kent.ac.uk" />
+	<target host="dan.kent.ac.uk" />
+	<target host="esd.kent.ac.uk" />
+	<target host="evision.kent.ac.uk" />
+	<target host="sso.id.kent.ac.uk" />
+	<target host="kar.kent.ac.uk" />
+	<target host="live.kent.ac.uk" />
+	<target host="myfolio.kent.ac.uk" />
+	<target host="player.kent.ac.uk" />
+	<target host="sds.kent.ac.uk" />
+	<target host="sds-staff.kent.ac.uk" />
+	<target host="static.kent.ac.uk" />
+	<target host="www.kent.ac.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="cs.kent.ac.uk" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<test url="http://owa.connect.kent.ac.uk/OWA" />
 
 
-	<rule from="^http://((?:blogs|sds|static|www)\.)?kent\.ac\.uk/"
-		to="https://$1kent.ac.uk/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.kent\.ac\.uk$" name="^cadata[\dA-F]{32}$" /-->
 
-	<rule from="^http://(?:www\.)?cs\.kent\.ac\.uk/"
+	<securecookie host="^\.kent\.ac\.uk$" name="^cadata[\dA-F]{32}$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://cs\.kent\.ac\.uk/"
 		to="https://www.cs.kent.ac.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

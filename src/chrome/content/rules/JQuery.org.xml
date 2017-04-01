@@ -4,28 +4,34 @@
 		- JQuery_Mobile.com.xml
 		- JQuery_UI.com.xml
 		- QUnit_JS.com.xml
+		- SizzleJS.com.xml
 
 
-	Nonfunctional subdomains:
+	Insecure cookies are set for these domains:
 
-		- events	(refused)
-
-
-	Problematic subdomains:
-
-		- brand *
-		- www	(refused)
-
-	* Works; mismatched, CN: jquery.org
+		- .jquery.org
 
 -->
-<ruleset name="jQuery.org (partial)">
+<ruleset name="jQuery.org">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="jquery.org" />
-	<target host="*.jquery.org" />
+	<target host="brand.jquery.org" />
+	<target host="contribute.jquery.org" />
+	<target host="events.jquery.org" />
+	<target host="irc.jquery.org" />
+	<target host="www.jquery.org" />
 
 
-	<rule from="^http://(?:(contribute\.|irc\.)|www\.)?jquery\.org/"
-		to="https://$1jquery.org/" />
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.jquery\.org$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

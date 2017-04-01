@@ -1,7 +1,7 @@
 <!--
 	Other comScore rulesets:
 
-		- ComScore_Data_Mine.xml
+		- ComScore_Data_Mine.com.xml
 		- Sitestat.xml
 
 
@@ -21,7 +21,6 @@
 
 		- comscore.com subdomains:
 
-			- ^ *
 			- ir *
 			- webmail	(mismatched, CN: im.scorecardresearch.com)
 
@@ -39,10 +38,11 @@
 
 		- comscore.com subdomains:
 
-			- (www.)	(^ → www)
+			- (www.)
 			- autodiscover
 			- dax-files
 			- mail
+			- siterecruit
 			- webmail	(→ mail)
 
 		- (www.)nedstat.com	(→ dax-files.comscore.com)
@@ -58,8 +58,21 @@
 -->
 <ruleset name="comScore.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="comscore.com"/>
-	<target host="*.comscore.com"/>
+	<target host="autodiscover.comscore.com"/>
+	<target host="dax.comscore.com"/>
+	<target host="dax-files.comscore.com"/>
+	<target host="mail.comscore.com"/>
+	<target host="my.comscore.com"/>
+	<target host="siterecruit.comscore.com"/>
+	<target host="www.comscore.com"/>
+
+	<!--	Complications:
+				-->
+	<target host="webmail.comscore.com"/>
+
 	<target host="nedstat.com" />
 	<target host="www.nedstat.com" />
 
@@ -67,19 +80,13 @@
 	<securecookie host="^(?:mail|my)\.comscore\.com$" name=".*"/>
 
 
-	<rule from="^http://(?:www\.)?comscore\.com/"
-		to="https://www.comscore.com/" />
-
-	<rule from="^http://(autodiscover|dax|dax-files|my)\.comscore\.com/"
-		to="https://$1.comscore.com/"/>
-
-	<rule from="^http://ir\.shareholder\.com/common/"
-		to="https://investor.shareholder.com/common/" />
-
-	<rule from="^http://(?:web)?mail\.comscore\.com/"
+	<rule from="^http://webmail\.comscore\.com/"
 		to="https://mail.comscore.com/" />
 
 	<rule from="^http://(?:www\.)?nedstat\.com/"
-		to="https://dax-files.comescore.com/" />
+		to="https://dax-files.comscore.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,44 +1,69 @@
 <!--
-	Nonfunctional domains:
+	NB: Server sends no certificate chain, see https://whatsmychaincert.com
 
-		- (www.)sciencecareers.org	(times out)
-		- images.sciencecareers.org	(ditto)
-		- jobs.sciencecareers.org	(404, valid cert)
 
-		- sciencemag.org subdomains:
+	For other AAAS coverage, see AAAS.org.xml.
 
-			- blogs			(times out)
-			- comments		(times out)
-			- news			(ditto)
-			- sciencecareers	(ditto)
-			- stke
-			- stm
-			- talk			(times out)
-			- video			(ditto)
+
+	Nonfunctional hosts in *sciencemag.org:
+
+		- advances ¹
+		- blogs ¹
+		- comments ²
+		- news ²
+		- sciencecareers ²
+		- specialprojects ²
+		- stke ¹
+		- stm ¹
+		- talk ²
+		- video	²
+		- webinar ²
+
+	¹ Refused
+	² Dropped
+
+
+	^sciencemag.org: Refused
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.sciencemag.org
+
+
+	Mixed content:
+
+		- Images on www.sciencemag.org from $self *
+
+	* Secured by us
 
 -->
-<ruleset name="Sciencemag.org (partial)" platform="mixedcontent">
+<ruleset name="Sciencemag.org (partial)" default_off="missing certificate chain">
 
-	<target host="community.sciencecareers.org" />
+	<!--	Direct rewrites:
+				-->
+	<target host="oascentral.sciencemag.org" />
+	<target host="scjobs.sciencemag.org" />
+	<target host="www.sciencemag.org" />
+
+	<!--	Complications:
+				-->
 	<target host="sciencemag.org" />
-	<target host="*.sciencemag.org" />
 
 
-	<securecookie host="^\.sciencemag\.org$" name="^OAX$" />
-	<securecookie host="^.+\.sciencemag\.org$" name=".*" />
-
-
-	<rule from="^http://community\.sciencecareers\.org/"
-		to="https://community.sciencecareers.org/" />
-
-	<!--	- !www doesn't work over https
-		- !www redirects to www over http
+	<!--	Not secured by server:
 					-->
-	<rule from="^https?://(?:www\.)?sciencemag\.org/"
+	<!--securecookie host="^www\.sciencemag\.org$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\." name="^OAX$" />
+	<securecookie host=".+\.sciencemag\.org$" name="." />
+
+
+	<rule from="^http://sciencemag\.org/"
 		to="https://www.sciencemag.org/" />
 
-	<rule from="^http://(oascentral|scjobs)\.sciencemag\.org/"
-		to="https://$1.sciencemag.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
 

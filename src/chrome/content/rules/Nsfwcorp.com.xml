@@ -4,26 +4,48 @@
 		- nsfw-live.s3.amazonaws.com
 
 
-	Nonfunctional subdomains:
+	Problematic hosts in *nsfwcorp.com:
 
-		- live	(times out)
+		- ^ ¹
+		- live ²
+
+	¹ Dropped
+	² Mismatched
 
 
-	Problematic subdomains:
+	Mixed content:
 
-		- ^	(times out)
+		- css on live from fonts.googleapis.com ¹
+		- on live from $self ²
+
+	¹ Secured by us
+	² Not secured by us <= mismatched
 
 -->
 <ruleset name="nsfwcorp.com (partial)">
 
-	<target host="nsfwcorp.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="conflict.nsfwcorp.com" />
+	<!--target host="live.nsfwcorp.com" /-->
 	<target host="www.nsfwcorp.com" />
 
+	<!--	Complications:
+				-->
+	<target host="nsfwcorp.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^live\.nsfwcorp\.com$" name="^it_exchange_session_[\da-f]{32}$" /-->
 
 	<securecookie host="^www\.nsfwcorp\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?nsfwcorp\.com/"
+	<rule from="^http://nsfwcorp\.com/"
 		to="https://www.nsfwcorp.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

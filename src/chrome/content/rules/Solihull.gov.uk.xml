@@ -1,0 +1,65 @@
+<!--
+	Solihull Metropolitan Borough Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *solihull.gov.uk:
+
+		- publicaccess ᵈ
+		- webtest ᵈ
+
+	ᵈ Dropped
+
+
+	These altnames don't exist:
+
+		- solihull.gov.uk
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .solihull.gov.uk
+		- www.solihull.gov.uk
+
+-->
+<ruleset name="Solihull.gov.uk (partial)">
+
+	<target host="eservices.solihull.gov.uk" />
+	<target host="www.solihull.gov.uk" />
+
+		<!--	200 redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.solihull\.gov\.uk/(?:$|About/contact-us$|AtoZ\.aspx|Business$|epay$|epay$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.solihull\.gov\.uk/+(?![Dd]esktop[Mm]odules/|[Pp]ortals/|favicon\.ico)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.solihull.gov.uk/About/contact-us" />
+			<test url="http://www.solihull.gov.uk/AtoZ.aspx" />
+			<test url="http://www.solihull.gov.uk/Business" />
+			<test url="http://www.solihull.gov.uk/epay" />
+			<test url="http://www.solihull.gov.uk/help" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.solihull.gov.uk/DesktopModules/CISS.SideMenu/img/spacer.gif" />
+			<test url="http://www.solihull.gov.uk/Portals/_default/Skins/AdaptOrangeSkins/TWMenuMobi/TWMenuMobi.css" />
+			<test url="http://www.solihull.gov.uk/favicon.ico" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.solihull\.gov\.uk$" name="^TS[\da-f]+$" /-->
+	<!--securecookie host="^www\.solihull\.gov\.uk$" name="^(?:dnn_IsMobile|solihull_gov_uk_https)$" /-->
+
+	<securecookie host="^(?!www\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

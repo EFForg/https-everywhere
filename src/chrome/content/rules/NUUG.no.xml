@@ -52,15 +52,32 @@
 -->
 <ruleset name="NUUG.no (partial)" platform="cacert">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="nuug.no" />
-	<target host="*.nuug.no" />
-		<!--
-			Avoid false/broken MCB:
+	<target host="approve.nuug.no" />
+	<target host="lists.nuug.no" />
+	<target host="memberdb.nuug.no" />
+	<target host="nerdhaven.nuug.no" />
+	<target host="rt.nuug.no" />
+	<target host="www.nuug.no" />
+
+		<!--	Avoid false/broken MCB:
 						-->
 		<exclusion pattern="^http://memberdb\.nuug\.no/+(?!favicon\.ico|global\.css)" />
 
+			<!--	+ve:
+					-->
+			<test url="http://memberdb.nuug.no/?page=edit-member" />
+			<test url="http://memberdb.nuug.no/?page=index" />
+			<test url="http://memberdb.nuug.no/?page=signup" />
 
-	<rule from="^http://((?:approve|lists|memberdb|nerdhaven|rt|www)\.)?nuug\.no/"
-		to="https://$1nuug.no/" />
+			<!--	-ve:
+					-->
+			<test url="http://memberdb.nuug.no//global.css" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

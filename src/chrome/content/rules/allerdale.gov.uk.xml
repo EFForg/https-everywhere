@@ -1,0 +1,54 @@
+<!--
+	Allerdale Borough Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *allerdale.gov.uk:
+
+		- democracy ᵃ
+		- feeds ᵃ
+		- mapping ᵈ
+		- planning ᵈ
+		- www ᵃ
+
+	ᵃ Shows another domain
+	ᵈ Dropped
+
+
+	Partially covered hosts in *allerdale.gov.uk:
+
+		- secure1 *
+
+	* 1 path differs from http
+
+
+	^allerdale.gov.uk does not exist.
+
+-->
+<ruleset name="Allerdale.gov.uk (partial)">
+
+	<target host="payments.allerdale.gov.uk" />
+	<target host="secure1.allerdale.gov.uk" />
+
+		<!--	Differs from http:
+								-->
+		<exclusion pattern="^http://secure1\.allerdale\.gov\.uk/benefitscalculator" />
+
+			<!--	+ve:
+					-->
+			<test url="http://secure1.allerdale.gov.uk/benefitscalculator/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://secure1.allerdale.gov.uk/publicaccesslive/selfservice/citizenportal/login.htm" />
+
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)$" />
+	<securecookie host="^(?!secure1\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

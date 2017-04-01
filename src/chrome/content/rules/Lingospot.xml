@@ -1,27 +1,37 @@
 <!--
 	Nonfunctional subdomains:
 
-		- corp		(replies with http)
+		- blog *
+		- corp *
 		- get		(shows engine; mismatched, CN: chill.planetdiscover.com)
-		- login		(no https, rly)
+		- login ³
+		- wordpress *
 		- www		(redirects to http, cert valid)
 
+	* WP Engine
+	³ Shows console.lingospot.com
 
-	Problematic subdomains:
 
-		- blog		(mismatched, CN: *.wpengine.com)
-		- wordpress	(redirects to http; mismatched, CN: *.wpengine.com)
+	Insecure cookies are set for these domains:
+
+		- .lingospot.com
 
 -->
-<ruleset name="Lingospot (partial)">
+<ruleset name="Lingospot.com (partial)">
 
-	<target host="*.lingospot.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="console.lingospot.com" />
+	<target host="engine.lingospot.com" />
 
 
-	<rule from="^http://engine\.lingospot\.com/"
-		to="https://engine.lingospot.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.lingospot\.com$" name="^LUI$" /-->
 
-	<rule from="^https?://(?:blog|wordpress)\.lingospot\.com/"
-		to="https://lingonew.wpengine.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
 
 </ruleset>

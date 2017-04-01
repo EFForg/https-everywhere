@@ -34,6 +34,9 @@
 		- secure1		(works, expired)
 		- service1		(works, expired, mismatched, CN: secure1.symantec.com)
 		- sfdoccentral		(works, expired 2011-12-14)
+		- www4			(breaks blog)
+		- corp.sarcscan (mistmatched, CN: submit.symantec.com)
+		- retail.sarcscan (mistmatched, CN: submit.symantec.com)
 
 	* Works, akamai
 
@@ -46,63 +49,135 @@
 <ruleset name="Symantec (partial)">
 
 	<target host="symantec.com" />
-	<target host="*.symantec.com" />
-		<!--
-			These redirect to http.
-						-->
-		<exclusion pattern="^http://www\.symantec\.com/connect/(?:$|all-connect$|articles/|blogs/|imagebrowser/view/image/|forums/)" />
+	<target host="bcportal.symantec.com" />
+	<target host="buy.symantec.com" />
+	<target host="careers.symantec.com" />
+	<target host="customercare.symantec.com" />
+	<target host="education.symantec.com" />
+	<target host="transfer.emea.symantec.com" />
+	<target host="et.symantec.com" />
+	<target host="faster.symantec.com" />
+	<target host="fileconnect.symantec.com" />
+	<target host="fileshare.symantec.com" />
+	<target host="locator.symantec.com" />
+	<target host="licensing.symantec.com" />
+	<target host="licensingprograms.symantec.com" />
+	<target host="my.symantec.com" />
+	<target host="my-qa.symantec.com" />
+	<target host="my-uat.symantec.com" />
+	<target host="mysort.symantec.com" />
+	<target host="mysupport.symantec.com" />
+	<target host="mysymantec.symantec.com" />
+	<target host="oms.symantec.com" />
+	<target host="partner.symantec.com" />
+	<target host="partnerlocator.symantec.com" />
+	<target host="partnernet.symantec.com" />
+	<target host="partnernet-internal.symantec.com" />
+	<target host="partnernet-qa.symantec.com" />
+	<target host="partnernet-sit.symantec.com" />
+	<target host="partnernet-uat.symantec.com" />
+	<target host="partnernet-temp.symantec.com" />
+	<target host="partnervpn.symantec.com" />
+	<target host="phoenix.symantec.com" />
+	<target host="productadvisor.symantec.com" />
+	<target host="renewals.symantec.com" />
+	<target host="security.symantec.com" />
+	<target host="sfprep.symantec.com" />
+	<target host="sitedirector.symantec.com" />
+	<target host="scm.symantec.com" />
+	<target host="solutions.symantec.com" />
+	<target host="sort.symantec.com" />
+	<target host="ssae.symantec.com" />
+	<target host="store.symantec.com" />
+	<target host="submit.symantec.com" />
+	<target host="symaccount.symantec.com" />
+	<target host="symbeta.symantec.com" />
+	<target host="symlms.symantec.com" />
+	<target host="telemetrics.symantec.com" />
+	<target host="vias.symantec.com" />
+	<target host="vip.symantec.com" />
+	<target host="desktop.vip.symantec.com" />
+	<target host="idprotect.vip.symantec.com" />
+	<target host="toolbar.vip.symantec.com" />
+	<target host="vos.symantec.com" />
+	<target host="vpn-us-west.symantec.com" />
+	<target host="vs.symantec.com" />
+	<target host="webdl.symantec.com" />
+	<target host="www-secure.symantec.com" />
 	<target host="*.symanteccloud.com" />
 	<target host="*.symanteccontent.com" />
 	<target host="now.symassets.com" />
+	<target host="check.symantec.com" />
+	<target host="entsupport.symantec.com" />
+	<target host="go.symantec.com" />
+	<target host="customersupport.symantec.com" />
+	<target host="liveupdate.symantec.com" />
+	<target host="securityresponse.symantec.com" />
+	<target host="buy.symanteccloud.com" />
+	<target host="static.symanteccloud.com" />
+	<target host="static1.symanteccloud.com" />
+	<target host="static2.symanteccloud.com" />
+	<target host="static3.symanteccloud.com" />
+
+		<!--	These redirect to http.
+						-->
+		<!--exclusion pattern="^http://www\.symantec\.com/connect/(?:$|all-connect$|articles/|blogs/|imagebrowser/view/image/|forums/)" /-->
+		<!--
+			More conservatively:
+						-->
+		<exclusion pattern="^http://www\.symantec\.com/connect/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.symantec.com/connect/" />
+			<test url="http://www.symantec.com/connect/all-connect" />
+			<test url="http://www.symantec.com/connect/articles/" />
+			<test url="http://www.symantec.com/connect/blogs/" />
+			<test url="http://www.symantec.com/connect/forums/" />
+			<test url="http://www.symantec.com/connect/imagebrowser/view/image/" />
 
 
-	<securecookie host="^(?:.*\.)?symantec(?:content)?\.com$" name=".*" />
-
+	<!--securecookie host="." name="." /-->
 
 	<!--	//symantec.com/.+:
 			- 404s over https
 			- Redirects to www over http
 					-->
-	<rule from="^https?://symantec\.com/"
+	<rule from="^http://symantec\.com/"
 		to="https://www.symantec.com/" />
 
-	<rule from="^https?://check\.symantec\.com/(?:$|\?.*)"
+	<rule from="^http://check\.symantec\.com/(?:$|\?.*)"
 		to="https://www.symantec.com/" />
 
-	<rule from="^https?://definitions\.symantec\.com/(?:$|\?.*)"
-		to="https://www.symantec.com/business/security_response/definitions.jsp" />
+		<test url="http://check.symantec.com/?test" />
 
-	<rule from="^https?://entsupport\.symantec\.com/(?:$|\?.*)"
+	<rule from="^http://entsupport\.symantec\.com/(?:$|\?.*)"
 		to="https://www.symantec.com/enterprise/support/index.jsp" />
 
-	<rule from="^https?://go\.symantec\.com/(?:$|\?.*)"
+		<test url="http://entsupport.symantec.com/?test" />
+
+	<rule from="^http://go\.symantec\.com/(?:$|\?.*)"
 		to="https://www.symantec.com/index.jsp" />
 
-	<rule from="^https?://om\.symantec\.com/"
-		to="https://veritasnonconsumer.122.2o7.net/" />
+		<test url="http://go.symantec.com/?test" />
 
-	<rule from="^http://(bcportal|buy|careers|customercare|education|transfer\.emea|et|faster|fileconnect|fileshare|licensing(?:programs)?|locator|my?|my(?:-qa|-uat|sort|support|symantec)|oms|partner(?:locator|net(?:-internal|-qa|-sit|-uat|-temp)?|vpn)|phoenix|productadvisor|renewals|(?:corp\.|retail\.)?sarcscan|security|sfprep|sitedirector|scm|solutions|sort|ssae|store|submit|symaccount|symbeta|symlms|telemetrics|vias|vip|(?:desktop|idprotect|toolbar)\.vip|vos|vpn-us-west|vs|webdl|www4?|www-secure)\.symantec\.com/"
-		to="https://$1.symantec.com/" />
-
-	<rule from="^https?://customersupport\.symantec\.com/(resource|servlet)/"
+	<rule from="^http://customersupport\.symantec\.com/(resource|servlet)/"
 		to="https://symantec1.secure.force.com/$1/" />
 
-	<rule from="^https?://liveupdate\.symantec\.com/(?:$|\?.*)"
+		<test url="http://customersupport.symantec.com/resource/" />
+		<test url="http://customersupport.symantec.com/servlet/" />
+
+	<rule from="^http://liveupdate\.symantec\.com/(?:$|\?.*)"
 		to="https://www.symantec.com/security_response/" />
 
-	<rule from="^https?://securityresponse\.symantec\.com/(?:$|\?.*)"
-		to="https://www.symantec.com/security_response/index.jsp" />
+		<test url="http://liveupdate.symantec.com/?test" />
 
-	<rule from="^https?://se(?:cur|rvic)e1\.symantec\.com/(\?.*)?$"
-		to="https://www.symantec.com/techsupp/$1" />
+	<rule from="^http://securityresponse\.symantec\.com/(?:$|\?.*)"
+		to="https://www.symantec.com/security_response/" />
 
-	<rule from="^http://(buy|static)\.symanteccloud\.com/"
-		to="https://$1.symanteccloud.com/" />
+		<test url="http://securityresponse.symantec.com/?test" />
 
-	<rule from="^http://static(1|2|3)\.symanteccontent\.com/"
-		to="https://static$1.symanteccontent.com/" />
-
-	<rule from="^http://now\.symassets\.com/"
-		to="https://now.symassets.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

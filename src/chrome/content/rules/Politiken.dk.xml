@@ -1,14 +1,30 @@
 <!--
+	Other Politiken rulesets:
+
+		- Pol.dk.xml
+
+
 	Nonfunctional subdomains:
 
-		- eavis *
+		- eavis ¹
 		- kundecenter *
 		- kundecentertest *
+		- labs *
+		- soejle3cache *
 		- subtest *
 		- tildoeren *
-		- web		(refused)
+		- web *
+		- weekly *
 
-	* Times out
+	* Connection timed out
+
+	Problematic subdomains:
+
+		- boligmarked ¹
+		- nyhedsbreve ²
+
+	¹ No content; mismatched, CN: *.boligsiden.dk
+	² Works; mismatched, CN: *.peytz.dk
 
 
 	Partially covered subdomains:
@@ -18,19 +34,61 @@
 
 	* Some pages redirect to http
 
+
+	Insecure cookies are set for these hosts:
+
+		- plus.politiken.dk
+		- shop.politiken.dk
+
+
+	Mixed content:
+
+		- Images on nyhedsbreve from $self ¹
+
+		- Ads on ^ from ads.creative-serving.com *
+
+	¹ Not secured by us <= mismatched
+	* Secured by us
+
 -->
-<ruleset name="Politiken.dk (partial)">
+<ruleset name="Politiken.dk (mixed content)">
 
-	<target host="multimedia.pol.dk" />
+	<!--	Direct rewrites:
+				-->
 	<target host="politiken.dk" />
-	<target host="*.politiken.dk" />
-		<exclusion pattern="^http://(?:plus|shop)\.politiken\.dk/(?!Css/|[iI]mages/|Uploaded/)" />
+	<target host="plus.politiken.dk" />
+	<target host="shop.politiken.dk" />
+	<target host="www.politiken.dk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(plus|shop)\.politiken\.dk/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:plus|shop)\.politiken\.dk/(?!Css/|[iI]mages/|Uploaded/|favicon\.ico)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://plus.politiken.dk/arrangementer" />
+			<test url="http://plus.politiken.dk/galleri" />
+			<test url="http://shop.politiken.dk/Abonnement_i_udlandet/" />
+			<test url="http://shop.politiken.dk/Eavis/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://plus.politiken.dk/Css/reset.css" />
+			<test url="http://plus.politiken.dk/Images/bg_linkArrows.gif" />
+			<test url="http://plus.politiken.dk/favicon.ico" />
+			<test url="http://shop.politiken.dk/favicon.ico" />
 
 
-	<rule from="^http://multimedia\.pol\.dk/"
-		to="https://multimedia.pol.dk/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(plus|shop)\.politiken\.dk$" name="^(ASP.NET_SessionId|Commerce_TestPersistentCookie|Commerce_TestSessionCookie|PolCurrentURL)$" /-->
 
-	<rule from="^http://((?:plus|shop|www)\.)?politiken\.dk/"
-		to="https://$1politiken.dk/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

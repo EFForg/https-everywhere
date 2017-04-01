@@ -1,3 +1,4 @@
+#!/usr/bin/env python2.7
 """
 Copyleft 2013 Osama Khalid.
 

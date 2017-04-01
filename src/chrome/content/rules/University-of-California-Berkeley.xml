@@ -1,181 +1,273 @@
 <!--
-	Nonfunctional domains:
+	University of California, Berkeley
+	http://www.berkeley.edu/
 
 
-		- berkeley.edu subdomains:
+	Nonfunctional hosts in *berkeley.edu:
 
-			- (www.)		(prints "No access to SSL site.")
-			- alumni-friends	(prints domain name; CN: asterix.berkeley.edu)
-			- gfael.are ¹
-			- areweb ²
-			- atcal-career ³
-			- awards ³
-			- builders ³
-			- cads2 ³
-			- cal-demo		(prints "a" over https; acts as atcal over http)
-			- calparents ⁴
-			- calvm	⁴
-			- campaign ³
-			- campuslife ⁵
-			- cdms			(shows cosmology; mismatched, CN: cosmology.berkeley.edu)
-			- cfr ³
-			- charterday ³
-			- compute.cnr ²
-			- naturebeta.cnr ²
-			- staff.cnr ²
-			- cwh ²
-			- diller ³		(403s over http)
-			- discovercal ³
-			- idsg.eecs		(data differs)
-			- environmentalsciences ²
-			- forestry ²
-			- fundraising ³
-			- hewlett ³
-			- hewlettchallenge ³	(CN: devcomm.urel)
-			- homecoming		(prints domain name)
-			- hrweb ⁵
-			- mailman.icsi		(refused)
-			- identity ³
-			- ieas
-			- ims			(400; times out over https, so status unknown)
-			- inauguration ³
-			- lawcat		(502)
-			- ls
-			- blogs.lib		(shows www.lib)
-			- mdp ²
-			- www.mip		(403)
-			- newalumnichallenge ³
-			- newscenter ⁵
-			- nst ²
-			- nutrition ²
-			- ourenvironment ²
-			- socalevents ⁵
-			- stadium ³
-			- systemstatus
-			- tiencenter		(valid cert; "Site Temporarily Unavailable" over http, so status unknown)
-			- urel ³		(CN: devcomm.urel)
-			- devcomm.urel		(403s over http; redirects to givetocal over https)
+		- admissions      ¹
+		- blog.admissions	Redirects to www.ocf.berkeley.edu
+		- bdrive		    Handshake fails
+		- beartracks-new  ¹
+		- calparents		200 "No access to the calparents SSL site available"
+		- e-news		    Shows www.berkeley.edu
+		- mailman.icsi    ¹
+		- ls			    200 "Site not found"
+		- puppet          ²
+		- puppet.ocf      ²
+		- research		    Shows blank tree
+		- urshare-prod1.urel ²
+		- wikihub-new     ¹
 
-		- (www.)ucbsystems.org
-
-	¹ Times out
-	² Shows nature
-	³ Shows givetocal
-	⁴ Prints "No access to the $foo SSL site available."
-	⁵ http reply
+	¹ Refused
+	² Dropped
 
 
-	Problematic subdomains:
+	Problematic hosts in *berkeley.edu:
+		- asterix       *
+		- diversity     *
+		- www.give      *
+		- www.givetocal *
+		- haasawards    *
+		- journalism    ᴵ
+		- newstudents   *
+		- or            *
+		- pt            *
+		- students      *
+		- visitors      *
 
-		- are *
-		- callcenter **
-		- cosmology	(works, self-signed)
-		- cs *
-		- eecs *
-		- graduation	(prints domain name; mismatched, CN: asterix.berkeley.edu)
-		- notary.icsi	(works; mismatched, CN: *.bro.org)
-		- law *
-		- oskicat	(some [most?] pages redirect to http, scripts/ redirects to screens/ssoauth.html)
-		- ourpromise **
+	* Mismatched
+	ᴵ Incomplete certificate chain
 
-	* Mismatch
-	** Shows givetocal
+	Insecure cookies are set for these domains:
 
-
-	Partially covered subdomains:
-
-		- alumni *
-		- blogs *
-		- callcenter	(→ givetocal)
-		- graduation	(→ commencement)
-		- ourpromise	(→ givetocal)
-
-	* At least some pages redirect to http
+		- .commencement.berkeley.edu
+		- .events.berkeley.edu
 
 
-	Fully covered subdomains:
+	Mixed content:
 
-		- (www.)are
-		- auth
-		- beartracks
-		- beartracks-new
-		- callink
-		- calnet.calnet
-		- cas-p[1-4].calnet
-		- net-auth.calnet
-		- (www.)cnr
-		- nature.cnr
-		- code
-		- developer
-		- events
-		- as-code-prod.ist
-		- as-ezsvn-prod.ist
-		- (www.)law
-		- (www.)lib
-		- nature
-		- oskicat	(→ oskicatp)
-		- oskicatp
-		- security
-		- fortuna.security
-		- students
-		- sunsite
-		- wikihub
-		- wikihub-new
+		- css on (www.)?notary.icsi, news, visit from fonts.googleapis.com *
 
+		- Images, on:
 
-	Covered wildcard cookies:
+			- news from newsdev.berkeley.edu
+			- news from www.berkeley.edu *
 
-		- .events
-		- .fortuna.security
-		- .security
+		- Bug on events from s7.addthis.com *
 
-
-	Other wildcard cookie domains observed:
-
-		- .
-		- .blogs.lib
-		- .campuslife
+	* Secured by us
 
 -->
-<ruleset name="University of California, Berkeley (partial)">
+<ruleset name="Berkeley.edu (partial)">
 
-	<target host="*.berkeley.edu" />
-		<!--
-			These paths 302s to http:
+	<!--	Direct rewrites:
+				-->
+	<target host="berkeley.edu" />
+	<target host="airbears.berkeley.edu" />
+	<target host="apply.berkeley.edu" />
+	<target host="atcal.berkeley.edu" />
+	<target host="auth-key.berkeley.edu" />
+	<target host="auth.berkeley.edu" />
+	<target host="beartalk.berkeley.edu" />
+	<target host="beartracks-new.berkeley.edu" />
+	<target host="beartracks.berkeley.edu" />
+	<target host="blu.berkeley.edu" />
+	<target host="blu.is.berkeley.edu" />
+	<target host="boinc.berkeley.edu" />
+	<target host="bconnected.berkeley.edu" />
+	<target host="bcourses.berkeley.edu" />
+	<target host="bspace.berkeley.edu" />
+	<target host="cal.berkeley.edu" />
+	<target host="calcentral.berkeley.edu" />
+	<target host="calfutures.berkeley.edu" />
+	<target host="callink.berkeley.edu" />
+	<target host="calmail.berkeley.edu" />
+	<target host="calmessages.berkeley.edu" />
+	<target host="calnet.berkeley.edu" />
+	<target host="career.berkeley.edu" />
+	<target host="ccc.berkeley.edu" />
+	<target host="code.berkeley.edu" />
+	<target host="commencement.berkeley.edu" />
+	<target host="convio.berkeley.edu" />
+	<target host="developer.berkeley.edu" />
+	<target host="eureka.berkeley.edu" />
+	<target host="events.berkeley.edu" />
+	<target host="fellowship.berkeley.edu" />
+	<target host="foundation.berkeley.edu" />
+	<target host="give.berkeley.edu" />
+	<target host="givetocal.berkeley.edu" />
+	<target host="gspp.berkeley.edu" />
+	<target host="setiathome.berkeley.edu" />
 
-				- $
-				- community$
-				- donate$
-				- donate/new-alumni-challenge$
-				- events$
-				- join$
+	<target host="notary.icsi.berkeley.edu" />
+	<target host="www.notary.icsi.berkeley.edu" />
+	<target host="www.icsi.berkeley.edu" />
+
+	<target host="ihouseonline.berkeley.edu" />
+	<target host="inews.berkeley.edu" />
+	<target host="international.berkeley.edu" />
+	<target host="kb.berkeley.edu" />
+	<target host="nature.berkeley.edu" />
+	<target host="netreg.berkeley.edu" />
+	<target host="static.ocf.berkeley.edu" />
+	<target host="oskicatp.berkeley.edu" />
+	<target host="scholarship.berkeley.edu" />
+	<target host="seniors.berkeley.edu" />
+	<target host="services.housing.berkeley.edu" />
+	<target host="visit.berkeley.edu" />
+	<target host="wikihub-new.berkeley.edu" />
+	<target host="wikihub.berkeley.edu" />
+	<target host="www.berkeley.edu" />
+
+	<!-- Open Computing Facility -->
+	<target host="accounts.ocf.berkeley.edu" />
+	<target host="docs.ocf.berkeley.edu" />
+	<target host="mirrors.ocf.berkeley.edu" />
+	<target host="pma.ocf.berkeley.edu" />
+	<target host="rt.ocf.berkeley.edu" />
+	<target host="ssh.ocf.berkeley.edu" />
+	<target host="wiki.ocf.berkeley.edu" />
+	<target host="www.ocf.berkeley.edu" />
+
+	<!-- Security -->
+	<target host="security.berkeley.edu" />
+
+	<!-- IST -->
+	<target host="ist.berkeley.edu" />
+
+
+	<!-- University Relations -->
+	<target host="wiki.urel.berkeley.edu" />
+
+	<!-- Department of Agriculture and Resource Economics -->
+	<target host="are.berkeley.edu" />
+
+	<!-- College of Natural Resources -->
+	<target host="cnr.berkeley.edu" />
+	<target host="nature.cnr.berkeley.edu" />
+	<target host="www.cnr.berkeley.edu" />
+
+	<!-- EECS and CS -->
+	<target host="autoconfig.cs.berkeley.edu" />
+	<target host="autoconfig.eecs.berkeley.edu" />
+	<target host="autodiscover.cs.berkeley.edu" />
+	<target host="autodiscover.eecs.berkeley.edu" />
+	<target host="buffy.eecs.berkeley.edu" />
+	<target host="chisel.eecs.berkeley.edu" />
+	<target host="hkn.eecs.berkeley.edu" />
+	<target host="www.cs.berkeley.edu" />
+	<target host="www.eecs.berkeley.edu" />
+
+	<!--	Complications:
+				-->
+	<target host="www.are.berkeley.edu" />
+	<target host="bmail.berkeley.edu" />
+	<target host="cal1card.berkeley.edu" />
+	<target host="callcenter.berkeley.edu" />
+	<target host="cs.berkeley.edu" />
+	<target host="eecs.berkeley.edu" />
+	<target host="www.give.berkeley.edu" />
+	<target host="graduation.berkeley.edu" />
+	<target host="mirrors.berkeley.edu" />
+	<target host="ocf.berkeley.edu" />
+	<target host="visitors.berkeley.edu" />
+
+		<!--	Only the root of these subdomains is guaranteed compatible
+			with a HTTPS redirect, so we exclude other paths:
+									-->
+		<exclusion pattern="^http://(www\.)?(c|eec)s\.berkeley\.edu/.+" />
+
+			<!--	+ve:
 						-->
-		<exclusion pattern="^http://alumni\.berkeley\.edu/(?!sites/)" />
-		<exclusion pattern="^http://blogs\.berkeley\.edu/(?:.+/)?(?:$|\?)" />
+			<test url="http://cs.berkeley.edu/?hello" />
+			<test url="http://cs.berkeley.edu/no/path/is/matched" />
+			<test url="http://eecs.berkeley.edu/no/path/is/matched" />
+			<test url="http://eecs.berkeley.edu/~cs70/" />
+
+		<exclusion pattern="^http://graduation\.berkeley\.edu/.+" />
+
+			<!--	+ve:
+					-->
+			<test url="http://graduation.berkeley.edu/no/path/is/matched" />
+			<test url="http://graduation.berkeley.edu/?some+query+string" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.berkeley\.edu/(?:$|map$)" /-->
+		<!--
+			404:
+				-->
+		<!--exclusion pattern="^http://www\.berkeley\.edu/(?:directory$|faculty-staff$|students$|twitter/index/lv_twitter_feed_UCBerkeley)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.berkeley\.edu/+(?!favicon\.ico|images/|news2/|pdf/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.berkeley.edu/directory" />
+			<test url="http://www.berkeley.edu/faculty-staff" />
+			<test url="http://www.berkeley.edu/map" />
+			<test url="http://www.berkeley.edu/students" />
+			<test url="http://www.berkeley.edu/twitter/index/lv_twitter_feed_UCBerkeley" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.berkeley.edu/favicon.ico" />
+			<test url="http://www.berkeley.edu/images/uploads/logo-ucberkeley.png" />
+			<test url="http://www.berkeley.edu/news2/bitn/default.png" />
+			<test url="http://www.berkeley.edu/pdf/scmap.pdf" />
 
 
-	<securecookie host="^(?:\w.*|\.events|(?:\.fortuna)?\.security)\.berkeley\.edu$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.commencement\.berkeley\.edu$" name="^SESS[\da-f]{32}$" /-->
+	<!--securecookie host="^\.events\.berkeley\.edu$" name="^sid$" /-->
+
+	<securecookie host="^(?:(?!www\.berkeley\.edu$)\w.*|\.events|(?:\.fortuna)?\.security)\.berkeley\.edu$" name="." />
 
 
-	<rule from="^http://(airbears|alumni|asterix|atcal|atcal-dev|auth|auth-key|beartracks(?:-new)?|blogs|blu|bspace|cal|calagenda|cal-dev|calfutures|callink|calmail|(?:[\w-]+\.)?calnet|career|ccc|ccc-dev|cnr|(nature|www)\.cnr|commencement|convio|code|auto(?:config|discover)\.(?:ee)?cs|developer|(?:auth|buffy)\.eecs|egiving|eureka|events|fellowship|foundation(?:-dev)?|givetocal|haasawards|services\.housing|ihouseonline|inews|international|blu\.is|as-(?:code|ezsvn)-prod\.ist|ist|journalism|kb|lib|www\.lib|nature|or|oskicatp|scholarship|(?:fortuna\.)?security|seniors|(?:new)?students|sunsite|(?:urshare-prod1|wiki)\.urel|wikihub(?:-new)?)\.berkeley\.edu/"
+	<!-- These domains must *not* redirect to the www. version -->
+
+	<rule from="^http://www\.(are|give)\.berkeley\.edu/"
 		to="https://$1.berkeley.edu/" />
 
-	<rule from="^http://(?:www\.)?(are|boinc)\.berkeley\.edu/"
-		to="https://$1.berkeley.edu/" />
+	<!--	Redirect drops forward slash, path, and args:
+								-->
+	<rule from="^http://bmail\.berkeley\.edu/.*"
+		to="https://mail.google.com/a/berkeley.edu" />
+
+		<test url="http://bmail.berkeley.edu/path/is/dropped" />
+
+	<!--	Redirect drops forward slash and args, but not path:
+									-->
+	<rule from="^http://cal1card\.berkeley\.edu/+([^?]*).*"
+		to="https://services.housing.berkeley.edu/c1c/$1" />
+
+		<test url="http://cal1card.berkeley.edu//?bar" />
+		<test url="http://cal1card.berkeley.edu//?foo" />
+		<test url="http://cal1card.berkeley.edu/?bar" />
+		<test url="http://cal1card.berkeley.edu/?foo" />
+		<test url="http://cal1card.berkeley.edu/has/a/path?query-string-dropped" />
 
 	<rule from="^http://callcenter\.berkeley\.edu/$"
-		to="https://givetocal.berkeley.edu/browse/?u=191" />
+		to="https://give.berkeley.edu/browse/index.cfm?u=191" />
 
-	<rule from="^http://(?:www\.)?(cs|eecs|law)\.berkeley\.edu/"
+	<!-- These domains must redirect to the www. version -->
+	<rule from="^http://(cs|eecs|ocf)\.berkeley\.edu/"
 		to="https://www.$1.berkeley.edu/" />
 
 	<rule from="^http://graduation\.berkeley\.edu/$"
 		to="https://commencement.berkeley.edu/" />
 
-	<rule from="^http://oskicatp?\.berkeley\.edu/"
-		to="https://oskicatp.berkeleye.edu/" />
+	<rule from="^http://mirrors\.berkeley\.edu/$"
+		to="https://mirrors.ocf.berkeley.edu/" />
 
-	<rule from="^http://ourpromise\.berkeley\.edu/$"
-		to="https://givetocal.berkeley.edu/browse/?u=174" />
+	<rule from="^http://visitors\.berkeley\.edu/"
+		to="https://visit.berkeley.edu/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

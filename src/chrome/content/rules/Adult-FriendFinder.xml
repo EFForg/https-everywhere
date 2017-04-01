@@ -4,35 +4,56 @@
 
 	CDN buckets:
 
-		 - cs77.wac.edgecastcdn.net
-
-			- graphics.adultfriendfinder.com
+		 - cs77.wac.edgecastcdn.net	← graphics
 
 
-	Problematic subdomains:
+	Problematic hosts in *adultfriendfinder.com:
 
-		- (www.)	(works, mismatched, CN: secure.adultfriendfinder.com)
-		- graphics	(works, mismatched, CN: *.securedataimages.com)
+		- (www.)? ᵐ
+		- graphics ᵐ
+
+	ᵐ Mismatched
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains: ᶜ
 
-		- (www.)	(→ secure)
-		- banners	(→ secure)
-		- graphics	(→ secureimage.securedataimages.com)
-		- secure
+		- .adultfriendfinder.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Adult FriendFinder (partial)">
+<ruleset name="Adult FriendFinder.com">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="secure.adultfriendfinder.com" />
+
+	<!--	Complications:
+				-->
 	<target host="adultfriendfinder.com" />
-	<target host="*.adultfriendfinder.com" />
+	<target host="banners.adultfriendfinder.com" />
+	<target host="graphics.adultfriendfinder.com" />
+	<target host="www.adultfriendfinder.com" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://secure.adultfriendfinder.com/go/p1" /-->
 
 
-	<rule from="^https?://graphics\.adultfriendfinder\.com/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.adultfriendfinder\.com$" name="^(?:AB_TRACKING|ALPO|HISTORY|IP_COUNTRY|LOCATION_FROM_IP|REFERRAL_URL|click_id_time|ffadult_apr|ffadult_apr_session|ffadult_tr|ffadult_who|v_hash)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://(?:banners\.|www\.)?adultfriendfinder\.com/"
+		to="https://secure.adultfriendfinder.com/" />
+
+	<rule from="^http://graphics\.adultfriendfinder\.com/"
 		to="https://secureimage.securedataimages.com/" />
 
-	<rule from="^https?://(?:(?:banners|secure|www)\.)?adultfriendfinder\.com/"
-		to="https://secure.adultfriendfinder.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,17 +1,19 @@
 <!--
+	Discovery Communications
+
+	Other Discovery Communications rulesets:
+
+		- DDM_CDN.com.xml
+
+
 	CDN buckets:
 
+		- amsarkadium-a.akamaihd.net/assets/dsc-discovery-main/
 		- discovery.custhelp.com
 		- dsc.discovery.com.edgesuite.net
 		- games.dsc.discovery.com.edgesuite.net
-
 		- netstorage.discovery.com.edgesuite.net
-
-			- a681.g.akamai.net
-
 		- news.discovery.com.edgesuite.net
-
-			- a1840.g.akamai.net
 
 		- dsc-static.edgesuite.net
 
@@ -22,46 +24,79 @@
 			- static.ddmcdn.com
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *discovery.com:
 
-		- discovery.com subdomains:
-
-			- blogs
-			- dsc		(prints "This Discovery web site is down
+		- blogs
+		- dsc		(prints "This Discovery web site is down
 					for scheduled maintenance", akamai)
-			- games.dsc	(dropped)
-			- news *
+		- games.dsc ³
 
-		- r.ddmcdn.com *
-		- static.ddmcdn.com *
-
-	* 504, akamai
+	³ Refused
 
 
-	Problematic domains:
+	Problematic host in *discovery.com:
 
-		- netstorage.discovery.com *
-		- store.discovery.com *
+		- netstorage *
+		- news *
+		- store *
 
 	* Works, akamai
 
 
-	Fully covered domains:
+	Fully covered hosts in *discovery.com:
 
-		- discovery.com subdomains:
+		- (www.)?
+		- netstorage	(→ akamai)
+		- store		(→ securestore.discovery.com)
+		- securestore
 
-			- netstorage	(→ akamai)
+
+	Mixed content:
+
+		- css on news from static.ddmcdn.com ¹
+		- css on news from fonts.googleapis.com ²
+
+		- Images on news and www from r.ddmcdn.com ¹
+		- Images on news and www from static.ddmcdn.com ¹
+
+		- Ads/bugs, on:
+
+			- news from:
+
+				- tags.bkrtx.com ²
+				- pagead2.googlesyndication.com ²
+				- widgets.outbrain.com ²
+				- www.reddit.com ²
+				- b.scorecardresearch.com ²
+
+			- news and www, from:
+
+				- content.dl-rms.com ²
+				- icompass.insightexpressai.com ²
+				- js.revsci.com ²
+
+			- www from core.insightexpressai.com
+
+	¹ Rule not enabled by default <= mismatched
 
 -->
-<ruleset name="Discovery Communications (partial)">
+<ruleset name="Discovery.com (partial)">
 
-	<target host="*.discovery.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="discovery.com" />
+	<target host="securestore.discovery.com" />
+	<target host="www.discovery.com" />
+
+	<!--	Complications:
+				-->
+	<target host="store.discovery.com" />
 
 
-	<rule from="^http://netstorage\.discovery\.com/"
-		to="https://a248.e.akamai.net/f/681/7401/5m/netstorage.discovery.com/" />
-
-	<rule from="^http://(?:secure)?store\.discovery\.com/"
+	<rule from="^http://store\.discovery\.com/"
 		to="https://securestore.discovery.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,48 @@
+<!--
+	CDN buckets:
+
+		- duh6oa3w9hopv.cloudfront.net
+
+			- assets
+
+
+	Fully covered subdomains:
+
+		- ^
+		- analytics
+		- assets	(→ duh6oa3w9hopv.cloudfront.net)
+		- (www.)?forums
+		- my
+		- support
+		- us-3
+
+
+	These altnames don't exist:
+
+		- www.support.rightscale.com
+
+
+	Mixed content:
+
+		- Images on forums from client.newleaders.com *
+
+	* Not secured by us <= mismatched
+
+-->
+<ruleset name="RightScale.com (partial)">
+
+	<target host="rightscale.com" />
+	<target host="*.rightscale.com" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.rightscale\.com/$" /-->
+
+
+	<rule from="^http://assets\.rightscale\.com/"
+		to="https://duh6oa3w9hopv.cloudfront.net/" />
+
+	<rule from="^http://((?:analytics|(?:www\.)?forums|my|support|us-3)\.)?rightscale\.com/"
+		to="https://$1rightscale.com/" />
+
+</ruleset>

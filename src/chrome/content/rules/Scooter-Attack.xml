@@ -1,20 +1,58 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *scooter-attack.com:
 
-		- b2b		(http & https data differ)
-		- forum		(no https)
+		- b2b ¹
+		- forum ²
+
+	¹ Shows default page
+	² 522
+
+
+	^scooter-attack.com: 521
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .scooter-attack.com
+		- .rollerhaendler.scooter-attack.com
+		- shop.scooter-attack.com
+
+
+	Mixed content:
+
+		- Bug on www from stats.scooter-attack.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Scooter-Attack (partial)">
+<ruleset name="Scooter-Attack.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="rollerhaendler.scooter-attack.com" />
+	<target host="shop.scooter-attack.com" />
+	<target host="stats.scooter-attack.com" />
+	<target host="webshop.scooter-attack.com" />
+	<target host="www.scooter-attack.com" />
+
+	<!--	Complications:
+				-->
 	<target host="scooter-attack.com" />
-	<target host="*.scooter-attack.com" />
 
 
-	<securecookie host="^(?:\.rollerhaendler\.|shop)?\.scooter-attack\.com$" name=".+" />
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.scooter-attack\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^\.rollerhaendler\.scooter-attack\.com$" name="^(?:cookie_test|rhlanguage)$" /-->
+	<!--securecookie host="^shop\.scooter-attack\.com$" name="^SASESSIONID$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(rollerhaendler\.|(?:web)?shop\.|www\.)?scooter-attack\.com/"
-		to="https://$1scooter-attack.com/" />
+	<rule from="^http://scooter-attack\.com/"
+		to="https://www.scooter-attack.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

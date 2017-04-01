@@ -1,0 +1,60 @@
+<!--
+	For other News Corporation coverage, see News-Corporation.xml.
+
+
+	Nonfunctional hosts in *thesun.co.uk:
+
+		- extras ⁴
+		- directory ᵈ
+		- favourite ³
+		- help ʰ
+		- img ʰ
+		- perks ³
+
+	³ 503
+	⁴ 504
+	ᵈ Dropped
+	ʰ Redirects to http
+
+
+	Problematic hosts in *thesun.co.uk:
+
+		- jobs ᵐ
+
+	ᵐ Mismatched
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- home.thesun.co.uk
+		- jobs.thesun.co.uk
+		- join.thesun.co.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="The Sun.co.uk (partial)">
+
+	<target host="thesun.co.uk" />
+	<target host="feeds.thesun.co.uk" />
+	<target host="home.thesun.co.uk" />
+	<target host="join.thesun.co.uk" />
+	<target host="login.thesun.co.uk" />
+	<target host="www.thesun.co.uk" />
+
+		<!--	$ 503s, so:
+					-->
+		<test url="http://feeds.thesun.co.uk/puzzles/wordsearch/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:home|join)\.thesun\.co\.uk$" name="^AWSELB$" /-->
+	<!--securecookie host="^jobs\.thesun\.co\.uk$" name="^(?:AnonymousUserId|BrowserSession|FixedFacetDefaults)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

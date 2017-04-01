@@ -1,11 +1,28 @@
+<!--
+	Problematic domains:
+
+		- kintera.org *
+
+	* Cert only matches www
+
+-->
 <ruleset name="Kintera Network">
-	<target host="kintera.org" />
-	<target host="*.kintera.org" />
-	<target host="www.*.kintera.org" />
+
 	<target host="kintera.com" />
 	<target host="www.kintera.com" />
+	<target host="kintera.org" />
+	<target host="*.kintera.org" />
 
-	<rule from="^(http://(www\.)?|https://)kintera\.org/" to="https://www.kintera.org/" />
-	<rule from="^http://([-a-zA-Z0-9_]+\.)?([-a-zA-Z0-9_]+)\.kintera\.org/([^/]+/[^/]){1}" to="https://www.kintera.org/$3" />
-	<rule from="^(http://(www\.)?|https://)kintera\.com/" to="https://www.kintera.com/" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.kintera\.org$" name="^KNTASESSION$" /-->
+
+
+	<rule from="^http://(?:www\.)?kintera\.(com|org)/"
+		to="https://www.kintera.$1/" />
+
+	<rule from="^http://(?:[\w-]+\.){1,2}kintera\.org/(?=[^/]+/[^/])"
+		to="https://www.kintera.org/" />
+
 </ruleset>

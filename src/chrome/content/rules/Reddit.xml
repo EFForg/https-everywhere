@@ -1,65 +1,109 @@
 <!--
-	For full coverage via pay.reddit.com, see Reddit_via_pay.xml.
-
-
 	For other Condé Nast coverage, see Conde-Nast.xml.
+
+
+	Other Reddit rulesets:
+
+		- redditblog.com.xml
+		- Reddit_media.com.xml
+		- Reddit_static.com.xml
+		- Redditgifts.com.xml
+
+
+	As of Aug. 2014, Reddit supports lots more SSL!
+	We can probably prune some of the old static rules here.
 
 
 	CDN buckets:
 
+		- s3.amazonaws.com/as-production-assets/
+		- s3-us-west-2.amazonaws.com/as-user-assets/
 		- s3.amazonaws.com/reddit/
 		- s3.amazonaws.com/redditads/
 		- s3.amazonaws.com/redditstatic/
+		- s3.amazonaws.com/sp.reddit.com/
 		- s3.amazonaws.com/static.reddit.com/
 		- s3.amazonaws.com/(\w\.)?thumbs.redditmedia.com/
 		- buttons.reddit.com.edgesuite.net
 
 
-	Nonfunctional domains:
+	Problematic subdomains:
 
-		- blog.reddit.com	(blogger)
-		- buttons.reddit.com	(503, akamai)
+		- www.np *
 
-		- pixel.redditmedia.com	(dropped)
-
-			Seems some sort of ad tracking, possibly can be sent to /dev/null; didn't find
-			anything broken when I blocked the domain.  Doesn't seem to be used anymore.
-
-		- www.redditmedia.com	(refused)
-
-			Seems only/mostly to be used for ads
+	* Mismatched
 
 
-	No pages are covered, therefore there
-	*CANNOT* be any mixed content!
+	Observed hosts:
+
+		- (www.)
+
+		- [a-z]{1,2}:
+
+			- dr
+			- fp
+			- gr
+			- i
+			- np
+			- pr
+			- rd
+			- sl
+			- sp
+			- sv
+
+		- [a-z]{2}-[a-z]{2}:
+
+			- en-us
+
+		- blog
+		- m
+		- www.np	(→ np)
+		- pay
+		- pixel
+		- redditama
+		- ssl
+		- static
+		- thumbs	(→ s3.amazonaws.com)
+
+
+	Insecure cookies are set for these hosts:
+
+		- .reddit.com
 
 -->
-<ruleset name="Reddit (partial)">
+<ruleset name="Reddit.com">
 
 	<target host="reddit.com" />
-	<target host="ssl.reddit.com" />
-	<target host="static.reddit.com" />
-	<target host="thumbs.reddit.com" />
-	<target host="www.reddit.com" />
-		<!--
-			static/ contains social media widgets:
-								-->
-		<exclusion pattern="^http://(?:www\.)?reddit\.com/(?!static/)" />
-	<target host="*.redditmedia.com" />
-	<target host="redditstatic.com" />
-	<target host="www.redditstatic.com" />
+	<target host="*.reddit.com" />
+
+		<test url="http://i.reddit.com/" />
+		<test url="http://m.reddit.com/" />
+		<test url="http://np.reddit.com/" />
+		<test url="http://redditama.reddit.com/" />
+		<test url="http://www.reddit.com/" />
 
 
-	<rule from="^http://(?:ssl\.|www\.)?reddit\.com/"
-		to="https://ssl.reddit.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.reddit\.com$" name="^(__cfduid|_recentclicks2|cf_clearance|over18)$" /-->
 
-	<rule from="^http://(static|thumbs)\.reddit\.com/"
-		to="https://s3.amazonaws.com/$1.reddit.com/" />
+	<securecookie host="." name="." />
 
-	<rule from="^http://(\w+\.)?thumbs\.redditmedia\.com/"
-		to="https://s3.amazonaws.com/$1thumbs.redditmedia.com/" />
 
-	<rule from="^http://(?:www\.)?redditstatic\.com/"
-		to="https://redditstatic.s3.amazonaws.com/" />
+	<rule from="^http://www\.np\.reddit\.com/"
+		to="https://np.reddit.com/" />
+
+		<test url="http://www.np.reddit.com/" />
+
+	<rule from="^http://thumbs\.reddit\.com/"
+		to="https://s3.amazonaws.com/thumbs.reddit.com/" />
+
+		<test url="http://thumbs.reddit.com/" />
+
+	<!--rule from="^http://((?:[a-z]{1,2}|[a-z]{2}-[a-z]{2}|blog|pay|redditama|ssl|static|www)\.)?reddit\.com/"
+		to="https://$1reddit.com/" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

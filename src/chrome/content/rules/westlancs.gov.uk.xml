@@ -1,0 +1,52 @@
+<!--
+	West Lancashire Borough Council
+
+	For rules causing false/broken MCB, see westlancs.gov.uk-falsemixed.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *westlancs.gov.uk:
+
+		- (www.)? ᵈ
+		- webapp1 ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *westlancs.gov.uk:
+
+		- maps ˣ
+
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Mixed content:
+
+		- css on maps from serverapi.arcgisonline.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="West Lancs.gov.uk (partial)">
+
+	<!--target host="maps.westlancs.gov.uk" /-->
+	<target host="pa.westlancs.gov.uk" />
+	<target host="secure.westlancs.gov.uk" />
+
+		<!--	$ shows default page, so:
+							-->
+		<!--test url="http://maps.westlancs.gov.uk/wlbclocalplan/" /-->
+
+		<!--	$ redirects to www.westlancs.gov.uk, so:
+								-->
+		<test url="http://secure.westlancs.gov.uk/SelfServe/ServicePage.aspx?servicePath=" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

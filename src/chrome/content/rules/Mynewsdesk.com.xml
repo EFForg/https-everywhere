@@ -4,38 +4,52 @@
 		- MND_CDN.com.xml
 
 
-	Nonfunctional subdomains:
+	CDN buckets:
 
-		- people	(dropped)
-
-
-	Fully covered subdomains:
-
-		- (www.)
-		- insight
-		- publish
+		- get-mynewsdesk.herokuapp.com
 
 
-	Mixed content:
+	Nonfunctional hosts in *mynewsdesk.com:
 
-		Web bugs, on:
+		- careers ʳ
+		- people ᵈ
 
-			- insight from www.facebook.com *
-			- www from stats.newsdesk.se.re.getclicky.com
+	ᵈ Dropped
+	ʳ Refused
 
-	* Secured by us
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .mynewsdesk.com
+		- get.mynewsdesk.com
+		- publish.mynewsdesk.com
+		- www.mynewsdesk.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="Mynewsdesk.com (partial)">
 
 	<target host="mynewsdesk.com" />
-	<target host="*.mynewsdesk.com" />
+	<target host="get.mynewsdesk.com" />
+	<target host="insight.mynewsdesk.com" />
+	<target host="publish.mynewsdesk.com" />
+	<target host="resources.mynewsdesk.com" />
+	<target host="www.mynewsdesk.com" />
+
+		<test url="http://resources.mynewsdesk.com/image/upload/t_next_gen_thumb_mini/nmtybnpx2hqlcobix63t.jpg" />
 
 
-	<securecookie host="^\.mynewsdesk.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.mynewsdesk.com$" name="^(_mynewsdesk_session|origin_site|picked_site)$" /-->
+	<!--securecookie host="^get\.mynewsdesk\.com$" name="^(_get-mynewsdesk_session|site)$" /-->
+	<!--securecookie host="^(?:publish|www)\.mynewsdesk\.com$" name="^comebacks$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://((?:insight|publish|www)\.)?mynewsdesk\.com/"
-		to="https://$1mynewsdesk.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

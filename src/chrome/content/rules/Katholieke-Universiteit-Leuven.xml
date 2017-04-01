@@ -1,52 +1,192 @@
 <!--
+	Katholieke Universiteit Leuven
+
+	For rules causing false/broken MCB, see Kuleuven.be-falsemixed.xml.
+
+
 	Nonfunctional subdomains:
 
-		- alumn			(presents link to kuleuven.be/kuleuven/)
 		- onderwijsaanbod
+		- zoek ²
+
+	² Refused
 
 
 	Problematic subdomains:
 
-		- esat	(cert only matches www.esat)
+		- alumni ¹
+		- kuleuven.ezproxy ²
+		- services.libis ⁵
+		- organigram
+
+	¹ Refused
+	² Cert only matches *.kuleuven.ezproxy
+	⁵ Mismatched
 
 
 	Partially covered subdomains:
 
-		- (www.)esat	(^ → www, cosic 400s)
+		- (www.)? ¹
+		- (www.)esat *
+
+	¹ wieiswie/ prompts for login
+	* Broken MCB triggered by /cosic
 
 
-	Fully covered subdomains:
+	netlogin: Dropped over http & https
 
-		- bronx.esat
-		- www.cosic.esat
+
+	These altnames don't exist:
+
+		- www.agenda.kuleuven.be
+		- videolab.kuleuven.be
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www.esat from $self *
+			- www.esat from stijl.kuleuven.be *
+
+		- Images, on:
+
+			- associatiem, www.esat from stijl *
+			- videolab.avnet, videolab.cc, status from piwik.cc *
+			- www.esat from www.cosic.esat.kuleuven.be *
+			- www.esat, news from www *
+
+		- Bugs on news from piwik.cc *
+
+	¹ * Secured by us
 
 -->
-<ruleset name="Katholieke Universiteit Leuven (partial)">
+<ruleset name="KU Leuven.be (partial)">
 
-	<target host="kuleuven.be" />
-	<target host="*.kuleuven.be" />
-		<!--
-			400:
+	<!--	Direct rewrites:
 				-->
-		<exclusion pattern="^http://(?:www\.)?esat\.kuleuven\.be/+cosic(?:$|[?/])" />
+	<target host="kuleuven.be" />
+	<target host="aai.kuleuven.be" />
+	<target host="account.kuleuven.be" />
+	<target host="activatie.kuleuven.be" />
+	<target host="admin.kuleuven.be" />
+	<target host="agenda.kuleuven.be" />
+	<target host="alum.kuleuven.be" />
+	<target host="www.alum.kuleuven.be" />
+	<target host="webwsp.aps.kuleuven.be" />
+	<target host="associatie.kuleuven.be" />
+	<target host="wiki.associatie.kuleuven.be" />
+	<target host="www.associatie.kuleuven.be" />
+	<target host="videolab.avnet.kuleuven.be" />
+	<target host="bib.kuleuven.be" />
+	<target host="www.bib.kuleuven.be" />
+
+	<target host="cygnus.cc.kuleuven.be" />
+	<target host="m.cygnus.cc.kuleuven.be" />
+	<target host="piwik.cc.kuleuven.be" />
+	<target host="videolab.cc.kuleuven.be" />
+
+	<target host="cwisdb.kuleuven.be" />
+	<target host="dml.kuleuven.be" />
 	<target host="www.dml.kuleuven.be" />
+	<target host="doel.kuleuven.be" />
+	<target host="www.doel.kuleuven.be" />
+	<target host="esat.kuleuven.be" />
+
+	<target host="bronx.esat.kuleuven.be" />
+	<target host="www.cosic.esat.kuleuven.be" />
+	<target host="securehomes.esat.kuleuven.be" />
+	<target host="securewww.esat.kuleuven.be" />
+	<target host="www.esat.kuleuven.be" />
+
+	<target host="login.kuleuven.ezproxy.kuleuven.be" />
+	<target host="www.kuleuven.ezproxy.kuleuven.be" />
 	<target host="owa.groupware.kuleuven.be" />
+	<target host="icts.kuleuven.be" />
+	<target host="piwik.icts.kuleuven.be" />
+	<target host="www.icts.kuleuven.be" />
+	<target host="idp.kuleuven.be" />
+	<target host="lirias.kuleuven.be" />
+	<target host="ludit.kuleuven.be" />
+	<target host="netlogin.kuleuven.be" />
+	<target host="nieuws.kuleuven.be" />
+	<!--target host="organigram.kuleuven.be" /-->
+	<target host="password.kuleuven.be" />
+	<target host="status.kuleuven.be" />
+	<target host="stijl.kuleuven.be" />
+	<target host="owa.student.kuleuven.be" />
+	<target host="toledo.kuleuven.be" />
+	<target host="m.toledo.kuleuven.be" />
+	<target host="wachtwoord.kuleuven.be" />
+	<target host="webmail.kuleuven.be" />
+	<target host="wiki.kuleuven.be" />
+	<target host="www.kuleuven.be" />
+
+	<!--	Complications:
+				-->
+	<target host="alumni.kuleuven.be" />
+	<target host="kuleuven.ezproxy.kuleuven.be" />
+	<target host="services.libis.kuleuven.be" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?esat\.kuleuven\.be/+cosic(?!/wp-content/)(?:$|[?/])" />
+
+			<!--	+ve:
+					-->
+			<test url="http://esat.kuleuven.be/cosic" />
+			<test url="http://esat.kuleuven.be/cosic?" />
+			<test url="http://esat.kuleuven.be/cosic/" />
+			<test url="http://www.esat.kuleuven.be//cosic" />
+			<test url="http://www.esat.kuleuven.be//cosic?" />
+			<test url="http://www.esat.kuleuven.be//cosic/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://esat.kuleuven.be/cosic/wp-content/themes/kuleuven/style.css" />
+			<test url="http://www.esat.kuleuven.be/cosic/wp-content/plugins/the-events-calendar/resources/tribe-events-theme-mobile.min.css" />
+
+		<!--exclusion pattern="^http://organigram\.kuleuven\.be/(?!$)" /-->
+
+			<!--test url="http://organigram.kuleuven.be/" /-->
+
+		<!--	Prompts for login:
+						-->
+		<exclusion pattern="^http://(?:www\.)?kuleuven\.be/+wieiswie(?:$|[?/])" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.kuleuven.be/wieiswie/" />
+			<test url="http://www.kuleuven.be/wieiswie/en/person" />
+			<test url="http://www.kuleuven.be/wieiswie/nl/person" />
+			<test url="http://www.kuleuven.be/wieiswie/nl/unit/50000050" />
+			<test url="http://www.kuleuven.be/wieiswie/nl/unit/councilsearch" />
 
 
-	<securecookie host="^.+\.kuleuven\.be$" name=".+" />
+	<securecookie host=".+\.kuleuven\.be$" name=".+" />
 
 
-	<!--	Cert only matches www.	-->
-	<rule from="^http://(?:www\.)?(esat\.)?kuleuven\.be/"
-		to="https://www.$1kuleuven.be/" />
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://alumni\.kuleuven\.be/[^?]*"
+		to="https://alum.kuleuven.be/portaal/" />
 
-	<rule from="^http://(aai|activatie|admin|alumni|associatie|bib|cwisdb|(?:www\.)?dml|(?:bronx|www\.cosic)\.esat|owa\.groupware|icts|idp|ludit|netlogin|nieuws|password|status|stijl|owa\.student|toledo|wachtwoord|webmail)\.kuleuven\.be/"
-		to="https://$1.kuleuven.be/" />
+		<test url="http://alumni.kuleuven.be//" />
+		<test url="http://alumni.kuleuven.be/?foo" />
 
-	<!--	- Doesn't work over https
-		- 302s like so
-			-->
-	<rule from="^http://organigram\.kuleuven\.be/$"
-		to="https://www.kuleuven.be/wieiswie/nl/unit/50000050" />
+	<rule from="^http://kuleuven\.ezproxy\.kuleuven\.be/"
+		to="https://www.kuleuven.ezproxy.kuleuven.be/" />
+
+	<rule from="^http://services\.libis\.kuleuven\.be/"
+		to="https://services.libis.be/" />
+
+	<!--	Redirects like so:
+					-->
+	<!--rule from="^http://organigram\.kuleuven\.be/"
+		to="https://www.kuleuven.be/wieiswie/nl/unit/50000050" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,5 +1,79 @@
-<ruleset name="Bergens Tidende" default_off="certificate problem">
-  <target host="www.bt.no" />
+<!--
+	Bergens Tidende
+
+	For rules causing false/broken MCB, see BT.no-falsemixed.xml.
+
+
+	Nonfunctional subdomains:
+
+		- lisa1 *
+
+	* Dropped
+
+
+	Problematic domains:
+
+		- bt.no *
+		- lisa.bt.no *
+		- bt.mnocdn.no *
+
+	* Mismatched
+
+
+	Partially covered subdomains:
+
+		- (www.) *	(^ → www)
+		- kundesenter *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- statisk
+
+
+	These altnames don't exist:
+
+		- www.kundesenter.bt.no
+
+
+	Mixed content:
+
+		- css, on:
+
+			- lisa from $self
+			- www from $self
+			- www from lisa1
+
+		- Images, on:
+
+			- lisa from $self
+			- www from $self
+			- www from statisk
+			- www from bt.mnocdn.no
+
+-->
+<ruleset name="BT.no (partial)">
+  <target host="*.bt.no" />
   <target host="bt.no" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://kundesenter\.bt\.no/favicon\.ico" /-->
+		<!--exclusion pattern="^http://www\.bt\.no/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://kundesenter\.bt\.no/+(?!keypublisher_gui/|sitefiles/)" />
+		<exclusion pattern="^http://(?:www\.)?bt\.no/+(?!external/|skins/)" />
+		<!--
+			(Subject to broken MCB):
+						-->
+		<!--exclusion pattern="^http://(www\.)?bt\.no/+tips($|[?/])" /-->
+
   <rule from="^http://(?:www\.)?bt\.no/" to="https://www.bt.no/" />
+
+	<rule from="^http://(kundesenter|statisk)\.bt\.no/"
+		to="https://$1.bt.no/" />
 </ruleset>

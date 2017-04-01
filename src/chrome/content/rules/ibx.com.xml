@@ -1,0 +1,97 @@
+<!--
+	Nonfunctional hosts in *ibx.com:
+
+		- basics ᵃ
+		- cr ᵃ
+		- innovation ᵃ
+		- medpolicy ᵃ
+		- nationalaccounts ᵃ
+		- news ᵃ
+		- provcomm ᵃ
+
+	ᵃ Shows another domain
+
+
+	Problematic hosts in *ibx.com:
+
+		- ^ ᵈ
+		- wc2 * ᵐ
+
+	* Redirect differs
+	ᵈ Dropped, preemptable redirect
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .ibx.com
+		- ecom.ibx.com
+		- finders.ibx.com
+		- ibxpress.ibx.com
+		- reimbursements.ibx.com
+		- service.ibx.com
+		- www.ibx.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bugs, on:
+
+			- ibxpress from b.collective-media.net ˢ
+			- ibxpress from ad.doubleclick.net
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="IBX.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ecom.ibx.com" />
+	<target host="finders.ibx.com" />
+	<target host="ibxpress.ibx.com" />
+	<target host="reimbursements.ibx.com" />
+	<target host="service.ibx.com" />
+	<target host="www.ibx.com" />
+
+	<!--	Complications:
+				-->
+	<target host="ibx.com" />
+	<target host="wc2.ibx.com" />
+
+		<!--	Mixed bugs:
+					-->
+		<!--test url="http://ibxpress.ibx.com/ibxmed/employers/" /-->
+
+		<!--	403:
+				-->
+		<!--test url="http://medpolicy.ibx.com/policies/mpi.nsf/home!Readform" /-->
+		<!--test url="http://provcomm.ibx.com/ProvComm/ProvComm.nsf/PIHU_IBC_All_Cat/4F233C6F792049FE85257EED004C5C05" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.ibx\.com$" name="^dtCookie$" /-->
+	<!--securecookie host="^ecom\.ibx\.com$" name="(?:JSESSIONID|^ObSSOCookie)$" /-->
+	<!--securecookie host="^(?:finders|www)\.ibx\.com$" name="JSESSIONID$" /-->
+	<!--securecookie host="^ibxpress\.ibx\.com$" name="^(?:JSESSIONID|ORA_OSFS_SESSION)$" /-->
+	<!--securecookie host="^reimbursements\.ibx\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^service\.ibx\.com$" name="^ObSSOCookie$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://wc2\.ibx\.com/+"
+		to="https://www.amerihealthnj.com/" />
+
+		<test url="http://wc2.ibx.com/index.jsp" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

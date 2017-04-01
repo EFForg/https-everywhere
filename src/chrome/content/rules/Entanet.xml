@@ -1,20 +1,41 @@
-<ruleset name="Entanet (partial)" platform="mixedcontent">
+<!--
+	Other Entanet rulesets:
 
-	<target host="enta.net"/>
-	<target host="*.enta.net"/>
-	<target host="voipuserportal.co.uk"/>
-	<target host="www.voipuserportal.co.uk"/>
+		- voipuserportal.co.uk.xml
 
-	<securecookie host="^(.*\.)?enta\.net$" name=".*"/>
-	<securecookie host="^(.*\.)?voipuserportal\.co\.uk$" name=".*"/>
 
-	<rule from="^http://enta\.net/"
-		to="https://www.enta.net/"/>
+	Nonfunctional hosts in *enta.net:
 
-	<rule from="^http://(billing|synergi|www)\.enta\.net/"
-		to="https://$1.enta.net/"/>
+		- noc ʳ
 
-	<rule from="^http://(www\.)?voipuserportal\.co\.uk/"
-		to="https://$1voipuserportal.co.uk/"/>
+	ʳ Refused
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- billing.enta.net
+		- synergi.enta.net
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Enta.net (partial)">
+
+	<target host="enta.net" />
+	<target host="billing.enta.net" />
+	<target host="synergi.enta.net" />
+	<target host="www.enta.net" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^billing\.enta\.net$" name="^(?:PHPSESSID|ci_session)$" /-->
+	<!--securecookie host="^synergi\.enta\.net$" name="^PHPSESSID$" /-->
+
+	<securecookie host="." name=".*" />
+
+
+	<rule from="^http:"
+		to="https:"/>
 
 </ruleset>

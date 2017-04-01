@@ -1,0 +1,50 @@
+<!--
+	Nonfunctional subdomains:
+
+		- annuaire ¹
+		- caris ²
+		- nomadisme ¹
+		- simsu ¹
+
+	¹ Dropped
+	² Refused
+
+
+	Partially covered subdomains:
+
+		- cicg *
+		- www *
+
+	* Avoiding broken MCB
+
+
+	Fully covered subdomains:
+
+		- cas-inp
+		- cas-uds
+		- proxagalan
+		- vpn
+		- vpn\d
+
+
+	^grenet.fr doesn't exist.
+
+
+	Mixed content:
+
+		- iframes on cicg, www from cicg
+
+-->
+<ruleset name="Grenet.fr (partial)">
+
+	<target host="*.grenet.fr" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:cicg|www)\.grenet\.fr/+(?!charte/|favicon\.ico)" />
+
+
+	<rule from="^http://(cas-(?:inp|uds)|cicg|proxagalan|vpn\d?|www)\.grenet\.fr/"
+		to="https://$1.grenet.fr/" />
+
+</ruleset>

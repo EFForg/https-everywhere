@@ -1,36 +1,74 @@
 <!--
+	Institute of Physics
+
 	For problematic rules, see Institute-of-Physics-mismatches.xml.
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *iop.org:
 
-		- ej
-		- stacks	(no https)
+		- ej ʳ
+		- journals ʳ
+		- stacks ʳ
+
+	ʳ Refused
 
 
-	Problematic subdomains:
+	Problematic hosts in *iop.org:
 
-		- content.cws *
-		- cms.iopscience *
+		- ^ ᵐ
+		- content.cws ᵐ
+		- cms.iopscience ᵐ
 
-	* Works, mismatched, CN: *.iop.org
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .iop.org
+		- iopscience.iop.org
+		- .iopscience.iop.org
+		- ticket.iop.org
+
+
+	Mixed content:
+
+		- Images on iopscience from ej.iop.org ʳ
+		- Images on iopscience from cms.iopscience.iop.org ᵐ
+
+	ʳ Unsecurable <= refused
+	ᵐ Rule disabled by default <= mismatched
 
 -->
-<ruleset name="Institute of Physics (partial)">
+<ruleset name="IoP.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="atom.iop.org" />
+	<target host="authors.iop.org" />
+	<target host="images.iop.org" />
+	<target host="iopscience.iop.org" />
+	<target host="ticket.iop.org" />
+	<target host="www.iop.org" />
+
+	<!--	Complications:
+				-->
 	<target host="iop.org" />
-	<target host="*.iop.org" />
-	<target host="*.iopscience.iop.org" />
 
 
-	<securecookie host="^\.?iopscience\.iop\.org$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.iop\.org$" name="^IOP_session_live$" /-->
+	<!--securecookie host="^iopscience\.iop\.org$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^\.iopscience\.iop\.org$" name="^ssi_checked$" /-->
+
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\.iopscience\." name="." />
 
 
-	<!--	Cert only matches *.iop.org	-->
-	<rule from="^https?://(?:www\.)?iop\.org/"
+	<rule from="^http://iop\.org/"
 		to="https://www.iop.org/" />
 
-	<rule from="^http://i(mages|opscience)\.iop\.org/"
-		to="https://i$1.iop.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

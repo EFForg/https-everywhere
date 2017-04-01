@@ -1,6 +1,28 @@
-<ruleset name="Postdanmark.dk">
-  <target host="postdanmark.dk" />
-  <target host="www.postdanmark.dk" />
+<!--
+	(www.)?postdanmark.dk: Handshake fails
 
-  <rule from="^http://(www\.)?postdanmark\.dk/" to="https://www.postdanmark.dk/" />
+
+	Insecure cookies are set for these hosts:
+
+		- www2.postdanmark.dk
+
+-->
+<ruleset name="Postdanmark.dk (partial)">
+
+	<target host="www2.postdanmark.dk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www2\.postdanmark\.dk$" name="^(?:DMS-TIM-TAM-COOKIE|EKM_COOKIE|EKOM-TIM-TAM-COOKIE|JSESSIONID|POSTNORD-SESSION-ID)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+        <!-- Mixed content from maps.google.com: -->
+        <exclusion pattern="http://www2\.postdanmark\.dk/iis2-findos2/" />
+        <test url="http://www2.postdanmark.dk/iis2-findos2/default.aspx" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

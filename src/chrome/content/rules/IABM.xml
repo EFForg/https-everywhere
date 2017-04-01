@@ -1,14 +1,39 @@
-<ruleset name="IABM">
+<!--
+	Insecure cookies are set for these domains and hosts: ᶜ
 
-	<target host="theiabm.org"/>
-	<target host="www.theiabm.org"/>
+		- www.theiabm.org
+		- .www.theiabm.org
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
-	<securecookie host="^www\.theiabm\.org$" name=".*"/>
+	Mixed content:
+
+		- iframe on www from players.brightcove.net
+
+		- Images, on:
+
+			- www from theiabm.innuodesign.co.uk
+			- www from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="The IABM.org">
+
+	<target host="theiabm.org" />
+	<target host="www.theiabm.org" />
 
 
-	<!--	Cert doesn't match !www.	-->
-	<rule from="^http://(?:www\.)?theiabm\.org/"
-		to="https://www.theiabm.org/"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.theiabm\.org$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.www\.theiabm\.org$" name="^(?:currency|language)$" /-->
+
+	<securecookie host=".\.theiabm\.org$" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

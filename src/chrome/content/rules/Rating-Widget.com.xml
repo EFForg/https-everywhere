@@ -2,7 +2,6 @@
 	Problematic subdomains:
 
 		- ^ *
-		- css *
 		- img *
 		- js *
 		- www	(mismatched, CN: secure.rating-widget.com)
@@ -12,34 +11,47 @@
 
 	Mixed content:
 
-		- css from fonts.googleapis.com *
+		- css from fonts.googleapis.com ˢ
 
 		- Images, from:
 
-			- ^ *
-			- img *
+			- ^ ˢ
+			- img ˢ
 
-	* Secured by us
-
-
-	There are protocol-relative links on secure to ^
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="Rating-Widget.com">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="css.rating-widget.com" />
+	<target host="secure.rating-widget.com" />
+
+		<test url="http://css.rating-widget.com/wordpress/toprated.css" />
+
+	<!--	Complications:
+				-->
 	<target host="rating-widget.com" />
-	<target host="*.rating-widget.com" />
+	<target host="img.rating-widget.com" />
+	<target host="js.rating-widget.com" />
+	<target host="www.rating-widget.com" />
 
 
-	<securecookie host="^secure\.rating-widget\.com$" name=".+" />
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
 
 
-	<!--	There are protocol-relative inclusions of ^ on secure.
-									-->
-	<rule from="^https?://(?:secure\.|www\.)?rating-widget\.com/"
+	<rule from="^http://rating-widget\.com/"
 		to="https://secure.rating-widget.com/" />
 
-	<rule from="^http://(css|img|js)\.rating-widget\.com/"
+	<rule from="^http://(img|js)\.rating-widget\.com/"
 		to="https://secure.rating-widget.com/$1/" />
+
+	<rule from="^http://www\.rating-widget\.com/"
+		to="https://secure.rating-widget.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

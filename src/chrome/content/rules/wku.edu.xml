@@ -1,0 +1,143 @@
+<!--
+	Western Kentucky University
+
+	Other Western Kentucky University rulesets:
+
+		- wkustore.com.xml
+
+
+	Nonfunctional hosts in *wku.edu:
+
+		- acadmedia ⁴
+		- astro ʳ
+		- climlist ᵃ
+		- orgs ᵃ
+		- physics ʳ
+		- rct ʳ
+		- social *
+
+	* Erroneous redirect
+	⁴ 404
+	ᵃ Shows another domain
+	ʳ Refused
+
+
+	Problematic hosts in *wku.edu:
+
+		- (www.)?alumni ᵐ
+		- engineering.blog ᵐ
+		- honorsadvising.blog ᵐ
+		- (www.)?bookstore ᵐ
+		- digitalcommons ᵐ
+		- portal ʰ
+		- topnet ᵐ
+		- webmail ᵐ
+
+	ʰ Redirects to http, preemptable redirect
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .wku.edu
+		- adweb01.wku.edu
+		- apps.wku.edu
+		- blackboard.wku.edu
+		- cpdonline.wku.edu
+		- email.wku.edu
+		- my.wku.edu
+		- td.wku.edu
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Image on (www.)? from img.youtube.com ˢ
+
+		- Bugs, on:
+		
+			- alumni from www.facebook.com ˢ
+			- alumni from www.intagme.com ˢ
+		
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="WKU.edu (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="wku.edu" />
+	<target host="acsapps.wku.edu" />
+	<target host="adweb01.wku.edu" />
+	<target host="apps.wku.edu" />
+	<target host="asaweb2.wku.edu" />
+	<target host="blackboard.wku.edu" />
+	<target host="blog.wku.edu" />
+	<target host="cas.wku.edu" />
+	<target host="cpdonline.wku.edu" />
+	<target host="connect.wku.edu" />
+	<target host="ecas-sso.wku.edu" />
+	<target host="email.wku.edu" />
+	<target host="intranet.wku.edu" />
+	<target host="itweb.wku.edu" />
+	<target host="my.wku.edu" />
+	<target host="mystuff.wku.edu" />
+	<target host="people.wku.edu" />
+	<target host="td.wku.edu" />
+	<target host="www.wku.edu" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://apps.wku.edu/iwku/lab-traffic/?theme=mywku" /-->
+		<!--test url="http://intranet.wku.edu/php/prod/mystuff/index.php" /-->
+
+	<!--	Complications:
+				-->
+	<target host="bookstore.wku.edu" />
+	<target host="www.bookstore.wku.edu" />
+	<target host="portal.wku.edu" />
+	<target host="webmail.wku.edu" />
+
+		<!--	404:
+				-->
+		<!--test url="http://acadmedia.wku.edu/UC100/links/kheaa_fedfinaid.html" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.wku\.edu$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^(?:adweb01|td)\.wku\.edu$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^apps\.wku\.edu$" name="^(?:PHPSESSID|iwkutheme)$" /-->
+	<!--securecookie host="^(?:blackboard|cpdonline)\.wku\.edu$" name="^session_id$" /-->
+	<!--securecookie host="^email\.wku\.edu$" name="^(?:cadata|sessionid)$" /-->
+	<!--securecookie host="^my\.wku\.edu$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://(?:www\.)?bookstore\.wku\.edu/.*"
+		to="https://www.wkustore.com/" />
+
+	<!--	Redirect kees path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://portal\.wku\.edu/+"
+		to="https://www.wku.edu/it/portal-redirect/" />
+
+		<test url="http://portal.wku.edu/index.php" />
+
+	<!--	Redirect kees path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://webmail\.wku\.edu/+"
+		to="https://www.wku.edu/it/webmail" />
+
+		<test url="http://webmail.wku.edu/index.php" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

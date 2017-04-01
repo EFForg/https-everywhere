@@ -1,33 +1,88 @@
 <!--
-	Nonfunctional domains:
+	For rules causing false/broken MCB, see ATech_Media.com-falsemixed.xml.
 
-		- cloud.atechmedia.com		(http reply)
-		- status.atechmedia.com		(refused)
+	Other aTech Media rulesets:
 
-
-	Problematic domains:
-
-		- (www.)atech.io	(mismatched, CN: *.atechmedia.com)
+		- ATech.io.xml
+		- Codebase_HQ.com.xml
 
 
-	Fully covered domains:
+	Nonfunctional hosts in *atechmedia.com:
 
-		- (www.)atech.io	(→ atechmedia.com)
-		- (www.)atechmedia.com
+		- cloud ¹
+		- status ²
+
+	¹ Shows another domain
+	² Refused
+
+
+	Problematic hosts in *atechmedia.com:
+
+		- send ¹
+		- www ²
+
+	¹ Mixed css
+	² Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- atechmedia.com
+		- apns.atechmedia.com
+		- community.atechmedia.com
+		- gcm.atechmedia.com
+		- identity.atechmedia.com
+		- send.atechmedia.com
+		- suggest.atechmedia.com
+
+
+	Mixed content:
+
+		- css on send from $self *
+
+		- Images, on :
+
+			- send from $self *
+			- send from i2.wp.com *
+
+	* Secured by us
 
 -->
-<ruleset name="aTech Media (partial)">
+<ruleset name="aTech Media.com (partial)">
 
-	<target host="atech.io" />
-	<target host="www.atech.io" />
+	<!--	Direct rewrites:
+				-->
 	<target host="atechmedia.com" />
+	<target host="apns.atechmedia.com" />
+	<target host="blog.atechmedia.com" />
+	<target host="community.atechmedia.com" />
+	<target host="gcm.atechmedia.com" />
+	<target host="identity.atechmedia.com" />
+	<!--target host="send.atechmedia.com" /-->
+	<target host="suggest.atechmedia.com" />
+
+	<!--	Complications:
+				-->
 	<target host="www.atechmedia.com" />
 
 
-	<securecookie host="^(?:www\.)?atechmedia\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^atechmedia\.com$" name="^(?:_atech-website_session|browser_id)$" /-->
+	<!--securecookie host="^apns\.atechmedia\.com$" name="^_apns-proxy_session$" /-->
+	<!--securecookie host="^community\.atechmedia\.com$" name="^session_id$" /-->
+	<!--securecookie host="^gcm\.atechmedia\.com$" name="^_gcm_proxy_session$" /-->
+	<!--securecookie host="^identity\.atechmedia\.com$" name="^(?:_identity2_session|browser_id)$" /-->
+	<!--securecookie host="^send\.atechmedia\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^suggest\.atechmedia\.com$" name="^(?:_suggest_session|browser_id)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(www\.)?atech(?:\.io|media\.com)/"
-		to="https://$1atechmedia.com/" />
+	<rule from="^http://www\.atechmedia\.com/"
+		to="https://atechmedia.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

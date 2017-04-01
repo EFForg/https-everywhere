@@ -6,35 +6,59 @@
 
 	Fully covered subdomains:
 
-		- www
+		- (www.)?
 		- blog
 		- devwiki
 		- doc
+		- files
 		- forum
+		- lists
 		- portal
 		- redmine
-		- files
 		- snapshots
 
 
-	Observed cookie domains:
+	Insecure cookies are set for these domains and hosts:
 
-		- .
-		- devwiki
-		- doc
-		- forum
-		- redmine
+		- forum.pfsense.org
+		- redmine.pfsense.org
+
+
+	Mixed content:
+
+		- css on blog from fonts.googleapis.com *
+
+		- Images on (www.) from www *
+
+	* Secured by us
 
 -->
 <ruleset name="pfSense.org (partial)">
 
-	<target host="*.pfsense.org" />
+	<!--	Direct rewrites:
+				-->
+	<target host="pfsense.org" />
+	<target host="blog.pfsense.org" />
+	<target host="devwiki.pfsense.org" />
+	<target host="doc.pfsense.org" />
+	<target host="files.pfsense.org" />
+	<target host="forum.pfsense.org" />
+	<target host="lists.pfsense.org" />
+	<target host="portal.pfsense.org" />
+	<target host="redmine.pfsense.org" />
+	<target host="snapshots.pfsense.org" />
+	<target host="www.pfsense.org" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^forum\.pfsense\.org$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^redmine\.pfsense\.org$" name="^_redmine_session$" /-->
 
 	<securecookie host=".+\.pfsense\.org$" name=".+" />
 
 
-	<rule from="^http://(blog|devwiki|doc|forum|portal|redmine|www|snapshots|files)\.pfsense\.org/"
-		to="https://$1.pfsense.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

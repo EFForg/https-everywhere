@@ -1,0 +1,62 @@
+<!--
+	For rules causing false/broken MCB, see Mozo.com.au-falsemixed.xml.
+
+
+	CDN buckets:
+
+		- d2z6hwhdmvwrl2.cloudfront.net
+
+			- mozo4-assets.mozo.co
+
+		- d3ce7u6cfep64i.cloudfront.net
+
+			- news-assets.mozo.com.au
+
+		- resources.news.com.au.edgesuite.net
+
+			- resources2
+
+
+	Nonfunctional domains:
+
+		- resources2.news.com.au *
+
+	* 503, akamai
+
+
+	^mozo.co doesn't exist.
+
+
+	Mixed content:
+
+		- css on ^ from mozo4-assets.mozo.co ¹
+
+		- Images from static ²
+
+		- Ads from static ²
+
+	¹ Secured by us
+	² Unsecurable <= refused
+
+-->
+<ruleset name="Mozo.com.au (partial)">
+
+	<target host="*.mozo.co" />
+	<target host="mozo.com.au" />
+	<target host="*.mozo.com.au" />
+		<!--
+			Avoid MCB:
+					-->
+		<!--exclusion pattern="^http://(?:www\.mozo\.co|(?:www\.)?mozo\.com\.au)/+(?!favicon\.ico|images/|mozo_favicon\.ico)" /-->
+
+
+	<rule from="^http://(www\.mozo\.co|(?:www\.)?mozo\.com\.au)/(?=favicon\.ico|images/|mozo_favicon\.ico)"
+		to="https://$1/" />
+
+	<rule from="^http://mozo4-assets\.mozo\.co/"
+		to="https://d2z6hwhdmvwrl2.cloudfront.net/" />
+
+	<rule from="^http://news-assets\.mozo\.com\.au/"
+		to="https://d3ce7u6cfep64i.cloudfront.net/" />
+
+</ruleset>

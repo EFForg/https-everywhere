@@ -1,0 +1,59 @@
+<!--
+	For other Lidl coverage, see Lidl.xml.
+
+
+	Nonfunctional hosts in *lidl.co.uk:
+
+		- www.dartford ᵈ
+		- www.huntingdon ᵈ
+		- www.richmondroad ᵈ
+		- www.welshpool ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *lidl.co.uk:
+
+		- (www.)? ᴬ
+		- careers ᴬ
+		- property ᴬ
+
+	ᴬ Akamai / mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- ssl.lidl.co.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images on specials from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Lidl.co.uk (partial)">
+
+	<target host="specials.lidl.co.uk" />
+	<target host="ssl.lidl.co.uk" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://ssl.lidl.co.uk/en/1282.htm" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^ssl\.lidl\.co\.uk$" name="^(?:JSESSIONID|dsSessionUk)$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

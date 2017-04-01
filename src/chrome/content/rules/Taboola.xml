@@ -1,44 +1,48 @@
 <!--
+	Other Taboola rulesets:
+
+		- Taboolasyndication.com.xml
+
+
 	CDN buckets:
 
 		- orig-1000[23].taboola.cotcdn.net
 
-
-	Nonfunctional domains:
-
-		- cdn.taboolasyndication.com
-		- trc.taboolasyndication.com
+	Nonfunctional subdomains:
 
 
-	Partially covered subdomains:
+		- blog	(refused)
+		- mb	(times out)
+		- cdn-yjp *
+		- images *
+		- netstorage *
+		- trc *
 
-		- trc	(libtrc/\w+/rbox.js 502s)
+	* akamai
 
+	Problematic subdomains:
 
-	Fully covered subdomains:
+		- cannes2016	(invalid cert; mismatch)
+		- jobs	(invalid cert; mismatch)
+		- store	(invalid cert; mismatch)
+		- vrc	(expired)
 
-		- images
 
 -->
 <ruleset name="Taboola (partial)">
 
 	<target host="taboola.com" />
-	<target host="*.taboola.com" />
-		<!--
-			502:
-				-->
-		<exclusion pattern="^http://trc\.taboola\.com/libtrc/" />
-
+	<target host="www.taboola.com" />
+	<target host="api.taboola.com" />
+	<target host="backstage.taboola.com" />
+	<target host="cdn.taboola.com" />
+	<target host="go.taboola.com" />
+	<target host="popup.taboola.com" />
+	<target host="signup.taboola.com" />
 
 	<securecookie host="^www\.taboola\.com$" name=".*" />
 
-
-	<!--	Cert only matches *.taboola.com.
-							-->
-	<rule from="^http://(?:www\.)?taboola\.com/"
-		to="https://www.taboola.com/" />
-
-	<rule from="^http://(images|trc)\.taboola\.com/"
-		to="https://$1.taboola.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

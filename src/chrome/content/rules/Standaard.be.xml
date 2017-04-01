@@ -1,0 +1,121 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://standaard.be/ => https://standaard.be/: Cycle detected - URL already encountered: https://standaard.be/
+Fetch error: http://2.standaardcdn.be/ => https://www.standaard.be/: Cycle detected - URL already encountered: https://www.standaard.be/
+	For rules causing either false/broken or valid MCB, see Standaard.be-mixed.xml.
+
+
+	CDN buckets:
+
+		- [12].standaardcdn.be.edgesuite.net
+
+		- corelio.edgesuite.net
+
+			- meteo1.standaard.be
+
+
+	Nonfunctional domains:
+
+		- abonnement.standaard.be ¹
+		- m.standaard.be ²
+		- meteo1.standaard.be ³
+		- 1.standaardcdn.be ⁴
+
+	¹ Dropped
+	² Shows www
+	³ 503, akamai
+	⁴ 504, akamai
+
+
+	Problematic domains:
+
+		- standaard.be subdomains:
+
+			- cdn2 ¹
+			- dating ²
+			- shop ³
+
+		- 2.standaardcdn.be ⁴
+
+	¹ Dropped
+	² $ 503s; mismatched, CN: secure.datinglab.net
+	³ $ 404s
+	⁴ 504, akamai
+
+
+	Partially covered domains:
+
+		- dating.standaard.be	(→ secure.datinglab.net)
+		- www.standaard.be ¹
+
+	¹ Avoiding false and valid MCB
+
+
+	Fully covered domains:
+
+		- standaard.be subdomains:
+
+			- ^
+			- cdn2		(→ www)
+			- shop
+
+		- 2.standaardcdn.be	(→ www.standaard.be)
+
+
+	Mixed content:
+
+		- iframe on www from meteo1 ¹
+
+		- Images, on www from:
+
+			- www from 1.standaardcdn.be ¹
+			- www from www.jobat.be ¹
+
+		- Web bugs, on m from:
+
+			- www.googletagmanager.com ²
+			- b.scorecardresearch.com ²
+
+	¹ Unsecurable
+	² Secured by us
+
+-->
+<ruleset name="Standaard.be (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+
+	<!--	https://sta... redirects to http://www..., so
+		we can avoid a duplicate target warning by
+		blanket rewriting !www to www here.
+							-->
+	<target host="standaard.be" />
+	<target host="*.standaard.be" />
+		<!--
+			Exception to MCB:
+						-->
+		<exclusion pattern="^http://www\.standaard\.be/+(?!extra/)" />
+		<!--
+			s/$ 503s:
+					-->
+		<!--exclusion pattern="^http;//dating\.standaard\.be/+($|\?|s/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http;//dating\.standaard\.be/+(?!css/|favicon\.ico|js/|pics/|pht/)" /-->
+	<target host="2.standaardcdn.be" />
+
+
+	<securecookie host="^shop\.standaard\.be$" name=".+" />
+
+
+	<rule from="^http://shop\.standaard\.be/+(?=$|\?)"
+		to="https://shop.standaard.be/CORELIO-Standaard-Site/index-nl_BE" />
+
+	<rule from="^http://(shop\.)?standaard\.be/"
+		to="https://$1standaard.be/" />
+
+	<rule from="^http://(?:2|cdn2|www)\.standaard(?:cdn)?\.be/"
+		to="https://www.standaard.be/" />
+
+	<rule from="^http://dating\.standaard\.be/(?=css/|favicon\.ico|js/|pics/|pht/)"
+		to="https://secure.datinglab.net/" />
+
+</ruleset>

@@ -1,27 +1,89 @@
 <!--
 	Other Demandware rulesets:
 
+		- cquotient.com.xml
+		- Demandware.net.xml
 		- Demandware.edgesuite.net.xml
 
 
 	bucket: demandware.edgesuite.net/aabl_prd/on/demandware.static/
+
+
+	Nonfunctional hosts in *demandware.com:
+
+		- blog *
+		- labs *
+		- marketing ʳ
+
+	* 500
+	ʳ Refused
+
+
+	Problematic hosts in *demandware.com:
+
+		- investors ᴬ
+
+	ᴬ Akamai / mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- demandware.com
+		- www.demandware.com
+		- xchange.demandware.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images on (www.)? from www.demandware.com *
+
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
 -->
-<ruleset name="Demandware (partial)" platform="mixedcontent">
+<ruleset name="Demandware.com (partial)">
 
 	<target host="demandware.com"/>
-	<target host="*.demandware.com"/>
-	<target host="demandware.net"/>
-	<target host="*.demandware.net"/>
+	<!--target host="labs.demandware.com"/-->
+	<target host="www.demandware.com"/>
+	<target host="xchange.demandware.com"/>
 
-	<securecookie host="^(.*\.)?demandware\.com$" name=".*"/>
+	<!--	Complications:
+				-->
+	<target host="investors.demandware.com" />
 
-	<rule from="^http://(www\.)?demandware\.(?:com|net)/"
-		to="https://$1demandware.com/"/>
+		<!--	Avoid user-visible paths:
+						-->
+		<exclusion pattern="^http://investors\.demandware\.com/(?!/*(?:client|media_files)/)" />
 
-	<rule from="^http://(labs|xchange)\.demandware\.com/"
-		to="https://$1.demandware.com/"/>
+			<!--	+ve:
+					-->
+			<test url="http://investors.demandware.com/phoenix.zhtml?c=247632&amp;p=irol-EventDetails&amp;EventId=5188309" />
+			<test url="http://investors.demandware.com/phoenix.zhtml?c=247632&amp;p=irol-irhome" />
+			<test url="http://investors.demandware.com/phoenix.zhtml?c=247632&amp;p=irol-newsArticle&amp;ID=2031432" />
 
-	<rule from="^http://sits-pod(\d+)\.demandware\.net/"
-		to="https://sits-pod$1.demandware.net/"/>
+			<!--	-ve:
+					-->
+			<test url="http://investors.demandware.com/client/24/247632/css/ccbnIR.css" />
+			<test url="http://investors.demandware.com/media_files/IROL/24/247632/2015/img/mastheads/bg-masthead-investor.jpg" />
+
+		<test url="http://www.demandware.com/contact" />
+		<test url="http://www.demandware.com/events" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?demandware\.com$" name="^(PHPSESSID|exp_csrf_token|exp_last_activity|exp_last_visit|exp_stashid|exp_tracker)$" /-->
+	<!--securecookie host="^xchange\.demandware\.com$" name="^(BIGipServerpool\w.]+|JSESSIONID|jive\.security\.context)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://investors\.demandware\.com/"
+		to="https://phx.corporate-ir.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

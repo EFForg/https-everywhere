@@ -1,58 +1,33 @@
 <!--
-	For rules causing false/broken MCB, see Docker.io-falsemixed.xml.
+	For other Docket coverage, see Docker.com.xml.
 
 
-	Problematic subdomains:
-
-		- ^	(dropped)
-
-
-	Fully covered subdomains:
-
-		- (www.)	(^ → www)
-		- docs
-		- index
-
-
-	Partially covered subdomains:
+	Problematic hosts in *docker.io:
 
 		- blog *
+		- docs *
 
-	* Avoiding false/broken MCB, rest handled in Docker.io-falsemixed.xml.
-
-
-	Mixed content:
-
-		- css, on blog from:
-
-			- $self *
-			- fonts.googleapis.com *
-
-		- Images, on blog from:
-
-			- $self *
-			- www *
-
-	* Secured by us
+	* Cert only matches *docker.com
 
 -->
-<ruleset name="docker.io (partial)">
+<ruleset name="Docker.io">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="docker.io" />
-	<target host="*.docker.io" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://blog\.docker\.io/+(?!\?mcsf_action=|assets/|favicon\.ico|plugins/|wp-content/|wp-includes/)" />
+	<target host="index.docker.io" />
+	<target host="www.docker.io" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.docker.io" />
+	<target host="docs.docker.io" />
 
 
-	<securecookie host="^www\.docker\.io$" name=".+" />
+	<rule from="^http://(blog|docs)\.docker\.io/"
+		to="https://$1.docker.com/" />
 
-
-	<rule from="^http://(?:www\.)?docker\.io/"
-		to="https://www.docker.io/" />
-
-	<rule from="^http://(blog|docs|index)\.docker\.io/"
-		to="https://$1.docker.io/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

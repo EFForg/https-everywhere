@@ -1,0 +1,101 @@
+<!--
+	The University of Alabama
+
+	For rules causing false/broken MCB, see UA.edu-falsemixed.xml.
+
+	For problematic rules, see UA.edu-problematic.xml.
+
+
+	Nonfunctional subdomains:
+
+		- actcard ¹
+		- alumni ¹
+		- bamadining ²
+		- bamaparking ¹
+		- alabamamaps ³
+		- dialog ²
+		- eop ²
+		- events ²
+		- experts ²
+		- www.fa ²
+		- financialaffairs ⁴
+		- gobama ¹
+		- housing ⁵
+		- hr ¹
+		- maplibrary ³
+		- printing ⁴
+		- registrar ²
+		- research ²
+		- roadclosures ⁴
+		- sacs ¹
+		- www.uafacilities ²
+		- uanews ²
+
+	¹ Shows copingpower
+	² Refused
+	³ Shows another domain
+	⁴ Shows fa-webprod.fa
+	⁵ Shows secure
+
+
+	Problematic subdomains:
+
+		- directory *
+		- tour *
+
+	* Works; mismatched, CN: www.ua.edu
+
+
+	Partially covered subdomains:
+
+		- (www.)as *
+
+	* Avoiding false/broken MCB
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- home.as
+		- bama
+		- copingpower
+		- fa-webprod.fa
+		- mybama
+		- oirax
+		- onlinegiving
+		- secure.sa
+		- ssb
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www.as from $self *
+			- directory and tour from www *
+
+		- Images, on:
+
+			- www.as from $self
+			- bama, onlinegiving, and tour from www *
+
+		- favicon on (www.), directory, and tour from www *
+
+	* Secured by us
+
+-->
+<ruleset name="UA.edu (partial)">
+
+	<target host="ua.edu" />
+	<target host="*.ua.edu" />
+		<!--exclusion pattern="^http://(actcard|alabamamaps|alumni|bamadining|bamaparking|dialog|directory|eop|events|experts|www\.fa|financialaffairs|gobama|housing|hr|maplibrary|printing|research|registrar|roadclosures|sacs|tour|www\.uafacilities|uanews)\.ua\.edu/" /-->
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?as\.ua\.edu/+home(?!/wp-content/|/wp-includes/)" />
+
+
+	<rule from="^http://((?:as|(?:home|www)\.as|bama|copingpower|fa-webprod\.fa|mybama|oirax|onlinegiving|secure\.sa|ssb|www)\.)?ua\.edu/"
+		to="https://$1ua.edu/" />
+
+</ruleset>

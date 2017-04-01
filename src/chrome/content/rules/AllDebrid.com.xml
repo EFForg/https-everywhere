@@ -1,24 +1,44 @@
 <!--
-	Nonfunctional domains:
+	Other AllDebrid rulesets:
 
-		- blog.alldebrid.com	(refused)
+		- AllDebrid.fr.xml
 
 
-	Mixed images on www.alldebrid.fr from blog.alldebrid.com
+	Nonfunctional hosts in alldebrid.com:
+
+		- forum *
+		- stats ⁴
+
+	⁴ 403
+	* Refused
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- alldebrid.com
+		- .alldebrid.com
+		- www.alldebrid.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="AllDebrid.com (partial)">
 
 	<target host="alldebrid.com" />
-	<target host="*.alldebrid.com" />
-	<target host="alldebrid.fr" />
-	<target host="www.alldebrid.fr" />
+	<target host="cdn.alldebrid.com" />
+	<target host="www.alldebrid.com" />
 
 
-	<securecookie host="^(?:w*\.)?alldebrid\.(?:com|fr)$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?alldebrid\.com$" name="^lang" /-->
+	<!--securecookie host="^\.alldebrid\.com$" name="^(__cfduid|cf_clearance)" /-->
+	<!--securecookie host="^www\.alldebrid\.com$" name="^domain$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(cdn\.|www\.)?alldebrid\.(com|fr)/"
-		to="https://$1alldebrid.$2/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

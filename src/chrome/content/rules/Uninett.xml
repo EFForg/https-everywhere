@@ -2,58 +2,106 @@
 	Other Uninett rulesets:
 
 		- Discojuice.org.xml
+		- ECampus.no.xml
+		- Eduroam.no.xml
 		- Feide.xml
 		- Foodl.org.xml
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *uninett.no:
 
-		- apt *
-		- search *
+		- apt ¹
+		- blog.nav ²
+		- login.paas ³
 
-	* Redirects to www
-
-
-	Problematic subdomains:
-
-		- (www.)gn3campus	(redirects to www)
+	¹ Refused
+	² Blogger / handshake fails
+	³ Shows loggregator.paas
 
 
-	Fully covered subdomains:
+	Problematic domains:
 
-		- (www.)
-		- ansatt
-		- bildebase
-		- ca
-		- www.dike
-		- disco
-		- drupal
-		- eureka
-		- (www.)gn3campus	(→ ow.feide.no)
-		- metanav
-		- nav
-		- openwiki
-		- rt
-		- surveytest
-		- tjenester
-		- test.tjenester
-		- www3
-		- www-feide
+		- www.gigacampus.no ¹
+		- (www.)?gn3campus.uninett.no ²
+
+	¹ Shows loggregator.paas.uninett.no, preemptable redirect
+	² Redirects to www
+
+
+	These altnames don't exist:
+
+		- drupal-nymedia.uninett.no
+		- eureka-nymedia.uninett.no
+		- www.idp.uninett.no
+		- www6.uninett.no
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- bildebase.uninett.no
+		- .bildebase.uninett.no
+		- eureka.uninett.no
+		- openwiki.uninett.no
+		- uaa.paas.uninett.no
+		- .rt.uninett.no
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Uninett (partial)">
+<ruleset name="Uninett.no (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="uninett.no" />
-	<target host="*.uninett.no" />
+	<target host="agora.uninett.no" />
+	<target host="bildebase.uninett.no" />
+	<target host="ca.uninett.no" />
+	<target host="cert.uninett.no" />
+	<target host="drupal.uninett.no" />
+	<target host="eureka.uninett.no" />
+	<target host="metanav.uninett.no" />
+	<target host="nav.uninett.no" />
+	<target host="openwiki.uninett.no" />
+
+	<target host="api.paas.uninett.no" />
+	<target host="doppler.paas.uninett.no" />
+	<target host="loggregator.paas.uninett.no" />
+	<target host="uaa.paas.uninett.no" />
+
+	<target host="piwik.uninett.no" />
+	<target host="rt.uninett.no" />
+	<target host="tjenester.uninett.no" />
+	<target host="www.uninett.no" />
+
+	<!--	Complications:
+				-->
+	<target host="www.gigacampus.no" />
+
+	<target host="gn3campus.uninett.no" />
+	<target host="www.gn3campus.uninett.no" />
 
 
-	<securecookie host="^(?:\.ansatt|\.?bildebase|\.?eureka|nav|openwiki|\.rt|surveytest|\.(?:test\.)?tjenester|\.www)\.uninett\.no$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:bildebase|eureka|openwiki)\.uninett\.no$" name="^SimpleSAMLSessionID$" /-->
+	<!--securecookie host="^\.bildebase\.uninett\.no$" name="^SESS[\da-f]{32}$" /-->
+	<!--securecookie host="^uaa\.paas\.uninett\.no$" name="^X-Uaa-Csrf$" /-->
+	<!--securecookie host="^\.rt\.uninett\.no$" name="^mellon-ansattcookie$" /-->
+
+	<securecookie host="^(?!\.uninett\.no$)." name="." />
 
 
-	<rule from="^http://((?:ansatt|bildebase|ca|www\.dike|disco|drupal|eureka|metanav|nav|openwiki|rt|surveytest|(?:test\.)?tjenester|www3?|www-feide)\.)?uninett\.no/"
-		to="https://$1uninett.no/" />
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://www\.gigacampus\.no/.*"
+		to="https://openwiki.uninett.no/gigacampus:start" />
+
+		<test url="http://www.gigacampus.no/index.php" />
 
 	<rule from="^http://(?:www\.)?gn3campus\.uninett\.no/"
 		to="https://ow.feide.no/geantcampus:start" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

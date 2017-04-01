@@ -2,55 +2,73 @@
 	For problematic rules, see XtGem.com-problematic.xml.
 
 
-	Problematic subdomains:
+	Problematic hosts in *xtgem.com:
 
-		- www		(cert only matches ^xtgem.com)
-		- blog *
-		- bucklink *
-		- syntax *
+		- blog ᵐ
+		- bucklink ᵐ
+		- syntax ᵐ
+		- www ᵐ
 
-	* Works; expired 2013-10-23, mismatched, CN: xtgem.com
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- xtgem.com
+		- .xtgem.com
+		- blog.xtgem.com
 
 
 	Mixed content:
 
 		- css, on:
 
-			- ^ from fonts.googleapis.com *
-			- blog from blog *
-			- blog from fonts.googleapis.com *
-			- syntax from syntax *
-			- syntax from fonts.googleapis.com *
+			- blog from blog ˢ
+			- blog from fonts.googleapis.com ˢ
+			- syntax from syntax ˢ
+			- syntax from fonts.googleapis.com ˢ
 
 		- Images, on:
 
-			- blog from ^ *
-			- syntax from ^ *
+			- blog from ^ ˢ
+			- syntax from ^ ˢ
 			- syntax from www4.clustrmaps.com **
 			- syntax from tutorial.graham.yn.lt
 
 		- Web bugs, on:
 
-			- ^ from pixel.quantserve.com *
-			- blog from www.google-analytics.com *
-			- blog from pixel.quantserve.com *
-			- syntax from www.google-analytics.com *
-			- syntax from pixel.quantserve.com *
+			- blog from www.google-analytics.com ˢ
+			- blog from pixel.quantserve.com ˢ
+			- syntax from www.google-analytics.com ˢ
+			- syntax from pixel.quantserve.com ˢ
 
-	* Secured by us
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 	** Unsecurable
 
 -->
 <ruleset name="XtGem.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="xtgem.com" />
-	<target host="*.xtgem.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www.xtgem.com" />
 
 
-	<securecookie host="^\.xtgem\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^xtgem\.com$" name="^_(?:_lang|_template|xta_vid)$" /-->
+	<!--securecookie host="^(?:blog)?\.xtgem\.com$" name="^session$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:www\.)?xtgem\.com/"
+	<rule from="^http://www\.xtgem\.com/"
 		to="https://xtgem.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

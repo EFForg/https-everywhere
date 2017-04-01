@@ -1,4 +1,11 @@
+
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://discuss.xilo.net/ => https://discuss.xilo.net/: (51, "SSL: no alternative certificate subject name matches target host name 'discuss.xilo.net'")
+
+	XILO Communications
+
+
 	CDN buckets:
 
 		- contentdn.net/x/
@@ -13,22 +20,31 @@
 	Fully covered subdomains:
 
 		- discuss
+		- login		(→ my.xilo.net)
+		- my
 
 -->
-<ruleset name="XILO Communications (partial)">
+<ruleset name="XILO.net (partial)" default_off='failed ruleset test'>
 
-	<target host="*.xilo.net" />
+	<!--	Direct rewrites:
+				-->
+	<target host="discuss.xilo.net" />
+	<target host="my.xilo.net" />
+
+	<!--	Complications:
+				-->
+	<target host="login.xilo.net" />
 
 
 	<securecookie host="^discuss\.xilo\.net$" name=".+" />
 
 
-	<rule from="^http://discuss\.xilo\.net/"
-		to="https://discuss.xilo.net/" />
-
 	<!--	Redirects like so.
 					-->
-	<rule from="^http://(?:my|login)\.xilo\.net/"
+	<rule from="^http://login\.xilo\.net/"
 		to="https://my.xilo.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

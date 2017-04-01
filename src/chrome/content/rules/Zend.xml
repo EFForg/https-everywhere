@@ -1,5 +1,7 @@
 <!--
-	For rules that cause false/broken MCB, see Zend.com-falsemixed.xml.
+	Other Zend rulesets:
+
+		- Apigility.org.xml
 
 
 	CDN buckets:
@@ -8,92 +10,70 @@
 		- static-zend.pantherssl.com
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *zend.com:
 
-		- forums	(dropped)
-		- framework	(reset)
+		- blog *
+		- forums *
 
-
-	Problematic subdomains:
-
-		- ^	(works, cert only matches www)
+	* 403
 
 
-	Observed cookie domains:
+	Problematic hosts in *zend.com:
 
-		- .
-		- forums
-		- .forums
+		- ^ *
 		- framework *
-		- .framework
-		- shop *
-		- .shop
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .zend.com
+		- pages.zend.com
+		- shop.zend.com *
+		- .shop.zend.com
+		- www.zend.com
 
 	* Tracking cookies only
 
 
-	Fully covered subdomains:
+	These altnames don't exist:
 
-		- static	(→ (shop|static)-zend.pantherssl.com)
-
-
-	Partially covered subdomains:
-
-		- (www.) *	(^ → www)
-		- shop *
-
-	* Avoiding false/broken MCB, rest handled in Zend.com-falsemixed.xml
-
-
-	Mixed content:
-
-		- Script on www from static *
-
-		- css, on:
-
-			- shop from static *
-			- www from static *
-
-		- Images, on:
-
-			- shop from static *
-			- www from static *
-
-	* Secured by us
-
-
-	NB: We secure all resources, and thus
-	-falsemixed should be merged for Ffx 24.
+		- www.pages.zend.com
 
 -->
-<ruleset name="Zend (partial)">
+<ruleset name="Zend.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="pages.zend.com" />
+	<target host="shop.zend.com" />
+	<target host="support.zend.com" />
+	<target host="www.zend.com" />
+
+	<!--	Complications:
+				-->
 	<target host="zend.com" />
-	<target host="*.zend.com" />
-		<!--
-			Avoiding false/broken MCB:
-							-->
-		<exclusion pattern="^http://(?:www\.)?zend\.com/(?!favicon\.ico|\w\w/user(?:$|[?/]))" />
-		<exclusion pattern="^http://shop\.zend\.com/(?!checkout(?:$|[?/])|favicon\.ico)" />
+	<target host="static.zend.com" />
 
+		<test url="http://static.zend.com/shop/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.zend\.com$" name="^iep$" /-->
+	<!--securecookie host="^pages\.zend\.com$" name="^BIGipServer.*" /-->
+	<!--securecookie host="^shop\.zend\.com$" name="^(?:\d{8}-SKEY|\d{8}-VID|HumanClickSiteContainerID_\d{8}|lpFPCtest|VIEWED_PRODUCTS)$" /-->
+	<!--securecookie host="^\.shop\.zend\.com$" name="^frontend$" /-->
+	<!--securecookie host="^www\.zend\.com$" name="^PHPSESSID$" /-->
 
 	<securecookie host="^\.zend\.com$" name="^__utm\w$" />
-	<!--
-		Is this safe to secure here?
-						-->
-	<!--securecookie host="^\.zend\.com$" name="^iep$" /-->
-	<!--
-		Uncomment this when -falsemixed.xml is merged:
-								-->
-	<!--securecookie host="^.*\.zend\.com$" name=".*" /-->
-	<securecookie host="^shop\.zend\.com$" name="^(?:\d{8}-SKEY|\d{8}-VID|HumanClickSiteContainerID_\d{8}|lpFPCtest|VIEWED_PRODUCTS)$" />
+	<securecookie host="^\.shop\.zend\.com$" name="." />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?zend\.com/"
+	<rule from="^http://zend\.com/"
 		to="https://www.zend.com/" />
-
-	<rule from="^http://shop\.zend\.com/"
-		to="https://shop.zend.com/" />
 
 	<!--	NB: Must catch this before the next rule.	-->
 	<rule from="^http://static\.zend\.com/shop/"
@@ -102,4 +82,6 @@
 	<rule from="^http://static\.zend\.com/"
 		to="https://static-zend.pantherssl.com/" />
 
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

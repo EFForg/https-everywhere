@@ -1,12 +1,40 @@
+<!--
+	Nonfunctional subdomains:
+
+		- en *
+
+	* Shows issues
+
+
+	Problematic subdomains:
+
+		- blog ¹
+		- issues ²
+		- status ³
+
+	¹ Wordpress
+	² Expired 2014-07-22
+	³ Heroku
+
+-->
 <ruleset name="Gitorious">
-  <target host="gitorious.org" />
-  <target host="*.gitorious.org" />
-	<exclusion pattern="^http://(blog|en|status)\.gitorious\.org/"/>
 
-	<securecookie host=".*\.gitorious\.org$" name=".*"/>
+	<target host="gitorious.org" />
+	<target host="*.gitorious.org" />
+		<exclusion pattern="^http://(?:blog|en)\.gitorious\.org/" />
+		<exclusion pattern="^http://issues\.gitorious\.org/+(?!$|\?)" />
 
-  <rule from="^http://gitorious\.org/"
-	  to="https://gitorious.org/"/>
-  <rule from="^http://([^/:@\.]+)\.gitorious\.org/"
-	  to="https://$1.gitorious.org/"/>
+
+	<securecookie host=".*\.gitorious\.org$" name=".+" />
+
+
+	<rule from="^http://issues\.gitorious\.org/+(?=$|\?)"
+		to="https://gitorious.org/projects/gitorious/issues" />
+
+	<rule from="^http://status\.gitorious\.org/"
+		to="https://gitorious-status.herokuapp.com/" />
+
+	<rule from="^http://([^/:@\.]+\.)?gitorious\.org/"
+		to="https://$1gitorious.org/" />
+
 </ruleset>

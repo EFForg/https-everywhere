@@ -1,10 +1,40 @@
-<ruleset name="Deezer">
+<!--
+Disabled because:
 
+Currently Deezer's website *generally* redirects as follows:
+
+	https://deezer.com/      301 Moved Permanantly (to www.deezer.com)
+	https://www.deezer.com/  302 Found             (to plain-http URL)
+	http://www.deezer.com/   200 OK
+
+That is, if we apply an http -> httpS rule to [www.]deezer.com most paths will
+end up being loaded via plain-http anyway.  The one (known) exception is the
+path /ajax/gw-light.php which Deezer's servers do not redirect to plain-http.
+
+If we apply the http -> httpS rule for [www.]deezer.com, the top-level document
+ends up being redirected to load via plain-http, but then makes non-redirected
+httpS XHR POST requests to gw-light.php.  Since it makes these XHR requests
+without requesting cross-origin permissions the requests fail.  The main
+symptom of this failure is that clicking on the left-hand navigation bar does
+nothing.
+-->
+<ruleset name="Deezer.com (Buggy)" default_off="breaks left-hand navigation bar links">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="deezer.com" />
-	<target host="*.deezer.com" />
+	<target host="cdns-files.deezer.com" />
+	<target host="www.deezer.com" />
 
+<!--
+We can't currently add the following since the served certificates are not
+valid for these domains.
 
-	<rule from="^http://(cdns-files\.|www\.)?deezer\.com/"
-		to="https://$1deezer.com/" />
+	<target host="cdn-images.deezer.com" />
+	<target host="e-cdn-files.deezer.com" />
+-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,23 +1,29 @@
 <!--
-	Mixed content:
+	Insecure cookies are set for these hosts: ᶜ
 
-		- css from fonts.googleapis.com *
+		- evoluted.net
+		- www.evoluted.net
 
-		- Ads from www.googleadservices.com *
-
-	* Secured by us
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Evoluted.net">
+<ruleset name="Evoluted.net" default_off="testing">
 
 	<target host="evoluted.net" />
+	<target host="assets.evoluted.net" />
 	<target host="www.evoluted.net" />
 
+		<test url="http://assets.evoluted.net/assets/img/client-logos/nhs.png" />
 
-	<securecookie host="^(?:www\.)?evoluted\.net$" name=".+" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?evoluted\.net$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(www\.)?evoluted\.net/"
-		to="https://$1evoluted.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

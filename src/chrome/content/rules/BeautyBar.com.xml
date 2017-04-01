@@ -1,25 +1,48 @@
 <!--
-	Other Quidsi rulesets:
+	For other Amazon coverage, see Amazon.xml.
 
-		- Soap.com.xml
+
+	CDN buckets:
+
+		- beautybar.q-assets.com
+
+
+	^beautybar.com: Refused
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .beautybar.com
+		- www.beautybar.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="BeautyBar.com (partial)">
+<ruleset name="BeautyBar.com">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="www.beautybar.com" />
+
+	<!--	Complications:
+				-->
 	<target host="beautybar.com" />
-		<!--	Redirects to http.
-		<exclusion pattern="^http://www\.beautybar\.com/($|aboutus/|cat=|p/|redeem$)" /-->
-	<target host="*.beautybar.com" />
 
 
-	<!--	c[1-4]: Akamai
-		!www: cert is only valid for www.	-->
-	<rule from="^https?://(?:c\d\.)?beautybar\.com/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.beautybar\.com$" name="^(?:cookie-check|session-id|ubid-main)$" /-->
+	<!--securecookie host="^www\.beautybar\.com$" name="^(?:GEO_COUNTRYCODE|GEO_ZIPCODE|VISITOR_ID|cookie-check)$" /-->
+
+	<securecookie host="." name="^aps-trtmnt$" />
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://beautybar\.com/"
 		to="https://www.beautybar.com/" />
 
-	<!--	Many paths redirect to http,
-		so work by inclusing for now.	-->
-	<rule from="^http://www\.beautybar\.com/(app/|(?:checkout|login)\.qs|[iI]mages/|giftcertificate/|helpcenter/|myaccount/|SampleSociety/|(?:App_)?Themes/|[\w\-]+\.aspx)"
-		to="https://www.beautybar.com/$1" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

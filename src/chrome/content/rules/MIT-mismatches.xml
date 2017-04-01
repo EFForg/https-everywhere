@@ -2,31 +2,78 @@
 	For rules that are on by default, see MIT.xml.
 
 -->
-<ruleset name="Massachusetts Institute of Technology (mismatches)" default_off="expired, mismatch, self-signed">
+<ruleset name="Massachusetts Institute of Technology (problematic)" default_off="expired, mismatched, missing certificate chain, self-signed">
 
-	<target host="3down.mit.edu" />
+	<!--	Direct rewrites:
+				-->
+	<target host="www.advancedligo.mit.edu" />
 	<target host="calendar.mit.edu" />
+	<target host="counter.mit.edu" />
 	<target host="cluedumps.mit.edu" />
-	<!--	cert: *.scripts.mit.edu		-->
+	<target host="diversity.mit.edu" />
+	<target host="executive.mit.edu" />
 	<target host="hacks.mit.edu" />
-	<target host="mosh.mit.edu" />
+	<target host="iceo.mit.edu" />
+	<target host="iceoblog.mit.edu" />
+	<target host="libguides.mit.edu" />
+	<target host="tmg-trackr.media.mit.edu" />
+	<target host="mlkscholars.mit.edu" />
+	<target host="relate.mit.edu" />
 	<!--	Self-signed	-->
 	<target host="people.mit.edu" />
-		<!--
-			- 403 over https
-			- 302s to www.csail.mit.edu/peoplesearch over http
-										-->
-		<exclusion pattern="^http://people\.mit\.edu/($|\?)" />
+	<target host="webmail.mit.edu" />
+	<target host="zscore.mit.edu" />
+
+	<!--	Complications:
+				-->
+	<target host="advancedligo.mit.edu" />
 	<target host="techtime.mit.edu" />
 
+		<!--	- 403 over https
+			- 302s to www.csail.mit.edu/peoplesearch over http
+										-->
+		<exclusion pattern="^http://people\.mit\.edu/(?:$|\?)" />
 
-	<securecookie host="^(?:3down|cluedumps)\.mit\.edu$" name=".+" />
+			<!--	+ve:
+					-->
+			<test url="http://people.mit.edu/?f" />
+			<test url="http://people.mit.edu/?o" />
 
 
-	<rule from="^http://(3down|calendar|cluedumps|hacks|mosh|people)\.mit\.edu/"
-		to="https://$1.mit.edu/" />
+		<!--	>=1 path 404s:
+					-->
+		<exclusion pattern="^http://tmg-tracker\.media\.mit\.edu/(?!$|\?)" />
 
-	<rule from="^http://techtime\.mit\.edu/(?:\?.*)?$"
+			<!--	+ve:
+					-->
+			<test url="http://tmg-trackr.media.mit.edu/publishedmedia/Papers/604-HydroMorph%20Shape%20Changing%20Water/Published/PDF" />
+
+		<exclusion pattern="^http://techtime\.mit\.edu/(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://techtime.mit.edu/f" />
+			<test url="http://techtime.mit.edu/o" />
+			<test url="http://techtime.mit.edu/b" />
+			<test url="http://techtime.mit.edu/a" />
+
+			<!--	-ve:
+					-->
+			<test url="http://techtime.mit.edu/?f" />
+			<test url="http://techtime.mit.edu/?o" />
+			<test url="http://techtime.mit.edu/?b" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://advancedligo\.mit\.edu/"
+		to="https://www.advancedligo.mit.edu/" />
+
+	<rule from="^http://techtime\.mit\.edu/(?:$|\?.*)"
 		to="https://calendar.mit.edu/techtime/index.shtml" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

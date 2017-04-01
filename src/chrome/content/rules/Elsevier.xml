@@ -1,11 +1,13 @@
 <!--
-	For domains with mixed content, see Elsevier-mixedcontent.xml.
-
 	For problematic rules, see Elsevier-mismatches.xml
 
 
 	Other Elsevier rulesets:
 
+		- Els-CDN.com.xml
+		- Elsevier.ca.xml
+		- Elsevier_Health.com.xml
+		- Elsevier_Health.com.au.xml
 		- Journal_of_Affective_Disorders.xml
 		- Journal-of-Bodywork-and-Movement-Therapies.xml
 		- SciVerse.xml
@@ -20,78 +22,128 @@
 			- -ssl doesn't exist
 
 
-	Problematic domains:
+	Nonfunctional hosts in *elsevier.com:
 
-		- elsevier.com subdomains:
+		- www.ethics *
+		- res.journals
+		- reprints *
 
-			- ^		(cert only matches www)
-			- www		(mixed content from cdn)
-			- cdn		(404, mismatched, CN: *.netdna-ssl.com)
-
-		- loginptr.elsevierhealth.com	(cert: secure.elsevierhealth.com)
+	* Refused
 
 
-	Nonfunctional domains:
+	Problematic hosts in *elsevier.com:
 
-		- res.journals.elsevier.com
+		- cdn		(404, mismatched, CN: *.netdna-ssl.com)
+		- dev ²
+		- developers ³
+		- (www.)?ees ⁴
+		- support	(Redirect destination mismatched)
+
+	² Mixed css
+	³ Mismatched
+	⁴ Expired
 
 
-	Fully covered domains:
+	Partially covered hosts on *elsevier.com:
 
-		- ees.elsevier.com
-		- support.elsevier.com
+		- dev ¹
+		- (www.)?developers ²	(^ → www)
+
+	¹ Avoiding MCB
+	² Some paths redirect to http
 
 
-	Targets solely for wildcard cookies:
+	Fully covered hosts in *elsevier.com:
 
-		- *.secure.elsevierhealth.com
+		- (www.)?
+		- api
+		- help
+		- linkinghub
+		- support	(→ help.elsevier.com)
+
+
+	Insecure cookies are set for these hosts:
+
+		- evolve.elsevier.com
+		- help.elsevier.com
+
+
+	Mixed content:
+
+		- css on dev from getbootstrap.com ¹
+
+		- Images, on:
+
+			- ees.elsevier.com from $self
+			- linkinghub.elsevier.com from www.sciencedirect.com
+			- linkinghub.elsevier.com from www2.us.elsevierhealth.com
+
+	¹ Unsecurable <= refused
 
 -->
-<ruleset name="Elsevier (partial)">
+<ruleset name="Elsevier.com (partial)">
 
-	<target host="*.els-cdn.com" />
-	<target host="elsevier.ca" />
-	<target host="www.elsevier.ca" />
-	<target host="*.elsevier.com" />
-		<exclusion pattern="^http://www\.developers\.elsevier\.com/($|action)" />
-	<target host="elsevierhealth.com" />
-	<target host="*.elsevierhealth.com" />
-	<target host="elsevierhealth.com.au" />
-	<target host="www.elsevierhealth.com.au" />
-	<target host="elsevierhealth.co.uk" />
-	<target host="www.elsevierhealth.co.uk" />
+	<!--	Direct rewrites:
+				-->
+	<target host="elsevier.com" />
+	<target host="acw.elsevier.com" />
+	<target host="api.elsevier.com" />
+	<target host="auth.elsevier.com" />
+	<target host="covers.elsevier.com" />
+	<target host="dev.elsevier.com" />
+	<target host="www.developers.elsevier.com" />
+	<!--target host="ees.elsevier.com" /-->
+	<!--target host="www.ees.elsevier.com" /-->
+	<target host="evolve.elsevier.com" />
+	<target host="help.elsevier.com" />
+	<target host="linkinghub.elsevier.com" />
+	<target host="pa.elsevier.com" />
+	<target host="www.elsevier.com" />
+
+	<!--	Complications:
+				-->
+	<target host="developers.elsevier.com" />
+	<target host="support.elsevier.com" />
+
+		<!--	Avoid valid MCB:
+						-->
+		<exclusion pattern="^http://dev\.elsevier\.com/+(?!css/|img/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://dev.elsevier.com/myapikey.html" />
+			<test url="http://dev.elsevier.com//myapikey.html" />
+			<test url="http://dev.elsevier.com/release_notes.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://dev.elsevier.com/css/lavish-bootstrap.css" />
+			<test url="http://dev.elsevier.com/img/logo_Elsevier.gif" />
+
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://www\.developers\.elsevier\.com/action/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.developers.elsevier.com/action/devprojects" />
 
 
-	<securecookie host="^origin-ars\.els-cdn\.com$" name=".*" />
-	<securecookie host="^www\.elsevier\.ca$" name=".*" />
-	<securecookie host="^(?!\.www\.elsevier\.).*\.elsevier\.com$" name=".+" />
-	<securecookie host="(.*\.)?elsevierhealth\.co(m(\.au)?|\.uk)$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^evolve\.elsevier\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^help\.elsevier\.com$" name="^(cp_session|theme)$" /-->
+
+	<securecookie host=".*\.elsevier\.com$" name=".+" />
 
 
-	<rule from="^https?://(?:origin-)?(ars|cdn)\.els-cdn\.com/"
-		to="https://origin-$1.els-cdn.com/" />
-
-
-	<rule from="^https?://(?:www\.)?elsevier\.ca/"
-		to="https://www.elsevier.ca/" />
-
-	<rule from="^https?://(?:www\.)?developers\.elsevier\.com/"
+	<rule from="^http://developers\.elsevier\.com/"
 		to="https://www.developers.elsevier.com/" />
 
-	<rule from="^http://(acw|auth|covers|ees|linkinghub|pa|support)\.elsevier\.com/"
-		to="https://$1.elsevier.com/" />
+	<rule from="^http://support\.elsevier\.com/"
+		to="https://help.elsevier.com/" />
 
-
-	<rule from="^http://(www\.)?((?:asia|eu|mea|us)\.)?elsevierhealth\.com/"
-		to="https://$1$2elsevierhealth.com/" />
-
-	<rule from="^http://secure\.elsevierhealth\.com/"
-		to="https://secure.elsevierhealth.com/" />
-
-	<rule from="^https?://(?:www\.)?elsevierhealth\.com\.au/"
-		to="https://www.elsevierhealth.com.au/" />
-
-	<rule from="^http://(www\.)?elsevierhealth\.co\.uk/"
-		to="https://$1elsevierheath.co.uk/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

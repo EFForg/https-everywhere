@@ -1,5 +1,7 @@
 <!--
-	For problematic rules, see Crazy-Egg-problematic.xml.
+	Other Crazy Egg rulesets:
+
+		- CEtrk.com.xml
 
 
 	CDN buckets:
@@ -8,46 +10,56 @@
 		- s3.amazonaws.com/new.cetrk.com/
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *crazyegg.com:
 
-		- cetrk.com
+		- resources ʳ
+
+	ʳ Refused
+
+
+	Problematic hosts in *crazyegg.com:
+
+		- www.script ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .crazyegg.com
+		- help.crazyegg.com
+		- www.crazyegg.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Image on help from resources.crazyegg.com ʳ
+
+	ʳ Unsecurable <= refused
 
 -->
-<ruleset name="Crazy Egg (partial)">
+<ruleset name="Crazy Egg.com (partial)">
 
 	<target host="crazyegg.com" />
-	<target host="*.crazyegg.com" />
-		<exclusion pattern="^http://(?:www\.)?crazyegg\.com/(?:$|\?)" />
+	<target host="blog.crazyegg.com" />
+	<target host="help.crazyegg.com" />
+	<target host="script.crazyegg.com" />
+	<target host="support.crazyegg.com" />
+	<target host="www.crazyegg.com" />
 
 
-	<!--	At least the homepage redirects to http.
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.crazyegg\.com$" name="^(?:adxs|ce2tg)$" /-->
+	<!--securecookie host="^help\.crazyegg\.com$" name="^_help_center_session$" /-->
+	<!--securecookie host="^www\.crazyegg\.com$" name="^sid$" /-->
 
-			These paths don't:
+	<securecookie host="." name="." />
 
-				- contact$
-				- contact/$
-				- external/
-				- help$
-				- help/
-				- images/
-				- login$
-				- login/$
-				- opt-out$
-				- opt-out/$
-				- overview$
-				- pricing$
-				- pricing/$
-				- privacy$
-				- signup$
-				- signup/pro$
-				- signup/standard$
-				- stylesheets/
-				- terms$
 
-	<rule from="^http://(www\.)?crazyegg\.com/((?:external|help|images|signup|stylesheets)(?:$|/|\?)|(?:login|opt-out|overview|pricing|terms)(?:/?$|\?))"
-		to="https://$1crazyegg.com/$2" /-->
-
-	<rule from="^http://(www\.)?crazyegg\.com/"
-		to="https://$1crazyegg.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

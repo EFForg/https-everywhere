@@ -1,65 +1,63 @@
 <!--
 	CDN buckets:
 
-		- legacy.o.miisolutions.net/...
-
-			- mi-cache.legacy.com
-			- mi-static.legacy.com
+		- legacy.o.miisolutions.net
 
 
-	Problematic subdomains:
+	Nonfunctional hosts in *legacy.com:
 
-		- blog		(handled in WordPress-blogs.xml)
-		- connect	(CN: *.ning.com)
-		- mi-cache *
-		- mi-static *
+		- (www.)? ᵈ
+		- static.cms ³
 
-	* 404, CN: *.service.mirror-image.net
+	³ 503
+	ᵈ Dropped
 
 
-	Partially covered subdomains:
+	Problematic hosts in *legacy.com:
 
-		- (www.) *
+		- ak-static ᴬ
+		- (www.)?connect ᵐ
+		- mi-cache ᴬ
+		- mi-static ᴬ
+
+	ᴬ Akamai / mismatched
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *legacy.com:
+
 		- memorialwebsites *
 
 	* Some pages redirect to http
 
-
-	Fully covered subdomains:
-
-		- ^
-		- cache
-		- mi
-		- mi-cache
-		- mi-static
-		- static
-
 -->
-<ruleset name="Legacy.com (partial)" platform="mixedcontent">
+<ruleset name="Legacy.com (partial)">
 
-	<target host="legacy.com" />
-	<target host="*.legacy.com" />
-		<exclusion pattern="^http://(?:www\.)?legacy\.com/(?!$|favicon\.ico|globalscripts/tracking/AIMWrapper\.js|Images/|(?:[\w/-]+/)?(?:images/|ObitsTileCorner\.axd|scripts/|Styles/)|ns/|NS/|OBITUARIES/AffiliateArtwork\.axd)" />
-		<exclusion pattern="^http://memorialwebsites\.legacy\.com/(?!create(?:account|memorial)\.aspx|images/|styles/)" />
-	<target host="*.legacyconnect.ning.com" />
+	<target host="blog.legacy.com" />
+	<target host="cache.legacy.com" />
+	<target host="media2.legacy.com" />
+	<target host="memorialwebsites.legacy.com" />
+	<target host="mi.legacy.com" />
+	<target host="static.legacy.com" />
+	<target host="sympathy.legacy.com" />
+
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://memorialwebsites\.legacy\.com/(?:.*/)?InvalidPage\.aspx" />
+
+			<!--	+ve:
+					-->
+			<test url="http://memorialwebsites.legacy.com/InvalidPage.aspx" />
+			<test url="http://memorialwebsites.legacy.com/bar/InvalidPage.aspx" />
+			<test url="http://memorialwebsites.legacy.com/foo/InvalidPage.aspx" />
 
 
-	<securecookie host="^static\.legacy\.com$" name=".+" />
-	<securecookie host="^\.legacyconnect\.ning\.com$" name=".+" />
+	<securecookie host="." name="^optimizely" />
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
 
 
-	<!--	obituaries/Images/ redirects to http.
-							-->
-	<rule from="^http://(www\.)?legacy\.com/obituaries/Images/"
-		to="https://$1legacy.com/obituaries/images/" />
-
-	<rule from="^http://((?:cache|mi|static|memorialwebsites|www)\.)?legacy\.com/"
-		to="https://$1legacy.com/" />
-
-	<rule from="^http://connect\.legacy\.com/"
-		to="https://legacyconnect.ning.com/" />
-
-	<rule from="^http://mi-(cache|static)\.legacy\.com/"
-		to="https://$1.legacy.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

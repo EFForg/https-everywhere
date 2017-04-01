@@ -1,19 +1,56 @@
-<!-- This rule was automatically generated based on an HSTS
-     preload rule in the Chromium browser.  See 
-     https://src.chromium.org/viewvc/chrome/trunk/src/net/base/transport_security_state.cc
-     for the list of preloads.  Sites are added to the Chromium HSTS
-     preload list on request from their administrators, so HTTPS should
-     work properly everywhere on this site.
- 
-     Because Chromium and derived browsers automatically force HTTPS for
-     every access to this site, this rule applies only to Firefox. -->
-<ruleset name="Logentries.com" platform="firefox">
-  <target host="logentries.com" />
-  <target host="www.logentries.com" />
+<!--
+	Problematic hosts in *logentries.com:
 
-  <securecookie host="^logentries\.com$" name=".+" />
-  <securecookie host="^www\.logentries\.com$" name=".+" />
+		- info ¹
+		- labs ²
 
-  <rule from="^http://logentries\.com/" to="https://logentries.com/" />
-  <rule from="^http://www\.logentries\.com/" to="https://www.logentries.com/" />
+	¹ Hubspot/mismatched
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	These altnames don't exist:
+
+		- www.forum.logentries.com
+		- www.labs.logentries.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- logentries.com
+		- info.logentries.com
+		- labs.logentries.com
+		- www.logentries.com
+
+
+	Mixed content:
+
+		- css on info from fonts.googleapis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Logentries.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="logentries.com" />
+	<target host="community.logentries.com" />
+	<target host="blog.logentries.com" />
+	<target host="forum.logentries.com" />
+	<!--target host="labs.logentries.com" /-->
+	<target host="www.logentries.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?logentries\.com$" name="^SERVERID$" /-->
+	<!--securecookie host="^info\.logentries\.com$" name="^hsPagesViewedThissession$" /-->
+	<!--securecookie host="^labs\.logentries\.com$" name="^crSession$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

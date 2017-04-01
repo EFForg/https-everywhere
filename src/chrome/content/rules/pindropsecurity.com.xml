@@ -1,0 +1,58 @@
+<!--
+	For other Pindrop coverage, see pindrop.com.xml.
+
+
+	Nonfunctional hosts in *pindropsecurity.com:
+
+		- info ᵃ
+
+	ᵃ Marketo / Shows another domain
+
+-->
+<ruleset name="Pindrop Security.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="pindropsecurity.com" />
+	<target host="www.pindropsecurity.com" />
+
+	<!--	Complications:
+				-->
+	<target host="info.pindropsecurity.com" />
+
+
+	<securecookie host="^(?!info\.)\w" name="." />
+	<securecookie host="^\." name="(?:__cfduid|cf_clearance)$" />
+
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://info\.pindropsecurity\.com/+(?:\?.*)?$"
+		to="https://pindropsecurity.com/" />
+
+	<rule from="^http://info\.pindropsecurity\.com/"
+		to="https://na-sji.marketo.com/" />
+
+		<exclusion pattern="^http://info\.pindropsecurity\.com/+(?!$|\?|css/|images/|rs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://info.pindropsecurity.com/All-In-Party-3.html" />
+			<test url="http://info.pindropsecurity.com/All-In-Party-RSVP.html" />
+			<test url="http://info.pindropsecurity.com/Canada_Launch.html" />
+			<test url="http://info.pindropsecurity.com/Diagnosing-Phone-Fraud-Threats-Healthcare-Registration.html" />
+			<test url="http://info.pindropsecurity.com/Embassy_Event_RSVP.html" />
+			<test url="http://info.pindropsecurity.com/Hijacking-Shipments-Phone-Channel-Registration.html" />
+			<test url="http://info.pindropsecurity.com/Preventing-Fraud-Airline-Call-Centers-Webinar-Registration.html" />
+			<test url="http://info.pindropsecurity.com/Webcast-Deploying-New-Technologies-to-Secure-Telephony-and-Authenticate-Callers.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://info.pindropsecurity.com/?" />
+			<test url="http://info.pindropsecurity.com/css/mktLPSupport.css" />
+			<test url="http://info.pindropsecurity.com/rs/pindropsecurity/images/Pindrop_Logo_Grey_RGB.gif" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

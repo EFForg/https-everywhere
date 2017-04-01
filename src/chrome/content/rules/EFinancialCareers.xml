@@ -4,43 +4,84 @@
 
 	CDN buckets:
 
+		- d2p98mys7gexzy.cloudfront.net ← news-cdn
+
 		- www.efinancialcareers.com.edgesuite.net
-			- jobs.efinancialcareers.com
-			- static.efinancialcareers.com
-			- www.efinancialcareers.com
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *efinancialcareers.com:
 
-		- ^
-		- jobs		(Akamai; 504)
-		- static	(Akamai; 503)
-		- www		(Akamai; 504)
-		- www-origin
+		- jobs ¹
+		- news ²
+		- recruiters ²
+		- static ³
+		- www-origin ¹
 
-
-	Problematic subdomains:
-
-		- news *
-
-	* CN: *.wordpress.com.  Covered in WordPress-blogs.xml.
-	Cookies thereof are secured here.
+	¹ Refused
+	² Dropped
+	³ Redirects to http
 
 
-	Fully covered subdomains:
+	Problematic hosts in *efinancialcareers.com:
 
-		- backoffice
+		- news-cdn *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .efinancialcareers.com
+		- www.efinancialcareers.com
 
 -->
-<ruleset name="eFinancialCareers">
+<ruleset name="eFinancialCareers.com (partial)">
 
-	<target host="*.efinancialcareers.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="efinancialcareers.com" />
+	<target host="backoffice.efinancialcareers.com" />
+	<target host="m.efinancialcareers.com" />
+	<target host="mbeta.efinancialcareers.com" />
+	<target host="myefc.efinancialcareers.com" />
+	<target host="partner-myefc.efinancialcareers.com" />
+	<target host="www.efinancialcareers.com" />
+
+	<!--	Complications:
+				-->
+	<target host="news-cdn.efinancialcareers.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.efinancialcareers\.com/($|favicon\.ico)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?efinancialcareers\.com/(?!login|myefc/profile|resources/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.efinancialcareers.com/jobs-Information_Technology.s019" />
+			<test url="http://www.efinancialcareers.com/search" />
+			<test url="http://www.efinancialcareers.com/sitemap/html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.efinancialcareers.com/myefc/profile" />
 
 
-	<securecookie host="^.*\.efinancialcareers\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.efinancialcareers\.com$" name="^__utm\w+$" /-->
+	<!--securecookie host="^www\.efinancialcareers\.com$" name="^(JSESSIONID|SID|matchingCompaniesAlertShown)$" /-->
+
+	<securecookie host="^\." name="^__utm" />
 
 
-	<rule from="^http://backoffice\.efinancialcareers\.com/"
-		to="https://backoffice.efinancialcareers.com/" />
+	<rule from="^http://news-cdn\.efinancialcareers\.com/"
+		to="https://d2p98mys7gexzy.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,33 +1,77 @@
 <!--
+	NB: If any tested domains cease to exist, just remove the test.
+
+
 	s3.amazonaws.com/qualys/ | d1dejaj6dcqv24.cloudfront.net
 
--->
-<ruleset name="Qualys (partial)">
 
-	<target host="qualys.com" />
-	<target host="*.qualys.com" />
-		<!--	Doesn't work.	-->
-		<exclusion pattern="^http://news\."/>
+	Problematic subdomains:
 
-	<!--	Observed cookies:
+		- laws *
+		- news *
 
-			- \.
+	* Works; mismatched, CN: www.qualys.com
+
+
+	Fully covered subdomains:
+
+		- (?!laws\.|news\.)[\w.]+:
+
+			- qualysguard.qg2.apps
 			- browsercheck
 			- community
-					-->
-	<securecookie host="^.*\.qualys\.com$" name=".*"/>
-
-
-	<!--	Observed working subdomains:
-
-			- browsercheck
-			- community
+			- qg2
 			- pci
 			- qualysguard
 			- seal
 			- www
-				-->
-	<rule from="^http://(\w+\.)?qualys\.com/"
-		to="https://$1qualys.com/"/>
+
+		- laws	(→ community)
+		- news	(→ community)
+
+
+	Insecure cookies are set for these domains:
+
+		- community.qualys.com
+
+-->
+<ruleset name="Qualys.com">
+
+	<target host="qualys.com" />
+	<target host="*.qualys.com" />
+
+		<test url="http://community.qualys.com/" />
+		<test url="http://browsercheck.qualys.com/" />
+		<test url="http://seal.qualys.com/" />
+		<test url="http://www.qualys.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="community\.qualys\.com$" name="^(BIGipServerpool_qualys-inc6\.hosted\.jivesoftware\.com|JSESSIONID)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+						-->
+	<rule from="^http://laws\.qualys\.com/+"
+		to="https://community.qualys.com/blogs/laws-of-vulnerabilities/" />
+
+		<test url="http://laws.qualys.com/" />
+		<test url="http://laws.qualys.com//" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+						-->
+	<rule from="^http://news\.qualys\.com/+"
+		to="https://community.qualys.com/blogs/news/" />
+
+		<test url="http://news.qualys.com/" />
+		<test url="http://news.qualys.com//" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

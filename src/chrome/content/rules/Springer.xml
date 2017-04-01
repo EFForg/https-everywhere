@@ -1,61 +1,113 @@
 <!--
+	For rules causing false/broken MCB, see springer.com-falsemixed.xml.
+
 	Other Springer rulesets:
 
 		- Biomed-Central.xml
+		- Springer-Gabler.de.xml
+		- Springer_Zahnmedizin.de.xml
 
 
 	Nonfunctional domains:
 
 		- (www.)chemistrycentral.com	(times out)
-		- link.springer.com *
-		- rd.springer.com *
+		- academy.springer.com ᵃ
 		- (www.)springeropen.com *
 
 	* 504, akamai
+	ᵃ Shows another domain
 
 
 	Problematic domains:
 
-		- springer.com			(mismatched, CN: www.springer.com)
+		- springer.com ᵐ
+		- adinsight.springer.com ᴬ
+		- adis.springer.com ᴬ
+		- adis-static.springer.com ᴬ
+		- download.springer.com ᴬ
+		- download-redirector.springer.com ᴬ
+		- extras.springer.com ᵐ
+		- lod.springer.com ˣ
+		- materials.springer.com ᴬ
+
 		- springerlink.com
 		- www.springerlink.com		(akamai)
 		- (www.)springeronline.com	(works; mismatched, CN: www.springer.com)
 
+	ᴬ Akamai / mismatched
+	ᵐ Mismatched
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
-	Fully covered domains:
 
-		- (www.)springer.com
-		- admin.springer.com
-		- checkout.springer.com
-		- images.springer.com
-		- preview.springer.com
-		- static.springer.com
+	These altnames do not exist:
+
+		- download-ssl.springer.com
+		- health-ssl.springer.com
+		- rd-ssl.springer.com
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .springer.com
+		- lod.springer.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on lod from $self ˢ
+		- Images on lod from $self ˢ
+		- Bugs on health, link, rd from springergmbh01.webtrekk.net ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Springer (partial)">
+<ruleset name="Springer.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="admin.springer.com" />
+	<target host="adminportal.springer.com" />
+	<target host="adwizard.springer.com" />
+	<target host="checkout.springer.com" />
+	<target host="dev.springer.com" />
+	<target host="health.springer.com" />
+	<target host="images.springer.com" />
+	<target host="lab.springer.com" />
+	<target host="link.springer.com" />
+	<!--target host="lod.springer.com" /-->
+	<target host="preview.springer.com" />
+	<target host="copublishers.live.cf.public.springer.com" />
+	<target host="resource-cms.springer.com" />
+	<target host="signon.springer.com" />
+	<target host="static.springer.com" />
+	<target host="static-content.springer.com" />
+	<target host="www.springer.com" />
+
+		<test url="http://images.springer.com/_default" />
+		<test url="http://resource-cms.springer.com/springer-cms/rest/v1/img/35898/v2/spcom-img-homepage-teaser" />
+		<test url="http://static.springer.com/spcom/sites/sgw/images/expander_arrows.png" />
+		<test url="http://static-content.springer.com/cover/cover-placeholder.png" />
+
+	<!--	Complications:
+				-->
 	<target host="springer.com" />
-	<target host="*.springer.com" />
-	<target host="springer-gabler.de" />
-	<target host="www.springer-gabler.de" />
-	<target host="springerzahnmedizin.de"/>
-	<target host="www.springerzahnmedizin.de"/>
 
 
-	<securecookie host="^springer-gabler\.de$" name=".+" />
-	<securecookie host="^.+\.springer\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.springer\.com$" name="^(?:sim-inst-token|tabSet|springercomcountry|trackid)$" /-->
+	<!--securecookie host="^lod\.springer\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host=".\.springer\.com$" name="." />
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
 
 
-	<rule from="^https?://(?:www\.)?springer\.com/"
+	<rule from="^http://springer\.com/"
 		to="https://www.springer.com/"/>
 
-	<rule from="^http://(admin|checkout|images|preview|static)\.springer\.com/"
-		to="https://$1.springer.com/" />
-
-	<rule from="^http://(?:www\.)?springer-gabler\.de/"
-		to="https://springer-gabler.de/"/>
-
-	<rule from="^http://(?:www\.)?springerzahnmedizin\.de/(css|img|servlet)/"
-		to="https://springerzahnmedizin.de/$1/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

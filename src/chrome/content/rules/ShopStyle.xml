@@ -1,33 +1,71 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://shopstyle.com.au/ => https://www.shopstyle.com.au/: Cycle detected - URL already encountered: https://www.shopstyle.com.au/
 	For problematic rules, see ShopStyle-mismatches.xml.
 
+
+	Problematic domains:
+
+		- shopstyle.co.uk ¹
+		- omniture.shopstyle.com ²
+		- shopstyle.com.au ¹
+		- shopstyle.de ¹
+		- shopstyle.fr ¹
+
+	¹ Cert only matches www
+	² 2o7.net
+
+
+	Partially covered domains:
+
+		- www.shopstyle.com *
+
+	* $ redirects to http
+
+
+	Fully covered domains:
+
+		- shopstyle.com subdomains:
+
+			- (www.)?m
+			- omniture	(→ shopstyle-com.112.2o7.net)
+			- secure
+			- shopsensebeta
+			- shopsensetest
+			- shopsensewidget
+
 -->
-<ruleset name="ShopStyle (partial)">
+<ruleset name="ShopStyle (partial)" default_off='failed ruleset test'>
 
 	<target host="shopstyle.*" />
 	<target host="www.shopstyle.*" />
 	<target host="shopstyle.co.*" />
-	<target host="*.shopstyle.com" />
-	<target host="shopstyle.com.au" />
-	<target host="*.shopstyle.com.au" />
 	<target host="*.shopstyle.co.jp" />
 	<target host="*.shopstyle.co.uk" />
+	<target host="*.shopstyle.com" />
+		<!--
+			Redirect to http:
+						-->
+		<exclusion pattern="^http://www\.shopstyle\.com/(?:home)?(?:$|\?)" />
+	<target host="shopstyle.com.au" />
+	<target host="*.shopstyle.com.au" />
 	<target host="*.shopstyle.de" />
 	<target host="*.shopstyle.fr" />
 
 
-	<securecookie host="^.*\.shopstyle\.[\w\.]{2,6}$" name=".*" />
+	<securecookie host=".*\.shopstyle\.[\w.]{2,6}$" name=".+" />
 
-
-	<rule from="^http://(ads\.|shopsense\.|www\.)?shopstyle\.com/"
-		to="https://$1shopstyle.com/" />
 
 	<rule from="^http://(www\.)?shopsense\.co\.jp/"
 		to="https://$1shopsense.co.jp/" />
 
-	<!--	Cert only matches www.
-					-->
-	<rule from="^https?://(?:www\.)?shopstyle\.(com\.au|co\.uk|de|fr)/"
+	<rule from="^http://(?:www\.)?shopstyle\.(co\.uk|com\.au|de|fr)/"
 		to="https://www.shopstyle.$1/" />
+
+	<rule from="^http://omniture\.shopstyle\.com/"
+		to="https://shopstyle-com.112.2o7.net/" />
+
+	<rule from="^http://((?:ads|(?:www\.)?m|secure|shopsense(?:beta|test|widget)?|www)\.)?shopstyle\.com/"
+		to="https://$1shopstyle.com/" />
 
 </ruleset>

@@ -1,0 +1,42 @@
+<!--
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.nachrichtendienstgesetz.ch
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	STS header includes includeSubdomains
+	for ^, www
+
+-->
+<ruleset name="Nachrichtendienstgesetz.ch">
+
+	<target host="nachrichtendienstgesetz.ch" />
+	<target host="*.nachrichtendienstgesetz.ch" />
+
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?:[^./]+\.){2,}nachrichtendienstgesetz\.ch/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.nachrichtendienstgesetz.ch/" />
+			<test url="http://exists.not.nachrichtendienstgesetz.ch/" />
+
+		<test url="http://beta.nachrichtendienstgesetz.ch/" />
+		<test url="http://check.nachrichtendienstgesetz.ch/" />
+		<test url="http://www.nachrichtendienstgesetz.ch/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.nachrichtendienstgesetz\.ch$" name="^_icl_current_language$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

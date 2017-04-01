@@ -1,5 +1,18 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://govexec.com/ => https://www.govexec.com/: Cycle detected - URL already encountered: https://www.govexec.com/
+Fetch error: http://secure.nationaljournal.com/ => https://secure.nationaljournal.com/: (28, 'Connection timed out after 10000 milliseconds')
+Fetch error: http://admin.theatlanticwire.com/ => https://admin.theatlanticwire.com/: (51, "SSL: no alternative certificate subject name matches target host name 'admin.theatlanticwire.com'")
 	For problematic rules, see Atlantic-Media-problematic.xml.
+
+	theatln.tc is handled in Bit.ly_vanity_domains.xml.
+
+
+	Other Atlantic Media rulesets:
+
+		- Defense_One.com.xml
+		- The_Atlantic.com.xml
+		- The_Wire.com.xml
 
 
 	CDN buckets:
@@ -15,52 +28,38 @@
 		- cdn.govexec.com		(cert: gp1.wac.edgecastcdn.net)
 		- (www.)nationaljournal.com	(timeout)
 		- media.nationaljournal.com	(ditto)
-		- www.theatlantic.com		(cert: ssl.theatlantic.com)
-		- advertising.theatlantic.com	(ditto)
 
 
 	Problematic domains:
 
+		- theatln.tc ¹
 		- cdn.theatlanticcities.com	(cert: gp1.wac.edgecastcdn.net; 404)
-		- ssl.theatlantic.com		(some images 404)
-		- assets.theatlantic.com	(self-signed)
 
-
-	Fully covered domains:
-
-		- cdn.theatlantic.com
-		- ssl.theatlantic.com		(→ cdn.theatlantic.com)
-		- assets.theatlantic.com	(→ cdn.theatlantic.com)
+	¹ Refused
 
 -->
-<ruleset name="Atlantic Media (partial)">
+<ruleset name="Atlantic Media (partial)" default_off='failed ruleset test'>
 
 	<target host="govexec.com" />
 	<target host="*.govexec.com" />
 	<target host="secure.nationaljournal.com" />
-	<target host="*.theatlantic.com" />
 	<target host="*.theatlanticcities.com" />
 	<target host="admin.theatlanticwire.com" />
 
 
 	<securecookie host="\.govexec\.com$" name=".*" />
-	<securecookie host="^admin\.theatlantic(cities|wire)$" name=".*" />
+	<securecookie host="^admin\.theatlantic(?:cities|wire)$" name=".*" />
 
 
 	<!--	- Cert is not valid for !www
 		- cdn is hosted on edgecast
 		- cdn 404s as-is
 					-->
-	<rule from="^https?://(?:cdn\.|www\.)?govexec\.com/"
+	<rule from="^http://(?:cdn\.|www\.)?govexec\.com/"
 		to="https://www.govexec.com/" />
 
 	<rule from="^http://secure\.nationaljournal\.com/"
 		to="https://secure.nationaljournal.com/" />
-
-	<!-- not 100% sure about this, but it's the
-		  least broken configuration I can find -->
-	<rule from="^http://(?:assets|cdn|ssl)\.theatlantic\.com/"
-		to="https://cdn.theatlantic.com/" />
 
 	<rule from="^http://admin\.theatlantic(cities|wire)\.com/"
 		to="https://admin.theatlantic$1.com/" />

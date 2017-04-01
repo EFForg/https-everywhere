@@ -1,0 +1,46 @@
+<!--
+	STS header includes includeSubdomains
+	for ^, analytics, www
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- clients.sigterm.no
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Sigterm.no">
+
+	<target host="sigterm.no" />
+	<target host="*.sigterm.no" />
+
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?:(?![^.]+\.analytics\.sigterm\.com/)(?:[^./]+\.){2,}|(?:[^./]+\.){3,})sigterm\.no/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.sigterm.no/" />
+			<test url="http://exists.not.sigterm.no/" />
+			<test url="http://this.host.analytics.sigterm.no/" />
+			<test url="http://exists.not.analytics.sigterm.no/" />
+			<test url="http://thishost.clients.sigterm.no/" />
+			<test url="http://existsnot.clients.sigterm.no/" />
+
+		<test url="http://analytics.sigterm.no/" />
+		<test url="http://clients.sigterm.no/" />
+		<test url="http://www.sigterm.no/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^clients\.sigterm\.no$" name="^blesta_sid$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

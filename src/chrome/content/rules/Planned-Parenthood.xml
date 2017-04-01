@@ -1,10 +1,41 @@
-<ruleset name="Planned Parenthood" platform="mixedcontent">
+<!--
+	Other Planned Parenthood rulesets:
+
+		- plannedparenthoodaction.org.xml
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .marketplace.plannedparenthood.org
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images on asktheexperts from www.plannedparenthood.org ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Planned Parenthood.org">
 
 	<target host="plannedparenthood.org" />
+	<target host="asktheexperts.plannedparenthood.org" />
+	<target host="marketplace.plannedparenthood.org" />
+	<target host="videos.plannedparenthood.org" />
 	<target host="www.plannedparenthood.org" />
 
 
-	<rule from="^https?://(?:www\.)?plannedparenthood\.org/"
-		to="https://www.plannedparenthood.org/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.marketplace\.plannedparenthood\.org$" name="^frontend$" /-->
+
+	<securecookie host="^\." name="^(?:_gat?$|_gat_|optimizely)" />
+	<securecookie host="^(?!\.plannedparenthood\.org$)." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

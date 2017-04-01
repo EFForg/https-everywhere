@@ -1,28 +1,53 @@
 <!--
-	Problematic domains:
+	Other AMC Networks rulesets:
+
+		- amcnetworks.com.xml
+		- sundance.tv.xml
+
+
+	Nonfunctional domains:
 
 		- score.services.amcnets.com	(times out)
-		- press.amcnetworks.com		(times out)
 
-		- amctv.com subdomains:
 
-			- ^		(times out)
-			- blogs		(works; mismatched, CN: *.hs.llnwd.net)
+	^amctv.com: Dropped
+
+
+	Mixed content:
+
+		- css, on:
+		
+			- www from $self ˢ
+			- www from fast.fonts.net ˢ
+
+		- Images, on:
+		
+			- www from $self ˢ
+			- www from images.amcnetworks.com ˢ
+
+	ˢ Secured by us
 
 -->
-<ruleset name="AMC (partial)">
+<ruleset name="AMC TV.com (partial)" platform="mixedcontent">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="media.amctv.com" />
+	<target host="www.amctv.com" />
+
+	<!--	Complications:
+				-->
 	<target host="amctv.com" />
-	<target host="*.amctv.com" />
 
 
-	<securecookie host="^www\.amctv\.com$" name=".+" />
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\w" name=".+" />
 
 
-	<rule from="^https?://(?:www\.)?amctv\.com/"
+	<rule from="^http://amctv\.com/"
 		to="https://www.amctv.com/" />
 
-	<rule from="^http://media\.amctv\.com/"
-		to="https://media.amctv.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

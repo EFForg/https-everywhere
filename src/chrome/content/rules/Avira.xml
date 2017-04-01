@@ -1,17 +1,44 @@
-<ruleset name="Avira">
+<!--
+	Insecure cookies are set for these domains and hosts:
 
+		- .avira.com
+		- www.avira.com
+
+-->
+<ruleset name="Avira.com">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="avira.com" />
-	<target host="*.avira.com" />
+	<target host="analysis.avira.com" />
+	<target host="forum.avira.com" />
+	<target host="license.avira.com" />
+	<target host="myaccount.avira.com" />
+	<target host="partnernet.avira.com" />
+	<target host="www.avira.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www.analysis.avira.com" />
+	<target host="www.forum.avira.com" />
+	<target host="www.license.avira.com" />
+	<target host="www.myaccount.avira.com" />
+	<target host="www.partnernet.avira.com" />
 
 
-	<!--securecookie host="^\.avira\.com$" name="^av_cid$" /-->
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.avira\.com$" name="^(?:__qca|av_cid|avr_pp|country|language)$" /-->
+	<!--securecookie host="^www\.avira\.com$" name="^(?:PHPSESSID|passthrough|permpassthrough)$" /-->
+
+	<securecookie host="^\.avira\.com$" name="^__qca$" />
 	<securecookie host="^www\.avira\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?avira\.com/"
-		to="https://www.avira.com/" />
-
-	<rule from="^http://(?:www\.)?(analysis|forum|license|myaccount|partnernet)\.avira\.com/"
+	<rule from="^http://www\.(analysis|forum|license|myaccount|partnernet)\.avira\.com/"
 		to="https://$1.avira.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

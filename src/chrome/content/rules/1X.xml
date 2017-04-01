@@ -1,25 +1,38 @@
 <!--
-	Cert doesn't match www.
-
-
 	Problematic subdomains:
 
 		- mail		(interrupted)
+		- www ²
+
+	² Mismatched
 
 -->
-<ruleset name="1X">
+<ruleset name="1X.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="1x.com" />
-	<target host="*.1x.com" />
+	<target host="autodiscover.1x.com" />
+	<target host="owa.1x.com" />
+
+	<!--	Complications:
+				-->
+	<target host="mail.1x.com" />
+	<target host="www.1x.com" />
 
 
 	<securecookie host="^\.1x\.com$" name=".+" />
 
 
-	<rule from="^http://(?:(autodiscover\.|owa\.)|www\.)?1x\.com/"
-		to="https://$11x.com/" />
-
-	<rule from="^https?://mail\.1x\.com/(?:.*)"
+	<rule from="^http://mail\.1x\.com/.*"
 		to="https://mail.google.com/a/1x.com" />
+
+		<test url="http://mail.1x.com//" />
+
+	<rule from="^http://www\.1x\.com/"
+		to="https://1x.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,68 @@
+<!--
+	For rules causing MCB, see Inc.com-falsemixed.xml.
+
+
+	Nonfunctional subdomains:
+
+		- admin ¹
+		- dev-admin ²
+		- store ¹
+
+	¹ Shows CentOS test page
+	² Refused
+
+
+	These altnames don't exist:
+
+		- www.subscriptions.inc.com
+
+
+	Mixed content:
+
+		- frame on www from dev-admin ¹
+
+		- css, on:
+
+			- conference from $self ²
+			- conference and www from netdna.bootstrapcdn.com ²
+			- conference from fonts.googleapis.com ²
+			- mediakit from $self ²
+			- www from $self ²
+			- www from admin ¹
+
+		- Images, on:
+
+			- www from admin ¹
+			- www from dev-admin ¹
+
+	¹ Unsecurable
+	² Secured by us
+
+-->
+<ruleset name="Inc.com (partial)">
+
+	<target host="inc.com" />
+	<target host="*.inc.com" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:conference|mediakit)\.inc\.com/+(?!wp-content/|wp-includes/)" />
+		<exclusion pattern="^http://(?:www\.)?inc\.com/+(?!favicon\.ico|lib/|views/css/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^magazine\.inc\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^\.subscriptions\.inc\.com$" name="^mb_sessid_/inc_amst$" /-->
+
+	<securecookie host="^(?:magazine|\.subscriptions)\.inc\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?inc\.com/"
+		to="https://www.inc.com/" />
+
+	<rule from="^http://(conference|mediakit|subscriptions|magazine)\.inc\.com/"
+		to="https://$1.inc.com/" />
+
+</ruleset>
+

@@ -1,0 +1,64 @@
+<!--
+	Other DuoDecad IT Services rulesets:
+
+		- Dditscdn.com.xml
+		- LiveJasmin.xml
+
+
+	Nonfunctional hosts in *dditservices.com:
+
+		- speedtest.hkg ᵈ
+		- speedtest.lax ᵈ
+		- speedtest.lux ᵈ
+		- speedtest.mia ʳ
+		- speedtest ᵈ
+
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- dditservices.com
+		- www.dditservices.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	STS header includes includeSubdomains
+
+-->
+<ruleset name="DD IT Services.com (partial)">
+
+	<target host="dditservices.com" />
+	<target host="*.dditservices.com" />
+
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?:(?:[^./]+\.){2}|speedtest\.|speedtest\.\w{3}\.)dditservices\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.dditservices.com/" />
+			<test url="http://exists.not.dditservices.com/" />
+			<test url="http://speedtest.hkg.dditservices.com/" />
+			<test url="http://speedtest.lax.dditservices.com/" />
+			<test url="http://speedtest.lux.dditservices.com/" />
+			<test url="http://speedtest.mia.dditservices.com/" />
+			<test url="http://speedtest.dditservices.com/" />
+
+		<test url="http://secure.dditservices.com/" />
+		<test url="http://www.dditservices.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?dditservices\.com$" name="^(?:PHPSESSID|site_lang)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

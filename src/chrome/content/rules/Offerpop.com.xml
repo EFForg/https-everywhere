@@ -1,0 +1,52 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/assets.offerpop.com/
+
+		- d3nxc88n0lpo37.cloudfront.net
+
+			- images.offerpop.com
+
+
+	Problematic hosts in *offerpop.com:
+
+		- images *
+
+	* Cloudfront
+
+
+	Insecure cookies are set for these hosts:
+
+		- app-community.offerpop.com
+		- community.offerpop.com
+
+-->
+<ruleset name="Offerpop.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="offerpop.com" />
+	<target host="app-community.offerpop.com" />
+	<target host="community.offerpop.com" />
+	<target host="www.offerpop.com" />
+
+	<!--	Complications:
+				-->
+	<target host="images.offerpop.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:app-)?community\.offerpop\.com$" name="^BIGipServer" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://images\.offerpop\.com/"
+		to="https://d3nxc88n0lpo37.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

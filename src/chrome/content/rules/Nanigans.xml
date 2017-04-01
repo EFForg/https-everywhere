@@ -1,26 +1,35 @@
 <!--
-	Problematic domains:
+	Other Nanigans rulesets:
 
-		- www.unifiedtracking.com	(mismatched)
+		- Socialtyzetracking.com.xml
+		- Unifiedtracking.com.xml
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .nanigans.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Nanigans (partial)">
+<ruleset name="Nanigans.com (partial)">
 
-	<target host="*.nanigans.com"/>
-	<target host="socialtyzetracking.com" />
-	<target host="www.socialtyzetracking.com" />
-	<target host="unifiedtracking.com" />
-	<target host="www.unifiedtracking.com" />
+	<target host="api.nanigans.com" />
+	<target host="lp.nanigans.com" />
 
-
-	<securecookie host="^lp\.nanigans\.com$" name=".+" />
-	<securecookie host="^www\.(?:socialtyze|unified)tracking\.com$" name=".+" />
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://api.nanigans.com/event.php?app_id=&amp;type=visit&amp;name=landing&amp;gtmcb=" /-->
 
 
-	<rule from="^http://(api|lp)\.nanigans\.com/"
-		to="https://$1.nanigans.com/"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.nanigans\.com$" name="^(NaN_fbx|NaN_fbxa|NaN_hash|NaN_mt)$" /-->
 
-	<rule from="^http://(?:www\.)?(socialtyze|unified)tracking\.com/"
-		to="https://www.$1tracking.com/" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

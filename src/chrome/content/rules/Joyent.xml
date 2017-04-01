@@ -1,43 +1,69 @@
 <!--
 	Other Joyent rulesets:
 
+		- Joyent_Cloud.com.xml
+		- Nodejs.org.xml
+		- Npm.im.xml
+		- Npm_js.com.xml
 		- Npm_js.org.xml
+		- SmartOS.org.xml
 
 
-	Problematic domains:
+	Nonfunctional hosts in *joyent.com:
 
-		- jobs.nodejs.org	(works; mismatched, CN: *.jobamatic.com)
+		- lpage *
+
+	* Marketo
 
 
-	Nonfunctional domains:
+	Insecure cookies are set for these hosts:
 
-		- (www.)nodejs.org *
-		- blog.nodejs.org *
-		- build.nodejs.org *
-
-	* Refused
+		- my.joyent.com
+		- sso.joyent.com
+		- wiki.joyent.com
+		- www.joyent.com
 
 -->
-<ruleset name="Joyent (partial)">
+<ruleset name="Joyent.com (partial)">
 
 	<target host="joyent.com"/>
 	<target host="*.joyent.com"/>
-	<target host="*.joyentcloud.com"/>
-	<target host="no.de"/>
-	<target host="www.no.de"/>
 
-	<securecookie host="^(.*\.)?(joyent\.com|no\.de)$" name=".*"/>
+		<!--exclusion pattern="^http://lpage\.joyent\.com/(?!css/|images/|rs/)" /-->
 
-	<rule from="^http://joyent\.com/"
-		to="https://www.joyent.com/"/>
+			<!--	-ve:
+					-->
+			<!--test url="http://lpage.joyent.com/TheDeck.html" /-->
 
-	<rule from="^http://(\w+)\.joyent\.com/"
-		to="https://$1.joyent.com/"/>
+		<exclusion pattern="^http://lpage\.joyent\.com/" />
 
-	<rule from="^http://([\w\-]*api|my)\.joyentcloud\.com/"
-		to="https://$1.joyentcloud.com/"/>
+			<test url="http://lpage.joyent.com/" />
 
-	<rule from="^http://(?:www\.)?no\.de/"
-		to="https://no.de/"/>
+		<test url="http://apidocs.joyent.com/" />
+		<test url="http://docs.joyent.com/" />
+		<test url="http://help.joyent.com/" />
+		<test url="http://my.joyent.com/" />
+		<test url="http://pkgsrc.joyent.com/" />
+		<test url="http://sso.joyent.com/login" />
+		<test url="http://www.joyent.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^my\.joyent\.com$" name="^(X-Mapping-\w+|connect\.sid)$" /-->
+	<!--securecookie host="^sso\.joyent\.com$" name="^connect\.sess$" /-->
+	<!--securecookie host="^wiki\.joyent\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^www\.joyent\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<!--	This needs tests.
+				-->
+	<!--rule from="^http://lpage\.joyent\.com/"
+		to="https://na-sjf.marketo.com/" /-->
+
+	<rule from="^http://([\w-]+\.)?joyent\.com/"
+		to="https://$1joyent.com/"/>
 
 </ruleset>

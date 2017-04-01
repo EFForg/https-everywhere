@@ -1,33 +1,48 @@
 <!--
-	Problematic domains:
+	Problematic hosts in *lithium.com:
 
-		- lithium.com	(mismatch)
+		- (client_id) ᵐ
+		- spark ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- (client_id).lithium.com
+		- www.lithium.com
 
 -->
-<ruleset name="Lithium">
+<ruleset name="Lithium.com (partial)">
 
-	<target host="74.86.17.250" />
 	<target host="lithium.com" />
 	<target host="*.lithium.com" />
-	<target host="*.i.lithium.com" />
+
+		<test url="http://community.lithium.com/" />
+		<test url="http://lithosphere.lithium.com/" />
+		<test url="http://www.lithium.com/" />
+
+		<!--	Clients:
+				-->
+		<test url="http://canonusa.i.lithium.com/" />
 
 
-	<securecookie host="^.*\.lithium\.com$" name=".+" />
+	<!--securecookie host="^(client_id)\.lithium\.com$" name="^(?:LiSESSIONID|LithiumUserInfo|LithiumUserSecure|LithiumVisitor)$" /-->
+	<!--securecookie host="^www\.lithium\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^https?://74\.86\.17\.250/assets/"
-		to="https://www.lithium.com/assets/" />
+	<!--	Redirect drops forward slash
+		and path, but not args:
+					-->
+	<rule from="^http://spark\.lithium\.com/[^?]*"
+		to="https://www.lithium.com/lithium-social-media-monitoring" />
 
+		<test url="http://spark.lithium.com/" />
+		<test url="http://spark.lithium.com/index.php" />
 
-	<rule from="^https?://(?:www\.)?lithium\.com/"
-		to="https://www.lithium.com/" />
-
-	<rule from="^http://(lithosphere|spark)\.lithium\.com/"
-		to="https://$1.lithium.com/" />
-
-	<!--	Clients have unique subdomains.
-						-->
-	<rule from="^http://(\w+)\.i\.lithium\.com/"
-		to="https://$1.i.lithium.com/" />
+	<rule from="^http://((?:community|\w+\.i|lithosphere|www)\.)?lithium\.com/"
+		to="https://$1lithium.com/" />
 
 </ruleset>

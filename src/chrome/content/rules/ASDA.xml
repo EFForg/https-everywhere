@@ -1,66 +1,194 @@
 <!--
+	For rules covering resources which do not secure
+	mixed content, see asda.com-resources.xml.
+
 	For other Wal-Mart coverage, see Walmart.com.xml.
 
 
-	asda.ugc.bazaarvoice.com
+	CDN buckets:
+
+		- asda.ugc.bazaarvoice.com
+		- d2shgyxr5r9niq.cloudfront.net
+		- asda.scene7.com
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *asda.com:
 
-		- greenroom *
-		- reviews		(redirects to http, akamai)
-		- shop			(shows walmart.com, mismatched, CN: cap-hosting.walmart.com)
-		- storelocator		(shows imp-facebook.i6a.co.uk, mismatched)
-		- your *
+		- money ᵈ
+		- reviews ʰ
+		- survey ʳ
+		- tradein ᵃ
 
-	* Shows impuploader.i6a.co.uk, mismatched)
-
-
-	Problematic subdomains:
-
-		- credit-card		(shows credit-cardapply, mismatched)
-		- giftguide		(interrupted)
-		- omniture.groceries	(mismatched, CN: *.d2.sc.omtrdc.net)
-		- survey
+	ᵃ Shows another domain
+	ᵈ Dropped
+	ʰ Redirects to http
+	ʳ Refused
 
 
-	Fully covered subdomains:
+	Problematic hosts in *asda.com:
 
-		- cards
-		- credit-card			(→ apply.creation.co.uk)
-		- direct
-		- ipadkiosk.direct
-		- i.groceries
-		- omniture.groceries		(→ groceries.asda.com.d2.sc.omtrdc.net)
-		- groceries-qa2
-		- i\d-groceries
-		- money
-		- online-account-manager
-		- pulse
-		- tradein
+		- ^ ᵈ
+		- credit-card ᵃ
+		- ipadkiosk.direct ᵐ
+		- giftguide ᵈ
+		- greenroom ᵐ
+		- omniture.groceries ᵐ
+		- storelocator ᵐ
+		- www ᴬ
+		- your ᵐ
+
+	ᵃ Shows credit-cardapply, equivalent to another domain
+	ᴬ Akamai / mismatched
+	ᵈ Dropped, preemptable redirect
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *asda.com:
+
+		- direct ʰ
+
+	ʰ Some pages redirect to http
+
+
+	These altnames do not exist:
+
+		- priceguarantee.asda.com
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .asda.com
+		- cards.asda.com
+		- groceries.asda.com
+		- .groceries.asda.com
+		- home-insurance.asda.com
+		- mobile.asda.com
+		- storelocator.asda.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- direct from asda.scene7.com
+			- your from pbs.twimg.com ˢ
+			- www from $self
+
+		- favicon on www from $self
+		- Bug on storelocator from dev.virtualearth.net ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="ASDA (partial)">
+<ruleset name="ASDA.com (partial)">
 
-	<target host="*.asda.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="cards.asda.com" />
+	<target host="credit-cardapply.asda.com" />
+	<target host="direct.asda.com" />
+	<target host="email.asda.com" />
+	<target host="groceries.asda.com" />
+	<target host="apg.groceries.asda.com" />
+	<target host="i.groceries.asda.com" />
+	<target host="service.groceries.asda.com" />
+	<target host="groceries-qa2.asda.com" />
+	<target host="home-insurance.asda.com" />
+	<target host="i1-groceries.asda.com" />
+	<target host="i2-groceries.asda.com" />
+	<target host="i3-groceries.asda.com" />
+	<target host="low-prices.asda.com" />
+	<target host="mobile.asda.com" />
+	<target host="online-account-manager.asda.com" />
+	<target host="opticians.asda.com" />
+	<target host="pulse.asda.com" />
+	<target host="sustainability.asda.com" />
+	<target host="travelinsurance.asda.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://direct\.asda\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://direct\.asda\.com/(?!/*(?:favicon\.ico|on/demandware\.static/|on/demandware.store/Sites-ASDA-Site/default/(?:Login-Show|NewsletterSignup-Form|Order-Track)(?:$|[?/])))" /-->
+		<!--
+			Avoid potential XHR problems:
+							-->
+		<!--exclusion pattern="^http://direct\.asda\.com/(?!.+\.js(?:$|\?))" /-->
+		<!--
+			In sum:
+							-->
+		<!--exclusion pattern="^http://direct\.asda\.com/(?!/*(?:favicon\.ico|on/demandware\.static/(?!.+\.js(?:$|\?))|on/demandware.store/Sites-ASDA-Site/default/(?:Login-Show|NewsletterSignup-Form|Order-Track)(?:$|[?/])))" /-->
+		<!--
+			Do not incease non-Tor distinguishability:
+									-->
+		<exclusion pattern="^http://direct\.asda\.com/(?!/*on/demandware.store/Sites-ASDA-Site/default/(?:Login-Show|NewsletterSignup-Form|Order-Track)(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://direct.asda.com/george/clothing/10,default,sc.html" />
+			<test url="http://direct.asda.com/on/demandware.static/-/Sites-ASDA-Library/default/v1469264129481/Beaconing/beacon_adapter_v1.04.js" />
+			<test url="http://direct.asda.com/on/demandware.static/-/Sites-ASDA-Library/default/v1469264129481/GeorgeJavascript/Fancybox/jquery.fancybox.min.js" />
+			<test url="http://direct.asda.com/on/demandware.static/-/Sites-ASDA-Library/default/v1469264129481/GeorgeJavascript/bxslider/jquery.bxslider.min.js" />
+			<test url="http://direct.asda.com/on/demandware.static/Sites-ASDA-Site/-/default/v1469264129481/internal/jscript/dwac-14.8.js" />
+			<test url="http://direct.asda.com/on/demandware.static/Sites-ASDA-Site/-/default/v1469264129481/internal/jscript/dwanalytics.js" />
+			<!--
+			<test url="http://direct.asda.com/on/demandware.static/Sites-ASDA-Site/-/default/v1469264129481/js/george.body.libraries.min.js" />
+			<test url="http://direct.asda.com/on/demandware.static/Sites-ASDA-Site/-/default/v1469264129481/js/george.libraries.min.js" />
+			-->
+
+			<!--	-ve:
+					-->
+			<!--
+			<test url="http://direct.asda.com/on/demandware.static/Sites-ASDA-Site/-/default/dw2daeaa8b/img/blank.gif" />
+			-->
+			<!--	Mixed image: -->
+			<test url="http://direct.asda.com/on/demandware.store/Sites-ASDA-Site/default/NewsletterSignup-Form" />
+			<test url="http://direct.asda.com/on/demandware.store/Sites-ASDA-Site/default/Order-Track" />
+			<test url="http://direct.asda.com/on/demandware.store/Sites-ASDA-Site/default/Login-Show" />
+
+		<!--	$ redirects to another domain, so:
+								-->
+		<test url="http://email.asda.com/fancybox/jquery.fancybox-1.3.4.css" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://groceries.asda.com/api/user/view?responsegroup=extended&amp;addressload=none&amp;requestorigin=gi&amp;nextorder=false&amp;_=1" /-->
+
+		<test url="http://i.groceries.asda.com/g/086/045/5013026086045_500000_IDShot_3.jpeg" />
+		<test url="http://i1-groceries.asda.com/g/014/851/4069600014851_21000_IDShot_2.jpeg" />
+		<test url="http://i2-groceries.asda.com/g/209/273/5015116209273_500000_IDShot_3.jpeg" />
+		<test url="http://i3-groceries.asda.com/g/571/820/5052449571820_21000_IDShot_2.jpeg" />
+
+	<!--	Complications:
+				-->
+	<target host="credit-card.asda.com" />
+	<target host="omniture.groceries.asda.com" />
 
 
-	<securecookie host="^.+\.asda\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.asda\.com$" name="^dtCookie$" /-->
+	<!--securecookie host="^cards\.asda\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^groceries\.asda\.com$" name="^(?:ASDACOOKIECHECK$|DCENV$|JSESSIONID$|MTEP_EXISTING_SESSION$|NSC_|akaau_P[12]$)" /-->
+	<!--securecookie host="^\.groceries\.asda\.com$" name="^(?:SSID|SSLB|SSPV|SSRT|SSSC)$" /-->
+	<!--securecookie host="^home-insurance\.asda\.com$" name="^(?:\.Star|ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^(?:mobile|storelocator)\.asda\.com$" name="_session$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid$|_gat?$|_gat_|optimizely|s_v)" />
+	<securecookie host="^(?!direct\.).+\.asda\.com$" name="." />
 
 
-	<rule from="^https?://credit-card\.asda\.com/$"
-		to="https://apply.creation.co.uk/apply/index.html?brandCode=asda_colleague" />
-
-	<rule from="^https?://credit-card\.asda\.com/(?!$)"
+	<rule from="^http://credit-card\.asda\.com/"
 		to="https://apply.creation.co.uk/" />
 
-	<rule from="^http://(cards|(?:ipadkiosk\.)?direct|email|i(?:\.|\d-)groceries|grocieries-qa2|money|online-account-manager|pulse|tradein)\.asda\.com/"
-		to="https://$1.asda.com/" />
-
-	<rule from="^https?://omniture\.groceries\.asda\.com/"
+	<rule from="^http://omniture\.groceries\.asda\.com/"
 		to="https://groceries.asda.com.d2.sc.omtrdc.net/" />
 
-	<rule from="^https?://survey\.asda\.com/(?:\?.*)?$"
-		to="https://www.emailvision.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

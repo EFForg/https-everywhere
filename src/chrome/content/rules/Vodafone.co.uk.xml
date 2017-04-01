@@ -1,0 +1,107 @@
+<!--
+	For other Vodafone Group coverage, see Vodafone.xml.
+
+
+	CDN buckets:
+
+		- s3.blog.vodafone.co.uk.s3.amazonaws.com
+
+
+	Nonfunctional hosts in *vodafone.com:
+
+
+	Problematic hosts in *vodafone.co.uk:
+
+		- blog *
+		- rewardz *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .vodafone.co.uk
+		- forum.vodafone.co.uk
+		- .forum.vodafone.co.uk
+		- freesim.vodafone.co.uk
+		- pp-shop.vodafone.co.uk
+		- rewards.vodafone.co.uk
+		- shop.vodafone.co.uk
+		- www.vodafone.co.uk
+
+
+	cms-consumer: Dropped over http & https
+
+
+	Mixed content:
+
+		- css on blog from $self ¹
+
+		- Image, on:
+
+			- blog, mediacentre from s3.blog.vodafone.co.uk.s3.amazonaws.com
+			- blog from $self ¹
+			- careers from $self *
+			- iphone, pp-shop, shop from assets.vodafone.co.uk *
+			- iphone, pp-shop, rewards from www.vodafone.co.uk *
+
+		- Bugs, on:
+
+			- blog from vodafoneuk.122.2o7.net *
+			- blog from www.facebook.com *
+
+	¹ Not secured by us <= mismatched
+	* Secured by us
+
+-->
+<ruleset name="Vodafone.co.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="vodafone.co.uk" />
+	<target host="assets.vodafone.co.uk" />
+	<target host="careers.vodafone.co.uk" />
+	<target host="freesim.vodafone.co.uk" />
+	<target host="help.vodafone.co.uk" />
+	<target host="iphone.vodafone.co.uk" />
+	<target host="mediacentre.vodafone.co.uk" />
+	<target host="online.vodafone.co.uk" />
+	<target host="pp-shop.vodafone.co.uk" />
+	<target host="rewards.vodafone.co.uk" />
+	<target host="shop.vodafone.co.uk" />
+	<target host="support.vodafone.co.uk" />
+	<target host="tradein.vodafone.co.uk" />
+	<target host="vip.vodafone.co.uk" />
+	<target host="www.vodafone.co.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="rewardz.vodafone.co.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.vodafone\.co\.uk$" name="^(?:ObSSOCookie|vf_returning_visitor)$" /-->
+	<!--securecookie host="^forum\.vodafone\.co\.uk$" name="^(?:LiSESSIONID|LithiumUserSecure|LithiumUserInfo|LithiumVisitor)$" /-->
+	<!--securecookie host="^\.forum\.vodafone\.co\.uk$" name="^recentlyViewedPosts$" /-->
+	<!--securecookie host="freesim\.vodafone\.co\.uk$" name="^(?:ci_session|csrf_cookie_name)$" /-->
+	<!--securecookie host="^rewards\.vodafone\.co\.uk$" name="^freebees$" /-->
+	<!--securecookie host="^(?:pp-)?shop\.vodafone\.co\.uk$" name="^(?:DYN_USER_CONFIRM|DYN_USER_ID|JSESSIONID)$" /-->
+	<!--securecookie host="^www\.vodafone\.co\.uk$" name="^(?:JSESSIONID|VFCOOKIE)$" /-->
+
+	<securecookie host="^\.vodafone\.co\.uk$" name="^vf_returning_visitor$" />
+	<securecookie host=".+\.vodafone\.co\.uk$" name=".+" />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://rewardz\.vodafone\.co\.uk/+"
+		to="https://rewards.vodafone.co.uk/" />
+
+		<test url="http://rewardz.vodafone.co.uk//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

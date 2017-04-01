@@ -1,17 +1,12 @@
 <!--
-	Fully covered subdomains:
+	Nonfunctional hosts in *dotcloud.com:
 
-		- (www.)
-		- blog
-		- docs
-		- help
-		- status
-		- support	(→ dotcloud.zendesk.com)
+		- zerorpc ʳ
+
+	ʳ Refused
 
 
-	Nonfunctional subdomains:
-
-		- platform-status	(interrupted)
+	STS header includes includeSubdomains
 
 -->
 <ruleset name="dotCloud.com (partial)">
@@ -19,14 +14,22 @@
 	<target host="dotcloud.com" />
 	<target host="*.dotcloud.com" />
 
+		<exclusion pattern="^http://zerorpc\.dotcloud\.com/" />
 
-	<securecookie host="^www\.dotcloud\.com$" name=".+" />
+			<test url="http://zerorpc.dotcloud.com/" />
+
+		<test url="http://www.dotcloud.com/" />
 
 
-	<rule from="^http://((?:blog|docs|help|status|www)\.)?dotcloud\.com/"
-		to="https://$1dotcloud.com/" />
+	<securecookie host="." name="." />
 
-	<rule from="^http://support\.dotcloud\.com/"
-		to="https://dotcloud.zendesk.com/" />
+
+	<rule from="^http://status\.dotcloud\.com/"
+		to="https://dotcloud.statuspage.io/" />
+
+		<test url="http://status.dotcloud.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

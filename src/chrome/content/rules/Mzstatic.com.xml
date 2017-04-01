@@ -1,0 +1,51 @@
+<!--
+	For other Apple coverage, see Apple.com.xml.
+
+	CDN buckets:
+		- a([1-5]).mzstatic.com.edgesuite.net/...
+			- a$1.da1.akamai.net/...
+
+	Data differ between http & https:
+		dzc-metrics.mzstatic.com
+
+	Problematic hosts in *mzstatic.com:
+		- a\d *
+		- r *
+		- r[1-8] *
+	* Akamai
+-->
+<ruleset name="Mzstatic.com (partial)">
+
+	<!--	Direct rewrites:	-->
+	<target host="mzstatic.com" />
+	<target host="www.mzstatic.com" />
+	<target host="accertify.mzstatic.com" />
+	<target host="itc.mzstatic.com" />
+	<target host="metrics.mzstatic.com" />
+	<target host="s.mzstatic.com" />
+	<target host="s1.mzstatic.com" />
+	<target host="s2.mzstatic.com" />
+	<target host="s3.mzstatic.com" />
+	<target host="s4.mzstatic.com" />
+	<target host="s5.mzstatic.com" />
+	<target host="store.mzstatic.com" />
+
+	<!--	Complications:	-->
+	<target host="a1.mzstatic.com" />
+	<target host="a2.mzstatic.com" />
+	<target host="a3.mzstatic.com" />
+	<target host="a4.mzstatic.com" />
+	<target host="a5.mzstatic.com" />
+	<target host="r.mzstatic.com" />
+
+	<rule from="^http://a(\d)\.mzstatic\.com/"
+			to="https://s$1.mzstatic.com/" />
+		<test url="http://a1.mzstatic.com/us/r30/Video2/v4/e5/3f/9d/e53f9dc7-e0f9-66eb-d4fd-ff6c289d7780/poster212x312.jpeg" />
+		<test url="http://a2.mzstatic.com/us/r30/Music/v4/46/c5/35/46c53591-9adf-c950-c05f-e755b8d41a44/cover600x600.jpeg" />
+
+	<rule from="^http://r\.mzstatic\.com/"
+			to="https://s.mzstatic.com/" />
+		<test url="http://r.mzstatic.com/email/images_shared/header_welcome.gif" />
+
+	<rule from="^http:" to="https:" />
+</ruleset>

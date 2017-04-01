@@ -1,19 +1,34 @@
 <!--
-	Nonfunctional subdomains:
+	Problematic hosts in *nginx.org:
 
-		- (www.)	(refused)
-		- wiki		(dropped)
+		- wiki ᵃ
+
+	ᵃ Shows www.nginx.com, preemptable redirect
 
 -->
-<ruleset name="nginx.org (partial)">
+<ruleset name="nginx.org">
 
-	<target host="*.nginx.org" />
+	<!--	Direct rewrites:
+				-->
+	<target host="nginx.org" />
+	<target host="forum.nginx.org" />
+	<target host="trac.nginx.org" />
+	<target host="www.nginx.org" />
+
+	<!--	Complications:
+				-->
+	<target host="wiki.nginx.org" />
 
 
-	<securecookie host="^\.?trac\.nginx\.org$" name=".+" />
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://wiki\.nginx\.org/[^?]*"
+		to="https://www.nginx.com/resources/wiki/" />
 
+		<test url="http://wiki.nginx.org/start/" />
 
-	<rule from="^http://trac\.nginx\.org/"
-		to="https://trac.nginx.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

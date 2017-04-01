@@ -1,0 +1,115 @@
+<!--
+	For other Microsoft coverage, see Microsoft.xml.
+
+
+	CDN buckets:
+
+		- i.g.social.ms.akadns.net
+
+			- i1.social.s-msft.com
+
+
+	Problematic hosts in s-msft.com:
+
+		- i[1-4].services.social ¹
+		- i[2-4].social *
+		- i[2-4].code.msdn *
+		- i[2-4].gallery.technet *
+
+	¹ Akamai
+	* Mismatched
+
+
+	Fully hosts in *s-msft.com:
+
+		- widgets.membership
+		- i1.code.msdn
+		- i[2-4].code.msdn		(→ i1.code.msdn.s-msft.com)
+		- i1.visualstudiogallery.msdn
+
+		- *.sec:
+
+			- download-codeplex
+			- i-msdn
+			- i-technet
+			- i-vso
+			- i2-technet
+			- i3-vso
+
+		- i[1-4].services.social	(→ services.social.microsoft.com)
+		- i1.social
+		- i[2-4].social			(→ i1.social.s-msft.com)
+		- i1.gallery.technet
+		- i[2-4].gallery.technet	(→ i1.gallery.technet.s-msft.com)
+
+
+	Insecure cookies are set for these hosts:
+
+		- i1.code.msdn.s-msft.com
+
+-->
+<ruleset name="s-Msft.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="widgets.membership.s-msft.com" />
+	<target host="i1.code.msdn.s-msft.com" />
+	<target host="i1.visualstudiogallery.msdn.s-msft.com" />
+	<target host="*.sec.s-msft.com" />
+	<target host="i1.social.s-msft.com" />
+	<target host="i1.gallery.technet.s-msft.com" />
+
+	<!--	Complications:
+				-->
+	<target host="i2.code.msdn.s-msft.com" />
+	<target host="i3.code.msdn.s-msft.com" />
+	<target host="i4.code.msdn.s-msft.com" />
+	<target host="i2.social.s-msft.com" />
+	<target host="i3.social.s-msft.com" />
+	<target host="i4.social.s-msft.com" />
+	<target host="i1.services.social.s-msft.com" />
+	<target host="i2.services.social.s-msft.com" />
+	<target host="i3.services.social.s-msft.com" />
+	<target host="i4.services.social.s-msft.com" />
+	<target host="i2.gallery.technet.s-msft.com" />
+	<target host="i3.gallery.technet.s-msft.com" />
+	<target host="i4.gallery.technet.s-msft.com" />
+
+		<test url="http://widgets.membership.s-msft.com/v1/widgets.js" />
+		<test url="http://i1.code.msdn.s-msft.com/content/common/trans.gif" />
+		<test url="http://i1.code.msdn.s-msft.com/windowsapps/content/common/download.png" />
+		<test url="http://i1.visualstudiogallery.msdn.s-msft.com/content/common/trans.gif" />
+
+		<test url="http://i-msdn.sec.s-msft.com/Areas/Centers/Themes/StandardDevCenter/Content/HeaderFooterSprite.png" />
+		<test url="http://i-msdn.sec.s-msft.com/Areas/Epx/Themes/Office/Content/ImageSprite.png" />
+		<test url="http://i-msdn.sec.s-msft.com/dynimg/IC711386.png" />
+		<test url="http://i-vso.sec.s-msft.com/Areas/VisualStudio/Themes/VStudio/Content/ImageSprite.png" />
+		<test url="http://i-vso.sec.s-msft.com/Combined.css" />
+		<test url="http://i3-vso.sec.s-msft.com/dynimg/IC796831.png" />
+
+		<test url="http://i1.social.s-msft.com/globalresources/Images/trans.gif" />
+		<test url="http://i1.social.s-msft.com//globalresources/Images/trans.gif" />
+		<test url="http://i1.gallery.technet.s-msft.com/scriptcenter/content/common/sharethis/facebook.gif" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^i1\.code\.msdn\.s-msft.com$" name="^ssostate$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://i[2-4]\.(code\.msdn|social|gallery\.technet)\.s-msft\.com/"
+		to="https://i1.$1.s-msft.com/" />
+
+		<test url="http://i2.code.msdn.s-msft.com/windowsapps/content/common/download.png" />
+		<test url="http://i2.social.s-msft.com/globalresources/Images/trans.gif" />
+		<test url="http://i2.gallery.technet.s-msft.com/scriptcenter/content/common/sharethis/facebook.gif" />
+
+	<rule from="^http://i[1-4]\.services\.social\.s-msft\.com/"
+		to="https://services.social.microsoft.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

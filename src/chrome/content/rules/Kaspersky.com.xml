@@ -1,58 +1,212 @@
 <!--
 	Other Kaspersky rulesets:
 
+		- Kaspersky.ru.xml
+		- Kaspersky.ua.xml
+		- Kaspersky-cyberstat.com.xml
+		- Kaspersky_Club.ru.xml
+		- Kaspersky_Partners.com.xml
+		- Kaspersky_Partners.ru.xml
 		- Kasperskycontenthub.com.xml
+		- Securelist.ru.xml
+		- Threatpost.ru.xml
 
 
 	CDN buckets:
 
 		- kaspersky.122.2o7.net
+		- a248.e.akamai.net/L/16382/90570/15h/reviews.kaspersky.com/
 
 		- 46qasb3uw5yn639ko4bz2ptr8u.wpengine.netdna-cdn.com
 
 			- blog
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *kaspersky.com:
 
-		- academy	(shows www; mismatched, CN: www.kapersky.com)
-		- blog		(403, wpengine)
-		- business	(redirects to http, wpengine)
-		- forum		(dropped)
-		- www		(401, valid cert)
+		- (www.)? ¹
+		- css ²
+		- forum	³
+		- newvirus ⁴
+		- reviews *
+
+	¹ Redirects to http/410
+	² Handshake fails
+	³ Dropped
+	⁴ Shows default page
+	* 403
 
 
-	Fully covered subdomains:
+	Problematic hosts in *kaspersky.com:
 
-		- anti-theft
-		- companyaccount
-		- eugene
-		- manage-tablet
-		- my
-		- support
-		- trusted
-		- uis
+		- www.academy ³
+		- www.blog ¹
+		- www.business ³
+		- www.eugene ¹
+		- (www.)?free ²
+		- me ²
+		- media ²
+		- www.sas ³
+		- tr1 ⁴
+
+	¹ Mismatched, CN: threatpost.com
+	² Mismatched, CN: www.kaspersky.com
+	³ WP Engine
+	⁴ Mismatched, CN: *.d2.sc.omtrdc.net
+
+
+	These altnames don't exist:
+
+		- www.arabic.kaspersky.com
+		- www.cybermap.kaspersky.com
+		- www.plblog.kaspersky.com
+		- www.press.kaspersky.com
+		- www.us-business.kaspersky.com
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .kaspersky.com
+		- academy.kaspersky.com
+		- arabic.kaspersky.com
+		- blog.kaspersky.com
+		- business.kaspersky.com
+		- center.kaspersky.com
+		- companyaccount.kaspersky.com
+		- eugene.kaspersky.com
+		- extcss.kaspersky.com
+		- plblog.kaspersky.com
+		- press.kaspersky.com
+		- sas.kaspersky.com
+		- us-business.kaspersky.com
+		- .usa.kaspersky.com
+		- usblog.kaspersky.com
+		- .virusdesk.kaspersky.com
+		- www.kaspersky.com
+		- .www.kaspersky.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
 
-		- Images on eugene from kasperskycontenthub.com *
+		- css, on:
 
-	* Secured by us, doesn't trip MCB anyway
+			- cybermap, virusdesk from fonts.googleapis.com ³
+			- me from $self ¹
+
+		- Images, on:
+
+			- me from $self ¹
+			- usa from $self ³
+
+		- Ads/bugs, on:
+
+			- usa from tr1 ³
+			- me from googleads.g.doubleclick.net ⁴
+
+	¹ Not secured by us <= mismatched
+	² Unsecurable <= 410
+	³ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+	⁴ Rule disabled by default
 
 -->
 <ruleset name="Kaspersky.com (partial)">
 
-	<target host="*.kaspersky.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="academy.kaspersky.com" />
+	<target host="anti-theft.kaspersky.com" />
+	<target host="arabic.kaspersky.com" />
+	<target host="blog.kaspersky.com" />
+	<target host="business.kaspersky.com" />
+	<target host="cca.kaspersky.com" />
+	<target host="center.kaspersky.com" />
+	<target host="companyaccount.kaspersky.com" />
+	<target host="cybermap.kaspersky.com" />
+	<target host="eugene.kaspersky.com" />
+	<target host="extcss.kaspersky.com" />
+	<target host="manage-tablet.kaspersky.com" />
+	<target host="my.kaspersky.com" />
+	<target host="noransom.kaspersky.com" />
+	<target host="plblog.kaspersky.com" />
+	<target host="premiumsupport.kaspersky.com" />
+	<target host="press.kaspersky.com" />
+	<target host="sas.kaspersky.com" />
+	<target host="store.kaspersky.com" />
+	<target host="support.kaspersky.com" />
+	<target host="trusted.kaspersky.com" />
+	<target host="uis.kaspersky.com" />
+	<target host="us-business.kaspersky.com" />
+	<target host="usa.kaspersky.com" />
+	<target host="usblog.kaspersky.com" />
+	<target host="virusdesk.kaspersky.com" />
+	<target host="www.kaspersky.com" />
 
+	<!--	Complications:
+				-->
+	<target host="www.academy.kaspersky.com" />
+	<target host="www.blog.kaspersky.com" />
+	<target host="www.business.kaspersky.com" />
+	<target host="www.eugene.kaspersky.com" />
+	<target host="www.sas.kaspersky.com" />
+	<target host="tr1.kaspersky.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.kaspersky\.com/$" /-->
+		<!--
+			410:
+				-->
+		<!--exclusion pattern="^http://www\.kaspersky\.com/(images/|other/custom-html/|resources/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.kaspersky\.com/(?!/*(?:downloads/keys|vpnhelp(?:$|[?/])))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.kaspersky.com/about" />
+			<test url="http://www.kaspersky.com/africa/" />
+			<test url="http://www.kaspersky.com/docs" />
+			<test url="http://www.kaspersky.com/estore" />
+			<test url="http://www.kaspersky.com/tr/" />
+			<test url="http://www.kaspersky.com/ukrenew" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.kaspersky.com/downloads/keys/klvpnsetup.exe" />
+			<test url="http://www.kaspersky.com/vpnhelp" />
+			<test url="http://www.kaspersky.com/vpnhelp/other_browsers.html" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.kaspersky\.com$" name="^s_vi$" /-->
+	<!--securecookie host="^(academy|blog|business|eugene|plblog|press|sas|us-business|usblog)\.kaspersky\.com$" name="^X-Mapping-\w{8}$" /-->
+	<!--securecookie host="^center\.kaspersky\.com$" name="^__RequestVerificationToken$" /-->
+	<!--securecookie host="^companyaccount\.kaspersky\.com$" name="^(?:ISAWPLB\{[\dA-F]{8}(-[\dA-F]){4}\}|q)$" /-->
+	<!--securecookie host="^extcss\.kaspersky\.com$" name="^(?:ISAWPLB\{[\dA-F]{8}(-[\dA-F]){4}\}|JSESSIONID|q)$" /-->
+	<!--securecookie host="^store\.kaspersky\.com$" name="^(?:BIGipServer.*|JSESSIONID|VISITOR_ID|X-DR-(?:CURRENCY|LOCALE|SHOPPER-kasperus|THEME))$" /-->
+	<!--securecookie host="^\.usa\.kaspersky\.com$" name="^USClientRoute$" /-->
+	<!--securecookie host="^\.virusdesk\.kaspersky\.com$" name="^ClientRouteNewSupport$" /-->
+	<!--securecookie host="^www\.kaspersky\.com$" name="^uid$" /-->
+	<!--securecookie host="^\.www\.kaspersky\.com$" name="^ClientRouteOldWeb$" /-->
 
 	<!--	Tracking cookies:
 					-->
-	<securecookie host="^\.kaspersky\.com$" name="^s_\w+$" />
-	<securecookie host="^(?:\.anti-theft|\.eugene|\.?my|\.?support)\.kaspersky\.com$" name=".+" />
+	<securecookie host="^\." name="^s_\w+$" />
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\.(?:anti-theft|eugene|my|support|usa|virusdesk)\.kaspersky\.com$" name="." />
 
 
-	<rule from="^http://(anti-theft|companyaccount|eugene|manage-tablet|my|support|trusted|uis)\.kaspersky\.com/"
+	<rule from="^http://www\.(academy|blog|business|eugene|sas)\.kaspersky\.com/"
 		to="https://$1.kaspersky.com/" />
+
+	<rule from="^http://tr1\.kaspersky\.com/"
+		to="https://kaspersky.d2.sc.omtrdc.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

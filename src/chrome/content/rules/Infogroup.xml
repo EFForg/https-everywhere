@@ -2,26 +2,69 @@
 	Nonfunctional domains:
 
 		- (www.)infogroup.com
-		- list.infousa.com	(cert: secured.infousa.com; shows that domain)
+		- list.infousa.com *
+		- secured.infousa.com *
+
+	* Connection reset by peer
+
+	Problematic hosts:
+
+		- link.p0.com *
+
+	* Protocol-relative redirect
+
+
+	Fully covered hosts in *infousa.com:
+
+		- (www.)?
+		- account
+		- ca
+		- leads
+		- publicfiling
+		- secured
+		- shared.sub
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- link.p0.com
+		- .link.p0.com
 
 -->
 <ruleset name="Infogroup (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="infousa.com" />
-	<target host="*.infousa.com" />
+	<target host="account.infousa.com" />
+	<target host="ca.infousa.com" />
+	<target host="leads.infousa.com" />
+	<target host="publicfiling.infousa.com" />
 	<target host="shared.sub.infousa.com" />
+	<target host="www.infousa.com" />
+
 	<target host="link.p0.com" />
 
+		<!--	https://github.com/EFForg/https-everywhere/issues/1606
 
-	<securecookie host="^(.*\.)?infousa\.com$" name=".*" />
+			Protocol-relative redirect:
+							-->
+		<exclusion pattern="^http://link\.p0\.com/u\.d\?" />
+
+			<test url="http://link.p0.com/u.d?UYGrM1Gw9CS2jP8VxJ5zva=95471" />
+			<test url="http://link.p0.com/u.d?UYGrM1Gw9CS2jP8VxJ5zva=95471&amp;" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^link\.p0\.com$" name="^YMRC_\d+$" /-->
+	<!--securecookie host="^\.link\.p0\.com$" name="^(BIGipServerlink\.p0\.com|avr(_\d+)+)$" /-->
+
+	<securecookie host="^(?:.*\.)?infousa\.com$" name=".*" />
 	<securecookie host="^link\.p0\.com$" name=".*" />
 
 
-	<rule from="^http://((?:account|ca|leads|publicfiling|secured|shared\.sub|www)\.)?infousa\.com/"
-		to="https://$1infousa.com/" />
-
-	<!--	Tracking beacon.	-->
-	<rule from="^http://link\.p0\.com/"
-		to="https://link.p0.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

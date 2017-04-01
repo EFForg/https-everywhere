@@ -1,37 +1,41 @@
 <!--
-	Nonfunctional subdomains:
+	Problematic hosts in *coreboot.org:
 
-		- qa		(shows blank page)
-		- review	(shows www)
+		- ^ *
+		- patchwork *
 
-
-	Problematic subdomains:
-
-		- ^	(404)
+	* Mismatched
 
 
-	Fully covered subdomains:
+	Mixed content:
 
-		- (www.)	(^ → www)
-		- tracker
+		- Images on blogs from $self *
 
-
-	Expired 2010-10-21
+	* Secured by us
 
 -->
-<ruleset name="coreboot (partial)" default_off="expired" platform="cacert">
+<ruleset name="coreboot.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="blogs.coreboot.org" />
+	<target host="qa.coreboot.org" />
+	<target host="review.coreboot.org" />
+	<target host="tracker.coreboot.org" />
+	<target host="www.coreboot.org" />
+
+	<!--	Complications:
+				-->
 	<target host="coreboot.org" />
-	<target host="*.coreboot.org" />
 
 
-	<securecookie host="^.*\.coreboot\.org$" name=".*" />
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:www\.)?coreboot\.org/"
+	<rule from="^http://coreboot\.org/"
 		to="https://www.coreboot.org/" />
 
-	<rule from="^http://tracker\.coreboot\.org/"
-		to="https://tracker.coreboot.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

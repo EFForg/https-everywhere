@@ -9,32 +9,72 @@
 			- seals
 
 
-	Partially covered subdomains:
+	Problematic hosts in *
 
-		- (www.)	(pages redirect to http)
+		- support *
+
+	* Mismatched
 
 
-	Fully covered subdomains:
+	www.trust-guard.com: Pages redirect to http
 
-		- members
-		- seals		(→ c674753.ssl.cf2.rackcdn.com)
-		- secure
+
+	Insecure cookies are set for these domains:
+
+		- .trust-guard.com
 
 -->
 <ruleset name="Trust-Guard.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="trust-guard.com" />
-	<target host="*.trust-guard.com" />
-		<exclusion pattern="^http://(?:www\.)?trust-guard\.com/+(?!CSS/|favicon\.ico|Images/|Other/|Scripts/|Templates/)" />
+	<target host="members.trust-guard.com" />
+	<target host="secure.trust-guard.com" />
+	<target host="www.trust-guard.com" />
+
+	<!--	Complications:
+				-->
+	<target host="seals.trust-guard.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.trust-guard\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.trust-guard\.com/+(?!CSS/|favicon\.ico|Images/|Other/|Scripts/|Templates/)" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.trust-guard.com/affiliates/" />
+			<test url="http://www.trust-guard.com/cindex.asp" />
+			<test url="http://www.trust-guard.com/faq.htm" />
+			<test url="http://www.trust-guard.com/features.htm" />
+			<test url="http://www.trust-guard.com/partners.htm" />
+			<test url="http://www.trust-guard.com/pindex.asp" />
+			<test url="http://www.trust-guard.com/security-scanned.htm" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.trust-guard.com/favicon.ico" />
+			<test url="http://www.trust-guard.com/Images/xbutton.gif" />
+			<test url="http://www.trust-guard.com/Templates/2.0/css/style.css" />
 
 
-	<securecookie host="^(?:members|secure)\.trust-guard\.com$" name=".+" />
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.trust-guard\.com$" name="^(?:__cfduid|Language|cf_clearance)$" /-->
+	<!--securecookie host="^www\.trust-guard\.com$" name="^(?:FirstVisitForm|PHPSESSID)$" /-->
 
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^(?:members|secure)\.trust-guard\.com$" name="." />
 
-	<rule from="^http://((?:members|secure|www)\.)?trust-guard\.com/"
-		to="https://$1trust-guard.com/" />
 
 	<rule from="^http://seals\.trust-guard\.com/"
 		to="https://c674753.ssl.cf2.rackcdn.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

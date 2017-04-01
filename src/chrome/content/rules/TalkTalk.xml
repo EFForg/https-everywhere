@@ -1,33 +1,33 @@
 <!--
-	Nonfunctional:
+	Other TalkTalk rulesets:
 
-		- pipex.net		(redirects to talktalkbusiness.co.uk)
-		- error.talktalk.co.uk	(dropped)
-		- mobile.talktalk.co.uk	(redirects to secure-mobiles.com; mismatched, CN: *.secure-mobiles.com)
-
-
-	Problematic domains:
-
-		- careers.talktalk.co.uk	(works, CN: Parallels Panel)
-		- webmail.talktalk.co.uk	(dropped)
+		- Nildram.net.xml
+		- TTxm.co.uk.xml
+		- TalkTalk_Business.co.uk.xml
+		- TalkTalk-Labs.com.xml
 
 
-	Partially covered subdomains:
+	Nonfunctional hosts in *talktalk.co.uk:
 
-		- webmail	(→ www, [^?/]+ 404s)
+		- error ¹
+		- mobile ²
+
+	¹ Dropped
+	² Redirects to secure-mobiles.com; mismatched, CN: *.secure-mobiles.com
 
 
-	Fully covered domains:
+	Problematic hosts in *talktalk.co.uk:
 
-		- talktalk.co.uk subdomains:
+		- careers *
 
-			- (www.)	(^ → www)
-			- help
-			- help2
-			- my
-			- myaccount
-			- sales
-			- sso
+	* CN: Parallels Panel
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .talktalk.co.uk
+		- sales.talktalk.co.uk
+		- www.talktalk.co.uk
 
 
 	Mixed content:
@@ -41,7 +41,7 @@
 			- help2.talktalk.co.uk from m\d.ttxm.co.uk *
 			- www.talktalk.co.uk from m\d.ttxm.co.uk *
 
-		- Web bugs, on www.talktalk.co.uk from:
+		- Bugs, on www.talktalk.co.uk from:
 
 			- fls.doubleclick.net *
 			- b.scorecardresearch.com *
@@ -49,51 +49,34 @@
 
 	* Secured by us
 
-
-	Observed cookie domains:
-
-		- .talktalk.co.uk
-		- community.talktalk.co.uk
-		- my.talktalk.co.uk
-
 -->
-<ruleset name="TalkTalk (partial)">
+<ruleset name="TalkTalk.co.uk (partial)">
 
-	<target host="secure.nildram.net"/>
-	<target host="talktalk.co.uk"/>
-	<target host="*.talktalk.co.uk"/>
-	<target host="talktalkbusiness.co.uk"/>
-	<target host="*.talktalkbusiness.co.uk"/>
-	<target host="*.ttxm.co.uk"/>
-	<target host="tiscali.co.uk"/>
-	<target host="*.tiscali.co.uk"/>
+	<!--	Direct rewrites:
+				-->
+	<target host="talktalk.co.uk" />
+	<target host="community.talktalk.co.uk" />
+	<target host="help.talktalk.co.uk" />
+	<target host="help2.talktalk.co.uk" />
+	<target host="my.talktalk.co.uk" />
+	<target host="myaccount.talktalk.co.uk" />
+	<target host="myaccountholding.talktalk.co.uk" />
+	<target host="sales.talktalk.co.uk" />
+	<target host="sso.talktalk.co.uk" />
+	<target host="webmail.talktalk.co.uk" />
+	<target host="www.talktalk.co.uk" />
 
-	<securecookie host="^(.*\.)?talktalk\.co\.uk$" name=".*"/>
-	<securecookie host="^billing\.mytalktalkbusiness\.co\.uk$" name=".*"/>
 
-	<rule from="^http://secure\.nildram\.net/"
-		to="https://secure.nildram.net/"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?talktalk\.co\.uk$" name="^TS[\da-f]{8}$" /-->
+	<!--securecookie host="^\.talktalk\.co\.uk$" name="^(?:TS[\da-f]{8}|portalId|tiscalicustomsettings)$" /-->
+	<!--securecookie host="^sales\.talktalk\.co\.uk$" name="^(?:ADRUM_BT|TS[\da-f]{8}|branchId)$" /-->
 
-	<rule from="^https?://(?:www\.)?t(?:alktalk|iscali)\.co\.uk/"
-		to="https://www.talktalk.co.uk/"/>
+	<securecookie host="." name="." />
 
-	<rule from="^http://(community|help2?|my|myaccount|sales|sso)\.talktalk\.co\.uk/"
-		to="https://$1.talktalk.co.uk/"/>
 
-	<rule from="^http://webmail\.talktalk\.co\.uk/+(?:\?.*)?$"
-		to="https://www.talktalk.co.uk/mail/?from=aol" />
-
-	<rule from="^http://billing\.mytalktalkbusiness\.co\.uk/"
-		to="https://billing.mytalktalkbusiness.co.uk/"/>
-
-	<!--	Cert only matches *.talkta...	-->
-	<rule from="^http://(?:www\.)?talktalkbusiness\.co\.uk/(Global/|[tT]emplates/)"
-		to="https://www.talktalkbusiness.co.uk/$1"/>
-
-	<rule from="^http://media\.tiscali\.co\.uk/"
-		to="https://media.tiscali.co.uk/"/>
-
-	<rule from="^http://m(\d)\.ttxm\.co\.uk/"
-		to="https://m$1.ttxm.co.uk/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

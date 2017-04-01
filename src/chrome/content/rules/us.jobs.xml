@@ -1,0 +1,57 @@
+<!--
+	CDN buckets:
+
+		- d1rap9luh07sve.cloudfront.net	← images
+
+
+	Problematic hosts in *us.jobs:
+
+		- images ᵐ
+
+	ᵐ Cloudfront / mismatched
+
+
+	Mixed content:
+
+		- iframe on ^ from player.vimeo.com ˢ
+
+		- css, on:
+
+			- ^ from ajax.googleapis.com ˢ
+			- ^ from css.nlx.org ˢ
+			- ^ from $self ˢ
+
+		- Images, on:
+
+			- ^ from de.nlx.org ˢ
+			- ^ from png.nlx.org ˢ
+			- ^ from images.us.jobs ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="US.jobs" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="us.jobs" />
+	<target host="www.us.jobs" />
+
+	<!--	Complications:
+				-->
+	<target host="images.us.jobs" />
+
+
+	<securecookie host="^\." name="^__qca$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://images\.us\.jobs/"
+		to="https://d1rap9luh07sve.cloudfront.net/" />
+
+		<test url="http://images.us.jobs/usdj/format/topbar.png" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

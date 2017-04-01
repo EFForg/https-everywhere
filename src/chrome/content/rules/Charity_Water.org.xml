@@ -1,0 +1,51 @@
+<!--
+	charitywater.myshopify.com <=> store
+
+
+	Problematic subdomains:
+
+		- store *
+
+	* Shopify
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- d2p
+		- f01
+		- my
+		- shop	(→ charitywater.myshopify.com)
+
+
+	Mixed content:
+
+		- Images on www from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="charity water.org">
+
+	<target host="charitywater.org" />
+	<target host="*.charitywater.org" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^\.charitywater\.org$" name="^mycw_session$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?charitywater\.org$" name="^(last_visit|return_count)$" /-->
+
+	<securecookie host="^(?:www\.)?charitywater\.org$" name=".+" />
+
+
+	<rule from="^http://((?:d2p|f01|my|www)\.)?charitywater\.org/"
+		to="https://$1charitywater.org/" />
+
+	<rule from="^http://store\.charitywater\.com/"
+		to="https://charitywater.myshopify.com/" />
+
+</ruleset>

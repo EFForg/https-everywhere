@@ -1,8 +1,141 @@
-<ruleset name="Next">
-  <target host="next.co.uk" />
-  <target host="www.next.co.uk" />
+<!--
+	Nonfunctional hosts in *next.co.uk:
 
-  <securecookie host="^(.+\.)?next\.co\.uk$" name=".*"/>
+		- art2order ʳ
+		- b2b ʳ
+		- blog ᵈ
+		- experiences ᶠ
+		- gifting ʳ
+		- nbn ᵈ
+		- photos ʳ
+		- reviews ʰ
 
-  <rule from="^http://(?:www\.)?next\.co\.uk/" to="https://www.next.co.uk/"/>
+	ᵈ Dropped
+	ᶠ Handshake fails
+	ʰ Redirects to http
+	ʳ Refused
+
+
+	Problematic hosts in *next.co.uk:
+
+		- ^ ᵈ
+		- cdn ᴬ
+		- cdn2 ᴬ
+		- housesigns ᵐ
+		- press ᵐ
+		- stores ᶜ
+		- wallstickers ᵐ
+		- www ᵀ
+
+	ᴬ Akamai / mismatched
+	ᵀ Blocks Tor users
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵈ Dropped, preemptable redirect
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- careers.next.co.uk
+		- .gardenplants.next.co.uk
+		- help.next.co.uk
+		- .help.next.co.uk
+		- housesigns.next.co.uk
+		- m.next.co.uk
+		- made2measure.next.co.uk
+		- press.next.co.uk
+		- stores.next.co.uk
+		- wallstickers.next.co.uk
+		- .wallstickers.next.co.uk
+		- wine.next.co.uk
+		- www.next.co.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+
+			- housesigns from fast.fonts.com ˢ
+			- wallstickers from $self ᵐ
+
+		- Images, on:
+
+			- m, stores from cdn2.next.co.uk ᵐ
+			- wallstickers from $self ᵐ
+
+	ᵐ Not secured by us <= mismatched
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Next.co.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="careers.next.co.uk" />
+	<target host="gardenplants.next.co.uk" />
+	<target host="m.next.co.uk" />
+	<target host="made2measure.next.co.uk" />
+	<!--target host="stores.next.co.uk" /-->
+	<target host="wine.next.co.uk" />
+	<target host="www.next.co.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="next.co.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.next\.co\.uk/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?next\.co\.uk/(?!/*(?:[Cc][Ss][Ss]/|[Ii]mages/|content/common/|favicon\.ico|secure/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.next.co.uk/clearance/" />
+			<test url="http://www.next.co.uk/homeware" />
+			<test url="http://www.next.co.uk/inspire/" />
+			<test url="http://www.next.co.uk/sale/" />
+			<test url="http://www.next.co.uk/stores/" />
+			<test url="http://www.next.co.uk/women/shoes" />
+
+			<!--	-ve:
+					-->
+			<test url="http://next.co.uk/CSS/storefronts.css" />
+			<test url="http://next.co.uk/Images/Mobile/ClearSearch.png" />
+			<test url="http://next.co.uk/content/common/items/default/default/footer/flags/big-flags-sprite.png" />
+			<test url="http://www.next.co.uk/favicon.ico" />
+			<test url="http://www.next.co.uk/secure/account/ForgottenPassword.aspx" />
+			<test url="http://www.next.co.uk/secure/account/Register.aspx" />
+			<test url="http://www.next.co.uk/secure/accounts/transfer" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:careers|\.gardenplants)\.next\.co\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^help\.next\.co\.uk$" name="^(?:ASP\.NET_SessionId$|NSC_)" /-->
+	<!--securecookie host="^\.help\.next\.co\.uk$" name="^NSC_" /-->
+	<!--securecookie host="^housesigns\.next\.co\.uk$" name="^(?:ASP\.NET_SessionId|AbodeHSCart)$" /-->
+	<!--securecookie host="^\.(?:housesigns|wallstickers)\.next\.co\.uk$" name="^ARRAffinity$" /-->
+	<!--securecookie host="^m\.next\.co\.uk$" name="^NSC_" /-->
+	<!--securecookie host="^(?:made2measure|wine)\.next\.co\.uk$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^press\.next\.co\.uk$" name="^AWSELB$" /-->
+	<!--securecookie host="^stores\.next\.co\.uk$" name="^laravel_session$" /-->
+	<!--securecookie host="^wallstickers\.next\.co\.uk$" name="^WallStickersCart$" /-->
+	<!--securecookie host="^www\.next\.co\.uk$" name="^(?:ASP\.NET_SessionId$|NSC_|NextIncentive$)" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\.help\." name="." />
+	<securecookie host="^(?!www\.)\w" name="." />
+
+
+	<rule from="^http://next\.co\.uk/"
+		to="https://www.next.co.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

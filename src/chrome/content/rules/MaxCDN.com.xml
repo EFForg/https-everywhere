@@ -1,0 +1,121 @@
+<!--
+	Other MaxCDN rulesets:
+
+		- BootstrapCDN.xml
+		- NetDNA.xml
+		- Netdna-ssl.com.xml
+
+
+	CDN buckets:
+
+		- maxcdn.wpengine.netdna-cdn.com
+
+			- maxcdn-wpengine.netdna-ssl.com doesn't exist
+
+		- toolsmaxcdn.netdnasa9.netdna-cdn.com
+
+
+	Nonfunctional hosts in *maxcdn.com:
+
+		- tools ʳ
+
+	ʳ Refused
+
+
+	Problematic hosts in *maxcdn.com:
+
+		- blog ʰ
+		- feedback ᵐ
+		- pages ᵐ
+		- support ᵛ
+
+	ʰ WP Engine / redirects to http, preemptable redirect
+	ᵐ Mismatched
+	ᵛ Revoked, preemptable redirect
+
+
+	These altnames do not exist:
+
+		- www.twemoji.maxcdn.com
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- cp.maxcdn.com
+		- rws.maxcdn.com
+		- secure.maxcdn.com
+		- secure-cdn.maxcdn.com
+		- tracking.maxcdn.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on status from fonts.googleapis.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="MaxCDN.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="maxcdn.com" />
+	<target host="cp.maxcdn.com" />
+	<target host="docs.maxcdn.com" />
+	<target host="oss.maxcdn.com" />
+	<target host="reseller-docs.maxcdn.com" />
+	<target host="rws.maxcdn.com" />
+	<target host="secure.maxcdn.com" />
+	<target host="secure-cdn.maxcdn.com" />
+	<target host="status.maxcdn.com" />
+	<target host="tracking.maxcdn.com" />
+	<target host="twemoji.maxcdn.com" />
+	<target host="www.maxcdn.com" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.maxcdn.com" />
+	<target host="pages.maxcdn.com" />
+	<target host="support.maxcdn.com" />
+
+		<!--test url="http://feedback.maxcdn.com/customer-happiness-awards-2015" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:cp|rws|secure|secure-cdn)\.maxcdn\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^tracking\.maxcdn\.com$" name="^AWSELB$" /-->
+
+	<securecookie host="^\." name="^optimizely" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://blog\.maxcdn\.com/+"
+		to="https://www.maxcdn.com/blog/" />
+
+		<test url="http://blog.maxcdn.com//" />
+
+	<rule from="^http://pages\.maxcdn\.com/"
+		to="https://vault.stackpath.com/" />
+
+		<!--	$ redirects to another domain, so:
+								-->
+		<test url="http://pages.maxcdn.com/nginx-whitepaper" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://support\.maxcdn\.com/+"
+		to="https://www.maxcdn.com/one/" />
+
+		<test url="http://support.maxcdn.com//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

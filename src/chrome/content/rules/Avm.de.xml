@@ -1,12 +1,68 @@
-<ruleset name="Avm.de" platform="mixedcontent" >
+<!--
+	Nonfunctional hosts in *avm.de:
 
-<target host="piwik.avm.de"/>
-<target host="www.avm.de"/>
-<target host="avm.de"/>
+		- webgw ᵖ
 
-<!-- webgw.avm.de doesn't support TLS -->
+	ᵖ Plaintext reply
 
-<rule from="^http://piwik\.avm\.de/" to="https://piwik.avm.de/"/>
-<rule from="^http://(www\.)?avm\.de/" to="https://www.avm.de/"/>
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- partner.avm.de
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bug on help from piwik.avm.de ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="AVM.de (partial)">
+
+	<target host="avm.de"/>
+	<target host="at.avm.de"/>
+	<target host="be.avm.de"/>
+	<target host="ch.avm.de"/>
+	<target host="download.avm.de"/>
+	<target host="en.avm.de"/>
+	<target host="ftp.avm.de"/>
+	<target host="it.avm.de"/>
+	<target host="jobs.avm.de"/>
+	<target host="lu.avm.de"/>
+	<target host="nl.avm.de"/>
+	<target host="partner.avm.de"/>
+	<target host="piwik.avm.de"/>
+	<target host="pl.avm.de"/>
+	<target host="service.avm.de"/>
+	<target host="www.avm.de"/>
+
+		<test url="http://en.avm.de/contact/" />
+		<test url="http://en.avm.de/guide/" />
+		<test url="http://en.avm.de/news/" />
+		<test url="http://en.avm.de/products/" />
+		<test url="http://en.avm.de/service/" />
+
+		<test url="http://avm.de/produkte/" />
+		<test url="http://avm.de/service/" />
+		<test url="http://avm.de/ratgeben/" />
+		<test url="http://avm.de/aktuelles/" />
+
+		<!--	$ 404s, so:
+					-->
+		<test url="http://help.avm.de/fritzbox.php?topic=hilfe_fon_waehlhilfe" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^partner\.avm\.de$" name="^_web\d+_session$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -4,116 +4,150 @@
 
 	Other Red Hat rulesets:
 
+		- Beaker-Project.org.xml
+		- Cygwin.com.xml
+		- Enterprisers_Project.com.xml
+		- Gluster.org.xml
 		- JBoss.xml
 		- Opensource.com.xml
 		- OpenShift.xml
+		- OVirt.org.xml
+		- RDO_project.org.xml
+		- RH_Cloud.com.xml
 		- Spice-space.org.xml
 
 
-	rhat.client.shareholder.com
-
-			- investors
+	rhat.client.shareholder.com	← investors
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *redhat.com:
 
-		- et		(refused)
-		- ftp *
-		- investors *
-		- spacewalk	(shows www)
-		- sources *
+		- et ʳ
+		- ftp ᵈ
+		- spacewalk *
+		- sources ᵈ
 
-	* Times out
-
-
-	Problematic subdomains:
-
-		- apac		(cert only matches www.apac)
-		- europe	(cert only matches www.europe)
-		- jobs		(mismatched, CN: *.sc.hodesdigital.com)
-		- magazine *
-		- servicesblog *
-
-	* Mismatched, CN: *.wordpress.com
+	* Redirects to www.redhat.com
+	ʳ Refused
+	ᵈ Dropped
 
 
-	Partially covered subdomains:
+	Problematic hosts in *redhat.com:
 
-		- investors	(→ investor.shareholder.com)
+		- cloudformsblog ᵐ
+		- community ᴵ
+		- www.cz ᵐ
+		- magazine ᵐ
+		- middlewareblog ᵐ
+		- mobileblog ᵐ
+		- redhatstackblog ᵐ
+		- redhatstorage ᵐ
+		- rhelblog ᵐ
+		- servicesblog ᵐ
+		- verticalindustriesblog ᵐ
+
+	ᵐ Mismatched
+	ᴵ Incomplete certificate chain
+
+	careers: Dropped over http & https
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
-		- (www.)	(^ → www)
-		- academy
-		- access
-		- (www.)apac	(^ → www)
-		- ar
-		- archive
-		- at
-		- au
-		- be
-		- br
-		- bugzilla
-		- ca
-		- careers
-		- cn
-		- de
-		- docs
-		- engage
-		- es
-		- (www.)europe	(^ → www)
-		- fr
-		- gb
-		- hardware
-		- id
-		- in
-		- it
-		- jobs		(→ redhat.sc.hodesdigital.com)
-		- jp
-		- listman
-		- lk
-		- mx
-		- openshift
-		- people
-		- ph
-		- rhn
-		- ru
-		- sg
-		- smtrcs
-		- support
-		- webmail
+		- .redhat.com
+		- .bugzilla.redhat.com
+		- .smtrcs.redhat.com
+		- www.redhat.com
+		- .www.redhat.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
 
-		- Web bug on www from s7.addthis.com *
+		- Images on developerblog rhdevelopers.files.wordpress.com ˢ
+		- Bug on www from s7.addthis.com ˢ
 
-	* Secured by us
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Red Hat">
+<ruleset name="Red Hat.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="redhat.com" />
-	<target host="*.redhat.com" />
+	<target host="academy.redhat.com" />
+	<target host="access.redhat.com" />
+	<target host="apac.redhat.com" />
+	<target host="www.apac.redhat.com" />
+	<target host="ar.redhat.com" />
+	<target host="archive.redhat.com" />
+	<target host="at.redhat.com" />
+	<target host="au.redhat.com" />
+	<target host="be.redhat.com" />
+	<target host="br.redhat.com" />
+	<target host="bugzilla.redhat.com" />
+	<target host="ca.redhat.com" />
+	<target host="cn.redhat.com" />
+	<target host="cz.redhat.com" />
+	<target host="de.redhat.com" />
+	<target host="developerblog.redhat.com" />
+	<target host="docs.redhat.com" />
+	<target host="engage.redhat.com" />
+	<target host="es.redhat.com" />
+	<target host="europe.redhat.com" />
+	<target host="www.europe.redhat.com" />
+	<target host="fr.redhat.com" />
+	<target host="gb.redhat.com" />
+	<target host="hardware.redhat.com" />
+	<target host="id.redhat.com" />
+	<target host="in.redhat.com" />
+	<target host="investors.redhat.com" />
+	<target host="it.redhat.com" />
+	<target host="jp.redhat.com" />
+	<target host="listman.redhat.com" />
+	<target host="lk.redhat.com" />
+	<target host="mx.redhat.com" />
+	<target host="openshift.redhat.com" />
+	<target host="openstack.redhat.com" />
+	<target host="partner.redhat.com" />
+	<target host="people.redhat.com" />
+	<target host="ph.redhat.com" />
+	<target host="rhn.redhat.com" />
+	<target host="ru.redhat.com" />
+	<target host="securityblog.redhat.com" />
+	<target host="sg.redhat.com" />
+	<target host="smtrcs.redhat.com" />
+	<target host="support.redhat.com" />
+	<target host="webmail.redhat.com" />
+	<target host="www.redhat.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www.cz.redhat.com" />
+	<target host="jobs.redhat.com" />
 
 
-	<securecookie host="^(?:.*\.)?redhat\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.redhat\.com$" name="^(JSESSIONIDSSO|become_user|rh_become|rh_shared_auth|rh_user|rh_user_detail|s_vi)$" /-->
+	<!--securecookie host="^\.bugzilla\.redhat\.com$" name="^(BROWSE_PRODUCT|Bugzilla_login_request_cookie|DEFAULTFORMAT)$" /-->
+	<!--securecookie host="^\.smtrcs\.redhat\.com$" name="^s_vi$" /-->
+	<!--securecookie host="^www\.redhat\.com$" name="^(AWSELB|JSESSIONID|WL_DCID|java-wapps-t1-sticky-sessions)$" /-->
+	<!--securecookie host="^\.www\.redhat\.com$" name="^DCID$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:www\.)?redhat\.com/"
-		to="https://www.redhat.com/" />
+	<rule from="^http://www\.cz\.redhat\.com/"
+		to="https://cz.redhat.com/" />
 
-	<rule from="^http://(academy|access|a[rtu]|archive|be|br|bugzilla|ca|careers|cn|de|docs|engage|es|fr|gb|hardware|i[dnt]|jp|listman|lk|mx|openshift|people|ph|rhn|ru|sg|smtrcs|support|webmail)\.redhat\.com/"
-		to="https://$1.redhat.com/" />
-
-	<rule from="^http://(?:www\.)?(apac|europe)\.redhat\.com/"
-		to="https://www.$1.redhat.com/" />
-
-	<rule from="^http://investors\.redhat\.com/common/"
-		to="https://investor.shareholder.com/common/" />
-
+	<!--	Redirect drops path but not args:
+							-->
 	<rule from="^http://jobs\.redhat\.com/"
-		to="https://redhat.sc.hodesdigital.com/" />
+		to="https://www.redhat.com/en/jobs" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

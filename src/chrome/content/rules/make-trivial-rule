@@ -3,8 +3,8 @@
 # THIS IS NOT A RULE, but a shell script to create simple rules for a
 # specified domain.
 #
-# create $1.xml, mapping $1 and www.$1 to https://$2 (or https://www.$1 by
-# default)
+# Create $1.xml, mapping $1 and www.$1 to https://$2 (or simply http:
+# to https: by default).
 
 if [ -z "$1" ]
 then
@@ -34,6 +34,15 @@ fi
 
 lower=$(echo "$1" | tr A-Z a-z)
 escaped=$(echo "$lower" | sed 's/\./\\./g' )
+
+duplicate=$(grep -EHin '<target\s+host="(w+\.)?'$escaped'"\s*/>' *.xml)
+if [ -n "$duplicate" ]
+then
+  echo "error: $lower already exists:" >&2
+  echo "$duplicate" >&2
+  exit 1
+fi
+
 if [ "$#" -gt 1 ] ; then
     to="$2"
 else
@@ -41,11 +50,20 @@ else
 fi
 
 cat > "$dest" <<END
-<ruleset name="$capitalized">
-  <target host="$lower" />
-  <target host="www.$lower" />
+<!--
+	Nonfunctional hosts in *.$lower:
 
-  <rule from="^http://(www\.)?$escaped/" to="https://$to/" />
+	h: http redirect
+	m: certificate mismatch
+	r: connection refused
+	s: self-signed certificate
+	t: timeout on https
+-->
+<ruleset name="$capitalized">
+	<target host="$lower" />
+	<target host="www.$lower" />
+
+	<rule from="^http:" to="https:" />
 </ruleset>
 END
 

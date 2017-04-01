@@ -1,86 +1,95 @@
 <!--
+	The National Archives
+
 	For problematic rules, see National_Archives.gov.uk-problematic.xml.
 
 	For other UK government coverage, see GOV.UK.xml.
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *nationalarchives.gov.uk:
 
-		- blog *
-		- bookshop	(dropped)
-		- media *
-		- smartsource *
-
-	* Refused
-
-
-	Problematic subdomains:
-
-		- ^	(cert only matches www)
-		- labs	(works; expired 2012-06-23, self-signed)
-
-
-	Partially covered subdomains:
-
-		- discovery	(some pages redirect to http)
-
-
-	Fully covered subdomains:
-
-		- (www.) *	(^ → www)
-		- community
-		- images
-
-	* Server is only configured for RC4 and weaker ciphers
-
-
-	Observed cookie domains:
-
-		- bookshop ¹
-		- discovery ²
-		- images ³
-		- labs ⁴
+		- blog ¹
+		- bookshop ²
+		- media ²
 		- smartsource ¹
+		- webarchive ¹
 
-	¹ Not secured by us <= we don't touch http cookies
-	² Not secured by us <= incomplete coverage
-	³ Secured by us
-	⁴ Secured by us when set via https (rule off by default)
+	¹ Refused
+	² Dropped
+
+
+	Problematic hosts in *nationalarchives.gov.uk:
+
+		- labs ¹ ²
+
+	¹ Expired
+	² Untrusted root
+
+
+	Insecure cookies are set for these hosts:
+
+		- discovery.nationalarchives.gov.uk
 
 
 	Mixed content:
 
 		- css, on:
 
-			- labs from labs ¹
-			- labs from www ¹
-			- www from fonts.googleapis.com ¹
+			- labs, www from fonts.googleapis.com ¹
+			- www from $self ¹
 
-		- Images on labs from labs ¹
-
-		- Web bugs on community, images, and labs from smartsource ²
+		- Images on www from $self ¹
+		- Bugs on community, images, labs, www from smartsource.nationalarchives.gov.uk ²
 
 	¹ Secured by us
 	² Unsecurable
 
 -->
-<ruleset name="NationalArchivesGovUK (partial)">
+<ruleset name="National Archives.gov.uk (partial)">
 
 	<target host="nationalarchives.gov.uk" />
-	<target host="*.nationalarchives.gov.uk" />
+	<target host="community.nationalarchives.gov.uk" />
+	<target host="discovery.nationalarchives.gov.uk" />
+	<target host="images.nationalarchives.gov.uk" />
+	<target host="secure.nationalarchives.gov.uk" />
+	<target host="www.nationalarchives.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://discovery\.nationalarchives\.gov\.uk/$" /-->
 		<!--
-			Some pages redirect to http:
-							-->
-		<exclusion pattern="^http://discovery\.nationalarchives\.gov\.uk/+(?!SearchUI/Content/)" />
+			Exceptions:
+					-->
+		<exclusion pattern="^http://discovery\.nationalarchives\.gov\.uk/(?!/*(?:Content/compiled-css/|Content/[Ii]mages/|SearchUI/Content/|favicon\.ico|register$|sign-in$))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://discovery.nationalarchives.gov.uk/advanced-search" />
+			<test url="http://discovery.nationalarchives.gov.uk/browse/" />
+			<test url="http://discovery.nationalarchives.gov.uk/details/c/F18168" />
+			<test url="http://discovery.nationalarchives.gov.uk/details/r/C10012" />
+			<test url="http://discovery.nationalarchives.gov.uk/details/r/C2322602" />
+			<test url="http://discovery.nationalarchives.gov.uk/details/r/C44" />
+			<test url="http://discovery.nationalarchives.gov.uk/find-an-archive" />
+			<test url="http://discovery.nationalarchives.gov.uk/results/r/?_q=service%20records&amp;_sd=1914&amp;_ed=1920&amp;_hb=tna&amp;_d=WO" />
+			<test url="http://discovery.nationalarchives.gov.uk/tags/index" />
+
+			<!--	-ve:
+					-->
+			<test url="http://discovery.nationalarchives.gov.uk/Content/Images/logo-white.png" />
+			<test url="http://discovery.nationalarchives.gov.uk/Content/compiled-css/main.min.4.1.0.css" />
+			<test url="http://discovery.nationalarchives.gov.uk/favicon.ico" />
+			<test url="http://discovery.nationalarchives.gov.uk/register" />
+			<test url="http://discovery.nationalarchives.gov.uk/sign-in" />
 
 
-	<securecookie host=".+\.nationalarchives\.gov\.uk$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="discovery\.nationalarchives\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host=".\.nationalarchives\.gov\.uk$" name="." />
 
 
-	<rule from="^http://(?:www\.)?nationalarchives\.gov\.uk/"
-		to="https://www.nationalarchives.gov.uk/" />
-
-	<rule from="^http://(community|discovery|images)\.nationalarchives\.gov\.uk/"
-		to="https://$1.nationalarchives.gov.uk/" />
-
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

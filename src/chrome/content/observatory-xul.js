@@ -27,6 +27,8 @@ function observatory_prefs_init(doc) {
     obsprefs.getBoolPref("extensions.https_everywhere._observatory.self_signed");
   document.getElementById("send-asn").checked = 
     obsprefs.getBoolPref("extensions.https_everywhere._observatory.send_asn");
+  document.getElementById("show-cert-warning").checked = 
+    obsprefs.getBoolPref("extensions.https_everywhere._observatory.show_cert_warning");
 
   // More complicated: is it anonymised by Tor?
   var obs_how = doc.getElementById("ssl-obs-how");
@@ -135,6 +137,11 @@ function toggle_send_asn() {
   obsprefs.setBoolPref("extensions.https_everywhere._observatory.send_asn", send_asn);
   if (send_asn) ssl_observatory.setupASNWatcher()
   else          ssl_observatory.stopASNWatcher();
+}
+
+function toggle_show_cert_warning() {
+  var show_cert_warning = document.getElementById("show-cert-warning").checked;
+  obsprefs.setBoolPref("extensions.https_everywhere._observatory.show_cert_warning", show_cert_warning);  
 }
 
 function toggle_alt_roots() {

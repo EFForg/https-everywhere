@@ -1,0 +1,61 @@
+<!--
+	Partially covered hosts in *ethereum.org:
+
+		- wiki *
+
+	* (?!$|\?) 403s
+
+
+	Mixed content:
+
+		- Bug on forum from m.c.lnkd.licdn.com *
+
+	* Unsecurable <= 400
+
+-->
+<ruleset name="Ethereum.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ethereum.org" />
+	<target host="blog.ethereum.org" />
+	<target host="code.ethereum.org" />
+	<target host="forum.ethereum.org" />
+	<target host="www.ethereum.org" />
+
+	<!--	Complications:
+				-->
+	<target host="wiki.ethereum.org" />
+
+		<exclusion pattern="^http://wiki\.ethereum\.org/(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://wiki.ethereum.org/default.aspx" />
+			<test url="http://wiki.ethereum.org/index.htm" />
+			<test url="http://wiki.ethereum.org/index.html" />
+			<test url="http://wiki.ethereum.org/index.php" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.ethereum\.org$" name="^vf_ethereum_\w+-tk$" /-->
+	<!--
+		Incapsula cookies:
+					-->
+	<!--securecookie host="^\.ethereum\.org$" name="^(incap_ses_\d+_\d+|nlbi_\d+|visid_incap_\d+)$" /-->
+	<!--securecookie host="^www\.ethereum\.org$" name="^___utm\w+$" /-->
+
+	<securecookie host="^(?!wiki\.)." name="." />
+
+
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://wiki\.ethereum\.org/.*"
+		to="https://github.com/ethereum/wiki/wiki" />
+
+		<test url="http://wiki.ethereum.org/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

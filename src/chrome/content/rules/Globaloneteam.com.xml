@@ -1,0 +1,48 @@
+<!--
+	For other InterContinental Hotels Group PLC coverage, see IHG_PLC.com.xml.
+
+
+	(www.): mismatched, CN: www.ihgmerlin.com
+
+
+	Fully covered subdomains:
+
+		- (www.)	(→ me2.ihgmerlin.com & www.ihgmerlin.com)
+		- dsso
+		- sso
+		- sso-qa
+
+-->
+<ruleset name="globaloneteam.com">
+
+	<target host="globaloneteam.com" />
+	<target host="*.globaloneteam.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.globaloneteam\.com$" name="^SMIDENTITY$" /-->
+	<!--securecookie host="^dsso\.globaloneteam\.com$" name="^BIGipServersec_DSSO_80$" /-->
+	<!--securecookie host="^sso\.globaloneteam\.com$" name="^BIGipServersec_Siteminder_\d+$" /-->
+	<!--securecookie host="^sso-qa\.globaloneteam\.com$" name="^BIGipServerSiteMinder_QA_DMZ_\d+$" /-->
+
+	<securecookie host="^(?:dsso|sso|sso-qa)\.globaloneteam\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?globaloneteam\.com/(?=$|\?)"
+		to="https://me2.ihgmerlin.com/web/merlin/home" />
+
+	<!--	Redirect drops path but not args:
+						-->
+	<rule from="^http://(?:www\.)?globaloneteam\.com//[^?]*"
+		to="https://www.ihgmerlin.com/portal/server.pt?" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://(?:www\.)?globaloneteam\.com/"
+		to="https://me2.ihgmerlin.com/me2-vanity-url-portlet/redirect/" />
+
+	<rule from="^http://(dsso|sso|sso-qa)\.globaloneteam\.com/"
+		to="https://$1.globaloneteam.com/" />
+
+</ruleset>

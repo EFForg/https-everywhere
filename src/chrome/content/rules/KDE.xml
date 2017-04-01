@@ -1,93 +1,151 @@
 <!--
-	Nonfunctional subdomains:
+	Other KDE rulesets:
 
-		- (www.) *
-		- akademy200[6-9] *
-		- api		(revoked)
-		- developer **
-		- docs *
-		- dolphin *
-		- downloads	(shows https://files, valid cert)
-		- edu *
-		- ev *
-		- events *
-		- jointhegame *
-		- l10n **
-		- manifesto *
-		- planet *
-		- rekonq *
-		- utils *
-		- websvn *
-		- wiki *
-
-	* Dropped
-	** Refused
+		- Calligra.org.xml
+		- DigiKam.org.xml
+		- KMyMoney.org.xml
+		- Krita.org.xml
+		- Planet_KDE.org.xml
 
 
-	Problematic subdomains:
+	Nonfunctional hosts in *kde.org:
 
-		- files		(some data differ)
-		- lists		(works, CN: localhost)
-		- reviewboard	(shows git.reviewboard; mismatched, CN: git.reviewboard.kde.org)
+		- api ¹
+		- commits ²
 
-
-	Partially covered subdomains:
-
-		- files
-		- userbase	(some pages redirect to http)
+	¹ 503
+	² Shows another domain
 
 
-	Fully covered subdomains:
+	Problematic hosts in *kde.org:
 
-		- akademy201[023]
-		- amarok
-		- blogs
+		- developer ¹
+		- files ²
 
-		- bugs subdomains:
+	¹ retired subdomain, only retained for legacy compatibility. see https://lists.eff.org/pipermail/https-everywhere/2016-January/002647.html 
+ 	² Some data differ
 
-			- ^
-			- admin
-			- sandbox
 
-		- cdn
-		- community
-		- conf
-		- dot
-		- forum
-		- identity
-		- mail
-		- nepomuk
-		- news
-		- projects
-		- reviewboard		(→ git.reviewboard)
-		- git.reviewboard
-		- season
-		- sprints
-		- sysadmin
-		- techbase
+	Insecure cookies are set for these domains and hosts:
+
+		- .kde.org
+		- .akademy2010.kde.org
+		- jointhegame.kde.org
+		- quickgit.kde.org
+		- sysadmin.kde.org
+
+
+	Mixed content:
+
+		- css on phonon from fonts.googleapis.com *
+
+	* Secured by us
 
 -->
-<ruleset name="KDE (partial)">
+<ruleset name="KDE.org (partial)">
 
-	<target host="*.kde.org" />
-		<!--exclusion pattern="^http://(akademy200\d|api|developer|docs|dolphin|downloads|edu|ev|events|jointhegame|l10n|lists|manifesto|planet|rekonq|utils|websvn|wiki|www)\." /-->
-		<!--
-			Pages differ, various files 404:
+	<!--	Direct rewrites:
+				-->
+	<target host="kde.org" />
+	<target host="accessibility.kde.org" />
+	<target host="akademy.kde.org" />
+	<target host="akademy2006.kde.org" />
+	<target host="akademy2007.kde.org" />
+	<target host="akademy2008.kde.org" />
+	<target host="akademy2009.kde.org" />
+	<target host="akademy2010.kde.org" />
+	<target host="akademy2012.kde.org" />
+	<target host="akademy2013.kde.org" />
+	<target host="amarok.kde.org" />
+	<target host="blogs.kde.org" />
+	<target host="bugs.kde.org" />
+	<target host="build.kde.org" />
+	<target host="cdn.kde.org" />
+	<target host="community.kde.org" />
+	<target host="conf.kde.org" />
+	<target host="conference2004.kde.org" />
+	<target host="conference2005.kde.org" />
+	<target host="conference2006.kde.org" />
+	<target host="conference2007.kde.org" />
+	<target host="conference2008.kde.org" />
+	<target host="conference2009.kde.org" />
+	<target host="conference2010.kde.org" />
+	<target host="docs.kde.org" />
+	<target host="dolphin.kde.org" />
+	<target host="dot.kde.org" />
+	<target host="edu.kde.org" />
+	<target host="ev.kde.org" />
+	<target host="events.kde.org" />
+	<target host="forum.kde.org" />
+	<target host="freebsd.kde.org" />
+	<target host="identity.kde.org" />
+	<target host="jointhegame.kde.org" />
+	<target host="kopete.kde.org" />
+	<target host="lists.kde.org" />
+	<target host="mail.kde.org" />
+	<target host="manifesto.kde.org" />
+	<target host="nepomuk.kde.org" />
+	<target host="news.kde.org" />
+	<target host="phonon.kde.org" />
+	<target host="pim.kde.org" />
+	<target host="planet.kde.org" />
+	<target host="projects.kde.org" />
+	<target host="quickgit.kde.org" />
+	<target host="rekonq.kde.org" />
+	<target host="relate.kde.org" />
+	<target host="reviewboard.kde.org" />
+	<target host="git.reviewboard.kde.org" />
+	<target host="season.kde.org" />
+	<target host="solid.kde.org" />
+	<target host="sprints.kde.org" />
+	<target host="sysadmin.kde.org" />
+	<target host="techbase.kde.org" />
+	<target host="userbase.kde.org" />
+	<target host="utils.kde.org" />
+	<target host="websvn.kde.org" />
+	<target host="wiki.kde.org" />
+	<target host="www.kde.org" />
+
+		<!--	Pages differ, various files 404:
 									-->
-		<!--exclusion pattern="^http://files\.kde\.org/+.+\.(btih|magnet|meta4|metalist|sha1|sha256|torrent)$" /-->
-		<exclusion pattern="^http://files\.kde\.org/+(?!.+\.(?:7z|bz2|de?b|diff|exe|dgml|dmg|dsc|gz|install|jpg|kml|meta|mp4|msc|odp|ogg|opml|otp|pdf|pl|png|sbm|scenario|sla|svg|tar|tif|tmp|txt|webm|xcf|xml|zip)|PKGBUILD)$" />
-		<exclusion pattern="^http://userbase\.kde\.org/(?!extensions/|favicon\.ico|images\.userbase/|index\.php\?title=Special:(?:Captcha/help|OpenIDLogin|UserLogin)|load\.php|skins/)" />
+		<exclusion pattern="^http://files\.kde\.org/(?:$|.+/$|.+\.(?:btih|magnet|md5|meta4|metalink|mirrorlist|sha1|sha256|torrent)$)" />
+		<!--exclusion pattern="^http://files\.kde\.org/+(?!.+\.(?:7z|bz2|de?b|diff|exe|dgml|dmg|dsc|gpg|gz|install|iso|jpg|kml|list|manifest|meta|mp4|msc|odp|ogg|opml|otp|pdf|pl|png|sbm|scenario|sla|svg|tar|tif|tmp|txt|webm|xcf|xml|zip)$|PKGBUILD|SHA256SUMS)$" /-->
+
+			<!--	+ve:
+					-->
+			<test url="http://files.kde.org/akademy/2014/videos/README.mirrorlist" />
+			<test url="http://files.kde.org/amarok/podcast_directory/" />
+			<test url="http://files.kde.org/amarok/podcast_directory/public_podcast_directories.opml.mirrorlist" />
+			<test url="http://files.kde.org/edu/logo/KDEdu%20versiones.svg.btih" />
+			<test url="http://files.kde.org/edu/logo/KDEdu%20versiones.svg.magnet" />
+			<test url="http://files.kde.org/edu/logo/KDEdu%20versiones.svg.md5" />
+			<test url="http://files.kde.org/edu/logo/KDEdu%20versiones.svg.meta4" />
+			<test url="http://files.kde.org/edu/logo/KDEdu%20versiones.svg.metalink" />
+			<test url="http://files.kde.org/edu/logo/KDEdu%20versiones.svg.mirrorlist" />
+			<test url="http://files.kde.org/edu/logo/KDEdu%20versiones.svg.sha1" />
+			<test url="http://files.kde.org/edu/logo/KDEdu%20versiones.svg.sha256" />
+			<test url="http://files.kde.org/edu/logo/KDEdu%20versiones.svg.torrent" />
+			<test url="http://files.kde.org/snapshots/neon5-latest.iso.mirrorlist" />
+			<test url="http://files.kde.org/snapshots/unstable-amd64-latest.iso.mirrorlist" />
+
+			<!--	-ve:
+					-->
+			<test url="http://files.kde.org/amarok/podcast_directory/public_podcast_directories.opml" />
+			<test url="http://files.kde.org/calligra/kpresenter/template_contest_2010/preview/darkly_yours.png" />
+			<test url="http://files.kde.org/khotnewstuff/amarokapplets/downloads/127657-impulse.tar.gz" />
 
 
-	<!--securecookie host="^\.kde\.org$" name="^(incap_ses_\d+|visid_incap)_\d+$" /-->
-	<securecookie host="^(?!userbase\.).+\.kde\.org$" name=".+" />
-	<securecookie host="^userbase\.kde\.org$" name="^__utm\w+$" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.kde\.org" name="^(?:incap_ses_\d+|visid_incap)_\d+$" /-->
+	<!--securecookie host="^jointhegame\.kde\.org$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^quickgit\.kde\.org" name="^GitPHPLocale$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(akademy201[023]|amarok|blogs|bugs|(?:admin|sandbox)\.bugs|cdn|community|conf|dot|forum|identity|mail|nepomuk|news|projects|season|sprints|sysadmin|techbase|userbase)\.kde\.org/"
-		to="https://$1.kde.org/" />
 
-	<rule from="^http://(?:git\.)?reviewboard\.kde\.org/"
-		to="https://git.reviewboard.kde.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

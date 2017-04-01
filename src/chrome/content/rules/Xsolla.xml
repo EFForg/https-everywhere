@@ -1,29 +1,88 @@
 <!--
-	Nonfunctional xsolla.com subdomains:
+	Other Xsolla rulesets:
 
-		- (www.)	(times out)
-		- analytics	(handshake fails)
-		- help		(403; mismatched, CN: ps.xsolla.com)
+		- 2pay.ru.xml
 
 
-	Problematic domains:
+	CDN buckets:
 
-		- tools.xsolla.com	(works, self-signed)
+		- xsolla.cachefly.net
+
+
+	Problematic hosts in *xsolla.com:
+
+		- blog ²
+		- status ⁴
+
+	² 403
+	⁴ StatusPage.io
+
+
+	These altnames don't exist:
+
+		- www.ps.xsolla.com
+		- www.merchant.xsolla.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- xsolla.com
+		- .xsolla.com
+		- www.xsolla.com
+
+
+	Mixed content:
+
+		- css on developers, help from fonts.googleapis.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Xsolla (partial)">
+<ruleset name="Xsolla.com (partial)">
 
-	<target host="2pay.ru" />
-	<target host="*.xsolla.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="xsolla.com" />
+	<target host="account.xsolla.com" />
+	<target host="analytics.xsolla.com" />
+	<target host="cdn.xsolla.com" />
+	<target host="cdn3.xsolla.com" />
+	<target host="demo-merchant.xsolla.com" />
+	<target host="developers.xsolla.com" />
+	<target host="help.xsolla.com" />
+	<target host="livedemo.xsolla.com" />
+	<target host="merchant.xsolla.com" />
+	<target host="ps.xsolla.com" />
+	<target host="secure.xsolla.com" />
+	<target host="static.xsolla.com" />
+	<target host="tools.xsolla.com" />
+	<target host="www.xsolla.com" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.xsolla.com" />
+	<target host="status.xsolla.com" />
 
 
-	<securecookie host="^.+\.xsolla\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="(www\.)?xsolla\.com$" name="^_icl_current_languag$" /-->
+	<!--securecookie host="\.xsolla\.com$" name="^AdRoll_vs$" /-->
+
+	<securecookie host="^(?:.+\.)?xsolla\.com$" name="." />
+	<securecookie host="\." name="^(?:__utm|_gat?$|AdRoll_vs$)" />
 
 
-	<rule from="^http://2pay\.ru/"
-		to="https://2pay.ru/" />
+	<!--	Redirect keeps path, args,
+		and forward slash:
+					-->
+	<rule from="^http://blog\.xsolla\.com/"
+		to="https://xsolla.com/blog/" />
 
-	<rule from="^http://((?:dev-)?account|cdn|ps|secure|static)\.xsolla\.com/"
-		to="https://$1.xsolla.com/" />
+	<rule from="^http://status\.xsolla\.com/"
+		to="https://xsolla.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

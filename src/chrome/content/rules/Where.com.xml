@@ -4,30 +4,36 @@
 	For other PayPal coverage. see PayPal.xml.
 
 
-	Fully covered subdomains:
-
-		- ad
-		- paypal.adtag
-		- upstream
-		- (www.)
+	(www.)?where.com: Dropped over http & https
 
 
-	Observed cookie domains:
+	Insecure cookies are set for these domains:
 
-		- ad
-		- upstream
+		- .where.com
 
 -->
 <ruleset name="Where.com">
 
-	<target host="where.com" />
-	<target host="*.where.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="ad.where.com" />
+	<target host="ads.where.com" />
+	<target host="ads2.where.com" />
+	<target host="paypal.adtag.where.com" />
+	<target host="upstream.where.com" />
+
+		<test url="http://ads2.where.com/mds/imp?addeviceid=" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.where\.com$" name="^m_p_tc$" /-->
+
+	<securecookie host="^\.where\.com$" name="^m_p_tc$" />
 	<securecookie host="^ad\.where\.com$" name=".+" />
 
 
-	<rule from="^http://((?:ad|paypal\.adtag|upstream|www)\.)?where\.com/"
-		to="https://$1where.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

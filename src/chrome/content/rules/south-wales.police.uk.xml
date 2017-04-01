@@ -1,0 +1,67 @@
+<!--
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	CDN buckets:
+
+		- pcclivewww.blob.core.windows.net
+		- swplive.blob.core.windows.net
+
+
+	Problematic hosts in *south-wales.police.uk:
+
+		- dev ᵐ
+		- commissioner ᵐ
+
+	ᵐ Mismatched
+
+
+	^south-wales.police.uk: Reset over http, dropped over https
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- commissioner.south-wales.police.uk
+		- dev.south-wales.police.uk
+		- .dev.south-wales.police.uk
+		- eservices.south-wales.police.uk
+		- www.south-wales.police.uk
+		- .www.south-wales.police.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on commissioner, dev, www from fonts.googleapis.com ˢ
+		- Images on commissioner from pcclivewww.blob.core.windows.net ˢ
+		- Images on www from swplive.blob.core.windows.net ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="South-Wales.Police.uk (partial)">
+
+	<target host="eservices.south-wales.police.uk" />
+	<target host="sports.south-wales.police.uk" />
+	<target host="www.south-wales.police.uk" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://eservices.south-wales.police.uk/Jobs/Default.aspx?ReturnUrl=%2fjobs" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^eservices\.south-wales\.police\.uk$" name="^(?:ASP\.NET_SessionId|language)$" /-->
+	<!--securecookie host="^(?:commissioner|dev|www)\.south-wales\.police\.uk$" name="^pll_language$" /-->
+	<!--securecookie host="^\.(?:dev|www)\.south-wales\.police\.uk$" name="^ARRAffinity$" /-->
+
+	<securecookie host="^\.www\." name="." />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

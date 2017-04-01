@@ -1,0 +1,57 @@
+<!--
+	For rules causing false/broken MCB, see shortnote.jp-falsemixed.xml.
+
+
+	CDN buckets:
+
+		- d1zxaq39zvefje.cloudfront.net	← s
+
+
+	Problematic hosts in *shortnote.jp:
+
+		- mm ˣ
+		- s ᵐ
+
+	ᵐ Cloudfront / mismatched
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Mixed content:
+
+		- css on mm from $self ˢ
+
+		- Images, on:
+
+			- mm from $self ˢ
+			- mm from s.shortnote.jp ˢ
+			- mm from www.shortnote.jp ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="ShortNote.jp (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="shortnote.jp" />
+	<target host="info.shortnote.jp" />
+	<!--target host="mm.shortnote.jp" /-->
+	<target host="www.shortnote.jp" />
+
+	<!--	Complications:
+				-->
+	<target host="s.shortnote.jp" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://s\.shortnote\.jp/"
+		to="https://d1zxaq39zvefje.cloudfront.net/" />
+
+		<test url="http://s.shortnote.jp/data/notes/A/AM/AMc/AMcfhVoP/i/2_pc2sgpv0.jpg" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

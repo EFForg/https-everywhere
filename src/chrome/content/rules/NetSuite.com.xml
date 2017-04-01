@@ -1,0 +1,46 @@
+<!--
+	Nonfunctional subdomains:
+
+		- ^ ¹
+		- shopping ¹
+		- www ²
+
+	¹ Dropped
+	² 503, akamai
+
+
+	Insecure cookies are set for these domains:
+
+		- .netsuite.com
+		- checkout.netsuite.com
+		- .checkout.netsuite.com
+		- forms.netsuite.com
+		- .forms.netsuite.com
+		- .system.netsuite.com
+
+-->
+<ruleset name="NetSuite.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="checkout.netsuite.com" />
+	<target host="forms.netsuite.com" />
+	<target host="system.netsuite.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.netsuite\.com$" name="^mbox$" /-->
+	<!--securecookie host="^checkout\.netsuite\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^\.checkout\.netsuite\.com$" name="^(NLShopperId|NLVisitorId|NS_VER|gc)$" /-->
+	<!--securecookie host="^forms\.netsuite\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^\.forms\.netsuite\.com$" name="^NS_VER$" /-->
+	<!--securecookie host="^\.system\.netsuite\.com$" name="^country$" /-->
+
+	<securecookie host="^\.?(?:checkout|forms|system)\.netsuite\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

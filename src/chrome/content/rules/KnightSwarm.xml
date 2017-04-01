@@ -1,15 +1,42 @@
-<ruleset name="KnightSwarm">
+<!--
+	Problematic hosts in *knightswarm.com:
 
+		- order *
+
+	* Expired
+
+
+	These altnames don't exist:
+
+		- www.my.knightswarm.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- knightswarm.com
+		- .knightswarm.com
+		- www.knightswarm.com
+
+-->
+<ruleset name="KnightSwarm.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="knightswarm.com" />
-	<target host="*.knightswarm.com" />
+	<target host="my.knightswarm.com" />
+	<!--target host="order.knightswarm.com" /-->
+	<target host="www.knightswarm.com" />
 
 
-	<securecookie host="^(.*\.)?knightswarm\.com$" name=".*" />
-
-
-	<!--	!www cert is self-signed.
+	<!--	Not secured by server:
 					-->
-	<rule from="^https?://(?:(order\.)|www\.)?knightswarm.com/"
-		to="https://$1knightswarm.com/" />
+	<!--securecookie host="^(www\.)?knightswarm\.com$" name="^PHPSESSID[\da-f]{4}$" /-->
+	<!--securecookie host="^\.knightswarm\.com$" name="^(__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^(?:.*\.)?knightswarm\.com$" name=".*" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

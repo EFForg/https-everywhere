@@ -1,19 +1,38 @@
 <!--
-	Problematic subdomains:
+	^iar.com: refused
 
-		- ^	(refused)
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- www.iar.com
+		- .www.iar.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="IAR.com">
 
-	<target host="iar.com" />
+	<!--	Direct rewrites:
+				-->
 	<target host="www.iar.com" />
 
+	<!--	Complications:
+				-->
+	<target host="iar.com" />
 
-	<securecookie host="^www\.iar\.com$" name=".+" />
+
+	<!--securecookie host="^www\.iar\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^\.www\.iar\.com$" name="^PreferredLanguage$" /-->
+
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\.www\." name="." />
 
 
-	<rule from="^http://(?:www\.)?iar\.com/"
+
+	<rule from="^http://iar\.com/"
 		to="https://www.iar.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

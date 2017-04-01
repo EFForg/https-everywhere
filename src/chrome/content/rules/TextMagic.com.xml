@@ -6,36 +6,38 @@
 
 	Nonfunctional subdomains:
 
-		- api	(http reply)
+		- api *
+
+	* 503/521
 
 
-	Some pages redirect to http.
+	Insecure cookies are set for these domains and hosts:
 
-
-	Mixed content:
-
-		- Images on www from $self *
-
-		- Web bug on www from images.scanalert.com *
-
-	* Secured by us
+		- .textmagic.com
+		- my.textmagic.com
+		- .support.textmagic.com
 
 -->
-<ruleset name="TextMagic.com (partial)">
+<ruleset name="TextMagic.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="textmagic.com" />
+	<target host="my.textmagic.com" />
+	<target host="support.textmagic.com" />
 	<target host="www.textmagic.com" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://(www\.)?textmagic\.com/+($|\?)" /-->
-		<!--
-			Exceptions:
+
+
+	<!--	Not secured by server:
 					-->
-		<!--exclusion pattern="^http://(www\.)?textmagic\.com/+(?!(app|blog)($|[?/])|favicon\.ico|img/)" /-->
+	<!--securecookie host="^\.textmagic\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^my\.textmagic\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.support\.textmagic\.com$" name="EP-LastViewedPosts$" /-->
+
+	<securecookie host=".*\.textmagic\.com$" name="" />
 
 
-	<rule from="^http://(www\.)?textmagic\.com/(?=(?:app|blog)(?:$|[?/])|favicon\.ico|img/)"
-		to="https://$1textmagic.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

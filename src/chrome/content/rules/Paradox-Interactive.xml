@@ -1,8 +1,60 @@
-<ruleset name="Paradox Interactive (partial)">
+<!--
+	Paradox Interactive
 
-	<target host="connect.paradoxplaza.com"/>
 
-	<rule from="^http://connect\.paradoxplaza\.com/"
-		to="https://connect.paradoxplaza.com/"/>
+	Nonfunctional hosts in *paradoxplaza.com:
+
+		- connect *
+		- oldforum *
+
+	* Connection rejected
+
+
+	Problematic hosts in *paradoxplaza.com:
+
+		- career *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- forum.paradoxplaza.com
+		- www.paradoxplaza.com
+		- .www.paradoxplaza.com
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- career from res.cloudinary.com *
+			- forum from i.imgur.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Paradox Plaza.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="paradoxplaza.com"/>
+	<target host="accounts.paradoxplaza.com"/>
+	<target host="career.paradoxplaza.com"/>
+	<target host="forum.paradoxplaza.com"/>
+	<target host="www.paradoxplaza.com"/>
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^forum\.paradoxplaza\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^www\.paradoxplaza\.com$" name="^frontend$" /-->
+	<!--securecookie host="^\.www\.paradoxplaza\.com$" name="^(?:frontend|store)$" /-->
+
+	<securecookie host=".+\.paradoxplaza\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

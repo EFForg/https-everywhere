@@ -1,32 +1,32 @@
 <!--
+
 	CDN buckets:
-
 		- d2ues8mtn1tc1i.cloudfront.net
-
-
-	Problematic subdomains:
-
-		- ^	(works; mismatched, CN: *.heroku.com)
-
-
 	inspectlet.js sets the following wildcard cookies
 	on whichever domain it is loaded from:
-
 		- __insp_nv
 		- __insp_pad
 		- __insp_ref
-
 -->
-<ruleset name="Inspectlet.com">
 
+<ruleset name="Inspectlet">
+
+	<!--	Mixed Content-->
+	<target host="blog.inspectlet.com" />
+	<exclusion pattern="^http://blog\.inspectlet\.com/(?!favicon\.ico|wp-content/|wp-includes/)" />
+		<test url="http://blog.inspectlet.com/" />
+		<test url="http://blog.inspectlet.com/favicon.ico" />
+		<test url="http://blog.inspectlet.com/wp-content/themes/inspectlet/genericons/genericons/genericons.css" />
+		<test url="http://blog.inspectlet.com/wp-includes/js/wp-embed.min.js?ver=4.4.2" />
+
+	<!--	Directly -->
 	<target host="inspectlet.com" />
-	<target host="*.inspectlet.com" />
-
-
+	<target host="apidocs.inspectlet.com" />
+	<target host="cdn.inspectlet.com" />
+	<target host="www.inspectlet.com" />
+	
+	<rule from="^http:" to="https:" />
+	
 	<securecookie host="^(?:.*\.)?inspectlet\.com$" name=".+" />
-
-
-	<rule from="^http://(?:www\.)?inspectlet\.com/"
-		to="https://www.inspectlet.com/" />
-
+	
 </ruleset>

@@ -2,27 +2,46 @@
 	For problematic rules, see Xt-Commerce-mismatches.xml.
 
 
-	Nonfunctional domains:
+	Mixed content:
 
-		- addons.xt-commerce.com	(cert: plesk, self-signed, expired;
-						shows default Plesk page)
+		- css addons, www from $self *
+
+		- Images, on:
+
+			- www from www.google.com *
+			- addons, www from $self *
+			- addons from www.xt-commerce.com *
+
+		- Ads on www from googleads.g.doubleclick.net
+
+	* Secured by us
 
 -->
-<ruleset name="xt:Commerce (partial)" platform="mixedcontent">
+<ruleset name="xt:Commerce (false MCB)" platform="mixedcontent">
 
-	<target host="xt-commerce.com" />
-	<target host="www.xt-commerce.com" />
-	<!--	* for cross-domain cookie.	-->
-	<target host="*.www.xt-commerce.com" />
-
-
-	<securecookie host="^www\.xt-commerce\.com$" name=".*" />
-
-
-	<!--	- Cert only matches www
-		- !www redirects to www
+	<!--	Direct rewrites:
 				-->
-	<rule from="^https?://(?:www\.)?xt-commerce\.com/"
+	<target host="addons.xt-commerce.com" />
+	<target host="www.xt-commerce.com" />
+
+	<!--	Complications:
+				-->
+	<target host="xt-commerce.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.xt-commerce\.com$" name="^(?:incap_ses_\d+|visid_incap)_\d+$" /-->
+	<!--securecookie host="^www\.xt-commerce\.com$" name="^(?:___utm[abm]\w+|x[\da-f]+)$" /-->
+
+	<securecookie host="^\." name="^(?:incap_ses_\d+|visid_incap)_\d+$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://xt-commerce\.com/"
 		to="https://www.xt-commerce.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

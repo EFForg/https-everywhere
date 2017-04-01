@@ -18,6 +18,9 @@
 
 	<target host="ex.ac.uk" />
 	<target host="*.ex.ac.uk" />
+
+		<test url="http://empslocal.ex.ac.uk/" />
+
 	<target host="exeter.ac.uk" />
 	<target host="*.exeter.ac.uk" />
 		<exclusion pattern="^http://(?:www\.)?(?:psychology|sshs)\." />
@@ -26,8 +29,12 @@
 	<securecookie host="^(?:.*\.)?exeter\.ac\.uk$" name=".+" />
 
 
-	<rule from="^http://newton\.ex\.ac\.uk/"
-		to="https://newton.ex.ac.uk/" />
+	<!--
+		Cert only matches empslocal.ex.ac.uk, so rewrite to ex.ac.uk
+		instead of the exeter.ac.uk used for all other subdomains.
+	-->
+	<rule from="^http://empslocal\.ex(?:eter)?\.ac\.uk/"
+		to="https://empslocal.ex.ac.uk/" />
 
 	<!--	Observed subdomains:
 
@@ -46,6 +53,7 @@
 			- lifesciences
 			- my
 			- mysso
+			- newton
 			- owa
 			- projects
 			- sid
@@ -55,12 +63,12 @@
 
 	Cert only matches exeter
 				-->
-	<rule from="^https?://([\w-]+\.)?ex(?:eter)?\.ac\.uk/"
+	<rule from="^http://([\w-]+\.)?ex(?:eter)?\.ac\.uk/"
 		to="https://$1exeter.ac.uk/" />
 
 	<!--	Cert only matches //*.exeter
 						-->
-	<rule from="^https?://(?:www\.)?([\w-]+\.)ex(?:eter)?\.ac\.uk/"
+	<rule from="^http://(?:www\.)?([\w-]+\.)ex(?:eter)?\.ac\.uk/"
 		to="https://$1exeter.ac.uk/" />
 
 </ruleset>

@@ -1,0 +1,47 @@
+<!--
+	Fetch testing note: otrs redirects to 404
+	login prompt over http & https
+
+
+	(www.)?datamotion.com: 404
+
+
+	These altnames do not exist:
+
+		- www.support.datamotion.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- otrs.datamotion.com
+		- ssl.datamotion.com
+		- support.datamotion.com
+		- testing.datamotion.com
+
+-->
+<ruleset name="DataMotion.com (partial)">
+
+	<target host="monitoring.datamotion.com" />
+	<target host="otrs.datamotion.com" />
+	<target host="partners.datamotion.com" />
+	<target host="ssl.datamotion.com" />
+	<target host="support.datamotion.com" />
+	<target host="testing.datamotion.com" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://ssl.datamotion.com/form.aspx?co=3438&amp;frm=energy&amp;to=flareenergy.fromforms" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:otrs|support)\.datamotion\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^(?:ssl|testing)\.datamotion\.com$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

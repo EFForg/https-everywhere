@@ -1,39 +1,57 @@
 <!--
-	Nonfunctional subdomains:
+	Problematic hosts in *percona.com:
 
-		- forum		(shows www)
+		- forum ¹
+		- mysql101 ²
 
-
-	Problematic subdomains:
-
-		- form		(mismatched, CN: *.marketo.com)
-
-
-	Partially covered subdomains:
-
-		- form		(→ na-n.marketo.com)
+	¹ Refused
+	² Mismatched
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these hosts:
 
-		- (www.)
-		- customers
-		- s[0-3]
+		- customers.percona.com
+		- form.percona.com
+		- www.percona.com
 
 -->
-<ruleset name="Percona (partial)">
+<ruleset name="Percona.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="percona.com" />
-	<target host="*.percona.com" />
+	<target host="customers.percona.com" />
+	<target host="form.percona.com" />
+	<target host="s0.percona.com" />
+	<target host="s1.percona.com" />
+	<target host="s2.percona.com" />
+	<target host="s3.percona.com" />
+	<target host="tools.percona.com" />
+	<target host="www.percona.com" />
+
+	<!--	Complications:
+				-->
+	<target host="forum.percona.com" />
 
 
-	<securecookie host="^customers\.percona\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^customers\.percona\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^form\.percona\.com$" name="^BIGipServer" /-->
+	<!--securecookie host="^www\.percona\.com$" name="^bb(?:lastactivity|lastvisit|sessionhash)$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^https?://form\.percona\.com/(cs|image|r)s/"
-		to="https://na-n.marketo.com/$1s/" />
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://forum\.percona\.com/[^?]*"
+		to="https://www.percona.com/forums/" />
 
-	<rule from="^http://(customers\.|s\d\.|www\.)?percona\.com/"
-		to="https://$1percona.com/" />
+		<test url="http://forum.percona.com//index.php?foo" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

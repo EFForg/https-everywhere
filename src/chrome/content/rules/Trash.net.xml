@@ -1,17 +1,40 @@
 <!--
-	Nonfunctiona subdomains:
+	Nonfunctional hosts in *trash.net:
 
-		- $	(cert: your; shows your's data)
-		- beer	(ditto)
-		- www	(ditto)
+		- beer ᵃ
+
+	ᵃ Shows your.trash.net
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- trash.net
+		- your.trash.net
+		- your2.trash.net
+		- www.trash.net
+		- www2.trash.net
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="trash.net (partial)" platform="cacert">
+<ruleset name="trash.net (partial)">
 
+	<target host="trash.net" />
 	<target host="your.trash.net" />
+	<target host="your2.trash.net" />
+	<target host="www.trash.net" />
+	<target host="www2.trash.net" />
 
 
-	<rule from="^http://your\.trash\.net/"
-		to="https://your.trash.net/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www2?\.)?trash\.net$" name="^CMSSESSID[\da-f]+$" /-->
+	<!--securecookie host="^your2?\.trash\.net$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

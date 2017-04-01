@@ -1,16 +1,45 @@
-<ruleset name="McAfee MX Logic">
+<!--
+	McAfee MX Logic
 
-	<target host="mxlogic.com"/>
-	<target host="*.mxlogic.com"/>
+	For other McAfee coverage, see McAfee.xml.
 
-	<securecookie host="^(.*\.)?mxlogic\.com$" name=".*"/>
 
-	<!--	Cert isn't valid for !www.	-->
-	<rule from="^http://(?:www\.)?mxlogic\.com/"
-		to="https://www.mxlogic.com/"/>
+	(www.)?mxlogic.com: Mismatched
 
-	<!--	Clients have unique domains.	-->
-	<rule from="^http://([^\.]\.)?(console|portal)\.mxlogic\.com/"
-		to="https://$1$2.mxlogic.com/"/>
+-->
+<ruleset name="MX Logic.com">
+
+	<target host="mxlogic.com" />
+	<target host="console.mxlogic.com" />
+	<target host="*.console.mxlogic.com" />
+	<target host="portal.mxlogic.com" />
+	<target host="*.portal.mxlogic.com" />
+	<target host="www.mxlogic.com" />
+
+		<!--	Clients have unique domains.	-->
+		<exclusion pattern="^http://(?:[^./]+\.){2,}(?:console|portal)\.mxlogic\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.console.mxlogic.com/" />
+			<test url="http://exists.not.console.mxlogic.com/" />
+			<test url="http://this.host.portal.mxlogic.com/" />
+			<test url="http://exists.not.portal.mxlogic.com/" />
+
+		<test url="http://portal.mxlogic.com/images/transparent.gif" />
+
+
+	<securecookie host="." name="." />
+
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://(?:www\.)?mxlogic\.com/.*"
+		to="https://partnerfocus.mcafee.com/" />
+
+		<test url="http://www.mxlogic.com/terms/privacy.cfm" />
+
+	<rule from="^http:"
+		to="https:"/>
 
 </ruleset>

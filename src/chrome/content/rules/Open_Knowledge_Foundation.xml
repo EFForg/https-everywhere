@@ -1,44 +1,79 @@
 <!--
-	For rules causing false/broken MCB, see OKFn.org-falsemixed.xml.
+	Open Knowledge Foundation
+
+	For rules causing false/broken MCB, see okfn.org-falsemixed.xml.
+
+
+	Problematic hosts in *okfn.org:
+
+		- blog ˣ
+		- www ᵗ
+
+	ᵗ Reset, preemptable redirect
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- okfn.org
+		- .okfn.org
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
 
-		- Scripts on ^ from $self *
+		- css, on:
 
-		- css, on ^ from:
+			- blog from a.okfn.org ˢ
+			- blog from assets.okfn.org ˢ
+			- blog from $self ˢ
+			- blog from blog.core.okfn.org ˢ
 
-			- assets *
-			- cloud.github.com *
-			- code.jquery.com *
+		- Images, on:
 
-		- Images, on ^ from:
+			- blog from $self ˢ
+			- blog from blog.core.okfn.org ˢ
+			- blog from i\d.wp.com ˢ
 
-			- $self *
-			- assets *
-			- farm\d.staticflickr.com *
-			- cloud.github.com *
-
-		- Web bugs, on ^ from:
-
-			- netdna.bootstrapcdn.com *
-			- w.sharethis.com *
-
-	* Secured by us
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Open Knowledge Foundation (partial)" default_off="mismatched">
+<ruleset name="OKFn.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="okfn.org" />
+	<!--target host="a.okfn.org" /-->
 	<target host="assets.okfn.org" />
-	<target host="www.okfn.org" />
+	<!--target host="blog.okfn.org" /-->
+	<!--target host="blog.core.okfn.org" /-->
+	<target host="pad.okfn.org" />
+
 		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://(?:www\.)?okfn\.org/(?!\?ver=\w+$|favicon\.ico|wp-content/|wp-includes/)" />
+		<test url="http://a.okfn.org/html/oki/panel/panel.html" />
+		-->
+		<test url="http://assets.okfn.org/themes/okfn/okf-footer/okf-footer.css" />
+
+	<!--	Complications:
+				-->
+	<target host="www.okfn.org" />
 
 
-	<rule from="^http://(assets\.|www\.)?okfn\.org/"
-		to="https://$1okfn.org/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^okfn\.org$" name="django_language$" /-->
+	<!--securecookie host="^\.okfn\.org$" name="^(__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<!--	Redirect keeps all:
+					-->
+	<rule from="^http://www\.okfn\.org/"
+		to="https://okfn.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

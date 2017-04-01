@@ -1,19 +1,67 @@
-<ruleset name="Barclays" platform="mixedcontent">
-  <target host="www.barclays.co.uk" />
+<!--
+	Other Barclays rulesets:
+
+		- Barcleycard.co.uk.xml
+		- Barclays_Corporate.com.xml
+
+
+	Problematic hosts in *barclays.co.uk:
+
+		- ^ *
+		- jobs *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .barclays.co.uk
+		- bank.barclays.co.uk
+		- www.jobs.barclays.co.uk
+
+
+	Mixed content:
+
+		- Images on www.jobs from $self *
+
+		- Ads/bugs, on:
+
+			- www.jobs from ib.adnxs.com *
+			- www.jobs from bs.serving-sys.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Barclays.co.uk">
+
+	<!--	Direct rewrites:
+				-->
   <target host="barclays.co.uk" />
   <target host="ask.barclays.co.uk" />
-  <target host="barclayscorporate.com" />
-  <target host="www.barclayscorporate.com" />
+	<target host="bank.barclays.co.uk" />
+	<target host="www.jobs.barclays.co.uk" />
+	<target host="smetrics.barclays.co.uk" />
+  <target host="www.barclays.co.uk" />
 
-  <target host="barclaycard.co.uk" />
-  <target host="*.barclaycard.co.uk" />
-  <target host="*.secure.barclaycard.co.uk" />  
+	<!--	Complications:
+				-->
+	<target host="jobs.barclays.co.uk" />
 
-  <securecookie host="^(.+\.)?(barclays|barclayscorporate)\.(com|co\.uk)$" name=".*"/>
 
-  <rule from="^http://(?:www\.)?barclays\.co\.uk/" to="https://www.barclays.co.uk/"/>
-  <rule from="^http://ask\.barclays\.co\.uk/" to="https://ask.barclays.co.uk/"/>
-  <rule from="^http://(?:www\.)?barclayscorporate\.com/" to="https://www.barclayscorporate.com/"/>
-  <rule from="^http://(?:secure\.)?barclaycard\.co\.uk/" to="https://www.barclaycard.co.uk/"/>
-  <rule from="^http://(www|bcol|letmechoose|ask|spendmanagement)\.(?:secure\.)?barclaycard\.co\.uk/" to="https://$1.barclaycard.co.uk/"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.barclays\.co\.uk$" name="^s_vi$" /-->
+	<!--securecookie host="^bank\.barclays\.co\.uk$" name="^(?:BIGipServer\w+|rolb-live_\w+|tabIndex)$" /-->
+	<!--securecookie host="^www\.jobs\.barclays\.co\.uk$" name="^(?:guid|wplinkedin)$" /-->
+
+	<securecookie host="^\.barclays\.co\.uk$" name="^s_vi$" />
+	<securecookie host="^(?:.+\.)?barclays\.co\.uk$" name=".*"/>
+
+
+	<rule from="^http://(jobs\.)?barclays\.co\.uk/"
+		to="https://www.$1barclays.co.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

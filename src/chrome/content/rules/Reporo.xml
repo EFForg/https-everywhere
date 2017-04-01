@@ -1,39 +1,56 @@
 <!--
-	CDN buckets:
+	Other Reporo rulesets:
 
-		- netdna-pull.reporo.netdna-cdn.com
-
-			- -ssl doesn't exist
-			- netdna.reporo.net
+		- reporo.net.xml
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *reporo.com:
 
-		- blog.reporo.com *
-		- netdna.reporo.net	(404; mismatched, CN: *.netdna-ssl.com)
-		- www.reporo.net *
+		- blog ᵈ
 
-	* Times out
+	ᵈ Dropped
 
 
-	Problematic domains:
+	^reporo.com: Mismatched
 
-		- reporo.com	(cert only matches www.reporo.com)
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.reporo.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Reporo (partial)">
+<ruleset name="Reporo.com (partial)">
 
+	<!--	Direct rewrites::
+				-->
+	<target host="static.reporo.com" />
+	<target host="support.reporo.com" />
+	<target host="www.reporo.com" />
+
+		<test url="http://static.reporo.com/images/list-style1.png" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://www.reporo.com/analytics/" /-->
+
+	<!--	Complications:
+				-->
 	<target host="reporo.com" />
-	<target host="*.reporo.com" />
 
 
-	<securecookie host="^www\.reporo\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.reporo\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?reporo\.com/"
+	<rule from="^http://reporo\.com/"
 		to="https://www.reporo.com/" />
 
-	<rule from="^http://static\.reporo\.com/"
-		to="https://static.reporo.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

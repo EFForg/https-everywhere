@@ -1,37 +1,56 @@
 <!--
+	Sanoma News
+
 	For other Sanoma Corporation coverage, see Sanoma.com.xml.
 
 
-	Sanoma News
+	Nonfunctional hosts in *sanoma.fi:
+
+		- (www.)? ᵈ
+		- media ʳ
+
+	ᵈ Dropped
+	ʳ Refused
 
 
-	Problematic subdomains:
+	Insecure cookies are set for these hosts: ᶜ
 
-		- (www.)	(dropped)
+		- oma.sanoma.fi
 
-
-	Fully covered subdomains:
-
-		- (www.)	(→ www.sanoma.com)
-		- admp-tc
-		- analytics
-		- cts
-		- sat
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Sanoma.fi">
+<ruleset name="Sanoma.fi (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="analytics.sanoma.fi" />
+	<target host="cts.sanoma.fi" />
+	<target host="oma.sanoma.fi" />
+	<target host="ratas.sanoma.fi" />
+	<target host="sat.sanoma.fi" />
+	<target host="sn.sanoma.fi" />
+	<target host="tili.sanoma.fi" />
+
+		<test url="http://analytics.sanoma.fi/zag.gif?Log=1&amp;v_jd=1" />
+		<test url="http://tili.sanoma.fi/public/widget/css/widget.css?style=hs_blue" />
+
+	<!--	Complications:
+				-->
 	<target host="sanoma.fi" />
-	<target host="*.sanoma.fi" />
+	<target host="www.sanoma.fi" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^oma\.sanoma\.fi$" name="^_subs_csrf$" /-->
 
 	<!--	Tracking cookies:
 
-			- evid and evid-synced set by admp-tc
 			- v1st set by analytics
 						-->
-	<securecookie host="^\.sanoma\.fi$" name="^(?:evid|evid-synced|v1st)$" />
-	<securecookie host="^sat\.sanoma\.fi$" name=".+" />
+	<securecookie host="^\." name="^(?:evid|evid-synced|v1st)$" />
+	<securecookie host="^\w" name="." />
 
 
 	<!--	Server drops path:
@@ -39,7 +58,7 @@
 	<rule from="^http://(?:www\.)?sanoma\.fi/.*"
 		to="https://www.sanoma.com/fi" />
 
-	<rule from="^http://(admp-tc|analytics|cts|sat)\.sanoma\.fi/"
-		to="https://$1.sanoma.fi/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

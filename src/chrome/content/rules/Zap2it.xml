@@ -1,27 +1,72 @@
 <!--
+	CDN buckets:
+
+		- d1mxyp5ceukbya.cloudfront.net
+
+			- image-cdn
+
+		- images.zap2it.com.edgesuite.net
+
+
 	Nonfunctional domains:
 
-		- ^		(dropped)
-		- images.zap2it.com	(Akamai; 503)
-		- www *
+		- login *
+		- tvbythenumbers *
 
-	* 503, akamai
+	* Refused
+
+
+	Problematic subdomains:
+
+		- (www.)? ¹
+		- image-cdn ²
+		- images ²
+
+	¹ Expired
+	² Mismatched
 
 
 	Fully covered subdomains:
 
-		- login
+		- (www.)?
+		- image-cdn	(→ d1mxyp5ceukbya.cloudfront.net)
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.zap2it.com
+
+
+	Mixed content:
+
+		- Images on www from image-cdn.zap2it.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Zap2it (partial)">
+<ruleset name="Zap2it.com (partial)" default_off="expired, mismatched">
 
-	<target host="login.zap2it.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="zap2it.com" />
+	<target host="www.zap2it.com" />
+
+	<!--	Complications:
+				-->
+	<target host="image-cdn.zap2it.com" />
 
 
-	<securecookie host="^login\.zap2it\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.zap2it\.com$" name="^^(fuelcid|rmcookie)$" /-->
+
+	<securecookie host="^www\.zap2it\.com$" name=".+" />
 
 
-	<rule from="^http://login\.zap2it\.com/"
-		to="https://login.zap2it.com/" />
+	<rule from="^http://image-cdn\.zap2it\.com/"
+		to="https://d1mxyp5ceukbya.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

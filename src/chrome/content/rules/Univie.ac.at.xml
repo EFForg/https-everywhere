@@ -1,0 +1,96 @@
+<!--
+	University of Vienna
+
+
+	Nonfunctional subdomains:
+
+		- rna.tbi *
+
+	* Refused
+
+
+	Partially covered subdomains:
+
+		- blog ¹
+		- data ²
+
+	¹ Avoiding false/broken MCB
+	² index.html redirects to http
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- aufnahmeverfahren
+		- bibliothek
+		- www.bpc
+		- chemie
+		- cs
+		- ctl
+		- forschungsnewsletter
+		- informatik
+		- international
+		- intra
+		- kalender
+		- medienportal
+		- online
+		- public
+		- sbterminals
+		- studentpoint
+		- studien-lehrwesen
+		- studienservice-lehrwesen
+		- www.tbi
+		- univis
+		- weblogin
+		- webmail
+		- zid
+
+
+	Mixed content:
+
+		- css on blog from $self *
+
+		- Images, on:
+
+			- bibliothek from $self *
+			- blog from $self *
+			- www from $self *
+
+		- favicons, on:
+
+			- www.bpc from $self *
+			- forschungsnewsletter from $self *
+			- international from $self *
+			- kalender from $self *
+			- public and univis from public *
+
+	* Secured by us
+
+-->
+<ruleset name="Univie.ac.at (partial)">
+
+	<target host="univie.ac.at" />
+	<target host="*.univie.ac.at" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://blog\.univie\.ac\.at/+(?!backend/|favicon\.ico)" />
+		<!--
+			Redirect to http:
+						-->
+		<exclusion pattern="^http://data\.univie\.ac\.at/index\.html" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(aufnahmeverfahren|www\.bpc|chemie|cs|ctl|forschungsnewsletter|informatik|international|kalender|medienportal|public|sbterminals|studentpoint|studien-lehrwesen|studienservice-lehrwesen|www|zid)\.univie\.ac\.at$" name="^fe_typo_user$" /-->
+	<!--securecookie host="^univis\.univie\.ac\.at$" name="^(JSESSIONID|aceid-\d+)$" /-->
+	<!--securecookie host="^weblogin\.univie\.ac\.at$" name="^(_idp_authn_lc_key|JSESSIONID)$" /-->
+
+	<securecookie host="^(?:aufnahmeverfahren|www\.bpc|chemie|cs|ctl|forschungsnewsletter|informatik|international|kalender|medienportal|public|sbterminals|studentpoint|studien(?:service)?-lehrwesen|univis|weblogin|www|zid)\.univie\.ac\.at$" name=".+" />
+
+
+	<rule from="^http://((?:aufnahmeverfahren|bibliothek|blog|www\.bpc|cs|ctl|data|forschungsnewsletter|informatik|international|intra|kalender|medienportal|online|public|sbterminals|studentpoint|studien(?:service)?-lehrwesen|www\.tbi|univis|weblogin|webmail|www|zid)\.)?univie\.ac\.at//"
+		to="https://$1univie.ac.at/" />
+
+</ruleset>

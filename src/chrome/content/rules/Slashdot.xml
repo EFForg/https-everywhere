@@ -1,49 +1,67 @@
 <!--
-	For problematic rules, see Slashdot-mismatches.xml.
+	For rules causing false/broken MCB, see slashdot.org-falsemixed.xml.
 
 
-	Nonfunctional subdomains:
+	Nonfunctional covered hosts in *slashdot.org:
 
-		- mbeta			(404)
-		- slashdotheadlines.p	(refused)
+		- slashdotheadlines.p ʳ
 
-
-	Partially covered subdomains:
-
-		- (www.)	(many pages redirect to http)
+	ʳ Refused
 
 
-	Fully covered subdomains:
+	Problematic hosts in *slashdot.org:
 
-		- images
-		- tv
-		- y
+		- m ˣ
+
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Mixed content:
+
+		- css, on:
+
+			- m from a.fsdn.com *
+			- m from fonts.googleapis.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Slashdot (partial)">
+<ruleset name="Slashdot.org (partial)">
 
 	<target host="slashdot.org" />
-	<target host="*.slashdot.org" />
+	<target host="apple.slashdot.org" />
+	<target host="build.slashdot.org" />
+	<target host="deals.slashdot.org" />
+	<target host="developers.slashdot.org" />
+	<target host="devices.slashdot.org" />
+	<target host="entertainment.slashdot.org" />
+	<target host="games.slashdot.org" />
+	<target host="hardware.slashdot.org" />
+	<target host="images.slashdot.org" />
+	<target host="interviews.slashdot.org" />
+	<target host="it.slashdot.org" />
+	<target host="jobs.slashdot.org" />
+	<target host="linux.slashdot.org" />
+	<!--target host="m.slashdot.org" /-->
+	<target host="mbeta.slashdot.org" />
+	<target host="mobile.slashdot.org" />
+	<target host="news.slashdot.org" />
+	<target host="partnervideo.slashdot.org" />
+	<target host="politics.slashdot.org" />
+	<target host="science.slashdot.org" />
+	<target host="tech.slashdot.org" />
+	<target host="technology.slashdot.org" />
+	<target host="tv.slashdot.org" />
+	<target host="www.slashdot.org" />
+	<target host="y.slashdot.org" />
+	<target host="yro.slashdot.org" />
 
 
-	<securecookie host="^slashdot\.org$" name="^w3tc_referrer$" />
+	<securecookie host="^\." name="^_(?:ga|_qca$)" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:\w+\.)?slashdot\.org/favicon\.ico$"
-		to="https://tv.slashdot.org/wp-content/themes/TVslashdot/images/favicon.ico" />
-
-	<rule from="^http://(www\.)?slashdot\.org/(login\.pl|my/|submission|topic/|webcasts)"
-		to="https://$1slashdot.org/$2" />
-
-	<!--	Redirects to http as-is:
-						-->
-	<rule from="^http://slashdot\.org/images/"
-		to="https://images.slashdot.org/images/" />
-
-	<rule from="^http://(\w+)\.slashdot\.org/ajax\.pl"
-		to="https://$1.slashdot.org/ajax.pl" />
-
-	<rule from="^http://(images|tv|y)\.slashdot\.org/"
-		to="https://$1.slashdot.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

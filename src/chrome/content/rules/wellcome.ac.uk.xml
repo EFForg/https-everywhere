@@ -1,0 +1,113 @@
+<!--
+	The Wellcome Trust
+
+	Other Wellcome Trust rulesets:
+
+		- wellcomelibrary.org.xml
+
+
+	Nonfunctional hosts in *wellcome.ac.uk:
+
+		- (www.)? ᵃ
+		- archives ᵈ
+		- catalogue ᵈ
+		- genome ᵃ
+		- conf.hinxton ᵃ
+		- malaria ᵃ
+		- myprofile ᶠ
+		- spin ᵈ
+		- strategy ᵃ
+
+	ᵃ Shows another domain
+	ᵈ Dropped
+	ᶠ Handshake fails
+
+
+	Problematic hosts in *wellcome.ac.uk:
+
+		- blog ᵐ
+		- film:15151 ᵖ
+		- library ᵐ
+		- libsys ᵐ
+		- thecrunch ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+	ᵖ Plaintext reply
+
+
+	These altnames do not exist:
+
+		- www.webmail.hinxton.wellcome.ac.uk
+
+
+	Insecure cookies are set for these hosts:
+
+		- autodiscover.hinxton.wellcome.ac.uk
+		- registration.hinxton.wellcome.ac.uk
+		- wtac.hinxton.wellcome.ac.uk
+
+		- jobs.wellcome.ac.uk
+		- oadeposit.wellcome.ac.uk
+		- thecrunch.wellcome.ac.uk
+		- trustnet.wellcome.ac.uk
+
+
+	Mixed content:
+
+		- Images on thecrunch from $self
+
+-->
+<ruleset name="Wellcome.ac.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="account.wellcome.ac.uk" />
+	<target host="grants.wellcome.ac.uk" />
+
+	<target host="autodiscover.hinxton.wellcome.ac.uk" />
+	<target host="registration.hinxton.wellcome.ac.uk" />
+	<target host="webmail.hinxton.wellcome.ac.uk" />
+	<target host="wtac.hinxton.wellcome.ac.uk" />
+
+	<target host="jobs.wellcome.ac.uk" />
+	<target host="oadeposit.wellcome.ac.uk" />
+	<target host="secure.wellcome.ac.uk" />
+	<!--target host="thecrunch.wellcome.ac.uk" /-->
+	<target host="trustnet.wellcome.ac.uk" />
+	<target host="wtgrants.wellcome.ac.uk" />
+	<target host="wtreset.wellcome.ac.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="library.wellcome.ac.uk" />
+
+		<!--	Set cookie without Secure:
+							-->
+		<!--test url="http://wtac.hinxton.wellcome.ac.uk/portal/DesktopDefault.aspx?e=" /-->
+		<!--test url="http://jobs.wellcome.ac.uk/iRecruit/Home.aspx" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:(?:registration|wtac)\.hinxton|oadeposit|thecrunch)\.wellcome\.ac\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^(?:autodiscover|webmail)\.hinxton\.wellcome\.ac\.uk$" name="^cadata[\dA-F]{32}$" /-->
+	<!--securecookie host="^jobs\.wellcome\.ac\.uk$" name="^\.ASPXANONYMOUS$" /-->
+	<!--securecookie host="^trustnet\.wellcome\.ac\.uk$" name="^BIGipServer" /-->
+
+	<securecookie host="^\." name="^(?:__qca|_gat?)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://library\.wellcome\.ac\.uk/+"
+		to="https://wellcomelibrary.org/" />
+
+		<test url="http://library.wellcome.ac.uk/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

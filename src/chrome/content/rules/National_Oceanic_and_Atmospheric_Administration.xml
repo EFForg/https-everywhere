@@ -1,30 +1,111 @@
 <!--
+	National Oceanic and Atmospheric Administration
+
 	For other U.S. government coverage, see US-government.xml.
 
 
-	Cert only matches www.ncdc
+	Nonfunctional hosts in *noaa.gov:
+
+		- (www.)? ¹
+		- www.aoml ²
+		- www.careers ¹
+		- www.cio ¹
+		- www.corporateservices ¹
+		- www.goes ¹
+		- habsos ³
+		- www.history ¹
+		- www.legislative ¹
+		- www.lib ⁴
+		- ecowatch.ncddc ³
+		- service.ncddc ⁵
+		- www.ncddc ³
+		- nomads.ncep ²
+		- www.nesdis ⁵
+		- www.nesdisia ¹
+		- spidr.ngdc ²
+		- www.nnvl ¹
+		- noaanews
+		- www.noaanews ¹
+		- www.nws ⁶
+		- oceanservice ¹
+		- www.ospo ²
+		- www.photolib ¹
+		- www.rdc ¹
+
+	¹ Times out
+	² Refused
+	³ Redirects to http
+	⁴ Data differ
+	⁵ 401
+	⁶ 503, Akamai
 
 
-	Nonfunctional subdomains:
+	Problematic hosts in *noaa.gov:
 
-		- (www.)noaa.gov *
-		- maps.ngdc.noaa.gov
-		- noaanews.noaa.gov
-		- www.noaanews.noaa.gov *
+		- www.star.nesdis ¹ ²
 
-	* Times out
+	¹ Mixed css
+	² Untrusted root
+
+
+	These altnames don't exist:
+
+		- nodc.noaa.gov
+
+
+	Insecure cookies are set for these hosts:
+
+		- nsd.rdc.noaa.gov
+
+
+	Mixed content:
+
+		- css on www.star.nesdis from $self
+
+		- Image, on:
+
+			- gis.ncdc from www.adobe.com *
+			- www.star.nesdis from $self
+			- map.ngdc from www.ngdc.noaa.gov *
+
+	* Secured by us
 
 -->
-<ruleset name="National Oceanic and Atmospheric Administration (partial)">
+<ruleset name="NOAA.gov (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="ncdc.noaa.gov" />
+
+	<target host="gis.ncdc.noaa.gov" />
+	<target host="nes.ncdc.noaa.gov" />
 	<target host="www.ncdc.noaa.gov" />
 
+	<target host="ncei.noaa.gov" />
+	<target host="www.ncei.noaa.gov" />
+	<target host="ngdc.noaa.gov" />
 
-	<securecookie host="^www\.ncdc\.noaa\.gov$" name=".+" />
+	<target host="gis.ngdc.noaa.gov" />
+	<target host="maps.ngdc.noaa.gov" />
+	<target host="www.ngdc.noaa.gov" />
+
+	<target host="data.nodc.noaa.gov" />
+	<target host="www.nodc.noaa.gov" />
+	<target host="nsd.rdc.noaa.gov" />
+	<target host="tidesandcurrents.noaa.gov" />
 
 
-	<rule from="^https?://(?:www\.)?ncdc\.noaa\.gov/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^nsd\.rdc\.noaa\.gov$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://ncdc\.noaa\.gov/"
 		to="https://www.ncdc.noaa.gov/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

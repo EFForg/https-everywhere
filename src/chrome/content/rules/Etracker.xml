@@ -1,40 +1,92 @@
 <!--
+	Nonfunctional hosts in *etracker.com:
+
+		- editor *
+
+	* 200 "an error has occurred"
+
+
 	Problematic domains:
 
-		- (www.)sedotracker.com		(mismatched)
+		- etracker.de *
+		- (www.)?sedotracker.com *
+		- visitormotion.com *
+
+	* Mismatched
+
+
+	These altnames don't exist:
+
+		- mail.etracker.com
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- partner.etracker.de
+		- www.etracker.de
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	code.etracker.com sets ist and _vm_u cookies
 	on whichever domain it is loaded from.
 
 -->
-<ruleset name="etracker">
+<ruleset name="etracker (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="etracker.com" />
 	<target host="*.etracker.com" />
-	<target host="etracker.de" />
+	<target host="partner.etracker.de" />
 	<target host="www.etracker.de" />
-	<target host="visitormotion.com" />
 	<target host="www.visitormotion.com" />
 
-
-	<securecookie host="^(.*\.)?etracker\.(com|de)$" name=".*" />
-
-
-	<!--	!www: cert mismatch.
+	<!--	Complications:
 				-->
-	<rule from="^http://(?:www\.)?etracker\.(com|de)/"
-		to="https://www.etracker.$1/" />
+	<target host="etracker.de" />
+	<target host="visitormotion.com" />
 
-	<rule from="^http://(\w+)\.etracker\.(com|de)/"
-		to="https://$1.etracker.$2/" />
+		<exclusion pattern="^http://editor\.etracker\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://editor.etracker.com/" />
+
+		<test url="http://application.etracker.com/" />
+		<test url="http://autodiscover.etracker.com/" />
+		<test url="http://beta.etracker.com/" />
+		<test url="http://code.etracker.com/" />
+		<test url="http://owa.etracker.com/" />
+		<test url="http://partnerportal.etracker.com/" />
+		<test url="http://visitorvoice.etracker.com/" />
+		<test url="http://ws.etracker.com/" />
+		<test url="http://www.etracker.com/" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://www.etracker.de/cnt_css.php?et=&amp;v=&amp;java=n&amp;et_easy=0&amp;et_pagename=&amp;et_areas=&amp;et_ilevel=0&amp;et_target=&amp;et_lpage=0&amp;et_trig=0&amp;et_se=0&amp;et_cust=0&amp;et_basket=&amp;et_url=&amp;et_tag=&amp;et_sub=&amp;et_organisation=&amp;et_demographic=" /-->
+
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^partner\.etracker\.de$" name="^etrbo$" /-->
+	<!--securecookie host="^www\.etracker\.de$" name="^etcnt_\d+$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://etracker\.de/"
+		to="https://www.etracker.de/" />
 
 	<rule from="^http://(?:www\.)?sedotracker\.com/"
 		to="https://www.etracker.de/" />
 
-	<!--	Cert mismatch.
-				-->
-	<rule from="^http://(?:www\.)?visitormotion\.com/"
+	<rule from="^http://visitormotion\.com/"
 		to="https://www.visitormotion.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

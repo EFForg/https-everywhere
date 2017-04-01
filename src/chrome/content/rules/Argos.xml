@@ -1,8 +1,26 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://argosonline.es/ => https://www.argosonline.es/: (28, 'Operation timed out after 15001 milliseconds with 0 bytes received')
+Fetch error: http://www.argosonline.es/ => https://www.argosonline.es/: Cycle detected - URL already encountered: https://www.argosonline.es/
+Fetch error: http://www.greatcareers.co.uk/ => https://www.greatcareers.co.uk/: (60, 'SSL certificate problem: certificate has expired')
+Fetch error: http://wearechoosy.com/ => https://www.wearechoosy.com/: (60, 'SSL certificate problem: certificate has expired')
+Fetch error: http://www.wearechoosy.com/ => https://www.wearechoosy.com/: (60, 'SSL certificate problem: certificate has expired')
 	For problematic rules, see Argos-mismatches.
 
+
+	Problematic domains:
+
+		- (www.)?argos-spain.co.uk *
+
+	* Handshake fails
+
+
+	Fully covered domains:
+
+		- (www.)?argos-spain.co.uk	(→ www.argosonline.es)
+
 -->
-<ruleset name="Argos (partial)" platform="mixedcontent">
+<ruleset name="Argos (partial)" platform="mixedcontent" default_off='failed ruleset test'>
 
 	<target host="argos.co.uk" />
 	<target host="*.argos.co.uk" />
@@ -31,26 +49,31 @@
 	<securecookie host="^www\.wearechoosy\.com$" name=".*" />
 
 
-	<!--	Certs only match www.	-->
-	<rule from="^https?://(?:www\.)?argos(emails|-spain)?\.co\.uk/"
-		to="https://www.argos$1.co.uk/" />
+	<!--	Cert only matches www.	-->
+	<rule from="^http://(?:www\.)?argosemails\.co\.uk/"
+		to="https://www.argosemails.co.uk/" />
 
 	<rule from="^http://image\.email\.argos\.co\.uk/"
 		to="https://image.email.argos.co.uk/" />
 
 	<!--	Cert only matches www.	-->
-	<rule from="^https?://(?:www\.)?argos\.ie/"
+	<rule from="^http://(?:www\.)?argos\.ie/"
 		to="https://www.argos.ie/" />
 
 	<rule from="^http://competitions\.argos\.ie/"
 		to="https://competitions.argos.ie/" />
 
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://(?:www\.)?argos-spain\.co\.uk/.*"
+		to="https://www.argosonline.es/webapp/wcs/stores/servlet/LogonForm" />
+
 	<!--	!www: interrupted	-->
-	<rule from="^https?://(?:www\.)?argoscareers\.com/"
+	<rule from="^http://(?:www\.)?argoscareers\.com/"
 		to="https://www.argoscareers.com/" />
 
 	<!--	Cert only matches www.	-->
-	<rule from="^https?://(?:www\.)?argosonline\.es/"
+	<rule from="^http://(?:www\.)?argosonline\.es/"
 		to="https://www.argosonline.es/" />
 
 	<!--	!www doesn't exist.	-->
@@ -58,7 +81,7 @@
 		to="https://www.greatcareers.co.uk/" />
 
 	<!--	Cert only matches www.	-->
-	<rule from="^https?://(?:www\.)?wearechoosy\.com/"
+	<rule from="^http://(?:www\.)?wearechoosy\.com/"
 		to="https://www.wearechoosy.com/" />
 
 </ruleset>

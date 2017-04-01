@@ -1,43 +1,119 @@
 <!--
 	Other Free Software Foundation rulesets:
 
+		- GMP_Lib.org.xml
 		- GNU.org.xml
 		- GnuPG.org.xml
 
 
 	Nonfunctional domains:
 
+		- amt.fsf.org ¹
+		- mirror.fsf.org ¹
 		- shop.fsf.org		(redirects to http):
 		- specialk.nongnu.org	(dropped)
+
+	¹ Dropped	
 
 
 	Fully covered domains:
 
 		- fsf.org subdomains:
 
+			- (www.)?
 			- cas
+			- crm
+			- directory
+			- donate		(→ my.fsf.org)
+			- emailselfdefense
+			- my
+			- patron		(→ www.fsf.org)
+			- piwik
+			- static
+			- status
+			- u
+
+		- bugs.gnewsense.org	(→ savannah.nongnu.org)
+
+		- in *nongnu.org:
+
+			- lists
+			- savannah
+
+
+	Mixed content:
+
+		- Image on directory from static *
+
+	* Secured by us
 
 -->
 <ruleset name="Free Software Foundation">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="fsf.org" />
-	<target host="*.fsf.org" />
+	<target host="cas.fsf.org" />
+	<target host="crm.fsf.org" />
+	<target host="directory.fsf.org" />
+	<target host="emailselfdefense.fsf.org" />
+	<target host="my.fsf.org" />
+	<target host="piwik.fsf.org" />
+	<target host="shop.fsf.org" />
+	<target host="static.fsf.org" />
+	<target host="status.fsf.org" />
+	<target host="u.fsf.org" />
+	<target host="www.fsf.org" />
+
+        <target host="lists.nongnu.org" />
+        <target host="savannah.nongnu.org" />
+
+	<!--	Complications:
+				-->
+	<target host="donate.fsf.org" />
+	<target host="patron.fsf.org" />
+
 	<target host="bugs.gnewsense.org" />
 
-        <target host="*.nongnu.org" />
+
+		<!--	These paths redirect to http:
+
+				- $
+				- cart/$
+				- category/\w+/$
+				- product/\w+/$
+
+			There may be more than are handled here that don't.
+						-->
+		<exclusion pattern="^http://shop\.fsf\.org/(?!faq/$|jf$|static/|termsofsale/$)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://shop.fsf.org/cart/" />
+			<test url="http://shop.fsf.org/category/gnu-gear/" />
+			<test url="http://shop.fsf.org/category/signed/" />
+			<test url="http://shop.fsf.org/product/Introduction_to_Command_Line/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://shop.fsf.org/faq/" />
+			<test url="http://shop.fsf.org/jf" />
+			<test url="http://shop.fsf.org/termsofsale/" />
+
 		<!--exclusion pattern="^http://specialk\.nongnu\.org/" /-->
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^my\.fsf\.org$" name="^_ZopeId$" /-->
 
 	<!--	There's a cross-domain session cookie, which is not
 		handled in case it's used on unsecurable pages.
 			In particular, shop.fsf.org is not fully
 		securable, and seems to share a login system with www.
 		-->
-	<securecookie host="^(\.crm|my|status)\.fsf\.org$" name=".*" />
+	<securecookie host="^(?:\.crm|my|status)\.fsf\.org$" name=".*" />
 
-
-	<rule from="^http://((?:cas|crm|my|static|status|u|www)\.)?fsf\.org/"
-		to="https://$1fsf.org/" />
 
 	<!--	- Shows www's data over https
 		- 301s like so over http
@@ -51,25 +127,14 @@
 	<rule from="^http://patron\.fsf\.org/"
 		to="https://www.fsf.org/patrons" />
 
-	<!--	These paths redirect to http:
-
-			- $
-			- cart/$
-			- category/\w+/$
-			- product/\w+/$
-
-		There may be more than are handled here that don't.
-			-->
-	<rule from="^http://shop\.fsf\.org/(faq/$|jf$|static/|termsofsale/$)"
-		to="https://shop.fsf.org/$1" />
-
 	<!--	Redirects like so.
 					-->
-
-	<rule from="^http://bugs\.gnewsense\.org/(?:.*)"
+	<rule from="^http://bugs\.gnewsense\.org/.*"
 		to="https://savannah.nongnu.org/bugs/?group=gnewsense" />
 
-        <rule from="^http://(lists|savannah)\.nongnu\.org/"
-		to="https://$1.nongnu.org/" />
+		<test url="http://bugs.gnewsense.org//" />
+
+        <rule from="^http:"
+		to="https:" />
 
 </ruleset>

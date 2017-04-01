@@ -1,32 +1,81 @@
 <!--
-	For other US government coverage, see US-government.xml.
+	1.usa.gov is handled in Bit.ly_vanity_domains.xml.
+
+	For other U.S. government coverage, see US-government.xml.
 
 
-	apps.usa.gov is handled in US-government-mismatches.xml.
+	Problematic hosts in *usa.gov:
+
+		- answers *
+
+	* Akamai / mismatched
 
 
-	Nonfunctional domains:
+	These altnames don't exist:
 
-		- usa.gov				(Akamai, redirects to http)
-		- ansers.usa.gov			(timeout)
-		- blog.usa.gov
+		- beta.business.usa.gov
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- admin-survey.usa.gov
+		- .go.usa.gov
+		- kids.usa.gov
+		- publications.usa.gov
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on business, feedback, participation from fonts.googleapis.com *
+		- Images on feedback from sites.usa.gov *
+
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="USA.gov (partial)">
 
-	<target host="*.usa.gov" />
-
-
-	<!--	Observed cookie domains:
-
-			- publications
-			- search
-
+	<!--	Direct rewrites:
 				-->
-	<securecookie host="^.*\.usa\.gov$" name=".*" />
+	<target host="usa.gov" />
+	<target host="admin-survey.usa.gov" />
+	<target host="apps.usa.gov" />
+	<target host="beta.usa.gov" />
+	<target host="blog.usa.gov" />
+	<target host="business.usa.gov" />
+	<target host="www.business.usa.gov" />
+	<target host="financialprotection.usa.gov" />
+	<target host="go.usa.gov" />
+	<target host="gobierno.usa.gov" />
+	<target host="kids.usa.gov" />
+	<target host="www.kids.usa.gov" />
+	<target host="participation.usa.gov" />
+	<target host="publications.usa.gov" />
+	<target host="search.usa.gov" />
+	<target host="sites.usa.gov" />
+	<target host="*.sites.usa.gov" />
+	<target host="survey.usa.gov" />
+	<target host="vote.usa.gov" />
+	<target host="www.usa.gov" />
+
+		<test url="http://dearabby.sites.usa.gov/wp-content/themes/skeleton/images/border_top.png" />
+		<test url="http://dolblog.sites.usa.gov/files/2014/10/blog_social_facebook.png" />
+		<test url="http://ethics.sites.usa.gov/files/2014/07/showcase-ethics-bg.jpg" />
+		<test url="http://fedramp.sites.usa.gov/files/2015/02/news_bg.png" />
 
 
-	<rule from="^http://(business|publications|search)\.usa\.gov/"
-		to="https://$1.usa.gov/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^admin-survey\.usa\.gov$" name="^(?:_comment_tool_app_session|rack\.session)$" /-->
+	<!--securecookie host="^\.go\.usa\.gov$" name="^SESS[\da-f]{32}$" /-->
+	<!--securecookie host="^kids\.usa\.gov$" name="^AWSELB$" /-->
+	<!--securecookie host="^publications\.usa\.gov$" name="^(?:PHPSESSID|cookies)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

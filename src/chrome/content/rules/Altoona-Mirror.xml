@@ -1,30 +1,59 @@
 <!--
 	Nonfunctional altoonamirror.com subdomains:
 
-		- extras	(interrupted)
-		- jobs		(ditto)
+		- jobs ᶠ
+
+	ᶠ Handshake fails
+
+
+	Problematic hosts in *altoonamirror.com:
+
+		- ^ ᵐ
+		- mobile ᵐ
+
+	ᵐ Mismatched
+
+
+	Mixed content:
+
+		- Images on:
+
+			- www from extras.altoonamirror.com ˢ
+			- www from $self ˢ
+
+		- Ads/bugs, on:
+
+			- www from www.facebook.com ˢ
+			- www from embed.newsinc.com ˢ
+			- www from legacy.newsinc.com ˢ
+			- www from panewsmedia.org
+
+	ˢ Secured by us
 
 -->
-<ruleset name="Altoona Mirror (partial)">
+<ruleset name="Altoona Mirror.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="extras.altoonamirror.com" />
+	<target host="www.altoonamirror.com" />
+
+	<!--	Complications:
+				-->
 	<target host="altoonamirror.com" />
-	<target host="*.altoonamirror.com" />
-	<target host="intellnews.net" />
-	<target host="www.intellnews.net" />
+	<target host="mobile.altoonamirror.com" />
 
 
-	<securecookie host="^www\.altoonamirror\.com$" name=".*" />
-	<securecookie host="^www\.intellnews\.net$" name=".*" />
+	<securecookie host="^\w" name="." />
 
 
-	<!--	Cert only matches www.
-					-->
-	<rule from="^https?://(?:mobile\.|www\.)?altoonamirror\.com/"
+	<rule from="^http://mobile\.altoonamirror\.com/$"
+		to="https://www.altoonamirror.com/page/wap.frontPage/" />
+
+	<rule from="^http://(?:mobile\.)?altoonamirror\.com/"
 		to="https://www.altoonamirror.com/" />
 
-	<!--	Ditto.
-			-->
-	<rule from="^https?://(?:www\.)?intellnews\.net/"
-		to="https://www.intellnews.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,99 +1,346 @@
 <!--
+	Harvard University
+
 	For problematic rules, see Harvard-University-expired.xml.
 
 
-	Nonfunctional subdomains:
+	CDN buckets:
 
-		- (www.) *
-		- absabs
-		- astroart.cfa *
-		- chandra *
+		- dlv9ibhjf3gu3.cloudfront.net		<- media.campaign.harvard.edu
+		- d2i28rwvea3z9u.cloudfront.net		<- media.www.harvard.edu
+
+
+	Nonfunctional hosts in *harvard.edu:
+
+		- absabs ᵈ
+		- ads ᵈ
+		- cda ᵈ
+		- astroart.cfa ᵈ
+		- cxc.cfa ᵇ
+		- chandra ᵈ
 		- cleanslate		(redirects to cleanslate-stanford-edu.360designstudio.net; mismatched, CN: *.bluehost.com)
-		- news *
+		- cxc ᵇ
+		- dash ᵈ
+		- statuspage.rc.fas ⁴
+		- (www.)?hks ⁴
+		- icxc ᵇ
+		- belfercenter.ksg ⁴
+		- myads ᵈ
+		- news ᵈ
 		- reference.pin		(reused_issuer_and_serial)
-		- people.seas *
-		- worldmap *
+		- mirrors.seas ⁴
+		- people.seas ᵈ
+		- thestorymap ⁴
+		- worldmap ᵈ
+		- www.wjh ⁴
 
-	* Times out
+	ᵇ Shows default page
+	ᵈ Times out
+	⁴ Refused
 
 
-	Problematic subdomains:
+	Problematic hosts in *harvard.edu:
 
+		- alumni *	(Expired)
 		- berkman *
+		- campaign	(Cloudfront)
+		- media.campaign	(Cloudfront)
+		- cbmi.catalyst	(Mixed css)
+		- downloads		(Missing certificate chain)
+		- employment		(Shows static.fas)
+		- www.rc.fas *
 		- hsph
+		- services.huit		(Mismatched, CN: *.devcloud.acquia-sites.com)
+		- ksgexecprogram	(Refused)
 		- www.cyber.law *
 		- eon.law	(shows adam.law, mismatched, CN: adam.law.harvard.edu)
 		- pin *
 		- www.pin	($ redirects to http)
 		- pngu.mgh	(expired)
 		- saas **
+		- read.seas	(Self-signed)
+		- trademark		(Mismatched, CN: hwp.harvard.edu)
 		- yuba			(works; expired 2008-04-16, CN: localhost.localdomain)
+		- www		cloudfront
+		- media.www	cloudfront
+		- wyss ᶜ
 
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
 	* Mismatched
 	** Cert only matches www.saas
 
 
-	Partially covered subdomains:
+	Partially covered hosts in *harvard.edu:
 
+		- accessibility *
+		- cbmi.catalyst	(Avoiding broken MCB)
 		- www.cfa *	(image_archive/ 404s)
+		- cqh *
+		- economics *
+		- pearson.eps *
+		- astronomy.fas *
+		- hr *
+		- huit *
+		- static.hwpi *
+		- static.projects.iq *
+		- psr.iq *
 		- isites *
+
+		- computefest.seas *
+		- iacs.seas *
+		- robobees.seas *
+
+		- shanghaicenter *
+		- (www.)?trademark *	(www → ^)
+		- (www.)wcfia *
+		- programs.wcfia *
 
 	* At least some pages redirect to http
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
-		- (www.)berkman
-		- hbdm.hbsp
-		- (www.)hsph		(^ → www)
-		- login.icommons
+		- community.alumni.harvard.edu
+		- connects.catalyst.harvard.edu
+		- rc.fas.harvard.edu
+		- account.rc.fas.harvard.edu
+		- downloads.rc.fas.harvard.edu
+		- odybot.rc.fas.harvard.edu
+		- .hul.harvard.edu
+		- orgs.law.harvard.edu
+		- secure.post.harvard.edu
 
-		- law subdomains:
-
-			- adam *
-			- blogs *
-			- (www.)cyber
-			- eon *		(→ cyber.law.harvard.edu)
-
-		- www.pin1
-		- (www.)saas		(^ → www)
-
-	* www.foo doesn't exist
-
-
-	Targets solely for wildcard cookies:
-
-		- *.cyber.law.harvard.edu
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
 
+		- css on cbmi.catalyst from catalyst ¹
+		- Images on osc.hul from $self ¹
 		- Image on www.saas from seasdev.prod.acquia-sites.com *
 
+	¹ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 	* Doesn't trip MCB
 
 -->
-<ruleset name="Harvard University (partial)">
+<ruleset name="Harvard.edu (partial)">
 
-	<target host="*.harvard.edu" />
+	<!--	Direct rewrites:
+				-->
+	<target host="accessibility.harvard.edu" />
+	<target host="ui.adsabs.harvard.edu" />
+	<target host="community.alumni.harvard.edu" />
+	<target host="www.berkman.harvard.edu" />
+
+	<target host="catalyst.harvard.edu" />
+	<target host="cbmi.catalyst.harvard.edu" />
+	<target host="connects.catalyst.harvard.edu" />
+
+	<target host="www.cfa.harvard.edu" />
+	<target host="cqh.harvard.edu" />
+	<target host="dome.harvard.edu" />
+	<target host="dspace.harvard.edu" />
+	<target host="economics.harvard.edu" />
+	<target host="pearson.eps.harvard.edu" />
+
+	<target host="account.fas.harvard.edu" />
+	<target host="astronomy.fas.harvard.edu" />
+	<!--target host="downloads.fas.harvard.edu" /-->
+	<target host="rc.fas.harvard.edu" />
+	<target host="static.fas.harvard.edu" />
+
+	<target host="hbdm.hbsp.harvard.edu" />
+
+	<target host="exed.hks.harvard.edu" />
+	<target host="knet.hks.harvard.edu" />
+	<target host="research.hks.harvard.edu" />
+
+	<target host="hr.harvard.edu" />
+	<target host="www.hsph.harvard.edu" />
+	<target host="huevents.harvard.edu" />
+	<target host="huit.harvard.edu" />
+	<target host="intranet.huit.harvard.edu" />
+	<target host="osc.hul.harvard.edu" />
+	<target host="static.hwpi.harvard.edu" />
+	<target host="login.icommons.harvard.edu" />
+
+	<target host="projects.iq.harvard.edu" />
+	<target host="static.projects.iq.harvard.edu" />
+	<target host="psr.iq.harvard.edu" />
+
+	<target host="isites.harvard.edu" />
+
+	<target host="adam.law.harvard.edu" />
+	<target host="blogs.law.harvard.edu" />
+	<target host="cyber.law.harvard.edu" />
+
+	<target host="oncampus.harvard.edu" />
+	<target host="www.pin1.harvard.edu" />
+	<target host="post.harvard.edu" />
+	<target host="secure.post.harvard.edu" />
+	<target host="www.saas.harvard.edu" />
+
+	<target host="computefest.seas.harvard.edu" />
+	<target host="iacs.seas.harvard.edu" />
+	<target host="micro.seas.harvard.edu" />
+	<target host="robobees.seas.harvard.edu" />
+
+	<target host="shanghaicenter.harvard.edu" />
+	<target host="trademark.harvard.edu" />
+	<target host="wcfia.harvard.edu" />
+	<target host="programs.wcfia.harvard.edu" />
+	<target host="www.wcfia.harvard.edu" />
+	<!--target host="wyss.harvard.edu" /-->
+
+	<!--	Complications:
+				-->
+	<target host="berkman.harvard.edu" />
+	<target host="media.campaign.harvard.edu" />
+	<target host="employment.harvard.edu" />
+	<target host="www.rc.fas.harvard.edu" />
+	<target host="hsph.harvard.edu" />
+	<target host="www.fas.harvard.edu" />
+	<target host="ksgexecprogram.harvard.edu" />
+
+	<target host="www.cyber.law.harvard.edu" />
+	<target host="eon.law.harvard.edu" />
+	<target host="orgs.law.harvard.edu" />
+
+	<target host="pin.harvard.edu" />
+	<target host="www.pin.harvard.edu" />
+	<target host="saas.harvard.edu" />
+	<target host="www.trademark.harvard.edu" />
+	<target host="media.www.harvard.edu" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(accessibility|cqh|economics|astronomy\.fas|huit|static\.hwpi|(projects|static\.projects|psr)\.iq|onecampus|(computefest|iacs|robobees)\.seas|shanghaicenter|trademark|((programs|www)\.)?wcfia)\.harvard\.edu/($|fellows$|user/password|user/pin\?)" /-->
+		<!--exclusion pattern="^http://hr\.harvard\.edu/($|jobs/?$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:accessibility|cqh|economics|astronomy\.fas|hr|huit|static\.hwpi|(?:projects|static\.projects|psr)\.iq|onecampus|(?:computefest|iacs|robobees)\.seas|shanghaicenter|trademark|(?:(?:programs|www)\.)?wcfia)\.harvard\.edu/+(?!favicon\.ico|files/|modules/|profiles/|sites/|user(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://accessibility.harvard.edu/user/password" />
+			<test url="http://cqh.harvard.edu/user/password" />
+			<test url="http://economics.harvard.edu/user/password" />
+			<test url="http://astronomy.fas.harvard.edu/user/password" />
+			<test url="http://hr.harvard.edu/jobs" />
+			<test url="http://huit.harvard.edu/user/password" />
+			<test url="http://static.hwpi.harvard.edu/user/password" />
+			<test url="http://projects.iq.harvard.edu/user/password" />
+			<test url="http://static.projects.iq.harvard.edu/user/password" />
+			<test url="http://psr.iq.harvard.edu/user/password" />
+			<test url="http://shanghaicenter.harvard.edu/user/password" />
+
+			<!--	-ve:
+					-->
+			<test url="http://astronomy.fas.harvard.edu/favicon.ico" />
+			<test url="http://astronomy.fas.harvard.edu/profiles/openscholar/themes/hwpi_basetheme/images/hwpi_basesprite.png" />
+			<test url="http://astronomy.fas.harvard.edu/sites/projects.iq.harvard.edu/files/subtheme/github.com/ebiewener/Astronomy/css/astronomy.css" />
+			<test url="http://shanghaicenter.harvard.edu/favicon.ico" />
+			<test url="http://shanghaicenter.harvard.edu/profiles/openscholar/themes/hwpi_modern/images/footer-top-gradient.png" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://cbmi\.catalyst\.harvard\.edu/(?!formsJsf/javax\.faces\.resource/|formsJsf/resources/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://cbmi.catalyst.harvard.edu/cores/" />
+			<test url="http://cbmi.catalyst.harvard.edu/cores/cat/core.html?core_id=&amp;uri_id=&amp;category_id=&amp;navMode=cat" />
+
 		<!--exclusion pattern="^http://www\.cfa\.harvard\.edu/(?!common/)" /-->
 		<exclusion pattern="^http://www\.cfa\.harvard\.edu/image_archive/" />
-		<exclusion pattern="^http://isites\.harvard\.edu/(?!favicon\.ico|[fj]s/|icb/calendar/themes/|icb/[\w-]\.css)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.cfa.harvard.edu/image_archive/" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://pearson\.eps\.harvard\.edu/$" /-->
+		<exclusion pattern="^http://pearson\.eps\.harvard\.edu/+(?!favicon\.ico|misc/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://pearson.eps.harvard.edu/pages/graduate-students" />
+			<test url="http://pearson.eps.harvard.edu/people" />
+			<test url="http://pearson.eps.harvard.edu/people/stephanie-kusch" />
+
+			<!--	-ve:
+					-->
+			<test url="http://pearson.eps.harvard.edu/favicon.ico" />
+
+		<exclusion pattern="^http://isites\.harvard\.edu/+(?!favicon\.ico|[fj]s/|icb/calendar/themes/|icb/[\w-]\.css)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://isites.harvard.edu/course/colgsas-5243" />
+			<test url="http://isites.harvard.edu/hgse_pngt" />
+			<test url="http://isites.harvard.edu/icb/icb.do?keyword=" />
+			<test url="http://isites.harvard.edu/policypath" />
+			<test url="http://isites.harvard.edu/understandings_of_consequence" />
+
+			<!--	+ve:
+					-->
+			<test url="http://isites.harvard.edu/favicon.ico" />
+
+		<!--exclusion pattern="^http://mirrors\.seas\.harvard\.edu/" /-->
 
 
-	<securecookie host="^(?:login\.icommons|.*\.law|www\.pin1|www\.seas)\.harvard\.edu$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^community\.alumni\.harvard\.edu$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^connects\.catalyst\.harvard\.edu$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^rc\.fas\.harvard\.edu$" name="^(?:PHPSESSID|wfvt_\d+)$" /-->
+	<!--securecookie host="^account\.rc\.fas\.harvard\.edu$" name="^csrftoken$" /-->
+	<!--securecookie host="^downloads\.rc\.fas\.harvard\.edu$" name="^wordpress(?:_logged_in|_sec|user)?_[\da-f]{32}$" /-->
+	<!--securecookie host="^odybot\.rc\.fas\.harvard\.edu$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.hul\.harvard\.edu$" name="^SESS[\da-f]{32}$" /-->
+	<!--securecookie host="^orgs\.law\.harvard\.edu$" name="^X-Mapping-" /-->
+	<!--securecookie host="^secure\.post\.harvard\.edu$" name="^TS[\da-f]+$" /-->
 
+	<securecookie host="^(?:community\.alumni|connects\.catalyst|rc\.fas|\w.*\.rc\.fas|login\.icommons|.*\.law|www\.pin1|secure\.post|www\.seas)\.harvard\.edu$" name=".+" />
+
+
+	<rule from="^http://(berkman|hsph|pin|saas)\.harvard\.edu/"
+		to="https://www.$1.harvard.edu/" />
+
+	<rule from="^http://media\.campaign\.harvard\.edu/"
+		to="https://dlv9ibhjf3gu3.cloudfront.net/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://employment\.harvard\.edu/[^?]*"
+		to="https://hr.harvard.edu/jobs/" />
+
+		<test url="http://employment.harvard.edu/home" />
+
+	<rule from="^http://www\.(rc\.fas|trademark)\.harvard\.edu/"
+		to="https://$1.harvard.edu/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://ksgexecprogram\.harvard\.edu/+"
+		to="https://exed.hks.harvard.edu/" />
+
+		<test url="http://ksgexecprogram.harvard.edu//" />
+
+	<rule from="^http://(?:www\.cyber|eon)\.law\.harvard\.edu/"
+		to="https://cyber.law.harvard.edu/" />
 
 	<rule from="^http://www\.pin\.harvard\.edu/(?:$|\?.*)"
 		to="https://www.pin.harvard.edu/home.shtml" />
 
-	<rule from="^http://(?:www\.)?(berkman|hsph|pin|saas)\.harvard\.edu/"
-		to="https://www.$1.harvard.edu/" />
+		<test url="http://www.pin.harvard.edu/?" />
 
-	<rule from="^http://(www\.cfa|hbdm\.hbsp|login\.icommons|isites|adam\.law|blogs\.law|www\.pin1)\.harvard\.edu/"
-		to="https://$1.harvard.edu/" />
+	<rule from="^http://media\.www\.harvard\.edu/"
+		to="https://d2i28rwvea3z9u.cloudfront.net/" />
 
-	<rule from="^http://(?:www\.)?(?:cyber|eon)\.law\.harvard\.edu/"
-		to="https://cyber.law.harvard.edu/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,41 @@
+<!--
+	Non-functional subdomain:
+		- (www.)billing.flokinet.com		(some pages redirect to HTTP)
+
+
+	STS header includes includeSubDomains
+
+-->
+<ruleset name="FlokiNET.is (partial)">
+
+	<target host="flokinet.is" />
+	<target host="*.flokinet.is" />
+
+	<target host="billing.flokinet.com" />
+	<target host="www.billing.flokinet.com" />
+
+		<exclusion pattern="^http://(www\.)?billing\.flokinet\.com/?$"/>
+
+			<test url="http://billing.flokinet.com/" />
+			<test url="http://www.billing.flokinet.com/" />
+
+		<exclusion pattern="^http://(www\.)?billing\.flokinet\.com/(announcements|downloads|index|knowledgebase)\.php"/>
+
+			<test url="http://billing.flokinet.com/announcements.php" />
+			<test url="http://billing.flokinet.com/downloads.php" />
+			<test url="http://billing.flokinet.com/index.php" />
+			<test url="http://www.billing.flokinet.com/index.php" />
+			<test url="http://billing.flokinet.com/knowledgebase.php" />
+
+		<test url="http://blog.flokinet.is/" />
+		<test url="http://www.blog.flokinet.is/" />
+		<test url="http://www.flokinet.is/" />
+
+
+	<securecookie host="^(?!billing\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

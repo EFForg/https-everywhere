@@ -1,0 +1,71 @@
+<!--
+	Nonfunctional subdomains:
+
+		- careers ¹
+		- corporate ²
+		- mediacentre ³
+
+	¹ Shows onboarding
+	² Refused
+	³ Shows www.digitalnewsagency.com
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- fearlessflyer ²
+
+	¹ Cert only matches www
+	² Works; self-signed, CN: Parallels Panel
+
+
+	Partially covered subdomains:
+
+		- (www.) *	(^ → www)
+		- stafftravel *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- onboarding
+		- js.sc
+		- media.sc
+
+
+	These altnames don't exist:
+
+		- sc.easyjet.com
+
+
+	Mixed content:
+
+		- Images on fearlessflyer from i.vimeocdn.com *
+
+	* Rule disabled by default
+
+-->
+<ruleset name="easyJet.com (partial)">
+
+	<target host="easyjet.com" />
+	<target host="*.easyjet.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://stafftravel\.easyjet\.com/($|en$)" /-->
+		<!--exclusion pattern="^http://www\.easyjet\.com/($|en/$|en/searchpod\.mvc/showborderless3\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://stafftravel\.easyjet\.com/+(?!asp/en/stafftravel\.asp|common/|favicon\.ico)" />
+		<!--exclusion pattern="^http://www\.easyjet\.com/+(?!Content/|ejcms/|favicon\.ico|fonts/)" /-->
+
+
+	<rule from="^http://(?:www\.)?easyjet\.com/(?=Content/|ejcms/|favicon\.ico|fonts/)"
+		to="https://www.easyjet.com/" />
+
+	<rule from="^http://(onboarding|(?:js|media)\.sc|stafftravel)\.easyjet\.com/"
+		to="https://$1.easyjet.com/" />
+
+</ruleset>

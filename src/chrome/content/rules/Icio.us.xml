@@ -1,0 +1,65 @@
+<!--
+	For other Delicious coverage, see Delicious.xml.
+
+
+	CDN buckets:
+
+		- api-688261400.us-west-1.elb.amazonaws.com
+
+			- images.del.icio.us
+
+		- delicious.imgix.net
+
+
+	Problematic hosts in *icio.us:
+
+		- images.del *
+
+	* Mismatched, CN: api.del.icio.us
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .api.del.icio.us
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bug on api.del from api.mixbit.com *
+
+	* See https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="icio.us">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="api.del.icio.us" />
+
+	<!--	Complications:
+				-->
+	<target host="icio.us" />
+	<target host="del.icio.us" />
+	<target host="images.del.icio.us" />
+	<target host="www.icio.us" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.api\.del\.icio\.us$" name="^delvisitor$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://(www\.)?icio\.us/"
+		to="https://del.icio.us/" />
+
+	<rule from="^http://images\.del\.icio\.us/"
+		to="https://api.del.icio.us/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -2,16 +2,30 @@
 	Nonfunctional subdomains
 
 		- (www.)betterbroadbandblog.com	(cert: *.sandsvine.com; shows IIS7 welcome page)
-		- sandsvine.com			(times out)
-		- www.sandsvine.com		(redirects to adfs.sandvine.com/adfs/ls/?wa=wsignin1.0)
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.sandvine.com
 
 -->
-<ruleset name="Sandvine (partial)">
+<ruleset name="Sandvine.com">
 
-	<target host="adfs.sandvine.com" />
+	<target host="sandvine.com" />
+	<target host="sandbox.sandvine.com" />
+	<target host="support.sandvine.com" />
+	<target host="www.sandvine.com" />
 
 
-	<rule from="^http://adfs\.sandvine\.com/"
-		to="https://adfs.sandvine.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.sandvine\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="\." name="^_gat?$" />
+	<securecookie host="\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

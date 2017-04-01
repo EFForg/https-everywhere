@@ -2,50 +2,49 @@
 	CDN buckets:
 
 		- cdn.ttgtmedia.com.cdngc.net
-
-		- irsolutions.snl.com
-
-			- investor
+		- irsolutions.snl.com	← investor
 
 
 	Nonfunctional domains:
 
 		- techtarget.com subdomains:
 
-			- investor *
-			- searchsecurity *
-			- users		(refused)
+			- investor ᵈ
+			- searchsecurity ᵈ
+			- users ʳ
 
-		- cdn.ttgtmedia.com		(403; mismatched, CN: ssl2.cdngc.net)
+		- cdn.ttgtmedia.com ³
 
-	* Dropped
-
-
-	Problematic subdomains:
-
-		- ^	(dropped)
+	³ 403
+	ᵈ Dropped
+	ʳ Refused
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these hosts: ᶜ
 
-		- (www.)	(^ → www)
-		- media
-		- techtargetsummit
+		- techtarget.com
+		- techtargetsummit.techtarget.com
+		- www.techtarget.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="TechTarget (partial)">
+<ruleset name="TechTarget.com (partial)">
 
 	<target host="techtarget.com" />
-	<target host="*.techtarget.com" />
+	<target host="media.techtarget.com" />
+	<target host="techtargetsummit.techtarget.com" />
+	<target host="www.techtarget.com" />
 
 
-	<securecookie host="^(?:media|techtargetsummit|www)\.techtarget\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:techtargetsummit\.|www\.)?techtarget\.com$" name="^BIGipServer" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?techtarget\.com/"
-		to="https://www.techtarget.com/" />
-
-	<rule from="^http://(media|techtargetsummit)\.techtarget\.com/"
-		to="https://$1.techtarget.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,17 +1,26 @@
 <!--
-	For problematic rules, see SkimLinks-problematic.xml.
+	Other SkimLinks rulesets:
+
+		- redirectingat.com.xml
+		- Skimresources.com.xml
+		- Skm.io.xml
 
 
 	Problematic subdomains:
 
-		- redirect		(works, mismatched, CN: *.skimresources.com)
+		- redirect		(works, mismatched)
 
 
 	Nonfunctional subdomains:
 
-		- api-product
-		- api-products
+		- api-product ¹
+		- api-products ¹
 		- arthur	(times out)
+		- info		(Marketo)
+		- support ⁴
+
+	¹ Refused
+	⁴ Zendesk
 
 
 	Observed working subdomains:
@@ -21,35 +30,85 @@
 		- api-merchants
 		- blog
 		- events
+		- hub
 		- labs
 		- ocelot
 		- press
 		- scoop
+		- signup
+
+
+	Insecure cookies are set for these domains:  ᶜ
+
+		- .skimlinks.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="SkimLinks (partial)">
+<ruleset name="SkimLinks.com (partial)">
 
 	<target host="skimlinks.com" />
 	<target host="*.skimlinks.com" />
-		<exclusion pattern="^https?://api-products?\.skimlinks\.com/(?!$|\?.*)" />
-		<exclusion pattern="^http://(?:arthur|redirect)\." />
-		<exclusion pattern="^https?://support\.skimlinks\.com/(?!(?:assets|external|generated|images|registration|system)/)" />
-	<target host="*.skimresources.com" />
 
+		<exclusion pattern="^http://(?:api-products?|arthur|(?:[^./]+\.)+[^./]+)\.skimlinks.com/" />
+
+			<test url="http://api-product.skimlinks.com/" />
+			<test url="http://api-products.skimlinks.com/" />
+			<test url="http://arthur.skimlinks.com/" />
+			<test url="http://this.host.skimlinks.com/" />
+			<test url="http://exists.not.skimlinks.com/" />
+			<test url="http://honestly.this.host.skimlinks.com/" />
+			<test url="http://honestly.exists.not.skimlinks.com/" />
+
+		<exclusion pattern="^http://info\.skimlinks\.com/(?!/*(?:$|\?|css/|images/|rs/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://info.skimlinks.com/BestPracticeGuide.html" />
+			<test url="http://info.skimlinks.com/BestPracticeGuide.html?foo" />
+			<test url="http://info.skimlinks.com//BestPracticeGuide.html" />
+			<test url="http://info.skimlinks.com/Shoppable-Content-Guide.html" />
+			<test url="http://info.skimlinks.com//Shoppable-Content-Guide.html" />
+			<test url="http://info.skimlinks.com/SmartAttribution.html" />
+			<test url="http://info.skimlinks.com/SmartAttribution.html?bar" />
+			<test url="http://info.skimlinks.com//SmartAttribution.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://info.skimlinks.com/css/mktLPSupport.css" />
+			<test url="http://info.skimlinks.com/rs/skimbitltd/images/bg.jpg" />
+
+		<test url="http://hub.skimlinks.com/" />
+		<test url="http://signup.skimlinks.com/" />
+		<test url="http://www.skimlinks.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.skimlinks\.com$" name="^skimsession$" /-->
 
 	<securecookie host="^\.skimlinks\.com$" name=".+" />
 
 
-	<rule from="^https?://api-products?\.skimlinks\.com/(?:\?.*)?"
+	<rule from="^http://info\.skimlinks\.com/+(?:\?.*)?$"
 		to="https://skimlinks.com/" />
 
-	<rule from="^https?://support\.skimlinks\.com/"
-		to="https://skimlinks.zendesk.com/" />
+		<test url="http://info.skimlinks.com/?f" />
+		<test url="http://info.skimlinks.com/?o" />
+		<test url="http://info.skimlinks.com//?o" />
+		<test url="http://info.skimlinks.com/?b" />
+		<test url="http://info.skimlinks.com/?a" />
+		<test url="http://info.skimlinks.com/?r" />
 
-	<rule from="^http://([\w-]+\.)?skimlinks\.com/"
-		to="https://$1skimlinks.com/" />
+	<rule from="^http://info\.skimlinks\.com/"
+		to="https://na-lon03.marketo.com/" />
 
-	<rule from="^http://(r|s)\.skimresources\.com/"
-		to="https://$1.skimresources.com/" />
+	<rule from="^http://redirect\.skimlinks\.com/"
+		to="https://go.redirectingat.com/" />
+
+		<test url="http://redirect.skimlinks.com/?id=76434X1526786&amp;xs=1&amp;url=http%3A%2F%2Fwww.amazon.com%2Fgp%2Fproduct%2FB00IEYHMIM" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

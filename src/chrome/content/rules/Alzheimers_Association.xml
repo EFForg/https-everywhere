@@ -1,19 +1,49 @@
 <!--
+	Nonfunctional subdomains:
+
+		- shop *
+
+	* Dropped
+
+
 	Problematic subdomains:
 
-		- ^	(cert only matches www)
+		- blog *
+
+	* Works; expired, self-signed
+
+
+	act: some pages redirect to http
+
+
+	Mixed content:
+
+		- Images on (www.) from (www.) *
+
+	* Secured by us
 
 -->
-<ruleset name="Alzheimer's Association">
+<ruleset name="Alzheimer's Association (partial)">
 
 	<target host="alz.org" />
-	<target host="www.alz.org" />
+	<target host="*.alz.org" />
+		<!--exclusion pattern="^http://act\.alz\.org/+(PageServer;|TR/Walk/General\?)" /-->
+		<exclusion pattern="^http://act\.alz\.org/+(?!$|\?|\w+/images/|css/|favicon\.ico|images/)" />
 
 
-	<securecookie host="^www\.alz\.org$" name=".+" />
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^(www\.)?alz\.org$" name="^ASPSESSIONID\w{8}$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?alz\.org$" name="^alz%5Fgoogle$" /-->
+	<!--securecookie host="^sdc\.alz\.org$" name="^(ACOOKIE|WEBTRENDS_ID)$" /-->
+
+	<securecookie host="^(?:sdc\.|www\.)?alz\.org$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?alz\.org/"
-		to="https://www.alz.org/" />
+	<rule from="^http://((?:sdc|shop|www)\.)?alz\.org/"
+		to="https://$1alz.org/" />
 
 </ruleset>

@@ -1,26 +1,128 @@
 <!--
+	For rules causing false/broken MCB, see UniStra.fr-falsemixed.xml.
+
+
 	Nonfunctional:
 
+		- unistra.fr subdomains:
+
+			- icube-publis ¹
+			- icube-sysinfo ²
+			- icube-web ³
+			- med ⁴
+
+		- udsmed.u-strasbg.fr ⁴
 		- newlsiit.u-strasbg.fr
 
+	¹ Redirects to icube-intranet, valid cert
+	² Shows icube-intranet; mismatched, CN: icube-intranet.unistra.fr
+	³ Shows icube-intranet, valid cert
+	⁴ Dropped
+
+
+	Problematic domains:
+
+		- unistra.fr subdomains:
+
+			- ^ ¹
+			- engees ²
+			- lsiit-cnrs ³
+			- www.physique-ingenierie ⁴
+			- typodun ²
+
+		- icube-intranet.u-strasbg.fr ⁵
+		- typodun30.u-strasbg.fr ¹
+
+	¹ Cert only matches *.unistra.fr
+	² Mixed css from $self
+	³ Self-signed, CN: newlsiit
+	⁵ 400; mismatched, CN: icube-intranet.unistra.fr
+	⁴ Cert only matches *.unistra.fr, ^ redirects to www
+
+
+	Partially covered subdomains:
+
+		- (www.) *	(^ → www)
+		- engees *
+		- typodun *
+
+
+	* Avoiding mixed css from $self
+
+
+	Fully covered domains:
+
+		- unistra.fr subdomains:
+
+			- agenda
+			- alumni
+			- guide-etudiant
+			- icube
+			- icube-intranet
+			- inscriptions
+			- lsiit-cnrs		(→ icube)
+			- mathinfo
+			- physique-ingenierie
+			- reseau-alumni
+			- services-numeriques
+			- typodun2012
+
+		- icube-intranet.u-strasbg.fr	(-> icube-intranet.unistra.fr)
+		- typodun30.u-strasbg.fr	(→ typodun2012.unistra.fr)
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www.physique-ingenierie and www from www *
+			- www.physique-ingenierie from fonts.googleapis.com *
+
+		- Images, on:
+
+			- reseau-alumni from typodun30.u-strasbg.fr *
+			- www from $self *
+
+	* Secured by us
+
 -->
-<ruleset name="University of Strasbourg (partial)" platform="mixedcontent">
+<ruleset name="University of Strasbourg (partial)">
 
 	<target host="unistra.fr" />
 	<target host="*.unistra.fr" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://engees\.unistra\.fr/+(?!favicon\.ico|site/(?:favicon\.ico|fileadmin/|typo3temp/|uploads/))" />
+		<exclusion pattern="^http://typodun\.unistra\.fr/+(?!fileadmin/|typo3conf/)" />
+		<exclusion pattern="^http://www\.unistra\.fr/+plans(?!/commun/|styles/)" />
+	<target host="*.u-strasbg.fr" />
 
 
-	<!--	Observed cookies:
-
-			- lsiit-cnrs
-				- PHPSESSID
-			- www
-				- fe_typo_user
+	<!--	Not secured by server:
 					-->
-	<securecookie host="^www.unistra.fr$" name=".*" />
+	<!--securecookie host="^(alumni|engees|guide-etudiant|icube|inscriptions|mathinfo|services-numeriques|typodun|typodun2012|www)\.unistra\.fr$" name="^fe_typo_user$" /-->
+	<!--securecookie host="^reseau-alumni\.unistra\.fr$" name="^unistra_alumni(_user_referer)?$" /-->
+	<!--securecookie host="^www\.unistra\.fr$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^(?:guide-etudiant|icube|inscriptions|mathinfo|reseau-alumni|services-numeriques|typodun2012|www)\.unistra\.fr$" name=".+" />
 
 
-	<rule from="^http://(lsiit-cnrs\.|www\.)?unistra\.fr/"
-		to="https://$1unistra.fr/" />
+	<rule from="^http://(?:www\.)?unistra\.fr/"
+		to="https://www.unistra.fr/" />
+
+	<rule from="^http://(agenda|alumni|engees|guide-etudiant|icube|icube-intranet|inscriptions|mathinfo|physique-ingenierie|reseau-alumni|services-numeriques)\.unistra\.fr/"
+		to="https://$1.unistra.fr/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://lsiit-cnrs\.unistra\.fr/+"
+		to="https://icube.unistra.fr/" />
+
+	<rule from="^http://icube-intranet\.u-strasbg\.fr/"
+		to="https://icube-intranet.unistra.fr/" />
+
+	<rule from="^http://typodun30\.u-strasbg\.fr/"
+		to="https://typodun2012.unistra.fr/" />
 
 </ruleset>

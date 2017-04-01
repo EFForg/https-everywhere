@@ -1,20 +1,64 @@
 <!--
-	!www: expired 2009-10-26, self-signed, CN: plesk
+	Human Rights Watch
+
+
+	Problematic hosts in *hrw.org:
+
+		- beta ¹ ²
+		- human ³
+		- multimedia ¹ ²
+
+	¹ Expired
+	² Missing certificate chain
+	³ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .beta.hrw.org
+		- .multimedia.hrw.org
+		- donate.hrw.org
+
+
+	Mixed content:
+
+		- css on human from fonts.googleapis.com ¹
+		- Images on human from $self ²
+
+	¹ Secured by us
+	² Not secured by us <= mismatched
 
 -->
-<ruleset name="Human Rights Watch">
+<ruleset name="HRW.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="hrw.org" />
-	<target host="*.hrw.org" />
+	<target host="donate.hrw.org" />
+	<target host="features.hrw.org" />
+	<target host="ff.hrw.org" />
+	<!--target host="human.hrw.org" /-->
+	<target host="secure.hrw.org" />
+	<target host="www.hrw.org" />
+
+	<!--	Complications:
+				-->
+	<target host="beta.hrw.org" />
+	<target host="multimedia.hrw.org" />
 
 
-	<securecookie host="^.*\.hrw\.org$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.(?:beta|multimedia)\.hrw\.org$" name="^SESS[0-9a-f]{32}$" /-->
+	<!--securecookie host="^donate\.hrw\.org$" name="^JSESSIONID$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^https?://hrw\.org/"
-		to="https://www.hrw.org/" />
+	<rule from="^http://(?:beta|multimedia)\.hrw\.org/"
+		to="https://features.hrw.org/" />
 
-	<rule from="^http://(secure|www)\.hrw\.org/"
-		to="https://$1.hrw.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

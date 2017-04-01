@@ -1,26 +1,57 @@
 <!--
+	For problematic rules, see New_Statesman.com-problematic.xml.
+
+
+	^newstatesman.com: Refused
+	www.newstatesman.com: Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .newstatesman.com
+		- subscribe.newstatesman.com
+		- www.newstatesman.com
+
+
 	Mixed content:
 
-		- css from $self ¹
+		- css, on:
 
-		- Images from self ¹
+			- www from maxcdn.bootstrapcdn.com *
+			- www from fonts.googleapis.com *
+			- www from $self *
 
-		- Web bugs, from:
+		- Images on www from self *
 
-			- cdn.inskinmedia.com ²
-			- b.scorecardresearch.com ¹
-
-	¹ Secured by us
-	² Unsecurable
+	* Secured by us
 
 -->
-<ruleset name="New Stateman.com" default_off="mismatched">
+<ruleset name="New Statesman.com (partial)">
 
-	<target host="newstatesman.com" />
-	<target host="www.newstatesman.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="subscribe.newstatesman.com" />
+	<!--target host="www.newstatesman.com" /-->
+
+	<!--	Complications:
+				-->
+	<!--target host="newstatesman.com" /-->
 
 
-	<rule from="^http://(?:www\.)?newstatesman\.com/"
-		to="https://www.newstatesman.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^subscribe\.newstatesman\.com$" name="^SESS[\da-f]{32}$" /-->
+	<!--securecookie host="^www\.newstatesman\.com$" name="^(cookiesDisclosureCount|has_js)$" /-->
+
+	<securecookie host="^\.newstatesman\.com$" name="^__utm\w+$" />
+	<!--securecookie host="^(?:subscribe|www)\.newstatesman\.com$" name=".+" /-->
+	<securecookie host="^subscribe\.newstatesman\.com$" name=".+" />
+
+
+	<!--rule from="^http://newstatesman\.com/"
+		to="https://www.newstatesman.com/" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

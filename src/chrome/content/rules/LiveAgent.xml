@@ -1,24 +1,34 @@
 <!--
+	LiveAgent
+
 	For other QualityAgent coverage, see QualityAgent.xml.
 
 
-	Problematic subdomains:
+	Clients have unique subdomains.
 
-		- (www.)	(rx_record_too_long)
+
+	Insecure cookies are set for these hosts:
+
+		- ladesk.com
+		- www.ladesk.com
 
 -->
-<ruleset name="LiveAgent">
+<ruleset name="LAdesk.com">
 
 	<target host="ladesk.com" />
 	<target host="*.ladesk.com" />
 
+		<test url="http://www.ladesk.com/" />
 
-	<!--	Clients have unique subdomains.
-							-->
-	<rule from="^http://(\w+)\.ladesk\.com/"
-		to="https://$1.ladesk.com/" />
 
-	<rule from="^https?://(?:www\.)?ladesk\.com/"
-		to="https://www.qualityunit.com/liveagent/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?ladesk\.com$" name="^STICKYSESSION$" /-->
+
+	<securecookie host="^(?:www\.)?ladesk\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

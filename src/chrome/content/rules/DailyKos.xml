@@ -1,4 +1,7 @@
 <!--
+	For problematic rules, see DailyKos.com-problematic.xml.
+
+
 	CDN buckets:
 
 		- s3.amazonaws.com/dk-production/
@@ -7,93 +10,50 @@
 
 	Nonfunctional subdomains:
 
-		- comics	(cert: www; 307s to http)
-		- elections	(cert: www; 307s to http)
-		- labor		(cert: www; 301s to http)
+		- comics *
+		- elections *
+		- labor *
+
+	* Redirects to http
+
+
+	Problematic subdomains:
+
+		- assets ³
+		- campaigns ¹
+		- helpdesk ²
+		- images ³
+
+	¹ Salsa Labs
+	² Uservoice
+	³ Fastly
+
+
+	Mixed content:
+
+		- css on campaigns from fonts.googleapis.com ¹
+
+		- Images, on:
+
+			- www from images ²
+			- www from images[12] ²
+
+		- Ads, on:
+
+			- www from www.googleadservices.com ³
+			- www from cloudfront.assets.stitcher.com ¹
+
+	¹ Secured by us
+	² Some secured by us, others not <= 404
+	³ Rule disabled by default
 
 -->
-<ruleset name="Dailykos (buggy)" default_off="Breaks commenting and polls">
+<ruleset name="DailyKos.com">
 
 	<target host="dailykos.com" />
-	<target host="*.dailykos.com" />
-		<!--
-			Lulz. Many account-related pages 307 to http.
+	<target host="www.dailykos.com" />
+	<target host="m.dailykos.com" />
 
-
-			These paths 307 to http:
-
-				- accounts
-				- blog$
-				- blog/\w+$
-				- diaries$
-				- group$
-				- group/
-				- groups$
-				- groups/$
-				- login$
-				- news$
-				- news/\w[^/]*$
-				- newuser$
-				- part/user/popup/login$
-				- people$
-				- people/$
-				- user$
-				- user/
-
-
-			These paths do not:
-
-				- $
-				- c/
-				- donate$
-				- i/
-				- j/
-				- images/
-				- story/\d{4}/\d\d/\d\d/
-				- subscribe$
-
-
-			- These paths 403:
-
-				- newthread/\w+
-
-
-			https breaks login 'popup'. Works fine without JS enabled.
-							-->
-		<exclusion pattern="^http://(?:www\.)?dailykos\.com/+(?:$|\?)" />
-		<exclusion pattern="^http://(?:www\.)?dailykos\.com/(?:accounts|blog|diaries|groups?|login|new(?:s|thread|user)|part/user/popup/login|people|user)(?:$|\?|/)" />
-		<!--
-			404s.
-				-->
-		<exclusion pattern="^http://images[12]?\.dailykos\.com/assets/" />
-
-
-	<rule from="^http://(www\.)?dailykos\.com/"
-		to="https://$1dailykos.com/" />
-
-
-	<!--	At least some pages 404.
-					-->
-	<rule from="^https?://campaigns\.dailykos\.com/(dia|o|salsa)/"
-		to="https://kos.salsalabs.com/$1/" />
-
-	<rule from="^https?://helpdesk\.dailykos\.com/(help|pkg|stylesheets)/"
-		to="https://dailykos.tenderapp.com/$1/" />
-
-	<!--	404.
-			-->
-	<rule from="^https?://images[12]?\.dailykos\.com/"
-		to="https://www.dailykos.com/" />
-
-	<!--	- i/ 301s to images
-		- c/ & j/ do not
-				-->
-	<rule from="^https?://(?:comics|elections|labor)\.dailykos\.com/([cij])/"
-		to="https://www.dailykos.com/$1/" />
-
-	<!--	Doesn't fix login popout.
-
-	<rule from="^https://www\.dailykos\.com/j/([\w\-]+)\.js($|\?)"
-		to="http://www.dailykos.com/j/$1.js$2" downgrade="1" /-->
-
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

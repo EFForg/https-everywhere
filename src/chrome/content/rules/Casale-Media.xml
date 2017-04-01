@@ -1,13 +1,53 @@
-<ruleset name="Casale Media (partial)">
+<!--
+	(www.)?casalemedia.com: Refused
 
-	<target host="*.casalemedia.com" />
+
+	Problematic hosts in *casalemedia.com:
+
+		- ip *
+
+	* Akamai / mismatched
 
 
+	These altnames do not exist:
+
+		- r-ssl.casalemedia.com
+		- san.casalemedia.com
+
+
+	Insecure cookies are set for these domains:
+
+		- .casalemedia.com
+
+-->
+<ruleset name="Casale Media.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="as-sec.casalemedia.com" />
+	<target host="dsum-sec.casalemedia.com" />
+	<target host="js-sec.casalemedia.com" />
+	<target host="r.casalemedia.com" />
+	<target host="r-sec.casalemedia.com" />
+	<target host="ssum-sec.casalemedia.com" />
+	<target host="system.casalemedia.com" />
+
+	<!--	Complications:
+				-->
+	<target host="ip.casalemedia.com" />
+
+
+	<!--	Not secured by server:
+					-->
 	<!--securecookie host="^\.casalemedia\.com$" name="^(CMID|CMPS)" /-->
-	<securecookie host=".*\.casalemedia\.com$" name=".+" />
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(r|system)\.casalemedia\.com/"
-		to="https://$1.casalemedia.com/" />
+	<rule from="^http://ip\.casalemedia\.com/"
+		to="https://as-sec.casalemedia.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

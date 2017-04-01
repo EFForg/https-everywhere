@@ -1,9 +1,82 @@
-<ruleset name="The Times">
+<!--
+	For other News Corporation coverage, see News-Corporation.xml.
 
-	<target host="*.thetimes.co.uk" />
+
+	CDN buckets:
+
+		- times-deck.s3-eu-west-1.amazonaws.com
 
 
-	<rule from="^http://(home|login)\.thetimes\.co\.uk/"
-		to="https://$1.thetimes.co.uk/" />
+	Nonfunctional hosts in *thetimes.co.uk:
+
+		- bcg ᵇ
+		- extras ʰ
+		- ww1 ᵈ
+		- www ʰ
+
+	ᵇ Shows default page
+	ᵈ Dropped
+	ʰ Redirects to http
+
+
+	Problematic hosts in *thetimes.co.uk:
+
+		- ^ ᵐ
+		- archiveprints ᵐ
+		- carlocator ᵐ
+		- globalstore ᵐ
+		- jobs ᵐ
+		- store ᵐ
+		- store2 ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .thetimes.co.uk
+		- join.thetimes.co.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bug on globalstore, store from pubads.g.doubleclick.net *
+
+	* See https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="The Times.co.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="feeds.thetimes.co.uk" />
+	<target host="home.thetimes.co.uk" />
+	<target host="join.thetimes.co.uk" />
+	<target host="login.thetimes.co.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="archiveprints.thetimes.co.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.thetimes\.co\.uk$" name="^nuk_customer_location_hint$" /-->
+	<!--securecookie host="^join\.thetimes\.co\.uk$" name="^AWSELB$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://archiveprints\.thetimes\.co\.uk/.*"
+		to="https://www.magnoliabox.com/" />
+
+		<test url="http://archiveprints.thetimes.co.uk/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

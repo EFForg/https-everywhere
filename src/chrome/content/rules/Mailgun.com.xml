@@ -1,0 +1,42 @@
+<!--
+	For other Rackspace coverage, see Rackspace.xml.
+
+
+	Problematic hosts in *mailgun.com:
+
+		- blog ¹
+		- status ²
+
+	¹ Mismatched, CN: ssl4093.cloudflare.com
+	² StatusPage.io / mismatched
+
+-->
+<ruleset name="Mailgun.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="mailgun.com" />
+	<target host="documentation.mailgun.com" />
+	<target host="help.mailgun.com" />
+	<target host="www.mailgun.com" />
+
+	<!--	Complications:
+				-->
+	<target host="status.mailgun.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^mailgun\.com$" name="^mailgun_website$" /-->
+
+	<securecookie host="^\." name="^_ga" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://status\.mailgun\.com/"
+		to="https://mailgun.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

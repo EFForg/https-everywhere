@@ -1,0 +1,47 @@
+<!--
+	For other Cisco coverage, see Cisco.xml.
+
+
+	^sourcefire.com: Dropped
+	www.sourcefire.com: Refused
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- info.sourcefire.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Sourcefire.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="info.sourcefire.com" />
+
+	<!--	Complications:
+				-->
+	<target host="sourcefire.com" />
+	<target host="www.sourcefire.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^info\.sourcefire\.com$" name="^BIGipServer[\w-]+$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps args, but not
+		path nor forward slash:
+					-->
+	<rule from="^http://(?:www\.)?sourcefire\.com/[^?]*"
+		to="https://www.cisco.com/c/en/us/products/security/index.html" />
+
+		<test url="http://sourcefire.com//" />
+		<test url="http://www.sourcefire.com/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

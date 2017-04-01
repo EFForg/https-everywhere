@@ -2,28 +2,84 @@
 	Much of jobs.linux.com is handled in JobThread-clients.xml.
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *linux.com:
 
-		- blogs
+		- archive09 *
+
+	*  403
+
+
+	Problematic hosts in *linux.com:
+
+		- jobs ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .linux.com
+		- video.linux.com
+		- www.linux.com
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- jobs from www.linux.com ˢ
+			- www from training.linuxfoundation.org ˢ
+			- www from storage.pardot.com ˢ
+
+	ˢ Secured by us
 
 -->
-<ruleset name="Linux.com" platform="mixedcontent">
+<ruleset name="Linux.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="linux.com" />
-	<target host="*.linux.com" />
-	<!--	* for cross-domain cookies.	-->
-	<target host="*.store.linux.com" />
+	<target host="store.linux.com" />
+	<target host="video.linux.com" />
+	<target host="www.linux.com" />
 
+	<!--	Complications:
+				-->
+	<target host="jobs.linux.com" />
 
-	<securecookie host="^.*\.linux\.com$" name=".*" />
-
-
-	<rule from="^http://((?:store|video|www)\.)?linux\.com/"
-		to="https://$1linux.com/" />
-
-	<!--	Cert: www.jobthread.com
+		<!--	404:
+				-->
+		<!--exclusion pattern="^http://jobs\.linux\.com/images/" /-->
+		<!--
+			Exceptions:
 					-->
-	<rule from="^https?://jobs\.linux\.com/(image|file|partner)s/"
-		to="https://www.jobthread.com/$1s/" />
+		<exclusion pattern="^http://jobs\.linux\.com/+(?!files/|partners/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://jobs.linux.com/images/bullet.gif" />
+			<test url="http://jobs.linux.com/post" />
+			<test url="http://jobs.linux.com/sysadminjobs/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://jobs.linux.com/files/site_images/106573/106573_mainnav-sep.gif" />
+			<test url="http://jobs.linux.com/partners/jobthread/images/item_bullet.gif" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.linux\.com$" name="^(?:__qca$|__utm)" /-->
+	<!--securecookie host="^video\.linux\.com$" name="^[0-9a-f]{32}$" /-->
+	<!--securecookie host="^www\.linux\.com$" name="^([0-9a-f]{32}|linuxcom_v2_tpl)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://jobs\.linux\.com/"
+		to="https://www.jobthread.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

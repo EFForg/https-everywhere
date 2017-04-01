@@ -1,0 +1,50 @@
+<!--
+	Insecure cookies are set for these domains and hosts:
+
+		- .fatwallet.com
+		- www.fatwallet.com
+
+-->
+<ruleset name="FatWallet.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="fatwallet.com" />
+	<target host="static.fatwallet.com" />
+	<target host="www.fatwallet.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.fatwallet\.com/(?:$|forums/|password-help/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.fatwallet\.com/+(?!favicon\.ico|login(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.fatwallet.com/blog/" />
+			<test url="http://www.fatwallet.com/forums/" />
+			<test url="http://www.fatwallet.com/password-help/" />
+			<test url="http://www.fatwallet.com/support/contact/general/" />
+			<test url="http://www.fatwallet.com/tell-a-friend/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.fatwallet.com/favicon.ico" />
+			<test url="http://www.fatwallet.com/login" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.fatwallet\.com$" name="^(?:incap_ses|nlbi|visid_incap)_\d+$" /-->
+	<!--securecookie host="^www\.fatwallet\.com$" name="^___utm[abm]+$" /-->
+
+	<securecookie host="^\.fatwallet\.com$" name="^(?:incap_ses|nlbi|visid_incap)_\d+$" />
+	<securecookie host="^www\.fatwallet\.com$" name="^___utm[abm]+$" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

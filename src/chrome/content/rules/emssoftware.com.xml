@@ -1,0 +1,78 @@
+<!--
+	Nonfunctional hosts in *emssoftware.com:
+
+		- pages ᵃ
+
+	ᵃ Marketo / shows another domain
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- emssoftware.com
+		- .emssoftware.com
+		- events.emssoftware.com
+		- www.emssoftware.com
+		- .www.emssoftware.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="EMS Software.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="emssoftware.com" />
+	<target host="events.emssoftware.com" />
+	<target host="success.emssoftware.com" />
+	<target host="support.emssoftware.com" />
+	<target host="www.emssoftware.com" />
+
+		<!--	Set cookies without Secure:
+							-->
+		<!--test url="http://www.emssoftware.com/blog" /-->
+
+	<!--	Complications:
+				-->
+	<target host="pages.emssoftware.com" />
+
+		<exclusion pattern="^http://pages\.emssoftware\.com/(?!/*(?:$|\?|css/|images/|rs/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://pages.emssoftware.com/1-27-2016-Webinar-Encore.html" />
+			<test url="http://pages.emssoftware.com/1-28-2016-Webinar-Encore.html" />
+			<test url="http://pages.emssoftware.com/favicon.ico" />
+			<test url="http://pages.emssoftware.com/home.html" />
+			<test url="http://pages.emssoftware.com/index.html" />
+			<test url="http://pages.emssoftware.com/lp_gartner-paper-march-2016.html" />
+			<test url="http://pages.emssoftware.com/lp_gartner_digital_campus.html" />
+			<test url="http://pages.emssoftware.com/lp_gartner_videoconferencing.html" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?emssoftware\.com$" name="^CMSPreferredCulture$" /-->
+	<!--securecookie host="^\.(?:www\.)?emssoftware\.com$" name="^ARRAffinity$" /-->
+	<!--securecookie host="^events\.emssoftware\.com$" name="^(?:ASP\.Net_SessionId|ATS$|TS[\da-f]{8}$|language$)" /-->
+	<!--securecookie host="^www\.emssoftware\.com$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\." name="^(?:_gat?$|_gat_|ARRAffinity$)" />
+	<securecookie host="^(?!pages\.)\w" name="." />
+
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://pages\.emssoftware\.com/+(?:\?.*)?$"
+		to="https://www.emssoftware.com/Page-not-found" />
+
+		<test url="http://pages.emssoftware.com/?" />
+
+	<rule from="^http://pages\.emssoftware\.com/"
+		to="https://na-ab04.marketo.com/" />
+
+		<test url="http://pages.emssoftware.com/rs/486-ESV-129/images/download-now.png" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,75 +1,78 @@
 <!--
 	For other Nokia coverage, see Nokia.xml.
-
-
 	CDN buckets:
-
 		- static.here.sc.edgesuite.net
 
-
 	Nonfunctional domains:
+		- static.here.com     ᴹ
+		- static.here.sc      ᴿ
+	ᴹ Mismatch
+	ᴿ Redirects to http
 
-		- here.com subdomains:
-
-			- ^ *
-			- static **
-			- stg.static **
-			- stg *
-
-		- static.here.sc *
-
-	* Redirects to http
-	** Redirects to here.com
-
-
-	Fully covered domains:
-
-		- here.com subdomains:
-
-			- developer
-			- qa.developer
-			- m
-			- stg.m
-
-		- developer.here.net
-
-
-	Observed cookie domains:
-
-		- here.com subdomains:
-
-			- ^
-			- developer
-			- m
-			- stg.m
-			- static
-			- stg.static
-			- stg
-
-		- developer.here.net
-
-
-	Mixed content:
-
-		- Images on m from [234].maps.nlp.nokia.com *
-
-	* Doesn't trip MCB
-
+	Insecure cookies are set for these domains and hosts:
+		- here.com
+		- .here.com
+		- www.here.com
+		- developer.here.com
+		- npmrds.ext.here.com
+		- help.here.com
+		- m.here.com
+		- stg.m.here.com
 -->
-<ruleset name="Here.com (partial)">
+<ruleset name="Here.com">
+	<target host="here.com" />
+	<target host="www.here.com" />
+	<target host="access.here.com" />
+	<target host="account.here.com" />
+	<target host="backstage.here.com" />
+	<target host="st.backstage.here.com" />
+	<target host="share.cc.here.com" />
+	<target host="cms.here.com" />
+	<target host="lts.cms.here.com" />
+	<target host="companion.here.com" />
+	<target host="company.here.com" />
+	<target host="customlocation.here.com" />
+	<target host="datalens.here.com" />
+	<target host="nokia.datalens.here.com" />
+	<target host="developer.here.com" />
+	<target host="www.developer.here.com" />
+	<target host="dt.developer.here.com" />
+	<target host="dv.developer.here.com" />
+	<target host="st.developer.here.com" />
+	<target host="dialin.here.com" />
+	<target host="e.here.com" />
+	<target host="enterprise.here.com" />
+	<target host="npmrds.ext.here.com" />
+	<target host="tnm.ext.here.com" />
+	<target host="fs.here.com" />
+	<target host="help.here.com" />
+	<target host="jaguar.here.com" />
+	<target host="landrover.here.com" />
+	<target host="legal.here.com" />
+	<target host="lyncdiscover.here.com" />
+	<target host="m.here.com" />
+	<target host="stg.m.here.com" />
+	<target host="mapcreator.here.com" />
+	<target host="mapfeedback.here.com" />
+	<target host="maps.here.com" />
+	<target host="meet.here.com" />
+	<target host="mobile.here.com" />
+	<target host="pages.here.com" />
+	<target host="reporting.here.com" />
+	<target host="scheduler.here.com" />
+	<target host="share.here.com" />
+	<target host="trafficanalytics.here.com" />
+	<target host="authproxy.trafficanalytics.here.com" />
+	<target host="wego.here.com" />
 
-	<target host="*.here.com" />
-	<target host="developer.here.net" />
+	<!--	Not secured by server:	-->
+	<!--securecookie host="^((m|stg\.m)\.)?here\.com$" name="^MOO_SESSION-\d+$" /-->
+	<!--securecookie host="^\.here\.com$" name="^(here_access|here_auth)$" /-->
+	<!--securecookie host="^developer\.here\.com$" name="^XSRF-TOKEN$" /-->
+	<!--securecookie host="^help\.here\.com$" name="^tx_herehelp_ldt$" /-->
+	<!--securecookie host="^npmrds\.ext\.here\.com$" name="^fe_typo_user$" /-->
+	<!--securecookie host="^www\.here\.com$" name="^userSplitId$" /-->
+	<securecookie host="^(.*\.)?here\.com$" name=".+" />
 
-
-	<securecookie host="^(?:developer|m|stg\.m)\.here\.com$" name=".+" />
-	<securecookie host="^developer\.here\.net$" name=".+" />
-
-
-	<rule from="^http://((?:qa\.)?developer|m|stg\.m)\.here\.com/"
-		to="https://$1.here.com/" />
-
-	<rule from="^http://developer\.here\.net/"
-		to="https://developer.here.net/" />
-
+	<rule from="^http:"	to="https:" />
 </ruleset>

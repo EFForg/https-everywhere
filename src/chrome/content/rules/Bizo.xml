@@ -1,6 +1,8 @@
 <!--
 	For problematic rules, see Bizo-mismatches.xml.
 
+	For other LinkedIn coverage, see LinkedIn.xml
+
 
 	CDN buckets:
 
@@ -8,34 +10,38 @@
 		- d15a7gkmxinlzq.cloudfront.net
 
 
-	Nonfunctional domains:
+	Nonfunctional subdomains:
 
-		- (www.)bizo.com
-		- developer.bizo.com	(cert: ghs-ssl.googlehosted.com; 404)
+		- developer *
+
+	* Handshake fails
+
+
+	Problematic subdomains:
+
+		- blog *
+
+	* Mismatched
+
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- accounts
+		- b2bmarketing
+		- public
 
 -->
-<ruleset name="Bizo">
+<ruleset name="Bizo.com">
 
+	<target host="bizo.com" />
+	<target host="b2bmarketing.bizo.com" />
 	<target host="accounts.bizo.com" />
-	<target host="*.bizographics.com" />
+	<target host="public.bizo.com" />
+	<target host="www.bizo.com" />
 
 
-	<securecookie host="^\.bizographics\.com$" name=".+" />
-
-
-	<rule from="^http://accounts\.bizo\.com/"
-		to="https://accounts.bizo.com/" />
-
-	<!--	- Tracking beacon
-		- !www doesn't exist
-					-->
-	<rule from="^http://(api|imp2|www)\.bizographics\.com/"
-		to="https://$1.bizographics.com/" />
-
-	<!--	- js cert: cloudfront.net
-		- Uses sjs for https
-					-->
-	<rule from="^https?://s?js\.bizographics\.com/"
-		to="https://sjs.bizographics.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

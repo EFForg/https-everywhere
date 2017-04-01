@@ -1,17 +1,80 @@
+<!--
+	Other MeetMe rulesets:
+
+		- meetmecdna.com.xml
+
+
+	Problematic hosts in *meetme.com:
+
+		- games ᵐ
+
+	ᵐ Mismatched
+
+
+	These altnames do not exist:
+
+		- movies.meetme.com
+		- owned.meetme.com
+		- support.meetme.com
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .meetme.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
 <ruleset name="MeetMe">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="meetme.com" />
-	<target host="*.meetme.com" />
+	<target host="api.meetme.com" />
+	<target host="blinddate.meetme.com" />
+	<target host="causes.meetme.com" />
+	<target host="cpa.meetme.com" />
+	<target host="feed.meetme.com" />
+	<target host="friends.meetme.com" />
+	<target host="help.meetme.com" />
+	<target host="home.meetme.com" />
+	<target host="live.meetme.com" />
+	<target host="m.meetme.com" />
+	<target host="match.meetme.com" />
+	<target host="messages.meetme.com" />
+	<target host="nerve.meetme.com" />
+	<target host="photos.meetme.com" />
+	<target host="platform.meetme.com" />
+	<target host="profile.meetme.com" />
+	<target host="ssl.meetme.com" />
+	<target host="touch.meetme.com" />
+	<target host="vip.meetme.com" />
+	<target host="www.meetme.com" />
+
 	<target host="en.mtmei18n.com" />
 
+		<test url="http://en.mtmei18n.com/service/home/CSS/variations/b.min.css" />
 
-	<securecookie host="^m?\.meetme\.com$" name=".+" />
+	<!--	Complications:
+				-->
+	<target host="games.meetme.com" />
 
 
-	<rule from="^http://((?:api|blinddate|canvas|causes|cpa|feed|friends|games|help|home|live|m|match|messages|nerve|photos|platform|profile|ssl|vip|www)\.)?meetme\.com/"
-		to="https://$1meetme.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.meetme\.com$" name="^(?:MYB_TARGET|PHPSESSID|POSTAff2Cookie|mybLocale|mybRegData|mybRegTheme)$" /-->
 
-	<rule from="^http://en\.mtmei18n\.com/"
-		to="https://en.mtmei18n.com/" />
+	<securecookie host="." name="." />
+
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://games\.meetme\.com/.*"
+		to="https://www.myyearbook.com/" />
+
+		<test url="http://games.meetme.com/index.php" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

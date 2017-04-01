@@ -1,32 +1,176 @@
 <!--
-	Linkoping university
+	Linköping university
+
+	For rules causing false/broken MCB, see LIU.se-falsemixed.xml.
 
 	Lots of subdomains lack ssl.
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *liu.se:
 
-		- fe.itn *
-		- kts.itn *
-		- ncva.itn *
-		- www.lysator	(refused)
-		- m *
-		- mobil		(redirects to www, valid cert)
-		- sah *
+		- noplagiat.bibl ¹
+		- blog ²
+		- www.ep ³
+		- www.filfak ³
+		- fe.itn ⁴
+		- kts.itn ⁴
+		- ncva.itn ⁴
+		- staffwww.itn ⁵
+		- www.ek.isy ³
+		- m ⁴
+		- mobil ⁶
+		- search ³
+		- sah ⁴
+		- e-go.student ⁷
 
-	* Shows www, valid cert
+	¹ Dropped
+	² Redirects to http
+	³ Refused
+	⁴ Shows www.liu.se
+	⁵ Plaintext reply
+	⁶ Redirects to www.liu.se
+	⁷ Handshake fails
+
+
+	Problematic hosts in *liu.se:
+
+		- www.bibl ¹
+		- www1.bibl ²
+		- www3.bibl ³
+		- (www.)?commsys.isy ²
+		- www.moviii.isy ³
+		- www.vehicular.isy ³
+		- planet.lysator ⁴
+		- moviii ³
+		- www.stars ⁵
+
+	¹ Mixed iframe
+	² Mixed css
+	³ Mismatched
+	⁴ Shows another domain
+	⁵ Expired
+
+
+	These altnames don't exist:
+
+		- servlet.unit.liu.se
+
+
+	Mixed content:
+
+		- iframes, on:
+
+			- www.bibl from www3.bibl.liu.se *
+			- moviii from www.youtube.com *
+
+		- css, on:
+
+			- www2.bibl from maxcdn.bootstrapcdn.com *
+			- www2.bibl, (www.)?commsys.isy, www3.student from www.liu.se *
+			- (www.)?commsys.isy from $self *
+
+		- Images, on:
+
+			- www.bibl, (www.)?commsys.isy from $self *
+			- www.commsys.isy from www.liu.se *
+			- www.ics.isy from www.youblisher.com
+			- moviii.isy from moviii.liu.se *
+
+		- Bug on (www.)?commsys.isy from www.googletagmanager.com *
+
+	* Secured by us
 
 -->
-<ruleset name="LIU.se">
+<ruleset name="LIU.se (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="liu.se" />
-	<target host="*.liu.se" />
+	<target host="account.liu.se" />
+	<target host="login.e.bibl.liu.se" />
+	<!--target host="www.bibl.liu.se" /-->
+	<!--target host="www2.bibl.liu.se" /-->
+	<target host="fs.liu.se" />
+	<target host="www.hu.liu.se" />
+	<target host="www.ibl.liu.se" />
+	<target host="www.ida.liu.se" />
+	<target host="www.iei.liu.se" />
+	<target host="www.imh.liu.se" />
+	<target host="www.isak.liu.se" />
+	<target host="www.isv.liu.se" />
+
+	<target host="www.bb.isy.liu.se" />
+	<!--target host="commsys.isy.liu.se" /-->
+	<!--target host="www.commsys.isy.liu.se" /-->
+	<target host="www.control.isy.liu.se" />
+	<target host="www.cvl.isy.liu.se" />
+	<target host="www.da.isy.liu.se" />
+	<target host="www.fs.isy.liu.se" />
+	<target host="www.icg.isy.liu.se" />
+	<target host="www.ics.isy.liu.se" />
+	<target host="moviii.isy.liu.se" />
+	<target host="people.isy.liu.se" />
+	<target host="www.rt.isy.liu.se" />
+	<target host="users.isy.liu.se" />
+	<target host="www.isy.liu.se" />
+
+	<target host="servlet.it.liu.se" />
+	<target host="www.it.liu.se" />
+	<target host="lisam.liu.se" />
+	<target host="login.lisam.liu.se" />
+	<target host="lith.liu.se" />
+	<target host="www.lith.liu.se" />
+	<target host="login.liu.se" />
+
+	<target host="bugzilla.lysator.liu.se" />
+	<target host="datorhandbok.lysator.liu.se" />
+	<target host="git.lysator.liu.se" />
+	<target host="jskom.lysator.liu.se" />
+	<target host="lists.lysator.liu.se" />
+	<target host="www.lysator.liu.se" />
+
+	<target host="student.liu.se" />
+	<target host="www.student.liu.se" />
+	<target host="www3.student.liu.se" />
+	<target host="www.tema.liu.se" />
+	<target host="www.liu.se" />
+
+	<!--	Complications:
+				-->
+	<!--target host="www3.bibl.liu.se" /-->
+	<target host="www.moviii.isy.liu.se" />
+	<target host="www.vehicular.isy.liu.se" />
+	<target host="planet.lysator.liu.se" />
+	<target host="moviii.liu.se" />
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://www2.bibl.liu.se/widget/hours/four.aspx?lang=eng" /-->
+
+		<!--	Mixed image:
+					-->
+		<test url="http://www3.student.liu.se/portal/eng" />
 
 
-	<rule from="^http://(?:www\.)?(lith\.|student\.)?liu\.se/"
-		to="https://www.$1liu.se/" />
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
 
-	<rule from="^http://www\.(hu|ibl|ida|imh|isak|isv|tema)\.liu\.se/"
-		to="https://www.$1.liu.se/" />
+
+	<!--rule from="^http://www3\.bibl\.liu\.se/"
+		to="https://www2.bibl.liu.se/" /-->
+
+	<rule from="^http://(?:www\.moviii\.isy|moviii)\.liu\.se/"
+		to="https://moviii.isy.liu.se/" />
+
+	<rule from="^http://www\.vehicular\.isy\.liu\.se/"
+		to="https://www.fs.isy.liu.se/" />
+
+	<rule from="^http://planet\.lysator\.liu\.se/+"
+		to="https://www.lysator.liu.se/planet/" />
+
+		<test url="http://planet.lysator.liu.se//home.php" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,96 @@
+<!--
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *gov.wales:
+
+		- apw ᵃ
+		- law ᵃ
+		- prp ʰ
+		- rpt ᵃ
+
+	ᵃ Shows another domain
+	ʰ Redirects to http
+
+
+	Problematic hosts in *gov.wales:
+
+		- enterprisezones ᵐ
+		- www ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- cssiw.gov.wales
+
+-->
+<ruleset name="Gov.Wales (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="gov.wales" />
+	<target host="businesswales.gov.wales" />
+	<target host="cssiw.gov.wales" />
+	<target host="learning.gov.wales" />
+	<target host="organdonation.gov.wales" />
+
+	<!--	Complications:
+				-->
+	<target host="enterprisezones.gov.wales" />
+	<target host="www.gov.wales" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://gov\.wales/(?:$|\d+/thumbnail/|images/|consultation/images/|homepage/(?:footerblock|homeslider)/|splash\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:learning\.|www\.)?gov\.wales/+(?!\d+/(?:images|site_furniture)/|cbin/|homepage/megamenufmas/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://gov.wales/40346/thumbnail/splash/splash_bg1.jpg" />
+			<test url="http://gov.wales/consultation/images/ursay.jpg" />
+			<test url="http://gov.wales/homepage/footerblock/cabinetfooterfma.jpg" />
+			<test url="http://gov.wales/homepage/homeslider/currentfmas/beginslider.jpg" />
+			<test url="http://gov.wales/press/fourth/healthsocialcare/2016/160108alcohol/thumb.jpg" />
+			<test url="http://gov.wales/splash?orig=/" />
+			<test url="http://learning.gov.wales/career/professional-learning-model-en.jpg" />
+			<test url="http://learning.gov.wales/images/lnf-fma.jpg" />
+			<test url="http://learning.gov.wales/splash?orig=/" />
+			<test url="http://www.gov.wales/splash?orig=/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://gov.wales/40346/images/logos/wag_logo_cy.gif" />
+			<test url="http://gov.wales/40346/site_furniture/splash_logo.gif" />
+			<test url="http://gov.wales/cbin/71012/66999/redesign/reset.css" />
+			<test url="http://gov.wales/homepage/megamenufmas/fundingsectionhighlight.jpg" />
+			<test url="http://learning.gov.wales/cbin/css/print.css" />
+			<test url="http://www.gov.wales/cbin/71012/66999/redesign/reset.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^cssiw\.gov\.wales$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^cssiw\.gov\.wales$" name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+						-->
+	<rule from="^http://enterprisezones\.gov\.wales/+"
+		to="https://businesswales.gov.wales/enterprisezones/" />
+
+		<test url="http://enterprisezones.gov.wales/default.aspx" />
+
+	<rule from="^http://www\.gov\.wales/"
+		to="https://gov.wales/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

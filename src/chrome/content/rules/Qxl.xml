@@ -1,10 +1,50 @@
-<ruleset name="Qxl" platform="mixedcontent">
-  <target host="qxl.no" />
-  <target host="www.qxl.no" />
-  <target host="qxl.dk" />
-  <target host="www.qxl.dk" />
+<!--
+	Other QXL rulesets:
 
-  <rule from="^http://(?:www\.)?qxl\.no/" to="https://www.qxl.no/"/>
-  <rule from="^http://(?:www\.)?qxl\.dk/" to="https://www.qxl.dk/"/>
+		- QXL.dk.xml
+		- QXL_static.dk.xml
+		- QXL_static.no.xml
+
+
+	Nonfunctional hosts in qxl.no:
+
+		- hjelp *
+
+	* Handshake fails
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- auksjon.qxl.no, www.qxl.no from www.qxl.no *
+			- auksjon.qxl.no, www.qxl.no from pics.qxlstatic.no
+			- auksjon.qxl.no from www.ricardo.ch *
+
+	* Secured by us
+
+-->
+<ruleset name="QXL.no (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="qxl.no" />
+	<target host="auksjon.qxl.no" />
+	<target host="www.qxl.no" />
+
+		<!--	Mixed images:
+					-->
+		<test url="http://www.qxl.no/pris/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.qxl\.no$" name="^NbResult$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:"/>
 </ruleset>
 

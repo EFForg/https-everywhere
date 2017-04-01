@@ -1,11 +1,136 @@
-<ruleset name="Bigmirnet (partial)" platform="mixedcontent">
+<!--
+	For rules causing false/broken MCB, see Bigmir.net-falsemixed.xml.
 
-	<target host="auto.bigmir.net"/>
-	<target host="dnevnik.bigmir.net"/>
-	<target host="i.bigmir.net"/>
-	<target host="ivona.bigmir.net"/>
+	Other bigmir rulesets:
 
-	<rule from="^http://(auto|dnevnik|i|ivona)\.bigmir\.net/"
-		to="https://$1.bigmir.net/"/>
+		- MPort.ua.xml
+
+
+	Nonfunctional subdomains:
+
+		- autosale ¹
+		- c ²
+		- finance ³
+		- ivona ³
+		- prikol ³
+		- techno ³
+		- tour ³
+
+	¹ 403
+	² Handshake fails
+	³ Dropped
+
+
+	Problematic subdomains:
+
+		- afisha ¹
+		- antivirus ¹
+		- auto ¹
+		- cards ¹
+		- dnevnik ¹
+		- games ¹
+		- goroskop ¹
+		- info ¹
+		- mail ¹
+		- map ¹
+		- market ²
+		- perevod ¹
+		- photo ¹
+		- search ¹
+		- top ¹
+		- weather ¹
+
+	¹ Mixed css
+	² Mismatched, CN: technoportal.ua
+
+
+	Fully covered subdomains:
+
+		- i
+		- id
+		- m
+		- passport
+		- s
+
+
+	Insecure cookies are set for these domains:
+
+		- .bigmir.net
+
+
+	Mixed content:
+
+
+		- Flash on afisha from bm.img.com.ua ¹
+
+		- iframe on mail from id ¹
+
+		- css, on:
+
+			- afisha, antivirus, auto, cards, games, goroskop, info, mail, map, market, perevod, photo, search, sport, top, weather from bm.img.com.ua ¹
+			- map from asset1.mapia.au ²
+
+		- Fonts on afisha, auto, cards, games, goroskop, mail, market, perevod, photo, sport, top, weather from www.bigmir.net ³
+
+		- Images, on:
+
+			- afisha from www.adobe.com ¹
+			- afisha, antivirus, auto, cards, dnevnik, games, goroskop, info, m, mail, map, market, perevod, photo, search, sport, top, weather from bm.img.com.ua ¹
+			- afisha from v.img.com.ua ³
+			- antivirus, cards, dnevnik, photo from i ¹
+			- auto, sport from sport.img.com.ua ³
+			- map from mapia.au ⁴
+			- map from asset1.mapia.au ²
+			- market from i.technoportal.ua ¹
+			- photo from os1.img.com.ua ³
+
+		- favicon on antivirus, auto, cards, dnevnik, games, goroskop, mail, map, market, perevod, photo, search, sport, top, weather from bm.img.com.ua ¹
+
+		- Ads/bugs, on:
+
+			- afisha, auto, cards, dnevnik, games, goroskop, m, mail, map, market, perevod, photo, sport, weather from c ⁵
+			- auto from market ¹
+			- auto, cards, games, goroskop, id, mail, passport, perevod, photo, search, sport, top, weather from juke.mmi.bemobile.ua ¹
+			- dnevnik from www.facebook.com ¹
+			- dnevnik from platform.twitter.com ¹
+			- goroskop from h.holder.com.ua
+			- map from counter.rambler.ru ¹
+			- map from c1.web-visor.com
+			- market from i.technoportal.ua ¹
+			- search from ad.adriver.ru ¹
+	¹ Secured by us
+	² Unsecurable <= refused
+	³ Unsecurable <= dropped
+	⁴ Unsecurable <= 400
+	⁵ Unsecurable <= reset
+
+-->
+<ruleset name="bigmir.net (partial)">
+
+	<target host="i.bigmir.net" />
+	<target host="id.bigmir.net" />
+	<target host="market.bigmir.net" />
+		<!--
+			Differs from technoportal:
+							-->
+		<!--exclusion pattern="^http://market\.bigmir\.net/+($|\?|cnt/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://market\.bigmir\.net/+(?!css/|i/|/img/)" />
+	<target host="passport.bigmir.net" />
+	<target host="s.bigmir.net" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.bigmir\.net$" name="^(BMPS|bm_geo_location_id|weather_geo_location_\d+)$" /-->
+
+
+	<rule from="^http://market\.bigmir\.net/"
+		to="https://technoportal.ua/" />
+
+	<rule from="^http://(id?|m|passport|s)\.bigmir\.net/"
+		to="https://$1.bigmir.net/" />
 
 </ruleset>

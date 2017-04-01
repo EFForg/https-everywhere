@@ -5,24 +5,56 @@
 			- static.bufferapp.com
 
 
-	Nonfunctional subdomains:
+	Problematic subdomains:
 
-		- blog		(redirects to http, CN: *.wpengine.com)
+		- jobs *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- bufferapp.com
+		- cibot.bufferapp.com
+		- happiness.bufferapp.com
+		- jobs.bufferapp.com
+		- widgets.bufferapp.com
+		- www.bufferapp.com
+
+
+	Mixed content:
+
+		- css on jobs from fonts.googleapis.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Buffer">
+<ruleset name="Buffer app.com (partial)">
 
 	<target host="bufferapp.com" />
-	<target host="*.bufferapp.com" />
+	<target host="api.bufferapp.com" />
+	<target host="blog.bufferapp.com" />
+	<target host="cibot.bufferapp.com" />
+	<target host="growth.bufferapp.com" />
+	<target host="happiness.bufferapp.com" />
+	<target host="open.bufferapp.com" />
+	<target host="overflow.bufferapp.com" />
+	<target host="static.bufferapp.com" />
+	<target host="widgets.bufferapp.com" />
+	<target host="www.bufferapp.com" />
 
 
-	<securecookie host="^(?:www\.)?bufferapp\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(jobs\.|widgets\.|www\.)?bufferapp\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^bufferapp\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^cibot\.bufferapp\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^happiness\.bufferapp\.com$" name="^connect\.sid$" /-->
+
+	<securecookie host="^(?:(?:cibot|happiness|widgets|www)\.)?bufferapp\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?bufferapp\.com/"
-		to="https://$1bufferapp.com/" />
-
-	<rule from="^https?://static\.bufferapp\.com/"
-		to="https://d389zggrogs7qo.cloudfront.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

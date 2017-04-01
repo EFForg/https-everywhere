@@ -1,38 +1,36 @@
 <!--
-	Problematic domains:
+	Other AdSpeed rulesets:
 
-		- (www.)adspeed.biz
-		- \w\d+.adspeed.biz	(cert only matches g.adspeed.net)
-		- m.adpseed.com		(redirects to adspeed.com)
-		- www.adspeed.com *
-		- (www.)adspeed.net *
+		- AdSpeed.biz.xml
+		- AdSpeed.net.xml
 
-	* Cert only matches adspeed.com
+
+	CDN buckets:
+
+		- cdn-adspeedcom.netdna-ssl.com
+
+
+	Nonfunctional hosts in *adspeed.com:
+
+		- m *
+
+	* Redirects to adspeed.com
 
 -->
-<ruleset name="AdSpeed (partial)">
+<ruleset name="AdSpeed.com (partial)">
 
-	<target host="adspeed.biz" />
-	<target host="*.adspeed.biz" />
 	<target host="adspeed.com" />
 	<target host="www.adspeed.com" />
-	<target host="adspeed.net" />
-	<target host="*.adspeed.net" />
 
 
-	<securecookie host="^\.adspeed\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.adspeed\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^https?://(?:www\.)?adspeed\.biz/(?:.*)"
-		to="https://adspeed.com/?src=dotbiz" />
-
-	<rule from="^https?://(?:www\.)?adspeed\.com/"
-		to="https://adspeed.com/" />
-
-	<rule from="^https?://(?:\w\d+\.adspeed\.biz|g\.adspeed\.net)/"
-		to="https://g.adspeed.net/" />
-
-	<rule from="^https?://(?:www\.)?adspeed\.net/"
-		to="https://adspeed.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,29 +1,60 @@
 <!--
-	Nonfunctional domains:
+	For rules causing false/broken MCB, see ameba.jp-falsemixed.xml.
 
-		- link.ameba.jp	(times out)
-		- vc.ameba.jp	(times out)
+
+	Nonfunctional hosts in *ameba.jp:
+
+		- helps ᵈ
+		- link ᵈ
+		- vc ᵈ
+
+	ᵈ Dropped
+
+
+	^ameba.jp: Mismatched
+
+
+	Mixed content:
+
+		- css on www from stat100.ameba.jp ˢ
+		- Images on www from stat100.ameba.jp ˢ
+		- Bug on www from vc.ameba.jp ᵈ
+
+	ᵈ Unsecurable <= dropped
+	ˢ Secured by us
 
 -->
-<ruleset name="Ameba (partial)" platform="mixedcontent">
+<ruleset name="Ameba.jp (partial)">
 
-	<target host="ameba.jp" />
-	<target host="*.ameba.jp" />
+	<!--	Direct rewrites:
+				-->
+	<target host="api.curation.ameba.jp" />
+	<target host="astat.brave.pigg.ameba.jp" />
+	<target host="brave.pigg.ameba.jp" />
+	<target host="stat.ameba.jp" />
+	<target host="stat100.ameba.jp" />
+	<target host="user.ameba.jp" />
+	<!--target host="www.ameba.jp" /-->
+
+	<!--	Complications:
+				-->
+	<!--target host="ameba.jp" /-->
+
 		<exclusion pattern="^http://stat\.ameba\.jp/user_images/" />
 
+			<!--	+ve:
+					-->
+			<test url="http://stat.ameba.jp/user_images/" />
 
-	<securecookie host="^.*\.ameba\.jp$" name=".*" />
+
+	<!--securecookie host="." name="." /-->
+	<securecookie host="^\w" name="." />
 
 
-	<!--	Cert is only valid for www.	-->
-	<rule from="^https?://(?:www\.)?ameba\.jp/"
-		to="https://www.ameba.jp/" />
+	<!--rule from="^http://ameba\.jp/"
+		to="https://www.ameba.jp/" /-->
 
-	<!--	stat: Akamai	-->
-	<rule from="^https?://(?:ssl|stat)\.ameba\.jp/"
-		to="https://ssl.ameba.jp/" />
-
-	<rule from="^http://user\.ameba\.jp/"
-		to="https://user.ameba.jp/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

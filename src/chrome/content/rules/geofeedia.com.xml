@@ -1,0 +1,46 @@
+<!--
+	CDN buckets:
+
+		- geofeedia-wpengine.netdna-ssl.com
+
+
+	Problematic hosts in *geofeedia.com:
+
+		- (www.)? ᶜ
+		- blog ᵐ
+		- resources ᵐ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Akamai / mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- app.geofeedia.com
+
+
+	Mixed content:
+
+		- css on ^ from fast.fonts.net ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Geofeedia.com (partial)">
+
+	<!--target host="geofeedia.com" /-->
+	<target host="app.geofeedia.com" />
+	<!--target host="www.geofeedia.com" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^app\.geofeedia\.com$" name="^AWSELB$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

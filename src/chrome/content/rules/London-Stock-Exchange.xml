@@ -1,9 +1,47 @@
-<ruleset name="London Stock Exchange (partial)">
+<!--
+	Nonfunctional hosts in *londonstockexchange.com:
 
-	<target host="londonstockexchange.com"/>
+		- safe *
+
+	* Handshake fails
+
+
+	^londonstockexchange.com: Handshake fails
+
+-->
+<ruleset name="London Stock Exchange.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="www.londonstockexchange.com"/>
 
-	<rule from="^http://(?:www\.)?londonstockexchange\.com/(exchange/user|global|home|media|news)/"
-		to="https://www.londonstockexchange.com/$1/"/>
+	<!--	Complications:
+				-->
+	<target host="londonstockexchange.com"/>
+
+		<exclusion pattern="^http://(?:www\.)?londonstockexchange\.com/+(?!exchange/user/|global/|media/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.londonstockexchange.com/exchange/global/contact-us/contact-us.html" />
+			<test url="http://www.londonstockexchange.com/exchange/prices-and-markets/stocks/indices/ftse-indices.html" />
+			<test url="http://www.londonstockexchange.com/global/faqs/faqs.htm" />
+			<test url="http://www.londonstockexchange.com/global/map.htm" />
+			<test url="http://www.londonstockexchange.com/home/bribery-act-external.htm" />
+			<test url="http://www.londonstockexchange.com/home/homepage.htm" />
+			<test url="http://www.londonstockexchange.com/news/news/finance.htm" />
+
+			<!--	-ve:
+					-->
+			<test url="http://londonstockexchange.com/exchange/user/registration.html" />
+			<test url="http://www.londonstockexchange.com/global/icons/searchbig.gif" />
+			<test url="http://www.londonstockexchange.com/media/img/rebranding/logo_lse_rebranding.png" />
+
+
+	<rule from="^http://londonstockexchange\.com/"
+		to="https://www.londonstockexchange.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

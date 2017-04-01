@@ -1,32 +1,76 @@
 <!--
+	For rules causing false/broken MCB, see CyanogenMod.org-falsemixed.xml.
+
+
+	Other CyanogenMod rulesets:
+
+		- Get.CM.xml
+
+
 	Nonfunctional subdomains:
 
-		- ^ *
-		- forum *
-		- review	(refused)
-		- stats		(dropped)
-		- wiki *
-		- www	(520)
+		- beta.download ¹
 
-	* 522
+	¹ 404
+
+
+	Problematic subdomains:
+
+		- mirror.slc ¹
+		- www *
+
+	¹ Mismatched, CN: ssl2786.cloudflare.com
 
 
 	Fully covered subdomains:
 
+		- ^
 		- account
 		- download
 		- jira
+		- stats
+		- wiki
+		- forum
+
+
+	Insecure cookies are set for these domains:
+
+		- .
+		- jira
+
+
+	Mixed content:
+
+		- css www from $self *
+
+		- Images on www from $self *
+
+		- favicon on www from $self *
+
+		- Web bug on www from www.twilio.com *
+
+	* Secured by us
 
 -->
 <ruleset name="CyanogenMod.org (partial)">
 
-	<target host="*.cyanogenmod.org" />
+	<target host="cyanogenmod.org" />
+	<target host="account.cyanogenmod.org" />
+	<target host="download.cyanogenmod.org" />
+	<target host="forum.cyanogenmod.org" />
+	<target host="jira.cyanogenmod.org" />
+	<target host="review.cyanogenmod.org" />
+	<target host="stats.cyanogenmod.org" />
+	<target host="wiki.cyanogenmod.org" />
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^jira\.cyanogenmod\.org$" name="^(JSESSIONID|atlassian\.xsrf\.token)$" /-->
 
+	<securecookie host="^\.cyanogenmod\.org$" name="^__cfduid$" />
 	<securecookie host="^jira\.cyanogenmod\.org$" name=".+" />
 
-
-	<rule from="^http://(account|download|jira)\.cyanogenmod\.org/"
-		to="https://$1.cyanogenmod.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

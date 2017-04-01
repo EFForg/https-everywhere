@@ -1,35 +1,86 @@
-<!--	See MegaPath-expired.xml also
--->
-<ruleset name="MegaPath (partial)" platform="mixedcontent">
+<!--
+	Other MegaPath rulesets:
 
-	<target host="dashboard.covad.com"/>
-	<target host="my.covad.com"/>
-	<target host="support.covad.com"/>
-		<exclusion pattern="^http://support\.covad\.com/export/"/>
+		- Speakeasy.net.xml
+
+
+	Nonfunctional hosts in *megapath.com:
+
+		- pontus ʳ
+
+	ʳ Refused
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .megapath.com
+		- extranet.megapath.com
+		- my.megapath.com
+		- www.megapath.com
+
+-->
+<ruleset name="MegaPath.com (partial)">
+
 	<target host="megapath.com"/>
+	<target host="extranet.megapath.com"/>
+	<target host="my.megapath.com"/>
+	<target host="voice.megapath.com"/>
 	<target host="vp1-voiceportal.megapath.com"/>
 	<target host="www.megapath.com"/>
-	<target host="connect.megapathwholesale.com"/>
-	<target host="speakeasy.net"/>
-	<target host="*.speakeasy.net"/>
 
-	<rule from="^http://(dashboard|my|support)\.covad\.com/"
-		to="https://$1.covad.com/"/>
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://voice\.megapath\.com/(?:$|Error/invalidWebClient\.jsp)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://voice\.megapath\.com/(?!Login/)" />
 
-	<rule from="^http://(?:www\.)?megapath\.com/"
-		to="https://www.megapath.com/"/>
+			<!--	+ve:
+					-->
+			<test url="http://voice.megapath.com/Error/invalidWebClient.jsp" />
 
-	<rule from="^http://vp1-voiceportal\.megapath\.com/"
-		to="https://vp1-voiceportal.megapath.com/Login/"/>
+			<!--	-ve:
+					-->
+			<test url="http://voice.megapath.com/Login/" />
 
-	<rule from="^http://connect\.megapathwholesale\.com/"
-		to="https://connect.megapathwholesale.com/"/>
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://vp1-voiceportal\.megapath\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://vp1-voiceportal\.megapath\.com/(?!Login/)" />
 
-	<rule from="^http://(?:www\.)?speakeasy\.net/"
-		to="https://speakeasy.net/"/>
+			<!--	+ve:
+					-->
+			<test url="http://vp1-voiceportal.megapath.com/Error/invalidWebClient.jsp" />
 
-	<securecookie host="^my\.covad\.com$" name=".*"/>
-	<securecookie host="^(vp1-voiceportal|www)\.megapath\.com$" name=".*"/>
-	<securecookie host="^(www)?\.?speakeasy\.net$" name=".*"/>
+			<!--	-ve:
+					-->
+			<test url="http://vp1-voiceportal.megapath.com/Login/" />
+
+		<!--	Formerly redirected to http:
+							-->
+		<test url="http://www.megapath.com/about/" />
+		<test url="http://www.megapath.com/data/" />
+		<test url="http://www.megapath.com/partners/" />
+		<test url="http://www.megapath.com/sitemap/" />
+		<test url="http://www.megapath.com/support/login/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.megapath\.com$" name="^(?:cfid|cftoken)$" /-->
+	<!--securecookie host="^events\.megapath\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^my\.megapath\.com$" name="^(?:CF_COOKIE_SUPPORT|GUEST_LANGUAGE_ID|JSESSIONID)$" /-->
+	<!--securecookie host="^www\.megapath\.com$" name="^(?:CF_SESSION_\W+|MOBILEFORMAT|ORIGINALURLTOKEN|REFERRINGURL|SITEENTRYURL|VISITORID)$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^(?:events|my|www)\.megapath\.com$" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

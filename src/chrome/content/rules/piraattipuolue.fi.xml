@@ -1,0 +1,88 @@
+<!--
+	Nonfunctional hosts in *piraattipuolue.fi:
+
+		- arkisto ᵃ
+		- hame ᵃ
+		- helsinki ᵃ
+		- kauppa ᵃ
+
+	ᵃ Shows another domain
+
+
+	Problematic hosts in *piraattipuolue.fi:
+
+		- eurovaalikone * ʳ
+		- stats ᵉ
+		- wikileaks ᵐ
+
+	* Expired cert at redirect destination
+	ᵉ Expired
+	ᵐ Mismatched
+	ʳ Refused, preemptable redirect
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .foorumi.piraattipuolue.fi
+		- keskustelut.piraattipuolue.fi
+		- stats.piraattipuolue.fi
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images on ^, blogi from $self ˢ
+		- favicon on keskustelut from arkisto.piraattipuolue.fi ⁴
+
+		- Bug, on:
+		
+			- blogi from www.facebook.com ˢ
+			- blogi from apis.google.com ˢ
+			- blogi, keskustelut, wiki from stats.piraattipuolue.fi ᵉ
+			- blogi from platform.twitter.com ˢ
+
+	⁴ Unsecurable <= 404
+	ᵉ Not secured by us <= expired
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Piraattipuolue.fi (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="piraattipuolue.fi" />
+	<target host="blogi.piraattipuolue.fi" />
+	<target host="foorumi.piraattipuolue.fi" />
+	<target host="keskustelut.piraattipuolue.fi" />
+	<target host="tilastot.piraattipuolue.fi" />
+	<target host="wiki.piraattipuolue.fi" />
+	<target host="www.piraattipuolue.fi" />
+
+	<!--	Complications:
+				-->
+	<!--target host="eurovaalikone.piraattipuolue.fi" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.foorumi\.piraattipuolue\.fi$" name="^phpbb3_\w+_(?:k|sid|u)$" /-->
+	<!--securecookie host="^keskustelut\.piraattipuolue\.fi$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^stats\.piraattipuolue\.fi$" name="^DYNSRV$" /-->
+
+	<securecookie host="^(?!\.piraattipuolue\.fi$)." name="." />
+
+
+	<!--	Redirect drops all:
+					-->
+	<!--rule from="^http://eurovaalikone\.piraattipuolue\.fi/.*"
+		to="https://www.dy.fi/" /-->
+
+		<!--
+		<test url="http://eurovaalikone.piraattipuolue.fi/page/graphs" />
+		-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

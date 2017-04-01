@@ -1,5 +1,36 @@
-<ruleset name="NuGet">
-  <target host="nuget.org" />
-  <target host="www.nuget.org" />
-  <rule from="^http://(www\.)?nuget\.org/" to="https://$1nuget.org/"/>
+<!--
+	Problematic hosts in *nuget.org:
+
+		- blog *
+
+	* Github / mismatched
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .docs.nuget.org
+		- .status.nuget.org
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="NuGet.org (partial)">
+
+	<target host="nuget.org" />
+	<target host="dist.nuget.org" />
+	<target host="docs.nuget.org" />
+	<target host="status.nuget.org" />
+	<target host="www.nuget.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.(?:docs|status)\.nuget\.org$" name="^ARRAffinity$" /-->
+
+	<securecookie host="^\.(?:doc|statu)s\." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

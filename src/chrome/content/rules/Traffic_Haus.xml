@@ -1,16 +1,31 @@
 <!--
-	Nonfunctional subdomains:
+	Insecure cookies are set for these hosts: ᶜ
 
-		- syndication
+		- syndication.traffichaus.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Traffic Haus (partial)">
+<ruleset name="Traffic Haus.com (partial)">
 
 	<target host="traffichaus.com" />
-	<target host="*.traffichaus.com" />
+	<target host="stats.traffichaus.com" />
+	<target host="syndication.traffichaus.com" />
+	<target host="www.traffichaus.com" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://syndication.traffichaus.com/adserve/index.php?z=1&amp;loc=" /-->
 
 
-	<rule from="^http://(stats\.|www\.)?traffichaus\.com/"
-		to="https://$1traffichaus.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^syndication\.traffichaus\.com$" name="^(?:zone|th_trans)_\d+$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

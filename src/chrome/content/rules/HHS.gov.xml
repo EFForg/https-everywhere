@@ -1,0 +1,132 @@
+<!--
+	Department of Health and Human Services
+
+	For other US government coverage, see US-government.xml.
+
+
+	Nonfunctional hosts in *hhs.gov:
+
+		- ^ ¹
+		- eclkc.ohs.acf ²
+		- answers ¹
+		- archive ¹
+		- aspe ²
+		- www.learning ²
+		- millionhearts ³
+		- minorityhealth ²
+		- oig ⁴
+		- www ⁴
+
+	¹ Shows another domain
+	² Dropped
+	³ 404
+	⁴ Redirects to http
+
+
+	Problematic hosts in *hhs.gov:
+
+		- betobaccofree ¹
+		- freshempire.betobaccofree ¹
+		- ehrincentives.cms ᶜ
+		- (www.)?hospitalcompare ¹
+		- thinkculturalhealth ²
+
+	¹ Akamai
+	² 404
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- ams.hhs.gov
+		- tracker.cloud.hhs.gov
+		- ehrincentives.cms.hhs.gov
+		- comment-app.hhs.gov
+		- www.thinkculturalhealth.hhs.gov
+		- vaers.hhs.gov
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on freshempire.betobaccofree from fonts.googleapis.com *
+		- favicon on betobaccofree from $self
+
+		- Bugs, on:
+
+			- comment-app from $self *
+			- wcdapps from www.googletagmanager.com *
+
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="HHS.gov (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="acf.hhs.gov" />
+	<target host="www.acf.hhs.gov" />
+	<target host="ams.hhs.gov" />
+	<target host="freshempire.betobaccofree.hhs.gov" />
+	<target host="tracker.cloud.hhs.gov" />
+	<target host="cms.hhs.gov" />
+	<!--target host="ehrincentives.cms.hhs.gov" /-->
+	<target host="www.cms.hhs.gov" />
+	<target host="comment-app.hhs.gov" />
+	<target host="digitalmedia.hhs.gov" />
+	<target host="api.digitalmedia.hhs.gov" />
+	<target host="stage-api.digitalmedia.hhs.gov" />
+	<target host="iam.hhs.gov" />
+	<target host="lms.learning.hhs.gov" />
+	<target host="mentoring.hhs.gov" />
+	<target host="exclusions.oig.hhs.gov" />
+	<target host="forms.oig.hhs.gov" />
+	<target host="ori.hhs.gov" />
+	<target host="search.hhs.gov" />
+	<target host="stage-digitalmedia.hhs.gov" />
+	<target host="www.thinkculturalhealth.hhs.gov" />
+	<target host="vaers.hhs.gov" />
+	<target host="wcdapps.hhs.gov" />
+
+	<!--	Complications:
+				-->
+	<target host="hospitalcompare.hhs.gov" />
+	<target host="www.hospitalcompare.hhs.gov" />
+	<target host="thinkculturalhealth.hhs.gov" />
+
+		<!--	Mixed bug:
+					-->
+		<!--test url="http://wcdapps.hhs.gov/Badges/Handlers/Badge.ashx?js=0&amp;widgetname=betobaccofreew200short" /-->
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://comment-app.hhs.gov/surveys/11/visit" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^ams\.hhs\.gov$" name="^OAM_JSESSIONID$" /-->
+	<!--securecookie host="^tracker\.cloud\.hhs\.gov$" name="^(?:JSESSIONID|atlassian\.xsrf\.token)$" /-->
+	<!--securecookie host="^ehrincentives\.cms\.hhs\.gov$" name="^BIGipServer" /-->
+	<!--securecookie host="^comment-app\.hhs\.gov$" name="^(?:_comment_tool_public_session|survey_view_\d+)$" /-->
+	<!--securecookie host="^exclusions\.oig\.hhs\.gov$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^www\.thinkculturalhealth\.hhs\.gov$" name="^(?:ASPSESSIONID[A-Z]{8}|BIGipServer)" /-->
+	<!--securecookie host="^vaers\.hhs\.gov$" name="^_ZopeId$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps path and args, but not forward slash:
+									-->
+	<rule from="^http://(?:www\.)?hospitalcompare\.hhs\.gov/+"
+		to="https://www.medicare.gov/hospitalcompare/" />
+
+	<rule from="^http://thinkculturalhealth\.hhs\.gov/"
+		to="https://www.thinkculturalhealth.hhs.gov/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

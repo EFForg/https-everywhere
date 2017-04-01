@@ -1,29 +1,44 @@
 <!--
-	Partially covered subdomains:
-
-		- marketplace	(some pages redirect to http)
+	For other TrafficJunky coverage, see trafficjunky.com.xml.
 
 
-	Fully covered subdomains:
+	Problematic hosts in *trafficyjunky.net:
 
-		- (www.)
-		- ads
+		- cdn11 ᵐ
+		- beta.marketplace ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- marketplace.trafficjunky.net
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="TrafficJunky (partial)">
+<ruleset name="TrafficJunky.net (partial)">
 
 	<target host="trafficjunky.net" />
-	<target host="*.trafficjunky.net" />
-		<!--exclusion pattern="^http://marketplace\.trafficjunky\.net/+($|\?|(about-us|advertisers|contact-us|home|mobile|networks|privacy-policy|publishers|rules-and-regulations|sitemap|terms-of-use)($|[?/]))" /-->
-		<exclusion pattern="^http://marketplace\.trafficjunky\.net/+(?!bundles/|favicon\.ico|(?:member|signin|signup)(?:$|[?/]))" />
+	<target host="ads.trafficjunky.net" />
+	<target host="cdn10.trafficjunky.net" />
+	<target host="marketplace.trafficjunky.net" />
+	<target host="media.trafficjunky.net" />
+	<target host="pt.trafficjunky.net" />
+	<target host="www.trafficjunky.net" />
+
+		<test url="http://cdn10.trafficjunky.net/html5video/video-js.css" />
+		<test url="http://media.trafficjunky.net/delivery/js/abp/js1.js" />
 
 
-	<securecookie host="^www\.trafficjunky\.net$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^marketplace\.trafficjunky\.net$" name="^RNLBSERVERID$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<!--	ads: included on 3rd-party websites.
-							-->
-	<rule from="^http://((?:ads|marketplace|www)\.)?trafficjunky\.net/"
-		to="https://$1trafficjunky.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

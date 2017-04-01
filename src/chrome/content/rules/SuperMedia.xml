@@ -1,51 +1,37 @@
-<ruleset name="SuperMedia (partial)" platform="mixedcontent">
+<!--
+	For other Dex Media coverage, see Dex_Media.com.xml.
 
-	<target host="s.cdnwp.com"/>
-        <target host="directorystore.com"/>
-        <target host="*.directorystore.com"/>
-	<target host="superguarantee.com"/>
-	<target host="*.superguarantee.com"/>
+
+	Problematic subdomains:
+
+		- (www.)? ¹
+		- jobs ²
+
+	¹ Redirects to http before dexmedia.com
+	² Connection refused at redirect destination 
+
+-->
+<ruleset name="SuperMedia.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="my.supermedia.com"/>
+
+	<!--	Complications:
+				-->
 	<target host="supermedia.com"/>
-	<target host="*.supermedia.com"/>
-	<target host="superpages.com"/>
-	<target host="*.superpages.com"/>
-	<target host="switchboard.com"/>
-	<target host="www.switchboard.com"/>
-	<target host="whitepages.com"/>
-	<target host="*.whitepages.com"/>
+	<target host="www.supermedia.com"/>
 
 
-	<securecookie host="^(.*\.)?directorystore\.com$" name=".*"/>
-	<securecookie host="^(.*\.)?super(guarantee|media)\.com$" name=".*"/>
-	<securecookie host="^yellowpages\.superpages\.com$" name=".*"/>
+	<!--	Redirect keeps path but not args:
+						-->
+	<rule from="^http://(?:www\.)?supermedia\.com/[^?]*"
+		to="https://www.dexmedia.com/?ref=sm" />
 
+		<test url="http://supermedia.com//" />
+		<test url="http://www.supermedia.com//" />
 
-	<rule from="^http://s\.cdnwp\.com/"
-		to="https://s.cdnwp.com/"/>
-
-	<rule from="^http://(?:www\.)?directorystore\.com/"
-		to="https://www.directorystore.com/"/>
-
-
-	<rule from="^http://(www\.)?superguarantee\.com/"
-		to="https://$1superguarantee.com/"/>
-
-	<rule from="^http://(my\.|www\.)?supermedia\.com/"
-		to="https://$1supermedia.com/"/>
-
-	<rule from="^http://superpages\.com/"
-		to="https://www.superpages.com/"/>
-
-	<rule from="^http://(?:www\.)?(?:switchboard|whiteboard)\.com/(cache/|common/|switchboard/)"
-		to="https://s.cdnwp.com/$1"/>
-
-	<rule from="^http://(?:jscss|yellowpages)\.superpages\.com/"
-		to="https://yellowpages.superpages.com/"/>
-
-	<rule from="^http://whitepages\.com/"
-		to="https://www.whitepages.com/"/>
-
-	<rule from="^http://pro\.whitepages\.com/"
-		to="https://pro.whitepages.com/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

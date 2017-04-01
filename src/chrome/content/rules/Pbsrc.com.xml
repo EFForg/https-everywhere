@@ -1,0 +1,93 @@
+<!--
+	For other Photobucket coverage, see Photobucket.xml.
+
+
+	CDN buckets:
+
+		- crtl.aimatch.com
+
+			- b.photobucket.com
+
+		- wpc.38F2.edgecastcdn.net
+
+		- wpc.3901.edgecastcdn.net
+
+			- i000[1-9].photobucket.com
+
+		- wac.3B2E.edgecastcdn.net
+
+			- pic.pbsrc.com
+			- pic.photobucket.com
+
+		- cdn.photobucket.com.c.footprint.net
+
+			- img.photobucket.com
+			- i120\d.photobucket.com
+
+
+	Nonfunctional domains:
+
+		- static.pbsrc.com	(404, CN: gp1.wac.edgecastcdn.net)
+
+
+	Problematic hosts in *pbsrc.com:
+
+		- pic *
+		- pic2 *
+		- static2 *
+
+	* CN: gp1.wac.edgecastcdn.net; 404
+
+
+	Fully covered hosts in *pbsrc.com:
+
+		- (www.)
+		- opic2
+		- ostatic2
+		- pic			(→ pbsrc.com)
+		- pic2			(→ opic2.pbsrc.com)
+		- rs\d+
+		- static2		(→ ostatic2.pbsrc.com)
+
+-->
+<ruleset name="Pbsrc.com (partial)">
+	
+	<!-- https://github.com/EFForg/https-everywhere/issues/3527 -->
+	<exclusion pattern="^http://pic2\.pbsrc\.com/flash/ZeroClipboardFV3\.swf" />
+	<exclusion pattern="^http://static2\.pbsrc\.com/$" />
+	<target host="pbsrc.com" />
+	<target host="*.pbsrc.com" />
+
+		<!--	Direct rewrites:
+					-->
+			<test url="http://opic2.pbsrc.com/common/hero-slider-v2.png" />
+			<test url="http://opic2.pbsrc.com/footer/footer-facebook.png" />
+			<test url="http://opic2.pbsrc.com/footer/footer-logo.png" />
+			<test url="http://opic2.pbsrc.com/print/calendars/SimplyModern_PreviewIcon_Web_Gray.jpg" />
+			<test url="http://pic2.pbsrc.com/flash/ZeroClipboardFV3.swf" />
+
+		<test url="http://ostatic2.pbsrc.com/" />
+		<test url="http://www.pbsrc.com/" />
+
+		<!--	Complications:
+					-->
+		<test url="http://pic.pbsrc.com/" />
+
+			<test url="http://pic2.pbsrc.com/common/hero-slider-v2.png" />
+			<test url="http://pic2.pbsrc.com/footer/footer-facebook.png" />
+			<test url="http://pic2.pbsrc.com/footer/footer-logo.png" />
+			<test url="http://pic2.pbsrc.com/print/calendars/SimplyModern_PreviewIcon_Web_Gray.jpg" />
+
+		<test url="http://static2.pbsrc.com/" />
+
+	
+	<rule from="^http://pic\.pbsrc\.com/"
+		to="https://pbsrc.com/" />
+
+	<rule from="^http://(pic|static)2\.pbsrc\.com/"
+		to="https://o$12.pbsrc.com/" />
+
+	<rule from="^http://((?:opic2|ostatic2|rs\d+|www)\.)?pbsrc\.com/"
+		to="https://$1pbsrc.com/" />
+
+</ruleset>

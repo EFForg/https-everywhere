@@ -1,55 +1,274 @@
 <!--
-	Almost everything on europa.eu is missconfigured. but there are some exceptions.
+	Almost everything on europa.eu is misconfigured, but there are some exceptions.
+
+	For rules causing false/broken MCB, see Europa.eu-falsemixed.xml.
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *europa.eu:
 
-		- ^	(403, valid cert)
-		- ec	(403)
-		- eur-lex	(shows ^; mismatched, CN: europa.eu)
-		- www.europarl *
-		- (www.)ombudsman	(times out)
+		- ^ ¹
+		- curia ¹
 
-	* Dropped
+		- eacea.ec ʰ
+		- inspire.ec ᵈ
+		- trade.ec ⁴
+
+		- archive.eiopa ʳ
+		- eur-lex ⁵
+		- m.europarl ᵈ
+		- www.europarl ᵈ
+		- eurovoc ¹
+		- www.iss ʳ
+		- (www.)ombudsman ᵈ
+		- formex.publications ʳ
+		- ted ᵈ
+		- whoiswho ¹
+
+	¹ 400
+	⁴ 403; mismatched, CN: europa.eu
+	⁵ Shows ^; mismatched, CN: europa.eu
+	ᵈ Dropped
+	ʰ Redirects to http
+	ʳ Refused
 
 
-	Partially covered subdomains:
+	Problematic hosts in *europa.eu:
 
-		- cordis	(some pages redirect to http)
+		- video.consilium ᶜ ᵐ
+		- een.ec ˣ
+		- eeas ᵐ
+		- www.eeas ³ ᵐ
+		- www.tmview ᵐ
+
+	³ 403, preemptable redirect
+	ᶜ Cloudfront
+	ᵐ Mismatched
+	ˣ Mixed css
 
 
-	Fully covered subdomains:
+	Partially covered hosts in *europa.eu:
 
-		- www.europol
+		- www.consilium ʰ
+		- cordis ʰ
+		- ec ²
+
+	ʰ Some pages redirect to http
+	² $ 400s
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- bookshop.europa.eu
+		- ec.europa.eu
+		- .een.ec.europa.eu
+		- www.ecb.europa.eu
+		- eiopa.europa.eu
+		- .erc.europa.eu
+		- oami.europa.eu
+		- publication.europa.eu
 
 
 	Mixed content:
 
-		- Image on www.europol from www.europol *
-	
-	* Secured by us
+		- css on een.ec from $self ˢ
+
+		- Images, on:
+
+			- een.ec from ec.europa.eu
+			- een.ec from $self ˢ
+			- www.europol from www.europol ˢ
+
+		- Bugs, on:
+
+			- cordis from sdc-cordis.mainstrat.com ˢ
+			- publications from $self ˢ
+
+	ˢ Secured by us
 
 -->
-<ruleset name="Europa.eu">
+<ruleset name="Europa.eu (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="bookshop.europa.eu" />
+	<target host="subscriptions-dsms.consilium.europa.eu" />
+	<target host="www.consilium.europa.eu" />
+	<target host="cordis.europa.eu" />
+	<target host="www.easa.europa.eu" />
+	<target host="www.eba.europa.eu" />
+	<target host="ec.europa.eu" />
+
+	<!--target host="een.ec.europa.eu" /-->
+	<target host="joinup.ec.europa.eu" />
+	<target host="webgate.ec.europa.eu" />
+
+	<target host="www.ecb.europa.eu" />
+	<target host="eiopa.europa.eu" />
+	<target host="enisa.europa.eu" />
+	<target host="www.enisa.europa.eu" />
+	<target host="erc.europa.eu" />
+	<target host="www.europol.europa.eu" />
+	<target host="oami.europa.eu" />
+	<target host="open-data.europa.eu" />
+	<target host="publications.europa.eu" />
+
+	<!--	Complications:
+				-->
 	<target host="www.ecb.eu" />
-	<target host="*.europa.eu" />
-		<!--exclusion pattern="^http://cordis\.europa\.eu/+($|\?|css/|erawatch/css/|erawatch/icons/|favicon\.ico|guidance/icons/|live-edit/css/)" /-->
-		<exclusion pattern="^http://cordis\.europa\.eu/+(?!icons/|js/|wel/template-)" />
+
+	<target host="consilium.europa.eu" />
+	<target host="easa.europa.eu" />
+	<target host="www.tmview.europa.eu" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.consilium\.europa\.eu/(?:\w\w/$|\w\w/(?:contact|home)/$|en/splash/?requested=%2f)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="http://www\.consilium\.europa\.eu/+(?!content/|favicon\.ico|images/|uedocs/|uploadedImages/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.consilium.europa.eu/en/contact/" />
+			<test url="http://www.consilium.europa.eu/en/home/" />
+			<test url="http://www.consilium.europa.eu/es/home/" />
+			<test url="http://www.consilium.europa.eu/fr/" />
+			<test url="http://www.consilium.europa.eu/it/" />
+			<test url="http://www.consilium.europa.eu/mt/" />
+			<test url="http://www.consilium.europa.eu/ro/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.consilium.europa.eu/content/css/ie-global.css" />
+			<test url="http://www.consilium.europa.eu/content/icons/customtile.png" />
+			<test url="http://www.consilium.europa.eu/content/images/logo.png" />
+			<test url="http://www.consilium.europa.eu/favicon.ico" />
+			<test url="http://www.consilium.europa.eu/images/council-loading.gif" />
+			<test url="http://www.consilium.europa.eu/uploadedImages/Multimedia/Photos/Image-library/logos/20160101-NLpresidency-Home.png?n=6368&amp;targetTypeId=tablet" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://cordis\.europa\.eu/+($|\?|erawatch/css/|erawatch/icons/|guidance/$|home_\w\w\.html|live-edit/css/|scienceweek/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://cordis\.europa\.eu/+(?!account/|common/arc/|css/|favicon\.ico|guidance/(?:cs|icon)s/|icons/|js/|scienceweek/+(?!$|\?)|wel/template-)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://cordis.europa.eu/archive/home_en.html" />
+			<test url="http://cordis.europa.eu/growth/" />
+			<test url="http://cordis.europa.eu/guidance/" />
+			<test url="http://cordis.europa.eu/guidance/home_en.html" />
+			<test url="http://cordis.europa.eu/home_en.html" />
+			<test url="http://cordis.europa.eu/ictresults/" />
+			<test url="http://cordis.europa.eu/incubators/library.htm" />
+			<test url="http://cordis.europa.eu/life/" />
+			<test url="http://cordis.europa.eu/liguria/infra_en.html" />
+			<test url="http://cordis.europa.eu/liguria/rd_en.html" />
+			<test url="http://cordis.europa.eu/malopolska/intro_en.html" />
+			<test url="http://cordis.europa.eu/nmp/past_highlights.htm" />
+			<test url="http://cordis.europa.eu/research-eu/magazine_en.html" />
+			<test url="http://cordis.europa.eu/scienceweek/" />
+			<test url="http://cordis.europa.eu/stuttgart/intro_en.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://cordis.europa.eu/account/login_en" />
+			<test url="http://cordis.europa.eu/common/arc/css/cordis_archive.css" />
+			<test url="http://cordis.europa.eu/common/arc/icons/banner-archive_en.gif" />
+			<test url="http://cordis.europa.eu/css/content-home.css" />
+			<test url="http://cordis.europa.eu/css/splash.css" />
+			<test url="http://cordis.europa.eu/favicon.ico" />
+			<test url="http://cordis.europa.eu/guidance/css/styles.css" />
+			<test url="http://cordis.europa.eu/guidance/icons/nav-triangle.png" />
+			<test url="http://cordis.europa.eu/icons/op-cordis.png" />
+			<test url="http://cordis.europa.eu/scienceweek/css.css" />
+			<test url="http://cordis.europa.eu/scienceweek/exp_funzone.htm" />
+			<test url="http://cordis.europa.eu/scienceweek/home.htm" />
+			<test url="http://cordis.europa.eu/scienceweek/icons/logob.gif" />
+			<test url="http://cordis.europa.eu/scienceweek/media_press.htm" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://ec\.europa\.eu/index_en.htm /-->
+		<!--
+			404:
+					-->
+		<!--exclusion pattern="^http://ec\.europa\.eu/(?:ec_portal/(?:2016/images|stylesheets)/|growth/$|growth/contact/index_\w\w\.htm||index_\w\w\.htm|programmes/$|growth/tools-databases/newsroom/cf/_getimage\.cfm\?doc_id=)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://ec\.europa\.eu/(?!/*(?:(?:commission|eures|eusurvey|futurium|jrc|research)(?:$|[?/])|enterprise/images/|growth/(?:heroes/template|images|stylesheets)/|wel/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://ec.europa.eu/anti_fraud/index_en.htm" />
+			<test url="http://ec.europa.eu/atoz_en.htm" />
+			<test url="http://ec.europa.eu/avservices/" />
+			<test url="http://ec.europa.eu/carol/" />
+			<test url="http://ec.europa.eu/cyprus/" />
+			<test url="http://ec.europa.eu/ec_portal/2016/images/btn-arrow-more.png" />
+			<test url="http://ec.europa.eu/ec_portal/stylesheets/styles-splash.css" />
+			<test url="http://ec.europa.eu/geninfo/query/search_en.html" />
+			<test url="http://ec.europa.eu/greece/index_el.htm" />
+			<test url="http://ec.europa.eu/growth/" />
+			<test url="http://ec.europa.eu/growth/contact/index_en.htm" />
+			<test url="http://ec.europa.eu/growth/tools-databases/newsroom/cf/_getimage.cfm?doc_id=8076" />
+			<test url="http://ec.europa.eu/index_en.htm" />
+			<test url="http://ec.europa.eu/sitemap/index_en.htm" />
+
+			<!--	-ve:
+					-->
+			<test url="http://ec.europa.eu/commission" />
+			<test url="http://ec.europa.eu/enterprise/images/2013/bk_news_active.png" />
+			<test url="http://ec.europa.eu/eures" />
+			<test url="http://ec.europa.eu/eusurvey/" />
+			<test url="http://ec.europa.eu/eusurvey/runner/H2020SSOpenall" />
+			<test url="http://ec.europa.eu/futurium/" />
+			<test url="http://ec.europa.eu/growth/heroes/template/v2/images/eu-loading.gif" />
+			<test url="http://ec.europa.eu/growth/images/template-2014/banner/banner-en.gif" />
+			<test url="http://ec.europa.eu/growth/stylesheets/template-2014/entr-common.css" />
+			<test url="http://ec.europa.eu/jrc/" />
+			<test url="http://ec.europa.eu/research/participants/portal/desktop/en/opportunities/h2020/calls/erc-2016-stg.html" />
+			<test url="http://ec.europa.eu/wel/template-2013/images/logo/logo_en.gif" />
+			<test url="http://ec.europa.eu/wel/template-2013/stylesheets/ec.css" />
+
+		<test url="http://oami.europa.eu/knowledge/" />
+		<test url="http://oami.europa.eu/ohimportal/en/" />
 
 
-	<!--securecookie host="^\.europol\.europa\.eu$" name="^SESS\w32$" /-->
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^bookshop\.europa\.eu$" name="^(?:pg|s)id$" /-->
+	<!--securecookie host="^ec\.europa\.eu$" name="^(?:EURES_LF_(?:MARKETPLACE|PLUGINS)_SESSIONID|JSESSIONID|JSESSIONIDEUSURVEY)$" /-->
+	<!--securecookie host="^\.(?:een\.ec|erc|europol)\.europa\.eu$" name="^SESS[\da-f]{32}$" /-->
+	<!--securecookie host="^www\.ecb\.europa\.eu$" name="^BIGipServerPOOL\.www\.ecb\.europa\.eu_HTTPS$" /-->
+	<!--securecookie host="^eiopa\.europa\.eu$" name="^(?:NSC_|SearchSession$)" /-->
+	<!--securecookie host="^oami\.europa\.eu$" name="^b{15}$" /-->
+	<!--securecookie host="^publications\.europa\.eu$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^(?:bookshop|www\.ecb|eiopa|oami|publications)\.europa\.eu$" name="." />
+	<securecookie host="^ec\.europa\.eu$" name="^JSESSIONIDEUSURVEY$" />
 
 
-	<rule from="^http://www\.ecb(?:\.europa)?\.eu/"
+	<rule from="^http://www\.ecb\.eu/"
 		to="https://www.ecb.europa.eu/" />
 
-	<rule from="^http://(?:www\.)?consilium\.europa\.eu/"
-		to="https://www.consilium.europa.eu/" />
+	<rule from="^http://(consilium|easa)\.europa\.eu/"
+		to="https://www.$1.europa.eu/" />
 
-	<rule from="^http://(cordis|joinup\.ec|www\.europol)\.europa\.eu/"
-		to="https://$1.europa.eu/" />
+	<!--	Redirect drops path, args,
+		and forward slash:
+					-->
+	<rule from="^http://www\.tmview\.europa\.eu/.*"
+		to="https://www.tmdn.org/tmview/" />
 
-    <rule from="^http://(?:www\.)?easa\.europa\.eu/"
-        to="https://www.easa.europa.eu/" />
+		<test url="http://www.tmview.europa.eu/tmview/welcome.html" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

@@ -1,6 +1,74 @@
-<ruleset name="Charlotte Nature Museum">
+<!--
+	For rules covering resources which do not secure
+	mixed content, see charlottenaturemuseum.org-resources.xml.
+
+-->
+<ruleset name="Charlotte Nature Museum.org (partial)">
+
 	<target host="charlottenaturemuseum.org" />
 	<target host="www.charlottenaturemuseum.org" />
 
-	<rule from="^http://(?:www\.)?charlottenaturemuseum\.org/" to="https://www.charlottenaturemuseum.org/" />
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.charlottenaturemuseum\.org/(?:$|legal/privacy$|membership$|support$|support/partner$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(?:www\.)?charlottenaturemuseum\.org/(?!/*(?:assets/|content/|(?:membership/application|support/donate)(?:$|[?/])|favicon\.ico))" /-->
+		<!--
+			Avoid possible XHR problems:
+							-->
+		<!--exclusion pattern="^http://(?:www\.)?charlottenaturemuseum\.org/.+\.(?:js|swf)(?:$|\?)" /-->
+		<!--
+			In combination:
+					-->
+		<!--exclusion pattern="^http://(?:www\.)?charlottenaturemuseum\.org/(?!(?!.+\.(?:js|swf)(?:$|\?))/*(?:assets/|content/|(?:membership/application|support/donate)(?:$|[?/])|favicon\.ico))" /-->
+		<!--
+			Reduce non-Tor distinguishability:
+								-->
+		<exclusion pattern="^http://(?:www\.)?charlottenaturemuseum\.org/(?!/*(?:(?:assets|content)/.+\.pdf(?:$|\?)|(?:membership/application|support/donate)(?:$|[?/])))" />
+
+			<!--	+ve:
+					-->
+			<!--
+			<test url="http://www.charlottenaturemuseum.org/assets/js/_synced/home.js" />
+			<test url="http://www.charlottenaturemuseum.org/assets/js/_synced/layerslider/greensock.js" />
+			<test url="http://www.charlottenaturemuseum.org/assets/js/_synced/layerslider/layerslider.kreaturamedia.jquery.js" />
+			<test url="http://www.charlottenaturemuseum.org/assets/js/_synced/layerslider/layerslider.transitions.js" />
+			-->
+			<test url="http://www.charlottenaturemuseum.org/assets/js/cufon-fonts.js" />
+			<test url="http://www.charlottenaturemuseum.org/assets/js/cufon-yui.js" />
+			<test url="http://www.charlottenaturemuseum.org/assets/js/dp.js" />
+			<test url="http://www.charlottenaturemuseum.org/assets/js/jquery.colorbox-min.js" />
+			<test url="http://www.charlottenaturemuseum.org/content/features/home/banners/1.swf" />
+			<test url="http://www.charlottenaturemuseum.org/events/event/16/Outrageous-Reptiles-Amazing-Amphibians" />
+			<test url="http://www.charlottenaturemuseum.org/legal/privacy" />
+			<test url="http://www.charlottenaturemuseum.org/membership" />
+			<test url="http://www.charlottenaturemuseum.org/support" />
+			<test url="http://www.charlottenaturemuseum.org/support/partner" />
+
+			<!--	-ve:
+					-->
+			<!--
+			<test url="http://www.charlottenaturemuseum.org/assets/css/_synced/layerslider/skins/noskin/skin.css" />
+			<test url="http://www.charlottenaturemuseum.org/assets/images/sub_nav_arrow.gif" />
+			-->
+			<test url="http://www.charlottenaturemuseum.org/assets/pdfs/_synced/FamilyMembershipScholarshipForm.pdf" />
+			<test url="http://www.charlottenaturemuseum.org/content/birthdays/resources/4.pdf" />
+			<!--
+			<test url="http://www.charlottenaturemuseum.org/content/blog/photos/thumbs/246.jpg" />
+			<test url="http://www.charlottenaturemuseum.org/content/features/home/thumbs/1.jpg" />
+			<test url="http://www.charlottenaturemuseum.org/favicon.ico" />
+			-->
+			<test url="http://www.charlottenaturemuseum.org/membership/application" />
+			<test url="http://www.charlottenaturemuseum.org/membership/application/renew" />
+			<test url="http://www.charlottenaturemuseum.org/support/donate" />
+
+
+	<securecookie host="^\w" name="^__utm" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

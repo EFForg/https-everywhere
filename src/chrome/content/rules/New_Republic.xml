@@ -17,70 +17,37 @@
 			- info.newrepublic.com
 
 
-	Problematic domains:
+	Problematic hosts in *newrepublic.com:
 
-		- newrepublic.com subdomains:
+		- info *
 
-			- ^	(mismatched, CN: secure.newrepublic.com)
-			- info	(works, akamai)
-			- www *
-
-		- blogs.tnr.com *
-
-	* Works; mismatched, CN: *.gotpantheon.com
-
-
-	Fully covered domains:
-
-		- secure.newrepublic.com
-
-
-	Partially covered subdomains:
-
-		- (www.)newrepublic.com		(→ secure)
-		- blogs.tnr.com			(→ secure.newrepublic.com)
-
-
-	Observed cookie domains:
-
-		- info.newrepublic.com
+	* Hubspot/mismatched
 
 
 	Mixed content:
 
-		- iframe, on:
-
-			- www.newrepublic.com from info.newrepublic.com *
-			- blogs.tnr.com from info.newrepublic.com *
-
-		- Script on blogs.tnr.com from api.spokenlayer.com **
-
-		- css on www.newrepublic.com from www.newrepublic.com *
-
 		- Images, on:
 
-			- info.newrepublic.com from signup.tnr.com ***
-			- www.newrepublic.com from www.newrepublic.com ***
-			- www.newrepublic.com from blogs.tnr.com ***
-			- blogs.tnr.com from www.newrepublic.com ***
+			- info.newrepublic.com from signup.tnr.com *
+			- blogs.tnr.com from www.newrepublic.com *
 
 	* Secured by us
-	** Unsecurable
-	*** Secured by us, doesn't trip MCB anyway
 
 -->
-<ruleset name="New Repubic (partial)">
+<ruleset name="New Republic.com (partial)">
 
 	<target host="newrepublic.com" />
+	<target host="assets.newrepublic.com" />
+	<target host="images.newrepublic.com" />
 	<target host="secure.newrepublic.com" />
 	<target host="www.newrepublic.com" />
-		<!--
-			Pages redirect back:
-						-->
-		<exclusion pattern="^http://(?:(?:www\.)?newrepublic|blogs\.tnr)\.com/(?!favicon\.ico|sites/)" />
 
 
-	<rule from="^http://(?:(?:secure\.|www\.)?newrepublic|blogs\.tnr)\.com/"
-		to="https://secure.newrepublic.com/" />
+	<securecookie host="^\." name="^(?:__cfduid|__qca|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,12 +1,15 @@
 <!--
 	Other GitHub rulesets:
 
+		- Choosealicense.com.xml
+		- Github-Pages.xml
 		- Guag.es.xml
 		- Speaker_Deck.com.xml
 
 
 	CDN buckets:
 
+		- github-images.s3.amazonaws.com
 		- github.global.ssl.fastly.net
 		- a248.e.akamai.net/assets.github.com/
 		- a248.e.akamai.net/camo.github.com/
@@ -14,79 +17,70 @@
 		- github.myshopify.com
 
 
-	Nonfunctional domains:
-
-		- shop.github.com	(redirects to http)
-
-
-	Problematic domains:
-
-		- support.github.com	(works; mismatched, CN: github.com)
-
-
 	Fully covered domains:
 
 		- github.com subdomains:
 
 			- (www.)
-			- assets\d+
-			- cloud		(→ bugs.genivi.org)
-			- f.cloud
-			- codeload
+			- assets[0123]
+			- assets-cdn
+			- bounty
+			- cloud
 			- developer
 			- eclipse
+			- edu
+			- education
 			- enterprise
 			- gist
+			- gist-assets
+			- guides
 			- help
 			- identicons
 			- jobs
 			- mac
 			- mobile
-			- nodeload
 			- octodex
 			- pages
 			- raw
 			- rg3
+			- shop
 			- status
-			- support	(→ ^github.com)
+			- support
+			- training
+			- try
 			- wiki
 			- windows
 
 		- collector.githubapp.com
 
-		- github.io
+		- assets[0-3].githubusercontent.com
+		- camo.githubusercontent.com
+		- raw.githubusercontent.com
+		- render.githubusercontent.com
+
+
+	Insecure cookies are set for these domains:
+
+		- .github.com
+		- status.github.com
 
 -->
 <ruleset name="GitHub">
 
-	<target host="github.com" />
-	<target host="*.github.com" />
-	<target host="github.io" />
-	<target host="*.github.io" />
-	<target host="collector.githubapp.com" />
+	<target host=                     "github.io" />
+	<target host="avatars0.githubusercontent.com" />
+	<target host="avatars1.githubusercontent.com" />
+	<target host="avatars2.githubusercontent.com" />
+	<target host="avatars3.githubusercontent.com" />
+	<target host=     "camo.githubusercontent.com" />
+	<target host=     "raw.githubusercontent.com" />
+	<target host=   "render.githubusercontent.com" />
+	<target host=       "collector.githubapp.com" />
 
 
-	<securecookie host="^(?:.*\.)?github\.com$" name=".+" />
-
-
-	<rule from="^http://((?:assets\d+|f\.cloud|codeload|developer|eclipse|enterprise|gist|help|identicons|jobs|mac|mobile|nodeload|octodex|pages|raw|rg3|status|wiki|windows|www)\.)?github\.com/"
-		to="https://$1github.com/" />
-
-	<rule from="^http://cloud\.github\.com/"
-		to="https://d24z2fz21y4fag.cloudfront.net/" />
-
-	<!--	Server drops path:
-					-->
-	<rule from="^http://support\.github\.com/[^?]*(\?.*)?"
-		to="https://github.com/contact$1" />
-
-	<rule from="^http://collector\.githubapp\.com/"
-		to="https://collector.githubapp.com/" />
-
-	<rule from="^https?://github\.io/"
+	<rule from="^http://github\.io/"
 		to="https://pages.github.com/" />
 
-	<rule from="^http://([^/@:\.]+)\.github\.io/"
-		to="https://$1.github.io/" />
-
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

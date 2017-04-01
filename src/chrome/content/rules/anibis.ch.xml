@@ -1,0 +1,61 @@
+<!--
+	Problematic hosts in *anibis.ch:
+
+		- show *
+
+	* Expired
+
+
+	Fully covered hosts in *anibis.ch:
+
+		- ^
+		- can01
+		- m
+
+
+	Insecure cookies are set for these hosts:
+
+		- m.anibis.ch
+		- show.anibis.ch
+
+-->
+<ruleset name="anibis.ch (partial)">
+
+	<!--	Direct rewrites:
+				-->
+  <target host="anibis.ch"/>
+	<target host="can01.anibis.ch" />
+	<target host="m.anibis.ch"/>
+	<!--target host="show.anibis.ch"/-->
+	<target host="www.anibis.ch"/>
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.anibis\.ch/default\.aspx?wl=1&amp;lng=\w\w" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.anibis\.ch/+(?!\w\w/login\.aspx|ui/Anibis/css-public)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.anibis.ch/fr/automobiles--4/advertlist.aspx" />
+			<test url="http://www.anibis.ch/default.aspx?wl=1&amp;lng=en" />
+			<test url="http://www.anibis.ch/default.aspx?wl=1&amp;lng=fr" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.anibis.ch/fr/login.aspx" />
+			<test url="http://www.anibis.ch/ui/Anibis/css-public?v=" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^m\.anibis\.ch$" name="^(ASP\.NET_SessionId|xm_aniweb)$" /-->
+	<!--securecookie host="^show\.anibis\.ch$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^m\.anibis\.ch$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+</ruleset>

@@ -6,17 +6,43 @@
 
 	* No https
 
+
+	These altnames don't exist:
+
+		- www.ask.openstack.org
+		- www.wiki.openstack.org
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- www from $self ¹
+			- www from openstackreactions.enovance.com ²
+
+	¹ Secured by us
+	² Unsecurable <= dropped
+
 -->
-<ruleset name="OpenStack (partial)">
+<ruleset name="OpenStack.org (partial)">
 
 	<target host="openstack.org" />
-	<target host="*.openstack.org" />
+	<target host="ask.openstack.org" />
+	<target host="review.openstack.org" />
+	<target host="wiki.openstack.org" />
+	<target host="www.openstack.org" />
+	<target host="git.openstack.org" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^ask\.openstack\.org$" name="^(_csrf|sessionid)$" /-->
+	<!--securecookie host="^wiki\.openstack\.org$" name="^uls-previous-languages$" /-->
 
 	<securecookie host="^(?:(?:ask|wiki|www)\.)?openstack\.org$" name=".+" />
 
 
-	<rule from="^http://((?:ask|wiki|www)\.)?openstack\.org/"
-		to="https://$1openstack.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

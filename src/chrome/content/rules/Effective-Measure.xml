@@ -1,30 +1,71 @@
 <!--
-	For problematic rules, see Effective-Measures-mismatches.xml.
+	For other Effective Measure coverage, see Effective-Measures-mismatches.xml.
 
 
-	Nonfunctional subdomains:
+	Problematic hosts in *effectivemeasure.net:
 
-		- login.effectivemeasure.com	(Akamai; 504)
+		- us ¹
+		- za ²
+
+	¹ Cloudfront
+	² Akamai
+
+
+	Fully covered hosts in *effectivemeasure.net:
+
+		- (www.)?
+		- au
+		- au3
+		- in
+		- me
+		- me-cdn
+		- s
+		- us	(→ us3.effectivemeasure.net)
+		- us1
+		- za	(→ za1.effectivemeasure.net)
+		- za1
+
+
+	Insecure cookies are set for these domains:
+
+		- .effectivemeasure.net
 
 -->
-<ruleset name="Effective Measure">
+<ruleset name="Effective Measure.net">
 
-	<target host="*.effectivemeasure.net" />
+	<!--	Direct rewrites:
+				-->
+	<target host="effectivemeasure.net" />
+	<target host="au.effectivemeasure.net" />
+	<target host="au3.effectivemeasure.net" />
+	<target host="in.effectivemeasure.net" />
+	<target host="me.effectivemeasure.net" />
+	<target host="me-cdn.effectivemeasure.net" />
+	<target host="s.effectivemeasure.net" />
+	<target host="us1.effectivemeasure.net" />
+	<target host="www.effectivemeasure.net" />
+	<target host="za1.effectivemeasure.net" />
 
+	<!--	Complications:
+				-->
+	<target host="us.effectivemeasure.net" />
+	<target host="za.effectivemeasure.net" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.effectivemeasure\.net$" name="^vt?$" /-->
 
 	<securecookie host="^\.effectivemeasure\.net$" name=".*" />
 
 
-	<rule from="^http://((?:au3?|in|me|www)\.)effectivemeasure\.net/"
-		to="https://$1effectivemeasure.net/" />
+	<rule from="^http://us\.effectivemeasure\.net/"
+		to="https://us3.effectivemeasure.net/" />
 
-	<!--	za: Akamai	-->
-	<rule from="^https?://za1?\.effectivemeasure\.net/"
+	<rule from="^http://za\.effectivemeasure\.net/"
 		to="https://za1.effectivemeasure.net/" />
 
-	<!--	us: CloudFront.
-				-->
-	<rule from="^https?://us3?\.effectivemeasure\.net/"
-		to="https://us3.effectivemeasure.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

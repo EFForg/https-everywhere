@@ -1,48 +1,53 @@
 <!--
+	Other J-List rulesets:
+
+		- jbox.com.xml
+
+
 	CDN buckets:
 
 		- s3.amazonaws.com/images3.jlist.com/
+		- jlist-images.s3.amazonaws.com
+		- d1ct5r26oaip1n.cloudfront.net
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *jlist.com:
 
-		- feeds.jlist.com	(shows www; mismatched, CN: www.jlist.com)
+		- feeds ᵃ
 
-
-	Partially covered domains:
-
-		- (www.)jbox.com *
-		- (www.)jlist.com *
-
-	* Some pages redirect to http
+	ᵃ Shows ^jlist.com
 
 
-	Fully covered domains:
+	Insecure cookies are set for these domains:
 
-		- images3.jlist.com	(→ s3.amazonaws.com)
-		- support.jlist.com
-
-
-	Mixed content:
-
-		- Images on support.jlist.com from images3.jlist.com.s3.amazonaws.com *
-
-	* Secured by us
+		- .jlist.com
 
 -->
 <ruleset name="JList.com (partial)">
 
-	<target host="jbox.com" />
-	<target host="www.jbox.com" />
+	<!--	Direct rewrites:
+				-->
 	<target host="jlist.com" />
-	<target host="*.jlist.com" />
-		<exclusion pattern="^http://(?:www\.)?j(?:box|list)\.com/(?!account(?:$|[?/])|css/|favicon\.ico|img/|jlist\.ico|js/)" />
+	<target host="support.jlist.com" />
+	<target host="www.jlist.com" />
+
+	<!--	Complications:
+				-->
+	<target host="images3.jlist.com" />
 
 
-	<rule from="^http://(support\.|www\.)?j(box|list)\.com/"
-		to="https://$1j$2.com/" />
+	<!--	not secured by server:
+					-->
+	<!--securecookie host="^\.jlist\.com$" name="^(?:\d+jlist1|affiliateplus_account_code_1|affiliateplus_map_index|frontend|store)$" /-->
+
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\." name="^(?:affiliateplus_account_code_1|affiliateplus_map_index|frontend)$" />
+
 
 	<rule from="^http://images3\.jlist\.com/"
 		to="https://s3.amazonaws.com/images3.jlist.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

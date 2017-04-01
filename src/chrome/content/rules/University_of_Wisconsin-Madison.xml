@@ -5,53 +5,109 @@
 		- (www.)aos *
 		- www.geology		(shows geoscience; mismatched, CN: geoscience.wisc.edu)
 		- geoscience		(403/404)
+		- library		(mismatched, CN: www.library.wisc.edu)
 		- depot.library *
 		- digital.library
 		- m.library **
 		- madcat.library
-		- search.library	(redirects to wayf login)
 		- studyrooms.library **
 		- uwdc.library **
 		- xerxes.library
-		- (www.)today ***
+		- news ***
+		- www.today		(mismatched, CN: today.wisc.edu)
 		- vip ***
 		- www *
 
 	* Times out
 	** Redirects to www.library
-	*** Shows krakatau.doit
+	*** Shows (servername).doit
 
 
 	Problematic subdomains:
 
 		- krakatau.doit		(expired, self-signed)
 		- services.ldap		(weak crypto)
-
+		- ssc			(breaks Google site search)
+		- www.ssec		(breaks Google site search)
+		- www.uhs		(breaks Google site search)
 
 	Partially covered subdomains:
 
 		- (www.)library		(at least the homepage redirects to http)
+		- pages.cs ²
+		- www.doit.wisc.edu	(search page redirects to HTTP)
+
+	² Personal pages 404
 
 
 	Fully covered subdomains:
 
+		- cs subdomains:
+
+			- condor-wiki
+			- htcondor-wiki
+			- research
+			- www
+
+		- discovery
+		- go
+		- housing		(requires redirect to www.housing.wisc.edu)
+		- kb
 		- learnuw
 		- ecs.library
+		- www.library		(requires redirect to www.library.wisc.edu)
 		- login
+		- www.math
 		- my
 		- mywebspace
 		- wayf
 		- wiscmail
+
+
+	Mixed content:
+
+		- Images on htcondor-wiki.cs from research.cs *
+
+	* Secured by us
 
 -->
 <ruleset name="University of Wisconsin-Madison">
 
 	<target host="*.wisc.edu" />
 	<target host="*.library.wisc.edu" />
-		<exclusion pattern="^http://(?:www\.)?library\.wisc\.edu/(?!css/|images/)" />
 
+	<!-- 404: Individual users must enable SSL for their personal pages. -->
+	<exclusion pattern="^http://pages\.cs\.wisc\.edu/+~" />
+	<test url="http://pages.cs.wisc.edu/~hartzheim" />
 
-	<rule from="^http://(learnuw|(?:ecs\.|www\.)?library|login|my|mywebspace|wayf|wiscmail)\.wisc\.edu/"
-		to="https://$1.wisc.edu/" />
+	<rule from="^http://((?:condor-wiki|htcondor-wiki|pages|research)\.cs|discovery|(www\.)?doit|go|kb|learnuw|(ecs|search)\.library|login|my|mywebspace|wayf|wiscmail)\.wisc\.edu/"
+	to="https://$1.wisc.edu/" />
+
+	<test url="http://condor-wiki.cs.wisc.edu/" />
+	<test url="http://htcondor-wiki.cs.wisc.edu/" />
+	<test url="http://pages.cs.wisc.edu/" />
+	<test url="http://discovery.wisc.edu/" />
+	<test url="http://doit.wisc.edu/" />
+	<test url="http://www.doit.wisc.edu/" />
+	<test url="http://go.wisc.edu/" />
+	<test url="http://kb.wisc.edu/" />
+	<test url="http://learnuw.wisc.edu/" />
+	<test url="http://ecs.library.wisc.edu/" />
+	<test url="http://search.library.wisc.edu/" />
+	<test url="http://login.wisc.edu/" />
+	<test url="http://my.wisc.edu/" />
+	<test url="http://mywebspace.wisc.edu/" />
+	<test url="http://wayf.wisc.edu/" />
+	<test url="http://wiscmail.wisc.edu/" />
+
+	<!-- Require redirect to www.* to use SSL -->
+	<rule from="^http://(?:www\.)?(cs|housing|library|math)\.wisc\.edu/"
+	to="https://www.$1.wisc.edu/" />
+
+	<test url="http://cs.wisc.edu/" />
+	<test url="http://housing.wisc.edu/" />
+	<test url="http://library.wisc.edu/" />
+	<test url="http://www.library.wisc.edu/" />
+	<test url="http://math.wisc.edu/" />
 
 </ruleset>

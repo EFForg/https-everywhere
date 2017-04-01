@@ -1,6 +1,35 @@
-<ruleset name="Ziggo">
-  <target host="*.ziggo.nl" />
-  <target host="*.ziggo.com" />
+<!--
+	Other Ziggo rulesets:
 
-  <rule from="^http://(?:www\.)?ziggo\.(nl|com)/" to="https://www.ziggo.$1/"/>
+		- Ziggo.com.xml
+		- Ziggo_Zakelijk.nl.xml
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.ziggo.nl
+
+-->
+<ruleset name="Ziggo.nl">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ziggo.nl" />
+	<target host="mail.ziggo.nl" />
+	<target host="www.ziggo.nl" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<test url="http://www.ziggo.nl/klantenservice/administratief/service/accessoires-shop/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.ziggo\.nl$" name="^(?:JSESSIONID|renderid)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

@@ -1,0 +1,81 @@
+<!--
+	Nonfunctional subdomains:
+
+		- acroe ¹
+		- membres-timc ²
+		- mosig ³
+		- operette ⁴
+		- scci ⁴
+		- tima ⁵
+		- ufrima ¹
+		- www ¹
+
+	¹ Refused
+	² Shows trombi-timc
+	³ Shows brouet
+	⁴ Differs from http
+	⁵ Redirects to http
+
+
+	Problematic subdomains:
+
+		- brouet ¹
+		- docforge ¹
+		- intranet-ljk ¹
+		- ljk ¹
+		- msiam ²
+		- www-ljk ¹
+		- www-lmc ²
+
+	¹ Self-signed
+	² Mismatched
+
+
+	Partially covered subdomains:
+
+		- cmp *
+
+	* Avoiding broken MCB
+
+
+	Fully covered subdomains:
+
+		- c-vpn-pub
+		- forge
+		- iam
+		- mi2s
+		- msiam		(→ iam)
+		- trombi-timc
+
+
+	Mixed content:
+
+		- css on cmp from $self ¹
+
+		- Images, on:
+
+			- cmp from $self ¹
+			- ljk, www-ljk from www-ljk
+
+		- favicon on cmp from $self ¹
+
+	¹ Secured by us
+	² Not secured by us <= mismatched
+
+-->
+<ruleset name="Imag.fr (partial)">
+
+	<target host="*.imag.fr" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://cmp\.imag\.fr/+(?!_img/|\w+\.jpg|favicon\.ico|style\.css)" />
+
+
+	<rule from="^http://msiam\.imag\.fr/"
+		to="https://iam.imag.fr/" />
+
+	<rule from="^http://(c-vpn-pub|cmp|forge|iam|mi2s|trombi-timc)\.imag\.fr/"
+		to="https://$1.imag.fr/" />
+
+</ruleset>

@@ -2,25 +2,30 @@
 	For rules causing false/broken MCB, see Spring.io-falsemixed.xml.
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *spring.io:
 
 		- projects
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains and hosts:
 
-		- (www.)
+		- .spring.io
+		- forum.spring.io
 
 
 	Mixed content:
 
 		- css, on forum from:
 
-			- forum *
-			- fonts.googleapis.com *
 			- netdna.bootstrapcdn.com *
+			- fonts.googleapis.com *
+			- $self *
 
-		- Images, on forum from forum *
+		- Images, on:
+
+			- ^ from graph.facebook.com *
+			- ^ from i.stack.imgur.com *
+			- forum from forum *
 
 	* Secured by us
 
@@ -28,10 +33,19 @@
 <ruleset name="Spring.io (partial)">
 
 	<target host="spring.io" />
+	<target host="jira.spring.io" />
 	<target host="www.spring.io" />
 
 
-	<rule from="^http://(www\.)?spring\.io/"
-		to="https://$1spring.io/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.spring\.io$" name="^(__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^forum\.spring\.io$" name="^(bblastactivity|bblastvisit|bbsessionhash)$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

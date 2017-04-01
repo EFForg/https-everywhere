@@ -1,56 +1,117 @@
 <!--
+	American Physical Society
+
+
 	CDNs:
 
+		- d22izw7byeupn1.cloudfront.net
 		- cdn.physorg.com	(voxcdn.com)
 		- s.ph-cdn.com		(voxcdn.com)
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *aps.org:
 
-		- counter
-		- feeds
-		- physics
-		- pr[bel]
-		- prola
+		- counter ⁴
+		- feeds ᵈ
 
-
-	Partially covered subdomains:
-
-		- (www.)
-		- publish
+	⁴ 404
+	⁴ Dropped
 
 
-	Fully covered subdomains:
+	Problematic hosts in *aps.org:
 
-		- authors
-		- referees
-		- tesseract-assets		
+		- careers ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .aps.org
+		- authors.aps.org
+		- journals.aps.org
+		- librarians.aps.org
+		- physics.aps.org
+		- referees.aps.org
+		- store.aps.org
+		- www.aps.org
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- careers, www from ^aps.org ˢ
+			- careers from www.aps.org ˢ
+			- www from $self ˢ
+
+		- favicon on link from publish.aps.org ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="American Physical Society (partial)" platform="mixedcontent">
+<ruleset name="APS.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="aps.org" />
-	<target host="*.aps.org" />
-		<exclusion pattern="^http://(?:counter|feeds|physics|pr[bel]|prola)\." />
-		<!--
-			404 over https.
+	<target host="authors.aps.org" />
+	<target host="journals.aps.org" />
+	<target host="librarians.aps.org" />
+	<target host="link.aps.org" />
+	<target host="physics.aps.org" />
+	<target host="prb.aps.org" />
+	<target host="pre.aps.org" />
+	<target host="prl.aps.org" />
+	<target host="prola.aps.org" />
+	<target host="publish.aps.org" />
+	<target host="referees.aps.org" />
+	<target host="store.aps.org" />
+	<target host="www.aps.org" />
+
+		<!--	Sets cookie without Secure
+							-->
+		<!--test url="http://authors.aps.org/Submissions/login/new" /-->
+
+	<!--	Complications:
+				-->
+	<target host="feeds.aps.org" />
+
+		<!--	[/\w]$ 404s:
 					-->
-		<exclusion pattern="^http://publish\.aps\.org/(?:image|stylesheet)s/" />
+		<exclusion pattern="^http://feeds\.aps\.org/(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://feeds.aps.org/favicon.ico" />
+			<test url="http://feeds.aps.org/index.htm" />
+			<test url="http://feeds.aps.org/index.html" />
+			<test url="http://feeds.aps.org/index.php" />
 
 
-	<rule from="^http://(?:www\.)?aps\.org/(commonspot|elementadmin|[\w_/-]+images|style|templates)/"
-		to="https://www.aps.org/$1" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.aps\.org$" name="^aps_session_id$" /-->
+	<!--securecookie host="^authors\.aps\.org$" name="^_submissions_session$" /-->
+	<!--securecookie host="^(?:journals|librarians)\.aps\.org$" name="^rack\.session$" /-->
+	<!--securecookie host="^physics\.aps\.org$" name="^physics_session$" /-->
+	<!--securecookie host="^referees\.aps\.org$" name="^_Referrals_session$" /-->
+	<!--securecookie host="^store\.aps\.org$" name="^(?:_landing_page|_orig_referrer|cart_sig)$" /-->
+	<!--securecookie host="^www\.aps\.org$" name="^(?:APSSRV|CFID|CFTOKEN)$" /-->
 
-	<rule from="^http://(\w+)\.aps\.org/(files|images|misc|sites/[\w\.-]+themes|style(?:sheets)?)/"
-		to="https://$1.aps.org/$2" />
+	<securecookie host="^(?!feeds\.)\w" name="." />
 
-	<rule from="^http://(author|referee|tesseract-asset)s\.aps\.org/"
-		to="https://$1s.aps.org/" />
 
-	<rule from="^http://publish\.aps\.org/(login|signup)"
-		to="https://publish.aps.org/$1" />
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://feeds\.aps\.org/.*"
+		to="https://journals.aps.org/feeds" />
 
-	<rule from="^http://publish\.aps\.org/favicon\.ico"
-		to="https://www.aps.org/favicon.ico/" />
+		<test url="http://feeds.aps.org/?" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

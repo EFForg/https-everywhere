@@ -1,0 +1,42 @@
+<!--
+	(www.)?: dropped
+
+
+	Problematic subdomains:
+
+		- aws *
+		- manage *
+		- resweb *
+
+	* Insecure renegotiation
+
+
+	Insecure cookies are set for these hosts:
+
+		- aws.passkey.com
+		- manage.passkey.com
+		- resweb.passkey.com
+
+-->
+<ruleset name="Passkey.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="aws.passkey.com" />
+	<target host="manage.passkey.com" />
+	<target host="resweb.passkey.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^aws\.passkey\.com$" name="^(?:BIGipServer[\w-]+|JSESSIONID)$" /-->
+	<!--securecookie host="^manage\.passkey\.com$" name="^(?:BIGipServer[\w-]+|ServerID|TS[\da-f]{8})$" /-->
+	<!--securecookie host="^resweb\.passkey\.com$" name="^(?:BIGipServer[\w-]+|JSESSIONID|TS[\da-f]{8})$" /-->
+
+	<securecookie host="^(?:aws|manage|resweb)\.passkey\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

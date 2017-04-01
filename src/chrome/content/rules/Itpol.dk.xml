@@ -1,6 +1,22 @@
-<ruleset name="Itpol.dk (default off)" default_off="expired certificate" platform="cacert">
-  <target host="itpol.dk" />
-  <target host="www.itpol.dk" />
+<!--
+	Problematic domains
 
-  <rule from="^http://(www\.)?itpol\.dk/" to="https://www.itpol.dk/" />
+		- admin ¹²
+		- pad ¹³
+		- wiki ¹³
+
+	¹: Redirects to ^, yet HSTS includeSubDomains is specified for itpol.dk.
+	²: 'Unknown protocol' on HELLO
+	³: Bad CN in cert.
+-->
+<ruleset name="Itpol.dk">
+
+	<target host="it-pol.dk" />
+	<target host="www.it-pol.dk" />
+	<target host="itpol.dk" />
+	<target host="www.itpol.dk" />
+
+	<rule from="^http://(www\.)?it-?pol\.dk/"
+		to="https://$1itpol.dk/" />
+
 </ruleset>

@@ -7,12 +7,15 @@
 	Problematic domains:
 
 		- (www.)blog.fua.de *
+		- (www.)?eam.fua.de ᶜ
+
 		- (www.)blog.uni-erlangen.de *
 		- (www.)fau.eu			(works; mismatched, CN: www.uni-erlangen.org)
 		- u-erlangen.org ****
 		- www.u-erlangen.org ***
 		- blogs.uni-erlangen.de *
 		- www.blogs.uni-erlangen.de **
+		- (www.)?eam.uni-erlangen.de ᶜ
 		- (www.)home.uni-erlangen.de *
 		- uni-erlangen.com ***
 		- www.uni-erlangen.com ****
@@ -26,51 +29,72 @@
 		- www.university-nuremberg.de ****
 
 	* Prints "Fehler beim Aufbau einer Datenbankverbindung", valid cert
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
 	** Prints "Fehler beim Aufbau einer Datenbankverbindung", mismatched
 	*** Works; mismatched, self-signed
 	**** Works, self-signed
 
 
-	Fully covered domains:
+	Insecure cookies are set for these hosts:
 
-		- fau.de subdomains:
+		- eam.fau.de
+		- www.eam.fau.de
+		- eam.uni-erlangen.de
+		- www.eam.uni-erlangen.de
 
-			- (www.)
-			- (www.)blog	(→ blogs)
-			- (www.)blogs
-			- www1.cs
-			- (www.)eam
-			- ftp
 
-		- uni-erlangen.de subdomains:
+	Mixed content:
 
-			- (www.)
-			- (www.)blog		(→ blogs.fau.de)
-			- (www.)blogs		(→ blogs.fau.de)
-			- (www.)eam
-			- (www.)home		(→ blogs.fau.de)
-			- www1.informatik
+		- Bugs, on:
+
+			- (www.)?eam.fau.de, (www.)?eam.uni-erlangen.de from infovm9-8.rrze.uni-erlangen.de
 
 -->
 <ruleset name="University of Erlangen-Nuremberg (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="fau.de" />
-	<target host="*.fau.de" />
+	<target host="blogs.fau.de" />
+	<target host="www.blogs.fau.de" />
+	<target host="www1.cs.fau.de" />
+	<!--target host="eam.fau.de" /-->
+	<!--target host="www.eam.fau.de" /-->
+	<target host="ftp.fau.de" />
+	<target host="www.fau.de" />
+	<target host="ftp.rrze.uni-erlangen.de" />
+	<target host="ftp.uni-erlangen.de" />
+
 	<target host="uni-erlangen.de" />
-	<target host="*.uni-erlangen.de" />
+	<!--target host="eam.uni-erlangen.de" /-->
+	<!--target host="www.eam.uni-erlangen.de" /-->
+	<target host="www1.informatik.uni-erlangen.de" />
+	<target host="zuv.cms.rrze.uni-erlangen.de" />
+	<target host="www.uni-erlangen.de" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.fau.de" />
+	<target host="www.blog.fau.de" />
+
+	<target host="blog.uni-erlangen.de" />
+	<target host="www.blog.uni-erlangen.de" />
+	<target host="blogs.uni-erlangen.de" />
+	<target host="www.blogs.uni-erlangen.de" />
+	<target host="home.uni-erlangen.de" />
+	<target host="www.home.uni-erlangen.de" />
 
 
-	<securecookie host="^(?:www\.)?eam\.fau\.de$" name=".+" />
-	<securecookie host="^(?:www\.)?eam\.uni-erlangen\.de$" name=".+" />
+	<!--securecookie host="^(?:www\.)?eam\.fau\.de$" name="^fe_typo_user$" /-->
+	<!--securecookie host="^(?:www\.)?eam\.uni-erlangen\.de$" name="^fe_typo_user$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://((?:(?:www\.)?blogs|www1\.cs|www|ftp)\.)?fau\.de/"
-		to="https://$1fau.de/" />
-
-	<rule from="^http://(?:www\.)?blog(?:\.fau|(?:home|s?)\.uni-erlangen)\.de/"
+	<rule from="^http://(?:www\.)?(?:blog\.fau|(?:blogs?|home)\.uni-erlangen)\.de/"
 		to="https://blogs.fau.de/" />
 
-	<rule from="^http://((?:(?:www\.)?eam|www1\.informatik|www)\.)?uni-erlangen\.de/"
-		to="https://$1uni-erlangen.de/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

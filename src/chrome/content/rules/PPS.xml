@@ -1,61 +1,162 @@
+<!--
+	Insecure cookies are set for these hosts: ᶜ
+
+		- partipirate.ch
+		- ge.partipirate.ch
+		- sg.partipirate.ch
+		- tg.partipirate.ch
+		- vd.partipirate.ch
+		- www.partipirate.ch
+
+		- partitopirata.ch
+		- www.partitopirata.ch
+
+		- piratenpartei.ch
+		- be.piratenpartei.ch
+		- chat.piratenpartei.ch
+		- forum.piratenpartei.ch
+		- lu.piratenpartei.ch
+		- my.piratenpartei.ch
+		- projects.piratenpartei.ch
+		- registration.piratenpartei.ch
+		- service.piratenpartei.ch
+		- sg.piratenpartei.ch
+		- tg.piratenpartei.ch
+		- vs.piratenpartei.ch
+		- www.piratenpartei.ch
+		- zg.piratenpartei.ch
+		- zh.piratenpartei.ch
+		- stadt.zh.piratenpartei.ch
+		- zs.piratenpartei.ch
+
+		- pirateparty.ch
+		- www.pirateparty.ch
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images, on;
+
+			- ge.partipirate.ch from $self ˢ
+			- www.partitopirata.ch from www.cdt.ch ʳ
+			- www.partitopirata.ch from icons.iconarchive.com ʰ
+			- vs.piratenpartei.ch from $self ˢ
+			- stadt.zh.piratenpartei.ch from zh.piratenpartei.ch ˢ
+			- stadt.zh.piratenpartei.ch from $self ˢ
+
+	ʰ Unsecurable <= redirects to http
+	ʰ Unsecurable <= refused
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
 <ruleset name="PPS">
-	<target host="www.piratenpartei.ch"/>
-	<target host="*.piratenpartei.ch"/>
-	<target host="www.pirateparty.ch"/>
-	<target host="*.pirateparty.ch"/>
-	<target host="www.partipirate.ch"/>
-	<target host="*.partipirate.ch"/>
-	<target host="www.partitopirata.ch"/>
-	<target host="*.partitopirata.ch"/>
-	<exclusion pattern="^http://bl\.piratenpartei\.ch/"/>
-	<exclusion pattern="^http://bl\.partipirate\.ch/"/>
-	<exclusion pattern="^http://bl\.partitopirata\.ch/"/>
-	<exclusion pattern="^http://bl\.pirateparty\.ch/"/>
-	<exclusion pattern="^http://bs\.piratenpartei\.ch/"/>
-	<exclusion pattern="^http://bs\.partipirate\.ch/"/>
-	<exclusion pattern="^http://bs\.partitopirata\.ch/"/>
-	<exclusion pattern="^http://bs\.pirateparty\.ch/"/>
-	<exclusion pattern="^http://ag\.piratenpartei\.ch/"/>
-	<exclusion pattern="^http://ag\.partipirate\.ch/"/>
-	<exclusion pattern="^http://ag\.partitopirata\.ch/"/>
-	<exclusion pattern="^http://ag\.pirateparty\.ch/"/>
-	<exclusion pattern="^http://zh\.piratenpartei\.ch/"/>
-	<exclusion pattern="^http://zh\.partipirate\.ch/"/>
-	<exclusion pattern="^http://zh\.partitopirata\.ch/"/>
-	<exclusion pattern="^http://zh\.pirateparty\.ch/"/>
-	<exclusion pattern="^http://projects\.partipirate\.ch/"/>
-	<exclusion pattern="^http://projects\.pirateparty\.ch/"/>
-	<exclusion pattern="^http://projects\.partitopirata\.ch/"/>
-	<exclusion pattern="^http://info\.piratenpartei\.ch/"/>
-	<exclusion pattern="^http://info\.partipirate\.ch/"/>
-	<exclusion pattern="^http://info\.partitopirata\.ch/"/>
-	<exclusion pattern="^http://info\.pirateparty\.ch/"/>
-	<exclusion pattern="^http://lists\.piratenpartei\.ch/"/>
-	<exclusion pattern="^http://lists\.partipirate\.ch/"/>
-	<exclusion pattern="^http://lists\.partitopirata\.ch/"/>
-	<exclusion pattern="^http://lists\.pirateparty\.ch/"/>
-	<rule from="^http://([^/:@]*)\.piratenpartei\.ch/"
-			to="https://$1.piratenpartei.ch/"/>
-	<rule from="^http://([^/:@]*)\.pirateparty\.ch/"
-			to="https://$1.pirateparty.ch/"/>
-	<rule from="^http://([^/:@]*)\.partipirate\.ch/"
-			to="https://$1.partipirate.ch/"/>
-	<rule from="^http://([^/:@]*)\.partitopirata\.ch/"
-			to="https://$1.partitopirata.ch/"/>
-	<rule from="^https://([^/:@]*)\.piraten-partei\.ch/"
-			to="https://$1.piratenpartei.ch/"/>
-	<rule from="^http://([^/:@]*)\.piraten-partei\.ch/"
-			to="https://$1.piratenpartei.ch/"/>
-	<rule from="^https://([^/:@]*)\.parti-pirate\.ch/"
-			to="https://$1.partipirate.ch/"/>
-	<rule from="^http://([^/:@]*)\.parti-pirate\.ch/"
-			to="https://$1.partipirate.ch/"/>
-	<rule from="^https://([^/:@]*)\.partito-pirata\.ch/"
-			to="https://$1.partitopirata.ch/"/>
-	<rule from="^http://([^/:@]*)\.partito-pirata\.ch/"
-			to="https://$1.partitopirata.ch/"/>
-	<rule from="^https://([^/:@]*)\.pirate-party\.ch/"
-			to="https://$1.pirateparty.ch/"/>
-	<rule from="^http://([^/:@]*)\.pirate-party\.ch/"
-			to="https://$1.pirateparty.ch/"/>
+
+	<!--	Direct rewrites:
+				-->
+	<target host="partipirate.ch" />
+	<target host="*.partipirate.ch" />
+	<target host="partitopirata.ch" />
+	<target host="*.partitopirata.ch" />
+	<target host="piratenpartei.ch" />
+	<target host="*.piratenpartei.ch" />
+	<target host="pirateparty.ch" />
+	<target host="*.pirateparty.ch" />
+
+		<exclusion pattern="^http://(?:info|projects)\.p(?:artipirate|artitopirata|irateparty)\.ch/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://info.partipirate.ch/" />
+			<test url="http://info.partitopirata.ch/" />
+			<test url="http://info.pirateparty.ch/" />
+
+			<test url="http://projects.partipirate.ch/" />
+			<test url="http://projects.partitopirata.ch/" />
+			<test url="http://projects.pirateparty.ch/" />
+
+		<test url="http://ge.partipirate.ch/" />
+		<test url="http://sg.partipirate.ch/" />
+		<test url="http://tg.partipirate.ch/" />
+		<test url="http://vd.partipirate.ch/" />
+		<test url="http://www.partipirate.ch/" />
+
+		<test url="http://www.partiopirata.ch/" />
+		<test url="http://www.pirateparty.ch/" />
+
+		<test url="http://be.piratenpartei.ch/" />
+		<test url="http://chat.piratenpartei.ch/" />
+		<test url="http://forum.piratenpartei.ch/" />
+		<test url="http://lu.piratenpartei.ch/" />
+		<test url="http://my.piratenpartei.ch/" />
+		<test url="http://projects.piratenpartei.ch/" />
+		<test url="http://registration.piratenpartei.ch/" />
+		<test url="http://service.piratenpartei.ch/" />
+		<test url="http://sg.piratenpartei.ch/" />
+		<test url="http://tg.piratenpartei.ch/" />
+		<test url="http://vs.piratenpartei.ch/" />
+		<test url="http://zg.piratenpartei.ch/" />
+		<test url="http://zh.piratenpartei.ch/" />
+		<test url="http://stadt.zh.piratenpartei.ch/" />
+		<test url="http://winterthur.zh.piratenpartei.ch/" />
+		<test url="http://zs.piratenpartei.ch/" />
+
+	<!--	Complications:
+				-->
+	<target host="parti-pirate.ch" />
+	<target host="*.parti-pirate.ch" />
+	<target host="partito-pirata.ch" />
+	<target host="*.partito-pirata.ch" />
+	<target host="pirate-party.ch" />
+	<target host="*.pirate-party.ch" />
+	<target host="piraten-partei.ch" />
+	<target host="*.piraten-partei.ch" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:(?:ge|sg|tg|www)\.)?partipirate\.ch$" name="^uid$" /-->
+	<!--securecookie host="^vd\.partipirate\.ch$" name="^(?:PHPSESSID|uid)$" /-->
+
+	<!--securecookie host="^(?:www\.)?partitopirata\.ch$" name="^uid$" /-->
+
+	<!--securecookie host="^(?:(?:be|chat|lu|my|projects|sg|tg|www|zg|stadt\.zh|zs)\.)?piratenpartei\.ch$" name="^uid$" /-->
+	<!--securecookie host="^(?:forum|zh)\.piratenpartei\.ch$" name="^(?:PHPSESSID|uid)$" /-->
+	<!--securecookie host="^(?:registration|service)\.piratenpartei\.ch$" name="^(?:ASP\.NET_SessionId|uid)$" /-->
+	<!--securecookie host="^(?:vs)\.piratenpartei\.ch$" name="^(?:pll_language|uid)$" /-->
+
+	<!--securecookie host="^(?:www\.)?pirateparty\.ch$" name="^uid$" /-->
+
+
+	<rule from="^http://([^/]+\.)?parti-pirate\.ch/"
+		to="https://$1partipirate.ch/" />
+
+		<test url="http://www.parti-pirate.ch/" />
+
+	<rule from="^http://winterthur\.zh\.p(?:artipirate|artitopirata|irateparty)\.ch/"
+		to="https://winterthur.zh.piratenpartei.ch/" />
+
+		<test url="http://winterthur.zh.partipirate.ch/" />
+		<test url="http://winterthur.zh.partitopirata.ch/" />
+		<test url="http://winterthur.zh.pirateparty.ch/" />
+
+	<rule from="^http://([^/]+\.)?partito-pirata\.ch/"
+		to="https://$1partitopirata.ch/" />
+
+		<test url="http://www.partito-pirata.ch/" />
+
+	<rule from="^http://([^/]+\.)?pirate-party\.ch/"
+		to="https://$1pirateparty.ch/" />
+
+		<test url="http://www.pirate-party.ch/" />
+
+	<rule from="^http://([^/]+\.)?piraten-partei\.ch/"
+		to="https://$1piratenpartei.ch/" />
+
+		<test url="http://www.piraten-partei.ch/" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

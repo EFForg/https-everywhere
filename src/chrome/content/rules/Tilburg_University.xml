@@ -1,82 +1,53 @@
 <!--
-	Problematic domains:
+	Insecure cookies are set for these hosts:
 
-		- www.kub.nl *
-		- tilburguniversity.nl		(400; mismatched, CN: images.uvt.nl)
-		- www.tilburguniversity.nl	(redirects to osso)
-
-		- uvt.nl subdomains:
-
-			- ^ *
-			- oudesite	($ redirects to osso)
-			- saml		(shows different data)
-			- www		(redirects to osso)
-
-	* Mismatched, CN: www.tilburguniversity.edu
-
-
-	Partially covered domains:
-
-		- oudesite.uvt.nl
-
-
-	Fully covered domains:
-
-		- www.kub.nl			(→ www.tilburguniversity.edu)
-		- (www.)tilburguniversity.edu
-		- edit.tilburguniversity.edu
-		- (www.)tilburguniversity.nl	(→ www.tilburguniversity.edu)
-
-		- uvt.nl subdomains:
-
-			- (www.)	(→ www.tilburguniversity.edu)
-			- cooper-redir
-			- (www.)curry
-			- (www.)fibonacci
-			- edit.productie.gx
-			- www.productie.gx
-			- (www.)hermite
-			- osso
-			- osso...:4443
-			- sso
-			- stuwww
+		- www.tilburguniversity.edu
 
 -->
-<ruleset name="Tilburg University (partial)">
+<ruleset name="Tilburg University">
 
+	<target host="kub.nl" />
 	<target host="www.kub.nl" />
+
 	<target host="tilburguniversity.edu" />
-	<target host="*.tilburguniversity.edu" />
+	<target host="edit.tilburguniversity.edu" />
+	<target host="www.tilburguniversity.edu" />
+
 	<target host="tilburguniversity.nl" />
 	<target host="www.tilburguniversity.nl" />
+
 	<target host="uvt.nl" />
-	<target host="*.uvt.nl" />
-		<exclusion pattern="^http://oudesite\.uvt\.nl/(?!imweb2/)" />
+	<target host="asterix.uvt.nl" />
+	<target host="curry.uvt.nl" />
+	<target host="www.curry.uvt.nl" />
+	<target host="fibonacci.uvt.nl" />
+	<target host="www.fibonacci.uvt.nl" />
+	<target host="edit.productie.gx.uvt.nl" />
+	<target host="www.productie.gx.uvt.nl" />
+	<target host="hermite.uvt.nl" />
+	<target host="www.hermite.uvt.nl" />
+	<target host="osso.uvt.nl" />
+	<target host="oudesite.uvt.nl" />
+	<target host="rechten.uvt.nl" />
+	<target host="saml.uvt.nl" />
+	<target host="sso.uvt.nl" />
+	<target host="stuwww.uvt.nl" />
+	<target host="www.uvt.nl" />
 
 
-	<securecookie host="^www\.tilburguniversity\.edu$" name=".+" />
-	<securecookie host="^(?:sso|stuwww)\.uvt\.nl$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.tilburguniversity\.edu$" name="^route$" /-->
 
+	<securecookie host="^\w" name="." />
 
-	<rule from="^http://www\.kub\.nl/[^?]*(\?.*)?"
-		to="https://www.tilburguniversity.edu/nl/alumni/$1" />
-
-	<rule from="^http://(www\.)?tilberguniversity\.edu/"
-		to="https://$1tilberguniversity.edu/" />
-
-	<rule from="^http://edit\.tilburguniversity\.edu/"
-		to="https://edit.tilburguniversity.edu/" />
-
-	<rule from="^http://(?:www\.)?tilberguniversity\.nl/[^?]*(\?.*)?"
-		to="https://www.tilberguniversity.edu/$1" />
-
-	<rule from="^http://(?:www\.)?uvt\.nl/[^?]*(\?.*)?"
-		to="https://www.tilburguniversity.edu/nl$1" />
-
-	<rule from="^http://(cooper-redir|(?:www\.)?(?:curry|fibonacci|hermite)|(?:edit|www)\.productie\.gx|o?sso|oudesite|stuwww)\.uvt\.nl/"
-		to="https://$1.uvt.nl/" />
 
 	<rule from="^http://osso\.uvt\.nl:4443/"
 		to="https://osso.uvt.nl:4443/" />
+
+		<test url="http://osso.uvt.nl:4443/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

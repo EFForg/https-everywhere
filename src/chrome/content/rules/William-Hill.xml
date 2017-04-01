@@ -12,44 +12,99 @@
 		- jobs-williamhill.com		(self-signed; shows Apache status)
 		- (www.)williamhillmedia.com	(times out)
 		- careers.williamhillplc.com	(interrupted)
-		- www.williamhillplc.com	(cert: www2.myinvestis.com, expired, self-signed; ssl_error_handshake_failure_alert)
+		- www.williamhillplc.com	(Refused)
 
 
-	Fully covered domains:
+	Problematic hosts in *williamhill.com:
 
-		- cmscdn.staticcache.org
+		- ^ ¹
+		- bingo ¹
+		- casino ¹
+		- financials ¹
+		- games ¹
+		- gaming ²
+		- news ¹
+		- poker ¹
+		- vegas ¹
+		- whdn		(400
 
-		- williamhill.com subdomains:
+	¹ Mismatched
+	² Server sends no certificate chain, see https://whatsmychaincert.com
 
-			- files
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .williamhill.com
+		- ads2.williamhill.com
+		- sports.williamhill.com
+		- www.williamhill.com
+
+
+	Mixed content:
+
+		- css on casino, games, poker from whdn.williamhill.com
+
+		- Images, on:
+
+			- auth, casino, games, poker, www from whdn.williamhill.com *
+
+	* Secured by us
 
 -->
-<ruleset name="William Hill (partial)" platform="mixedcontent">
+<ruleset name="William Hill.com (partial)">
 
-	<target host="cmscdn.staticcache.org" />
+	<!--	Direct rewrites:
+				-->
+	<target host="ads2.williamhill.com" />
+	<target host="auth.williamhill.com" />
+	<target host="cachemobile.williamhill.com" />
+	<target host="files.williamhill.com" />
+	<!--target host="gaming.williamhill.com" /-->
+	<target host="mobilegaming.williamhill.com" />
+	<target host="scratchcards.williamhill.com" />
+	<target host="secdn.williamhill.com" />
+	<target host="serve.williamhill.com" />
+	<target host="sports.williamhill.com" />
+	<target host="www.williamhill.com" />
+
+	<!--	Complications:
+				-->
 	<target host="williamhill.com" />
-	<target host="*.williamhill.com" />
+	<target host="cacheserve.williamhill.com" />
+	<target host="whdn.williamhill.com" />
+
+		<!--	At least some pages redirect to http.
+
+			Exceptions:
+					-->
+		<exclusion pattern="^http://sports\.williamhill\.com/(?!acc/)" />
+
+			<test url="http://sports.williamhill.com/bet/en-gb" />
+			<test url="http://sports.williamhill.com/bet/en-gb/betting/y/5/Football.html" />
+			<test url="http://sports.williamhill.com/bet/en-gb/betting/y/9/Horse%2dRacing.html" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<test url="http://ads2.williamhill.com/redirect.aspx?pid=&amp;lpid=&amp;bid=" />
 
 
-	<!--
-		Tracking cookies:
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.williamhill\.com$" name="^(CSRF_COOKIE|SQ_SYSTEM_SESSION|banner_click|clickinfo|cust_lang|cust_login|cust_prefs|exp_last_activity|exp_last_visit|exp_tracker|source_NR|vars_info|vegas_visit|whUserData|zname_extension)$" /-->
+	<!--securecookie host="^(sports)?\.williamhill\.com$" name="^TS[\da-f]{8}$" /-->
+	<!--securecookie host="^ads2\.williamhill\.com$" name="^NetRefer(?:_CookieUniTrack_C|SPS)" /-->
+	<!--securecookie host="^(?:sports|www)\.williamhill\.com$" name="^TS[\da-f]{8}_\d\d$" /-->
+
+	<!--	Tracking cookies:
 					-->
 	<securecookie host="^\.williamhill\.com$" name="^(?:banner_(?:domain)?click|clickinfo|fd_click|exp_\w+)" />
-	<!--	Lots of cross-domain cookies.  Are any used on
-		(unsecurable) sports?	-->
-	<!--securecookie host="^\.williamhill\.com$" name="^zname_extension$" /-->
-	<securecookie host="^\w+\.williamhill\.com$" name=".*" />
+	<!--securecookie host="^\w+\.williamhill\.com$" name=".*" /-->
+	<securecookie host="^(?:ads2|www)\.williamhill\.com$" name="." />
 
-
-	<rule from="^http://cmscdn\.staticcache\.org/"
-		to="https://cmscdn.staticcache.org/" />
 
 	<!--	Cert only matches www.	-->
-	<rule from="^http://(?:www\.)?williamhill\.com/"
+	<rule from="^http://williamhill\.com/"
 		to="https://www.williamhill.com/" />
-
-	<rule from="^http://(cachemobile|files)\.williamhill\.com/"
-		to="https://$1.williamhill.com/" />
 
 	<!--	Advertisements included on 3rd-party websites.
 
@@ -57,19 +112,30 @@
 		path.  When rewritten to serve again with this
 		different path, it *doesn't* redirect back.
 					-->
-	<rule from="^http://(?:cache)?serve\.williamhill\.com/"
+	<rule from="^http://cacheserve\.williamhill\.com/"
 		to="https://serve.williamhill.com/" />
 
-	<!--	whdn:
-			- Cert: *.hs.llnwd.net
-			- Displays blank page
-			- Not on www
-					-->
-	<rule from="^http://(?:sec|wh)dn\.williamhill\.com/"
+	<!--	- 400
+		- Not on www
+				-->
+	<rule from="^http://whdn\.williamhill\.com/"
 		to="https://secdn.williamhill.com/" />
 
-	<!--	At least some pages redirect to http.	-->
-	<rule from="^http://sports\.williamhill\.com/acc/"
-		to="https://sports.williamhill.com/acc/" />
+		<!--	$400s:
+				-->
+		<exclusion pattern="^http://whdn\.williamhill\.com/+(?:$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://whdn.williamhill.com/?f" />
+			<test url="http://whdn.williamhill.com/?o" />
+			<test url="http://whdn.williamhill.com/??o" />
+
+			<!--	-ve:
+					-->
+			<test url="http://whdn.williamhill.com/cms/images/dotSpacer.gif" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

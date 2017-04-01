@@ -19,7 +19,6 @@
 		- domain **
 		- download *
 		- dsl *
-		- email *
 		- emailblog	(dropped)
 		- erotik *
 		- fahrschule	(redirects to pocketfahrschule.de; mismatched, CN: pocketfahrschule.de
@@ -43,7 +42,7 @@
 	** Redirects to http, expired 2013-09-26
 
 
-	Problematic bdomains:
+	Problematic domains:
 
 		- freenet.de subdomains:
 
@@ -69,21 +68,48 @@
 			- code		(→ secure)
 			- (www.)mload
 			- power
+			- email
 			- secure
 			- webmail
-			- reg.webmail
 
 		- blob.freent.de	(→ secure.freenet.de)
 		- code.freent.de	(→ secure.freenet.de)
 
+
+	reg.webmail: Dropped over http & https
+
+
+	Insecure cookies are set for these domains:
+
+		- .freenet.de
+
 -->
 <ruleset name="freenet.de (partial)">
 
-	<target host="*.freenet.de" />
-	<target host="*.freent.de" />
+	<!--	Direct rewrites:
+				-->
+	<target host="abakus.freenet.de" />
+	<target host="email.freenet.de" />
+	<target host="mload.freenet.de" />
+	<target host="www.mload.freenet.de" />
+	<target host="power.freenet.de" />
+	<target host="secure.freenet.de" />
+	<target host="webmail.freenet.de" />
+
+	<!--	Special cases:
+				-->
+	<target host="blob.freenet.de" />
+	<target host="code.freenet.de" />
+
+	<target host="blob.freent.de" />
+	<target host="code.freent.de" />
 
 
-	<securecookie host="^(?:(?:w*\.)?mload|\.reg)\.webmail\.freenet\.de$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.freenet\.de$" name="^regfrnsecurity$" /-->
+
+	<securecookie host="^(?:w*\.)?mload\.webmail\.freenet\.de$" name=".+" />
 
 
 	<rule from="^http://abakus\.freenet\.de/"
@@ -92,7 +118,7 @@
 	<rule from="^http://(?:blob|code)\.freene?t\.de/"
 		to="https://secure.freenet.de/" />
 
-	<rule from="^http://((?:www\.)?mload|power|secure|(?:reg\.)?webmail)\.freenet\.de/"
-		to="https://$1.freenet.de/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

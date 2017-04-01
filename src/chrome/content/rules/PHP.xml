@@ -1,39 +1,67 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *php.net:
 
-		- (www.)	(no https)
-		- gtk		(shows viewvc interface, valid cert
-		- windows *
+		- doc ¹
+		- gcov ²
+		- gtk ³
+		- lxr ¹
+		- news ¹
+		- talks ³
+		- windows ¹
+		- www ⁴
 
-	* Refused
+	¹ Refused
+	³ Shows viewvc interface, valid cert
+	⁴ Depends on the mirror, but the "best case" is an invalid certificate
 
 
-	Problematic subdomains:
+	Insecure cookies are set for these domains: ᶜ
 
-		- pecl	(works, expired 2013-01-08)
-		- snaps	($ works, some pages 404; expired 2013-06-05)
+		- php.net
+		- .php.net
+		- bugs.php.net
+		- edit.php.net
+		- master.php.net
+		- pear.php.net
+		- wiki.php.net
+		- www.php.net
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
-	Fully covered subdomains:
+	Mixed content:
 
-		- bugs
-		- downloads
-		- git
-		- pear
-		- static
-		- wiki
+		- css on (www.)? from fonts.googleapis.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="PHP (partial)">
+<ruleset name="PHP.net (partial)">
 
-	<target host="*.php.net" />
+	<target host="php.net" />
+	<target host="bugs.php.net" />
+	<target host="downloads.php.net" />
+	<target host="edit.php.net" />
+	<target host="git.php.net" />
+	<target host="master.php.net" />
+	<target host="museum.php.net" />
+	<target host="pear.php.net" />
+	<target host="pear2.php.net" />
+	<target host="pecl.php.net" />
+	<target host="people.php.net" />
+	<target host="qa.php.net" />
+	<target host="secure.php.net" />
+	<target host="shared.php.net" />
+	<target host="snaps.php.net" />
+	<target host="static.php.net" />
+	<target host="svn.php.net" />
+	<target host="wiki.php.net" />
 
 
-	<!--securecookie host="^\.php\.net$" name="^COUNTRY$" /-->
-	<securecookie host="^(?:bugs|wiki)\.php\.net$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(bugs|downloads|git|pear|static|wiki)\.php\.net/"
-		to="https://$1.php.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

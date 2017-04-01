@@ -1,27 +1,71 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *ilxgroup.com:
 
-		- support	(404, valid cert)
+		- shop ⁴
+		- support ᵃ
+
+	⁴ 404
+	ᵃ Shows shop.ilxgroup.com
 
 
-	^: 404
+	Problematic hosts in *ilxgroup.com:
+
+		- www2 ᵐ
+
+	ᵐ Pardot / mismatched
 
 
-	Some pages redirect to http.
+	Insecure cookies are set for these hosts:
+
+		- www.ilxgroup.com
 
 -->
 <ruleset name="ILG Group.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="ilxgroup.com" />
 	<target host="www.ilxgroup.com" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://(www\.)?ilxgroup\.com/+($|\?|(about-us|contact-us|Default|newsletter|support-form|why-it-works)\.asp)" /-->
-		<!--exclusion pattern="^http://(www\.)?ilxgroup\.com/+(?!consulting/images/|css/|favicon\.ico|images/|js/)" /-->
+
+	<!--	Complications:
+				-->
+	<target host="www2.ilxgroup.com" />
+
+		<exclusion pattern="^http://www2\.ilxgroup\.com/(?!/*(?:e/|$|\?))" />
+
+			<!--	See below respective rules for negative cases.
+
+				+ve:
+					-->
+			<test url="http://www2.ilxgroup.com/default.aspx" />
+			<test url="http://www2.ilxgroup.com/favicon.ico" />
+			<test url="http://www2.ilxgroup.com/index.htm" />
+			<test url="http://www2.ilxgroup.com/index.html" />
+			<test url="http://www2.ilxgroup.com/index.jsp" />
+			<test url="http://www2.ilxgroup.com/index.php" />
 
 
-	<rule from="^http://(?:www\.)?ilxgroup\.com/(?=consulting/images/|css/|favicon\.ico|images/|js/)"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.ilxgroup\.com$" name="^laravel_session$" /-->
+
+	<securecookie host="^(?!www2\.)\w" name="." />
+
+
+	<rule from="^http://www2\.ilxgroup\.com/(?=/*e/)"
+		to="https://go.pardot.com/" />
+
+		<test url="http://www2.ilxgroup.com/e/52142/112791343529511718875-posts/4j5zhj/152467769" />
+		<test url="http://www2.ilxgroup.com/e/52142/wiki-Windows-1-0/4yqg9x/172139929" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://www2\.ilxgroup\.com/.*"
 		to="https://www.ilxgroup.com/" />
+
+		<test url="http://www2.ilxgroup.com/?" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,9 +1,66 @@
-<ruleset name="Entrust (partial)">
+<!--
+	For other Datacard Group coverage, see Datacard.com.xml.
 
+
+	Nonfunctional subdomains:
+
+		- sslinstallcheck *
+
+	* Dropped
+
+-->
+<ruleset name="Entrust.net (partial)">
+
+	<target host="entrust.net" />
+	<target host="buy.entrust.net" />
+	<target host="enroll.entrust.net" />
+	<target host="home.entrust.net" />
+	<target host="login.entrust.net" />
+	<target host="managed.entrust.net" />
 	<target host="seal.entrust.net" />
+	<target host="www.entrust.net" />
+
+		<!--	Blank page:
+					-->
+		<!--exclusion pattern="^http://www\.entrust\.net/$" /-->
+		<!--
+			404:
+				-->
+		<!--exclusion pattern="^http://www\.entrust\.net/(images/(?!new/)|includes/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.entrust\.net/(?!css/|customer_support/|ev/|favicon\.ico|images/new/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.entrust.net/affiliates.htm" />
+			<test url="http://www.entrust.net/images/themes/entrust-datacard.jpg" />
+			<test url="http://www.entrust.net/includes/bjqs.css" />
+			<test url="http://www.entrust.net/quickstart/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.entrust.net/css/browser-qa.headers.css" />
+			<test url="http://www.entrust.net/customer_support/contact.cfm" />
+			<test url="http://www.entrust.net/ev/misuse.cfm" />
+			<test url="http://www.entrust.net/favicon.ico" />
+			<test url="http://www.entrust.net/images/new/header-white-arrow.gif" />
+			<test url="http://www.entrust.net/includes/bjqs.css" />
 
 
-	<rule from="^http://seal\.entrust\.net/"
-		to="https://seal.entrust.net/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^buy\.entrust\.net$" name="^(BIGipServer~ECS_PROD~buy\.entrust\.net\.443|JSESSIONID)$" /-->
+	<!--securecookie host="^\.go\.entrust\.net$" name="^ELOQUA$" /-->
+	<!--securecookie host="^home\.entrust\.net$" name="^BIGipServer~ECS_PROD~home\.entrust\.net\.443$" /-->
+	<!--securecookie host="^login\.entrust\.net$" name="^BIGipServer~ECS_PROD~login\.entrust\.net\.443$" /-->
+	<!--securecookie host="^managed\.entrust\.net$" name="^(BIGipServer~ECS_PROD~managed\.entrust\.net\.443|CFID|CFTOKEN|JSESSIONID)$" /-->
+
+	<securecookie host="^(?:buy|home|login|managed)\.entrust\.net$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

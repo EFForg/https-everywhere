@@ -1,50 +1,193 @@
 <!--
-	Nonfunctional subdomains:
+	University at Buffalo
 
-		- (www.)admissions		(rx_record_too_long)
-		- advising			(CN: prv-web.eng.buffalo.edu; shows that domain)
-		- (www.)academy			(ditto)
-		- (www.)apb			(CN: www.buffalo.edu; shows www)
-		- (www.)cit-helpdesk		(rx_record_too_long)
-		- (www.)computersecurity	(ditto)
-		- (www.)curca			(CN: prv-web.eng.buffalo.edu; shows that domain)
-		- (www.)discoveryseminars	(ditto)
-		- (www.)financialaid		(rx_record_too_long)
-		- (www.)health			(ditto)
-		- helpdesk			(ditto)
-		- (www.)giving			(CN: www.buffalo.edu; shows www)
-		- www.grad			(rx_record_too_long)
-		- (www.)itpolicies		(ditto)
-		- (www.)law
-		- (www.)orientation		(CN: prv-web.eng.buffalo.edu; shows that domain)
-		- (www.)ub-careers		(rx_record_too_long)
-		- undergrad-catalog		(ditto)
-		- universityscholars		(CN: prv-web.eng.buffalo.edu; shows that domain)
+	For rules causing false/broken MCB, see Buffalo.edu-falsemixed.xml.
+
+	Other University at Buffalo rulesets:
+
+		- BioXFEL.org.xml
+
+
+	Nonfunctional hosts in *buffalo.edu:
+
+		- (www.)?admissions ¹
+		- (www.)?academy ²
+		- advising ²
+		- www.alumni ⁵
+		- (www.)?apb ³
+		- www.cambi ¹
+		- www.chem ¹
+		- (www.)?cit-helpdesk ¹
+		- www.cogsci ¹
+		- (www.)?computersecurity ¹
+		- biocomputing.cse ¹
+		- src.cse ⁴
+		- www.cubs ⁴
+		- (www.)?curca ²
+		- (www.)?discoveryseminars ²
+		- (www.)?financialaid ¹
+		- engineering ⁵
+		- gsa ⁵
+		- (www.)?health ¹
+		- helpdesk ¹
+		- (www.)?hr ⁵
+		- (www.)?giving ⁵
+		- www.grad ¹
+		- www.ise ⁶
+		- (www.)?itpolicies ¹
+		- (www.)?law
+		- library ¹
+		- www.lmva ⁶
+		- www.mae ¹
+		- (www.)?orientation ²
+		- parent ¹
+		- pharmsci ¹
+		- provost ⁷
+		- www.provost ⁵
+		- registrar ¹
+		- security ⁸
+		- (www.)?social-work ⁵
+		- (www.)?ub-careers ⁵
+		- (www.)?ubit ⁵
+		- undergrad-catalog ¹
+		- universityscholars ²
+
+	¹ Plaintext reply
+	² Shows prv-web.eng.buffalo.edu
+	³ Shows www.buffalo.edu
+	⁴ Shows another domain
+	⁵ Refused
+	⁶ Shows default page
+	⁷ Could not resolve host
+	⁸ Expired
+
+	Problematic hosts in *buffalo.edu:
+
+		- www.cedar ¹
+		- www.cse ²
+		- eng ³
+		- ubjobs ⁴
+
+	¹ Mismatched, untrusted root
+	² Missing certificate chain
+	³ Mixed css
+	⁴ Mismatched
+
+
+	These altnames don't exist:
+
+		- www.coeus.buffalo.edu
+		- www.wiki.cse.buffalo.edu
+		- eng.buffalo.edu
+		- www.tdm.pharm.buffalo.edu
+		- www.tprc.pharm.buffalo.edu
+
+
+	Insecure cookies are set for these hosts:
+
+		- cse.buffalo.edu
+		- wiki.cse.buffalo.edu
+		- research.buffalo.edu
+		- www.research.buffalo.edu
+		- student-affairs.buffalo.edu
+		- www.student-affairs.buffalo.edu
+
+
+	Mixed content:
+
+		- css on www.eng from $self *
+		- Images on www.eng from $self *
+		- favicon on www.eng from $self *
+
+	* Secured by us
 
 -->
-<ruleset name="University at Buffalo (partial)">
+<ruleset name="Buffalo.edu (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="buffalo.edu" />
-	<target host="*.buffalo.edu" />
+	<target host="alumni.buffalo.edu" />
+	<target host="www.alumni.buffalo.edu" />
+	<target host="coeus.buffalo.edu" />
+	<target host="wiki.cse.buffalo.edu" />
+	<!--target host="www.cse.buffalo.edu" /-->
+	<target host="prv-web.eng.buffalo.edu" />
+	<!--target host="www.eng.buffalo.edu" /-->
+	<target host="myub.buffalo.edu" />
+	<target host="www.myub.buffalo.edu" />
+	<target host="inted.oie.buffalo.edu" />
+	<target host="tdm.pharm.buffalo.edu" />
+	<target host="tprc.pharm.buffalo.edu" />
+	<target host="pharmacy.buffalo.edu" />
+	<target host="research.buffalo.edu" />
+	<target host="www.research.buffalo.edu" />
+	<target host="shibboleth.buffalo.edu" />
+	<target host="socialwork.buffalo.edu" />
+	<target host="sphhp.buffalo.edu" />
+	<target host="student-affairs.buffalo.edu" />
+	<target host="www.student-affairs.buffalo.edu" />
+	<target host="ubfoundation.buffalo.edu" />
+	<target host="www.ubjobs.buffalo.edu" />
+	<target host="ublearns.buffalo.edu" />
+	<target host="ubmail.buffalo.edu" />
+	<target host="wings.buffalo.edu" />
+	<target host="www.wings.buffalo.edu" />
+	<target host="www.buffalo.edu" />
+
+	<!--	Complications:
+				-->
+	<target host="www.ubfoundation.buffalo.edu" />
+	<target host="ubjobs.buffalo.edu" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?student-affairs\.buffalo\.edu/special/speakers\.php" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?student-affairs\.buffalo\.edu/+(?!$|\?|(?:\w+/)?(?:images|style)/|genemail(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://student-affairs.buffalo.edu/nsp/readub/" />
+			<test url="http://student-affairs.buffalo.edu/nsp/readub/aboutus.php" />
+			<test url="http://student-affairs.buffalo.edu/nsp/readub/book.php" />
+			<test url="http://student-affairs.buffalo.edu/nsp/readub/events.php" />
+			<test url="http://student-affairs.buffalo.edu/special/aboutseries.php" />
+			<test url="http://student-affairs.buffalo.edu/special/aboutus.php" />
+			<test url="http://student-affairs.buffalo.edu/special/announcements.php" />
+			<test url="http://student-affairs.buffalo.edu/special/conference.php" />
+			<test url="http://student-affairs.buffalo.edu/special/distinguishedspeakers.php" />
+			<test url="http://student-affairs.buffalo.edu/special/speakers.php" />
+			<test url="http://student-affairs.buffalo.edu/special/specialevt.php" />
+			<test url="http://student-affairs.buffalo.edu/special/sponsors.php" />
+			<test url="http://student-affairs.buffalo.edu/special/tickets.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.student-affairs.buffalo.edu/genemail" />
+			<test url="http://www.student-affairs.buffalo.edu/images/ub.gif" />
 
 
-	<securecookie host="^.+\.buffalo\.edu$" name=".+" />
+	<!--	not secured by server:
+					-->
+	<!--securecookie host="^wiki\.cse\.buffalo\.edu$" name="^Cacti$" /-->
+	<!--securecookie host="^(?:www\.)?research\.buffalo\.edu$" name="^(?:CFGLOBALS|CFID|CFTOKEN|ISON)$" /-->
+	<!--securecookie host="^(?:www\.)?student-affairs\.buffalo\.edu$" name="^PHPSESSID$" /-->
 
+	<securecookie host="." name="." />
 
-	<rule from="^http://((?:(?:www\.)?(?:alumni|hr|myub|provost|ubit|wings)|prv-web\.eng|inted\.oie|security|shibboleth|ublearns|ubmail|www)\.)?buffalo\.edu/"
-		to="https://$1buffalo.edu/" />
+	<rule from="^http://www\.alumni\.buffalo\.edu/"
+		to="https://alumni.buffalo.edu/" />
 
-	<!--	At least some pages redirect to http.
-							-->
-	<rule from="^http://(www\.)?student-affairs\.buffalo\.edu/(\w+/)?(images|style)/"
-		to="https://$1student-affairs.buffalo.edu/$2$3/" />
-
-	<rule from="^https?://(?:www\.)?ubfoundation\.buffalo\.edu/"
+	<rule from="^http://www\.ubfoundation\.buffalo\.edu/"
 		to="https://ubfoundation.buffalo.edu/" />
 
-	<!--	Cert only matches www.ubjobs.
-						-->
-	<rule from="^https?://(?:www\.)?ubjobs\.buffalo\.edu/"
+	<rule from="^http://ubjobs\.buffalo\.edu/"
 		to="https://www.ubjobs.buffalo.edu/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

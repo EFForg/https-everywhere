@@ -2,17 +2,32 @@
 	For rules that are on by default, see CERN.xml.
 
 -->
-<ruleset name="CERN (problematic)" default_off="self-signed">
+<ruleset name="CERN.ch (problematic)" default_off="missing certificate chain, untrusted root">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="aliceinfo.cern.ch" />
+	<target host="atlasop.cern.ch" />
+	<target host="hypernews.cern.ch" />
 	<target host="invenio-demo.cern.ch" />
 	<target host="sft.its.cern.ch" />
+	<target host="osscvs.cern.ch" />
+	<target host="vocms0153.cern.ch" />
+	<target host="webregister.web.cern.ch" />
+
+	<!--	Complications:
+				-->
+	<target host="cmsdoc.cern.ch" />
 	<target host="root.cern.ch" />
 
+
+	<rule from="^http://cmsdoc\.cern\.ch/"
+		to="https://vocms0153.cern.ch/" />
 
 	<rule from="^http://root\.cern\.ch/(?=/*(?:$|\?))"
 		to="https://root.cern.ch/drupal/" />
 
-	<rule from="^http://(invenio-demo|sft\.its|root)\.cern\.ch/"
-		to="https://$1.cern.ch/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

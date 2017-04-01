@@ -1,0 +1,54 @@
+<!--
+	Problematic subdomains:
+
+		- blog ¹
+		- status ²
+
+	¹ Squarespace
+	² StatusPage
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.runscope.com
+
+
+	Mixed content:
+
+		- Images on blog from static1.squarespace.com *
+		- Bug on blog from ads.perfectaudience.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Runscope.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="runscope.com" />
+	<target host="www.runscope.com" />
+
+	<!--	Complications
+				-->
+	<target host="status.runscope.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.runscope\.com$" name="^SS_MID$" /-->
+	<!--securecookie host="^blog\.runscope\.com$" name="^(JSESSIONID|crumb)$" /-->
+	<!--securecookie host="^www\.runscope\.com$" name="^session$" /-->
+
+	<securecookie host="^www\.runscope\.com$" name=".+" />
+
+
+	<!--rule from="^http://blog\.runscope\.com/global/"
+		to="https://???.squarespace.com/global/" /-->
+
+	<rule from="^http://status\.runscope\.com/"
+		to="https://runscope.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

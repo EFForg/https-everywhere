@@ -1,17 +1,50 @@
 <!--
 	For other Envato coverage, see Envato.com.xml.
 
+
+	Nonfunctional subdomains:
+
+		- business *
+		- code *
+		- design *
+
+	* Redirect to http, valid cert
+
+
+	Fully covered subdomains:
+
+		- cms-assets
+		- jobs
+		- static
+		- support
+		- www
+
 -->
-<ruleset name="TutsPlus.com">
+<ruleset name="TutsPlus.com (partial)">
 
 	<target host="tutsplus.com" />
 	<target host="*.tutsplus.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://((?:business|code|design)\.)?tutsplus\.com/+($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://tutsplus\.com/+(?!favicon\.ico|sign_(?:in|up)(?:$|[?/]))" />
+		<exclusion pattern="^http://(?:business|code|design)\.tutsplus\.com/+(?!favicon\.ico)" />
 
 
-	<securecookie host="^(?:w*\.)?tutsplus\.com$" name=".+" />
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^jobs\.tutsplus\.com$" name="^_session_id$" /-->
+	<!--securecookie host="^support\.tutsplus\.com$" name="^(_help_center_session|_zendesk_session|_zendesk_shared_session)$" /-->
+
+	<securecookie host="^\.tutsplus\.com$" name="^__cfduid$" />
+	<!--securecookie host="^(?:w*\.)?tutsplus\.com$" name=".+" /-->
 
 
-	<rule from="^http://(www\.)?tutsplus\.com/"
+	<rule from="^http://((?:business|cms-assets|code|design|jobs|static|support|www)\.)?tutsplus\.com/"
 		to="https://$1tutsplus.com/" />
 
 </ruleset>

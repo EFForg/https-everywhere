@@ -1,9 +1,67 @@
-<ruleset name="Victorinox">
-    <target host="victorinox.com" />
-    <target host="*.victorinox.com" />
+<!--
+	Nonfunctional hosts in *victorinox.com:
 
-    <rule from="^https?://victorinox\.com/"
-        to="https://www.victorinox.com/" />
-    <rule from="^https?://(images|static|www\.)?victorinox\.com/"
-        to="https://$1victorinox.com/" />
+		- rsrc ᶠ
+
+	ᶠ Handshake fails
+
+
+	Mixed content:
+
+		- Image on www from maps.googleapis.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Victorinox.com (partial)">
+
+    <target host="victorinox.com" />
+	<target host="assets.victorinox.com" />
+	<target host="images.victorinox.com" />
+	<target host="static.victorinox.com" />
+	<target host="www.victorinox.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.victorinox\.com/global/en(?:/Explore/Company/Press-Contacts/cms/press-contacts|/Explore/Company/cms/company|/Products/Apparel/c/FAS|/Service/Corporate-Gifts/cms/service-corporate-gifts|/Service/FAQ/cms/service-faq|/Service/Product-support/cms/product-support|/jobs|/storeFinder)?$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?victorinox\.com/(?!/*(?:_ui/static/|global/\w\w/(?:Privacy-Policy/cms/privacy-policy|Service/Contact/cms/contact|login|myVictorinox|register)/*(?:$|\?)))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.victorinox.com/global/en" />
+			<test url="http://www.victorinox.com/global/en/Explore/Company/Press-Contacts/cms/press-contacts" />
+			<test url="http://www.victorinox.com/global/en/Explore/Company/cms/company" />
+			<test url="http://www.victorinox.com/global/en/Products/Apparel/c/FAS" />
+			<test url="http://www.victorinox.com/global/en/Service/Corporate-Gifts/cms/service-corporate-gifts" />
+			<test url="http://www.victorinox.com/global/en/Service/FAQ/cms/service-faq" />
+			<test url="http://www.victorinox.com/global/en/Service/Product-support/cms/product-support" />
+			<test url="http://www.victorinox.com/global/en/jobs" />
+			<test url="http://www.victorinox.com/global/en/storeFinder" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.victorinox.com/_ui/static/media/icons/icon_global.svg" />
+			<test url="http://www.victorinox.com/global/en/Explore/Visit-Us/cms/visit-us" />
+			<test url="http://www.victorinox.com/global/en/Privacy-Policy/cms/privacy-policy" />
+			<test url="http://www.victorinox.com/global/en/Service/Contact/cms/contact" /><!--	mixed image	-->
+			<test url="http://www.victorinox.com/global/en/login" />
+			<test url="http://www.victorinox.com/global/en/myVictorinox" />
+			<test url="http://www.victorinox.com/global/en/register" />
+
+		<test url="http://assets.victorinox.com/_ui/static/media/victorinox-logo.svg" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.victorinox\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^[^.vw]" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

@@ -1,4 +1,7 @@
 <!--
+	Commit comment: https://trac.torproject.org/projects/tor/ticket/10821
+
+
 	CDN buckets:
 
 		- www.corporate-ir.net.edgesuite.net
@@ -10,12 +13,12 @@
 
 			- cache
 			- cache-uat
+			- images
+			- styles
 
 		- freescale.https.internapcdn.net
 
-			- images
 			- media
-			- styles
 
 
 	Problematic subdomains:
@@ -50,7 +53,7 @@
 		- styles-uat
 
 
-	Overved cookie domains:
+	Observed cookie domains:
 
 		- community
 		- community-uat
@@ -74,8 +77,22 @@
 -->
 <ruleset name="Freescale.com (partial)">
 
+	<target host="apps.community.freescale.com" />
+	<target host="apps.community-uat.freescale.com" />
+	<target host="cache.freescale.com" />
+	<target host="cache-uat.freescale.com" />
+	<target host="community-cache.freescale.com" />
+	<target host="community-cache-uat.freescale.com" />
+	<target host="community.freescale.com" />
+	<target host="community-uat.freescale.com" />
+	<target host="fdc.freescale.com" />
 	<target host="freescale.com" />
-	<target host="*.freescale.com" />
+	<target host="images.freescale.com" />
+	<target host="images-uat.freescale.com" />
+	<target host="styles.freescale.com" />
+	<target host="styles-uat.freescale.com" />
+	<target host="www.freescale.com" />
+
 		<exclusion pattern="^http://(?:www\.)?freescale\.com/(?!favicon\.ico|files/|(?:idp|ruhp|security|webapp)(?:$|[?/])|js/|recommendation/|shared/)" />
 
 
@@ -85,16 +102,10 @@
 	<!--	^ redirects to www over http,
 		so copy that behavior:
 					-->
-	<rule from="^http://(?:www\.)?freescale\.com/"
+	<rule from="^http://freescale\.com/"
 		to="https://www.freescale.com/" />
 
-	<rule from="^http://cache(-uat)?\.freescale\.com/"
-		to="https://cache$1.freescale.com/freescale/ssl/" />
-
-	<rule from="^http://(community(?:-cache)?(?:-uat)?|apps\.community(?:-uat)?|fdc|(?:imag|styl)es(?:-uat)?)\.freescale\.com/"
-		to="https://$1.freescale.com/" />
-
-	<rule from="^http://investors\.freescale\.com/(client|WebSideStory)/"
-		to="https://a248.e.akamai.net/f/121/103/5m/investors.freescale.com/$1/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

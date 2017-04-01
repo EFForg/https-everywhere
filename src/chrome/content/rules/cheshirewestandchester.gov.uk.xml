@@ -1,0 +1,93 @@
+<!--
+	Cheshire West & Chester Council
+
+	For rules causing false/broken MCB, see cheshirewestandchester.gov.uk-falsemixed.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *cheshirewestandchester.gov.uk:
+
+		- (www.)? ᵈ
+		- cmttpublic ⁴
+		- inside ᵃ
+		- mobile ᶠ
+		- opendata ᶠ
+		- pa ᵈ
+
+	⁴ 404
+	ᵃ Shows online.cheshirewestandchester.gov.uk
+	ᵈ Dropped
+	ᶠ Handshake fails
+
+
+	Problematic hosts in *cheshirewestandchester.gov.uk:
+
+		- apps ˣ
+		- consult ᵐ
+		- mylimehouse ᵐ
+
+	ᵐ Mismatched
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- apps.cheshirewestandchester.gov.uk
+		- online.cheshirewestandchester.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on apps from $self ˢ
+		- Images on apps from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Cheshire West and Chester.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="apps.cheshirewestandchester.gov.uk" /-->
+	<target host="online.cheshirewestandchester.gov.uk" />
+	<target host="schooladmissions.cheshirewestandchester.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="consult.cheshirewestandchester.gov.uk" />
+	<target host="mylimehouse.cheshirewestandchester.gov.uk" />
+
+		<!--	Mixed css, sets cookie without Secure:
+								-->
+		<!--test url="http://apps.cheshirewestandchester.gov.uk/CWAC_SilverCloudSportsClubDatabase.htm" /-->
+
+		<!--	Set cookie without Secure:
+							-->
+		<!--test url="http://online.cheshirewestandchester.gov.uk/CustomerPortal" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^apps\.cheshirewestandchester\.gov\.uk$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+	<!--securecookie host="^online\.cheshirewestandchester\.gov\.uk$" name="^__RequestVerificationToken" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://consult\.cheshirewestandchester\.gov\.uk/"
+		to="https://epnbc-consult.objective.co.uk/" />
+
+		<test url="http://consult.cheshirewestandchester.gov.uk/portal/contact_us" />
+
+	<rule from="^http://mylimehouse\.cheshirewestandchester\.gov\.uk/"
+		to="https://epnbc.objective.co.uk/" />
+
+		<test url="http://mylimehouse.cheshirewestandchester.gov.uk/portal/contact_us" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -5,62 +5,141 @@
 	Other Zoho rulesets:
 
 		- ManageEngine.xml
+		- ManageEngine.jp.xml
 		- Site24x7.xml
+		- WebNMS.com.xml
 		- Zoho.jp.xml
+		- Zoho_static.com.xml
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *zoho.com:
 
-		- (www.)swissql.com	(cert: *.manageengine.com; $ redirects to http; .+ redirects to that domain and 404s)
+		- crmkbase.zoho.com ʰ
 
-
-	Problematic domains:
-
-		- customer-discussions.zoho.com		(works, redirects to forum.zoho-china.com)
-		- forum.zoho-china.com			(mismatched)
-
--->
-<ruleset name="Zoho (partial)">
-
-	<target host="forums.webnms.com" />
-	<target host="zoho.com" />
-	<target host="*.zoho.com" />
-	<target host="zohoblogs.com" />
-	<target host="www.zohoblogs.com" />
-	<target host="zohocorp.com" />
-	<target host="www.zohocorp.com" />
-	<target host="*.zohostatic.com" />
+	ʰ Redirects to http
 
 
-	<securecookie host="^forums\.webnms\.com$" name=".+" />
-	<securecookie host="^.*\.zoho\.com$" name=".+" />
-	<securecookie host="^(?:www\.)?zohoblogs\.com$" name=".+" />
+	Problematic hosts in *zoho.com:
+
+		- www.blogs ᵐ
+		- kbase.creator ᵐ
+		- www.creator ᵈ
+		- customer-discussions	(works, redirects to forum.zoho-china.com)
+		- www.forums ᵐ
+		- signup-dr ˣ
+
+	ᵐ Mismatched
+	ᵈ Dropped
+	ˣ Mixed css/iframe
 
 
-	<rule from="^http://forums\.webnms\.com/"
-		to="https://forums.webnms.com/" />
+	Wildcards covered:
 
-	<!--	Observed wiki subdomains:
+		- *.wiki.zoho.com:
 
 			- arvindnatarajan
 			- vbmacros
 			- zohocrm
 			- zohocrmapi
 			- zohodiscussions
+
+
+	These altnames don't exist:
+
+		- customer-blogs.zoho.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .zoho.com
+		- accounts.zoho.com
+		- contacts.zoho.com
+		- creator.zoho.com
+
+
+	Mixed content:
+
+		- iframe on signup-dr from $self *
+		- css on signup-dr from www.zoho.com *
+		- Image on signup-dr from www.zoho.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Zoho.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="zoho.com" />
+	<target host="accounts.zoho.com" />
+	<target host="assist.zoho.com" />
+	<target host="blog.zoho.com" />
+	<target host="blogs.zoho.com" />
+	<target host="business.zoho.com" />
+	<target host="chat.zoho.com" />
+	<target host="contacts.zoho.com" />
+
+	<target host="creator.zoho.com" />
+	<target host="api.creator.zoho.com" />
+	<target host="help.creator.zoho.com" />
+
+	<target host="crm.zoho.com" />
+	<target host="discuss.zoho.com" />
+	<target host="discussions.zoho.com" />
+	<target host="help.discussions.zoho.com" />
+	<target host="docs.zoho.com" />
+	<target host="forums.zoho.com" />
+	<target host="help.zoho.com" />
+	<target host="invoice.zoho.com" />
+	<target host="iplocation.zoho.com" />
+	<target host="mail.zoho.com" />
+	<target host="meeting.zoho.com" />
+	<target host="notebook.zoho.com" />
+	<target host="personal.zoho.com" />
+	<target host="projects.zoho.com" />
+	<target host="recruit.zoho.com" />
+	<target host="reports.zoho.com" />
+	<target host="people.zoho.com" />
+	<target host="search.zoho.com" />
+	<target host="sheet.zoho.com" />
+	<target host="show.zoho.com" />
+	<!--target host="signup-dr.zoho.com" /-->
+	<target host="support.zoho.com" />
+	<target host="wiki.zoho.com" />
+	<target host="*.wiki.zoho.com" />
+	<target host="writer.zoho.com" />
+	<target host="www.zoho.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www.blogs.zoho.com" />
+	<!--target host="kbase.creator.zoho.com" /-->
+	<target host="www.creator.zoho.com" />
+	<target host="www.forums.zoho.com" />
+
+		<!--	Redirects to http:
 						-->
-	<rule from="^http://((?:accounts|assist|(?:customer-|www\.)?blogs|business|chat|(?:(?:api|help|kbase|lounge|www)\.)?creator|crm|crmkbase|discuss|(?:help\.)?discussions|docs|forums|invoice|iplocation|mail|meeting|notebook|personal|planner|projects|recruit|reports|people|search|share|sheet|show2?|support|viewer|(?:\w+\.)?wiki|export\.writer|writer2?|www)\.)?zoho\.com/"
-		to="https://$1zoho.com/" />
+		<!--exclusion pattern="^http://crmkbase\.zoho\.com/($|wp-content/)" /-->
 
-	<rule from="^http://(www\.)?zoho(blogs|corp)\.com/"
-		to="https://$1zoho$2.com/" />
+		<!--	Sets cookies without Secure:
+							-->
+		<test url="http://contacts.zoho.com/file?ot=8&amp;ID=47070489&amp;t=serviceorg" />
 
-	<!--	Observed subdomains:
 
-			- css
-			- img
-			- js
+	<!--	Not secured by server:
 					-->
-	<rule from="^http://(\w+)\.zohostatic\.com/"
-		to="https://$1.zohostatic.com/"/>
+	<!--securecookie host="^\.zoho\.com$" name="^ztk$" /-->
+	<!--securecookie host="^(?:accounts|help|sheet|show|wiki)\.zoho\.com$" name="^(JSESSIONID|[\da-f]{10})$" /-->
+	<!--securecookie host="^contacts\.zoho\.com$" name="^[\da-f]{10}$" /-->
+	<!--securecookie host="^creator\.zoho\.com$" name="^[\da-f]{10}$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://www\.(blogs|creator|forums)\.zoho\.com/"
+		to="https://$1.zoho.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

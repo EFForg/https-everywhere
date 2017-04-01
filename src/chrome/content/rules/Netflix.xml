@@ -1,55 +1,96 @@
 <!--
+	Disabled per multiple user reports of intermittent breakage, one of which is at
+	https://github.com/EFForg/https-everywhere/issues/2232.
+
+	For problematic rules, see Netflix.com-problematic.xml.
+
+
 	CDN buckets:
 
-		- netflix.hs.llnwd.net/e1/us/
+		- images.netflix.com.edgesuite.net
 
 			- jsapi
 
-
-	Problematic subdomains:
-
-		- jsapi	(400; mismatched, CN: *.hs.llnwd.net)
+		- netflix.gilroystaging.co.uk
+		- netflix.hs.llnwd.net/e1/us/
 
 
-	Fully covered subdomains:
+	Nonfunctional hosts in *netflix.com:
 
-		- jsapi		(→ netflix.hs.llnwd.net)
+		- blog ¹
+		- developer ²
+		- techblog ¹
+		- ukirelandblog ¹
+		- image
+
+	¹ Blogger
+	² Mashery
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .netflix.com
+		- .cl.netflix.com
+		- contactus.netflix.com
+		- help.netflix.com
+		- .help.netflix.com
+		- openconnect.netflix.com
+
+	Trying to secure all cookies breaks dvd.netflix.com
+
+	Mixed content:
+
+		- Images on help from secure *
+
+	* Secured by us
 
 -->
-<ruleset name="Netflix (buggy)" default_off="various things break">
+<ruleset name="Netflix.com (partial)" >
 
 	<target host="netflix.com" />
-	<target host="*.netflix.com" />
-		<!--
-			blog, techblog, ukirelandblog:
+	<target host="account.netflix.com" />
+	<target host="api-global.netflix.com" />
+	<target host="contactus.netflix.com" />
+	<target host="customerevents.netflix.com" />
+	<target host="dvd.netflix.com" />
+	<target host="help.netflix.com" />
+	<target host="ir.netflix.com" />
+	<target host="jobs.netflix.com" />
+	<!--<target host="jsapi.netflix.com" /> cert only valid for akamai -->
+	<target host="ncds.netflix.com" />
+	<target host="openconnect.netflix.com" />
+	<target host="secure.netflix.com" />
+	<target host="signup.netflix.com" />
+	<target host="www.netflix.com" />
+	<target host="www1.netflix.com" />
+	<target host="www2.netflix.com" />
+	<target host="www3.netflix.com" />
+	<target host="pr.netflix.com" />
+	<target host="media.netflix.com" />
 
-				- Hosted on Blogger
-				- Shows Google 404 page
+	<target host="assets.nflxext.com" />
+	<target host="so-s.nflximg.net" />
+	<target host="tp-s.nflximg.net" />
+	<target host="www2-ext-s.nflximg.net" />
+	<target host="scdn.nflximg.net" />
 
-			developer:
+	<target host="*.isp.nflxvideo.net" />
+	<target host="*.ix.nflxvideo.net" />
 
-				- Handled in Mashery-clients.xml
-
-			ir:
-
-				- Cert: *.shareholder.com
-				- Throws 403
-
-			jobs:
-
-				- reset
-
-			-->
-		<exclusion pattern="^http://(blog|developer|ir|jobs|techblog|ukirelandblog)\.netflix\.com/" />
+		<!--	Redirect to http:
+						-->
+		<!--exclusion pattern="^http://ca\.netflix\.com/($|\?)" /-->
+		<!--exclusion pattern="^http://(blog|ca|developer|ir|techblog|ukirelandblog)\.netflix\.com/" /-->
 
 
-	<securecookie host="^(contactus|signup)\.netflix\.com$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.netflix\.com$" name="^(NetflixId|SID|memclid|tlr|zuulrgn)$" /-->
+	<!--securecookie host="^\.cl\.netflix\.com$" name="^cL$" /-->
+	<!--securecookie host="^\.(contactus|help)\.netflix\.com$" name="^hcVisitorId$" /-->
+	<!--securecookie host="^help\.netflix\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^openconnect\.netflix\.com$" name="^X-Mapping-\w+$" /-->
 
-
-	<rule from="^http://jsapi\.netflix\.com/"
-		to="https://netflix.hs.llnwd.net/e1/" />
-
-	<rule from="^http://([^/:@\.]+\.)?netflix\.com/"
-		to="https://$1netflix.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

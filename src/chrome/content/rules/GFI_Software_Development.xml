@@ -1,72 +1,101 @@
 <!--
+	Fixes: https://github.com/EFForg/https-everywhere/issues/4305
+
+
+	For rules causing false/broken MCB, see gfi.com-falsemixed.xml.
+
 	Other GFI Software Development rulesets:
 
+		- GFI.nl.xml
+		- GFI-Italia.com.xml
 		- GFI_Cloud.xml
+		- GFI_Hispana.com.xml
+		- GFI_Software.de.xml
+		- GFS_France.com.xml
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *gfi.com:
 
-		- kbase.gfi.com		(redirects to cutomers login, valid cert)
+		- kb ¹
+		- kbase ²
 
-
-	Problematic domains:
-
-		- kb.gfi.com		(redirects to http; mismatched, CN: slotmatching2.salesforce.com)
-		- gfi.nl *
-		- gfihispana.com *
-		- gfi-italia.com *
-		- gfisoftware.de *
-		- gfsfrance.com *
-
-	* Mismatched, CN: *.gif.com
+	¹ Redirects to http
+	² redirects to customers login
 
 
-	Partially covered domains:
+	Insecure cookies are set for these domains and hosts:
 
-		- kb.gfi.com		(→ gfi.secure.force.com)
+		- .gfi.com
+		- www.gfi.com
 
 
-	Fully covered domains:
+	Mixed content:
 
-		- (www.)gfi.com
-		- customers.gfi.com
-		- (www.)gfi.nl		(^ → www)
-		- (www.)gfihispana.com	(^ → www)
-		- (www.)gfi-italia.com	(^ → www)
-		- (www.)gfisoftware.de	(^ → www)
-		- (www.)gfsfrance.com	(^ → www)
+		- css on www.gfi.com from $self *
+		- Images on www.gfi.com from $self *
+		- Bug on www.gfi.com from pixel.fetchback.com *
+
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="GFI Software Development (partial)">
+<ruleset name="GFI.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="gfi.com" />
-	<target host="*.gfi.com" />
-	<target host="gfi.nl" />
-	<target host="www.gfi.nl" />
-	<target host="gfihispana.com" />
-	<target host="www.gfihispana.com" />
-	<target host="gfi-italia.com" />
-	<target host="www.gfi-italia.com" />
-	<target host="gfisoftware.de" />
-	<target host="www.gfisoftware.de" />
-	<target host="gfsfrance.com" />
-	<target host="www.gfsfrance.com" />
+	<target host="customers.gfi.com" />
+	<target host="www.gfi.com" />
+
+	<!--	Complications:
+				-->
+	<target host="kb.gfi.com" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://www\.gfi\.com/blog/(?!wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.gfi.com/blog/" />
+			<test url="http://www.gfi.com/blog/hold-off-on-upgrading-to-net-framework-4-6-1/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.gfi.com/blog/wp-content/plugins/wp-postratings/postratings-css.css" />
+
+		<!--exclusion pattern="^http://kb\.gfi\.com/(?!partnersurvey/site/|resource/)" /-->
+		<exclusion pattern="^http://kb\.gfi\.com/(?!resource/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://kb.gfi.com/articles/SkyNet_Article/How-to-upgrade-to-GFI-EventsManager-2013" />
+			<test url="http://kb.gfi.com/supportcommunity/" />
+			<test url="http://kb.gfi.com/supportcontact" />
+
+			<!--	-ve:
+					-->
+			<test url="http://kb.gfi.com/resource/1427501560000/CSSimages/imgskynet.png" />
 
 
-	<securecookie host="^(?:customers\.|www\.)?gfi\.com$" name=".+" />
-	<securecookie host="^www\.gf(?:i\.nl|ihispana\.com|i-italia\.com|isoftware\.de|sfrance\.com)$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.gfi\.com$" name="^EntryURL$" /-->
+	<!--securecookie host="^www\.gfi\.com$" name="^(?:ASP\.NET_SessionId|EntryURL|SC_ANALYTICS_(?:GLOBAL|SESSION)_COOKIE|adv|loc)$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^(?!www\.)\w" name="." />
+	<securecookie host="^www\." name="^(?:ASP\.NET_SessionId$|EntryURL$|SC_ANALYTICS|adv$|loc$)" />
 
 
-	<rule from="^http://(customers\.|www\.)?gfi\.com/"
-		to="https://$1gfi.com/" />
+	<!--	Needs test:
+				-->
+	<!--rule from="^http://kb\.gfi\.com/partnersurvey/site/"
+		to="https://gfi.secure.force.com/partnersurvey/site/" /-->
 
-	<rule from="^https?://kb\.gfi\.com/partnersurvey/site/"
-		to="https://gfi.secure.force.com/partnersurvey/site/" />
-
-	<rule from="^https?://kb\.gfi\.com/resource/"
+	<rule from="^http://kb\.gfi\.com/resource/"
 		to="https://gfi.secure.force.com/partnersurvey/resource/" />
 
-	<rule from="^https?://(?:www\.)?gf(i\.nl|ihispana\.com|i-italia\.com|isoftware\.de|sfrance\.com)/"
-		to="https://www.gf$1/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

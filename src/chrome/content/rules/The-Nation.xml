@@ -1,25 +1,80 @@
 <!--
-	s3.amazonaws.com/thenation/
+	CDN buckets:
+
+		- s3.amazonaws.com/thenation/
+
+
+	Problematic hosts in *thenation.com:
+
+		- ^ ʳ
+		- activism ¹
+		- nationbuilders ʳ
+
+	¹ Mismatched
+	ʳ Refused, preemptable redirect
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- donate.thenation.com
+		- subscribe.thenation.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on nationbuilders.thenation.com from static.ning.com *
+
+		- Images, on:
+
+			- nationbuilders.thenation.com from api.ning.com *
+			- www.thenation.com from $self *
+
+		- Bugs, on:
+
+			- www.thenation.com from b.scorecardresearch.com *
+			- www.thenation.com from platform.twitter.com *
+
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="The Nation">
+<ruleset name="The Nation.com">
 
-	<target host="65.98.18.218" />
+	<!--	Direct rewrites:
+				-->
 	<target host="donate.thenation.com" />
-	<target host="upgnation.com" />
-	<target host="www.upgnation.com" />
+	<target host="subscribe.thenation.com" />
+	<target host="www.thenation.com" />
+
+	<!--	Complications:
+				-->
+	<target host="thenation.com" />
+	<target host="nationbuilders.thenation.com" />
 
 
-	<securecookie host="^donate\.thenation\.com$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^donate\.thenation\.com$" name="^(?:ASP\.NET_SessionId$|NSC_|VisitorGuid$)" /-->
+	<!--securecookie host="^subscribe\.thenation\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://donate\.thenation\.com/"
-		to="https://donate.thenation.com/" />
+	<rule from="^http://thenation\.com/"
+		to="https://www.thenation.com/" />
 
-	<rule from="^http://65\.98\.18\.218/"
-		to="https://upgnation.com/" />
+	<rule from="^http://nationbuilders\.thenation\.com/$"
+		to="https://donate.thenation.com/nb-launch-pages/5_2015_nationbuildersmembership" />
 
-	<rule from="^http://(www\.)?upgnation\.com/(images/|(?:image|login|register)\.php|skin/|var/)"
-		to="https://$1upgnation.com/$1" />
+	<!--	Redirect keeps all and prepends forward slash:
+								-->
+	<rule from="^http://nationbuilders\.thenation\.com/"
+		to="https://donate.thenation.com/nb-launch-pages/5_2015_nationbuildersmembership/" />
+
+		<test url="http://nationbuilders.thenation.com/default.aspx" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,42 @@
+<!--
+	CDN buckets:
+
+		- d10svsm0gnverk.cloudfront.net
+
+			- img.metaboli.fr
+
+
+	Problematic hosts in *metaboli.fr:
+
+		- ^ ¹
+		- img ²
+		- www ³ ⁴
+
+	¹ Mismatched
+	² Cloudfront
+	³ Expired
+	⁴ Server sends no certificate chain, see https://whatsmychaincert.com
+
+-->
+<ruleset name="Metaboli.fr (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="www.metaboli.fr" /-->
+
+	<!--	Complications:
+				-->
+	<!--target host="metaboli.fr" /-->
+	<target host="img.metaboli.fr" />
+
+
+	<!--rule from="^http://metaboli\.fr/"
+		to="https://www.metaboli.fr/" /-->
+
+	<rule from="^http://img\.metaboli\.fr/"
+		to="https://d10svsm0gnverk.cloudfront.net/" />
+
+	<!--rule from="^http:"
+		to="https:" /-->
+
+</ruleset>

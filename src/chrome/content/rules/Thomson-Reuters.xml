@@ -1,57 +1,316 @@
 <!--
+	For rules covering resources which do not secure
+	mixed content, see thomsonreuters.com-resources.xml.
+
 	For problematic rules, see Thomson-Reuters-mismatches.xml.
 
 
 	Other Thomson Reuters rulesets:
 
+		- accelus.com.xml
+		- breakingviews.com.xml
 		- Corporate-ir.net.xml
 		- EndNote_Web.xml
 		- Mark-Monitor.xml
 		- Reuters.com.xml
+		- reuters.tv.xml
+		- ScholarOne.xml
+		- Thomson.com.xml
+		- thomsoninnovation.com.xml
+		- Thomson_Reuters.biz.xml
+		- thomsonreuters.com.ar.xml
+		- Thomson_Reuters_Life_Sciences.com.xml
 		- Web_of_Knowledge.xml
+		- Westlaw.com.xml
 
 
-	counterparties-assets.s3.amazonaws.com
+	CDN buckets:
+
+		- counterparties-assets.s3.amazonaws.com
+		- lifesciences.innerve8ltd.netdna-cdn.com
 
 
 	Nonfunctional domains:
 
 		- (www.)ccbn.com
 		- (www.)counterparties.com
-		- (www.)reuters.com		(sec_error_reused_issuer_and_serial)
-		- ip-science.thomsonreuters.com
+
+		- blog ⁵
+		- careers.thomsonreuters.com ³
+		- cmr ⁴
+		- compumark ⁵
+		- developercenter.thomsonreuters.com ⁴
+		- eximius ᵖ
+		- financial ᵃ
+		- innovation ᵃ
+		- ip ⁵
+		- ip-science.thomsonreuters.com ⁵
+		- ipscience ⁴
+		- lifesciences.thomsonreuters.com ⁵
+		- refscan ⁴
+		- science.thomsonreuters.com ⁵
+		- scientific ³
 		- staging.thomsonreuters.com
-		- (www.)thomsonreuters.com
+		- stateofinnovation ⁴
+		- trademarks ⁵
+
+	ᵃ Shows another domain
+	³ Shows insidecareers
+	⁴ Dropped
+	ᵖ Plaintext reply
+	⁵ Refused
 
 
-	Fully covered domains:
+	Problematic hosts in *thomsonreuters.com:
 
+		- corepublishingsolutions ᵐ
+		- blog.corepublishingsolutions ᵐ
+		- endnote ᵐ ˢ
+		- excellence ᵐ
+		- interest.ip ¹
+		- lifesciences ᵐ ˢ
+		- lresearch ³
+		- mena ᵐ
+		- nz ᵐ
+		- online ᵐ
+		- recap ᵐ ˢ
+		- osu.researchinview ᶜ
+		- interest.science ¹
+		- sustainability ᵐ
+		- wosac ᵐ ˢ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+	ˢ Self-signed
+	¹ Eloqua
+	³ Mismatched, CN: *.genego.com
+
+
+	Partially covered hosts in *thomsonreuters.com:
+
+		- legalsolutions *
+		- uklawstudent *
+
+	* Some pages redirect to http
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .thomsonreuters.com
+		- annual-report.thomsonreuters.com
+		- blogs.thomsonreuters.com
+
+		- admin.checkpoint.thomsonreuters.com
+		- billingsupport.checkpoint.thomsonreuters.com
+		- ebill.checkpoint.thomsonreuters.com
+		- support.checkpoint.thomsonreuters.com
+
+		- checkpointlearning.thomsonreuters.com
+		- datastream.thomsonreuters.com
+		- developers.thomsonreuters.com
+		- community.developers.thomsonreuters.com
+		- fmc.thomsonreuters.com
+		- fnis.thomsonreuters.com
+		- fntr.thomsonreuters.com
+		- forms.thomsonreuters.com
+		- assets.gcs.thomsonreuters.com
+		- iamam.thomsonreuters.com
+		- error.incites.thomsonreuters.com
+		- esi.incites.thomsonreuters.com
+		- jcr.incites.thomsonreuters.com
+		- legalsolutions.thomsonreuters.com
 		- info.legalsolutions.thomsonreuters.com
+		- myaccount.thomsonreuters.com
+		- proview.thomsonreuters.com
+		- osu.researchinview.thomsonreuters.com
+		- support.rg.thomsonreuters.com
+		- ria.thomsonreuters.com
+		- signin.thomsonreuters.com
+		- signon.thomsonreuters.com
+		- tax.thomsonreuters.com
+		- thehub.thomsonreuters.com
+		- tickhistory.thomsonreuters.com
+		- updates.thomsonreuters.com
+		- www.thomsonreuters.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on sustainability from assets.gcs.thomsonreuters.com * ˢ
+		- Images on interest.science from science ³
+		- Bug on customers from statse.webtrendslive.com ˢ
+
+	* Only fonts
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+	³ Unsecurable <= refused
 
 -->
-<ruleset name="Thomson Reuters (partial)">
+<ruleset name="Thomson Reuters.com (partial)">
 
-	<target host="*.west.thomson.com" />
-	<target host="*.thomsonreuters.com" />
-	<target host="*.westlaw.com" />
-	<target host="images.store.westlaw.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="thomsonreuters.com" />
+	<target host="aeddo.thomsonreuters.com" />
+	<target host="annual-report.thomsonreuters.com" />
+	<target host="blogs.thomsonreuters.com" />
+
+	<target host="admin.checkpoint.thomsonreuters.com" />
+	<target host="billingsupport.checkpoint.thomsonreuters.com" />
+	<target host="ebill.checkpoint.thomsonreuters.com" />
+	<target host="support.checkpoint.thomsonreuters.com" />
+
+	<target host="checkpointlearning.thomsonreuters.com" />
+	<target host="cl.thomsonreuters.com" />
+	<target host="clear.thomsonreuters.com" />
+	<target host="cs.thomsonreuters.com" />
+	<target host="customers.thomsonreuters.com" />
+	<target host="datastream.thomsonreuters.com" />
+	<target host="developers.thomsonreuters.com" />
+	<target host="community.developers.thomsonreuters.com" />
+	<target host="fmc.thomsonreuters.com" />
+	<target host="fnis.thomsonreuters.com" />
+	<target host="fntr.thomsonreuters.com" />
+	<target host="forms.thomsonreuters.com" />
+	<target host="assets.gcs.thomsonreuters.com" />
+	<target host="iamam.thomsonreuters.com" />
+	<target host="incites.thomsonreuters.com" />
+
+	<target host="error.incites.thomsonreuters.com" />
+	<target host="esi.incites.thomsonreuters.com" />
+	<target host="jcr.incites.thomsonreuters.com" />
+	<target host="login.incites.thomsonreuters.com" />
+
+	<target host="infobase.thomsonreuters.com" />
+	<target host="insider.thomsonreuters.com" />
+	<target host="embed.insider.thomsonreuters.com" />
+	<target host="jobs.thomsonreuters.com" />
+	<!--target host="legalsolutions.thomsonreuters.com" /-->
+	<target host="info.legalsolutions.thomsonreuters.com" />
+	<target host="static.legalsolutions.thomsonreuters.com" />
+	<target host="mifidii.thomsonreuters.com" />
+	<target host="myaccount.thomsonreuters.com" />
+	<target host="newsandinsight.thomsonreuters.com" />
+	<target host="peermonitor.thomsonreuters.com" />
+	<target host="permid.thomsonreuters.com" />
+	<target host="proview.thomsonreuters.com" />
+	<target host="info.proview.thomsonreuters.com" />
+	<!--target host="osu.researchinview.thomsonreuters.com" /-->
+	<target host="support.rg.thomsonreuters.com" />
+	<target host="ria.thomsonreuters.com" />
+	<target host="risk.thomsonreuters.com" />
+	<target host="sa-proview.thomsonreuters.com" />
+	<target host="signin.thomsonreuters.com" />
+	<target host="signon.thomsonreuters.com" />
+	<target host="tax.thomsonreuters.com" />
+	<target host="thehub.thomsonreuters.com" />
+	<target host="tickhistory.thomsonreuters.com" />
+	<!--target host="uklawstudent.thomsonreuters.com" /-->
+	<target host="updates.thomsonreuters.com" />
+	<target host="www.thomsonreuters.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://legalsolutions\.thomsonreuters\.com/law-products/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://legalsolutions\.thomsonreuters\.com/(?!/*(?:favicon\.ico|law-products/(?:_ui|onlineopinionV5|static|stylesheets)/|medias/))" /-->
+
+			<!--	+ve:
+
+			<test url="http://legalsolutions.thomsonreuters.com/law-products/" />
+			<test url="http://legalsolutions.thomsonreuters.com/law-products/jurisdictions/" />
+			<test url="http://legalsolutions.thomsonreuters.com/law-products/law-books/blacks-law-dictionary" />
+			<test url="http://legalsolutions.thomsonreuters.com/law-products/law-books/collections/finplan" />
+			<test url="http://legalsolutions.thomsonreuters.com/law-products/law-products/customer-service/onepass" />
+			<test url="http://legalsolutions.thomsonreuters.com/law-products/practice/" />
+			<test url="http://legalsolutions.thomsonreuters.com/law-products/westlaw-legal-research/training-support" />
+			-->
+
+			<!--	-ve:
+
+			<test url="http://legalsolutions.thomsonreuters.com/favicon.ico" />
+			<test url="http://legalsolutions.thomsonreuters.com/law-products/_ui/blueprint/print.css" />
+			<test url="http://legalsolutions.thomsonreuters.com/law-products/onlineopinionV5/oo_style.css" />
+			<test url="http://legalsolutions.thomsonreuters.com/law-products/static/ui/swc/screen.css" />
+			<test url="http://legalsolutions.thomsonreuters.com/law-products/stylesheets/themes/redmond/jquery-ui-1.8.9.custom.css" />
+			-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://uklawstudent\.thomsonreuters\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://uklawstudent\.thomsonreuters\.com/(?!/*wp-content/)" /-->
+
+			<!--	+ve:
+					-->
+			<!--
+			<test url="http://uklawstudent.thomsonreuters.com/blog/" />
+			<test url="http://uklawstudent.thomsonreuters.com/learn-the-law/" />
+			-->
+
+			<!--	-ve:
+					-->
+			<!--
+			<test url="http://uklawstudent.thomsonreuters.com/wp-content/themes/tr-alpha/resources/images/widget-background.png" />
+			-->
+
+		<test url="http://assets.gcs.thomsonreuters.com/fonts?variants=regular|bold" />
+		<test url="http://embed.insider.thomsonreuters.com/kwf/widget/caas/instanceid/0_97kgfhgw/cid/0_n1ukq68u/layout/player/features/notranscript" />
+		<test url="http://sa-proview.thomsonreuters.com/eReaderStaticContent_32.5.1002/images/loginECommerce/arrow_up_gray.png" />
+		<test url="http://static.legalsolutions.thomsonreuters.com/static/icons/oo_icon.gif" />
+
+		<!--	$ 500s, so:
+					-->
+		<test url="http://datastream.thomsonreuters.com/dsws/1.0/DSLogon.aspx" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://fnis.thomsonreuters.com/mbl/" />
+
+		<!--	Set cookies without Secure:
+							-->
+		<!--test url="http://forms.thomsonreuters.com/bankcapital12/" /-->
+		<!--test url="http://iamam.thomsonreuters.com/auth/UI/Login" /-->
+		<!--test url="http://myaccount.thomsonreuters.com/MYACCOUNT/AccessControl/AccessControl/SignIn" /-->
+		<!--test url="http://signin.thomsonreuters.com/?productid=ECMLTC&amp;returnto=http%3A%2F%2Flegalsolutions.thomsonreuters.com%2Flaw-products%2F" /-->
 
 
-	<securecookie host="^(images|myaccount)\.west\.thomson\.com$" name=".*" />
-	<securecookie host="^info\.legalsolutions\.thomsonreuters\.com$" name=".+" />
-	<securecookie host="^store\.westlaw\.com$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.thomsonreuters\.com$" name="^(?:CplReturnUrl|amlbcookie|trAuthCookie)$" /-->
+	<!--securecookie host="^(?:annual-report|blogs|assets\.gcs|updates)\.thomsonreuters\.com$" name="^X-Mapping-" /-->
+	<!--securecookie host="^admin\.checkpoint\.thomsonreuters\.com$" name="^(?:JSESSIONID$|oam\.Flash\.REDIRECT|oam\.Flash\.RENDERMAP\.TOKEN|platform-id)$" /-->
+	<!--securecookie host="^billingsupport\.checkpoint\.thomsonreuters\.com$" name="^KSBilling_Cookie$" /-->
+	<!--securecookie host="^(?:ebill\.checkpoint|developers|iamam|tickhistory)\.thomsonreuters\.com$" name="^BIGipServerpool" /-->
+	<!--securecookie host="^(?:support\.checkpoint|fnis)\.thomsonreuters\.com$" name="^(?:ASPSESSIONID[A-Z]{8}$|BIGipServer)" /-->
+	<!--securecookie host="^checkpointlearning\.thomsonreuters\.com$" name="^(?:ASP\.NET_SessionId$|BIGipServerpool)" /-->
+	<!--securecookie host="^customers\.thomsonreuters\.com$" name="^(?:ASP\.NET_SessionId|CZAR1)$" /-->
+	<!--securecookie host="^community\.developers\.thomsonreuters\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^fmc\.thomsonreuters\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^(?:fntr|ria)\.thomsonreuters\.com$" name="^(?:BIGipServerpool|TS[\da-f]{8}$)" /-->
+	<!--securecookie host="^forms\.thomsonreuters\.com$" name="^(?:ASP\.NET_SessionId$|X-Mapping-)" /-->
+	<!--securecookie host="^(?:error\.incites|legalsolutions|proview|www)\.thomsonreuters\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^(?:esi|jcr)\.incites\.thomsonreuters\.com$" name="^(?:BIGipServer|JSESSIONID$)" /-->
+	<!--securecookie host="^(?:info\.legalsolutions|support\.rg)\.thomsonreuters\.com$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+	<!--securecookie host="^myaccount\.thomsonreuters\.com$" name="^(?:\.MYACCOUNT|MA_ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^osu\.researchinview\.thomsonreuters\.com$" name="^(?:_AIMSSESSION$|BIGipServerpool)" /-->
+	<!--securecookie host="^sign[io]n\.thomsonreuters\.com$" name="^(bhCookiePerm|bhCookieSess)$" /-->
+	<!--securecookie host="^tax\.thomsonreuters\.com$" name="^(?:BIGipServerpool|PHPSESSID$)" /-->
+	<!--securecookie host="^thehub\.thomsonreuters\.com$" name="^(?:BIGipServerpool|jive\.login\.ts$|jive\.security\.context$)" /-->
+
+	<securecookie host="^\." name="^_(?:_qca$|gat?$|gat_)" />
+	<securecookie host="^(?!legalsolutions\.)\w" name="." />
 
 
-	<rule from="^http://myaccount\.west\.thomson\.com/"
-		to="https://myaccount.west.thomson.com/" />
+	<!--rule from="^http://lresearch\.thomsonreuters\.com/(?=static/)"
+		to="https://???.genego.com/" /-->
 
-	<rule from="^http://info\.legalsolutions\.thomsonreuters\.com/"
-		to="https://info.legalsolutions.thomsonreuters.com/" />
-
-	<rule from="^http://newsandinsight\.thomsonreuters\.com/(favicon\.ico$|(?:Help|Legal/Login|PrivacyPolicy|TermsOfUse)\.aspx|uploadedimages/|UserSettings\.aspx|Web/)"
-		to="https://newsandinsight.thomsonreuters.com/$1" />
-
-	<rule from="^http://(onepass|(?:images\.)?store)\.westlaw\.com/"
-		to="https://$1.westlaw.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,45 @@
+<!--
+	For problematic rules, see YellowPages.ca-problematic.xml.
+
+
+	Problematic subdomains:
+
+		- (www.) *
+		- yahoo.aws *
+
+	* Works; mismatched, CN: secure.yellowpages.ca
+
+
+	Mixed content:
+
+		- css on (www.) and yahoo.aws from cdn.cb.yp.ca *
+
+	Unsecurable <= 400
+
+-->
+<ruleset name="YellowPages.ca (partial)">
+
+	<target host="secure.yellowpages.ca" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^secure\.yellowpages\.ca$" name="^TS01[\da-f]{6}$" /-->
+	<!--securecookie host="^\.yellowpages\.ca$" name="^psid_ypca$" /-->
+
+	<!--	psid_ypca appears to identify clients' pages and appears not to
+		be used on secure.
+			So, if we handle it whenever we can - that is, whenever
+		the browser navigates to any applicable domain over tls, we
+		shouldn't cause any problems. In this way, Secure is set when
+		users fetch problematic domains over tls without enabling the
+		problematic ruleset.
+					-->
+	<securecookie host="^\.yellowpages\.ca$" name="^psid_ypca$" />
+	<securecookie host="^secure\.yellowpages\.ca$" name=".+" />
+
+
+	<rule from="^http://secure\.yellowpages\.ca/"
+		to="https://secure.yellowpages.ca/" />
+
+</ruleset>

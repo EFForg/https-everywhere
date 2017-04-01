@@ -1,45 +1,95 @@
 <!--
-	Problematic domains:
+	Other Glassdoor rulesets:
 
-		- glassdoor.ca *
-		- ads.glassdoor.com	(cloudfront)
-		- glassdoor.com.au *
-		- glassdoor.co.in *
-		- glassdoor.co.uk *
-
-	* Mismatched, CN: *.glassdoor.com
+		- glassdoor.ca.xml
+		- glassdoor.co.in.xml
+		- glassdoor.co.uk.xml
+		- glassdoor.com.au.xml
 
 
-	Partially covered subdomains:
+	CDN buckets:
 
-		- (www.)	(some pages redirect to http)
+		- d3uryx0fdgatve.cloudfront.net
+
+
+	Nonfunctional hosts in *glassdoor.com:
+
+		- help ʰ
+		- jobs ¹
+		- resources ᵃ
+
+	¹ 521
+	ᵃ Marketo / shows another domain
+	ʰ Redirects to http
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- glassdoor.com
+		- .glassdoor.com
+		- www.glassdoor.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Glassdoor (partial)">
+<ruleset name="Glassdoor.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="glassdoor.com" />
-	<target host="*.glassdoor.com" />
-		<exclusion pattern="^http://(?:www\.)?glassdoor\.c(?:a|om|om\.au|o\.in|o\.uk)/(?!images/|profile/)" />
-	<target host="glassdoor.com.au" />
-	<target host="*.glassdoor.com.au" />
-	<target host="glassdoor.co.*" />
-	<target host="*.glassdoor.co.in" />
-	<target host="*.glassdoor.co.uk" />
+	<target host="ads.glassdoor.com" />
+	<target host="b2b-assets.glassdoor.com" />
+	<target host="blog-content.glassdoor.com" />
+	<target host="static.glassdoor.com" />
+	<target host="media.glassdoor.com" />
+	<target host="www.glassdoor.com" />
+
+		<test url="http://blog-content.glassdoor.com/app/plugins/GDsocialShare/css/GDsocialShare-styles.min.css" />
+
+	<!--	Complications:
+				-->
+	<target host="resources.glassdoor.com" />
+
+		<exclusion pattern="^http://resources\.glassdoor\.com/(?!/*(?:$|\?|css/|images/|rs/))" />
+
+			<!--	For negative cases see below respective rules.
+
+				+ve:
+					-->
+			<test url="http://resources.glassdoor.com/contact-sales-side.html" />
+			<test url="http://resources.glassdoor.com/default.aspx" />
+			<test url="http://resources.glassdoor.com/employer-branding-for-dummies-1.html" />
+			<test url="http://resources.glassdoor.com/employer-engagement-toolkit.html" />
+			<test url="http://resources.glassdoor.com/five-reasons-your-job-postings-arent-working.html" />
+			<test url="http://resources.glassdoor.com/hubspot-culture-code.html" />
+			<test url="http://resources.glassdoor.com/index.htm" />
+			<test url="http://resources.glassdoor.com/recruiting-budget-spreadsheet-2015.html" />
 
 
-	<securecookie host="^static\.glassdoor\.com$" name=".+" />
+	<!--    Not secured by server:
+					-->
+	<!--securecookie host="^glassdoor\.com$" name="^ARPNTS$" /-->
+	<!--securecookie host="^\.glassdoor\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^www\.glassdoor\.com$" name="^(?:_uac|ARPNTS|gdId)$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid$|_gat?$|_gat_|cf_clearance$)" />
+	<securecookie host="^(?!resources\.)\w" name="." />
 
 
-	<rule from="^http://(media\.|static\.|www\.)?glassdoor\.com/"
-		to="https://$1glassdoor.com/" />
+	<rule from="^http://resources\.glassdoor\.com/(?=/*(?:cs|image|r)s/)"
+		to="https://na-abm.marketo.com/" />
 
-	<rule from="^https?://ads\.glassdoor\.com/"
-		to="https://d3uryx0fdgatve.cloudfront.net/" />
+		<test url="http://resources.glassdoor.com/css/mktLPSupport.css" /><!--	888 -->
+		<test url="http://resources.glassdoor.com/rs/glassdoor/images/arrow-green.png" /><!--	313 -->
 
-	<rule from="^https?://glassdoor\.c(a|om\.au|o\.in|o\.uk)/"
-		to="https://www.glassdoor.c$1/" />
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://resources\.glassdoor\.com/.*"
+		to="https://www.glassdoor.com/" />
 
-	<rule from="^http://(static|www)\.glassdoor\.c(a|om\.au|o\.in|o\.uk)/"
-		to="https://$1.glassdoor.c$2/" />
+		<test url="http://resources.glassdoor.com/?" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

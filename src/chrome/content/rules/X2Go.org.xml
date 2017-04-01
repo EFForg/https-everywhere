@@ -1,33 +1,51 @@
 <!--
-	Problematic subdomains:
+	Nonfunctional hosts in *x2go.org:
 
-		- ^	(redirects to orga.obviously-nice.de; mismatched, CN: orga.obviously-nice.de)
+		- packages *
+
+	* Shows bugs.x2go.org
 
 
-	Fully covered subdomains:
+	Problematic hosts in *x2go.org:
 
-		- (www.)	(^ → www)
-		- japsand
-		- jenkins
-		- jenkins...:8443
-		- new
-		- todo
-		- wiki
+		- ^ ¹
+		- bugs ²
+
+	¹ Redirects to orga.obviously-nice.de
+	² Mismatched
 
 -->
-<ruleset name="X2Go.org" default_off="self-signed">
+<ruleset name="X2Go.org" default_off="untrusted root">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="code.x2go.org" />
+	<target host="git.x2go.org" />
+	<target host="japsand.x2go.org" />
+	<target host="jenkins.x2go.org" />
+	<target host="lists.x2go.org" />
+	<target host="new.x2go.org" />
+	<target host="todo.x2go.org" />
+	<target host="wiki.x2go.org" />
+
+	<!--	Complications:
+				-->
 	<target host="x2go.org" />
-	<target host="*.x2go.org" />
+	<target host="bugs.x2go.org" />
+
+		<test url="http://jenkins.x2go.org:8443/" />
 
 
-	<securecookie host=".+\.x2go\.org$" name=".+" />
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:www\.)?x2go\.org/"
+	<rule from="^http://x2go\.org/"
 		to="https://www.x2go.org/" />
 
-	<rule from="^http://(japsand|jenkins|new|todo|wiki)\.x2go\.org(:8443)?/"
-		to="https://$1.x2go.org$2/" />
+	<rule from="^http://bugs\.x2go\.org/"
+		to="https://packages.x2go.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

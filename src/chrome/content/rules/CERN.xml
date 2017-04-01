@@ -1,135 +1,288 @@
 <!--
+	For rules causing false/broken MCB, see CERN.ch-falsemixed.xml.
+
 	For problematic rules, see CERN.ch-problematic.xml.
 
-
 	Nonfunctional domains:
+		- in *cern.ch:
+			- cdsware ʳ
+			- consult ᵃ
+			- inveniobuilder ᵈ
+			- library ᵃ
+			- line-mode ᵈ
+			- lxroot02 ᵃ
+			- opendata ᵈ
 
-		- cern.ch subdomains:
+			- in *web:
+				- aida2020 ᵈ
+				- educard2 ᵈ
+				- alpha ᵈ
+				- atlas-outreach ᵈ
+				- avc-dashboard ᵈ
+				- first-website ᵈ
+				- gs-dep ᵈ
+				- home ᵈ
+				- information-technology ᵈ
+				- library ᵈ
+				- ombuds ᵈ
+				- photoclub ᵈ
+				- press ᵈ
+				- user ʰ
 
-			- cernvm	(redirects to login.cern.ch, self-signed)
-			- library	(shows invenio-demo; mismatched, CN: invenio-demo.cern.ch)
-			- line-mode	(dropped)
-			- lxroot02	(shows root, self-signed)
+		- cerncourier.org ʰ
+		- (www.)?cernland.net	(prints "cernland.net does not exist")
 
-			- web subdomains:
+	ᵃ Shows another domain
+	ʳ Refused
+	ᵈ Redirects to login.cern.ch, valid cert
+	ᵈ Dropped
+	ʰ Redirects to http
 
-				- alpha *
-				- first-website *
-				- itssb *
-				- home *
-				- library *
-				- photoclub *
+	Problematic hosts in *cern.ch:
+		- aliceinfo ᵘ
+		- association ᵐ
+		- atlasop ᵘ
+		- bulletin ᵐ
+		- cmsdoc ᵐ ᵘ
+		- lhcb ᵐ
+		- osscvs ᵐ
+		- hypernews ᶜ
+		- info ⁴
+		- invenio-demo ᵉ ˢ
+		- savannah ᵐ
+		- sft.its ˢ
+		- photoclub ᵐ
+		- root ˢ	($ 403s, drupal/ works)
+		- vocms0153 ᵘ
+		- web ᵐ
+			- cvs.web ˣ
+			- hr-dept.web ᵐ
+			- indico.web ᵐ
+			- it-dep.web ᵐ
+			- listboxservices.web ᵐ
+			- project-voisins.web ᵐ
+			- sl.web ᵐ
+			- st.web ᵐ
+			- webregister.web ᵐ
+	⁴ 404
+	ᶜ Missing certificate chain
+	ᵉ Expired
+	ᵐ Mismatched
+	ˢ Self-signed
+	ᵘ Untrusted root
+	ˣ Mixed css
 
-		- cerncourier.org	(redirects to http; mismatched, CN: *.iop.org)
-		- (www.)cernland.net	(prints "cernland.net does not exist"; mismatched, CN: *.infomaniak.ch)
-
-	* Redirects to login.cern.ch, valid cert
-
-
-	Problematic cern.ch subdomains:
-
-		- info		(404; mismatched, CN: *.web.cern.ch)
-		- sft.its	(works, self-signed)
-		- photoclub	(works; mismatched, CN: CERN.CH)
-		- root		($ 403s, drupal/ works; self-signed)
-		- listboxservices.web	(mismatched, CN: *.cern.ch)
-
-
-	Partially covered subdomains:
-
+	Partially covered hosts in *cern.ch:
 		- listboxservices.web	(→ simba3.web)
 
+	Insecure cookies are set for these hosts:
+		- account.cern.ch
+		- cds.cern.ch
+		- cdsweb.cern.ch
+		- cernvm-online.cern.ch
+		- meter.cern.ch
+		- phonebook.cern.ch
+		- svnweb.cern.ch
+		- twiki.cern.ch
+		- vmm.cern.ch
 
-	Fully covered subdomains:
+		- atglance.web.cern.ch
+		- cernvm.web.cern.ch
+		- piwik.web.cern.ch
+		- printservice.web.cern.ch
+		- webservices.web.cern.ch
+		- winservices.web.cern.ch
 
-		- (www.)
-		- bulletin
-		- cds
-		- cdsmedia
-		- cdsweb
-		- edms
-		- ert
-		- espace
-		- indico
-		- login
-		- mtf
-		- savannah
-
-		- web subdomains:
-
-			- ^
-			- ab-dep-op-elogbook
-			- atlas
-			- committees
-			- education
-			- egee-uig
-			- environmental-impact
-			- framework
-			- hie-isolde
-			- hr-dept
-			- hr-info
-			- hr-recruit
-			- indico
-			- isolde
-			- isolde-project-rilis
-			- job
-			- oraweb
-			- outreach
-			- press
-			- project-voisins
-			- public
-			- service-portal
-			- simba3
-			- user
-			- webservices
-
-
-	Observed cookie domains:
-
-		- cds ¹
-		- cdsweb ¹
-		- cernvm ²
-		- .cernvm ²
-		- invenio-demo
-		- sft.its ³
-		- root ³
-		- .root ³
-		- savannah ¹
-
-		- web subdomains:
-
-			- alpha ²
-			- first-website ²
-			- home ²
-			- itssb ²
-			- library ²
-			- photoclub ²
-
-	¹ Secured by us <= complete coverage
-	² Not secured by us <= we don't touch http cookies
-	³ Secured by us when set via https
-
+	Mixed content:
+		- css, on:
+			- cvs.web from ^cern.ch ˢ
+			- hcc.web from fonts.googleapis.com ˢ
+		- Images, on:
+			- cvs.web, lhcdashboard.web from ^cern.ch ˢ
+			- lhcdashboard.web from lhcdashboard-images.web.cern.ch ˢ
+			- lpc.web from lpc-afs.web.cern.ch ˢ
+			- care-hhh.web, project-lbs.web, totem.web from $self ˢ
+			- slhc-rip1.web, totem.web from www.cern.ch ˢ
+			- test-dmtotem.web from webregister.web.cern.ch
+		- Bugs, on:
+			- account, acc-stats.web, cds, cdsweb, lhcb.web, lhcdasboard.web, linux.web from piwik.web.cern.ch ˢ
+			- go.web from piwik-short.web.cern.ch ˢ
+			- lhc-beam-operation-committee.web from www.counter-go.de
+			- pofpa.web from m1.nedstatbasic.net
+	ˢ Secured by us
 -->
-<ruleset name="CERN (partial)">
 
+<ruleset name="CERN">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="cern.ch" />
-	<target host="*.cern.ch" />
+	<target host="www.cern.ch" />
+	<target host="account.cern.ch" />
+	<target host="cds.cern.ch" />
+	<target host="cdsmedia.cern.ch" />
+	<target host="cdsweb.cern.ch" />
+	<target host="cernvm.cern.ch" />
+	<target host="cernvm-online.cern.ch" />
+	<target host="cta.cern.ch" />
+	<target host="dashboards.cern.ch" />
+	<target host="edms.cern.ch" />
+	<target host="ert.cern.ch" />
+	<target host="espace.cern.ch" />
+	<target host="espace2013.cern.ch" />
+	<target host="found.cern.ch" />
+	<target host="groups.cern.ch" />
+	<target host="indico.cern.ch" />
+	<target host="keystone.cern.ch" />
+	<target host="lbcomet.cern.ch" />
+	<target host="lbrundb.cern.ch" />
+	<target host="login.cern.ch" />
+	<target host="meter.cern.ch" />
+	<target host="mtf.cern.ch" />
+	<target host="netstat.cern.ch" />
+	<target host="openstack.cern.ch" />
+	<target host="phonebook.cern.ch" />
+	<target host="sir.cern.ch" />
+	<target host="svnweb.cern.ch" />
+	<target host="twiki.cern.ch" />
+	<target host="vmm.cern.ch" />
+
+	<target host="ab-dep-op-elogbook.web.cern.ch" />
+	<!--target host="acc-stats.web.cern.ch" /-->
+	<target host="alice-collaboration.web.cern.ch" />
+	<target host="atglance.web.cern.ch" />
+	<target host="atlas.web.cern.ch" />
+	<target host="atlassec.web.cern.ch" />
+	<target host="care-hhh.web.cern.ch" />
+	<target host="cernvm.web.cern.ch" />
+	<target host="committees.web.cern.ch" />
+	<target host="commonimages.web.cern.ch" />
+	<target host="computing-images.web.cern.ch" />
+	<target host="computing-templates.web.cern.ch" />
+	<!--target host="cvs.web.cern.ch" /-->
+	<!--target host="dashboard.web.cern.ch" /-->
+	<target host="dfsweb.web.cern.ch" />
+	<target host="education.web.cern.ch" />
+	<target host="egee-uig.web.cern.ch" />
+	<target host="environmental-impact.web.cern.ch" />
+	<target host="framework.web.cern.ch" />
+	<target host="go.web.cern.ch" />
+	<target host="hcc.web.cern.ch" />
+	<target host="hccdashboard.web.cern.ch" />
+	<target host="hie-isolde.web.cern.ch" />
+	<target host="hr-info.web.cern.ch" />
+	<target host="hr-recruit.web.cern.ch" />
+	<target host="info-slhc-pp.web.cern.ch" />
+	<target host="isolde.web.cern.ch" />
+	<target host="isolde-project-rilis.web.cern.ch" />
+	<target host="it-dep-redir.web.cern.ch" />
+	<target host="itssb.web.cern.ch" />
+	<target host="job.web.cern.ch" />
+	<target host="jobs.web.cern.ch" />
+	<target host="layout.web.cern.ch" />
+	<target host="lhc.web.cern.ch" />
+	<target host="lhcb.web.cern.ch" />
+	<target host="lhc-beam-operation-committee.web.cern.ch" />
+	<target host="lhc-commissioning.web.cern.ch" />
+	<target host="lhc-div-miwg.web.cern.ch" />
+	<target host="lhc-mpwg.web.cern.ch" />
+	<target host="lhc-statistics.web.cern.ch" />
+	<target host="lhcdashboard.web.cern.ch" />
+	<target host="lhcdashboard-images.web.cern.ch" />
+	<target host="linac4.web.cern.ch" />
+	<target host="linac4-project.web.cern.ch" />
+	<target host="linux.web.cern.ch" />
+	<target host="liuwg.web.cern.ch" />
+	<target host="lpc.web.cern.ch" />
+	<target host="lpc-afs.web.cern.ch" />
+	<target host="m.web.cern.ch" />
+	<target host="md-coord.web.cern.ch" />
+	<target host="niceadminreview.web.cern.ch" />
+	<target host="nicegraphs.web.cern.ch" />
+	<target host="op-webtools.web.cern.ch" />
+	<target host="outreach.web.cern.ch" />
+	<target host="paf.web.cern.ch" />
+	<target host="paf-ps2.web.cern.ch" />
+	<target host="paf-spsu.web.cern.ch" />
+	<target host="piwik.web.cern.ch" />
+	<target host="piwik-short.web.cern.ch" />
+	<target host="pofpa.web.cern.ch" />
+	<target host="printservice.web.cern.ch" />
+	<target host="proj-lti.web.cern.ch" />
+	<target host="project-lbs.web.cern.ch" />
+	<target host="project-slhc.web.cern.ch" />
+	<target host="public.web.cern.ch" />
+	<target host="remotedesktop.web.cern.ch" />
+	<target host="rilis.web.cern.ch" />
+	<target host="security.web.cern.ch" />
+	<target host="service-access-data.web.cern.ch" />
+	<target host="service-portal.web.cern.ch" />
+	<target host="simba3.web.cern.ch" />
+	<target host="sl-div.web.cern.ch" />
+	<target host="st-div.web.cern.ch" />
+	<target host="teacher-programmes.web.cern.ch" />
+	<target host="totem.web.cern.ch" />
+	<target host="webservices.web.cern.ch" />
+	<target host="winservices.web.cern.ch" />
+
+	<target host="home.cern" />
+	<target host="www.home.cern" />
+	<target host="alumni.cern" />
+	<target host="atlas.cern" />
+	<target host="cms.cern" />
+	<target host="hse.cern" />
+	<target host="nic.cern" />
+	<target host="press.cern" />
+	<target host="visit.cern" />
+
+	<!--	Complications:	-->
+
+	<target host="directory.web.cern.ch" />
+		<exclusion pattern="http://directory\.web\.cern\.ch/+(?!directory/(?:cern_toolbar/css|css|img|jquery-ui|js)/)" />
+			<!--	+ve:	-->
+			<test url="http://directory.web.cern.ch/directory/" />
+			<test url="http://directory.web.cern.ch/directory/#cds-tab" />
+			<test url="http://directory.web.cern.ch/directory/#search-tab" />
+			<test url="http://directory.web.cern.ch/directory/?6" />
+			<test url="http://directory.web.cern.ch/directory/?is" />
+			<test url="http://directory.web.cern.ch/directory/?quota" />
+			<test url="http://directory.web.cern.ch/directory/?test" />
+			<!--	-ve:	-->
+			<test url="http://directory.web.cern.ch/directory/cern_toolbar/css/toolbar.css" />
+			<test url="http://directory.web.cern.ch/directory/css/style.css" />
+			<test url="http://directory.web.cern.ch/directory/img/bullet.png" />
+			<test url="http://directory.web.cern.ch/directory/jquery-ui/jquery-ui.min.css" />
+			<test url="http://directory.web.cern.ch/directory/js/directory.js" />
+			<test url="http://directory.web.cern.ch/directory/js/bootstrap.min.js" />
 
 
-	<securecookie host=".*\.cern\.ch$" name=".+" />
+	<!--	Redirect keeps path and args,
+		but not forward slash:	-->
+	<target host="lhcb.cern.ch" />
+	<rule from="^http://lhcb\.cern\.ch/"
+		to="https://lhcb.web.cern.ch/lhcb/" />
 
-
-	<rule from="^http://((?:association|bulletin|cds|cdsmedia|cdsweb|edms|ert|espace|indico|login|mtf|savannah|(?:(?:ab-dep-op-elogbook|atlas|committees|education|egee-uig|environmental-impact|framework|hie-isolde|hr-dept|hr-info|hr-recruit|indico|isolde(?:-project-rilis)?|job|oraweb|outreach|press|project-voisins|public|service-portal|simba3|user|webservices)\.)?web|www)\.)?cern\.ch/"
-		to="https://$1cern.ch/" />
-
-	<!--	Redirects like so:
-					-->
-	<rule from="^https?://listboxservices\.web\.cern\.ch/listboxservices/simba2/"
+	<!--	Redirects like so:	-->
+	<target host="listboxservices.web.cern.ch" />
+	<rule from="^http://listboxservices\.web\.cern\.ch/listboxservices/simba2/"
 		to="https://simba3.web.cern.ch/simba3/simba2/" />
 
-	<!--	Protocol-relative redirect from user.web:
-							-->
-	<rule from="^https://home\.web\.cern\.ch/"
-		to="http://home.web.cern.ch/" downgrade="1" />
+		<exclusion pattern="^http://listboxservices\.web\.cern\.ch/(?!listboxservices/simba2/)" />
+			<!--	+ve:	-->
+			<test url="http://listboxservices.web.cern.ch/Default.aspx" />
+			<test url="http://listboxservices.web.cern.ch/home.php" />
+			<!--	-ve:	-->
+			<test url="http://listboxservices.web.cern.ch/listboxservices/simba2/" />
 
+	<target host="home.web.cern.ch" />
+	<rule from="^http://home\.web\.cern\.ch/"
+		to="https://home.cern/" />
+
+	<target host="st.web.cern.ch" />
+	<rule from="^http://st\.web\.cern\.ch/"
+		to="https://st-div.web.cern.ch/" />
+
+	<securecookie host=".+" name=".+" />
+
+	<rule from="^http:" to="https:" />
 </ruleset>

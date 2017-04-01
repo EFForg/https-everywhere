@@ -1,0 +1,109 @@
+<!--
+	London borough of Camden
+
+	For rules causing false/broken MCB, see Camden.gov.uk.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *camden.gov.uk:
+
+		- adlib ³
+		- aphr.gslb
+		- camdencarechoices ᵃ
+		- camdendataadmin *
+		- camdocs ʳ
+		- childcaresearch ʳ
+		- cindex *
+		- democracy ³
+		- gis ³
+		- (www.)?lessonstudy ᵇ
+		- (www.)?localoffer *
+		- maps ³
+		- schoolsearch ʳ
+		- beta.sharingbestpractice ᵃ
+		- whatson ʳ
+
+	* Redirects to another domain
+	³ 503
+	ᵃ Shows another domain
+	ᵇ Shows default page
+	ʳ Refused
+
+
+	Problematic hosts in *camden.gov.uk:
+
+		- business ᶜ
+		- beta.maps ᵐ
+		- news ᵐ ˣ
+		- www3 ˣ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+	ˣ Mixed css
+
+
+	Insecure cookies are set for these hosts:
+
+		- camden.gov.uk
+		- camdenactive.camden.gov.uk
+		- news.camden.gov.uk
+		- schoolsupportservices.camden.gov.uk
+		- permits.camden.gov.uk
+		- www.camden.gov.uk
+
+
+	Mixed content:
+
+		- css, on:
+
+			- beta.maps maxcdn.bootstrapcdn.com ˢ
+			- beta.maps cdnjs.cloudflare.com ˢ
+			- news from fonts.googleapis.com ˢ
+			- news from presspage-production-content.s3.amazonaws.com
+			- www3 from $self ˢ
+
+		- Images, on:
+		
+			- news from ^camden.gov.uk ˢ
+			- www3 from $self ˢ
+
+		- favicon on www3 from www.camden.gov.uk ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Camden.gov.uk (partial)">
+
+	<target host="camden.gov.uk" />
+	<!--target host="business.camden.gov.uk" /-->
+	<target host="camdenactive.camden.gov.uk" />
+	<target host="contact.camden.gov.uk" />
+	<target host="forms.camden.gov.uk" />
+	<target host="opendata.camden.gov.uk" />
+	<target host="payments.camden.gov.uk" />
+	<target host="permits.camden.gov.uk" />
+	<target host="schoolsupportservices.camden.gov.uk" />
+	<target host="www.camden.gov.uk" />
+	<!--target host="www3.camden.gov.uk" /-->
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://www3.camden.gov.uk/100in100/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?camden\.gov\.uk$" name="^ad_path$" /-->
+	<!--securecookie host="^(?:camdenactive|schoolsupportservices)\.camden\.gov\.uk$" name="^(?:ASP\.NET_SessionId|rtCookiePrivacySetting)$" /-->
+	<!--securecookie host="^news\.camden\.gov\.uk$" name="^PPSESSION$" /-->
+	<!--securecookie host="^permits\.camden\.gov\.uk$" name="^(?:\.ASPXANONYMOUS|ASP\.NET_SessionId)$" /-->
+
+	<securecookie host="^\." name="_gat$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

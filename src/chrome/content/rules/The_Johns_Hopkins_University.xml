@@ -1,55 +1,306 @@
 <!--
-	DNS Name: *.erp.johnshopkins.edu
+	For rules causing false/broken MCB, see JHU.edu-falsemixed.xml.
+
+	Other Johns Hopkins University rulesets:
+
+		- Hopkins-Interactive.com.xml
+		- JH.edu.xml
+		- JHMI.edu.xml
+		- Johns_Hopkins.edu.xml
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *jhu.edu:
 
-		- ssc.jhmi.edu	(shows ess.erp.johnhopkins.edu, CN: *.johnshopkins.edu)
-		- www.jhu.edu	(CN: *.johnshopkins.edu)
-		- (www.)library.jhu.edu
+		- academicsupport ²
+		- accessibility ²
+		- advanced ³
+		- www.advising ²
+		- (www.)?alumni ʳ
+		- www.ams ʳ
+		- anthropology ²
+		- archaeologicalmuseum ʳ
+		- (www.)?benefits **
+		- www.bio	(Shows orchid.hosts.jhmi.edu)
+		- (www.)?bme ²
+		- carey ʳ
+		- (www.)?cbi ²
+		- (www.)?chemistry ²
+		- classics ²
+		- cmdb		(Shows webapps.jhu.edu)
+		- cogsci ²
+		- digitalmedia ²
+		- e-catalog ʳ
+		- (www.)?econ ²
+		- education ᵈ
+		- eng ᵈ
+		- english ²
+		- eps ²
+		- gazette ²
+		- (www.)?grad ²
+		- grll ²
+		- gro ²
+		- history ²
+		- host ²
+		- humctr ²
+		- isi ʳ
+		- spar.isi ʳ
+		- jhuniverse ²
+		- krieger ²
+		- krieger2 ²
+		- kriegerbeta	(500)
+		- kriegerit ²
+		- ksasalpha	(Blank page)
+		- labsafety-old ²
+		- old.library ᵗ
+		- magazine ʳ
+		- mathnt.mat ²
+		- (www.)?math	(Plaintext reply)
+		- (www.)?mathematics ²
+		- neareast ²
+		- (www.)?nursing ²
+		- parents ²
+
+		- facultydb.peabody ᶠ
+		- musiclibrary.peabody	404
+		- preview.peabody ʳ
+
+		- pbs ²
+		- pha			(Shows mail.pha.jhu.edu)
+		- www.pha		(Shows wiki.pha.jhu.edu)
+		- philosophy ²
+		- physics-astronomy ²
+		- pmb ²
+		- pmcb ²
+		- politicalscience ²
+		- postdoc ²
+		- releases ²
+		- sexualassault ²
+		- (www.)?soc ²
+		- stepup ²
+		- tutoring ᵈ
+		- web ²
+		- webaccessibility	(Shows orchid.hosts.jhmi.edu)
+		- writingseminars ²
+
+	³ 403
+	ᵈ Dropped
+	** Shows hrnt
+	ʳ Refused
+	² 200 "not configured"
+	ᵗ Reset
+	ᶠ Handshake fails
 
 
-	Problematic domains:
+	Problematic hosts in *jhu.edu:
 
-		- cs.jhu.edu	(cert only matches www.cs)
+		- beta ᶜ
+		- (www.)?ce ʳ
+		- caportal.cis ᵐ
+		- gallery.cis ˢ
+		- mind.cog ᵉ
+		- (www.)?ce ʳ
+		- (www.)?giving ʳ
+		- homewoodphoto2 ˢ
+		- www.hub ᵐ
+		- help.isis ᵉ
+		- (www.)?it ²
+		- labsafety ˣ
+		- ask.library ᵐ
+		- databases.library ˢ
+		- nanjing ᵐ
+		- peabody ᵐ
+		- www.peabody ᶜ
+		- help.sset ᵉ ᵐ
+
+	² 200 "not configured"
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵉ Expired
+	ᵐ Mismatched
+	ʳ Refused
+	ˢ Self-signed
+	ˣ Mixed css
 
 
-	Fully covered domains:
+	Partially covered hosts in *jhu.edu:
 
-		- orchid.hosts.jhmi.edu
+		- www.ams ⁴	(→ engineering)
 
-		- (www.)cs.jhu.edu	(^ → www)
-		- webapps.jhu.edu
+	⁴ Some paths 404
 
-		- johnshopkins.edu subdomains:
 
-			- ess.erp
-			- my
-			- portal
-			- portalcontent
+	These altnames don't exist:
+
+		- beta.jhu.edu
+		- io17.cis.jhu.edu
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- blackboard.jhu.edu
+		- gallery.cis.jhu.edu
+		- archive.data.jhu.edu
+		- hrnt.jhu.edu
+		- hub.jhu.edu
+		- isis.jhu.edu
+		- m.jhu.edu
+		- .muse.jhu.edu
+		- esgwtdc.nts.jhu.edu
+		- peabody.jhu.edu
+		- www.peabody.jhu.edu
+
+
+	Mixed content:
+
+		- css, on:
+
+			- homewoodphoto2, www.peabody from fonts.googleapis.com ˢ
+			- labsafety from $self ˢ
+			- www.peabody from $self ᶜ
+
+		- Images, on:
+
+			- archive.data from dmp.data.jhu.edu ˢ
+			- archive.data, dmp.data from www.library.jhu.edu ˢ
+			- (www.)?cs, support.cs from engineering.jhu.edu ˢ
+			- engineering from $self ˢ
+			- homewoodphoto2 from *.r\d+.cf\d.rackcdn.com ˢ
+			- www.peabody from $self ᶜ
+
+		- favicon on hmt from webapps ˢ
+
+	ᶜ Not secured by us <= missing certificate chain
+	ˢ Secured by us
 
 -->
-<ruleset name="The Johns Hopkins University (partial)">
+<ruleset name="JHU.edu (partial)">
 
-	<target host="orchid.hosts.jhmi.edu" />
+	<!--	Direct rewrites:
+				-->
+	<target host="apply.jhu.edu" />
+	<!--target host="beta.jhu.edu" /-->
+	<target host="blackboard.jhu.edu" />
+	<target host="connect.jhu.edu" />
+	<target host="cs.jhu.edu" />
+	<target host="www.cs.jhu.edu" />
+	<target host="archive.data.jhu.edu" />
+	<target host="dmp.data.jhu.edu" />
+	<target host="jhweb.dev.jhu.edu" />
+	<target host="engineering.jhu.edu" />
+	<target host="ep.jhu.edu" />
+	<target host="folio.jhu.edu" />
+	<target host="hrnt.jhu.edu" />
+	<target host="hub.jhu.edu" />
+	<target host="api.hub.jhu.edu" />
+	<target host="isis.jhu.edu" />
+	<!--target host="help.isis.jhu.edu" /-->
+	<target host="jobs.jhu.edu" />
+	<target host="sites.krieger.jhu.edu" />
+	<!--target host="labsafety.jhu.edu" /-->
+	<target host="library.jhu.edu" />
+
+	<target host="catalyst.library.jhu.edu" />
+	<target host="databases.library.jhu.edu" />
+	<target host="findit.library.jhu.edu" />
+	<target host="rooms.library.jhu.edu" />
+	<target host="www.library.jhu.edu" />
+
+	<target host="m.jhu.edu" />
+	<target host="muse.jhu.edu" />
+	<target host="my.jhu.edu" />
+	<target host="esgwtdc.nts.jhu.edu" />
+	<!--target host="www.peabody.jhu.edu" /-->
+	<target host="wiki.pha.jhu.edu" />
+	<target host="jhupbooks.press.jhu.edu" />
+	<target host="www.press.jhu.edu" />
+	<target host="rising.jhu.edu" />
+	<target host="www.rising.jhu.edu" />
+	<target host="secure.jhu.edu" />
+	<target host="www.secure.jhu.edu" />
 	<target host="webapps.jhu.edu" />
-	<target host="*.johnshopkins.edu" />
-	<target host="ess.erp.johnshopkins.edu" />
+	<target host="www.jhu.edu" />
+
+	<!--	Complications:
+				-->
+	<target host="www.ams.jhu.edu" />
+	<target host="ce.jhu.edu" />
+	<target host="www.ce.jhu.edu" />
+	<target host="giving.jhu.edu" />
+	<target host="www.giving.jhu.edu" />
+	<target host="www.hub.jhu.edu" />
+	<target host="it.jhu.edu" />
+	<target host="www.it.jhu.edu" />
+	<!--target host="peabody.jhu.edu" /-->
+	<target host="nanjing.jhu.edu" />
+	<!--target host="help.sset.jhu.edu" /-->
+
+		<exclusion pattern="^http://www\.ams\.jhu\.edu/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.ams.jhu.edu/ers/" />
+			<test url="http://www.ams.jhu.edu/~eyink/" />
+			<test url="http://www.ams.jhu.edu/~fishkind/550_361.html" />
+			<test url="http://www.ams.jhu.edu/~priebe/students.html" />
+			<test url="http://www.ams.jhu.edu/~yxu70/research.html" />
 
 
-	<securecookie host="^.+\.johnshopkins\.edu$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^blackboard\.jhu\.edu$" name="^(?:JSESSIONID|bbcswebdav|session_id)$" /-->
+	<!--securecookie host="^gallery\.cis\.jhu\.edu$" name="^GallerySession$" /-->
+	<!--securecookie host="^archive\.data\.jhu\.edu$" name="^ice\.push\.browser$" /-->
+	<!--securecookie host="^hrnt\.jhu\.edu$" name="^(CFID|CFTOKEN|JHUJOBS_ID|JHUJOBS_USER|JSESSIONID)$" /-->
+	<!--securecookie host="^hub\.jhu\.edu$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^isis\.jhu\.edu$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^m\.jhu\.edu$" name="^(?:_kgouuid|[\da-f]{32})$" /-->
+	<!--securecookie host="^\.muse\.jhu\.edu$" name="^session$" /-->
+	<!--securecookie host="^esgwtdc\.nts\.jhu\.edu$" name="^(?:ACOOKIE|WEBTRENDS_ID)$" /-->
+	<!--securecookie host="^(www\.)?peabody\.jhu\.edu$" name="^(CFID|CFTOKEN)$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://orchid\.hosts\.jhmi\.edu/"
-		to="https://orchid.hosts.jhmi.edu/" />
+	<!--	Redirect keeps args:
+					-->
+	<rule from="^http://www\.ams\.jhu\.edu/+"
+		to="https://engineering.jhu.edu/ams/" />
 
-	<rule from="^https?://(?:www\.)?cs\.jhu\.edu/"
-		to="https://www.cs.jhu.edu/" />
+		<test url="http://www.ams.jhu.edu/?" />
 
-	<rule from="^http://webapps\.jhu\.edu/"
-		to="https://webapps.jhu.edu/" />
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://(?:www\.)?ce\.jhu\.edu/[^?]*"
+		to="https://engineering.jhu.edu/civil/" />
 
-	<rule from="^http://(ess\.erp|my|portal(?:content)?)\.johnshopkins\.edu/"
-		to="https://$1.johnshopkins.edu/" />
+		<test url="http://ce.jhu.edu/home.htm" />
+		<test url="http://www.ce.jhu.edu/home.php" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://(?:www\.)?giving\.jhu\.edu/+"
+		to="https://rising.jhu.edu/" />
+
+	<rule from="^http://www\.hub\.jhu\.edu/"
+		to="https://hub.jhu.edu/" />
+
+	<rule from="^http://(?:www\.)?it\.jhu\.edu/"
+		to="https://it.johnshopkins.edu/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://nanjing\.jhu\.edu/[^?]*"
+		to="https://www.sais-jhu.edu/graduate-studies/campuses/nanjing-china" />
+
+		<test url="http://nanjing.jhu.edu/home.htm" />
+
+	<!--rule from="^http://peabody\.jhu\.edu/"
+		to="https://www.peabody.jhu.edu/" /-->
+
+	<!--rule from="^http://help\.sset\.jhu\.edu/"
+		to="https://help.isis.jhu.edu/" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

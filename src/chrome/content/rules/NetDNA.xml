@@ -1,60 +1,78 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://hddn.com/ => https://hddn.com/: (51, "SSL: no alternative certificate subject name matches target host name 'hddn.com'")
+
+	For other MaxCDN coverage, see MaxCDN.com.xml.
+
+
 	Other NetDNA rulesets:
 
 		- BootstrapCDN.xml
+		- Netdna-ssl.com.xml
 
 
 	CDN buckets:
 
 		- s3.amazonaws.com/cdx-radar/
 
-		- maxcdn.wpengine.netdna-cdn.com
-
-			- maxcdn-wpengine.netdna-ssl.com doesn't exist
-
 
 	Nonfunctional domains:
 
-		- www.maxcdn.com	(moved to wpengine CDN and so broke)
 		- feedback.netdna.com	(prints "It works!", CN: squeeze)
 		- resources.netdna.com	(redirects to app-l.marketo.com)
 
+
+	Problematic hosts in *netdna.com:
+
+		- (www.)? ʰ
+
+	ʰ WP Engine / redirects to http
+
 -->
-<ruleset name="NetDNA (partial)">
+<ruleset name="NetDNA (partial)" default_off='failed ruleset test'>
 
 	<target host="hddn.com" />
-	<target host="*.hddn.com" />
-	<target host="*.maxcdn.com" />
+	<target host="login.hddn.com" />
+	<target host="www.hddn.com" />
+
+	<target host="blog.netdna.com" />
+	<target host="cp.netdna.com" />
+	<target host="cp3support.netdna.com" />
+	<target host="developer.netdna.com" />
+	<target host="login.netdna.com" />
+	<target host="rws.netdna.com" />
+	<target host="status.netdna.com" />
+	<target host="support.netdna.com" />
+
+	<!--	Complications:
+				-->
 	<target host="netdna.com" />
-	<target host="*.netdna.com" />
+	<target host="www.netdna.com" />
+
 	<target host="netdnasite.wpengine.netdna-cdn.com" />
-	<target host="*.netdna-ssl.com" />
 
 
-	<securecookie host="^login\.(?:hd|maxc)dn\.com$" name=".+" />
-	<securecookie host="^maxcdn\.com$" name=".+" />
-	<securecookie host="^.+\.netdna\.com$" name=".+" />
+	<securecookie host="^login\.hddn\.com$" name="." />
+	<securecookie host=".\.netdna\.com$" name="." />
 
 
 	<rule from="^http://(login\.|www\.)?hddn\.com/"
 		to="https://$1hddn.com/" />
 
-	<rule from="^http://blog\.maxcdn\.com/wp-content/plugins/lytebox/"
-		to="https://www.maxcdn.com/wp-content/plugins/lytebox/" />
+	<!--	Redirect drops path and forward slash:
+							-->
+	<rule from="^http://(?:www\.)?netdna\.com/[^?]*\??$"
+		to="https://www.maxcdn.com/?ref=netdna" />
 
-	<rule from="^http://blog\.maxcdn\.com/wp-content/themes/Akdesigner2/"
-		to="https://www.maxcdn.com/wp-content/themes/AKD2/" />
+	<!--	...but not args:
+				-->
+	<rule from="^http://(?:www\.)?netdna\.com/[^?]*\?"
+		to="https://www.maxcdn.com/?ref=netdna&amp;" />
 
-	<rule from="^http://secure\.maxcdn\.com/"
-		to="https://secure.maxcdn.com/" />
+	<rule from="^http://netdnasite\.wpengine\.netdna-cdn\.com/"
+		to="https://www.maxcdn.com/" />
 
-	<rule from="^http://((?:blog|cp|developer|login|rws|status|(?:cp3)?support|www)\.)?netdna\.com/"
-		to="https://$1netdna.com/" />
-
-	<rule from="^https?://netdnasite\.wpengine\.netdna-cdn\.com/"
-		to="https://www.netdna.com/" />
-
-	<rule from="^http://([\w-]+)\.netdna-ssl\.com/"
-		to="https://$1.netdna-ssl.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

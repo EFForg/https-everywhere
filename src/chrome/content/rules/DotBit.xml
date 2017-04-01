@@ -1,20 +1,55 @@
 <!--
-	Problematic subdomains:
+	Nonfunctional hosts in *dot-bit.org:
 
-		- ^	(expired 2012-12-09)
-		- www	(mismatched, CN: srv0.eu)
+		- dns *
+		- register *
+
+	* Refused
+
+
+	Problematic hosts in *dot-bit.org:
+
+		- (www.)? ¹
+		- explorer *
+
+	¹ Expired
+	* Shows cp login
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- dot-bit.org
+		- .dot-bit.org
 
 -->
-<ruleset name="DotBit" default_off="expired" platform="cacert">
+<ruleset name="Dot-BIT.org (partial)" default_off="expired">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="dot-bit.org" />
-	<target host="*.dot-bit.org" />
+	<target host="www.dot-bit.org" />
+
+	<!--	Complications:
+				-->
+	<target host="explorer.dot-bit.org" />
 
 
-	<securecookie host="^(?:.*\.)?dot-bit\.org$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^dot-bit\.org$" name="^bitcoin_dotbit_session$" /-->
+	<!--securecookie host="^\.dot-bit\.org$" name="^bitcoin_dotbit_i$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:www\.)?dot-bit\.org/"
-		to="https://dot-bit.org/" />
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://explorer\.dot-bit\.org/+"
+		to="https://explorer.namecoin.info/" />
+
+		<test url="http://explorer.dot-bit.org//" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

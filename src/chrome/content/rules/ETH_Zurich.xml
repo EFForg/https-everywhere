@@ -1,8 +1,19 @@
 <!--
+	ETH Zürich
+
+	For problematic rules, see ETHZ.ch-problematic.xml.
+
+
+	Other ETH Zürich rulesets:
+
+		- DARCH.ch.xml
+		- Untergeschoss.ch.xml
+
+
 	Nonfunctional subdomains:
 
 		- addis2050 *
-		- www.alumni		(^alumni doesn't exist)
+		- www.alumni ²
 
 		- arch subdomains:
 
@@ -14,53 +25,97 @@
 			- archiv.gta *
 			- ausstellungen.gta *
 
+		- www.arch ²
+		- www.ee ²
+		- e-collection.ethbib ³
+		- www.ethbib ⁴
+		- laser.inf ***
+		- se.inf ***
+		- e-collection.library ³
+		- www.vvz ⁵
+
 	* Redirects to http, mismatched, CN: webgta.ethz.ch
+	² Redirects to www.ethz.ch
 	** Redirects to http, mismatched, CN: webita.ethz.ch
+	³ Redirects to wayf.switch.ch
+	⁴ Redirects to www.library.ethz.ch
+	*** "Website not found"
+	⁵ Refused
 
 
 	Problematic subdomains:
 
 		- ^			(times out)
+		- e-citations.ethbib ²
 		- ethlife		(cert only matches www.ethlife)
+		- www.ethlife ⁴
+		- wiki.se.inf ⁵
+
+	² Insecure renegotiation
+	⁴ Expired
+	⁵ Server sends no certificate chain, see https://whatsmychaincert.com
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these hosts:
 
-		- ^			(→ www)
-		- (www.)bilddb.arch
-		- (www.)bilddb.gta.arch
-		- (www.)media.gta.arch
-		- (www.)intern.arch
-		- (www.)it.arch
-		- www.arch		(^arch doesn't exist)
-		- ethlife		(→ www.ethlife)
-		- www.ethlife
-		- webgta
-		- webita
+		- e-citations.ethbib.ethz.ch
+		- www.library.ethz.ch
+		- wtsdc.ethz.ch
+		- www.ethz.ch
+		- www1.ethz.ch
 
 -->
-<ruleset name="ETH Zürich (partial)">
+<ruleset name="ETHZ.ch (partial)">
 
-	<target host="darch.ch" />
+	<!--	Direct rewrites:
+				-->
+	<target host="bilddb.arch.ethz.ch" />
+	<target host="www.bilddb.arch.ethz.ch" />
+	<target host="bilddb.gta.arch.ethz.ch" />
+	<target host="www.bilddb.gta.arch.ethz.ch" />
+	<target host="media.gta.arch.ethz.ch" />
+	<target host="www.media.gta.arch.ethz.ch" />
+	<target host="intern.arch.ethz.ch" />
+	<target host="www.intern.arch.ethz.ch" />
+	<target host="it.arch.ethz.ch" />
+	<target host="www.it.arch.ethz.ch" />
+
+	<target host="e-citations.ethbib.ethz.ch" />
+	<!--target host="ethlife.ethz.ch" /-->
+	<!--target host="www.ethlife.ethz.ch" /-->
+	<target host="people.inf.ethz.ch" />
+	<target host="login.library.ethz.ch" />
+	<target host="www.library.ethz.ch" />
+	<target host="piwik.ethz.ch" />
+	<target host="stat.ethz.ch" />
+	<target host="webgta.ethz.ch" />
+	<target host="tg.ethz.ch" />
+	<target host="www.tg.ethz.ch" />
+	<target host="webita.ethz.ch" />
+	<target host="wtsdc.ethz.ch" />
+	<target host="www.ethz.ch" />
+	<target host="www1.ethz.ch" />
+
+	<!--	Complications:
+				-->
 	<target host="ethz.ch" />
-	<target host="*.ethz.ch" />
-	<target host="www.ethlife.ethz.ch" />
-	<target host="*.arch.ethz.ch" />
-	<target host="www.*.arch.ethz.ch" />
-	<target host="*.gta.arch.ethz.ch" />
-	<target host="www.*.gta.arch.ethz.ch" />
 
 
-	<securecookie host="^www\.ethz\.ch$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^e-citations\.ethbib\.ethz\.ch$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^www\.library\.ethz\.ch$" name="^amfID$" /-->
+	<!--securecookie host="^wtsdc\.ethz\.ch$" name="^(ACOOKIE|WEBTRENDS_ID)$" /-->
+	<!--securecookie host="^www\.ethz\.ch$" name="^_shibstate_\d+_\d+$" /-->
+	<!--securecookie host="^www1\.ethz\.ch$" name="^vcmp-p16-cookie$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://darch\.ch/"
-		to="https://darch.ch/" />
+	<rule from="^http://ethz\.ch/"
+		to="https://www.ethz.ch/" />
 
-	<rule from="^https?://(?:www\.)?(ethlife\.)?ethz\.ch/"
-		to="https://www.$1ethz.ch/" />
-
-	<rule from="^http://((?:www\.)?(?:(?:bilddb(?:\.gta)?|media\.gta|intern|it)\.)?arch|webgta|webita)\.ethz\.ch/"
-		to="https://$1.ethz.ch/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

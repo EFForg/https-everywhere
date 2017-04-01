@@ -12,11 +12,16 @@
 
 		- informahealthcare.com subdomains:
 
-			- comms *
-			- contact *
+			- comms ¹
+			- contact ¹
 			- www		(cert only matches ^informahealthcare.com)
 
-	* Works, mismatched, CN: *.gridserver.com
+		- informahealthcarestore.com subdomains:
+
+			- ^ ²
+
+	¹ Works, mismatched, CN: *.gridserver.com
+	² Works, mismatched, CN: ssl2528.cloudflare.com
 
 
 	Partially covered domains:
@@ -29,16 +34,32 @@
 	<target host="informahealthcare.com" />
 	<target host="www.informahealthcare.com" />
 	<target host="informahealthcarestore.com" />
-	<target host="*.informahealthcarestore.com" />
+	<target host="www.informahealthcarestore.com" />
+
+
+	<!-- Coverage hack -->
+	<exclusion pattern="^http://(?:www\.)?informahealthcare\.com/$" />
+
+
+	<test url="http://informahealthcare.com/" />
+	<test url="http://informahealthcare.com/action/registration" />
+	<test url="http://informahealthcare.com/favicon.ico" />
+	<test url="http://informahealthcare.com/sda/1801/informa-logo.png" />
+	<test url="http://informahealthcare.com/templates/jsp/style.css" />
+	<test url="http://www.informahealthcare.com/" />
+	<test url="http://www.informahealthcare.com/action/registration" />
+	<test url="http://www.informahealthcare.com/favicon.ico" />
+	<test url="http://www.informahealthcare.com/sda/1801/informa-logo.png" />
+	<test url="http://www.informahealthcare.com/templates/jsp/style.css" />
 
 
 	<securecookie host="^\.(?:www\.)?informahealthcarestore\.com$" name=".+" />
 
 
-	<rule from="^https?://(?:www\.)?informahealthcare\.com/(action/(?:clickThrough|doLogin|registration)|cssJawr/|favicon\.ico|na101/|sda/|templates/|userimages/)"
+	<rule from="^http://(?:www\.)?informahealthcare\.com/(action/(?:clickThrough|doLogin|registration)|cssJawr/|favicon\.ico|na101/|sda/|templates/|userimages/)"
 		to="https://informahealthcare.com/$1" />
 
 	<rule from="^http://(www\.)?informahealthcarestore\.com/"
-		to="https://$1informahealthcarestore.com/" />
+		to="https://www.informahealthcarestore.com/" />
 
 </ruleset>

@@ -1,0 +1,82 @@
+<!--
+	Nonfunctional hosts in *dreambox.com:
+
+		- clientsuccess ᵈ
+		- ondemand *
+
+	* Prints "OK"
+	ᵈ Dropped
+
+
+	Problematic hosts in *dreambox.com:
+
+		- www-static ⁴
+		- www2 ᵐ
+
+	⁴ 404, equivalent to another domain
+	ᵐ Pardot / mismatched
+
+
+	Mixed content:
+
+		- Images, on:
+		
+			- www, www2 from $self ˢ
+			- www2 from storage.pardot.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="DreamBox.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="dreambox.com" />
+	<target host="support.dreambox.com" />
+	<target host="www.dreambox.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www-static.dreambox.com" />
+	<target host="www2.dreambox.com" />
+
+		<exclusion pattern="^http://www2\.dreambox\.com/(?!/*(?:$|\?|[els]/|emailPreference/|unsubscribe/|webmail/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www2.dreambox.com/default.asp" />
+			<test url="http://www2.dreambox.com/default.aspx" />
+			<test url="http://www2.dreambox.com/favicon.ico" />
+			<test url="http://www2.dreambox.com/home.htm" />
+			<test url="http://www2.dreambox.com/home.html" />
+			<test url="http://www2.dreambox.com/home.jsp" />
+			<test url="http://www2.dreambox.com/home.php" />
+			<test url="http://www2.dreambox.com/index.htm" />
+			<test url="http://www2.dreambox.com/index.html" />
+
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^(?!www2\.)\w" name="." />
+
+
+	<rule from="^http://www-static\.dreambox\.com/"
+		to="https://www.dreambox.com/" />
+
+	<!--	Redirect drops args and forward slash and args:
+								-->
+	<rule from="^http://www2\.dreambox\.com/+(?:\?.*)?$"
+		to="https://www.dreambox.com/" />
+
+		<test url="http://www2.dreambox.com/?" />
+
+	<rule from="^http://www2\.dreambox\.com/"
+		to="https://go.pardot.com/" />
+
+		<test url="http://www2.dreambox.com/e/14872/DreamBox-Learn/3qxbnc/398936752" />
+		<test url="http://www2.dreambox.com/l/14872/2016-02-15/66jx58/14872/136373/icon_facebook.png" />
+		<test url="http://www2.dreambox.com/webmail/14872/573891896/297f2b97450d4f64e045281a8570ec16" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,146 +1,495 @@
 <!--
+	Massachusetts Institute of Technology
+
+	For rules causing false/broken MCB, see MIT.edu-falsemixed.xml.
 	For problematic rules, see MIT-mismatches.xml.
 
 
 	Other MIT rulesets:
 
+		- MIT_Press_Journals.org.xml
+		- TechnologyReview.xml
+		- technologyreview.in.xml
 		- Touchstone_Network.xml
 
 
-	Nonfunctional mit.edu subdomains:
+	CDN buckets:
 
-		- arts *
-		- artscal **
-		- civic		(no https)
-		- csail		(cert: inquir.csail.mit.edu; handshake fails)
-		- css.csail *
-		- inquir.csail	(cert: inquir.csail.mit.edu; handshake fails)
-		- www.csail	(handshake_failure)
-		- development ***
-		- events	(interruped)
+		- d3f3qxt87iw6id.cloudfront.net	← cdn.executive
+		- d1baxxa0joomi3.cloudfront.net
+		- duqmab81lwd47.cloudfront.net
+		- ocw.mit.edu.edgesuite.net
+
+
+	Nonfunctional mit.edu hosts in *mit.edu:
+
+		- alloy ¹
+		- appinventor ³
+		- ai2.appinventor ⁵
+		- arts ²
+		- artscal ³
+		- cesf ²
+		- classics ⁴
+		- cmsw ⁷
+		- connect ³
+
+		- bigdata.csail ⁵
+		- inquir.csail ⁵
+		- nms.csail ²
+		- publications.csail ⁵
+		- research.csail ⁵
+		- tig.csail ⁵
+		- wireless.csail ⁵
+
+		- development ⁵
+		- eaps4 ³
+		- economics ²
+		- events ⁶
 		- executive
-		- img		(shows web; mismatched, CN: web.mit.edu)
+		- gambit ⁷
+		- global	(Redirects to wayf.mit.edu)
+		- img ⁸
+		- ki ⁵
+		- lsc ⁵
+
+		- atlas.media ³
+		- macroconnections.media	(Shows blank tree)
+		- pantheon.media ²
+		- pulse.media ³
+		- tangible.media ²
 		- web.media
-		- mvl		(self-signed, expired; 403)
-		- ocw		(503, Akamai)
-		- scratch	(times out)
-		- student	(redirects to idp, valid cert)
-		- stuff *
-		- tech		(cert: the-tech.mit.edu; 401)
-		- the-tech	(401)
-		- web ****
-		- xvm ***
-		- websis	(shows student; mismatched, CN: student.mit.edu)
-		- www ****
 
-	* No https
-	** Times out
-	*** Handshake fails
-	**** Redirects to cert_error/
+		- mitworld ²
+		- mvl ⁹
+		- oastories ²
+		- ocw ᵃ
+		- sap		(Plaintext reply)
+		- sloanreview ²
+		- ssg ᶜ
+		- student ᵈ
+		- tech ⁴
+		- the-tech ⁴
+		- video ²
+		- web ⁴
+		- webcast	(Shows RHEL test page)
+		- xvm ⁵
+		- websis ᶠ
+		- www ᵉ
+
+	¹ Shows projects.csail
+	² Refused
+	³ Times out
+	⁴ 401
+	⁵ Handshake fails
+	⁶ Interrupted
+	⁷ Shows default page
+	⁸ Shows web
+	⁹ 403
+	ᵃ 503
+	ᵇ 400
+	ᶜ Shows lids
+	ᵈ Redirects to idp
+	ᵉ "client certificate was invalid or not provided"
+	ᶠ Shows student
 
 
-	Problematic subdomains:
+	Problematic hosts in *mit.edu:
 
-		- 3down		(works, self-signed)
-		- calendar	(works, expired 2013-01-27)
-		- cluedumps *
-		- hacks *
-		- ideabank	(mismatched, CN: future.mit.edu)
-		- itinfo	(redirects to ist; mismatched, CN: ist.mit.edu)
-		- techblogs	($ works, at least some pages 404, expired, self-signed)
-		- techtime	(mismatched, CN: calendar.mit.edu)
-
-	* Works; mismatched, CN: *.scripts.mit.edu
-
-
-
-	Fully covered subdomains:
-
-		- alum
-		- alumsso
-		- athena10
-		- ca
+		- ^ *
+		- advancedligo ᶜ ᵐ
+		- www.advancedligo ᶜ
+		- calendar ²
+		- counter ¹
+		- csail ³
+		- css.csail ᶜ
+		- people.csail	($ 403s)
+		- cluedumps ⁴
+		- diversity ⁴
+		- apply.eecs ²
+		- eecscal	(404)
+		- events ³
+		- executive	(Mismatched, CN: cms.executive.mit.edu)
+		- cdn.executive	(Cloudfront)
+		- hacks ⁴
+		- iceo ⁴
+		- iceoblog ⁴
+		- ideabank ⁵
+		- itinfo ⁶
+		- libguides	(LibGuides.com/mismatched)
+		- media		(Cert only matches *.media)
+		- tmg-trackr.media ² ᵐ **
 		- pdos.csail
+		- mlkscholars ⁴
+		- president	(Mixed iframe)
+		- resources	(Mixed iframe)
+		- shass		(Configured for SSL3 only)
+		- relate ¹
+		- techblogs ⁷
+		- techtime ⁸
+		- tgcat ¹ ²
+		- webmail ᶜ
+		- www *
+
+	* Redirects to https://web
+	** Some paths 404
+	¹ Self-signed
+	² Expired
+	³ Handshake fails
+	⁴ Mismatched, CN: *.scripts.mit.edu
+	⁵ Mismatched, CN: future.mit.edu
+	⁶ Redirects to ist
+	⁷ $ works, at least some pages 404, expired, self-signed
+	⁸ Mismatched, CN: calendar.mit.edu
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *mit.edu:
+
+		- calendars *
+
+	* $ redirects to http
+
+
+	Fully covered hosts in *mit.edu:
+
+		- blossoms
+		- ca
+		- chemefacsrch
+
+		- (www.)?csail	(^ → www)
+		- calendar.csail
+		- cap.csail
+		- projects.csail
+
+		- dc
 		- debathena
+		- athena.dialup
+		- (www.)?eecs
+		- eecs-search.eecs
+		- engineering
+		- entrepreneurship
+		- esd
+		- cdn.executive	(→ d3f3qxt87iw6id.cloudfront.net)
+		- cms.executive
 		- future
 		- giving
 		- gsc
 		- ideabank	(→ future)
+		- idm
 		- idp
-		- linerva
+		- lgo
+		- lgosdm
+		- innovation
+		- lids
+		- linc
+		- llwebprod2.ll
+		- www.ll
 		- immersion.media
 		- mit150
+		- mit-amps
+		- mosh
+		- mysloan
 		- odge
+		- oeit-tsa
+		- openafs
 		- orgchart
+		- pgp
 		- picker
+		- school-of-engineering-faculty-search
+		- sdm
+		- sdm-admissions
 		- sipb
+		- slice
+		- shop.sloanreview
+		- subscribe.sloanreview
 		- stellar
+		- stuff
+		- teachingexcellence
+		- techtv
+		- tll
 		- webpub
-		- whereis
-		- wikis
 
 
-	Mixed image on picker from web
+	These altnames don't exist:
+
+		- md.media.mit.edu
+		- rlecal.mit.edu
+
+
+	linerva: Dropped over http & https
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .csail.mit.edu
+		- lids.mit.edu
+		- .mit150.mit.edu
+		- .mitei.mit.edu
+		- techtv.mit.edu
+		- webmail.mit.edu
+
+
+	Mixed content:
+
+		- iframes, on:
+
+			- libguides from libraries.mit.edu *
+			- president from techtv.mit.edu *
+			- resources from www.google.com *
+
+		- css, on:
+
+			- hacks from $self
+			- tll from fast.fonts.com *
+			- libraries, mitstory from fonts.googleapis.com *
+			- reap from netdna.bootstrapcdn.com *
+			- scripts from web ²
+
+		- Images, on:
+
+			- civic from cmsw.mit.edu
+			- civic from hacks.mit.edu
+			- civic from tech.mit.edu
+			- hacks from $self
+			- idm from $self *
+			- lgosdm from sdm *
+			- llwebprod2.ll, www.ll from www.ll *
+			- mit-amps from $self *
+			- mitsloan from $self *
+			- dc, picker, whereis from web ²
+			- dome from libraries.mit.edu *
+			- mitei-members from mitei.mit.edu *
+			- relate from $self ³
+			- slice from $self *
+			- teachingexcellence from $self *
+			- teachingexcellence from oeit-tsa *
+			- techtv from duqmab81lwd47.cloudfront.net *
+
+		- favicon on www.media from $self *
+
+		- Ads/bugs, on:
+
+			- executive from pixel.fetchback.com *
+			- hacks from stuff.mit.edu
+			- mit-amps from counter ³
+			- scripts from www.kaltura.com *
+
+	* Secured by us
+	² Unsecurable
+	³ Rule disabled by default <= expired & self-signed
 
 -->
-<ruleset name="Massachusetts Institute of Technology (partial)">
+<ruleset name="MIT.edu (partial)">
 
-	<target host="*.mit.edu" />
-	<target host="www.*.mit.edu" />
-	<target host="people.csail.mit.edu" />
-	<target host="mitpressjournals.org" />
-	<target host="www.mitpressjournals.org" />
-
-
-	<!--	Observed cookie domains:
-
-			- alum
-			- .alum
-			- alumsso
-			- athena10
-			- ca
-			- cluedumps
-			- debathena
-			- .future
-			- giving
-			- gsc
-			- idp
-			- .ist
-			- kb
-			- .mit150
-			- mitpress
-			- scripts
-			- stellar
-			- student
-			- wayf
-			- webpub
-			- whereis
-			- wikis
+	<!--	Direct rewrites:
 				-->
-	<securecookie host="^(?:alum|alumsso|athena10|ca|debathena|giving|gsc|idp|kb|mitpress|scripts|stellar|webpub|wikis).mit\.edu$" name=".*" />
-	<!--securecookie host="^\.alum\.mist\.edu$" name="^S?SESS\w{32}$" /-->
-	<!--securecookie host="^\.future\.mist\.edu$" name="^SSESS\w{32}$" /-->
-	<!--securecookie host="^\.ist\.mist\.edu$" name="^SSESS\w{32}$" /-->
-	<!--securecookie host="^\.mit150\.mist\.edu$" name="^SESS\w{32}$" /-->
-	<securecookie host="^wayf\.mit\.edu$" name=".*" />
+	<target host="3down.mit.edu" />
+	<!--target host="www.advancedligo.mit.edu" /-->
+	<target host="alum.mit.edu" />
+	<target host="alumsso.mit.edu" />
+	<target host="athena10.mit.edu" />
+	<target host="blossoms.mit.edu" />
+	<target host="ca.mit.edu" />
+	<target host="calendars.mit.edu" />
+	<target host="chemefacsrch.mit.edu" />
+	<target host="civic.mit.edu" />
+	<target host="connect.mit.edu" />
+
+	<target host="calendar.csail.mit.edu" />
+	<target host="cap.csail.mit.edu" />
+	<!--target host="css.csail.mit.edu" /-->
+	<target host="groups.csail.mit.edu" />
+	<target host="pdos.csail.mit.edu" />
+	<target host="projects.csail.mit.edu" />
+	<target host="www.csail.mit.edu" />
+
+	<target host="dc.mit.edu" />
+	<target host="debathena.mit.edu" />
+	<target host="athena.dialup.mit.edu" />
+	<target host="dome.mit.edu" />
+	<target host="dspace.mit.edu" />
+
+	<target host="eecs.mit.edu" />
+	<target host="eecs-search.eecs.mit.edu" />
+	<target host="www.eecs.mit.edu" />
+
+	<target host="engineering.mit.edu" />
+	<target host="esd.mit.edu" />
+	<target host="cms.executive.mit.edu" />
+	<target host="oeit-tsa.mit.edu" />
+	<target host="future.mit.edu" />
+	<target host="giving.mit.edu" />
+	<target host="gsc.mit.edu" />
+	<target host="idm.mit.edu" />
+	<target host="idp.mit.edu" />
+	<target host="innovation.mit.edu" />
+	<target host="ist.mit.edu" />
+	<target host="kb.mit.edu" />
+	<target host="lgo.mit.edu" />
+	<target host="lgosdm.mit.edu" />
+	<target host="libraries.mit.edu" />
+	<target host="library.mit.edu" />
+	<target host="lids.mit.edu" />
+	<target host="linc.mit.edu" />
+	<target host="listart.mit.edu" />
+
+	<target host="llwebprod2.ll.mit.edu" />
+	<target host="www.ll.mit.edu" />
+
+	<target host="immersion.media.mit.edu" />
+	<target host="www.media.mit.edu" />
+
+	<target host="mit-amps.mit.edu" />
+	<target host="mit150.mit.edu" />
+	<target host="mitei.mit.edu" />
+	<target host="mitei-members.mit.edu" />
+	<target host="mitpress.mit.edu" />
+	<target host="mitsloan.mit.edu" />
+	<target host="mitstory.mit.edu" />
+	<target host="mosh.mit.edu" />
+	<target host="mysloan.mit.edu" />
+	<target host="news.mit.edu" />
+	<target host="newsoffice.mit.edu" />
+	<target host="www.newsoffice.mit.edu" />
+	<target host="oastats.mit.edu" />
+	<target host="odge.mit.edu" />
+	<target host="odl.mit.edu" />
+	<target host="openafs.mit.edu" />
+	<target host="orgchart.mit.edu" />
+	<target host="pgp.mit.edu" />
+	<target host="picker.mit.edu" />
+	<target host="reap.mit.edu" />
+	<!--target host="resources.mit.edu" /-->
+	<target host="school-of-engineering-faculty-search.mit.edu" />
+
+	<target host="scratch.mit.edu" />
+	<target host="api.scratch.mit.edu" />
+	<target host="www.scratch.mit.edu" />
+
+	<target host="scripts.mit.edu" />
+	<target host="www.scripts.mit.edu" />
+	<target host="zyan.scripts.mit.edu" />
+
+	<target host="sdm.mit.edu" />
+	<target host="sdm-admissions.mit.edu" />
+	<target host="sipb.mit.edu" />
+	<target host="slice.mit.edu" />
+
+	<target host="shop.sloanreview.mit.edu" />
+	<target host="subscribe.sloanreview.mit.edu" />
+
+	<target host="stellar.mit.edu" />
+	<target host="stuff.mit.edu" />
+	<target host="teachingexcellence.mit.edu" />
+	<target host="techtv.mit.edu" />
+	<target host="tll.mit.edu" />
+	<target host="wayf.mit.edu" />
+	<!--target host="webmail.mit.edu" /-->
+	<target host="webpub.mit.edu" />
+	<target host="whereis.mit.edu" />
+	<target host="wikis.mit.edu" />
+
+	<!--	Complications:
+				-->
+	<!--target host="advancedligo.mit.edu" /-->
+	<target host="csail.mit.edu" />
+	<target host="people.csail.mit.edu" />
+	<target host="eecscal.mit.edu" />
+	<target host="cdn.executive.mit.edu" />
+	<target host="ideabank.mit.edu" />
+	<target host="media.mit.edu" />
+	<target host="www.mitpress.mit.edu" />
+
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://calendars\.mit\.edu/+(?:$|\?)" />
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://calendars\.mit\.edu/+(?!Ewf/|Pages/SignUp/Page\.aspx)" /-->
+
+			<!--	+ve:
+
+				(test quota: 4)
+						-->
+			<test url="http://calendars.mit.edu/?" />
+			<test url="http://calendars.mit.edu//" />
+			<test url="http://calendars.mit.edu//?" />
+			<test url="http://calendars.mit.edu///" />
+
+			<!--	-ve:
+					-->
+			<test url="http://calendars.mit.edu/Ewf/VersionedStaticFiles/Backgrounds-v2/Darker.svg" />
+			<test url="http://calendars.mit.edu/Pages/SignUp/Page.aspx" />
+
+		<!--	404:
+				-->
+		<!--test url="http://tmg-trackr.media.mit.edu/publishedmedia/Papers/604-HydroMorph%20Shape%20Changing%20Water/Published/PDF" /-->
+
+		<!--	Mixed images:
+					-->
+		<!--test url="http://civic.mit.edu/blog/erhardt/forbidden-research-liveblog-hacking-culture-at-mit" /-->
 
 
-	<rule from="^http://mit\.edu/"
-		to="https://mit.edu/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^lids\.mit\.edu$" name="^[0-9a-f]{32}$" /-->
+	<!--securecookie host="^(\.csail|\.mit150|\.mitei)\.mist\.edu$" name="^SESS\w{32}$" /-->
+	<!--securecookie host="^techtv\.mit\.edu$" name="^_TechTV_session$" /-->
+	<!--securecookie host="^webmail\.mit\.edu$" name="^BIGipServerwebmail$" /-->
 
-	<rule from="^http://(alum|alumsso|athena10|ca|(?:groups|pdos|people)\.csail|debathena|future|giving|gsc|idp|ist|kb|librar(?:ies|y)|linerva|mail|immersion\.media|mit150|odge|orgchart|picker|(?:www\.|zyan\.)?scripts|sipb|stellar|wayf|webpub|whereis|wikis)\.mit\.edu/"
-		to="https://$1.mit.edu/" />
+	<securecookie host="^(?!calendars\.mit\.edu$)\w" name="." />
+	<securecookie host="^\." name="^__utm" />
+
+
+	<!--rule from="^http://advancedligo\.mit\.edu/"
+		to="https://www.advancedligo.mit.edu/" /-->
+
+	<rule from="^http://csail\.mit\.edu/"
+		to="https://www.csail.mit.edu/" />
+
+	<!--	Redirect keeps args but not forward slash:
+							-->
+	<rule from="^http://people\.csail\.mit\.edu/+(?:\?.*)?$"
+		to="https://www.csail.mit.edu/peoplesearch" />
+
+		<!--	(test quota: 5)
+					-->
+		<test url="http://people.csail.mit.edu/?stupid" />
+		<test url="http://people.csail.mit.edu/?test" />
+		<test url="http://people.csail.mit.edu/?requirement" />
+		<test url="http://people.csail.mit.edu/?for" />
+		<test url="http://people.csail.mit.edu//?stupid" />
+		<test url="http://people.csail.mit.edu//?people" />
+		<test url="http://people.csail.mit.edu//?grudgingly" />
+		<test url="http://people.csail.mit.edu//?filled" />
+
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://eecscal\.mit\.edu/.*"
+		to="https://calendars.mit.edu/eecs" />
+
+		<test url="http://eecscal.mit.edu/home.php" />
+
+	<rule from="^http://cdn\.executive\.mit\.edu/"
+		to="https://d3f3qxt87iw6id.cloudfront.net/" />
 
 	<rule from="^http://ideabank\.mit\.edu/"
 		to="https://future.mit.edu/" />
 
-	<rule from="^https?://(?:www\.)?mitpress\.mit\.edu/"
+	<rule from="^http://www\.mitpress\.mit\.edu/"
 		to="https://mitpress.mit.edu/" />
+
+	<rule from="^http://media\.mit\.edu/"
+		to="https://www.media.mit.edu/" />
 
 	<rule from="^http://scripts\.mit\.edu:444/"
 		to="https://scripts.mit.edu:444/" />
 
-	<rule from="^http://(www\.)?mitpressjournals\.org/((?:entityImage|na101|sda|templates|userimages)/|action/(?:registration|showLogin)$)"
-		to="https://www.mitpressjournals.org/$2" />
+		<test url="http://scripts.mit.edu:444/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

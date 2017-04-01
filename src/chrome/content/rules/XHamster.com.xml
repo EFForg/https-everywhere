@@ -1,73 +1,157 @@
 <!--
+	Other xHamster rulesets:
+
+		- XH_CDN.com.xml
+		- XHamster_Premium_Pass.com.xml
+
+
+	xHamster uses *.xhcdn.com and cdn13.com
+	As far as I can tell all of cdn13.com either only supports http or redirects from https to something else.
+
+
+	Nonfunctional hosts in *cdn13.com:
+
+		- a8-19.clients
+
+
 	CDN buckets:
 
-		- xhamster.uservoice.com
-
-			- suggestions
+		- xhamster.uservoice.com	← suggestions
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *xhamster.com:
 
 		- et\d *
 		- et1\d *
-		- m **
-		- mobile	(shows www)
-		- p1 *
-		- partners *
-		- upload *
+		- suggestions ³
 
-	* Times out
-	** Shows www; mismatched, CN: xhamster.com)
+	³ 403
+	* Dropped
 
 
-	Problematic subdomains:
+	Problematic hosts in *xhamster.com:
 
-		- suggestions	(works, uservoice.com)
+		- [\da-f]{6} ¹
+		- mobile ¹
 
-
-	Fully covered subdomains:
-
-		- (www.)
-		- eu-st
-		- static
+	¹ Mismatched
+	² uservoice.com
 
 
-	Mixed content:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
-		- Images, on www from:
+		- .xhamster.com
 
-			- et\d *
-			- et1\d *
-			- eu-st **
-			- p1 *
+		- m.xhamster.com
+		- .m.xhamster.com
+		- de.m.xhamster.com
+		- es.m.xhamster.com
+		- fr.m.xhamster.com
+		- it.m.xhamster.com
+		- jp.m.xhamster.com
+		- nl.m.xhamster.com
+		- pl.m.xhamster.com
+		- pt.m.xhamster.com
+		- ru.m.xhamster.com
 
-		- Web/ads bug on www from adscnt2 ***
-		- Web bug on www from cnt1 ***
-		- Web/ads bug on www from cnt2 ***
-		- Web bug on www from syndication.traffichaus.com ***
+		- partners.xhamster.com
 
-	* Unsecurable, doesn't trip MCB anyway
-	** Secured by us, doesn't trip MCB anyway
-	*** Unsecurable
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="xHamster.com (buggy)" default_off="reportedly breaks videos">
+<ruleset name="xHamster.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="xhamster.com" />
-	<target host="*.xhamster.com" />
+	<target host="de.xhamster.com" />
+	<target host="es.xhamster.com" />
+	<target host="eu-st.xhamster.com" />
+	<target host="fr.xhamster.com" />
+	<target host="it.xhamster.com" />
+	<target host="jp.xhamster.com" />
+	<target host="m.xhamster.com" />
+
+	<target host="de.m.xhamster.com" />
+	<target host="es.m.xhamster.com" />
+	<target host="fr.m.xhamster.com" />
+	<target host="it.m.xhamster.com" />
+	<target host="jp.m.xhamster.com" />
+	<target host="nl.m.xhamster.com" />
+	<target host="pl.m.xhamster.com" />
+	<target host="pt.m.xhamster.com" />
+	<target host="ru.m.xhamster.com" />
+
+	<target host="nl.xhamster.com" />
+	<target host="partners.xhamster.com" />
+	<target host="pl.xhamster.com" />
+	<target host="pt.xhamster.com" />
+	<target host="ru.xhamster.com" />
+	<target host="secure.xhamster.com" />
+	<target host="static.xhamster.com" />
+	<target host="upload.xhamster.com" />
+	<target host="us-st.xhamster.com" />
+	<target host="www.xhamster.com" />
+
+		<!--	Formerly redirected to http:
+							-->
+		<test url="http://xhamster.com/billing.php" />
+		<test url="http://xhamster.com/contact.php" />
+		<test url="http://xhamster.com/dating" />
+		<test url="http://xhamster.com/faq.php" />
+		<test url="http://xhamster.com/premium.php" />
+		<test url="http://xhamster.com/privacy.php" />
+		<test url="http://xhamster.com/stories" />
+		<test url="http://xhamster.com/stories/new/2.html" />
+		<test url="http://xhamster.com/user/Dark_Witch" />
+
+		<test url="http://de.xhamster.com/contact.php" />
+		<test url="http://es.xhamster.com/contact.php" />
+		<test url="http://fr.xhamster.com/contact.php" />
+		<test url="http://it.xhamster.com/contact.php" />
+		<test url="http://jp.xhamster.com/contact.php" />
+		<test url="http://m.xhamster.com/stories.html" />
+		<test url="http://nl.xhamster.com/contact.php" />
+		<test url="http://pl.xhamster.com/contact.php" />
+		<test url="http://pt.xhamster.com/contact.php" />
+		<test url="http://ru.xhamster.com/contact.php" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://xhamster.com/?fromMobile" /-->
+		<!--test url="http://m.xhamster.com/?light=1" /-->
+
+		<!--	Without this videos break when using flash:
+									 -->
+		<exclusion pattern="^http://static\.xhamster\.com/crossdomain\.xml" />
+
+			<test url="http://static.xhamster.com/crossdomain.xml" />
+			<test url="http://static.xhamster.com/crossdomain.xml?foo" />
+
+	<!--	Complications:
+				-->
+	<target host="mobile.xhamster.com" />
 
 
-	<securecookie host="^\.xhamster\.com$" name="^(?:splash-\d+|stats|uvts)$" />
-	<!--
-		Can these be secured safely?
-						-->
-	<!--securecookie host="^\.xhamster\.com$" name="^(mdg:uid|mobileType|prid)$" /-->
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.xhamster\.com$" name="^(?:first_visit|lang|mobileUse|prid|prs|stats_id)$" /-->
+	<!--securecookie host="^((de|es|fr|it|jp|nl|pl|pt|ru)\.)?m\.xhamster\.com$" name="^mobileRef$" /-->
+	<!--securecookie host="^\.m\.xhamster\.com$" name="^simple$" /-->
+	<!--securecookie host="^partners\.xhamster\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\." name="^(?:first_visit$|mobileRef$|splash-|stats|uvts$)" />
+	<securecookie host="^(?!\.xhamster\.com$)." name="." />
 
 
-	<rule from="^http://((?:eu-st|secure|static|www)\.)?xhamster\.com/"
-		to="https://$1xhamster.com/" />
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://mobile\.xhamster\.com/.*"
+		to="https://m.xhamster.com/" />
 
-	<rule from="^http://suggestions\.xhamster\.com/track\.gif"
-		to="https://xhamster.uservoice.com/track.gif" />
+		<test url="http://mobile.xhamster.com/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

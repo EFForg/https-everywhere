@@ -1,20 +1,62 @@
+<!--
+	Nonfunctional hosts in *cleverbridge.com:
+
+		- lp-content *
+
+	* 404
+
+
+	Problematic domains:
+
+		- go.cleverbridge.com *
+		- images.go.cleverbridge.com *
+
+	* Mismatched
+
+-->
 <ruleset name="cleverbridge (partial)">
 
 	<target host="cleverbridge.com"/>
 	<target host="*.cleverbridge.com"/>
 	<target host="cleverbridge.org"/>
-	<target host="*.cleverbridge.org"/>
-		<exclusion pattern="^http://(events|saas)\."/>
-		<!--
-			Breaks MajorGeeks mailing list signup.
+	<target host="www.cleverbridge.org" />
+
+		<exclusion pattern="^http://(?:go|lp-content)\.cleverbridge\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://go.cleverbridge.com/" />
+			<test url="http://lp-content.cleverbridge.com/boston/cb-white.svg" />
+
+		<!--	Breaks MajorGeeks mailing list signup.
 
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-September/001291.html
 							-->
 		<exclusion pattern="^http://message\.cleverbridge\.com/bin/icon_generator\?key=captcha-key$" />
 
-	<securecookie host="^(.*\.)cleverbridge\.com$" name=".*"/>
+			<!--	+ve:
+					-->
+			<test url="http://message.cleverbridge.com/bin/icon_generator?key=captcha-key" />
 
-	<rule from="^http://(\w+)\.cleverbridge\.(?:com|org)/"
-		to="https://$1.cleverbridge.com/"/>
+		<test url="http://events.cleverbridge.com/" />
+		<test url="http://message.cleverbridge.com/" />
+		<test url="http://static.cleverbridge.com/" />
+		<test url="http://support.cleverbridge.com/" />
+		<test url="http://www.cleverbridge.com/" />
+
+		<!--	Clients:
+				-->
+		<test url="http://farstone.cleverbridge.com/" />
+		<test url="http://laplink.cleverbridge.com/" />
+
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://(?:www\.)?cleverbridge\.org/"
+		to="https://www.cleverbridge.com/" />
+
+	<rule from="^http://(\w+\.)?cleverbridge\.com/"
+		to="https://$1cleverbridge.com/" />
 
 </ruleset>

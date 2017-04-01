@@ -1,5 +1,26 @@
-<ruleset name="tldrio">
-  <target host="tldr.io" />
+<!--
+	Problematic hosts in *tldr.io:
 
-  <rule from="^http://tldr\.io/" to="https://tldr.io/"/>
+		- ^ ¹ ²
+		- api ²
+		- www ² ³
+
+	¹ Mismatched
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+	³ 401
+
+
+	These altnames don't exist:
+
+		- www.api.tldr.io
+
+-->
+<ruleset name="tldr.io (partial)" default_off="missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="api.tldr.io" />
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

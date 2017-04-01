@@ -1,0 +1,108 @@
+<!--
+	University of Amsterdam
+
+
+	Nonfunctional subdomains:
+
+		- lib ¹
+		- opc ²
+		- studiegids ³
+		- (www.)?scriptiesonline.uba ²
+
+	¹ Shows uba-primo.hosted.exlibrisgroup.com
+	² Refused
+	³ Plaintext reply
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- (www.)?alumni ²
+		- (www.)?bijzonderecollecties ²
+		- blackboard ³
+		- extranet ³
+		- ray.ic ⁴
+		- medewerker ³
+		- mijn ³
+		- mytimetable ³
+		- staff.science ⁴
+		- secure ³
+		- m.sis ³
+		- (www.)?staff ³
+		- static ³
+		- email.student ⁵
+		- www.student ²
+		- (www.)?uba ²
+		- databases.uba ³
+		- www ³
+
+	¹ Dropped
+	² Mismatched, CN: www.uva.nl
+	³ Insecure renegotiation
+	⁴ Redirect differs
+	⁵ Google
+
+
+	Fully covered subdomains:
+
+		- (www.)?		(^ → www)
+		- blackboard
+		- extranet
+		- staff.fnwi
+		- ray.ic		(→ id)
+		- id
+		- medewerker
+		- mijn
+		- mytimetable
+		- rooster
+		- staff.science
+		- secure
+		- m.sis
+		- (www.)?staff
+		- static
+		- (www.)?student	(www → ^)
+		- email.student		(→ mail.google.com)
+		- databases.uba
+		- diensten.uba
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- diensten from $self *
+			- student from static *
+
+	* Secured by us
+
+-->
+<ruleset name="UvA.nl (partial)">
+
+	<target host="uva.nl" />
+	<target host="*.uva.nl" />
+
+
+	<rule from="^http://(?:www\.)?uva\.nl/"
+		to="https://www.uva.nl/" />
+
+	<rule from="^http://ray\.ic\.uva\.nl/"
+		to="https://id.uva.nl/" />
+
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://staff\.science\.uva\.nl/+(?:$|\?.*)"
+		to="https://staff.fnwi.uva.nl/" />
+
+	<rule from="^http://(?:www\.)?student\.uva\.nl/"
+		to="https://student.uva.nl/" />
+
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://email\.student\.uva\.nl/.*"
+		to="https://mail.google.com/a/student.uva.nl" />
+
+	<rule from="^http://(blackboard|extranet|staff\.fnwi|id|medewerker|mijn|mytimetable|rooster|staff\.science|secure|m\.sis|(?:www\.)?staff|static|student|d(?:atabases|iensten)\.uba)\.uva\.nl/"
+		to="https://$1.uva.nl/" />
+
+
+</ruleset>

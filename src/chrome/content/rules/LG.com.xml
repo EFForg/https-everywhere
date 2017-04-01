@@ -2,15 +2,9 @@
 	LG Electronics
 
 
-	Problematic subdomains:
-
-		- www	(valid cert, redirects to wws, pages then redirect back)
-
-
 	Partially covered subdomains:
 
-		- (www.)	(→ wws, to save on excessive requests)
-		- wws
+		- www
 		- wwwstg	(pages redirect to http)
 
 
@@ -18,26 +12,44 @@
 
 		- akamaitest
 		- admin.cms
-		- wws
 
 -->
 <ruleset name="LG.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="lg.com" />
-	<target host="*.lg.com" />
-		<exclusion pattern="^http://(?:www(?:stg)?\.)?lg\.com/(?!\w\w/(?:css|foresee|images|js)/|favicon\.ico|lg3-common(?:-v2)?/)" />
+	<target host="akamaitest.lg.com" />
+	<target host="admin.cms.lg.com" />
+	<target host="www.lg.com" />
+	<target host="wwwstg.lg.com" />
+
+		<exclusion pattern="^http://www(?:stg)?\.lg\.com/(?!\w\w/(?:css|foresee|images|js)/|favicon\.ico|lg3-common(?:-v2)?/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.lg.com/ae" />
+			<test url="http://www.lg.com/au" />
+			<test url="http://www.lg.com/common/index.jsp" />
+			<test url="http://www.lg.com/lg3-common/images/gateway/flag/ico-north03.gif" />
+			<test url="http://www.lg.com/us/mobile" />
+			<test url="http://www.lg.com/us/support/software-manuals" />
+			<test url="http://www.lg.com/us/tv-audio-video" />
+			<test url="http://www.lg.com/us/tvs" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.lg.com/favicon.ico" />
+			<test url="http://www.lg.com/lg3-common/images/gateway/flag/ico-north03.gif" />
 
 
 	<!--	Tracking cookies:
 					-->
 	<securecookie host="^\.lg\.com$" name="^(?:s_\w+|__utm)\w$" />
-	<securecookie host="^(?:admin\.cm|ww)s\.lg\.com$" name=".+" />
+	<securecookie host="^admin\.cms\.lg\.com$" name=".+" />
 
 
-	<rule from="^http://(?:ww[sw]\.)?lg\.com/"
-		to="https://wws.lg.com/" />
-
-	<rule from="^http://(akamaitest|admin\.cms|wwwstg)\.lg\.com/"
-		to="https://$1.lg.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

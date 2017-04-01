@@ -1,19 +1,23 @@
 <!--
 	CDN buckets:
-
 		- s3.amazonaws.com/files.enjin.com/
 
 		- d2umfjgc9kwn9b.cloudfront.net
 			- assets-cloud.enjin.com
-
 -->
-<ruleset name="Enjin">
-
+<ruleset name="Enjin" platform="mixedcontent">
 	<target host="enjin.com" />
 	<target host="*.enjin.com" />
-	<target host="*.www.enjin.com" />
 	<target host="resources.guild-hosting.net" />
-
+	
+	<test url="http://www.enjin.com/" />
+	<test url="http://assets-cloud.enjin.com/" />
+	<test url="http://support.enjin.com/" />
+	<test url="http://files.enjin.com/" />
+	<test url="http://townywarriorsmc.enjin.com/" />
+	<test url="http://www.townywarriorsmc.enjin.com/" />
+	<test url="http://dracokraft.enjin.com/" />
+	<test url="http://www.dracokraft.enjin.com/" />
 
 	<!--	Guild subdomains set wildcard cookies. In
 		order to secure them, we'd have to target
@@ -21,21 +25,19 @@
 							-->
 	<securecookie host="^(?:.*\.)?enjin\.com$" name=".+" />
 
-
-	<rule from="^https?://assets-cloud\.enjin\.com/"
+	<rule from="^http://assets-cloud\.enjin\.com/"
 		to="https://d2umfjgc9kwn9b.cloudfront.net/" />
 
-	<rule from="^https?://files\.enjin\.com/"
+	<rule from="^http://files\.enjin\.com/"
 		to="https://s3.amazonaws.com/files.enjin.com/" />
 
 	<!--	Guilds have unique subdomains.
 						-->
-	<rule from="^http://([\w\-]+\.)?enjin\.com/"
-		to="https://$1enjin.com/" />
+	<rule from="^http://(www\.)?([\w-]+\.)?enjin\.com/"
+		to="https://$2enjin.com/" />
 
 	<!--	CN: *.enjin.com
 				-->
-	<rule from="^https?://resources\.guild-hosting\.net/"
+	<rule from="^http://resources\.guild-hosting\.net/"
 		to="https://resources.enjin.com/" />
-
 </ruleset>

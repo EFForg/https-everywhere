@@ -2,20 +2,18 @@
 // were applied, and which ones weren't but might have been, to the contents
 // of a given page (top level nsIDOMWindow)
 
-serial_number = 0;
+var serial_number = 0;
 
-function ApplicableList(logger, doc, domWin) {
-  this.domWin = domWin;
-  this.uri = doc.baseURIObject.clone();
+function ApplicableList(logger, uri) {
+  this.log = logger;
+  this.uri = uri.clone();
   if (!this.uri) {
     this.log(WARN,"NULL CLONING URI " + doc);
-    if (doc) 
-      this.log(WARN,"NULL CLONING URI " + doc.baseURIObject);
-    if (doc.baseURIObject) 
-      this.log(WARN,"NULL CLONING URI " + doc.baseURIObject.spec);
+    if (uri) {
+      this.log(WARN,"NULL CLONING URI " + uri.spec);
+    }
   }
-  this.home = doc.baseURIObject.spec; // what doc we're housekeeping for
-  this.log = logger;
+  this.home = uri.spec; // what doc we're housekeeping for
   this.active = {};
   this.breaking = {}; // rulesets with redirection loops
   this.inactive = {};
@@ -30,7 +28,7 @@ ApplicableList.prototype = {
 
   empty: function() {
     // Empty everything, used when toggles occur in order to ensure that if
-    // the reload fails, the resulting list is not eroneous
+    // the reload fails, the resulting list is not erroneous
     this.active = {};
     this.breaking = {}; 
     this.inactive = {};
@@ -40,14 +38,14 @@ ApplicableList.prototype = {
 
   active_rule: function(ruleset) {
     this.log(INFO,"active rule " + ruleset.name +" in "+ this.home +" -> " +
-             this.domWin.document.baseURIObject.spec+ " serial " + this.serial);
+             this.uri.spec+ " serial " + this.serial);
     this.active[ruleset.name] = ruleset;
     this.all[ruleset.name] = ruleset;
   },
 
   breaking_rule: function(ruleset) {
     this.log(NOTE,"breaking rule " + ruleset.name +" in "+ this.home +" -> " +
-             this.domWin.document.baseURIObject.spec+ " serial " + this.serial);
+             this.uri.spec+ " serial " + this.serial);
     this.breaking[ruleset.name] = ruleset;
     this.all[ruleset.name] = ruleset;
   },
@@ -55,7 +53,7 @@ ApplicableList.prototype = {
   inactive_rule: function(ruleset) {
 
     this.log(INFO,"inactive rule " + ruleset.name +" in "+ this.home +" -> " +
-             this.domWin.document.baseURIObject.spec+ " serial " + this.serial);
+             this.uri.spec+ " serial " + this.serial);
     this.inactive[ruleset.name] = ruleset;
     this.all[ruleset.name] = ruleset;
   },
@@ -75,7 +73,11 @@ ApplicableList.prototype = {
   populate_list: function() {
     // The base URI of the dom tends to be loaded from some /other/
     // ApplicableList, so pretend we're loading it from here.
-    HTTPSEverywhere.instance.https_rules.rewrittenURI(this, this.uri);
+    var uri = this.uri;
+    if (!(uri.schemeIs("http") || uri.schemeIs("https"))) {
+      return true;
+    }
+    HTTPSEverywhere.instance.https_rules.rewrittenURI(this, uri);
     this.log(DBUG, "populating using alist #" + this.serial);
   },
 
@@ -100,20 +102,24 @@ ApplicableList.prototype = {
     var text = strings.getString("https-everywhere.menu.globalDisable");
     if(!https_everywhere.prefs.getBoolPref("globalEnabled"))
       text = strings.getString("https-everywhere.menu.globalEnable");
-        
+
     enableLabel.setAttribute('label', text);
-    enableLabel.setAttribute('command', 'https-everywhere-menuitem-globalEnableToggle');    
+    enableLabel.setAttribute('command', 'https-everywhere-menuitem-globalEnableToggle');
     this.prepend_child(enableLabel);
-    
+
     // add the label at the top
     var any_rules = false;
     for(var x in this.all) {
       any_rules = true;  // how did JavaScript get this ugly?
       break;
     }
+    // This label just describes the fact that the items underneath it enable
+    // and disable rules.
     var label = document.createElement('menuitem');
     label.setAttribute('label', strings.getString('https-everywhere.menu.enableDisable'));
-    label.setAttribute('command', 'https-everywhere-menuitem-preferences');
+    label.setAttribute('disabled', 'true');
+    label.setAttribute('class', 'menuitem-non-iconic');
+    label.setAttribute('style', 'font-weight: bold; color: -moz-MenuBarText;');
     var label2 = false;
     if (!any_rules) {
       label2 = document.createElement('menuitem');
@@ -140,8 +146,8 @@ ApplicableList.prototype = {
     var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
                      .getService(Components.interfaces.nsIWindowMediator);
                      
-    var domWin = wm.getMostRecentWindow("navigator:browser").content.document.defaultView.top;  
-    var location = domWin.document.baseURIObject.asciiSpec; //full url, including about:certerror details
+    var browser = wm.getMostRecentWindow("navigator:browser").gBrowser.selectedBrowser;
+    var location = browser.currentURI.asciiSpec; //full url, including about:certerror details
     
     if(location.substr(0, 6) == "about:"){
       //"From" portion of the rule is retrieved from the location bar via document.getElementById("urlbar").value
@@ -211,10 +217,16 @@ ApplicableList.prototype = {
   },
 
   add_command: function(rule) {
-      var command = this.document.createElement("command");
-      command.setAttribute('id', rule.id+'-command');
+      // basic validation for data to be added to xul
+      var ruleId = String(rule.id);
+      if (!ruleId.match(/^[a-zA-Z_0-9]+$/)) {
+        return;
+      }
+
+      var command = this.document.getElementById("https-everywhere-menuitem-rule-toggle-template").cloneNode();
+      command.setAttribute('id', ruleId+'-command');
+      command.setAttribute('data-id', ruleId);
       command.setAttribute('label', rule.name);
-      command.setAttribute('oncommand', 'toggle_rule("'+rule.id+'")');
       this.commandset.appendChild(command);
   },
 
@@ -226,6 +238,7 @@ ApplicableList.prototype = {
     var item = this.document.createElement('menuitem');
     item.setAttribute('command', rule.id+'-command');
     item.setAttribute('class', type+'-item menuitem-iconic');
+    item.setAttribute('type', 'checkbox');
     item.setAttribute('label', rule.name);
 
     // we can get confused if rulesets have their state changed after the

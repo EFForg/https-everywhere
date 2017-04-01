@@ -8,59 +8,100 @@
 			- static.businessinsider.com
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *businessinsider.com:
 
-		- articles	(403; CN: ssl2?.cdngc.net)
-		- jobs		(CN: *.jobamatic.com)
+		- articles ¹
+		- jobs ²
 
-
-	Problematic subdomains:
-
-		- static	(works; mismatched, CN: gp1.wac.edgecastcdn.net)
+	¹ 403; CN: ssl2?.cdngc.net
+	² CN: *.jobamatic.com
 
 
-	Partially covered subdomains:
+	Problematic hosts in *businessinsider.com:
 
-		- au.businessinsider.com	(some pages redirect to http)
+		- au *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .businessinsider.com
+		- intelligence.businessinsider.com
 
 -->
-<ruleset name="BuisnessInsider (partial)">
+<ruleset name="BusinessInsider.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="businessinsider.com" />
-	<target host="*.businessinsider.com" />
+	<target host="intelligence.businessinsider.com" />
+	<target host="static.businessinsider.com" />
+	<target host="static-bii.businessinsider.com" />
+	<target host="static-ssl.businessinsider.com" />
+	<target host="static1.businessinsider.com" />
+	<target host="static2.businessinsider.com" />
+	<target host="static3.businessinsider.com" />
+	<target host="static4.businessinsider.com" />
+	<target host="static5.businessinsider.com" />
+	<target host="static6.businessinsider.com" />
+	<target host="static7.businessinsider.com" />
+	<target host="static8.businessinsider.com" />
+
+	<!--	Fix broken video, see:
+			https://github.com/EFForg/https-everywhere/issues/5014 -->
+		<exclusion pattern="^http://static(\d|-ssl)?.businessinsider.com/assets/js/app/partners/ooyala/skin.json$" />
+		<test url="http://static.businessinsider.com/assets/js/app/partners/ooyala/skin.json" />
+		<test url="http://static1.businessinsider.com/assets/js/app/partners/ooyala/skin.json" />
+		<test url="http://static-ssl.businessinsider.com/assets/js/app/partners/ooyala/skin.json" />
+
+	<target host="static1.uk.businessinsider.com" />
+	<target host="static2.uk.businessinsider.com" />
+	<target host="static3.uk.businessinsider.com" />
+	<target host="static4.uk.businessinsider.com" />
+	<target host="static5.uk.businessinsider.com" />
+	<target host="static6.uk.businessinsider.com" />
+
+	<target host="www.businessinsider.com" />
+
+	<!--	Complications:
+				-->
+		<!--	Many pages redirect to http.
+							-->
+		<!--exclusion pattern="^http://uk\.businessinsider\.com/[\w-]+($|\?)" /-->
+	        <!--exclusion pattern="^http://www\.businessinsider\.com/$" /-->
 		<!--
-			Many pages redirect to http.
-							-->
-	        <exclusion pattern="^http://(?:www\.)?businessinsider\.com/(?!account|assets/|login|register)" />
-		<exclusion pattern="^http://au\.businessinsider\.com/(?!image/)" />
-		<!--exclusion pattern="^http://jobs\.businessinsider\.com/($|a/)" /-->
-		<exclusion pattern="^http://static\d?\.businessinsider\.com/image/" />
+			Exceptions:
+					-->
+	        <exclusion pattern="^http://www\.businessinsider\.com/(?!assets/|favicon\.ico|login)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.businessinsider.com/about" />
+			<test url="http://www.businessinsider.com/careers" />
+			<test url="http://www.businessinsider.com/contributor" />
+			<test url="http://www.businessinsider.com/events" />
+			<test url="http://www.businessinsider.com/forgot" />
+			<test url="http://www.businessinsider.com/trending" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.businessinsider.com/favicon.ico" />
+			<test url="http://www.businessinsider.com/login" />
 
 
-	<!--	Tracking cookie set by oascentral:
-							-->
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.businessinsider\.com$" name="^s$" /-->
+	<!--securecookie host="^intelligence\.businessinsider\.com$" name="^PHPSESSID$" /-->
+
 	<securecookie host="^\.businessinsider\.com$" name="^OAX$" />
-	<securecookie host="^oascentral\.businessinsider\.com$" name=".+" />
+	<securecookie host="^intelligence\.businessinsider\.com$" name=".+" />
 
-
-        <rule from="^http://(au\.|www\.)?businessinsider\.com/"
-		to="https://$1businessinsider.com/" />
 
         <!--    See Simply-Hired-clients.xml for problematic jobs rules.
 									-->
-        <rule from="^http://jobs\.businessinsider\.com/c/"
-                to="https://businessinsider.jobamatic.com/c/" />
-
-	<rule from="^http://oascentral\.businessinsider\.com/"
-		to="https://oascentral.businessinsider.com/" />
-
-	<!--	- static[1-9]? are identical
-		- static0 doesn't exist
-		- Cert: gp1.wac.edgecastcdn.net
-		- 404
-		- image/ redirects back to static
-						-->
-	<rule from="^http://static\d?\.businessinsider\.com/"
-		to="https://www.businessinsider.com/" />
+        <rule from="^http:"
+		to="https:" />
 
 </ruleset>

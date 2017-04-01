@@ -1,30 +1,57 @@
 <!--
-	Nonfunctional subdomains:
+	NB: Tor users cannot view* this website due to CloudFlare settings.
 
-		- kcnawatch	(shows www)
+	See:
+
+		- https://blog.torproject.org/blog/call-arms-helping-internet-services-accept-anonymous-users
+		- https://support.cloudflare.com/hc/en-us/articles/203306930-Does-CloudFlare-block-Tor-
+		- https://support.cloudflare.com/hc/en-us/articles/200170206-How-do-I-turn-I-m-Under-Attack-mode-on-
+
+	* without enabling javascript, for security and privacy implications see e.g.:
+
+		- https://www.mozilla.org/security/known-vulnerabilities/firefox.html
+		- https://trac.torproject.org/projects/tor/query?status=!closed&keywords=~tbb-fingerprinting
+		- https://panopticlick.eff.org
 
 
-	Some pages redirect to http.
+	Nonfunctional hosts in *nknews.org:
+
+		- kcnawatch *
+
+	* Shows www
 
 
-	Mixed content:
+	Problematic hosts in *nknews.org:
 
-		- Images on shop from shop *
+		signup *
 
-	* Secured by us
+	* Unbounce
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- nknews.org
+		- .nknews.org
+		- signup.nknews.org
+		- www.nknews.org
 
 -->
 <ruleset name="NK News.org (partial)">
 
 	<target host="nknews.org" />
-	<target host="*.nknews.org" />
-		<exclusion pattern="^http://(?:www\.)?nknews\.org/+(?!favicon\.ico|register(?:$|[?/])|wp-content/|wp-includes/)" />
+	<target host="shop.nknews.org" />
+	<target host="www.nknews.org" />
 
 
-	<securecookie host="^shop\.nknews\.org$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.nknews\.org$" name="^(__cfduid|__uima\d+|cf_clearance|ubvt|wordpress_test_cookie)$" /-->
+	<!--securecookie host="^(www\.)?nknews\.org$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^signup\.nknews\.org$" name="^(ubpv|ubvs$)" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(shop\.|www\.)?nknews\.org/"
-		to="https://$1nknews.org/" />
-
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

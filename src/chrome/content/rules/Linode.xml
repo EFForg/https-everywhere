@@ -1,9 +1,69 @@
-<ruleset name="Linode">
-  <target host="linode.com" />
-  <target host="*.linode.com" />
+<!--
+	Nonfunctional hosts in *linode.com:
 
-  <securecookie host="^.*linode\.com$" name=".*"/>
+		- speedtest.atlanta ¹
+		- speedtest.dallas ¹
+		- speedtest.frankfurt ¹
+		- speedtest.fremont ¹
+		- speedtest.london ¹
+		- speedtest.newark ¹
+		- speedtest.singapore ¹
+		- speedtest.tokyo ¹
 
-  <rule from="^http://linode\.com/" to="https://www.linode.com/"/>
-  <rule from="^http://(library|stats|manager|www)\.linode\.com/" to="https://$1.linode.com/"/>
+		- mirrors ¹
+		- atlanta.mirrors ¹
+		- dallas.mirrors ¹
+		- frankfurt.mirrors ¹
+		- fremont.mirrors ¹
+		- london.mirrors ¹
+		- newark.mirrors ¹
+		- singapore.mirrors ¹
+		- tokyo.mirrors ¹
+
+		- *.members ²
+		- *.nodebalancer ²
+
+	¹ Refused
+	² Customer load balancers and VPSes. Mismatched, refused or time out.
+-->
+<ruleset name="Linode.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="linode.com" />
+	<target host="alpha.linode.com" />
+	<target host="api.alpha.linode.com" />
+	<target host="login.alpha.linode.com" />
+	<target host="api.linode.com" />
+	<target host="apt.linode.com" />
+	<target host="apt-longview.linode.com" />
+	<target host="blog.linode.com" />
+	<target host="developers.linode.com" />
+	<target host="engineering.linode.com" />
+	<target host="forum.linode.com" />
+	<target host="library.linode.com" />
+	<target host="login.linode.com" />
+	<target host="manager.linode.com" />
+	<target host="stats.linode.com" />
+	<target host="status.linode.com" />
+	<target host="atlanta.webconsole.linode.com" />
+	<target host="dallas.webconsole.linode.com" />
+	<target host="frankfurt.webconsole.linode.com" />
+	<target host="fremont.webconsole.linode.com" />
+	<target host="london.webconsole.linode.com" />
+	<target host="newark.webconsole.linode.com" />
+	<target host="singapore.webconsole.linode.com" />
+	<target host="tokyo.webconsole.linode.com" />
+	<target host="www.linode.com" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.forum\.linode\.com$" name="^phpbb3_\w+_(k|sid|u)$" /-->
+
+	<securecookie host="^(?:.*\.)?linode\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

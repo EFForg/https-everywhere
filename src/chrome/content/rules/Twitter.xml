@@ -1,148 +1,160 @@
 <!--
-	Nonfunctional domains:
+	Other Twitter rulesets:
 
-		- blog.twitter.com		(hosted on Blogger)
-		- engineering.twitter.com	(hosted on Blogger; interrupted)
-		- status.twitter.com
-		- status.twitter.jp
+		- ads-twitter.com.xml
+		- Digits.com.xml
+		- T.co.xml
+		- Twimg.com.xml
+		- Twitter_Community.com.xml
+		- Twitter_Inc.com.xml
+		- Vine.co.xml
 
 
 	CDN buckets:
 
 		- a1095.g.akamai.net/=/1095/134446/1d/platform.twitter.com/ | platform2.twitter.com.edgesuite.net
-
-			- platform2.twitter.com
-
 		- twitter-any.s3.amazonaws.com
 		- twitter-blog.s3.amazonaws.com
-
-		- d2rdfnizen5apl.cloudfront.net
-
-			- s.twimg.com
 
 		- ssl2.twitter.com.edgekey.net
 		- twitter.github.com
 
 
-	Problematic domains:
+	Nonfunctional domains:
 
-		- twimg.com subdomains:
+		- status.twitter.com ¹
+		- status.twitter.jp *
 
-			- a[12]		(mismatched, CN: gp1.wac.edgecastcdn.net)
-			- a3 *
-			- a4		(mismatched, CN: si0.twimg.com)
-			- a5 *
-			- s		(cloudfront)
-
-		- twitter.com subdomains:
-
-			- urls.api *
-			- platform[0-3]		(403, akamai)
-			- anywhere.platform *
-			- widgets.platform	(mismatched, CN: si0.twimg.com)
-
-	* akamai
+	¹ 404
+	* Tumblr
 
 
-	Fully covered domains:
+	Problematic hosts in *twitter.com:
 
-		- (www.)t.co		(www → ^)
+		- app.tweet *
 
-		- twimg.com subdomains:
+	* Mismatched
 
-			- a\d		(→ si0)
-			- abs
-			- ea
-			- g
-			- gu
-			- hca
-			- jp
-			- ma
-			- ma[0123]
-			- o
-			- p
-			- pbs
-			- r
-			- s		(→ d2rdfnizen5apl.cloudfront.net)
-			- si[0-5]
-			- syndication
-			- cdn.syndication
-			- widgets
 
-		- twitter.com subdomains:
+	Observed hosts in *twitter.com:
 
-			- (www.)
-			- 201[012]
-			- ads
-			- analytics
-			- api
-			- cdn.api
-			- urls.api	(→ cdn.api)
-			- business
-			- preview.cdn
-			- preview-dev.cdn
-			- preview-stage.cdn
-			- de
-			- dev
-			- en
-			- es
-			- firefox
-			- fr
-			- it
-			- ja
-			- jp
-			- m
-			- media
-			- mobile
-			- music
-			- oauth
-			- p
-			- platform
-			- platform[0-3]		(→ platform)
-			- anywhere.platform	(→ platform)
-			- widgets.platform	(→ platform)
-			- search
-			- static
-			- support
-			- transparency
-			- upload
+		- (www.)?
+		- 201[0-4]
+		- about
+		- ads
+		- analytics
+		- api
+		- cdn.api
+		- urls.api
+		- urls-real.api
+		- apps
+		- blog
+		- business
+		- cards-dev
+		- cert
+		- dev
+		- engineering
+		- firefox
+		- m
+		- media
+		- mobile
+		- music
+		- partnerstream[12]
+		- pay
+		- pic
+		- platform
+		- widgets.platform
+		- s
+		- search
+		- sitestream
+		- static
+		- stream
+		- support
+		- syndication
+		- cdn.syndication
+		- transparency
+		- upload
+		- userstream
+
+
+	These altnames don't exist:
+
+		- cdn-dev.api.twitter.com
+		- preview.cdn.twitter.com
+		- syndication-o.twitter.com
+
+
+	Insecure cookies are set for these domains:
+
+		- twitter.com
+		- .twitter.com
+		- mobile.twitter.com
 
 -->
-<ruleset name="Twitter">
+<ruleset name="Twitter.com">
 
-	<target host="t.co" />
-	<target host="*.t.co" />
-	<target host="*.twimg.com" />
+	<!--	Direct rewrites:
+					-->
 	<target host="twitter.com" />
 	<target host="*.twitter.com" />
 
+		<test url="http://2010.twitter.com/" />
+		<test url="http://2011.twitter.com/" />
+		<test url="http://2012.twitter.com/" />
+		<test url="http://2013.twitter.com/" />
+		<test url="http://2014.twitter.com/" />
+		<test url="http://about.twitter.com/" />
+		<test url="http://ads.twitter.com/" />
+		<test url="http://analytics.twitter.com/" />
+		<test url="http://apps.twitter.com/" />
+		<test url="http://blog.twitter.com/" />
+		<test url="http://api.twitter.com/" />
+		<test url="http://business.twitter.com/" />
+		<test url="http://dev.twitter.com/" />
+		<test url="http://engineering.twitter.com/" />
+		<test url="http://firefox.twitter.com/" />
+		<test url="http://m.twitter.com/" />
+		<test url="http://media.twitter.com/" />
+		<test url="http://mobile.twitter.com/" />
+		<test url="http://music.twitter.com/" />
+		<test url="http://partnerstream1.twitter.com/" />
+		<test url="http://partnerstream2.twitter.com/" />
+		<test url="http://pay.twitter.com/" />
+		<test url="http://pic.twitter.com/" />
+		<test url="http://platform.twitter.com/" />
+		<test url="http://widgets.platform.twitter.com/" />
+		<test url="http://s.twitter.com/" />
+		<test url="http://search.twitter.com/" />
+		<test url="http://sitestream.twitter.com/" />
+		<test url="http://static.twitter.com/" />
+		<test url="http://status.twitter.com/" />
+		<test url="http://stream.twitter.com/" />
+		<test url="http://support.twitter.com/" />
+		<test url="http://syndication.twitter.com/" />
+		<test url="http://cdn.syndication.twitter.com/" />
+		<test url="http://transparency.twitter.com/" />
+		<test url="http://upload.twitter.com/" />
+		<test url="http://userstream.twitter.com/" />
+		<test url="http://www.twitter.com/" />
 
-	<securecookie host="^\.t\.co$" name=".+" />
-	<securecookie host="^(?:.*\.)?twitter\.com$" name=".+" />
+		<exclusion pattern="^http://(?:status|app\.tweet|images\.tweet|click\.e)\.twitter\.com/" />
+
+			<test url="http://status.twitter.com/" />
+			<test url="http://app.tweet.twitter.com/" />
+			<test url="http://images.tweet.twitter.com/" />
+			<test url="http://click.e.twitter.com/" />
 
 
-	<rule from="^http://(?:www\.)?t\.co/"
-		to="https://t.co/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^twitter\.com$" name="^external_referer$" /-->
+	<!--securecookie host="^\.twitter\.com$" name="^(?:guest_id|pid)$" /-->
+	<!--securecookie host="^mobile\.twitter\.com$" name="^(?:req_country|req_country_code|req_ip)$" /-->
 
-	<rule from="^http://a\d\.twimg\.com/"
-		to="https://si0.twimg.com/" />
+	<securecookie host="." name="." />
 
-	<rule from="^http://(abs|ea|gu?|hca|jp|ma\d?|o|p|pbs|r|si\d|(?:cdn\.)?syndication|widgets)\.twimg\.com/"
-		to="https://$1.twimg.com/" />
 
-	<rule from="^http://s\.twimg\.com/"
-		to="https://d2rdfnizen5apl.cloudfront.net/" />
-
-	<rule from="^http://((?:201\d|ads|analytics|(?:cdn\.)?api|business|preview(?:-dev|-stage)?\.cdn|de|dev|en|es|firefox|fr|it|ja|jp|m|media|mobile|music|oauth|p|platform|search|static|support|transparency|upload|www)\.)?twitter\.com/"
-		to="https://$1twitter.com/" />
-
-	<rule from="^http://urls\.api\.twitter\.com/"
-		to="https://cdn.api.twitter.com/" />
-
-	<rule from="^http://(?:blo|engineerin)g\.twitter\.com/favicon\.ico"
-		to="https://www.blogger.com/favicon.ico"/>
-
-	<rule from="^http://(?:anywhere\.|widgets\.)?platform\d?\.twitter\.com/"
-		to="https://platform.twitter.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

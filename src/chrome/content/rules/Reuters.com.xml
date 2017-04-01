@@ -8,7 +8,6 @@
 
 		- static.reuters.com.edgesuite.net
 
-			- a1768.g.akamai.net
 			- s[1-4]
 
 		- g3.us.reuters.com.edgesuite.net
@@ -18,75 +17,70 @@
 		- yospace-cds1.reuters.com.edgesuite.net
 
 
-	Nonfunctional reuters.com subdomains:
+	Nonfunctional domains:
 
-		- blogs *
-		- ca		(redirects to http)
-		- alerts.us **
-		- funds.us **
-		- portfolio.us **
-		- stockscreener.us **
-		- yospace-cds1		(503, akamai)
-		- js.www *
+		- reuters.com subdomains:
+
+			- (www.)? ²
+			- blogs *
+			- af ²
+			- ca		(redirects to http)
+			- alerts.us **
+			- funds.us **
+			- portfolio.us **
+			- static ⁴
+			- stockscreener.us **
+			- yospace-cds1		(503, akamai)
+			- js.www *
+
+
 
 	* Dropped
+	² Redirects to http
 	** Refused
+	⁴ 504, akamai
 
 
-	Problematic domains:
+	Problematic hosts in *reuters.com:
 
-		- reuters.com			(redirects to http, CN: localhost.localdomain)
-		- mediacdn.reuters.com *
-		- static.reuters.com *
-		- www.reuters.com		(redirects to http, akamai)
-		- s[1-4].reutersmedia.net *
-		- reut.rs			(dropped)
+		- mediacdn
+		- mediaexpress ᵐ
 
-	* Works, akamai
+	ᵐ Mismatched
 
 
-	Partially covered domains:
+	Insecure cookies are set for these hosts: ᶜ
 
-		- (www.)reuters.com		(→ akamai)
-		- static.reuters.com		(→ akamai)
-		- s[1-4].reutersmedia.net	(→ akamai)
+		- customers.reuters.com
+		- pictures.reuters.com
 
-
-	Fully covered domains:
-
-		- mediacdn.reuters.com		(→ akamai)
-		- commerce.us.reuters.com
-		- reut.rs			(→ bit.ly)
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="Reuters.com (partial)">
 
-	<target host="reuters.com" />
-	<target host="*.reuters.com" />
-	<target host="*.reutersmedia.net" />
-		<!--
-			Causes resources to be fetched from akamai.net/$
-										-->
-		<exclusion pattern="^http://s(?:tatic\.reuters\.com|\d\.reutersmedia\.net)/resources_v2/css/" />
-	<target host="reut.rs" />
+	<target host="commerce.reuters.com" />
+	<target host="customers.reuters.com" />
+	<target host="pictures.reuters.com" />
+	<target host="s1.reutersmedia.net" />
+	<target host="s2.reutersmedia.net" />
+	<target host="s3.reutersmedia.net" />
+	<target host="s4.reutersmedia.net" />
+
+		<!--	$ 404,s so:
+					-->
+		<test url="http://commerce.reuters.com/agencyaccess/signIn.do" />
 
 
-	<rule from="^http://(?:www\.)?reuters\.com/favicon.ico"
-		to="https://a248.e.akamai.net/f/1768/1/g/s1.reutersmedia.net/resources/images/favicon.ico" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^customers\.reuters\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^pictures\.reuters\.com$" name="^(?:ASP\.NET_SessionId|CorexLanguageRTR)$" /-->
 
-	<rule from="^http://(?:www\.)?reuters\.com/(resources/(?:images|media)|resources_v2/(?:images|js|media))/"
-		to="https://a248.e.akamai.net/f/1768/1/g/s1.reutersmedia.net/$1/" />
+	<securecookie host="^\w" name="." />
 
-	<rule from="^http://mediacdn\.reuters\.com/"
-		to="https://a248.e.akamai.net/f/1158/1/g/mediacdn.reuters.com/" />
 
-	<rule from="^http://commerce\.us\.reuters\.com/"
-		to="https://commerce.us.reuters.com/" />
-
-	<rule from="^http://s(tatic\.reuters\.com|\d\.reutersmedia\.net)/"
-		to="https://a248.e.akamai.net/f/1768/1/g/s$1/" />
-
-	<rule from="^http://reut\.rs/"
-		to="https://bit.ly/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

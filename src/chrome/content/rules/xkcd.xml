@@ -1,8 +1,11 @@
 <!--
+	For rules causing MCB, see xkcd-mixed.xml.
+
+
 	store-xkcd-com.myshopify.com
 
 
-	Nonfunctional xkcd.com subdomains:
+	Nonfunctional hosts in *xkcd.com:
 
 		- blag *
 		- blog *
@@ -16,63 +19,86 @@
 
 	Problematic domains:
 
-		- imgs.xkcd.com ¹
-		- (www.)store.xkcd.com		(redirects to http; mismatched, CN: *.myshopify.com)
-		- (www.)xkcd.org *
-		- m.xkcd.org *
+		- c.xkcd.com ¹
+		- c[0-8].xkcd.com ¹
+		- dynamic.xkcd.com ¹
+		- www.store.xkcd.com ²
+		- uni.xkcd.com ³
 
-	¹ 404; mismatched, CN: *.voxcdn.com
-	* Works; mismatched, CN: *.xkcd.com
+		- (www.)?xkcd.org ⁴
+		- m.xkcd.org ⁴
 
-
-	Fully covered domains:
-
-		- xkcd.com subdomains:
-
-			- (www.)
-			- 3d
-			- c0
-			- dynamic
-			- imgs		(→ sslimgs)
-			- m
-			- sslimgs
-			- (www.)store	(→ store-xkcd-com.myshopify.com)
-			- uni
-			- whatif
-			- what-if
-
-		- (www.)xkcd.org	(→ xkcd.com)
-		- m.xkcd.org		(→ m.xkcd.com)
+	¹ Missing certificate chain
+	² Redirects to http; mismatched, CN: *.myshopify.com
+	³ Mixed css
+	⁴ Works; mismatched, CN: *.xkcd.com
 
 
 	Mixed content:
 
+		- Scripts on:
+
+			- uni on ajax.googleapis.com *
+			- uni from dynamic.xkcd.com
+
 		- Images, on:
 
-			- ^ from imgs *
 			- m from imgs *
+			- shop from cdn.shopify.com *
 
-	* Secured by us, doesn't trip MCB
+	* Secured by us
 
 -->
 <ruleset name="xkcd">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="xkcd.com" />
+	<target host="3d.xkcd.com" />
+	<!--
+	<target host="c0.xkcd.com" />
+	<target host="c1.xkcd.com" />
+	<target host="c2.xkcd.com" />
+	<target host="c3.xkcd.com" />
+	<target host="c4.xkcd.com" />
+	<target host="c5.xkcd.com" />
+	<target host="c6.xkcd.com" />
+	<target host="c7.xkcd.com" />
+	<target host="c8.xkcd.com" />
+	<target host="dynamic.xkcd.com" />
+	-->
+	<target host="imgs.xkcd.com" />
+	<target host="m.xkcd.com" />
+	<target host="sslimgs.xkcd.com" />
+	<target host="store.xkcd.com" />
+	<!--target host="uni.xkcd.com" /-->
+	<target host="whatif.xkcd.com" />
+	<target host="what-if.xkcd.com" />
+	<target host="www.xkcd.com" />
+	<target host="c.xkcd.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www.store.xkcd.com" />
+
 	<target host="xkcd.org" />
-	<target host="*.xkcd.com" />
-	<target host="*.xkcd.org" />
+	<target host="m.xkcd.org" />
+	<target host="www.xkcd.org" />
 
 
-	<rule from="^http://(www\.|m\.)?xkcd\.(?:com|org)/"
+        <exclusion pattern="^http://(www\.|m\.)?xkcd\.com/1663/" />
+
+		<test url="http://xkcd.com/1663/" />
+		<test url="http://m.xkcd.com/1663/" />
+		<test url="http://www.xkcd.com/1663/" />
+
+	<rule from="^http://(www\.|m\.)?xkcd\.org/"
 		to="https://$1xkcd.com/" />
 
-	<rule from="^http://(3d|c0|dynamic|sslimgs|uni|what-?if)\.xkcd\.com/"
-        to="https://$1.xkcd.com/" />
+	<rule from="^http://www\.store\.xkcd\.com/"
+		to="https://store.xkcd.com/" />
 
-	<rule from="^https?://imgs\.xkcd\.com/"
-		to="https://sslimgs.xkcd.com/" />
-
-	<rule from="^http://(?:www\.)?store\.xkcd\.com/"
-		to="https://store-xkcd-com.myshopify.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

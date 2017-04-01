@@ -1,3 +1,9 @@
+<!--
+	Mixed content:
+
+		- Bug on (www.)?thalysthecard.com from logi\d+.xiti.com
+
+-->
 <ruleset name="Thalys">
     <target host="thalys.com" />
     <target host="www.thalys.com" />
@@ -7,18 +13,12 @@
     <!-- Accessible from Thalys trains. -->
     <target host="portal.thalysnet.com" />
 
-    <securecookie host="^(.*\.)?thalys\.com$" name=".+" />
-    <securecookie host="^(.*\.)?thalysnet\.com$" name=".+" />
-    <securecookie host="^(.*\.)?thalysthecard\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.thalysthecard\.com$" name="^SESS[\da-f]{32}$" /-->
 
-    <rule from="^https?://thalys\.com/"
-        to="https://www.thalys.com/" />
-    <rule from="^http://([^/:@]+)?\.thalys\.com/"
-        to="https://$1.thalys.com/" />
-    <rule from="^http://([^/:@]+)?\.thalysnet\.com/"
-        to="https://$1.thalysnet.com/" />
-    <rule from="^https?://thalysthecard\.com/"
-        to="https://www.thalysthecard.com/" />
-    <rule from="^http://([^/:@]+)?\.thalysthecard\.com/"
-        to="https://$1.thalysthecard.com/" />
+    <securecookie host="^(?:.*\.)?thalys(?:net|thecard)?\.com$" name=".+" />
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

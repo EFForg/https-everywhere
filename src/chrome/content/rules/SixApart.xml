@@ -1,11 +1,81 @@
-<ruleset name="SixApart" platform="mixedcontent">
-  <target host="sixapart.com" />
-  <target host="help.sixapart.com" />
-  <target host="www.sixapart.com" />
-  <target host="sixapart.jp" />
-  <target host="www.sixapart.jp" />
+<!--
+	Other Six Apart rulesets:
 
-  <rule from="^http://sixapart\.com/" to="https://sixapart.com/"/>
-  <rule from="^http://(help|www)\.sixapart\.com/" to="https://$1.sixapart.com/"/>
-  <rule from="^http://(?:www\.)?sixapart\.jp/" to="https://www.sixapart.jp/"/>
+		- Movable_Type.com.xml
+		- movabletype.net.xml
+		- sixapart.com.xml
+
+
+	Nonfunctional hosts in *sixapart.jp:
+
+		- media ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *sixapart.jp:
+
+		- makanai ᵐ ˣ
+
+	ᵐ Mismatched
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .sixapart.jp
+		- mtuser.sixapart.jp
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on makanai from $self *
+		- Images on makanai from $self *
+
+	* See https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	STS header includes includeSubdomains
+	for ^, www
+
+	Note that ^ redirects to https, so....
+
+-->
+<ruleset name="Six Apart.jp (partial)">
+
+	<target host="sixapart.jp" />
+	<target host="*.sixapart.jp" />
+
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?:(?:[^./]+\.){2,}|makanai\.|media\.)sixapart\.jp/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.sixapart.jp/" />
+			<test url="http://exists.net.sixapart.jp/" />
+			<test url="http://makanai.sixapart.jp/" />
+			<test url="http://media.sixapart.jp/" />
+
+		<test url="http://blog.sixapart.jp/" />
+		<test url="http://mtuser.sixapart.jp/" />
+		<test url="http://s.sixapart.jp/" />
+		<test url="http://s.sixapart.jp/sanl25814" />
+		<test url="http://www.sixapart.jp/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.sixapart\.jp$" name="^app_uid$" /-->
+	<!--securecookie host="^mtuser\.sixapart\.jp$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

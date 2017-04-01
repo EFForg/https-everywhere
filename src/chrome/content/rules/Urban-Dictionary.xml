@@ -1,43 +1,58 @@
 <!--
+	Other Urban Dictionary rulesets:
+
+		- UDimg.com.xml
+
+
 	CDN buckets:
 
 		- s3.amazonaws.com/s3.urbandictionary.com/
 
 
-	Problematic domains:
+	Problematic hosts in *urbandictionary.com:
 
-		- b.udimg.com *
-		- d.udimg.com *
+		- ^ *
+		- origin ²
+		- store ³
 
-		- urbandictionary.com subdomains:
-
-			- ^		(refused)
-			- origin	(mismatched, CN: *.herokuapp.com)
-			- static[0-3] *
-			- www *
-
-	* Works; mismatched, CN: *.a.ssl.fastly.net
+	* Refused
+	² Heroku
+	³ Shopify
 
 
-	nonfunctional subdomains:
-		blog	(hosted on Tumblr)
+	Insecure cookies are set for these domains:
+
+		- .urbandictionary.com
+
 -->
-<ruleset name="Urban Dictionary (partial)" default_off="mismatch">
+<ruleset name="Urban Dictionary.com">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="static0.urbandictionary.com"/>
+	<target host="static1.urbandictionary.com"/>
+	<target host="static2.urbandictionary.com"/>
+	<target host="static3.urbandictionary.com"/>
+	<!--target host="store.urbandictionary.com"/-->
+	<target host="www.urbandictionary.com"/>
+
+	<!--	Complications:
+				-->
 	<target host="urbandictionary.com"/>
-	<target host="*.urbandictionary.com"/>
-		<!--	Handled in TheResumator.com-clients.xml
-			due to this ruleset being off by default.	-->
-		<exclusion pattern="^http://jobs\."/>
+	<target host="origin.urbandictionary.com"/>
 
-	<!--	observed cookies:
-			- ^\.
-				- _urban_session
-			- ^www
-				- country	-->
-	<securecookie host="^(www)?\.urbandictionary\.com$" name=".*"/>
 
-	<rule from="^http://(?:origin\.|static[0-3]\.|www\.)?urbandictionary\.com/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.urbandictionary\.com$" name="^__qca$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://(?:origin\.)?urbandictionary\.com/"
 		to="https://www.urbandictionary.com/"/>
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

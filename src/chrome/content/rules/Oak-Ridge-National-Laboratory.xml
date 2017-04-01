@@ -1,70 +1,233 @@
 <!--
+	Oak Ridge National Laboratory
+
 	For other US government coverage, see US-government.xml.
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *ornl.gov:
 
+		- ameriflux ʳ
+		- bsec ᵃ
+		- cam ᵖ
+		- camm ᵃ
+		- cca1 ᵃ
+		- ccp2011 ᵃ
+		- cda ᵃ
+		- cdiac ᵈ
+		- www.cesar ᵃ
+		- www.cisr ᵃ
+		- www.cnms ᵃ
+		- computing ᵃ
+		- csite ᵈ
+		- www.csm ᵖ
+		- www.csmb ᵃ
+		- cta ᵃ
+		- dtree ᵈ
+		- ebis ᵃ
+		- ecp ᵃ
+		- edde ᵃ
+		- emc ᵃ
+		- energy ᵈ
+		- www.epm ᵖ
+		- equinox ᵖ
+		- www.esd ᵃ
+		- face ᵃ
+		- facedata ᵈ
+		- feedstockreview ᵃ
+		- feerc ᵃ
+		- futureinstruments ᵃ
 		- gsearch	(cert: www.ornl.gov)
-		- neutrons	(501; 403)
+		- hippo ʰ
+		- html ᵃ
+		- hydropower ᵃ
+		- imaging ᵈ
+		- inspire ᵈ
+		- www.ioc ᵃ
+		- leafweb ᶠ
+		- lustre ᶠ
+		- mippi ᵃ
+		- mnc ᵃ
+		- www.ms ᵃ
+		- nanotech ᵃ
+		- www.nerp ᵃ
+		- neutrons2 ᵃ
+		- nhts ᵃ
+		- orca ᵃ
+		- peemrc ᵃ
+		- peepsrc ᵃ
+		- per ᵃ
+		- www-cfadc.phy ᵃ
+		- pmi ʳ
+		- popcseq ᵈ
+		- prodigal ᵃ
+		- rsc ᵈ
+		- scale ᵃ
+		- stargate ᵃ
+		- stem ᵃ
+		- tarp ᵃ
+		- tasmanian ᵖ
+		- tccon ʳ
+		- tde ᵃ
+		- traffic ᵈ
+		- trafficapp ᵈ
+		- udi ᵃ
+		- usgs ᵈ
+		- visac ᵃ
+		- bison.usgs ᵈ
+		- weatherization ᵃ
+		- walkerbranch ᵈ
+
+	ᵃ Shows another domain
+	ᵈ Dropped
+	ᶠ Handshake fails
+	ʰ Redirects to http
+	ᵖ Plaintext reply
+	ʳ Refused
 
 
-	Problematic subdomains:
+	Problematic hosts in *ornl.gov:
 
-		- olcf		(cert only matches www.olcf)
+		- archive2 ᶜ
+		- climate ˢ
+		- compbio ᵉ ᵘ
+		- thredds.daac ᵐ ˣ
+		- fluxnet ᵉ ᵐ ˢ
+		- fsnutown.phy ᵉ
+		- genome ᵉ ᵘ
+		- mnspruce ᶜ
+		- mouse	*
+		- ngee ᵐ
+		- olcf ᵐ
+		- radware.phy ˢ
+		- plot1 ᶜ
+		- web **
+		- webmap ˣ
+
+	* Redirects to besc-lims.ornl.gov:9090
+	** >=1 paths 404
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵉ Expired
+	ᵐ Mismatched
+	ᵖ Plaintext reply
+	ˢ Self-signed
+	ᵘ Untrusted root
+	ˣ Mixed css
+
+
+	Mixed content:
+
+		- css, on:
+
+			- archive2 from www.archive.arm.gov *
+			- archive2 from www.arm.gov *
+			- thredds.daac, webmap from daac.ornl.gov ˢ
+			- webmap from visapi-gadgets.googlecode.com ˢ
+			- epa-bdcc, epa-bprg, epa-dccs, epa-heast, epa-prgs, epa-sdcc, epa-sprg, hhpprtv, info from fonts.googleapis.com ˢ
+
+		- Images, on:
+
+			- archive2 from www.arm.gov
+			- benefits, ft, info from $self ˢ
+			- fluxnet from $self
+			- mercury from usgs.ornl.gov ᵈ
+
+		- Bug, on:
+
+			- fluxnet from c.statcounter.com ˢ
+			- webmap from static.addtoany.com ˢ
+
+	* Irrelevant <= 404 over http
+	ᵈ Unsecurable <= dropped
+	ˢ Secured by us
 
 -->
-<ruleset name="Oak Ridge National Laboratory (partial)">
+<ruleset name="ORNL.gov (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="ornl.gov" />
-	<target host="*.ornl.gov" />
-		<!--	Redirect to 404 page	-->
-		<exclusion pattern="^http://www\.ornl\.gov/(adm/|info/|ornlreview/|partnerships/(css/handheld\.css|university)|search)" />
+	<!--target host="archive2.ornl.gov" /-->
+	<target host="benefits.ornl.gov" />
+	<target host="cci.ornl.gov" />
+	<target host="climatechangescience.ornl.gov" />
+	<target host="cmb.ornl.gov" />
+	<target host="crpk.ornl.gov" />
+	<target host="csites.ornl.gov" />
+	<target host="daac.ornl.gov" />
+	<target host="daac-news.ornl.gov" />
+	<target host="daymet.ornl.gov" />
+	<target host="ddr.ornl.gov" />
+	<target host="epa-bdcc.ornl.gov" />
+	<target host="epa-bprg.ornl.gov" />
+	<target host="epa-dccs.ornl.gov" />
+	<target host="epa-heast.ornl.gov" />
+	<target host="epa-prgs.ornl.gov" />
+	<target host="epa-sdcc.ornl.gov" />
+	<target host="epa-sprg.ornl.gov" />
+	<target host="extidp.ornl.gov" />
+	<target host="faf.ornl.gov" />
+	<target host="ft.ornl.gov" />
+	<target host="hhpprtv.ornl.gov" />
+	<target host="homer.ornl.gov" />
+	<target host="info.ornl.gov" />
+	<target host="itstools.ornl.gov" />
+	<target host="learning.ornl.gov" />
+	<target host="libcat.ornl.gov" />
+	<target host="mercury.ornl.gov" />
+	<!--target host="mnspruce.ornl.gov" /-->
+	<target host="msds.ornl.gov" />
+	<target host="nacp.ornl.gov" />
+	<target host="neutrons.ornl.gov" />
+	<!--target host="ngee-arctic.ornl.gov" /-->
+	<target host="nhaap.ornl.gov" />
+	<target host="www.olcf.ornl.gov" />
+	<!--target host="fsnutown.phy.ornl.gov" /-->
+	<target host="www.phy.ornl.gov" />
+	<!--target host="plot1.ornl.gov" /-->
+	<target host="rais.ornl.gov" />
+	<target host="rsicc.ornl.gov" />
+	<target host="user.ornl.gov" />
+	<target host="webgis.ornl.gov" />
+	<!--target host="webmap.ornl.gov" /-->
+	<target host="wiki.ornl.gov" />
+	<target host="www.ornl.gov" />
+
+	<!--	Complications:
+				-->
+	<!--target host="ngee.ornl.gov" /-->
+	<target host="olcf.ornl.gov" />
+
 	<target host="sustainability-ornl.org" />
 
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://ngee(?:-arctic)?\.ornl\.gov/$" /-->
 
-	<!--	Cert only matches www.	-->
-	<rule from="^https?://ornl\.gov/"
-		to="https://www.ornl.gov/" />
+		<!--	Redirects to 404:
+						-->
+		<!--test url="http://web.ornl.gov/info/ornlreview/v33_3_00/carbon.htm" /-->
 
-	<!--	At least some paths redirect to http.
+		<!--	Mixed content:
+					-->
+		<!--test url="http://benefits.ornl.gov/spd/default.aspx" /-->
+		<!--test url="http://info.ornl.gov/sites/sbpo/default.aspx" /-->
 
-		These paths work:
+		<!--	Formerly 404d
+					-->
+		<test url="http://www.ornl.gov/adm/user_facilities/" />
 
-			- $
-			- ornlhome/
-			- partnerships/			(except those listed below)
 
-		These don't:
+	<!--rule from="^http://ngee\.ornl\.gov/"
+		to="https://ngee-arctic.ornl.gov/" /-->
 
-			- adm/contracts/$
-			- adm/user_facilities/$
-			- info/features/get_feature.cfm
-			- info/library/$
-			- info/ornlreview/$
-			- info/ornlreview/images_home/pdficon_small.gif
-			- info/press_releases/get_press_release.cfm
-			- ornlreview/v45_1_12/article02.shtml
-			- partnerships/css/handheld.css?v=1
-			- partnerships/university$
-			- search
-
-		Hint:
-			- Working paths return 200.
-			- Nonworking paths return 302.
-
-				-->
-	<rule from="^http://www\.ornl\.gov/($|ornlhome/|partnerships/)"
-		to="https://www.ornl.gov/$1" />
-
-	<!--	ornlhome/ pages link to nonworking info/ & ornlreview/ pages via https.	-->
-	<rule from="^https://www\.ornl\.gov/(adm|info|ornlreview)/"
-		to="http://www.ornl.gov/$1/" downgrade="1" />
-
-	<rule from="^https?://(?:www\.)?olcf\.ornl\.gov/"
+	<rule from="^http://olcf\.ornl\.gov/"
 		to="https://www.olcf.ornl.gov/" />
 
 	<!--	www doesn't appear to exist.	-->
 	<rule from="^http://sustainability-ornl\.org/"
 		to="https://sustainability-ornl.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

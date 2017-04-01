@@ -1,0 +1,62 @@
+<!--
+	Problematic hosts in *perle.com:
+
+		- estoreeu *
+		- estoreuk *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- estoreeu.perle.com
+		- estoreuk.perle.com
+
+-->
+<ruleset name="Perle.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="perle.com" />
+	<target host="estore.perle.com" />
+	<!--target host="estoreeu.perle.com" /-->
+	<!--target host="estoreuk.perle.com" /-->
+	<target host="help.perle.com" />
+	<target host="www.help.perle.com" />
+	<target host="www.perle.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://estore\.perle\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://estore\.perle\.com/+(?!images/|scripts/|styles/|themes/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://estore.perle.com/dba0021.aspx" />
+			<test url="http://estore.perle.com/electricutility.aspx" />
+			<test url="http://estore.perle.com/iolants2.aspx" />
+			<test url="http://estore.perle.com/mcsm.aspx" />
+			<test url="http://estore.perle.com/page-not-found.aspx" />
+
+			<!--	-ve:
+					-->
+			<test url="http://estore.perle.com/images/down-icon.png" />
+			<test url="http://estore.perle.com/scripts/jQueryUiStyles/jquery-ui-1.10.3.custom.css" />
+			<test url="http://estore.perle.com/styles/main-menu.css" />
+			<test url="http://estore.perle.com/themes/migration-1-1/css/y4x_custom.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^estore(?:eu|uk)\.perle\.com$" name="^(?:ASPSESSIONID[A-Z]{8}|ekm_mo_perlesystem\w\w|ekm_perlesystem\w\w)$" /-->
+
+	<!--securecookie host="^estore\w\w\.perle\.com$" name=".+" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

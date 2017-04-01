@@ -1,42 +1,73 @@
 <!--
+	Disabled per https://trac.torproject.org/projects/tor/ticket/15485
+
+
 	CDN buckets:
 
 		- stitcher.assets.s3.amazonaws.com
+		- d1e7rotcsmgpz9.cloudfront.net	← cloudfront.assets
 
 		- stitcher.vo.llnwd.net
 
 			- .hs. doesn't exist
 
 
-	Cert only matches ^stitcher.com
+	Nonfunctional hosts in *stitcher.com:
 
-
-	Nonfunctional subdomains:
-
-		- app *
 		- landing *
 		- partners *
 
-	- Shows www
+	* Shows www.stitcher.com
 
 
-	Problematic subdomains:
+	Problematic hosts in *stitcher.com:
 
-		- ^			(cert only matches www)
+		- cloudfront.assets ²
 		- limelight.assets	(400, CN: *.hs.llnwd.net)
+		- ec-cdn-assets		404, EdgeCast
+
+	² Cloudfront
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- app from www.stitcher.com *
+			- www from $self *
+
+		- Bug on planet, www from b.scorecardresearch.com *
+
+	* Secured by us
 
 
 -->
-<ruleset name="Stitcher (partial)">
+<ruleset name="Stitcher.com (partial)" default_off="Breaks site">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="stitcher.com" />
-	<target host="*.stitcher.com" />
+	<target host="app.stitcher.com" />
+	<target host="secureimg.stitcher.com" />
+	<target host="www.stitcher.com" />
+
+	<!--	Complications:
+				-->
+	<target host="cloudfront.assets.stitcher.com" />
+	<target host="limelight.assets.stitcher.com" />
+	<target host="ec-cdn-assets.stitcher.com" />
 
 
-	<rule from="^https?://(?:www\.)?stitcher\.com/"
-		to="https://www.stitcher.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.stitcher\.com$" name="^_webapp_sui$" /-->
 
-	<rule from="^https?://limelight\.assets\.stitcher\.com/"
-		to="https://s3.amazonaws.com/stitcher.assets/" />
+
+	<rule from="^http://(?:cloudfront\.|limelight\.|ec-cdn-)assets\.stitcher\.com/"
+		to="https://secureimg.stitcher.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
 
 </ruleset>

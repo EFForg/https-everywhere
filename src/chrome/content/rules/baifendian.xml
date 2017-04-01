@@ -1,0 +1,41 @@
+<!--
+	Nonfunctional subdomains:
+
+		- (www.)	(^ → www)
+
+	Problematic subdomains:
+
+		- ^	(Mismatched)
+		- blog	(Expired)
+		- en	(Refused)
+		- setup	(Expired)
+		- static
+		- static1
+
+	Fully covered subdomains:
+		- ds5.api
+		- rec.api
+		- ssl-ds5-api
+		- ssl-rec5-api
+		- ssl-static
+		- ssl-static5
+
+-->
+<ruleset name="baifendian (partial)">
+
+	<target host="*.baifendian.com" />
+
+	<rule from="^http://(\w+\.api|ssl-[\w\-]+)\.baifendian\.com/"
+		to="https://$1.baifendian.com/" />
+		<test url="http://ds5.api.baifendian.com/2.0/MRecVAV.do" />
+		<test url="http://rec.api.baifendian.com/" />
+		<test url="http://ssl-ds5-api.baifendian.com/" />
+		<test url="http://ssl-rec5-api.baifendian.com/" />
+		<test url="http://ssl-static.baifendian.com/" />
+		<test url="http://ssl-static5.baifendian.com/" />
+	
+	<rule from="^http://passport\.baifendian\.com/"
+		to="https://passport.baifendian.com/" />
+		<test url="http://passport.baifendian.com/" />
+
+</ruleset>

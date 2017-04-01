@@ -1,24 +1,23 @@
 <!--
-	Problematic subdomains:
+	Insecure cookies are set for these domains:
 
-		- ^	(cert only matches www)
-
-
-	Some pages redirect to http.
+		- .medicinescomplete.com
 
 -->
-<ruleset name="MedicinesComplete (partial)">
+<ruleset name="MedicinesComplete.com">
 
 	<target host="medicinescomplete.com" />
 	<target host="www.medicinescomplete.com" />
-		<exclusion pattern="^http://www\.medicinescomplete\.com/(?!about/(?:269|images|style)/|mc(?:$|\?|/)|pdf/)" />
 
 
-	<!--	Server drops path like so, sans trailing slash:
-								-->
-	<rule from="^http://medicinescomplete\.com/.*"
-		to="https://www.medicinescomplete.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.medicinescomplete\.com$" name="^d0$" /-->
 
-	<rule from="^http://www\.medicinescomplete\.com/"
-		to="https://www.medicinescomplete.com/" />
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

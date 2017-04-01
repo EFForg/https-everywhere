@@ -1,0 +1,87 @@
+<!--
+	For problematic rules, see Wego_Health.com-problematic.xml.
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/wegohealthtvprod/
+		- d3vr1uk8na0dn7.cloudfront.net
+
+
+	Nonfunctional subdomains:
+
+		- sharinghub *
+
+	* Shows CentOS test page; self-signed, CN: gridhead.blueboxgrid.com
+
+
+	Problematic subdomains:
+
+		- blog *
+
+	* Works; mismatched, CN: *.gridserver.com.
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- tv
+
+
+	Observed cookie domains:
+
+		- ^ ¹
+		- . ²
+		- awards ³
+		- www ¹
+
+	¹ Secured by server
+	² Secured by us
+	³ Not secured by us <= incomplete support
+
+
+	Mixed content:
+
+		- css, on:
+
+			- blog from $self
+			- tv from fonts.googleapis.com *
+
+		- Images, on:
+
+			- awards from d3vr1uk8na0dn7.cloudfront.net *
+			- blog from $self
+			- tv from s3.amazonaws.com *
+			- tv from pbs.twimg.com *
+			- www from blog
+
+	* Secured by us
+
+-->
+<ruleset name="Wego Health.com (partial)">
+
+	<target host="wegohealth.com" />
+	<target host="*.wegohealth.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://awards\.wegohealth\.com/+($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://awards\.wegohealth\.com/+(?!nominees(?:$|\?))" />
+
+
+	<!--	Server sets Secure for:
+					-->
+	<!--securecookie host="^(www\.)?wegohealth\.com$" name=".+" /-->
+	<!--
+		But not for:
+				-->
+	<securecookie host="^\.wegohealth\.com$" name=".+" />
+
+
+	<rule from="^http://((?:awards|tv|www)\.)?wegohealth\.com/"
+		to="https://$1wegohealth.com/" />
+
+</ruleset>

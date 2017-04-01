@@ -1,52 +1,54 @@
-<ruleset name="Cloudfront">
+<ruleset name="Cloudfront.net">
 
 	<target host="*.cloudfront.net" />
-	<target host="www.cloudfront.net" />
 
+	<rule from="^http:" to="https:" />
+	<!-- from src/chrome/content/rules/Guild-Wars-2.xml  -->
+	<test url="http://d15glo5zfrmw71.cloudfront.net/" />
+	<test url="http://d1ej19d7kwigfi.cloudfront.net/" />
+	<test url="http://d1h9a8s8eodvjz.cloudfront.net/" />
 
-	<rule from="^http://([^/:@\.]+)\.cloudfront\.net/" 
-		to="https://$1.cloudfront.net/" />
+		<!--test url="http://d1o1wlqwda3y1b.cloudfront.net/A-NAL/CNVNAL-35096_31457369972thmb.jpg" /-->
+		<!--test url="http://d1uc3ft0n4nkav.cloudfront.net/images/gradient_bg.png" /-->
+		<!--test url="http://d235bdyk0zpoq6.cloudfront.net/assets/vibratissimo.jpg" /-->
+		<!--test url="http://d2wcds7obmglv2.cloudfront.net/assets/default/nav-arrow.gif" /-->
 
+	<!--	Attempt to work around "hang" after login for mapmyrun.com
+		https://github.com/EFForg/https-everywhere/issues/4159
+		report does not give any examples, so try all scripts. -->
+	<exclusion pattern="^http://d2i3r43q6ffvz8\.cloudfront\.net/.+\.js" />
+		<test url="http://d2i3r43q6ffvz8.cloudfront.net/prod/public/js/jquery/jquery-1.8.3.ddb54eca80f2.js?bust=3" />
+		<test url="http://d2i3r43q6ffvz8.cloudfront.net/prod/public/js/min/core.11b1b69c86c5.js?bust=3" />
 
-	<!--	Fixes video on prosieben.de/tv/switch-reloaded/video/clip/1928955-volle-kanne-der-riesen-rammler-1.3349717/
-											-->
-	<exclusion pattern="^http://d14orf5kgffdwb\.cloudfront\.net/dynamic/date\.php" />
-	<!--
-		https://trac.torproject.org/projects/tor/ticket/6848
-									-->
-	<exclusion pattern="^http://d1b14unh5d6w7g\.cloudfront\.net" />
+	<!-- This is a generalised precaution from turntable.fm
+		(rewriting this file seems to break cross origin in flash) -->
+	<exclusion pattern="^http://(\w+)\.cloudfront\.net/crossdomain\.xml" />
+		<test url="http://d1h9a8s8eodvjz.cloudfront.net/crossdomain.xml" />
+		<test url="http://d1ej19d7kwigfi.cloudfront.net/crossdomain.xml" />
 
-	<!--	https://trac.torproject.org/projects/tor/ticket/7020
-									-->
-  	<exclusion pattern="^http://d1i6vahw24eb07\.cloudfront\.net" />
-	<!--
-		C-SPAN videos: https://trac.torproject.org/projects/tor/ticket/7567
-									-->
-	<exclusion pattern="^http://d1k4es7bw1lvxt\.cloudfront\.net" />
-	<!--
-		this unbreaks turntable.fm and probably many other things
-									-->
-	<exclusion pattern="^http://d1bw0qpdrmjlhz\.cloudfront\.net" />
-	<!--
-		This breaks padlet.com wall:
+	<!-- Fix PBS videos, see https://github.com/EFForg/https-everywhere/issues/1508  -->
+	<exclusion pattern="^http://d3aef1qbbv7i5v\.cloudfront\.net/" />
+		<test url="http://d3aef1qbbv7i5v.cloudfront.net/lib/jwplayer/jwplayer.js" />
+		<test url="http://d3aef1qbbv7i5v.cloudfront.net/img/viral_player_sprite.png" />
 
-			https://trac.torproject.org/projects/tor/ticket/9146
-									-->
-	<exclusion pattern="^http://d2s8n7nv9yizdf\.cloudfront\.net/assets/extras-\w{32}\.js" />
-	<!--
-		and this is a generalised precaution from turntable.fm
-									-->
-	<exclusion pattern="^http://(?:[^/:@\.]+)\.cloudfront\.net/crossdomain\.xml" />
-  <!-- 
-      Spotify https://trac.torproject.org/projects/tor/ticket/7888 
-                  -->
-  <exclusion pattern="^http://dsu0uct5x2puz\.cloudfront\.net" />
-  <!-- Droplr: https://trac.torproject.org/projects/tor/ticket/8572 -->
-  <exclusion pattern="^http://d1zjcuqflbd5k\.cloudfront\.net" />
-  <!-- TuneIn: https://trac.torproject.org/projects/tor/ticket/8704 -->
-  <exclusion pattern="^http://d3bwsr3zpy54hy\.cloudfront\.net" />
-  <!-- Amazon mp3: https://trac.torproject.org/projects/tor/ticket/9367 
-                   https://trac.torproject.org/projects/tor/ticket/9851 -->
-  <exclusion pattern="^http://d2q1srilgjznst\.cloudfront\.net" />
-  <exclusion pattern="^http://d28julafmv4ekl\.cloudfront\.net" />
+	<!-- acinitiates.com fix -->
+	<exclusion pattern="^http://(?:d3bn78kc7qbjb6|d1nawi9f7y8zrl)\.cloudfront\.net/" />
+		<test url="http://d3bn78kc7qbjb6.cloudfront.net/rc-0.0.0.392/views/logs/logs.html" />
+		<test url="http://d1nawi9f7y8zrl.cloudfront.net/content/v1/content?ver=1.0.0" /> <!-- http://d1nawi9f7y8zrl.cloudfront.net/content/v1/content?ver=1.0.0&lang=en -->
+
+	<!-- See https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-creating-signed-url-custom-policy.html
+		Policies contain the protocol, so a signature for http will not work for https -->
+	<exclusion pattern="&amp;Signature=" />
+		<test url="http://d1h9a8s8eodvjz.cloudfront.net/test.txt?a=b&amp;Signature=1234" />
+		<test url="http://d1h9a8s8eodvjz.cloudfront.net/test.txt?a=b&amp;Signature=5678" />
+
+	<!-- Fix trailers playing on rottentomatoes.com e.g. http://www.rottentomatoes.com/m/the_revenant_2015/ -->
+	<!-- HTTPS seems to work, but it appears to force HTTP -->
+	<exclusion pattern="^http://d3biamo577v4eu\.cloudfront\.net/" />
+		<test url="http://d3biamo577v4eu.cloudfront.net/static/js/lib/jwplayer-7.2.3/jwplayer.flash.swf" />
+		<test url="http://d3biamo577v4eu.cloudfront.net/static/images/icons/favicon.ico" />
+		
+	<!-- Fix #3380 -->
+	<exclusion pattern="^http://d3s2wlph6mu7bx\.cloudfront\.net/" />
+		<test url="http://d3s2wlph6mu7bx.cloudfront.net/items/249704.svgz?http_iplan.meetingmatrix.com" />
 </ruleset>

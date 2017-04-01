@@ -1,18 +1,42 @@
 <!--
-	Some pages redirect to http.
+	Insecure cookies are set for these domains and hosts:
+
+		- nuand.com
+		- .nuand.com
+		- www.nuand.com
+
+
+	Mixed content:
+
+		- css from fonts.googleapis.com *
+		- Images from ^nuand.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Nuand.com (partial)">
+<ruleset name="Nuand.com">
 
 	<target host="nuand.com" />
 	<target host="www.nuand.com" />
-		<exclusion pattern="^http://(?:www\.)?nuand\.com/blog/(?!(?:checkou|my-accoun)t(?:$|[?/])|css/|images/|wp-admin/|wp-content/)" />
+
+		<!--	Formerly redirected to http:
+							-->
+		<test url="http://www.nuand.com/blog/" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<test url="http://nuand.com/forums/" />
 
 
-	<!--securecookie host="^(?:www\.)?nuand\.com$" name=".+" /-->
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?nuand\.com$" name="^(PHPSESSID|wc_session_cookie_[\da-f]{32})$" /-->
+	<!--securecookie host="^\.nuand\.com$" name="^phpbb3_\w+_(?:k|sid|u)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(www\.)?nuand\.com/"
-		to="https://$1nuand.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

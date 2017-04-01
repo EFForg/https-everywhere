@@ -1,0 +1,40 @@
+<!--
+	Problematic subdomains:
+
+		- ^ *
+		- www2 *
+
+	* Cert only matches www
+
+
+	Mixed content:
+
+		- Images, from:
+
+			- www ¹
+			- www2 ¹
+			- feeds2.feedburner.com ²
+
+		- favicon from www ¹
+
+	¹ Secured by us
+	² Unsecurable <= 404
+
+-->
+<ruleset name="KF Webs.net" default_off="self-signed">
+
+	<target host="kfwebs.net" />
+	<target host="www.kfwebs.net" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.kfwebs\.net$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^www\.kfwebs\.net$" name=".+" />
+
+
+	<rule from="^http://(?:www2?\.)?kfwebs\.net/"
+		to="https://www.kfwebs.net/" />
+
+</ruleset>

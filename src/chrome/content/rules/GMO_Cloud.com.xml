@@ -1,0 +1,109 @@
+<!--
+	For other GMO coverage, see GMO_Internet.xml.
+
+
+	Nonfunctional subdomains:
+
+		- th *
+
+	* Dropped
+
+
+	Problematic subdomains:
+
+		- blog ¹
+		- w *
+
+	¹ Mismatched
+	* Works; expired, self-signed
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- blog		(→ www.gmocloud.com)
+		- contact
+		- ir
+		- order
+		- partner
+		- private
+		- private-c
+		- shared
+		- support
+		- us
+		- vps
+		- vpsportal
+
+
+	home: Dropped over http & https
+
+
+	Insecure cookies are set for these hosts:
+
+		- contact.gmocloud.com
+		- order.gmocloud.com
+		- www.gmocloud.com
+
+
+	Mixed content:
+
+		- css on us from fonts.googleapis.com ²
+
+		- Images, on:
+
+			- ir, private, private-c, vps, w, from cache.img.gmo.jp
+			- ir from www.stockweather.co.jp ³
+
+		- Bugs, on private, private-c, shared, support, vps, from www.google.com ²
+
+	¹ Secured by us, minor
+	² Secured by us
+	³ Unsecurable <= 404
+
+-->
+<ruleset name="GMO Cloud.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="gmocloud.com" />
+	<target host="contact.gmocloud.com" />
+	<target host="ir.gmocloud.com" />
+	<target host="order.gmocloud.com" />
+	<target host="partner.gmocloud.com" />
+	<target host="private.gmocloud.com" />
+	<target host="private-c.gmocloud.com" />
+	<target host="shared.gmocloud.com" />
+	<target host="support.gmocloud.com" />
+	<target host="us.gmocloud.com" />
+	<target host="vps.gmocloud.com" />
+	<target host="vpsportal.gmocloud.com" />
+	<target host="www.gmocloud.com" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.gmocloud.com" />
+
+		<!--exclusion pattern="^http://(th|w)\.gmocloud\.com/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(contact|www)\.gmocloud\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^order\.gmocloud\.com$" name="^(ASP\.NET_SessionId|gmocloudneworder)$" /-->
+
+	<securecookie host="^(?:contact|order|www)\.gmocloud\.com$" name=".+" />
+
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://blog\.gmocloud\.com/[^?]*"
+		to="https://www.gmocloud.com/" />
+
+		<test url="http://blog.gmocloud.com/?" />
+		<test url="http://blog.gmocloud.com//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

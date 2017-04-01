@@ -1,16 +1,43 @@
 <!--
+	Federal Bureau of Investigation
+
 	For other US government coverage, see US-government.xml.
 
--->
-<ruleset name="Federal Bureau of Investigation (partial)" platform="mixedcontent">
 
+	Insecure cookies are set for these domains:
+
+		- .fbi.gov
+
+-->
+<ruleset name="FBI.gov">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="foia.fbi.gov" />
+	<target host="forms.fbi.gov" />
+	<target host="tips.fbi.gov" />
+	<target host="vault.fbi.gov" />
+	<target host="www.fbi.gov" />
+
+	<!--	Complications:
+				-->
 	<target host="fbi.gov" />
-	<target host="*.fbi.gov" />
+
+
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.fbi\.gov$" name="^(__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\.fbi\.gov$" name="^(?:__cfduid|cf_clearance)$" />
+
 
 	<rule from="^http://fbi\.gov/"
 		to="https://www.fbi.gov/" />
 
-	<rule from="^http://((?:foia|forms|tips|vault|www)\.)?fbi\.gov/"
-		to="https://$1fbi.gov/" />
+	<rule from="^http://foia\.fbi\.gov/"
+		to="https://www.fbi.gov/foia/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

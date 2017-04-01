@@ -3,6 +3,8 @@
 
 		- Adult-FriendFinder.xml
 		- Cams.com.xml
+		- Pop6.com.xml
+		- Securedataimages.com.xml
 		- Steamray.com.xml
 
 
@@ -14,52 +16,65 @@
 			- graphics.pop6.com
 
 
-	Problematic domains:
+	Problematic hosts in *friendfinder.com:
 
-		- friendfinder.com subdomains:
-
-			- (www.)		(works, mismatched, CN: secure.friendfinder.com)
-			- graphics *
-			- photos *
-			- piclist *
-
-		- (www.)pop6.com		(works, mismatched, CN: secure.adultfriendfinder.com)
-		- graphics.pop6.com *
+		- (www.)?		(works, mismatched, CN: secure.friendfinder.com)
+		- graphics *
+		- photos *
+		- piclist *
 
 	* Works, mismatched, CN: *.securedataimages.com
 
 
-	Fully covered domains:
+	These altnames do not exist:
 
-		- friendfinder.com subdomains:
+		- www.secure.friendfinder.com
 
-			- (www.)			(→ secure.friendfinder.com)
-			- graphics			(→ secureimage.securedataimages.com)
-			- photos			(→ secureimage.securedataimages.com)
-			- piclist			(→ secureimage.securedataimages.com)
-			- secure
 
-		- (www.)pop6.com			(→ secure.friendfinder.com)
-		- graphics.pop6.com			(→ secureimage.securedataimages.com)
-		- secureimage.securedataimages.com
+	Insecure cookies are set for these domains: ᶜ
+
+		- .friendfinder.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bug on secure from media.friendfinder.com *
+
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="FriendFinder">
+<ruleset name="FriendFinder.com">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="media.friendfinder.com" />
+	<target host="secure.friendfinder.com" />
+
+	<!--	Complications:
+				-->
 	<target host="friendfinder.com" />
-	<target host="*.friendfinder.com" />
-	<target host="pop6.com" />
-	<target host="*.pop6.com" />
-	<target host="secureimage.securedataimages.com" />
+	<target host="graphics.friendfinder.com" />
+	<target host="photos.friendfinder.com" />
+	<target host="piclist.friendfinder.com" />
+	<target host="www.friendfinder.com" />
 
 
-	<securecookie host="^\.friendfinder\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.friendfinder\.com$" name="^(AB_TRACKING|HISTORY|IP_COUNTRY|LOCATION_FROM_IP|PrefID|REFERRAL_URL|click_id_time|ff_tr|ff_who|v_hash)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^https?://(?:secure\.|www\.)?(?:friendfinder|pop6)\.com/"
+	<rule from="^http://(?:www\.)?friendfinder\.com/"
 		to="https://secure.friendfinder.com/" />
 
-	<rule from="^https?://(?:graphics|photos|piclist|secureimage)\.(?:friendfinder|pop6|securedataimages)\.com/"
+	<rule from="^http://(?:graphics|photos|piclist)\.friendfinder\.com/"
 		to="https://secureimage.securedataimages.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

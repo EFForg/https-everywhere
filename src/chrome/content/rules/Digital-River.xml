@@ -1,117 +1,94 @@
 <!--
 	Other Digital River rulesets:
 
+		- Commerce5.com.xml
+		- Digital_River_content.net.xml
+		- Element_5.xml
+		- Esellerate.net.xml
+		- Find_My_Order.com.xml
 		- Fireclick.com.xml
+		- Marketstudio.net.xml
 		- MyCommerce.xml
 		- Netflame.cc.xml
-		- SWREG.xml
+		- Share_it.com.xml
 
 
-	CDN buckets:
+	Nonfunctional hosts in *digitalriver.com:
 
-		- a248.e.akamai.net/f/248/5462/2d/images.element5.com/
+		- info *
 
-
-	Problematic domains:
-
-		- info.digitalriver.com		(redirects to app-sj03.marketo.com; mismatched, CN: *.marketo.com)
+	* invalid certificate
 
 
-	Partially covered domains:
+	Partially covered hosts in *digitalriver.com:
 
-		- corporate.digitalriver.com	(pages redirect to http)
-		- info.digitalriver.com		(→ na-sj03.marketo.com)
+		- corporate	(pages redirect to http)
+		- info		(→ na-sj03.marketo.com)
 
 
-	Fully covered domains:
+	Fully covered hosts in *digitalriver.com:
 
-		- digitalriver.com subdomains:
+		- (www.)?
+		- *.cfspx
+		- developers
 
-			- (www.)
-			- *.cfspx
-			- developers
-
-			- *.img	(tracking images for esellerate):
-
-				- drh
-				- drh[12]
-				- swreg
-				- ui1
-
-			- gc
-			- store
-
-		- *.img.digitalrivercontent.net:
+		- *.img	(tracking images for esellerate):
 
 			- drh
 			- drh[12]
-			- dri[12]
 			- mycommerce
+			- swreg
 			- ui1
 
-		- (www.)findmyorder.com
-		- *.frcanalytics.com
-		- reservoir.marketstudio.net
+		- gc
+		- store
+
+
+	Insecure cookies are set for these hosts:
+
+		- gc.digitalriver.com
+
+
+	Mixed content:
+
+		- Images on developers from www.digitalriver.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Digital River (partial)">
+<ruleset name="Digital River.com (partial)">
 
-	<target host="cm.commerce5.com" />
-	<target host="*.digitalriver.com" />
-		<!--
-			Pages redirect to http:
+	<!--	Direct rewrites:
+					-->
+	<target host="digitalriver.com" />
+	<target host="*.cfspx.digitalriver.com" />
+	<target host="corporate.digitalriver.com" />
+	<target host="developers.digitalriver.com" />
+	<target host="gc.digitalriver.com" />
+	<target host="*.img.digitalriver.com" />
+	<target host="store.digitalriver.com" />
+	<target host="www.digitalriver.com" />
+
+		<!--	Pages redirect to http:
 						-->
 		<exclusion pattern="^http://corporate\.digitalriver\.com/(?!DRHM/)" />
-	<target host="*.img.digitalrivercontent.net" />
-	<target host="cp.element5.com" />
-	<target host="findmyorder.com" />
-	<target host="www.findmyorder.com" />
-	<target host="*.frcanalytics.com" />
-	<target host="reservoir.marketstudio.net" />
+
+		<test url="http://corporate.digitalriver.com/store/wdau/ContentTheme/pbPage.contactus" />
+
+		<test url="http://drh.img.digitalriver.com/DRHM/Storefront/Site/findmyor/cm/images/Redesign2013/main_logo.png" />
 
 
+	<!--	not secured by server:
+					-->
+	<!--securecookie host="^gc\.digitalriver\.com$" name="^BIGipServerp(-\w+){5}$" /-->
 
 	<!--	Tracking cookie:
 				-->
 	<securecookie host="^\.digitalriver\.com$" name="^utag_\w+$" />
-	<!--	Observed cookie domains:
 
-			- cm.commerce5.com
-			- .digitalriver.com
-			- corporate.digitalriver.com
-			- developers.digitalriver.com
-			. .developers.digitalriver.com
-			- gc.digitalriver.com
-			- findmyorder.com
-			- www.findmyorder.com
-			- .marketstudio.net
-						-->
 	<securecookie host="^(?:\.?developers|gc|store)\.digitalriver\.com$" name=".+" />
-	<securecookie host="^(?:.*\.)?(?:commerce5|findmyorder)\.com$" name=".+" />
 
-
-	<rule from="^http://cm\.commerce5\.com/"
-		to="https://cm.commerce5.com/" />
-
-	<rule from="^http://((?:[\w+-]+\.cfspx|corporate|developers|gc|\w+\.img|store|www)\.)?digitalriver\.com/"
-		to="https://$1digitalriver.com/" />
-
-	<rule from="^http://info\.digitalriver\.com/(cs|image|j|r)s/"
-		to="https://na-sj03.marketo.com/$1s/" />
-
-	<rule from="^http://(\w+)\.img\.digitalrivercontent\.net/"
-		to="https://$1.img.digitalrivercontent.net/" />
-
-	<rule from="^http://cp\.element5\.com/"
-		to="https://cp.element5.com/"/>
-
-	<rule from="^http://(www\.)?findmyorder\.com/"
-		to="https://$1findmyorder.com/"/>
-
-	<rule from="^http://([\w-]+)\.frcanalytics\.com/"
-		to="https://$1.frcanalytics.com/"/>
-
-	<rule from="^http://reservoir\.marketstudio\.net/"
-		to="https://reservoir.marketstudio.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

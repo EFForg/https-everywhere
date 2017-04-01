@@ -1,21 +1,144 @@
-<ruleset name="Plymouth University" platform="mixedcontent">
-
-	<target host="plymouth.ac.uk" />
-	<target host="*.plymouth.ac.uk" />
+<!--
+	Plymouth University
 
 
-	<securecookie host="^(.*\.)?plymouth\.ac\.uk$" name=".*" />
+	Nonfunctional hosts in *plymouth.ac.uk:
+
+		- autism ¹
+		- blogs	 ¹
+		- www.cimt ²
+		- colamn ¹
+		- collections ³
+		- www.geog ⁴
+		- ilsselfhelp ¹
+		- lists.lib ⁵
+		- lynda	 ¹
+		- www.pbs ⁴
+		- www.perc ²
+		- perception ³
+		- www.politics ²
+		- primo ⁶
+		- research.psmd ²
+		- repository ⁴
+		- www.research ²
+
+		- cmr.soc ¹
+		- mdixon.soc ⁴
+		- neuromusic.soc ¹
+
+		- www.ssb ⁴
+		- tisselfhelp ¹
+		- tvarts ¹
+		- fostsvn.uopnet ⁷
+		- wts.uopnet ¹
+		- ils679.uopnet ¹
+		- www2 ²
+
+	¹ Refused
+	² Handshake fails
+	³ Shows another domain
+	⁴ Dropped
+	⁵ 404
+	⁶ 403
+	⁷ 401
 
 
-	<!--
-		Encountered subdomains:
+	Problematic hosts in *plymouth.ac.uk:
 
-			- intranet
-			- student
-			- www
+		- cognition ¹
+		- home ¹ ²
+		- wrasse ²
+		- www6 ¹
 
+	¹ Mismatched
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these domains:
+
+		- .plymouth.ac.uk
+
+
+	Mixed content:
+
+		- Images on upmedia from $self *
+		- Bug on collaborate from simplehitcounter.com
+
+	* Secured by us
+
+-->
+<ruleset name="Plymouth.ac.uk (partial)">
+
+	<!--	Direct rewrites:
 				-->
-	<rule from="^http://(\w+\.)?plymouth\.ac\.uk/"
-		to="https://$1plymouth.ac.uk/" />
+	<target host="plymouth.ac.uk" />
+	<target host="agresso.plymouth.ac.uk" />
+	<target host="agresso2.plymouth.ac.uk" />
+	<target host="arc.plymouth.ac.uk" />
+	<target host="assessment.plymouth.ac.uk" />
+	<target host="collaborate.plymouth.ac.uk" />
+	<target host="documents.plymouth.ac.uk" />
+	<target host="elements.plymouth.ac.uk" />
+	<target host="e-portfolio.plymouth.ac.uk" />
+	<target host="eportfolio.plymouth.ac.uk" />
+	<target host="erdt.plymouth.ac.uk" />
+	<target host="eservices.plymouth.ac.uk" />
+	<target host="exchange.plymouth.ac.uk" />
+	<target host="www.fose1.plymouth.ac.uk" />
+	<target host="www.fotpms.plymouth.ac.uk" />
+	<target host="hrservices.plymouth.ac.uk" />
+	<target host="ict-webtools.plymouth.ac.uk" />
+	<target host="intranet.plymouth.ac.uk" />
+	<target host="itselfservice.plymouth.ac.uk" />
+	<target host="studyrooms.lib.plymouth.ac.uk" />
+	<target host="open.plymouth.ac.uk" />
+	<target host="pearl.plymouth.ac.uk" />
+	<target host="adb.psmd.plymouth.ac.uk" />
+	<target host="penctu.psmd.plymouth.ac.uk" />
+	<target host="www.psy.plymouth.ac.uk" />
+	<target host="psylin.plymouth.ac.uk" />
+	<target host="resourcestore.plymouth.ac.uk" />
+	<target host="s3.plymouth.ac.uk" />
+	<target host="student.plymouth.ac.uk" />
+	<target host="www.tech.plymouth.ac.uk" />
+	<target host="wrb.uopnet.plymouth.ac.uk" />
+	<target host="upmedia.plymouth.ac.uk" />
+	<!--target host="wrasse.plymouth.ac.uk" /-->
+	<target host="wrb.plymouth.ac.uk" />
+	<target host="www.plymouth.ac.uk" />
+	<target host="www1.plymouth.ac.uk" />
+	<target host="www4.plymouth.ac.uk" />
+	<target host="www5.plymouth.ac.uk" />
+	<target host="xerte.plymouth.ac.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="cognition.plymouth.ac.uk" />
+	<target host="psychology.plymouth.ac.uk" />
+
+		<!--	Mixed bug:
+					-->
+		<test url="http://collaborate.plymouth.ac.uk/sites/cerg/Pages/COAST.aspx" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.plymouth\.ac\.uk$" name="^SSOUOPISA$" /-->
+
+	<securecookie host="^\.plymouth\.ac\.uk$" name="^SSOUOPISA$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://cognition\.plymouth\.ac\.uk/"
+		to="https://psylin.plymouth.ac.uk/" />
+
+	<!--	s? for protocol-relative embeds
+		and links from psylin:
+					-->
+	<rule from="^https?://psychology\.plymouth\.ac\.uk/"
+		to="https://psylin.plymouth.ac.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,23 +1,27 @@
 <!--
-	For problematic rules, see ScienceDaily.com.xml.
-
-
-	Problematic subdomains:
-
-		- (www.)	(self-signed, cert only matches www)
-
-
 	CDN buckets:
 
 		- s3.amazonaws.com/sciencedaily/
+		- d18c4k1slw9ka5.cloudfront.net
+
+
+	Other ScienceDaily rulesets:
+
+		- NewsDaily.com.xml
 
 -->
-<ruleset name="ScienceDaily.com (partial)">
+<ruleset name="ScienceDaily.com">
 
+	<target host="sciencedaily.com" />
 	<target host="images.sciencedaily.com" />
+	<target host="www.sciencedaily.com" />
 
 
-	<rule from="^https?://images\.sciencedaily\.com/"
-		to="https://d18c4k1slw9ka5.cloudfront.net/" />
+	<securecookie host="^\." name="^(?:__qca$|incap_|nlbi_|visid_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,26 +1,80 @@
 <!--
-	^: dropped
+	CDN buckets:
+
+		- d2onmsj2cximry.cloudfront.net	← assets
+		- d1umoivskfzt7s.cloudfront.net	← fonts
+		- ductl1gjw76cl.cloudfront.net	← assets-production
+
+
+	Nonfunctional hosts in *rovio.com:
+
+		- (www.)? ᵈ
+		- media ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *rovio.com:
+
+		- assets-production ᵐ
+		- competitions ᵐ
+		- fonts ᵐ
+		- freya ᵐ
+		- nibblers ᵐ
+		- stormsisters ᵐ
+
+	ᵐ Cloudfront / mismatched
 
 
 	Mixed content:
 
-		- Images from img.youtube.com *
+		- css, on:
 
-		- Web bugs from www.facebook.com *
+			- competitions, freya, nibblers from fonts.googleapis.com ˢ
+			- stormsisters from fonts.rovio.com ˢ
+			- stormsisters from hello.myfonts.net ˢ
 
-	* Secured by us
+		- Images from img.youtube.com ˢ
+		- favicon on competitions from assets.rovio.com ˢ
+		- Web bugs from www.facebook.com ˢ
+
+	ˢ Secured by us
 
 -->
-<ruleset name="Rovio.com">
+<ruleset name="Rovio.com (partial)">
 
-	<target host="rovio.com" />
-	<target host="www.rovio.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="account.rovio.com" />
+	<target host="support.rovio.com" />
+
+	<!--	Complications:
+				-->
+	<target host="assets.rovio.com" />
+	<target host="assets-production.rovio.com" />
+	<target host="fonts.rovio.com" />
 
 
-	<securecookie host="^www\.rovio\.com$" name=".+" />
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?rovio\.com/"
-		to="https://www.rovio.com/" />
+	<rule from="^http://assets\.rovio\.com/"
+		to="https://d2onmsj2cximry.cloudfront.net/" />
+
+		<test url="http://assets.rovio.com/rovio/favicon.ico" />
+
+	<rule from="^http://assets-production\.rovio\.com/"
+		to="https://ductl1gjw76cl.cloudfront.net/" />
+
+		<test url="http://assets-production.rovio.com/s3fs-public/privacypolicy_2.jpg" />
+
+	<rule from="^http://fonts\.rovio\.com/"
+		to="https://d1umoivskfzt7s.cloudfront.net/" />
+
+		<test url="http://fonts.rovio.com/books/brushup.css" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

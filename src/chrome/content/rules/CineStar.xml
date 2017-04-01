@@ -1,0 +1,50 @@
+<!--
+	Insecure cookies are set for these domains:
+
+		- .b2bshop.cinestar.de
+		- .shop.cinestar.de
+
+-->
+<ruleset name="CineStar.de (partial)">
+
+	<!--	Direct rewrites:
+				-->
+    <target host="cinestar.de" />
+	<target host="b2bshop.cinestar.de" />
+	<target host="shop.cinestar.de" />
+    <target host="www.cinestar.de" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.cinestar\.de/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.cinestar\.de/(?!.+\.(?:ico|jpg|png)(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.cinestar.de/app" />
+			<test url="http://www.cinestar.de/blog/" />
+			<test url="http://www.cinestar.de/card" />
+			<test url="http://www.cinestar.de/de/kino/konstanz-cinestar/" />
+			<test url="http://www.cinestar.de/de/kino/rostock-cinestar/" />
+			<test url="http://www.cinestar.de/karlsruhe_info.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.cinestar.de/ccds_tpl_img/relaunch2012/cs_logo.png" />
+			<test url="http://www.cinestar.de/favicon.ico" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.b2bshop\.cinestar\.de$" name="^frontend$" /-->
+	<!--securecookie host="^\.shop\.cinestar\.de$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\.(?:b2b)?shop\.cinestar\.de$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+</ruleset>

@@ -1,0 +1,72 @@
+<!--
+	West Oxfordshire District Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *westoxon.gov.uk:
+
+		- cmis ᵈ
+		- localplan ⁴
+		- parking ᶠ
+		- my ᵈ
+
+	⁴ 404
+	ᵈ Dropped
+	ᶠ Handshake fails
+
+
+	Problematic hosts in *westoxon.gov.uk:
+
+		- forms ᶜ
+		- planningconsultation ᵐ
+		- publicaccess ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	These altnames don't exist:
+
+		- westoxon.gov.uk
+
+
+	Insecure cookies are set for these domains:
+
+		- .www.westoxon.gov.uk
+
+
+	Mixed content:
+
+		- css on publicaccess from $self
+		- Images on publicaccess from $self
+
+-->
+<ruleset name="Westoxon.gov.uk">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="forms.westoxon.gov.uk" />
+	<target host="publicaccess.westoxon.gov.uk" />
+	<target host="www.westoxon.gov.uk" />
+
+		<!--	Reset => would make fetch test fail
+							-->
+		<exclusion pattern="^http://forms\.westoxon\.gov\.uk/$" />
+
+		<!--test url="http://forms.westoxon.gov.uk/eforms/ufsmain?formid=WODC_CONTAINER_REQUEST&amp;C_PRM__ORG=wodc&amp;C_PRM__UPRN=&amp;C_PRM__UID_ACCESSKEY=3c774fab929cc2fc" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^publicaccess\.westoxon\.gov\.uk$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^www\.westoxon\.gov\.uk$" name="^ARRAffinity$" /-->
+
+	<securecookie host="^\.www\." name="." />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

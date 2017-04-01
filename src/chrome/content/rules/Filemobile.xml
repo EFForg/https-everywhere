@@ -10,45 +10,43 @@
 	CDN buckets:
 
 		- assets.filemobile.com.s3.amazonaws.com
-
 		- s3.amazonaws.com/storage.filemobile.com/
-
-		- d2ksawk1637r8x.cloudfront.net
-
-			- cimg.filemobile.com
+		- d2ksawk1637r8x.cloudfront.net	← cimg.filemobile.com
 
 
-	Problematic subdomains:
+	Problematic hosts in *filemobile.com:
 
-		- bugreport	(CN: *.mediafactory.fm; works)
+		- bugreport ᵐ	(CN: *.mediafactory.fm)
 
-
-	- Fully covered subdomains:
-
-		- (www.)
-		- assets
-		- cimg		(→ d2ksawk1637r8x.cloudfront.net)
-		- developer
-		- storage
-		- rstorage
+	ᵐ Mismatched
 
 -->
-<ruleset name="Filemobile (partial)">
+<ruleset name="Filemobile.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="filemobile.com" />
-	<target host="*.filemobile.com" />
+	<target host="developer.filemobile.com" />
+	<target host="rstorage.filemobile.com" />
+	<target host="www.filemobile.com" />
+
+	<!--	Complications:
+				-->
+	<target host="assets.filemobile.com" />
+	<target host="cimg.filemobile.com" />
+	<target host="storage.filemobile.com" />
 
 
-	<securecookie host="^(?:.+\.)?filemobile\.com$" name=".+" />
+	<securecookie host="^(?:.+\.)?filemobile\.com$" name="." />
 
 
-	<rule from="^https?://(assets|storage)\.filemobile\.com/"
+	<rule from="^http://(assets|storage)\.filemobile\.com/"
 		to="https://s3.amazonaws.com/$1.filemobile.com/" />
 
-	<rule from="^http://(developer\.|rstorage\.|www\.)?filemobile\.com/"
-		to="https://$1filemobile.com/" />
-
-	<rule from="^https?://cimg\.filemobile\.com/"
+	<rule from="^http://cimg\.filemobile\.com/"
 		to="https://d2ksawk1637r8x.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

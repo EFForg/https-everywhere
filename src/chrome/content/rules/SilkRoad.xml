@@ -1,16 +1,92 @@
-<!--	!functional:
-		(www.)silkroad.com	(timeout)
-		pages.silkroad.com	(cert: *.marketo.com; 404)
+<!--
+	Problematic hosts in *silkroad.com;
+
+		- hr1 ᵐ
+
+	ᵐ Pardot / mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- silkroad.com
+		- emea.silkroad.com
+		- pages.silkroad.com
+		- www.silkroad.com
+		- (account_vhost).silkroad.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on emea, www from fonts.googleapis.com ˢ
+		- Images on jp, www from www.silkroad.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
 -->
-<ruleset name="SilkRoad (partial)">
+<ruleset name="SilkRoad.com (partial)">
 
+	<target host="silkroad.com"/>
 	<target host="*.silkroad.com"/>
-		<exclusion pattern="^http://(pages|www)\."/>
 
-	<securecookie host="^.*\.silkroad\.com$" name=".*"/>
+		<exclusion pattern="^http://(?:[^./]+\.){2,}silkroad\.com/" />
 
-	<!--	unique subdoman for each client	-->
-	<rule from="^http://([\w\-]+)\.silkroad\.com/"
-		to="https://$1.silkroad.com/"/>
+			<test url="http://this.host.silkroad.com/" />
+			<test url="http://exists.not.silkroad.com/" />
+
+		<test url="http://emea.silkroad.com/" />
+		<test url="http://fr.silkroad.com/" />
+		<test url="http://jp.silkroad.com/" />
+		<test url="http://pages.silkroad.com/" />
+		<test url="http://support.silkroad.com/" />
+		<test url="http://www.silkroad.com/" />
+
+		<exclusion pattern="^http://hr1\.silkroad\.com/(?!/*(?:$|\?|[el]/|webmail/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://hr1.silkroad.com/4-Steps-to-Strengthen-Your-Talent-Pipeline" />
+			<test url="http://hr1.silkroad.com/Onboarding-ROI-Calculator" />
+			<test url="http://hr1.silkroad.com/brand" />
+			<test url="http://hr1.silkroad.com/feedback" />
+			<test url="http://hr1.silkroad.com/tyv_performance" />
+			<test url="http://hr1.silkroad.com/ultimate-guide-performance" />
+			<test url="http://hr1.silkroad.com/video-demos" />
+
+			<!--	-ve:
+					-->
+			<test url="http://hr1.silkroad.com/l/61532/2014-12-15/289m" />
+			<test url="http://hr1.silkroad.com/l/61532/2015-01-22/59bm/61532/12024/LifeSuite_video_thumb.png" />
+
+		<!--	Accounts:
+					-->
+		<test url="http://dandb-openhire.silkroad.com/epostings/index.cfm?fuseaction=app.jobsearch&amp;byRegion=US_NC&amp;byLocation_US" />
+		<test url="http://dandbcareers.silkroad.com/" />
+		<!--test url="http://mhecareers.silkroad.com/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:emea\.|www\.)?silkroad\.com$" name="^X-Mapping-" /-->
+	<!--securecookie host="^support\.silkroad\.com$" name="^BIGipServer" /-->
+	<!--securecookie host="^($account)\.silkroad\.com$" name="^(?:BIGipServer.*|CFID|CFTOKEN)$" /-->
+
+	<securecookie host="^(?!hr1\.)." name="." />
+
+
+	<!--	Redirect drops args and forward slash and args:
+								-->
+	<rule from="^http://hr1\.silkroad\.com/+(?:\?.*)?$"
+		to="https://www.silkroad.com/" />
+
+		<test url="http://hr1.silkroad.com/" />
+		<test url="http://hr1.silkroad.com/?" />
+
+	<rule from="^http://hr1\.silkroad\.com/"
+		to="https://go.pardot.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

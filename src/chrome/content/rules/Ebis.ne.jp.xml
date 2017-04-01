@@ -1,0 +1,54 @@
+<!--
+	Nonfunctional hosts in *ebis.ne.jp:
+
+		- blog *
+
+	* Shows three.ne.jp
+
+
+	(www.)?ebis.ne.jp: Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- secure.ebis.ne.jp
+
+
+	Mixed content:
+
+		- Images on secure from blog.ebis.ne.jp ¹
+		- Bug on secure from le.nakanohito.jp ²
+
+	¹ Unsecurable <= shows another domain
+	² Unsecurable <= refused
+	
+-->
+<ruleset name="EBiS.ne.jp">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ac.ebis.ne.jp" />
+	<target host="secure.ebis.ne.jp" />
+
+	<!--	Complications:
+				-->
+	<target host="ebis.ne.jp" />
+	<target host="www.ebis.ne.jp" />
+
+		<test url="http://ac.ebis.ne.jp/ct_tag.php?argument=" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^secure\.ebis\.ne\.jp$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^secure\.ebis\.ne\.jp$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?ebis\.ne\.jp/"
+		to="https://secure.ebis.ne.jp/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

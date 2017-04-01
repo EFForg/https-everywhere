@@ -7,28 +7,46 @@
 		- drivee.jp *
 		- (www.)drivee.ne.jp *
 
-	* Mismached, CN: secure.drivee.ne.jp
-
-
-	Fully covered domains:
-
-		- (www.)drivee.jp	(^ → www)
-		- (www.)drivee.ne.jp	(→ www.drivee.jp)
-		- secure.drivee.ne.jp
+	* Mismatched, CN: secure.drivee.ne.jp
 
 -->
-<ruleset name="drivee">
+<ruleset name="drivee (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="drivee.jp" />
 	<target host="www.drivee.jp" />
+	<target host="secure.drivee.ne.jp" />
+
+	<!--	Complications:
+				-->
 	<target host="drivee.ne.jp" />
-	<target host="*.drivee.ne.jp" />
+	<target host="www.drivee.ne.jp" />
+
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://www\.drive\.jp/(?:$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.drive.jp/?" />
+			<test url="http://www.drive.jp/?foo" />
+			<test url="http://www.drive.jp/?bar" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.drivee.jp/manual.php" />
+			<test url="http://www.drivee.jp/news.php" />
+			<test url="http://www.drivee.jp/order.php" />
 
 
-	<rule from="^http://(?:www\.)?drivee\.(?:ne\.)?jp/"
+	<rule from="^http://drivee\.jp/"
 		to="https://www.drivee.jp/" />
 
-	<rule from="^http://secure\.drivee\.ne\.jp/"
-		to="https://secure.drivee.ne.jp/" />
+	<rule from="^http://(?:www\.)?drivee\.ne\.jp/"
+		to="https://www.drivee.jp/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

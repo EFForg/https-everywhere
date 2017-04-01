@@ -1,48 +1,38 @@
 <!--
-	CDN buckets:
+	Other iFixit rulesets:
+		- IFixit.net.xml
 
-		- d225i93lhigkl1.cloudfront.net
-			- ifixit-meta.dozuki.net
 
-		- da2lh5cs8ikqj.cloudfront.net
-			- cart-products.ifixit.net
+	Nonfunctional hosts in *ifixit.com:
 
-		- d3nevzfk7ii3be.cloudfront.net
-			- guide-images.ifixit.net
+		- edu *
+
+	* Redirects to http
+
+
+	Fully covered hosts in *ifixit.com:
+
+		- (www.)?
+		- meta
 
 -->
-<ruleset name="iFixit (partial)">
+<ruleset name="iFixit.com (partial)">
 
-	<target host="ifixit-meta.dozuki.net" />
+	<!--	Direct rewrites:
+				-->
 	<target host="ifixit.com" />
-	<target host="*.ifixit.com" />
-	<target host="*.edu.ifixit.com" />
-	<target host="*.ifixit.net" />
+	<!--target host="edu.ifixit.com" /-->
+	<target host="meta.ifixit.com" />
+	<target host="www.ifixit.com" />
 
-
-	<securecookie host="^\.edu\.ifixit\.com$" name=".+" />
-
-
-	<rule from="^https?://ifixit-meta\.dozuki\.net/"
-		to="https://d225i93lhigkl1.cloudfront.net/" />
-
-	<!--	Some (most?) pages 302 to http.
+		<!--	Redirects to http:
 						-->
-	<rule from="^http://(www\.)?ifixit\.com/(cart|Guide)/login(/register)?($|\?)"
-		to="https://$1ifixit.com/$2/login$3$4" />
+		<!--exclusion pattern="^http://edu\.ifixit\.com/$" /-->
 
-	<rule from="^http://edu\.ifixit\.com/"
-		to="https://edu.ifixit.com/" />
 
-	<!--	Some (most?) pages 302 to http.
-						-->
-	<rule from="^http://meta\.ifixit\.com/login(/register)?($|\?)"
-		to="https://meta.ifixit.com/login$1$2" />
+	<!--securecookie host="^\.edu\.ifixit\.com$" name=".+" /-->
 
-	<rule from="^https?://cart-products\.ifixit\.net/"
-		to="https://da2lh5cs8ikqj.cloudfront.net/" />
 
-	<rule from="^https?://guide-images\.ifixit\.net/"
-		to="https://d3nevzfk7ii3be.cloudfront.net/" />
-
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

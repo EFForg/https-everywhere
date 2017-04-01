@@ -1,0 +1,53 @@
+<!--
+	Local Government Improvement and Development
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *idea.gov.uk:
+
+		- (www.)? ʳ
+		- www.communities ʳ
+		- sites ᵇ
+
+	ᵇ Shows default page
+	ʳ Refused
+
+
+	Problematic hosts in *idea.gov.uk:
+
+		- blogs ᵉ ᵐ ˢ
+
+	ᵉ Expired
+	ᵐ Mismatched
+	ˢ Self-signed
+
+-->
+<ruleset name="IDeA.gov.uk (partial)">
+
+	<!--	Complications:
+				-->
+	<target host="www.communities.idea.gov.uk" />
+
+
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://www\.communities\.idea\.gov\.uk/.*"
+		to="https://khub.net/" />
+
+		<!--	[/\w]$ does not redirect:
+							-->
+		<exclusion pattern="^http://www\.communities\.idea\.gov\.uk/(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.communities.idea.gov.uk/default.aspx" />
+			<test url="http://www.communities.idea.gov.uk/index.htm" />
+			<test url="http://www.communities.idea.gov.uk/index.html" />
+			<test url="http://www.communities.idea.gov.uk/index.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.communities.idea.gov.uk/?" />
+
+</ruleset>

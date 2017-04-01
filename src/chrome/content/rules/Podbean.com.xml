@@ -1,19 +1,217 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/user-css.podbean.com/
+		- d8g345wuhgd7e.cloudfront.net
+		- deow9bq0xqvbj.cloudfront.net
+
+
+	Nonfunctional hosts in *podbean.com:
+
+		- support ʰ
+
+	ʰ Desk.com / redirects to http
+
+
+	Problematic hosts in *podbean.com:
+
+		- fs1 ᵐ
+		- img ᵐ
+		- imglogo ᵐ
+
+	ᵐ Cloudfront / mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- podbean.com
+		- .podbean.com
+		- patron.podbean.com
+		- sponsorship.podbean.com
+		- www.podbean.com
+		- (account_vhost).podbean.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+
+			- brothersquarrel, catholicplaylist, comedynerdinterviewscomedians, daghewardmillsvideo, dccsouth, dutcher, dynastyplaybook, fateofheroes, friendsatthetable, gdjb, imsradio, jayscottoutdoors, leaguecast, lastwordfc, philhulettandfriends, popcultureninja, techteachers, thecigarauthority, truecrimegarage from fonts.googleapis.com ˢ
+			- catholicplaylist, comedynerdinterviewscomedians, dutcher, dynastyplaybook, fateofheroes, friendsatthetable, gdjb, imsradio, jayscottoutdoors, leaguecast, philhulettandfriends, popcultureninja, techteachers, thecigarauthority, truecrimegarage from www.podbean.com * ˢ
+
+		- Images, on:
+
+			- apqcpodcasts, blackagendaradio, brothersquarrel, catholicplaylist, everythingwentblack, infectiousmyth, insidethebrainof, jesusfilms, leaguecast, playerplaza, scrambledeggs, starwarskidscast, thefreudmuseum, timeshighered, vepodcast from www.podbean.com ˢ
+			- friendsatthetable from i.imgur.com ˢ
+			- catholicplaylist, comedynerdinterviewscomedians, fateofheroes, gdjb, leaguecast, playerplaza, popcultureninja, techteachers, thecigarauthority from deow9bq0xqvbj.cloudfront.net ˢ
+			- catholicplaylist, comedynerdinterviewscomedians, deepinscripture, fateofheroes, gdjb, jesusfilms, leaguecast, marylindow, philhulettandfriends, popcultureninja, ufcgymradio from $self ˢ
+			- catholicplaylist, comedynerdinterviewscomedians, fateofheroes, gdjb, leaguecast, marylindow, popcultureninja, ufcgymradio from s\d+.podbean.com ˢ
+			- deepinscripture from www.chnetwork.org
+			- imsradio from fs1.podbean.com ˢ
+			- jesusfilms from www.openheaven.org ᵐ
+			- jesusfilms from i\d+.photobucket.com ˢ
+			- marylindow from image01.netatlantic.com
+			- strongwoman from paleoparents.com ⁴
+
+		- favicon on friendsatthetable, njdep, philhulettandfriends, thefreudmuseum, wsfi from $self ˢ
+
+		- Bugs, on:
+
+			- apqcpodcasts from linkmaker.itunes.apple.com ˢ
+			- philhulettandfriends from www.tqlkg.com ˢ
+
+	* Only fonts
+	⁴ Unsecurable <= 404
+	ᵐ Not secured by us <= mismatched
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
 <ruleset name="Podbean.com (partial)">
 
 	<target host="podbean.com" />
 	<target host="*.podbean.com" />
+
+		<exclusion pattern="^http://(?:[^./]+\.){2,}podbean\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.podbean.com/" />
+			<test url="http://exists.not.podbean.com/" />
+
+		<exclusion pattern="^http://(?:img|imglogo|support)\.podbean\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://img.podbean.com/" />
+			<test url="http://imglogo.podbean.com/" />
+			<test url="http://support.podbean.com/" />
+
+		<!--	Direct rewrites:
+					-->
+		<test url="http://patron.podbean.com/" />
+		<test url="http://s101.podbean.com/pb/8895c7da9fcc31bd27d2a898711a837e/57dda7aa/data4/fs154/1158931/uploads/2016Reunion_MarshallPruett_821__737.jpg" />
+		<test url="http://s102.podbean.com/pb/0e4cc81221a407458fd12c83206d0b66/57ddee7a/data2/fs60/703131/uploads/GrahamStuart.jpg" />
+		<test url="http://s103.podbean.com/pb/d7722cd7b167cd66ab3d61f88f59b116/57ddb3ec/data2/fs73/725826/uploads/National_Hockey_League.jpg" />
+		<test url="http://s35.podbean.com/pb/98a9b2a2d9c977e18b16f8f03885a43a/57dddc90/data1/blogs1/627412/uploads/mm-coffee.png" />
+		<test url="http://s36.podbean.com/pb/53a7ac7e1cef228dd21c852d4015ec4b/57dda6c0/data2/fs174/873187/uploads/monique_inspires.jpg" />
+		<test url="http://s51.podbean.com/pb/3b79d642380171ca46f4d0f26eff49ee/57ddba56/data2/fs24/977910/uploads/youtube.jpg" />
+		<test url="http://s56.podbean.com/pb/3f13035dfe4a8e885bc1c7bde004cb5d/57dddd1f/data1/fs4/737498/uploads/Podbean-background.jpg" />
+		<test url="http://s58.podbean.com/pb/4ddd7d3a0bbb7bb50b901417754d6525/57ddb3e9/data1/fs73/725826/uploads/Ella_Mae_Wiggins.jpg" />
+		<test url="http://s59.podbean.com/pb/e73c4dfde6f42696ca9631106a5be27e/57ddb3e9/data2/fs73/725826/uploads/union_square.jpg" />
+		<test url="http://s61.podbean.com/pb/370f390621168c3fd163eddfd88a86d3/57ddb9b2/data1/fs94/116310/uploads/10665742_10152460822062218_4721846116973856477_n.jpg" />
+		<test url="http://s62.podbean.com/pb/3dc403e0200ca75f939b817fa1e7862f/57ddabf8/data2/fs105/703570/uploads/backgroundfornow.jpg" />
+		<test url="http://s63.podbean.com/pb/035e734148dbfc01699fc8fce254d71a/57ddb269/data1/fs17/766167/uploads/Booth_MR90_Square_Logo_.jpg" />
+		<test url="http://s65.podbean.com/pb/bb4faa7b06437696c2f3cad7bffff077/57dda6c0/data1/fs174/873187/uploads/omar_camp_2.jpg" />
+		<test url="http://s66.podbean.com/pb/a1203dfc9b9b4aa3d5fe294285ef8dcc/57dde970/data2/blogs60/797780/uploads/BadReviews4.jpg" />
+		<test url="http://s67.podbean.com/pb/ca31b0978154407c94a98a15e0b7a29e/57ddba56/data1/fs24/977910/uploads/website.jpg" />
+		<test url="http://s68.podbean.com/pb/8e1f90cb31fd890ea3a456319f324b7e/57ddb9b1/data2/fs94/116310/uploads/sg.jpg" />
+		<test url="http://s69.podbean.com/pb/4e25a8ccc123e50d7e443b07b3c73cfd/57ddb3e9/data2/fs73/725826/uploads/typo.jpg" />
+		<test url="http://s70.podbean.com/pb/c12f41b22c383f47d619a9c1825900f5/57ddb784/data4/fs104/1153110/uploads/Star_Trek_movie_logo_2009.jpg" />
+		<test url="http://s71.podbean.com/pb/affbc5046fc40043f8c7bc8d0a754fbd/57ddee7a/data2/fs60/703131/uploads/take_127.jpg" />
+		<test url="http://s72.podbean.com/pb/01bcc9f85fe3d2ee65258983a8f99eac/57ddb3e9/data2/fs73/725826/uploads/rolf.jpg" />
+		<test url="http://s73.podbean.com/pb/a755b1c3ea74c2e73670f88036f0aca8/57ddee79/data2/fs64/703131/uploads/caad_logo.png" />
+		<test url="http://s75.podbean.com/pb/aa8e175d0b95e6f960d8617bb4a75d66/57ddb2ff/data4/fs60/717321/uploads/IMG_7735.jpg" />
+		<test url="http://sponsorship.podbean.com/" />
+		<test url="http://www.podbean.com/" />
+
+		<!--	(accounts:)	-->
+		<test url="http://apqcpodcasts.podbean.com/" />
+		<test url="http://artandinspiration.podbean.com/" />
+		<test url="http://blackagendaradio.podbean.com/" />
+		<test url="http://brothersquarrel.podbean.com/" />
+		<test url="http://canvasonfbi.podbean.com/" />
+		<test url="http://catholicplaylist.podbean.com/" />
+		<test url="http://comedynerdinterviewscomedians.podbean.com/" />
+		<test url="http://daghewardmillsvideo.podbean.com/" />
+		<test url="http://dccsouth.podbean.com/" />
+		<test url="http://deepinscripture.podbean.com/" />
+		<test url="http://digitaldrift.podbean.com/" />
+		<test url="http://dutcher.podbean.com/" />
+		<test url="http://dynastyplaybook.podbean.com/" />
+		<test url="http://enagicxl.podbean.com/" />
+		<test url="http://everythingwentblack.podbean.com/" />
+		<test url="http://fantasyfootballinsiders.podbean.com/" />
+		<test url="http://fateofheroes.podbean.com/" />
+		<test url="http://floridagovcon.podbean.com/" />
+		<test url="http://friendsatthetable.podbean.com/" />
+		<test url="http://gamersunscripted.podbean.com/" />
+		<test url="http://gdjb.podbean.com/" />
+		<test url="http://genclix.podbean.com/" />
+		<test url="http://groovypodcast.podbean.com/" />
+		<test url="http://hiphoproundtable.podbean.com/" />
+		<test url="http://icology.podbean.com/" />
+		<test url="http://imsradio.podbean.com/" />
+		<test url="http://infectiousmyth.podbean.com/" />
+		<test url="http://insidethebrainof.podbean.com/" />
+		<test url="http://jayscottoutdoors.podbean.com/" />
+		<test url="http://jesuschristthatsfunny.podbean.com/" />
+		<test url="http://jesusfilms.podbean.com/" />
+		<test url="http://kalimandir.podbean.com/" />
+		<test url="http://ktic.podbean.com/" />
+		<test url="http://kvjshow.podbean.com/" />
+		<test url="http://laborhistoryin2.podbean.com/" />
+		<test url="http://lastwordfc.podbean.com/" />
+		<test url="http://leadlikejesus.podbean.com/" />
+		<test url="http://leaguecast.podbean.com/" />
+		<test url="http://leftyshow.podbean.com/" />
+		<test url="http://marshallpruett.podbean.com/" />
+		<test url="http://marylindow.podbean.com/" />
+		<test url="http://momentsofmagic.podbean.com/" />
+		<test url="http://multimediaweek.podbean.com/" />
+		<test url="http://nationalffa.podbean.com/" />
+		<test url="http://njdep.podbean.com/" />
+		<test url="http://philhulettandfriends.podbean.com/" />
+		<test url="http://playerplaza.podbean.com/" />
+		<test url="http://popcultureninja.podbean.com/" />
+		<test url="http://ptbnpop.podbean.com/" />
+		<test url="http://schoolofmovies.podbean.com/" />
+		<test url="http://scrambledeggs.podbean.com/" />
+		<test url="http://sfob.podbean.com/" />
+		<test url="http://sportsfeld.podbean.com/" />
+		<test url="http://squaredcirclegazette.podbean.com/" />
+		<test url="http://starwarskidscast.podbean.com/" />
+		<test url="http://stevegruber.podbean.com/" />
+		<test url="http://strongwoman.podbean.com/" />
+		<test url="http://techteachers.podbean.com/" />
+		<test url="http://thecigarauthority.podbean.com/" />
+		<test url="http://thefreudmuseum.podbean.com/" />
+		<test url="http://thehitmaker.podbean.com/" />
+		<test url="http://theroadbacktoyou.podbean.com/" />
+		<test url="http://timeshighered.podbean.com/" />
+		<test url="http://truecrimegarage.podbean.com/" />
+		<test url="http://ufcgymradio.podbean.com/" />
+		<test url="http://vepodcast.podbean.com/" />
+		<test url="http://wsfi.podbean.com/" />
+
+		<!--	Complications:
+					-->
+		<test url="http://fs1.podbean.com/themes/classic/images/bg-dark.png" />
 		<!--
-			At least media57 504s
-
-			Only hosts images & audio files
-							-->
-		<exclusion pattern="^http://media\d+\." />
+		<test url="http://img.podbean.com/itunes-logo/379300/IMG_3552.jpg" />
+		-->
 
 
-	<securecookie host="^(?:.*\.)?podbean\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:(?:patron|sponsorship|www)\.)?podbean\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^\.podbean\.com$" name="^(?:__cfduid|__utm\w+|PHPSESSID|cf_clearance)$" /-->
+	<!--securecookie host="^(account_vhost)\.podbean\.com$" name="^(?:AWSELB|PHPSESSID)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(\w+\.)?podbean\.com/"
-		to="https://$1podbean.com/" />
+	<rule from="^http://fs1\.podbean\.com/"
+		to="https://d8g345wuhgd7e.cloudfront.net/" />
+
+	<!--rule from="^http://img\.podbean\.com/"
+		to="https://???.cloudfront.net/" /-->
+
+	<!--rule from="^http://imglogo\.podbean\.com/"
+		to="https://???.cloudfront.net/" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

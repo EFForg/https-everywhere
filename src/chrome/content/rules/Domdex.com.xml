@@ -1,25 +1,38 @@
 <!--
 	Problematic domains:
 
-		- (www.)magnetic.com	(works, mismatched, CN: new-domdex.info)
+		- (www.)?magnetic.com	(works, mismatched, CN: new-domdex.info)
 
 
-	Fully covered subdomains:
+	*.t.domdex.com: Per-client domains serving bugs
 
-		- (www.)
-		- *.t		(per-client domains serving web bugs)
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .domdex.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="domdex.com">
 
 	<target host="domdex.com" />
-	<target host="*.domdex.com" />
+	<target host="f.domdex.com" />
+	<target host="magnetic.domdex.com" />
+	<target host="*.t.domdex.com" />
+	<target host="www.domdex.com" />
+
+		<test url="http://magnetic.t.domdex.com/1/pix.gif" />
 
 
-	<securecookie host="^\.domdex\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.domdex\.com$" name="^(?:PAD|cc)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://((?:f|magnetic|[\w-]+\.t|www)\.)?domdex\.com/"
-		to="https://$1domdex.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

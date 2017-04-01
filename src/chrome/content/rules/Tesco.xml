@@ -1,7 +1,9 @@
 <!--
-	Partial
-
 	For rules causing false/broken MCB, see Tesco.com-falsemixed.xml.
+
+	Other Tesco rulesets:
+
+		- Tesco_Help.com.xml
 
 
 	tesco.scene7.com
@@ -10,6 +12,7 @@
 	Other Tesco rulesets:
 
 		- Clothing_at_Tesco.com.xml
+		- Our_Tesco.com.xml
 		- Tesco_Compare.com.xml
 		- Tesco_Bank.com.xml
 		- Tesco_Diets.com.xml
@@ -18,8 +21,11 @@
 
 	Nonfunctional domains:
 
+		- direct.tesco.com *
 		- origin-img.tesco.com
 		- origin-www.tesco.com *
+		- phone-shop.tesco.com *
+
 		- (www.)tescoliving.com *
 		- www.tescomagazine.com *
 
@@ -40,85 +46,149 @@
 	* Akamai
 
 
-	Fully covered domains:
-
-		- tesco.com subdomains:
-
-			- direct
-			- img ¹
-			- phone-shop
-			- secure
-
-		- *.tescoassets.com ¹
-
-			- direct
-			- ui
-
-	¹ → secure.tesco.com
-
-
 	Mixed content:
 
 		- css on secure from ui.tescoassets.com *
 
-		- Images on secure from www **
+		- Bugs, on:
 
-	* On groceries/ when rewritten from www; secured by us
-	** Secured by us
+			- secure from metrics.tesco.com *
+			- secure from rtd.tubemogul.com *
+			- secure from r.turn.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Tesco (partial)">
 
-	<target host="tesco.com" />
-	<target host="*.tesco.com" />
-		<!--
-			Avoid false/broken MCB:
+	<!--	Direct rewrites:
+				-->
+	<target host="www.giftcards.tesco.com" />
+	<target host="secure.tesco.com" />
+
+	<!--	Complications:
+				-->
+	<!--target host="tesco.com" /-->
+	<!--target host="img.tesco.com" /-->
+	<target host="metrics.tesco.com" />
+	<!--target host="www.tesco.com" /-->
+
+		<!--	These paths don't work:
+
+				- affiliates/$
+				- apps/$
+				- direct/hudl/$
+				- eathappyproject/$
+				- events/$
+				- foodcollection/$
+				- productrecall/$
+				- raceforlife/$
+				- staysafeonline/$
+				- wine/$	(redirects to winestore/)
+				- WINE/Help/$	(404)
+
+			These paths redirect back to www:
+
+				- direct/$
+				- direct/help/homepage.page$
+
+			These paths don't:
+
+				- $
+				- c/css/
+				- clubcard/
+				- css/
+				- directuiassets/
+				- exchange$
+				- exchange/$
+				- grocery/images/
+				- homepages/default/[\w.]+.css
+				- offer/$
+				- Wine/MarketingContent/Sites/
+				- wine/UIAssets/
+				- storelocator/
+				- storeLocator/
+				- termsandconditions/privacy.htm$
+
+			These paths cause CORS breakage:
+
+				- groceries/
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?tesco\.com/(?!$|(?:BrandGuarantee|carrier-bags|clubcard|exchange)(?:$|[?/])|(?:books|c/css|css|directuiassets|grocery/images|homepages/default|offer|store-?[lL]ocator|termsandconditions|whatsinstore|Wine/MarketingContent|wine/UIAssets)/)" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://www.tesco.com/WINE/Help/" /-->
+			<!--test url="http://www.tesco.com/affiliates/" /-->
+			<!--test url="http://www.tesco.com/apps/" /-->
+			<!--test url="http://www.tesco.com/direct/" /-->
+			<!--test url="http://www.tesco.com/direct/help/homepage.page" /-->
+			<!--test url="http://www.tesco.com/direct/hudl/" /-->
+			<!--test url="http://www.tesco.com/direct/technology-gaming/mobile-phones/cat3376638.cat" /-->
+			<!--test url="http://www.tesco.com/eathappyproject/" /-->
+			<!--test url="http://www.tesco.com/events/" /-->
+			<!--test url="http://www.tesco.com/foodcollection/" /-->
+			<!--test url="http://www.tesco.com/groceries/" /-->
+			<!--test url="http://www.tesco.com/productrecall/" /-->
+			<!--test url="http://www.tesco.com/raceforlife/" /-->
+			<!--test url="http://www.tesco.com/staysafeonline/" /-->
+			<!--test url="http://www.tesco.com/wine/" /-->
+			<!--test url="http://www.tesco.com/winestore/" /-->
+
+			<!--	-ve:
+					-->
+			<!--test url="http://www.tesco.com/BrandGuarantee" /-->
+			<!--test url="http://www.tesco.com/BrandGuarantee/HowItWorks" /-->
+			<!--test url="http://www.tesco.com/carrier-bags/" /-->
+			<!--test url="http://www.tesco.com/clubcard/" /-->
+			<!--test url="http://www.tesco.com/global/template/css/global.desktop.css" /-->
+			<!--test url="http://www.tesco.com/help/" /-->
+			<!--test url="http://www.tesco.com/help/contact/" /-->
+			<!--test url="http://www.tesco.com/homepages/default/css/datauri.preload.9.css" /-->
+			<!--test url="http://www.tesco.com/homepages/default/i/woti/more-from-tesco.s6.png" /-->
+			<!--test url="http://www.tesco.com/store-locator/uk/" /-->
+
+		<!--	Avoid false/broken MCB:
 						-->
 		<!--exclusion pattern="^http://(www\.)?tesco\.com/groceries/" /-->
-	<target host="*.tescoassets.com" />
+
+	<target host="direct.tescoassets.com" />
+	<target host="ui.tescoassets.com" />
 
 
-	<securecookie host="^secure\.tesco\.com$" name=".+" />
-
-
-	<!--	These paths don't work:
-
-			- wine/$	(redirects to winestore/)
-			- WINE/Help/$	(404)
-
-		These paths redirect back to www:
-
-			- direct/$
-			- direct/help/homepage.page$
-
-		These paths don't:
-
-			- $
-			- c/css/
-			- clubcard/
-			- css/
-			- directuiassets/
-			- exchange$
-			- exchange/$
-			- grocery/images/
-			- homepages/default/[\w.]+.css
-			- offer/$
-			- Wine/MarketingContent/Sites/
-			- wine/UIAssets/
-			- storelocator/
-			- storeLocator/
-			- termsandconditions/privacy.htm$
+	<!--	Not secured by server:
 					-->
-	<rule from="^http://(?:www\.)?tesco\.com/(?=$|exchange|(?:books|c/css|clubcard/clubcard|css|directuiassets|grocery/images|homepages/default|offer|store[lL]ocator|termsandconditions|whatsinstore|Wine/MarketingContent|wine/UIAssets)/)"
-		to="https://secure.tesco.com/" />
+	<!--securecookie host="^\.tesco\.com$" name="^(?:_gat?|DCCC|s_vi)$" /-->
+	<!--securecookie host="^www\.giftcards\.tesco\.com$" name="^(?:\.ASPXANONYMOUS|ASP\.NET_SessionId|dnn_IsMobile|language)$" /-->
 
-	<rule from="^http://(direct|phone-shop|secure)\.tesco\.com/"
-		to="https://$1.tesco.com/" />
+	<securecookie host="^\." name="^(?:_gat?$|s_v)" />
+	<securecookie host="^www\.giftcards\.tesco\.com$" name="." />
+	<!--securecookie host="^secure\.tesco\.com$" name="." /-->
 
-	<rule from="^http://img\.tesco\.com/"
-		to="https://secure.tesco.com/" />
+
+	<!--rule from="^http://(?:img\.|www\.)?tesco\.com/"
+		to="https://secure.tesco.com/" /-->
+
+	<rule from="^http://metrics\.tesco\.com/"
+		to="https://tesco.122.2o7.net/" />
+
+	<!--	Self-relative links:
+					-->
+	<!--rule from="^https://secure\.tesco\.com/"
+		to="http://www.tesco.com/" downgrade="1" /-->
+
+		<!--exclusion pattern="^https://secure\.tesco\.com/+(?!(?:affiliates|productrecall|raceforlife|staysafeonline)/$)" /-->
+
+			<!--	-ve:
+					-->
+			<!--test url="https://secure.tesco.com/affiliates/" /-->
+			<!--test url="https://secure.tesco.com/productrecall/" /-->
+			<!--test url="https://secure.tesco.com/raceforlife/" /-->
 
 	<rule from="^http://\w+\.tescoassets\.com/"
 		to="https://secure.tesco.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

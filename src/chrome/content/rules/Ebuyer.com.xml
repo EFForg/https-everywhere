@@ -1,0 +1,84 @@
+<!--
+	Disabled per https://github.com/EFForg/https-everywhere/issues/1642
+	For rules causing false/broken MCB, see Ebuyer.com-falsemixed.xml.
+
+
+	Other Ebuyer rulesets:
+
+		- Ebyr_CDN.net.xml
+
+
+	Problematic subdomains:
+
+		- blog *
+
+	* 403/404, configured for rc4 only
+
+
+	Partially covered subdomains:
+
+		- (www.) ¹
+		- accounts ²
+
+	¹ Some pages redirect to http
+	² Some pages redirect to http://static...
+
+
+	Fully covered subdomains:
+
+		- image
+		- forums
+		- orders
+		- static		
+
+
+	These altnames don't exist:
+
+		- www.accounts.ebuyer.com
+		- www.orders.ebuyer.com
+
+
+	Mixed content:
+
+		- css on www from $self *
+
+		- Images on www from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Ebuyer.com (partial)" default_off="Breaks blog">
+
+        <!--	https://e... redirects to http://w..., so we can avoid a
+		duplicate target warning by blanket-rewriting !www here.
+					-->
+	<target host="ebuyer.com" />
+	<target host="*.ebuyer.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<!--exclusion pattern="^http://www\.ebuyer\.com/+blog($|\?)" /-->
+		<!--exclusion pattern="^http://blog\.ebuyer\.com/+(favicon\.ico|wp-content/|wp-includes/)" /-->
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.ebuyer\.com/+($|\?|(CSR|help)($|\?))" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.ebuyer\.com/+(?!blog/(?:favicon\.ico|index\.php\?ak_action=aktt_css|wp-content/|wp-includes/)|favicon\.ico)" />
+		<exclusion pattern="^http://accounts\.ebuyer\.com/+(?!css/|favicon\.ico|images/|js/)" />
+
+
+	<!--	Some, but not all, secured by server:
+							-->
+	<securecookie host="^forums\.ebuyer\.com$" name=".+" />
+
+
+	<rule from="^http://((?:accounts|image|orders|static|www)\.)?ebuyer\.com/"
+		to="https://$1ebuyer.com/" />
+
+	<rule from="^http://blog\.ebuyer\.com/(?=favicon\.ico|wp-content/|wp-includes/)"
+		to="https://www.ebuyer.com/blog/" />
+
+</ruleset>

@@ -1,58 +1,274 @@
-<ruleset name="HSBC">
-  <!-- The list of country sites comes from https://www.hsbc.com/1/2 -->
+<!--
+	For rules covering resources which do not secure
+	mixed content, see hsbc.com-resources.xml.
 
-  <target host="hsbc.*" />
-  <target host="www.hsbc.*" />
-  <target host="hsbc.co.*" />
-  <target host="*.hsbc.co.uk" />
-  <target host="www.hsbc.co.*" />
-  <target host="hsbc.com.*" />
-  <target host="www.hsbc.com.*" />
-  <target host="*.hsbctrinkaus.de" />
-  <target host="hsbctrinkaus.de" />
-  <target host="*.sabb.com" />
-  <target host="sabb.com" />
-  <target host="firstdirect.com" />
-  <target host="*.firstdirect.com" />
-  <target host="*.us.hsbc.com" />
-  <target host="us.hsbc.com" />
-  <target host="www.business.hsbc.co.uk" />
+	Other HSBC Holdings rulesets:
 
-  <securecookie host="^(.*\.)?hsbc\.(.*)$" name=".+" />
-  <securecookie host="^(.*\.)?firstdirect\.com$" name=".+" />
+		- firstdirect.com.xml
+		- hsbc.co.in.xml
+		- hsbc.co.jp.xml
+		- hsbc.co.kr.xml
+		- hsbc.co.uk.xml
+		- hsbc.com.bd.xml
+		- hsbc.com.bh.xml
+		- hsbc.com.eg.xml
+		- hsbc.com.hk.xml
+		- hsbc.com.lb.xml
+		- hsbc.com.mu.xml
+		- hsbc.com.om.xml
+		- hsbc.com.qa.xml
+		- hsbc.com.vn.xml
+		- hsbcnet.com.xml
+		- hsbctrinkaus.de.xml
+		- member-hsbc-group.com.xml
+		- sabb.com.xml
 
-  <!-- These sites do not work (no HTTPS service operational). -->
-  <exclusion pattern="^http://www\.hangseng\.com/" />
-  <exclusion pattern="^http://www\.hfcbank\.co\.uk/" />
-  <exclusion pattern="^http://www\.hsbc\.cz/" />
-  <exclusion pattern="^http://www\.hsbc\.ge/" />
-  <exclusion pattern="^http://www\.hsbc\.ie/" />
-  <exclusion pattern="^http://www\.hsbc\.co\.id/" />
-  <exclusion pattern="^http://www\.hsbc\.co\.pa/" />
-  <exclusion pattern="^http://www\.hsbc\.co\.za/" />
-  <exclusion pattern="^http://www\.kuwait\.hsbc\.com/" />
+
+	Nonfuntional hosts in *hsbc.com:
+
+		- www.about.algeria *
+		- www.business.algeria *
+		- tko.apps.asiapacific ²
+		- www.global.assetmanagement *
+		- www.crs *
+		- www.gbm *
+		- www.globalliquidity *
+		- www.about.maldives *
+		- www.business.maldives *
+		- www.rmb *
+		- www.about.us *
+		- www *
+
+	² 200 "Page not found"
+	* Unrecognized name
+
+
+	Problematic hosts in *hsbc.com:
+
+		- www.algeria ᵐ
+		- assetmanagement ᵐ
+		- www.bd *
+		- cmbinsight ᵐ
+		- images.cmbinsight ᵐ
+		- www.corporate ᵐ
+		- www.etf ᵐ
+		- expat ᵐ
+		- facta ᵉ ᵐ
+		- www.facta *
+		- theopen.golf ᵉ ᵐ
+		- www.institutional ᵐ
+		- (www.)?kr ᵐ
+		- ebanking.kr ᵐ
+		- ytchanneladmin.media ᵉ
+		- www.mefco ᵐ
+		- www.careers.middleeast ᵐ
+		- ukbusiness ᵐ
+		- banking.us ᵐ
+		- (www.)?vn ᵐ
+
+	* Unrecognized name, equivalent to another domain
+	ᵉ Expired
+	ᵐ Mismatched
+
+
+	These altnames do not exist:
+
+		- bahrain.hsbc.com
+		- lebanon.hsbc.com
+		- oman.hsbc.com
+		- qatar.hsbc.com
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.apps.asiapacific.hsbc.com
+		- www.insurance.asiapacific.hsbc.com
+		- www.assetmanagement.hsbc.com
+		- www.bahrain.hsbc.com
+		- .cmbinsight.hsbc.com
+		- www.ebank.egypt.hsbc.com
+		- www.egypt.hsbc.com
+		- www.expat.hsbc.com
+		- www.homeandaway.hsbc.com
+		- www.ebanking.kr.hsbc.com
+		- www.lebanon.hsbc.com
+		- www.maldives.hsbc.com
+		- ytchanneladmin.media.hsbc.com
+		- www.offshore.hsbc.com
+		- www.oman.hsbc.com
+		- www.qatar.hsbc.com
+		- www.research.hsbc.com
+		- www.ukbusiness.hsbc.com
+		- us.hsbc.com
+		- www.us.hsbc.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images, on;
+
+			- cmbinsight from images.cmbinsight.hsbc.com
+
+		- Bugs, on:
+
+			- www.algeria, www.apps.asiapacific, www.assetmanagement, www.etf, www.expat, (www.)?expatexplorer, facta, www.homeandaway, www.ebanking.kr, www.careers.middleeast, services.mobile, banking.us from www1.member-hsbc-group.com ˢ
+			- www.assetmanagement from bs.serving-sys.com ˢ
+			- www.etf from \d+.fls.doubleclick.net
+			- globalconnections from fls.doubleclick.net
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="HSBC.com (partial)" default_off="testing">
+
+<!-- The list of country sites comes from https://www.hsbc.com/1/2 -->
+<!--
+	<target host="hsbc.*" />
+	<target host="www.hsbc.*" />
+	<target host="hsbc.co.*" />
+	<target host="www.hsbc.co.*" />
+	<target host="hsbc.com.*" />
+	<target host="www.hsbc.com.*" />
+	<target host="*.hsbctrinkaus.de" />
+	<target host="hsbctrinkaus.de" />
+-->
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="hsbc.com" /-->
+	<target host="www.apps.asiapacific.hsbc.com" />
+	<target host="www.insurance.asiapacific.hsbc.com" />
+	<target host="www.assetmanagement.hsbc.com" />
+	<target host="www.bahrain.hsbc.com" />
+	<target host="www.egypt.hsbc.com" />
+	<target host="www.expat.hsbc.com" />
+	<target host="expatexplorer.hsbc.com" />
+	<target host="www.expatexplorer.hsbc.com" />
+	<target host="globalconnections.hsbc.com" />
+	<target host="www.globalconnections.hsbc.com" />
+	<target host="www.homeandaway.hsbc.com" />
+	<target host="www.lebanon.hsbc.com" />
+	<target host="www.maldives.hsbc.com" />
+	<target host="trading.markets.hsbc.com" />
+	<target host="www.memberservices.hsbc.com" />
+	<target host="services.mobile.hsbc.com" />
+	<target host="mytennisambition.hsbc.com" />
+	<target host="www.offshore.hsbc.com" />
+	<target host="www.oman.hsbc.com" />
+	<target host="www.qatar.hsbc.com" />
+	<target host="www.research.hsbc.com" />
+	<target host="www.ukbusiness.hsbc.com" />
+	<target host="us.hsbc.com" />
+
+	<target host="www.banking.us.hsbc.com" />
+	<target host="investorfunds.us.hsbc.com" />
+	<target host="www.investorfunds.us.hsbc.com" />
+	<target host="www.us.hsbc.com" />
+
+		<!--	$: 200 "page not found", so:
+							-->
+		<test url="http://www.apps.asiapacific.hsbc.com/1/2/imo2" />
+
+		<!--	Mixed bugs:
+					-->
+		<!--test url="http://www.assetmanagement.hsbc.com/us" /-->
+
+	<!--	Complications:
+				-->
+	<target host="assetmanagement.hsbc.com" />
+	<target host="www.bd.hsbc.com" />
+	<!--target host="images.cmbinsight.hsbc.com" /-->
+	<target host="www.corporate.hsbc.com" />
+	<target host="expat.hsbc.com" />
+	<target host="theopen.golf.hsbc.com" />
+	<target host="www.institutional.hsbc.com" />
+	<target host="kr.hsbc.com" />
+	<target host="ebanking.kr.hsbc.com" />
+	<target host="www.kr.hsbc.com" />
+	<target host="www.mefco.hsbc.com" />
+	<target host="ukbusiness.hsbc.com" />
+	<target host="banking.us.hsbc.com" />
+	<target host="vn.hsbc.com" />
+	<target host="www.vn.hsbc.com" />
+
+	<!-- These sites do not work (no HTTPS service operational). -->
+	<!--
+	<exclusion pattern="^http://www\.hangseng\.com/" />
+	<exclusion pattern="^http://www\.hfcbank\.co\.uk/" />
+	<exclusion pattern="^http://www\.hsbc\.cz/" />
+	<exclusion pattern="^http://www\.hsbc\.ge/" />
+	<exclusion pattern="^http://www\.hsbc\.ie/" />
+	<exclusion pattern="^http://www\.hsbc\.co\.id/" />
+	<exclusion pattern="^http://www\.hsbc\.co\.pa/" />
+	<exclusion pattern="^http://www\.hsbc\.co\.za/" />
+	-->
 
   <!-- These do not work (invalid SSL certificate). -->
-  <exclusion pattern="^http://www\.hsbc\.co\.nz/" />
-  <exclusion pattern="^http://www\.hsbc\.com\.tr/" />
-  <exclusion pattern="^http://www\.hsbc\.com\.uy/" />
-
-  <rule from="^http://(?:www\.)?hsbc\.([^/:@]+)/"
-        to="https://www.hsbc.$1/" />
-  <rule from="^https?://([^/:@]+)?\.hsbc\.co\.uk/"
-      to="https://$1.hsbc.co.uk/" />
-
-  <rule from="^https?://firstdirect\.com/"
-      to="https://www.firstdirect.com/" />
-  <rule from="^https?://([^/:@]+)?\.firstdirect\.com/"
-      to="https://$1.firstdirect.com/" />
-
-  <!-- some odd regional sites not using hsbc.tld names -->
-  <rule from="^http://(?:www\.)?hsbctrinkaus\.de/" to="https://www.hsbctrinkaus.de/" />
-  <rule from="^http://(?:www\.)?sabb\.com/" to="https://www.sabb.com/" />
-  <rule from="^http://(?:www\.)?firstdirect\.com/" to="https://www.firstdirect.com/" />
-  <rule from="^http://www\.business\.hsbc\.co\.uk/" to="https://www.business.hsbc.co.uk/" />
+	<!--
+	<exclusion pattern="^http://www\.hsbc\.co\.nz/" />
+	<exclusion pattern="^http://www\.hsbc\.com\.tr/" />
+	<exclusion pattern="^http://www\.hsbc\.com\.uy/" />
+	-->
 
 
-  <rule from="^http://(?:www\.)?us\.hsbc\.com/" to="https://www.us.hsbc.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.insurance\.asiapacific\.hsbc\.com$" name="^HKWGTK$" /-->
+	<!--securecookie host="^www\.assetmanagement\.hsbc\.com$" name="^(?:[\dA-Z]_ID|www\.assetmanagement\.hsbc\.com)$" /-->
+	<!--securecookie host="^www\.(?:bahrain|egypt|ebanking\.kr|lebanon|oman|qatar)\.hsbc\.com$" name="^[A-Z]+-IB-DIGITAL_WDC$" /-->
+	<!--securecookie host="^\.cmbinsight\.hsbc\.com$" name="^ELOQUA$" /-->
+	<!--securecookie host="^www\.(?:apps\.asiapacific|expat|homeandaway|maldives)\.hsbc\.com$" name="^(?:JSESSIONID|[A-Z]+TK)$" /-->
+	<!--securecookie host="^ytchanneladmin\.media\.hsbc\.com$" name="^BIGipServer" /-->
+	<!--securecookie host="^www\.offshore\.hsbc\.com$" name="^JSP2TK$" /-->
+	<!--securecookie host="^www\.research\.hsbc\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^www\.ukbusiness\.hsbc\.com$" name="^UKBIB-EVRGRN-WDC$" /-->
+	<!--securecookie host="^us\.hsbc\.com$" name="^www\.us\.hsbc\.com-VH$" /-->
+	<!--securecookie host="^www\.us\.hsbc\.com$" name="^(?:USIB2G|www\.us\.hsbc\.com-VH)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<!--rule from="^http://(?:www\.)?hsbc\.([^/:@]+)/"
+		to="https://www.hsbc.$1/" /-->
+
+	<rule from="^http://(assetmanagement|expat|ukbusiness|banking\.us)\.hsbc\.com/"
+		to="https://www.$1.hsbc.com/" />
+
+	<rule from="^http://www\.bd\.hsbc\.com/"
+		to="https://www.hsbc.com.bd/" />
+
+	<!--rule from="^http://images\.cmbinsight\.hsbc\.com/"
+		to="https://secure.p03.eloqua.com/" /-->
+
+		<!--
+		<test url="http://images.cmbinsight.hsbc.com/EloquaImages/clients/HsbcUsaInc/%7B396d6b45-02fc-481e-ac76-f6a81bf8503b%7D_EventLandingPage_pagebackground.gif" />
+		-->
+
+	<rule from="^http://www\.(?:corporate|institutional)\.hsbc\.com/"
+		to="https://www.hsbcnet.com/" />
+
+	<rule from="^http://(?:www\.ebanking\.|www\.)?kr\.hsbc\.com/"
+		to="https://www.hsbc.co.kr/" />
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://theopen\.golf\.hsbc\.com/[^?]*"
+		to="https://financialplanning.hsbc.com.uk/" />
+
+		<test url="http://theopen.golf.hsbc.com/index.htm" />
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://www\.mefco\.hsbc\.com/[^?]*"
+		to="https://www.hsbc.ae/mefco" />
+
+		<test url="http://www.mefco.hsbc.com/index.htm" />
+
+	<rule from="^http://(?:www\.)?vn\.hsbc\.com/"
+		to="https://www.hsbc.com.vn/" />
+
 </ruleset>

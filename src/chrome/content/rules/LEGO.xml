@@ -1,5 +1,9 @@
 <!--
+	CDN buckets:
+
 	lego.112.2o7.net/b/ss/legoglobal/
+		- lego.reviews.bazaarvoice.com
+		- cache.lego.com.edgesuite.net
 
 
 	Nonfunctional subdomains:
@@ -8,16 +12,18 @@
 		- service **
 		- services **
 		- cs.us *
-		- www
+		- www * ³
 
 	* 404, mismatched
 	** At least some pages redirect to http
+	³ Not all paths work when rewritten to wwwsecure
 
 
 	Problematic subdomains:
 
-		- (www.)
+		- cache		Akamai
 		- en-us.kb	(mismatched, CN: *.parature.com)
+		- reviews	Akamai
 
 
 	Partially covered subdomains:
@@ -27,29 +33,103 @@
 		- shop *
 
 	* Some (most?) pages redirect to http
-	
+
+
+	Insecure cookies are set for these domains:
+
+		- .lego.com
 
 -->
-<ruleset name="LEGO (partial)">
+<ruleset name="LEGO.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="lego.com" />
-	<target host="*.lego.com" />
-		<exclusion pattern="^http://club\.lego\.com/(?!en-us/join/magazinesubscription)" />
-		<exclusion pattern="^http://education\.lego\.com/(?!\w\w-\w\w/[\w-]+/|Design/|WebResource\.axd)" />
-		<exclusion pattern="^http://shop.lego.com/(?!VIP/modal/vipLearnMoreModal\.jsp)" />
-	<target host="services.*.lego.com" />
+	<target host="aboutus.lego.com" />
+	<target host="account.lego.com" />
+	<target host="services.account.lego.com" />
+	<target host="account2.lego.com" />
+	<target host="assets.lego.com" />
+	<target host="club.lego.com" />
+	<target host="services.community.lego.com" />
+	<target host="education.lego.com" />
+	<target host="shop.education.lego.com" />
+	<target host="moderation.lego.com" />
+	<target host="rebrick.lego.com" />
+	<target host="shop.lego.com" />
+	<target host="wwwsecure.lego.com" />
 
+	<!--	Complications:
+				-->
+	<!--target host="www.lego.com" /-->
+
+		<exclusion pattern="^http://club\.lego\.com/(?!en-us/join/magazinesubscription)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://club.lego.com/de-de/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://club.lego.com/en-us/join/magazinesubscription" />
+
+		<exclusion pattern="^http://education\.lego\.com/(?!\w\w-\w\w/[\w-]+/|Design/|WebResource\.axd)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://education.lego.com/downloads/" />
+			<test url="http://education.lego.com/ja-jp" />
+			<test url="http://education.lego.com/ko-kr" />
+			<test url="http://education.lego.com/zh-cn" />
+
+			<!--	-ve:
+					-->
+			<test url="http://education.lego.com/ko-kr/products/" />
+
+		<exclusion pattern="^http://shop.lego.com/(?!VIP/modal/vipLearnMoreModal\.jsp)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://shop.lego.com/VIP" />
+
+			<!--	-ve:
+					-->
+			<test url="http://shop.lego.com/VIP/modal/vipLearnMoreModal.jsp" />
+
+		<!--	Breakage is more extensive than this:
+				https://github.com/EFForg/https-everywhere/issues/2858
+
+			So default-inclusion of www → wwwsecure is disabled in favor of
+			including what we know to work as we find it.
+
+			Exclusions and tests are left as commentary and for future use.
+
+			404:
+				-->
+		<!--exclusion pattern="^http://www\.lego\.com/(?:\w\w-\w\w/bionicle|friends)(?:$|[?/])" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://www.lego.com/en-us/bionicle" /-->
+			<!--test url="http://www.lego.com/en-us/bionicle/" /-->
+			<!--test url="http://www.lego.com/en-us/bionicle/?domainredir=" /-->
+			<!--test url="http://www.lego.com/en-us/bionicle/?domainredir=www.bionicle.com" /-->
+			<!--test url="http://www.lego.com/en-us/friends" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.lego\.com$" name="^XLB$" /-->
 
 	<securecookie host="^(?:aboutus|account2?|services\.account|assets|rebrick)\.lego\.com$" name=".+" />
 
 
-	<rule from="^https?://(?:www\.|wwwsecure\.)?lego\.com/"
-		to="https://wwwsecure.lego.com/" />
+	<!--rule from="^http://www\.lego\.com/"
+		to="https://wwwsecure.lego.com/" /-->
 
-	<rule from="^http://(aboutus|account2?|services\.(?:account|community)|assets|club|education|moderation|rebrick|shop)\.lego\.com/"
-		to="https://$1.lego.com/" />
+		<test url="http://27d.deviantart.net/" />
 
-	<rule from="^http://cache\.lego\.com/"
-		to="https://a248.e.akamai.net/cache.lego.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

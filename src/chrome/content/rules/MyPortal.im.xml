@@ -1,14 +1,30 @@
 <!--
-	www.myportal.im doesn't exist
+	(www.)?myportal.im does not exist.
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- qtime.myportal.im
+		- wiki.myportal.im
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="myPortal.im">
 
-	<target host="myportal.im" />
+	<target host="qtime.myportal.im" />
 	<target host="wiki.myportal.im" />
 
 
-	<rule from="^http://(wiki\.)?myportal\.im/"
-		to="https://$1myportal.im/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^qtime\.myportal\.im$" name="^(?:\.ASPXANONYMOUS|ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^wiki\.myportal\.im$" name="^(?:ASP\.NET_SessionId|WT_Cookie)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -3,6 +3,7 @@
 
 		- wac.68fd.edgecastcdn.net/??68FD/
 
+			- ec
 			- static
 
 		- ssl-static.wac.68fd.edgecastcdn.net
@@ -18,9 +19,7 @@
 
 		- libsyn.com subdomains:
 
-			- hwcdn *
 			- imake *
-			- traffic	(redirects to static-ssl)
 			- \w+ **
 
 		- libsynpro.com		(shows www; mismatched, CN: *.libsyn.com)
@@ -29,33 +28,59 @@
 	** Dropped - unique subdomains for podcasts
 
 
-	Problematic subdomains:
+	Problematic hosts in *libsyn.com:
 
+		- ec *
+		- hwcdn ʳ
 		- static	(works; mismatched, CN: gp1.wac.edgecastcdn.net)
 
+	* Mismatched, CN: edgecastcdn.net
+	ʳ Refused
 
-	Fully covered subdomains:
 
-		- (www.)
-		- fusion
-		- ssl-static
-		- static	(→ ssl-static)
-		- three
+	Insecure cookies are set for these domains and hosts:
+
+		- .libsyn.com
+		- html5-player.libsyn.com
 
 -->
-<ruleset name="libsyn (partial)">
+<ruleset name="libsyn.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="libsyn.com" />
-	<target host="*.libsyn.com" />
+	<target host="assets.libsyn.com" />
+	<target host="fusion.libsyn.com" />
+	<target host="html5-player.libsyn.com" />
+	<target host="ssl-static.libsyn.com" />
+	<target host="three.libsyn.com" />
+	<target host="traffic.libsyn.com" />
+	<target host="secure-ec.libsyn.com" />
+	<target host="secure-hwcdn.libsyn.com" />
+	<target host="www.libsyn.com" />
+
+	<!--	Complications:
+				-->
+	<target host="ec.libsyn.com" />
+	<target host="hwcdn.libsyn.com" />
+	<target host="static.libsyn.com" />
 
 
-	<securecookie host="^\.libsyn\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.libsyn\.com$" name="^libsyn-paywall$" /-->
+	<!--securecookie host="^html5-player\.libsyn\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://((?:assets|fusion|html5-player|three|www)\.)?libsyn\.com/"
-		to="https://$1libsyn.com/" />
+	<rule from="^http://(ec|hwcdn)\.libsyn\.com/"
+		to="https://secure-$1.libsyn.com/" />
 
-	<rule from="^http://(?:ssl-)?static\.libsyn\.com/"
+	<rule from="^http://static\.libsyn\.com/"
 		to="https://ssl-static.libsyn.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

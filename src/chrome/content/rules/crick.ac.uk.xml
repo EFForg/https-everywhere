@@ -1,0 +1,85 @@
+<!--
+	The Francis Crick Institute
+
+
+	Nonfunctional hosts in *crick.ac.uk:
+
+		- bmm ⁴
+		- genomes ᵈ
+		- genomics ᵈ
+
+	⁴ 404
+	ᵈ Dropped
+
+
+	Problematic hosts in *crick.ac.uk:
+
+		- webmail ᵖ
+
+	ᵖ Plaintext reply
+
+
+	These altnames don't exist:
+
+		- www.jobs.crick.ac.uk
+		- www.procurement.crick.ac.uk
+
+
+	Insecure cookies are set for these hosts:
+
+		- bioinformatics.crick.ac.uk
+
+
+	Mixed content:
+
+		- css on procurement from fonts.googleapis.com ˢ
+		- Image on (www.)? from pbs.twimg.com ˢ
+
+		- favicons, on:
+		
+			- (www.)? from www.crick.ac.uk ˢ
+			- (www.)? from hts.cancerresearchuk.org
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Crick.ac.uk">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="crick.ac.uk" />
+	<target host="bioinformatics.crick.ac.uk" />
+	<target host="hts.crick.ac.uk" />
+	<target host="intranet.crick.ac.uk" />
+	<target host="jobs.crick.ac.uk" />
+	<target host="procurement.crick.ac.uk" />
+	<target host="www.crick.ac.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="webmail.crick.ac.uk" />
+
+		<!--	Mixed favicon:
+					-->
+		<!--test url="http://hts.crick.ac.uk/rnaiMeeting/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^bioinformatics\.crick\.ac\.uk$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://webmail\.crick\.ac\.uk/+"
+		to="https://emea.centrify.com/" />
+
+		<test url="http://webmail.crick.ac.uk/default.aspx" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

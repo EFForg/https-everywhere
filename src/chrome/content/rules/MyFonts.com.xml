@@ -1,32 +1,42 @@
 <!--
+	Other MyFonts rulesets:
+
+		- MyFonts.net.xml
+
+
 	CDN buckets:
 
 		- d2c1cl1a12l6zn.cloudfront.net
 
 			- cdn.myfonts.com
-			- cdn.myfonts.net
 
 
 	Nonfunctional domains:
 
-		- webfonts.myfonts.com
+		- meta.myfonts.com *
+
+	* Dropped
 
 -->
 <ruleset name="MyFonts.com (partial)">
 
 	<target host="myfonts.com" />
-	<target host="*.myfonts.com" />
-		<exclusion pattern="^http://(?:www\.)?myfonts\.com/(?!my/|s/|secure/|viewlicense(?:$|\?))" />
-	<target host="*.myfonts.net" />
+	<target host="cdn.myfonts.com" />
+	<target host="origin.myfonts.com" />
+	<target host="www.myfonts.com" />
 
 
-	<rule from="^http://(origin\.|www\.)?myfonts\.com/"
-		to="https://$1myfonts.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.myfonts\.com$" name="^apisession$" /-->
 
-	<rule from="^https?://cdn\.myfonts\.(?:com|net)/"
-		to="https://d2c1cl1a12l6zn.cloudfront.net/" />
+	<securecookie host="^www\.myfonts\.com$" name=".+" />
 
-	<rule from="^http://(hello|origin|your)\.myfonts\.net/"
-		to="https://$1.myfonts.net/" />
+
+	<rule from="^http://cdn\.myfonts\.com/"
+		to="https://cdn.myfonts.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

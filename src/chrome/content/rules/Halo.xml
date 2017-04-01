@@ -7,28 +7,42 @@
 		- waypointprod.blob.core.windows.net
 
 
-	Problematic subdomains:
+	Problematic hosts in *haolwaypoint.com:
 
-		- ^		(times out)
-		- download	(akamai)
+		- ^ ¹
+		- download ²
+
+	¹ Dropped
+	² Akamai
 
 -->
 <ruleset name="Halo">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="app.halowaypoint.com" />
+	<target host="assets.halowaypoint.com" />
+	<target host="blogs.halowaypoint.com" />
+	<target host="forums.halowaypoint.com" />
+	<target host="download-ssl.halowaypoint.com" />
+	<target host="www.halowaypoint.com" />
+
+	<!--	Special cases:
+				-->
 	<target host="halowaypoint.com" />
-	<target host="*.halowaypoint.com" />
+	<target host="download.halowaypoint.com" />
 
 
-	<securecookie host="^(?:app|forums)?\.halowaypoint\.com$" name=".+" />
+	<securecookie host="." name="." />
 
 
-	<rule from="^https?://(?:www\.)?halowaypoint\.com/"
+	<rule from="^http://halowaypoint\.com/"
 		to="https://www.halowaypoint.com/" />
 
-	<rule from="^http://(app|assets|blogs|forums)\.halowaypoint\.com/"
-		to="https://$1.halowaypoint.com/" />
-
-	<rule from="^https?://download(?:-ssl)?\.halowaypoint\.com/"
+	<rule from="^http://download\.halowaypoint\.com/"
 		to="https://download-ssl.halowaypoint.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

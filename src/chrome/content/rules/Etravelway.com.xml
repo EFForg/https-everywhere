@@ -1,6 +1,37 @@
-<ruleset name="Etravelway.com">
-  <target host="etravelway.com" />
-  <target host="www.etravelway.com" />
+<!--
+	NB: server sends no certificate chain, see https://whatsmychaincert.com
 
-  <rule from="^http://(www\.)?etravelway\.com/" to="https://www.etravelway.com/" />
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- etravelway.com
+		- www.etravelway.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images from www.etravelway.com ˢ
+		- Bug from hits3.truehits.net
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="eTravelWay.com" default_off="missing certificate chain">
+
+	<target host="etravelway.com" />
+	<target host="www.etravelway.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?etravelway\.com$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

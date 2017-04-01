@@ -1,26 +1,58 @@
 <!--
-	Nonfunctional subdomains:
+	Mismatch:
+		- builds
+		- iso.cdn
+		- pkg.cdn
+		- download
+		- ftp
+		- pbibuild
+		- pbibuild64
+		- pootle
+		- pootle2
+		- wiki
 
-		- ^ *
-		- forums *
-		- lists		(shows mail.ixsystems.com; mismatched, CN: *.ixsystems.com)
-		- pootle *
-		- pootle2 *
-		- wiki *
-		- www		(times out)
 
-	* Refused
+	Timeout:
+		- lists
+		- translate
 
+
+	Incomplete cert chain:
+		- ^
+
+
+	Insecure cookies are set for these hosts:
+
+		- bugs.pcbsd.org
+		- forums.pcbsd.org
+
+
+	Mixed content on ^ and www.
 -->
-<ruleset name="PC-BSD (partial)">
+<ruleset name="PC BSD.org (partial)">
 
-	<target host="trac.pcbsd.org" />
+	<target host="www.pcbsd.org" />
+	<target host="api.pcbsd.org" />
+	<target host="area51.pcbsd.org" />
+	<target host="blog.pcbsd.org" />
+	<target host="bugs.pcbsd.org" />
+	<target host="forums.pcbsd.org" />
+	<target host="web.pcbsd.org" />
 
 
-	<securecookie host="^trac\.pcbsd\.org$" name=".+" />
+	<exclusion pattern="^http://www\.pcbsd\.org/(?!favicon\.ico|wp-content/|wp-includes/)" />
+	<test url="http://www.pcbsd.org/favicon.ico" />
+	<test url="http://www.pcbsd.org/wp-content/uploads/2015/12/PCBSD.png" />
+	<test url="http://www.pcbsd.org/wp-includes/js/jquery/jquery.js" />
+	<test url="http://www.pcbsd.org/community/" />
+	<test url="http://www.pcbsd.org/download/" />
+	<test url="http://www.pcbsd.org/docs/" />
 
 
-	<rule from="^http://trac\.pcbsd\.org/"
-		to="https://trac.pcbsd.org/" />
+	<securecookie host="^(bugs|forums)\.pcbsd\.org$" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

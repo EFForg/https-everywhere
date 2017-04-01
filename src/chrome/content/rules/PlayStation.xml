@@ -2,122 +2,174 @@
 	For other Sony coverage, see Sony.xml.
 
 
+	CDN buckets:
+
+		- a248.e.akamai.net/=/4111/272091/1d/sceastorage.download.akamai.com/263133/
+
+			- cdn.us.playstation.com
+
 		- playstation.custhelp.com
 		- playstationna.i.lithium.com
 
 
-	Nonfunctional playstation.com subdomains:
+	Nonfunctional hosts in *playstation.com:
 
-		- (www.) *
-		- blog.eu *
-		- mypsn.eu *
-		- fp.profiles.us *
+		- blog.eu ᵈ
+		- mypsn.eu ᵈ
+		- fp.profiles.us ᵈ
 
-	* Dropped
-
-
-	Problematic domains:
-
-		- uk.playstation.com		(works; mismatched, CN: secure.eu.playstation.com)
-		- www.us.playstation.com	(mismatched)
+	ᵈ Dropped
 
 
-	Partially covered domains:
+	Problematic hosts in *playstation.com:
 
-		- (www.)us.playstation.com	(www → ^, many paths redirect to http)
+		- metrics.aem ᵐ
+		- static.blog ᴬ
+		- uk ᵐ
+		- us ᴬ
+		- cdn.us ³
+		- service1.us ᵉ
+		- www.us ᵐ
 
-
-	Fully covered domains:
-
-		- playstation.com subdomains:
-
-			- eu subdomains:
-
-				- secure
-				- software
-				- webtrends
-
-			- store
-
-			- us subdomains:
-
-				- blog
-				- community
-				- service1
-				- support
-
-		- static-resource.np.community.playstation.net
-		- en-support.psm.playstation.net
+	ᵐ Mismatched
+	ᴬ Akamai
+	³ 403
+	ᵉ Expired
 
 
-	Mixed images on support.us.playstation.com from us.playstation.com
+	These altnames don't exist:
+
+		- www.hardware.support.eu.playstation.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .playstation.com
+		- io.playstation.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- community.us from fonts.googleapis.com *
+
+		- Images, on:
+
+			- community.us from playstationna.i.lithium.com *
+			- community.us from cdn.us.playstation.com *
+			- community.us from $self *
+			- support.us.playstation.com from us.playstation.com
+
+		- Bugs, on:
+
+			- community.us from sonycomputerentertainmentofamerica.122.2o7.net *
+			- www from metrics.aem.playstation.com *
+
+	* Secured by us
 
 -->
-<ruleset name="PlayStation (partial)">
+<ruleset name="PlayStation.com (partial)">
 
-	<target host="*.playstation.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="playstation.com" />
+	<target host="smetrics.aem.playstation.com" />
+	<target host="docs.playstation.com" />
+
+	<target host="secure.eu.playstation.com" />
+	<target host="assets.software.eu.playstation.com" />
+	<target host="hardware.support.eu.playstation.com" />
+
+	<target host="io.playstation.com" />
+	<target host="media.playstation.com" />
+	<target host="psmedia.playstation.com" />
+	<target host="status.playstation.com" />
+	<target host="store.playstation.com" />
+
+	<target host="blog.us.playstation.com" />
+	<target host="secure.cdn.us.playstation.com" />
+	<target host="community.us.playstation.com" />
+	<target host="on.us.playstation.com" />
+	<target host="secure.us.playstation.com" />
+	<!--target host="service1.us.playstation.com" /-->
+	<target host="support.us.playstation.com" />
+
+	<target host="www.playstation.com" />
+
+	<!--	Complications:
+				-->
+	<target host="metrics.aem.playstation.com" />
+	<target host="static.blog.playstation.com" />
+	<target host="us.playstation.com" />
+	<target host="cdn.us.playstation.com" />
+	<target host="www.us.playstation.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://blog\.us\.playstation\.com/$" /-->
 		<!--
-			Many paths now redirect to http:
-
-				- https://mail1.eff.org/pipermail/https-everywhere-rules/2012-September/001284.html
-				- https://mail1.eff.org/pipermail/https-everywhere-rules/2013-July/001641.html
-
-				Including:
-
-					- $
-					- adaptor/?$
-					- adaptor/verify/?$
-					- community/?$
-					- community/liveevents/?$
-					- csimg/
-					- favicon.ico
-					- games/?$
-					- games/.*.html
-					- games-and-media$
-					- games-and-media/franchise/.*.html
-					- grid$
-					- grid/games_events/?$
-					- myprofile$
-					- news/consumeralerts/$
-					- omniture/blogs/s_code.js
-					- ps3/?$
-					- ps3/games-and-media/$
-					- psn/playstation-home/?$
-					- psn/shows-and-tv-series/$
-					- wtb/?$
-					- support/warranties/index.htm
-					- support/warranties/.*/index.htm
-
-				But not including:
-
-					- pscomauth/groups/public/documents/webasset/transparent.gif
-					- psnevent/EventsController.action
-					- uwps/PSNTicketRetrievalGenericServlet
-
-
-				support/?$ does too, but then redirects to a secure url.
-													-->
-		<!--exclusion pattern="^http://us\.playstation\.com/($|\?|(adaptor|community|games|grid|games-and-media|myprofile|news|ps[3n]|wtb)($|[?/])|csimg/|omniture/|support/?[^?])" /-->
-		<exclusion pattern="^http://us\.playstation\.com/(?!pscomauth/|psnevent/|uwps/)" />
-	<target host="*.playstation.net" />
-
-
-	<securecookie host=".*\.playstation\.com$" name=".+" />
-	<securecookie host="^en-support\.psm\.playstation\.net$" name=".+" />
-
-
-	<rule from="^http://((?:secure|software|webtrends)\.eu|store|(?:blog|community|service1|support)\.us)\.playstation\.com/"
-		to="https://$1.playstation.com/" />
-
-	<!--	Redirects to http first:
+			Exceptions:
 					-->
-	<rule from="^http://(?:www\.)?us\.playstation\.com/support/?(\?.*)?$"
-		to="https://support.us.playstation.com/$1" />
+		<exclusion pattern="^http://blog\.us\.playstation\.com/(?!/*wp-content/)" />
 
-	<rule from="^http://(?:www\.)?us\.playstation\.com/"
-		to="https://us.playstation.com/" />
+			<!--	+ve:
+					-->
+			<test url="http://blog.us.playstation.com/comment_policy/" />
+			<test url="http://blog.us.playstation.com/tag/call-of-duty/feed/" />
 
-	<rule from="^http://(static-resource\.np\.community|en-support\.psm)\.playstation\.net/"
-		to="https://$1.playstation.net/" />
+			<!--	-ve:
+					-->
+			<test url="http://blog.us.playstation.com/wp-content/plugins/wp-postratings/images/custom/rating_off.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?playstation\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^\.playstation\.com$" name="^(?:APPLICATION_SITE_URL|ps_auth|ps_profile_US|s_vi)$" /-->
+	<!--securecookie host="^\.aem\.playstation\.com$" name="^s_vi$" /-->
+	<!--securecookie host="^io\.playstation\.com$" name="^(?:JSESSIONID|SONYCOOKIE)$" /-->
+	<!--securecookie host="^support\.us\.playstation\.com$" name="^Lithium(?:UserInfo|UserSecure|Visitor)$" /-->
+	<!--securecookie host="^(www\.)support\.playstation\.com$" name="^(JSESSIONID|TS[0-9a-f]{8})$" /-->
+
+	<!--securecookie host="." name="." /-->
+	<securecookie host="^\." name="^s_v" />
+	<securecookie host="^(?!blog\.us\.)\w" name="." />
+
+
+	<rule from="^http://metrics\.aem\.playstation\.com/"
+		to="https://smetrics.aem.playstation.com/" />
+
+	<rule from="^http://static\.blog\.playstation\.com/"
+		to="https://blog.us.playstation.com/" />
+
+	<rule from="^http://(?:www\.)?us\.playstation\.com/$"
+		to="https://www.playstation.com/en-us/home/" />
+
+	<rule from="^http://(?:www\.)?us\.playstation\.com/support/?"
+		to="https://support.us.playstation.com/" />
+
+		<exclusion pattern="^http://(?:www\.)?us\.playstation\.com/(?!$|support/?(\?.*)?$)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://us.playstation.com/PS3/Network/Status" />
+			<test url="http://us.playstation.com/chat" />
+			<test url="http://us.playstation.com/community/myfriends/" />
+			<test url="http://us.playstation.com/digitalupgrade/" />
+			<test url="http://us.playstation.com/registration/" />
+			<test url="http://us.playstation.com/search/" />
+			<test url="http://us.playstation.com/tunein-radio/" />
+			<test url="http://us.playstation.com/vidzone/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://us.playstation.com/support/" />
+
+	<rule from="^http://cdn\.us\.playstation\.com/"
+		to="https://secure.cdn.us.playstation.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

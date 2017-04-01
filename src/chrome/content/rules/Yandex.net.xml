@@ -1,0 +1,293 @@
+
+<!--
+	For other Yandex coverage, see Yandex.xml.
+
+
+	Nonfunctional subdomains:
+
+		- mobile.photo *
+		- pythonbp *
+
+	* Differs from http
+
+
+	Problematic subdomains:
+
+		- (www.)? ²
+		- www.browser ¹
+		- direct **
+		- element ²
+		- elements ***
+		- img.encyc *
+		- vec0[1-4].maps ⁴
+		- static.video ⁵
+
+	¹ 404
+	² Mismatched
+	** Redirect destination doesn't exist => makes fetch checker complain
+	*** Mismatched cert for redirect destination
+	* Mismatched, CN: yastatic.net
+	⁴ Unspecified effect[?]
+	⁵ Apparently breaks video
+
+
+	Fully covered subdomains:
+
+		- (www.)?	(→ yandex.ru)
+		- internetometr.download.cdn
+		- sandbox.api.maps
+		- 0\d.pvec.maps		([1-4])
+
+		- ((www.)?[^.]+|[^.]+.[^.]+): *	(www → ^)
+
+			- api-yaru
+			- awaps
+
+			- avatars
+			- \d+.avatars
+			- default.avatars
+
+			- avatars-fast
+			- ba
+			- pix.blogs
+			- pix2.blogs
+			- (www.)?browser
+
+			- captcha
+			- a.captcha
+			- s.captcha
+
+			- cache-ams0[13-6].cdn
+			- cache-default04e.cdn
+			- cache-default05h.cdn
+			- cache-default06f.cdn
+			- download.cdn
+			- kp.cdn
+			- sba.cdn
+
+			- ceviri
+			- tv-front.content
+			- resizer.corba
+			- \d.cs-ellpic
+			- css
+			- disk
+			- downloader
+			- favicon
+			- img-css.friends
+			- hotels-proxy
+			- review-api-external.http
+			- img
+			- img-fotki
+			- img\d-fotki
+			- img
+			- img[1-7]-fotki
+			- imgl
+			- st.kp
+			- audio.lingvo
+			- webattach.mail
+			- mailstatic
+			- msoffice.maps
+			- vec.maps
+			- mdata
+			- money
+			- resizer-mobile.photo
+
+			- api.rasp
+			- static.rasp
+			- suburban-widget.rasp
+
+			- resize
+			- site
+			- static
+			- lego.static
+			- translate
+			- uc-static
+			- upics
+			- video
+			- wbms
+			- info.weather
+			- img-css.webchat2
+			- wfarm
+			- wi
+			- wimg
+			- xss
+
+	* Except where excluded below
+
+
+	These altnames don't exist:
+
+		- downloader.disk.yandex.net
+		- webattach-v6.mail.yandex.net
+		- mailstatic-v6.yandex.net
+		- music.yandex.net
+		- pogoda.yandex.net
+		- www.pogoda.yandex.net
+		- www.weather.yandex.net
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- wfarm from yastatic.net *
+			- pythonbp from img.yandex.net *
+
+		- favicon on wfarm from yastatic.net *
+
+		- Ads/bugs on ba from kiks.yandex.ru *
+
+	* Secured by us
+
+-->
+<ruleset name="Yandex.net (partial)">
+
+	<target host="yandex.net" />
+	<target host="*.yandex.net" />
+		<!--
+			Data clusters for Maps and Video:
+								-->
+		<exclusion pattern="^http://(?:jgo|vec\d+|stv\d+)\.maps\.yandex\.net/" />
+
+			<test url="http://jgo.maps.yandex.net/" />
+			<test url="http://stv1.maps.yandex.net/" />
+			<test url="http://stv2.maps.yandex.net/" />
+			<test url="http://vec1.maps.yandex.net/" />
+			<test url="http://vec2.maps.yandex.net/" />
+
+		<!--	What does this fix?
+						-->
+		<exclusion pattern="^http://[^.]+-tub(?:-[^.]+)?\.yandex\.net/" />
+
+			<test url="http://im0-tub-by.yandex.net/" />
+			<test url="http://im0-tub-com.yandex.net/" />
+			<test url="http://im0-tub-kz.yandex.net/" />
+			<test url="http://im0-tub-ru.yandex.net/" />
+			<test url="http://im0-tub-ua.yandex.net/" />
+		<!--
+			Search suggestions:
+						-->
+		<exclusion pattern="^http://suggest-[a-z]+\.yandex\.net/" />
+
+			<test url="http://suggest-a.yandex.net/" />
+			<test url="http://suggest-b.yandex.net/" />
+		<!--
+			Needed for Yandex video player to work:
+								-->
+		<exclusion pattern="^http://[^.]+\.video\.yandex\.net/" />
+
+			<test url="http://static.video.yandex.net/" />
+			<test url="http://static.video.yandex.net//" />
+		<!--
+			Needed for kinopoisk charts to work:
+								-->
+		<exclusion pattern="^http://st\.kp\.yandex\.net/crossdomain\.xml" />
+		<exclusion pattern="^http://st\.kp\.yandex\.net/shab/chart_settings/" />
+
+			<test url="http://st.kp.yandex.net/crossdomain.xml" />
+			<test url="http://st.kp.yandex.net/shab/chart_settings/votes_graph_settings.xml" />
+
+		<!--
+			Miscellaneous:
+					-->
+		<exclusion pattern="^http://(?:direct|elements?|mobile\.photo|pythonbp)\.yandex\.net/" />
+
+			<test url="http://direct.yandex.net/" />
+			<test url="http://element.yandex.net/" />
+			<test url="http://elements.yandex.net/" />
+			<test url="http://mobile.photo.yandex.net/" />
+			<test url="http://pythonbp.yandex.net/" />
+
+		<test url="http://api-yaru.yandex.net/" />
+		<test url="http://awaps.yandex.net/" />
+		<test url="http://avatars.yandex.net/" />
+		<test url="http://1.avatars.yandex.net/" />
+		<test url="http://default.avatars.yandex.net/" />
+		<test url="http://avatars-fast.yandex.net/" />
+		<test url="http://ba.yandex.net/" />
+		<test url="http://pix.blogs.yandex.net/" />
+		<test url="http://pix2.blogs.yandex.net/" />
+		<test url="http://browser.yandex.net/" />
+		<test url="http://www.browser.yandex.net/" />
+		<test url="http://captcha.yandex.net/" />
+		<test url="http://a.captcha.yandex.net/" />
+		<test url="http://s.captcha.yandex.net/" />
+		<test url="http://cache-default06f.cdn.yandex.net/" />
+		<test url="http://download.cdn.yandex.net/" />
+		<test url="http://kp.cdn.yandex.net/" />
+		<test url="http://sba.cdn.yandex.net/" />
+		<test url="http://ceviri.yandex.net/" />
+		<test url="http://tv-front.content.yandex.net/" />
+		<test url="http://resizer.corba.yandex.net/" />
+		<test url="http://1.cs-ellpic.yandex.net/" />
+		<test url="http://css.yandex.net/" />
+		<test url="http://disk.yandex.net/" />
+		<test url="http://downloader.yandex.net/" />
+		<test url="http://favicon.yandex.net/" />
+		<test url="http://img-css.friends.yandex.net/" />
+		<test url="http://hotels-proxy.yandex.net/" />
+		<test url="http://review-api-external.http.yandex.net/" />
+		<test url="http://img.yandex.net/" />
+		<test url="http://img-fotki.yandex.net/" />
+		<test url="http://img1-fotki.yandex.net/" />
+		<test url="http://img.yandex.net/" />
+		<test url="http://img1-fotki.yandex.net/" />
+		<test url="http://imgl.yandex.net/" />
+		<test url="http://st.kp.yandex.net/" />
+		<test url="http://audio.lingvo.yandex.net/" />
+		<test url="http://webattach.mail.yandex.net/" />
+		<test url="http://mailstatic.yandex.net/" />
+		<test url="http://msoffice.maps.yandex.net/" />
+		<test url="http://vec.maps.yandex.net/" />
+		<test url="http://mdata.yandex.net/" />
+		<test url="http://money.yandex.net/" />
+		<test url="http://resizer-mobile.photo.yandex.net/" />
+		<test url="http://api.rasp.yandex.net/" />
+		<test url="http://static.rasp.yandex.net/" />
+		<test url="http://suburban-widget.rasp.yandex.net/" />
+		<test url="http://resize.yandex.net/" />
+		<test url="http://site.yandex.net/" />
+		<test url="http://static.yandex.net/" />
+		<test url="http://lego.static.yandex.net/" />
+		<test url="http://translate.yandex.net/" />
+		<test url="http://uc-static.yandex.net/" />
+		<test url="http://upics.yandex.net/" />
+		<test url="http://video.yandex.net/" />
+		<test url="http://wbms.yandex.net/" />
+		<test url="http://info.weather.yandex.net/" />
+		<test url="http://img-css.webchat2.yandex.net/" />
+		<test url="http://wfarm.yandex.net/" />
+		<test url="http://wi.yandex.net/" />
+		<test url="http://wimg.yandex.net/" />
+		<test url="http://xss.yandex.net/" />
+		<test url="http://www.yandex.net/" />
+
+		<test url="http://internetometr.download.cdn.yandex.net/" />
+		<test url="http://sandbox.api.maps.yandex.net/" />
+		<test url="http://01.pvec.maps.yandex.net/" />
+
+
+	<!--	Redirect keeps path, args, but not forward slash:
+								-->
+	<rule from="^http://(?:www\.)?yandex\.net/+"
+		to="https://yandex.ru/" />
+
+			<test url="http://yandex.net//" />
+			<test url="http://yandex.net/favicon.ico" />
+			<test url="http://www.yandex.net//" />
+
+	<rule from="^http://(?:www\.)?([^.]+)\.yandex\.net/"
+		to="https://$1.yandex.net/" />
+
+	<rule from="^http://(internetometr\.download\.cdn|sandbox\.api\.maps|0\d\.pvec\.maps)\.yandex\.net/"
+		to="https://$1.yandex.net/" />
+
+	<!--	Here we can enable 4+ level domains with a single regexp,
+		but I've never seen any domains more that 4 levels deep
+		in Yandex network, so I wouldn't enable them now -
+		it may be inconvenient and may broke some services.
+		Only 4-level domains match.
+						-->
+	<rule from="^http://([^.]+)\.([^.]+)\.yandex\.net/"
+		to="https://$1.$2.yandex.net/" />
+</ruleset>

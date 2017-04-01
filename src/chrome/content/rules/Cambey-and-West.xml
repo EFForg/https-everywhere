@@ -1,11 +1,54 @@
-<ruleset name="Cambey &amp; West (partial)">
+<!--
+	Cambey & West
 
-	<target host="cambeywest.com"/>
-	<target host="www.cambeywest.com"/>
 
-	<securecookie host="^(www\.)?cambeywest\.com$" name=".*"/>
+	Nonfunctional hosts in *cambeywest.com:
 
-	<rule from="^http://(www\.)?cambeywest\.com/"
-		to="https://$1cambeywest.com/"/>
+		- ful *
+
+	* Handshake fails
+
+
+	Insecure cookies are set for these hosts:
+
+		- cambeywest.com
+		- www.cambeywest.com
+
+-->
+<ruleset name="Cambey West.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="cambeywest.com" />
+	<target host="www.cambeywest.com" />
+
+	<!--	Complications:
+				-->
+	<target host="ful.cambeywest.com" />
+
+		<!--	All other paths are untested:
+							-->
+		<exclusion pattern="^http://ful\.cambeywest\.com/+(?!$|cwwweb/$)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://ful.cambeywest.com/index" />
+			<test url="http://ful.cambeywest.com/index.asp" />
+			<test url="http://ful.cambeywest.com/index.htm" />
+			<test url="http://ful.cambeywest.com/index.php" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?cambeywest\.com$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://ful\.cambeywest\.com/(?:cwweb)?$"
+		to="https://www.cambeywest.com/cwweb/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

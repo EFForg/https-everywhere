@@ -4,10 +4,15 @@
 
 	Other Brightcove rulesets:
 
+		- Bcove.me.xml
 		- Zencoder.xml
 
 
 	CDN buckets:
+
+		- brightcove01.brightcove.com.edgesuite.net
+
+			- a948.ga.akamai.net
 
 		- brightcove04.brightcove.com.edgesuite.net
 
@@ -25,13 +30,11 @@
 
 			- feeds *
 			- forum **
-			- goku			(refused)
 			- investor ***
-			- link
 			- brightcove04.o	(503, Akamai)
 			- status *
 
-		- brightcove.vo.llnwd.net	(400; CN: *.hs.llnwd.net, .hs. doesn't exist)
+		- brightcove.vo.llnwd.net	(400; .hs. doesn't exist)
 
 	* Reset
 	** Refused
@@ -41,27 +44,32 @@
 	Problematic domains:
 
 		- admin.brightcove.com		(akamai)
+		- brightcove01.brightcove.com ¹
 		- go.brightcove.com		(works; mismatched, CN: secure.eloqua.com)
-		- opensource.brightcove.com	(works; mismatched, CN: *.vorpal.io)
-		- services.brightcove.com	(504, valid cert)
+		- opensource.brightcove.com	(refused)
 
-
-	Partially covered subdomains:
-
-		- (www.) *
-		- blog *
-
-	* Some pages redirect to http
+	¹ Works, akamai
 
 
 	Fully covered subdomains:
 
+		- (www.) *
 		- api
 		- read.appcloud
+		- transcode.appcloud
 		- write.appcloud
+		- blog
 		- brightcove01-secure
 		- developer
 		- docs
+		- images.gallery
+		- goku
+		- img
+		- link
+		- opensource	(→ docs)
+		- signin
+		- solutions
+		- support
 		- videocloud
 
 
@@ -74,12 +82,27 @@
 
 	/101716/rtmp_pd
 
+
+	These altnames don't exist:
+
+		- www.images.gallery.brightcove.com
+		- www.goku.brightcove.com
+		- www.services.brightcove.com
+		- www.signin.brightcove.com
+		- www.solutions.brightcove.com
+		- www.support.brightcove.com
+
+
+	Mixed content:
+
+		- Images on support from img *
+
+	* Secured by us
+
 -->
 <ruleset name="Brightcove (partial)">
 
 	<target host="*.brightcove.com" />
-		<exclusion pattern="^http://(?:www\.)?brightcove\.com/(?!sites/|timetrade-iframe\.html)" />
-		<exclusion pattern="^http://blog\.brightcove\.com/(?!sites/)" />
 		<!--
 			Videos fail to load.
 
@@ -89,8 +112,16 @@
 		<!--
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2013-May/001587.html
 													-->
+		<!--
+			Videos fail to load.
+			https://trac.torproject.org/projects/tor/ticket/12405
+			The Brightcove player loads in an iframe, whose URL gets correctly
+			rewritten to HTTPS. However, that iframe attempts to load a script
+			that runs afoul of the mixed content blocking bug. -->
+		<exclusion pattern="^https://secure.brightcove.com/services/viewer/" />
+
 		<exclusion pattern="^http://admin\.brightcove\.com/viewer/us20[\d\.]+/BrightcoveBootloader\.swf(?:\?|$)" />
-		<!--exclusion pattern="^https?://c\.brightcove\.com/services/messagebroker/amf\?playerId=" /-->
+		<!--exclusion pattern="^http://c\.brightcove\.com/services/messagebroker/amf\?playerId=" /-->
 		<exclusion pattern="^http://admin\.brightcove\.com/viewer/.+\.swf(?:\?|$)" />
 
 	<!--securecookie host="^\.brightcove\.com$" name="^(test|vorpal-signature|vorpal-user)$" /-->
@@ -99,18 +130,20 @@
 	<rule from="^http://c\.brightcove\.com/services/viewer/"
 		to="https://secure.brightcove.com/services/viewer/" />
 
-	<rule from="^http://((?:api|(?:read\.|write\.)?appcloud|blog|brightcove01-secure|docs|files|img|metrics|my|register|secure|signin|videocloud|www)\.)?brightcove\.com/"
+	<rule from="^http://((?:api|(?:read\.|transcode\.|write\.)?appcloud|blog|brightcove01-secure|docs|files|images\.gallery|goku|img|link|metrics|my|register|secure|services|signin|solutions|support|videocloud|www)\.)?brightcove\.com/"
 		to="https://$1brightcove.com/" />
 
-	<!--	At least the homepage redirects to http.
+	<!--	Then everything else to -secure.
 							-->
-	<rule from="^http://support\.brightcove\.com/(en/contact$|sites/)"
-		to="https://support.brightcove.com/$1" />
+	<rule from="^http://brightcove01\.brightcove\.com/"
+		to="https://brightcove01-secure.brightcove.com/" />
 
-	<rule from="^https?://s?admin\.brightcove\.com/"
+	<rule from="^http://s?admin\.brightcove\.com/"
 		to="https://sadmin.brightcove.com/" />
 
-	<rule from="^http://services\.brightcove\.com/"
-		to="https://secure.brightcove.com/" />
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://opensource\.brightcove\.com/+[^?]*"
+		to="https://docs.brightcove.com/en/video-cloud/open-source/" />
 
 </ruleset>

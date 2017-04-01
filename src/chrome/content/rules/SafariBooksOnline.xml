@@ -1,24 +1,64 @@
 <!--
-	Problematic subdomains:
+	CDN buckets:
 
-		- my	(akamai)
+		- my.safaribooksonline.com.global.prod.fastly.net
+		- techbus.safaribooksonline.com.global.prod.fastly.net
+
+		- safaribooksonline.force.com
+
+			- support
+
+
+	Nonfunctional hosts in *safaribooksonline.com:
+
+		- support *
+
+	* Force.com
+
+
+	Problematic hosts in *safaribooksonline.com:
+
+		- my ¹
+		- ssl ²
+		- techbus ¹
+
+	¹ Fastly
+	² Insecure renegotiation
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- my.safaribooksonline.com
+		- .my.safaribooksonline.com
+		- ssl.safaribooksonline.com
+		- .ssl.safaribooksonline.com
+		- techbus.safaribooksonline.com
+		- .techbus.safaribooksonline.com
+		- www.safaribooksonline.com
+		- .www.safaribooksonline.com
 
 -->
-<ruleset name="Safari Books Online">
-  <target host="my.safaribooksonline.com" />
-		<!--
-			Paths relative to / cause images to be fetched from akamai.net/$
-											-->
-		<exclusion pattern="^http://my\.safaribooksonline\.com/static/.+\.css" />
-  <target host="www.safaribooksonline.com" />
+<ruleset name="Safari Books Online.com (partial)">
 
-	<!--	Avoid user-visible paths:
-						-->
-	<rule from="^http://my\.safaribooksonline\.com/(favicon\.ico|images/|static/)"
-		to="https://a248.e.akamai.net/f/1543/1/b/my.safaribooksonline.com/$1" />
+	<!--	Direct rewrites:
+				-->
+	<target host="safaribooksonline.com" />
+	<target host="blog.safaribooksonline.com" />
+	<target host="ssl.safaribooksonline.com" />
+	<target host="www.safaribooksonline.com" />
 
-    <rule from="^http://my\.safaribooksonline\.com/login$"
-        to="https://ssl.safaribooksonline.com/securelogin"/>
-    <rule from="^http://www\.safaribooksonline\.com/Corporate/Index/logIn\.php$"
-        to="https://ssl.safaribooksonline.com/securelogin"/>
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="(my|ssl|techbus)\.safaribooksonline\.com$" name="^cookie-monster$" /-->
+	<!--securecookie host="\.(my|ssl|techbus)\.safaribooksonline\.com$" name="^Safari$" /-->
+	<!--securecookie host="www\.safaribooksonline\.com$" name="^(BrowserCookie|csrftoken|original_referer)$" /-->
+	<!--securecookie host="\.www\.safaribooksonline\.com$" name="^(?:corp_sessionid|csrfsafari)$" /-->
+
+	<securecookie host="(?:ssl|\.?www)\.safaribooksonline\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

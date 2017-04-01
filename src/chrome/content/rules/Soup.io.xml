@@ -1,0 +1,134 @@
+<!--
+	Other Soup rulesets:
+
+		- Soup_CDN.com.xml
+
+
+	Problematic hosts in *soup.io:
+
+		- [\da-f] ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .soup.io
+		- www.soup.io
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on www from fonts.googleapis.com ˢ
+		- Image on www from static.soup.io ˢ
+		- Bug on www from pixel.quantserve.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Soup.io (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="soup.io" />
+	<target host="asset-0.soup.io" />
+	<target host="asset-1.soup.io" />
+	<target host="asset-2.soup.io" />
+	<target host="asset-3.soup.io" />
+	<target host="asset-4.soup.io" />
+	<target host="asset-5.soup.io" />
+	<target host="asset-6.soup.io" />
+	<target host="asset-7.soup.io" />
+	<target host="asset-8.soup.io" />
+	<target host="asset-9.soup.io" />
+	<target host="asset-a.soup.io" />
+	<target host="asset-b.soup.io" />
+	<target host="asset-c.soup.io" />
+	<target host="asset-d.soup.io" />
+	<target host="asset-e.soup.io" />
+	<target host="asset-f.soup.io" />
+	<target host="static.soup.io" />
+	<target host="www.soup.io" />
+
+		<!--	Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.soup\.io/(?:$|\?|signup$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.soup\.io/(?!/*(?:favicon\.ico|images/|login(?:$|[?/])))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.soup.io/about" />
+			<test url="http://www.soup.io/everyone" />
+			<test url="http://www.soup.io/frames/analytics" />
+			<test url="http://www.soup.io/privacy" />
+			<test url="http://www.soup.io/remote/toggle/frame?" />
+			<test url="http://www.soup.io/signup" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.soup.io/favicon.ico" />
+			<test url="http://www.soup.io/images/soup_small.png" />
+			<!--
+				(Mixed content):
+						-->
+			<test url="http://www.soup.io/login" />
+
+		<test url="http://static.soup.io/images/bar/drop.gif" />
+
+	<!--	Complications:
+				-->
+	<target host="0.asset.soup.io" />
+	<target host="1.asset.soup.io" />
+	<target host="2.asset.soup.io" />
+	<target host="3.asset.soup.io" />
+	<target host="4.asset.soup.io" />
+	<target host="5.asset.soup.io" />
+	<target host="6.asset.soup.io" />
+	<target host="7.asset.soup.io" />
+	<target host="8.asset.soup.io" />
+	<target host="9.asset.soup.io" />
+	<target host="a.asset.soup.io" />
+	<target host="b.asset.soup.io" />
+	<target host="c.asset.soup.io" />
+	<target host="d.asset.soup.io" />
+	<target host="e.asset.soup.io" />
+	<target host="f.asset.soup.io" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.soup\.io$" name="^(?:__qca|__utm\w+|soup_pool)$" /-->
+	<!--securecookie host="^www\.soup\.io$" name="^soup_session_id$" /-->
+
+	<securecookie host="^\." name="^__(?:qca$|utm)" />
+
+
+	<rule from="^http://(\w)\.asset\.soup\.io/"
+		to="https://asset-$1.soup.io/" />
+
+		<test url="http://0.asset.soup.io/asset/1539/2240_65c6_500.jpeg" />
+		<test url="http://1.asset.soup.io/asset/4345/4529_01da_390.jpeg" />
+		<test url="http://2.asset.soup.io/asset/3784/8642_df7d.jpeg" />
+		<test url="http://3.asset.soup.io/asset/3810/3683_f2a3_390.jpeg" />
+		<test url="http://4.asset.soup.io/asset/3061/5988_4d48.png" />
+		<test url="http://5.asset.soup.io/asset/0932/6117_09a9.jpeg" />
+		<test url="http://6.asset.soup.io/asset/0661/6294_aaef.jpeg" />
+		<test url="http://7.asset.soup.io/asset/2587/3719_3b0d_960.jpeg" />
+		<test url="http://8.asset.soup.io/asset/3170/9080_6033_480.jpeg" />
+		<test url="http://9.asset.soup.io/asset/2204/2617_36e0.jpeg" />
+		<test url="http://a.asset.soup.io/asset/3290/9786_0213_960.jpeg" />
+		<test url="http://b.asset.soup.io/asset/3743/9787_4343_390.jpeg" />
+		<test url="http://c.asset.soup.io/asset/4582/2300_3c64.jpeg" />
+		<test url="http://d.asset.soup.io/asset/3879/6365_97be.jpeg" />
+		<test url="http://e.asset.soup.io/asset/3708/2638_b88c.jpeg" />
+		<test url="http://f.asset.soup.io/asset/2516/9167_0f28.jpeg" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

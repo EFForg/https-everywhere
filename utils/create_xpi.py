@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/env python2.7
 
 # Uses the Python zip implementation to create deterministic XPI's
 # Author: Yan Zhu, yan@mit.edu
@@ -8,9 +8,10 @@ Usage: python create_xpi.py -x <exclusions> -n <name of zipped file> <directory>
 """
 
 import argparse
-import zipfile_deterministic as zipfile
-import sys
 import glob
+import os
+import sys
+import zipfile_deterministic as zipfile
 
 parser = argparse.ArgumentParser(
     description="Deterministic XPI file creator.")
@@ -34,5 +35,6 @@ compress = zipfile.ZIP_DEFLATED
 
 xpiFile = zipfile.ZipFile(args.xpiname, mode='w', compression=compress)
 
-xpiFile.write_from_directory(args.directory, exclusions, compress_type=compress)
+os.chdir(args.directory)
+xpiFile.write_from_directory(".", exclusions, compress_type=compress)
 xpiFile.close()

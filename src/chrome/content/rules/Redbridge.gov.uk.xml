@@ -1,0 +1,123 @@
+<!--
+	London Borough of Redbridge
+
+	For rules causing false/broken MCB, see Redbridge.gov.uk-falsemixed.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *redbridge.gov.uk:
+
+		- contracts ᵃ
+		- data ⁴
+		- emissions ᵃ
+		- forums ⁴
+		- find ᵃ
+		- mylife ²
+		- planning ⁴
+
+	ᵃ Shows another domain
+	² 200 blank page
+	⁴ 404
+
+
+	Problematic hosts in *redbridge.gov.uk:
+
+		- www2 ˣ
+
+	ˣ Mixed css
+
+
+	Problematic hosts in *redbridge.gov.uk:
+
+		- moderngov ʰ
+
+	ʰ Some pages redirect to http
+
+
+	These altnames do not exist:
+
+		- www.benefits.redbridge.gov.uk
+		- www.payments.redbridge.gov.uk
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.redbridge.gov.uk ᶜ
+		- youchoose.redbridge.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on www2 from $self ˢ
+		- Images on www2 from www.redbridge.gov.uk ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Redbridge.gov.uk (partial)">
+
+	<target host="redbridge.gov.uk" />
+	<target host="benefits.redbridge.gov.uk" />
+	<target host="eforms.redbridge.gov.uk" />
+	<target host="jobs.redbridge.gov.uk" />
+	<target host="moderngov.redbridge.gov.uk" />
+	<target host="payments.redbridge.gov.uk" />
+	<target host="www.redbridge.gov.uk" />
+	<!--target host="www2.redbridge.gov.uk" /-->
+	<target host="youchoose.redbridge.gov.uk" />
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://www2.redbridge.gov.uk/cms/the_council/about_the_council/budget_consultation_2015.aspx" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://moderngov\.redbridge\.gov\.uk/(?:mgUserInfo|mgePetitionListDisplay)\.aspx" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://moderngov\.redbridge\.gov\.uk/(?!/*(?:[Ss]iteSpecific/|TagDocs/|UserData/|(?:ieLogon|ieRegisterUser|mgEPetitionSubmit|mgPasswordReqst|mgRegisterKeywordInterest)\.aspx|jquery-ui/|mgimages/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://moderngov.redbridge.gov.uk/ieDocHome.aspx" />
+			<test url="http://moderngov.redbridge.gov.uk/ieDocSearch.aspx" />
+			<test url="http://moderngov.redbridge.gov.uk/mgCalendarMonthView.aspx" />
+			<test url="http://moderngov.redbridge.gov.uk/mgDelegatedDecisions.aspx" />
+			<test url="http://moderngov.redbridge.gov.uk/mgGeneric.aspx" />
+			<test url="http://moderngov.redbridge.gov.uk/mgListCommittees.aspx" />
+			<test url="http://moderngov.redbridge.gov.uk/mgMemberIndex.aspx" />
+			<test url="http://moderngov.redbridge.gov.uk/mgPlansHome.aspx" />
+			<test url="http://moderngov.redbridge.gov.uk/mgUserInfo.aspx" />
+			<test url="http://moderngov.redbridge.gov.uk/mgWhatsNew.aspx" />
+			<test url="http://moderngov.redbridge.gov.uk/mgePetitionListDisplay.aspx" />
+
+			<!--	-ve:
+					-->
+			<test url="http://moderngov.redbridge.gov.uk/SiteSpecific/ssWordStyles.css" />
+			<test url="http://moderngov.redbridge.gov.uk/TagDocs/3/2/0/T00000023/logo.jpg" />
+			<test url="http://moderngov.redbridge.gov.uk/UserData/9/3/0/Info00000039/bigpic.jpg" />
+			<test url="http://moderngov.redbridge.gov.uk/ieLogon.aspx" />
+			<test url="http://moderngov.redbridge.gov.uk/ieRegisterUser.aspx" />
+			<test url="http://moderngov.redbridge.gov.uk/jquery-ui/css/Smoothness/jquery-ui-1.10.2.custom.min.css" />
+			<test url="http://moderngov.redbridge.gov.uk/mgEPetitionSubmit.aspx" />
+			<test url="http://moderngov.redbridge.gov.uk/mgPasswordReqst.aspx" />
+			<test url="http://moderngov.redbridge.gov.uk/mgRegisterKeywordInterest.aspx" />
+			<test url="http://moderngov.redbridge.gov.uk/mgimages/logo-pdf-1.gif" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.redbridge\.gov\.uk$" name="^Redbridge" /-->
+	<!--securecookie host="^youchoose\.redbridge\.gov\.uk$" name="^YouChooseCookie$" /-->
+
+	<securecookie host="^(?!moderngov\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

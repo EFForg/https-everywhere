@@ -1,21 +1,65 @@
 <!--
+	For rules causing false/broken MCB, see SigFig.com-falsemixed.xml.
+
+
 	CDN buckets:
 
 		- d12ofxxpqkq4dm.cloudfront.net
 		- d7e8o9i11vi0c.cloudfront.net
 
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- beta
+		- secure
+		- support
+
+
+	Partially covered subdomains:
+
+		- blog *
+
+	* Avoiding false/broken MCB
+
+
+	These altnames don't exist:
+
+		- www.support.sigfig.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- blog from $self *
+			- blog from fonts.googleapis.com *
+
+		- Images, on:
+
+			- blog from $self *
+			- blog from \d.gravatar.com *
+			- blog from i\d.wp.com *
+
+		- favicon on blog from $self *
+
+	* Secured by us
+
 -->
-<ruleset name="SigFig">
+<ruleset name="SigFig.com (partial)">
 
 	<target host="sigfig.com" />
 	<target host="*.sigfig.com" />
-	<target host="*.www.sigfig.com" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://blog\.sigfig\.com/+(?!favicon\.ico|wp-content/|wp-includes/)" />
 
 
 	<securecookie host="^\.www\.sigfig\.com$" name=".+" />
 
 
-	<rule from="^http://((?:beta|blog|secure|www)\.)?sigfig\.com/"
+	<rule from="^http://((?:beta|blog|secure|support|www)\.)?sigfig\.com/"
 		to="https://$1sigfig.com/" />
 
 </ruleset>

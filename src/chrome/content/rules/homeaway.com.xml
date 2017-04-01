@@ -1,0 +1,143 @@
+<!--
+	For rules covering resources which do not secure
+	mixed content, see homeaway.com-resources.xml.
+
+	Other HomeAway.com rulesets:
+
+		- vrbo.com.xml
+
+
+	CDN buckets:
+
+		- s225508597.t.eloqua.com	← app.mailaway
+
+
+	Nonfunctional hosts in *homeaway.com:
+
+		- clicklink ᵖ
+		- expedia.help ʰ
+
+	ʰ Redirects to http
+	ᵖ Plaintext reply
+
+
+	Problematic hosts in *homeaway.com:
+
+		- blog ᵐ
+		- mailaway ᵐ
+		- app.mailaway ᵐ
+		- images.mailaway ᵐ
+		- productupdates ᵐ
+
+	ᵐ Mismatched
+
+
+	^homeaway.com: dropped over http & https
+
+
+	These altnames do not exist:
+
+		- www.community.homeaway.com
+		- www.help.homeaway.com
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .homeaway.com
+		- blog.homeaway.com
+		- community.homeaway.com
+		- help.homeaway.com
+		- investors.homeaway.com
+		- .mailaway.homeaway.com
+		- productupdates.homeaway.com
+		- www.homeaway.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on mailaway from images.mailaway.homeaway.com ˢ
+
+		- Images, on:
+		
+			- blog, productupdates from static1.squarespace.com ˢ
+			- blog from pbs.twimg.com ˢ
+			- mailaway from images.mailaway.homeaway.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="HomeAway.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="book.homeaway.com" />
+	<target host="cas.homeaway.com" />
+	<target host="community.homeaway.com" />
+	<!--target host="csvcus.homeaway.com" /-->
+	<target host="help.homeaway.com" />
+	<target host="investors.homeaway.com" />
+	<!--target host="software.homeaway.com" /-->
+	<target host="www.homeaway.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://software\.homeaway\.com/(?:$|rezfest$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://software\.homeaway\.com/(?!/*Themes/)" /-->
+
+			<!--	+ve:
+					-->
+			<!--
+			<test url="http://software.homeaway.com/rezfest" />
+			<test url="http://software.homeaway.com/vacation-rentals" />
+			<test url="http://software.homeaway.com/vacation-rentals/pci-compliance" />
+			-->
+
+			<!--	-ve:
+					-->
+			<!--
+			<test url="http://software.homeaway.com/Themes/Marketing/Content/Images/background.png" />
+			<test url="http://software.homeaway.com/Themes/Marketing/Styles/kickstart-grid.css" />
+			-->
+
+		<!--test url="http://csvcus.homeaway.com/rsrcs/cdn-logos/1.3.0/partners/expedia/logo.png" /-->
+
+	<!--	Complications:
+				-->
+	<target host="app.mailaway.homeaway.com" />
+	<!--target host="images.mailaway.homeaway.com" /-->
+
+		<!--	Mixed content:
+					-->
+		<test url="http://mailaway.homeaway.com/PreferenceCenter" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.homeaway\.com$" name="^SS_MID$" /-->
+	<!--securecookie host="^(?:blog|productupdates)\.homeaway\.com$" name="^crumb$" /-->
+	<!--securecookie host="^community\.homeaway\.com$" name="^(?:BIGipServer|jive\.security\.context$)" /-->
+	<!--securecookie host="^help\.homeaway\.com$" name="^HA_HC_(?:SESSION|USER)$" /-->
+	<!--securecookie host="^investors\.homeaway\.com$" name="(?:^ASP\.NET_SessionId$|ASPX_PUBLIC_LanguageId$|^BIGipServer)" /-->
+	<!--securecookie host="^luxury\.homeaway\.com$" name="^(?:[\da-f-]+|JSESSIONID|ab|ha-cookie-consent|ha-ppc-source|ha[sv])$" /-->
+	<!--securecookie host="^mailaway\.homeaway\.com$" name="^ELOQUA$" /-->
+	<!--securecookie host="^www\.homeaway\.com$" name="^(?:[\da-f-]+|JSESSIONID|ha-cookie-consent|ha[sv])$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--rule from="^http://(?:app|images)\.mailaway\.homeaway\.com/" -->
+	<rule from="^http://app\.mailaway\.homeaway\.com/"
+		to="https://s225508597.t.eloqua.com/" />
+
+		<test url="http://app.mailaway.homeaway.com/e/er?s=225508597&amp;lid=6394" />
+		<!--test url="http://images.mailaway.homeaway.com/EloquaImages/clients/HomeAwayInc/%7B5a63765f-4824-4157-bda8-947535eebf18%7D_flag-as.gif" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -2,24 +2,29 @@
 	For other Trustwave coverage, see Trustwave.xml.
 
 
-	Problematic domains:
+	Insecure cookies are set for these hosts:
 
 		- trustkeeper.net
+		- www.trustkeeper.net
 
 -->
-<ruleset name="TrustKeeper">
+<ruleset name="TrustKeeper.net">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="trustkeeper.net" />
-	<target host="*.trustkeeper.net" />
+	<target host="sealserver.trustkeeper.net" />
+	<target host="www.trustkeeper.net" />
 
 
-	<securecookie host="^www\.trustkeeper\.net$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?trustkeeper\.net$" name="^(?:TKSESSION|i18nloc|sponsorId)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^https?://(?:www\.)?trustkeeper\.net/"
-		to="https://www.trustkeeper.net/" />
-
-	<rule from="^http://sealserver\.trustkeeper\.net/"
-		to="https://sealserver.trustkeeper.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

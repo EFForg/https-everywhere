@@ -1,36 +1,38 @@
 <!--
-	Nonfunctional travelrepublic.co.uk subdomains:
+	Problematic hosts in *travelrepublic.co.uk:
 
-		- blog		(http reply)
-		- static	(refused)
+		- blog *
+		- static *
 
-
-	Problematic domains:
-
-		- travelrepublic.co.uk *
-		- (www.)travelrepublic.com *
-
-	* Cert only matches www.travelrepublic.co.uk
+	* Mismatched
 
 -->
 <ruleset name="Travel Republic (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="travelrepublic.co.uk" />
-	<target host="*.travelrepublic.co.uk" />
+	<target host="m.travelrepublic.co.uk" />
+	<!--target host="static.travelrepublic.co.uk" /-->
+	<target host="www.travelrepublic.co.uk" />
+
 	<target host="travelrepublic.com" />
 	<target host="www.travelrepublic.com" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.travelrepublic.co.uk" />
 
 
 	<securecookie host="^(?:m|www)?\.travelrepublic\.co\.uk$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?travelrepublic\.co\.uk/"
-		to="https://www.travelrepublic.co.uk/" />
+	<!--	Redirect keeps path, args, and forward slash:
+							-->
+	<rule from="^http://blog\.travelrepublic\.co\.uk/"
+		to="https://www.travelrepublic.co.uk/blog/" />
 
-	<rule from="^http://m\.travelrepublic\.co\.uk/"
-		to="https://m.travelrepublic.co.uk/" />
-
-	<rule from="^http://(?:www\.)?travelrepublic\.com/.*"
-		to="https://www.travelrepublic.co.uk/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

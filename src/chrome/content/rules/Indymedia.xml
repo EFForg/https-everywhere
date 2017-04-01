@@ -1,28 +1,234 @@
 <!--
-	Problematic subdomains:
+	Other Indymedia rulesets:
 
-		- ^	(cert only matches www)
+		- Indymedia.nl.xml
+		- Indymedia.org.uk.xml
+		- Northern-Indymedia.org.xml
+
+
+	Nonfunctional hosts in *indymedia.org:
+
+		- argentina ʳ
+		- armenia
+		- austin ʳ
+		- barcelona ᵃ
+		- bc ¹
+		- beirut ²
+		- boston ²
+		- dev.boston ²
+		- bristol	Redirects to http
+		- colorado ᵈ
+		- cyprus ʳ
+		- hu ¹
+		- hungary ¹
+		- istanbul ⁴
+		- japan ᵃ
+		- la ᵖ
+		- lists ³
+		- liveradio ³
+		- mexico ²
+		- miami ²
+		- neworleans ²
+		- newsreal ²
+		- piter ʳ
+		- pittsburgh ʳ
+		- portland ²
+		- portugal ᵖ
+		- print ʳ
+		- pt ᵖ
+		- richmond ²
+		- satellite ²
+		- tech ²
+		- worcester ¹
+
+	⁴ 404
+	¹ Shows another domain
+	ᵃ Shows another domain
+	ᵈ Dropped
+	ᵖ Plaintext reply
+	² Refused
+	ʳ Refused
+	³ Dropped
+
+
+	Problematic hosts in *indymedia.org:
+
+		- abruzzo ᵉ ᵘ
+		- antwerpen ᵐ
+		- barcelona ⁵
+		- calabria ᵉ ᵘ
+		- www.belgium ᵐ
+		- ch ²
+		- chat ¹ ²
+		- emiliaromagna ᵉ ᵘ
+		- grenoble ³
+		- irc ¹
+		- israel ¹ ² ⁴
+		- italy	¹ ⁵
+		- lille ³
+		- manila ²
+		- napoli ᵉ ᵘ
+		- netherlands ²
+		- northern ¹ ²
+		- nottingham ² ⁶
+		- perth ᵐ
+		- piemonte ᵉ ᵘ ˣ
+		- publish.portland ¹ ⁶
+		- roma ¹ ⁵
+		- swizerland ²
+		- ukraine ¹ ᵀ
+
+	ᵀ CAcert
+	¹ Expired
+	ᵉ Expired
+	² Mismatched
+	ᵐ Mismatched
+	³ Self-signed
+	⁴ Missing certificate chain
+	⁵ Untrusted root
+	ᵘ Untrusted root
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+	⁶ CAcert
+
+
+	STS header includes includeSubdomains
+	for belgium, brussels, bruxelles, bxl, grenoble, nantes
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .israel.indymedia.org
+		- nantes.indymedia.org
+		- .nantes.indymedia.org
+		- www.nantes.indymedia.org
+		- publish.nyc.indymedia.org
+		- publish.indymedia.org
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+
+			- piemonte from $self
+
+		- Images, on:
+
+			- (www.)?, publish from www.indymedia.org ˢ
+			- barcelona from $self
+			- piemonte from $self
+
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Indymedia.org" platform="cacert">
-  <target host="indymedia.org" />
-  <target host="*.indymedia.org" />
-  <target host="indymedia.org.uk" />
-  <target host="*.indymedia.org.uk" />
-  <target host="northern-indymedia.org" />
-  <target host="*.northern-indymedia.org" />
+<ruleset name="Indymedia.org (partial)">
 
-<!--
+	<!--	Direct rewrites:
+				-->
+	<target host="indymedia.org" />
+	<target host="athens.indymedia.org" />
+	<target host="belarus.indymedia.org" />
+	<target host="www.belarus.indymedia.org" />
+	<target host="belgium.indymedia.org" />
+	<target host="*.belgium.indymedia.org" />
+	<target host="brussels.indymedia.org" />
+	<target host="*.brussels.indymedia.org" />
+	<target host="bruxelles.indymedia.org" />
+	<target host="*.bruxelles.indymedia.org" />
+	<target host="bxl.indymedia.org" />
+	<target host="*.bxl.indymedia.org" />
+	<target host="de.indymedia.org" />
+	<target host="docs.indymedia.org" />
+	<target host="www.docs.indymedia.org" />
+	<target host="grenoble.indymedia.org" />
+	<target host="*.grenoble.indymedia.org" />
+	<target host="lille.indymedia.org" />
+	<target host="www.lille.indymedia.org" />
+	<target host="linksunten.indymedia.org" />
+	<target host="www.linksunten.indymedia.org" />
+	<target host="nantes.indymedia.org" />
+	<target host="*.nantes.indymedia.org" />
+	<target host="nyc.indymedia.org" />
+	<target host="publish.nyc.indymedia.org" />
+	<target host="www.nyc.indymedia.org" />
+	<target host="pouget.indymedia.org" />
+	<target host="publish.indymedia.org" />
+	<target host="wichmann.indymedia.org" />
+	<target host="www.indymedia.org" />
+
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="http://(?:[^./]+\.){2,}(?:belgium|brussels|bruxelles|bxl|grenoble|nantes)\.indymedia\.org/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.belgium.indymedia.org/" />
+			<test url="http://exists.not.belgium.indymedia.org/" />
+			<test url="http://this.host.brussels.indymedia.org/" />
+			<test url="http://exists.not.brussels.indymedia.org/" />
+			<test url="http://this.host.bruxelles.indymedia.org/" />
+			<test url="http://exists.not.bruxelles.indymedia.org/" />
+			<test url="http://this.host.bxl.indymedia.org/" />
+			<test url="http://exists.not.bxl.indymedia.org/" />
+			<test url="http://this.host.grenoble.indymedia.org/" />
+			<test url="http://exists.not.grenoble.indymedia.org/" />
+			<test url="http://this.host.nantes.indymedia.org/" />
+			<test url="http://exists.not.nantes.indymedia.org/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.belgium.indymedia.org/" />
+			<test url="http://www.brussels.indymedia.org/" />
+			<test url="http://www.bxl.indymedia.org/" />
+			<test url="http://next.grenoble.indymedia.org/" />
+			<test url="http://www.grenoble.indymedia.org/" />
+			<test url="http://www.nantes.indymedia.org/" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<test url="http://publish.nyc.indymedia.org/nyc/servlet/OpenMir" />
+		<test url="http://publish.indymedia.org/earth/servlet/OpenMir" />
+
+	<!--	Complications:
+				-->
+	<target host="netherlands.indymedia.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.israel\.indymedia\.org$" name="^SESS[\da-f]{32}$" /-->
+	<!--securecookie host="^(?:www\.)?nantes\.indymedia\.org$" name="^(?:_session_id|flash)$" /-->
+	<!--securecookie host="^\.nantes\.indymedia\.org$" name="^_session_id$" /-->
+	<!--securecookie host="^publish\.(?:nyc\.)?indymedia\.org$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^publish\.indymedia\.org$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://www\.belgium\.indymedia\.org/"
+		to="https://belgium.indymedia.org/" />
+
+	<rule from="^http://netherlands\.indymedia\.org/"
+		to="https://www.indymedia.nl/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+
+<!--	Old exclusions and notes follow for reference purposes.
+
+
  This is a ruleset for the https-everywhere extension for firefox.
  for more info see https://www.eff.org/https-everywhere
 
- to install install the extension put this file in
+ to install the extension put this file in
   ~/.mozilla/your.profile/HTTPSEverywhereUserRules
--->
-<!-- 2010/07/14 Version 0.1 chekov(at-sign)riseup.net -->
-<!--
+
+ 2010/07/14 Version 0.1 chekov(at-sign)riseup.net
+
  scope of this document:
-  indymedia.org based imcs and infrastrucure
+  indymedia.org based imcs and infrastructure
   it also includes the indymedia.org.uk and the northern-indymedia.org ans northernindymedia.org domains
   discuss this document at the im-tech list from lists.indymedia.org
   not including indymedia.us, indymedia.org.il and the like
@@ -30,63 +236,36 @@
  2010-06-23 report on tested sites:
  == working ==
  "global"
- volunteer, irc, chat, lists
- radio, docs, mir
- biotech, video, keys
+ radio, mir
+ keys
 
  linksunten
 
  == failed ==
- ambazonia|austin|beirut|bergstedt|blackcat|bulgaria|canarias|chiapas|
- colorado|dc|dl1\.video|hm|hudsonmohawk|jakarta|korea|laplana|lille1|mail\.se
- |minneapolis|mke|nettlau|newsreal|nycap|old\.estrecho|ottawa|perth|pl|
- rochester|romania|rous|russia|shiva|sweden|twincities|victoria|wmass|worcester|www1\.mexico|mexico|www3\.ch
+ ambazonia|beirut|bergstedt|blackcat|bulgaria|canarias|chiapas|
+ dc|dl1\.video|hm|hudsonmohawk|jakarta|korea|laplana|lille1|mail\.se
+ |minneapolis|mke|nettlau|newsreal|nycap|ottawa|perth|pl|
+ rochester|romania|rous|russia|shiva|sweden|twincities|victoria|wmass|worcester|www1\.mexico|www3\.ch
 
- print, satellite, translations
- india, italia
--->
+ translations
+ italia
 
-  <!-- global -->
-  <rule from="^http://(?:www\.)?indymedia\.org/" to="https://www.indymedia.org/"/>
 
-  <!-- exclusion for infrastructure -->
-  <exclusion pattern="^http://(?:www\.)?(?:print|translations|satellite)\.indymedia\.org/"/>
+  exclusion for infrastructure
+  <exclusion pattern="^http://(?:www\.)?translations\.indymedia\.org/"/>
 
-  <!-- exclusion for imcs -->
+  exclusion for imcs
 
-  <exclusion pattern="^http://(?:www\.)?(?:de|pr|india|italia|beirut)\.indymedia\.org/"/>
+  <exclusion pattern="^http://(?:www\.)?(?:pr|italia|beirut)\.indymedia\.org/"/>
 
-  <exclusion pattern="^http://(?:ambazonia|atlanta|austin|beirut|bergstedt|blackcat|bulgaria|canarias|chiapas|colorado|dc|dl1\.video|hm|hudsonmohawk|jakarta|korea|laplana|lille1|mail\.se|minneapolis|mke|nettlau|newsreal|nycap|old\.estrecho|ottawa|perth|pl|rochester|romania|rous|russia|shiva|sweden|twincities|victoria|wmass|worcester|(?:www(1)?\.)?mexico|www3\.ch)\.indymedia\.org/"/>
+  <exclusion pattern="^http://(?:ambazonia|atlanta|beirut|bergstedt|blackcat|bulgaria|canarias|chiapas|dc|dl1\.video|hm|hudsonmohawk|jakarta|korea|laplana|lille1|mail\.se|minneapolis|mke|nettlau|newsreal|nycap|ottawa|perth|pl|rochester|romania|rous|russia|shiva|sweden|twincities|victoria|wmass|worcester|www1?\.mexico|www3\.ch)\.indymedia\.org/"/>
   <exclusion pattern="^http://(?:media[12]?\.argentina|buscador\.argentina)\.indymedia\.org/"/>
-  <exclusion pattern="^http://(?:(?:dev\.)?boston)\.indymedia\.org/"/>
   <exclusion pattern="^http://(?:(?:www2?\.)?brasil|brazil)\.indymedia\.org/"/>
-  <exclusion pattern="^http://(?:chicago|chicago2|www0\.chicago|dev\.chicago)\.indymedia\.org/"/>
-  <exclusion pattern="^http://(?:de|media[12]?\.de|www[23]\.de|www[23]\.germany)\.indymedia\.org/"/>
-  <exclusion pattern="^http://(?:(?:www[12]\.)?istanbul|media2?\.istanbul|bagimsiz-istanbul|istanbul\.bbm)\.indymedia\.org/"/>
+  <exclusion pattern="^http://(?:chicago2|www0\.chicago|dev\.chicago)\.indymedia\.org/"/>
+  <exclusion pattern="^http://(?:media[12]?\.de|www[23]\.de|www[23]\.germany)\.indymedia\.org/"/>
+  <exclusion pattern="^http://(?:www[12]\.istanbul|media2?\.istanbul|bagimsiz-istanbul|istanbul\.bbm)\.indymedia\.org/"/>
   <exclusion pattern="^http://(?:(?:publish\.)?sandiego)\.indymedia\.org/"/>
 
-  <!-- domains with www prefix -->
-  <rule from="^http://www\.([^/:@\.]+)\.indymedia\.org/" to="https://www.$1.indymedia.org/"/>
-
-  <!-- doamins without www as prefix -->
-  <rule from="^http://([^/:@\.]+)\.indymedia\.org/" to="https://$1.indymedia.org/"/>
-
-  <!-- indymedia.org.uk -->
-  <rule from="^http://indymedia\.org\.uk/" to="https://indymedia.org.uk/"/>
-  <rule from="^http://(london|notts|sheffield)\.indymedia\.org\.uk/" to="https://$1.indymedia.org.uk/"/>
-  <rule from="^http://www\.(london|notts|sheffield)\.indymedia\.org\.uk/" to="https://www.$1.indymedia.org.uk/"/>
-
-  <!-- northern-indymedia.org -->
-<!--
-https same as http: www.northern-indymedia.org, www.northern-indymedia.org , northern-indymedia.org, m.northern-indymedia.org
-					mobi.northern-indymedia.org, mobile.northern-indymedia.org, wap.northern-indymedia.org
-https differs http: mob.northern-indymedia.org, joinin.northern-indymedia.org, radio.northern-indymedia.org
-					indyzines.northern-indymedia.org, sol.northern-indymedia.org, list.northern-indymedia.org
-					lists.northern-indymedia.org, mailinglist.northern-indymedia.org
 -->
-  <rule from="^http://northern-indymedia\.org/" to="https://northern-indymedia.org/"/>
-  <rule from="^http://(www|m|mobi|mobile|wap)\.northern-indymedia\.org/" to="https://$1.northern-indymedia.org/"/>
-  <!-- northernindymedia.org -->
-  <rule from="^http://(www\.)?northernindymedia\.org/" to="https://$1northern-indymedia.org/"/>
 
 </ruleset>

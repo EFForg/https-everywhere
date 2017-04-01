@@ -1,16 +1,78 @@
-<ruleset name="ShortList">
+<!--
+	For other Global Marketing Strategies coverage, see Global-Marketing-Strategies.xml.
 
+
+	NB: Tor users cannot view* this website due to CloudFlare settings.
+
+	See:
+
+		- https://blog.torproject.org/blog/call-arms-helping-internet-services-accept-anonymous-users
+		- https://support.cloudflare.com/hc/en-us/articles/203306930-Does-CloudFlare-block-Tor-
+		- https://support.cloudflare.com/hc/en-us/articles/200170206-How-do-I-turn-I-m-Under-Attack-mode-on-
+
+	* without enabling javascript, for security and privacy implications see e.g.:
+
+		- https://www.mozilla.org/security/known-vulnerabilities/firefox.html
+		- https://trac.torproject.org/projects/tor/query?status=!closed&keywords=~tbb-fingerprinting
+		- https://panopticlick.eff.org
+
+
+	Problematic hosts in *shorlist.com:
+
+		- ^ ᶜ
+		- \d.darkroom ᵐ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains:
+
+		- .shortlist.com
+
+
+	Mixed content:
+
+		- Images on www from \d.darkroom.shortlist.com ˢ
+		- Bug on www from b.scorecardresearch.com ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="ShortList.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="admin.shortlist.com" />
+	<target host="cdn.shortlist.com" />
+	<target host="darkroom.shortlist.com" />
+	<target host="www.shortlist.com" />
+
+	<!--	Complications:
+				-->
 	<target host="shortlist.com" />
-	<target host="*.shortlist.com" />
+	<target host="1.darkroom.shortlist.com" />
+	<target host="2.darkroom.shortlist.com" />
+	<target host="3.darkroom.shortlist.com" />
+	<target host="4.darkroom.shortlist.com" />
+	<target host="5.darkroom.shortlist.com" />
+	<target host="6.darkroom.shortlist.com" />
 
 
-	<securecookie host="^(?:www\.)?shortlist\.com$" name=".+" />
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.shortlist\.com$" name="^(__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(www\.)?shortlist\.com/"
-		to="https://$1shortlist.com/" />
+	<rule from="^http://shortlist\.com/"
+		to="https://www.shortlist.com/" />
 
-	<rule from="^https?://cdn\.shortlist\.com/"
-		to="https://d20z6n9g3vmn1.cloudfront.net/" />
+	<rule from="^http://\d\.darkroom\.shortlist\.com/"
+		to="https://darkroom.shortlist.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

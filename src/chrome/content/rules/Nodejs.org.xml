@@ -1,0 +1,60 @@
+<!--
+	For other Joyent coverage, see Joyent.xml.
+
+
+	Nonfunctional hosts in *nodejs.org:
+
+		- build *
+		- logs *
+
+	¹ Shows ^nodejs.org
+	* Refused
+
+
+	Problematic hosts in *nodejs.org:
+
+		- blog *
+		- jobs ¹
+
+	* Redirects to http
+	¹ Mismatched, CN: *.simply-partner.com
+
+
+	Mixed content:
+
+		- css on jobs from fonts.googleapis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="nodejs.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="nodejs.org" />
+	<target host="www.nodejs.org" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.nodejs.org" />
+
+
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.nodejs\.org$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://blog\.nodejs\.org/[^?]*"
+		to="https://nodejs.org/" />
+
+		<test url="http://blog.nodejs.org/home.php" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

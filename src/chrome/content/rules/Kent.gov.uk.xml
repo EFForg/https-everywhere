@@ -1,0 +1,119 @@
+<!--
+	Kent City Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *kent.gov.uk:
+
+		- beta ʰ
+		- local ʰ
+		- whatson ʳ
+
+	ʰ Redirects to http
+	ʳ Refused
+
+
+	Problematic hosts in *kent.gov.uk:
+
+		- consult ᵐ
+		- (www.)?consultations ᵐ ˢ
+		- digital ʳ
+		- www.eis ᵐ
+
+	ᵐ Mismatched
+	ʳ Refused, preemptable redirect
+	ˢ Self-signed
+
+
+	These altnames don't exist:
+	
+		- www.ola.kent.gov.uk
+
+	
+	Insecure cookies are set for these hosts: ᶜ
+
+		- beta.kent.gov.uk
+		- consult.kent.gov.uk
+		- democracy.kent.gov.uk
+		- www.eis.kent.gov.uk
+		- netloan.kent.gov.uk
+		- oktd.kent.gov.uk
+		- admin.oktd.kent.gov.uk
+		- open.kent.gov.uk
+		- admin.open.kent.gov.uk
+		- shareweb.kent.gov.uk
+		- webapps.kent.gov.uk
+		- www.kent.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+		
+			- consultations from fonts.googleapis.com ˢ
+			- www.eis, oktd, admin.oktd, open, admin.open from www.google.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Kent.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="kent.gov.uk" />
+	<target host="democracy.kent.gov.uk" />
+	<target host="netloan.kent.gov.uk" />
+	<target host="oktd.kent.gov.uk" />
+	<target host="admin.oktd.kent.gov.uk" />
+	<target host="ola.kent.gov.uk" />
+	<target host="open.kent.gov.uk" />
+	<target host="admin.open.kent.gov.uk" />
+	<target host="shareweb.kent.gov.uk" />
+	<target host="webapps.kent.gov.uk" />
+	<target host="www.kent.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="consult.kent.gov.uk" />
+	<target host="digital.kent.gov.uk" />
+	<target host="www.eis.kent.gov.uk" />
+
+		<!--	Formerly redirected to http:
+							-->
+		<test url="http://www.kent.gov.uk/about-the-council" />
+		<test url="http://www.kent.gov.uk/business/trading-standards/consumer-protection/consumer-alerts" />
+		<test url="http://www.kent.gov.uk/roads-and-travel" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^consult\.kent\.gov\.uk$" name="^(?:JSESSION|Server)ID$" /-->
+	<!--securecookie host="^(?:democracy|netloan)\.kent\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^(?:www\.eis|shareweb|webapps)\.kent\.gov\.uk$" name="^ISAWPLB\{[\dA-F]{8}(?:-[\da-f]{4}){3}-[\dA-F]{8}\}$" /-->
+	<!--securecookie host="^(?:oktd|admin\.oktd|open|admin\.open)\.kent\.gov\.uk$" name="^(?:CFGLOBALS|CFID|CFTOKEN|ISAWPLB\{[\dA-F]{8}(?:-[\da-f]{4}){3}-[\dA-F]{8}\})$" /-->
+	<!--securecookie host="^(?:beta|www)\.kent\.gov\.uk$" name="^SQ_SYSTEM_SESSION$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://consult\.kent\.gov\.uk/"
+		to="https://kent-consult.objective.co.uk/" />
+
+	<!--	Redirect keeps path amd args,
+		but not forward slash:
+					-->
+	<rule from="^http://digital\.kent\.gov\.uk/+"
+		to="https://www.youtube.com/KentCountyCouncil" />
+
+		<test url="http://digital.kent.gov.uk//" />
+
+	<rule from="^http://www\.eis\.kent\.gov\.uk/"
+		to="https://www.eiskent.co.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

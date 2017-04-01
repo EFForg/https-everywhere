@@ -1,30 +1,44 @@
 <!--
-		- sendgrid.zendesk.com
+	Nonfunctional hosts in *sendgrid.com:
 
-			- support
+		- labs *
 
-
-	Problematic subdomains:
-
-		- assets[1-4]	(mismatched, CN: sendgrid.com)
-		- support	(pages redirect to http, zendesk)
+	* Refused
 
 
-	Some pages redirect to http.
+	These altnames don't exist:
+
+		- www.community.sendgrid.com
+		- www.support.sendgrid.com
+
+
+	Insecure cookies are set for these domains:
+
+		- .sendgrid.com
 
 -->
 <ruleset name="SendGrid.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="sendgrid.com" />
-	<target host="*.sendgrid.com" />
-		<!--exclusion pattern="^http://(www\.)?sendgrid\.com/($|\?|newsletter/getSubscriptionWidget)" /-->
-		<exclusion pattern="^http://(?:www\.)?sendgrid\.com/(?!assets_ca/|favicon\.ico|(?:femr/turn_iframe|user)(?:$|[?/])|images/|mkt/assets/)" />
+	<target host="assets1.sendgrid.com" />
+	<target host="assets2.sendgrid.com" />
+	<target host="assets3.sendgrid.com" />
+	<target host="assets4.sendgrid.com" />
+	<target host="community.sendgrid.com" />
+	<target host="support.sendgrid.com" />
+	<target host="www.sendgrid.com" />
 
 
-	<rule from="^http://(?:assets\d\.|(www\.))?sendgrid\.com/"
-		to="https://$1sendgrid.com/" />
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.sendgrid\.com$" name="^(__cfduid|cf_clearance)$" /-->
 
-	<rule from="^http://support\.sendgrid\.com/(assets/|favicon\.ico|system/)"
-		to="https://assets.zendesk.com/$1" />
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

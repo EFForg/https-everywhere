@@ -1,50 +1,67 @@
 <!--
-	Nonfunctional subdomains:
+	Other Inria rulesets:
 
+		- Interstices.info.xml
+
+
+	Nonfunctional hosts in *inria.fr:
+
+		- prosecco.gforge *
 		- siteadmin.gforge
+		- voda.gforge *
 		- hal	(http reply)
 		- phototheque *
+		- prosecco ³
+		- sas2015	(Redirects to http)
 		- videotheque *
 
 	* Dropped
+	³ Redirects to www
 
 
-	Problematic subdomains:
+	Problematic hosts in *inria.fr:
 
+		- admin-www ¹
 		- en	(mismatched, CN: admin-www)
+		- planete ²
+
+	¹ Expired
+	² Mismatched
 
 
-	Fully covered subdomains:
-
-		- admin-www
-		- annuaire
-		- cas
-		- gforge
-		- lists.gforge
-		- gforge-qualif
-		- lists.gforge-qualif
-		- intranet
-		- planete
-		- raweb
-		- site
-		- sympa
-		- utop
-		- www
+	gforge-qualif, lists.gforge-qualif: Dropped over http & https
 
 -->
 <ruleset name="Inria.fr (partial)">
 
-	<target host="*.inria.fr" />
-	<target host="lists.*.inria.fr" />
+	<!--	Direct rewrites:
+				-->
+	<!--target host="admin-www.inria.fr" /-->
+	<target host="annuaire.inria.fr" />
+	<target host="cas.inria.fr" />
+	<target host="gforge.inria.fr" />
+	<target host="lists.gforge.inria.fr" />
+	<target host="intranet.inria.fr" />
+	<!--target host="planete.inria.fr" /-->
+	<target host="raweb.inria.fr" />
+	<target host="site.inria.fr" />
+	<target host="sympa.inria.fr" />
+	<target host="utop.inria.fr" />
+	<target host="www.inria.fr" />
+	<target host="www-sop.inria.fr" />
+
+	<!--	Complications:
+				-->
+	<target host="en.inria.fr" />
 
 
-	<securecookie host="^.+\.inria\.fr$" name=".+" />
+	<securecookie host="^(?!\.inria\.fr$)." name="." />
 
 
-	<rule from="^http://(admin-www|annuaire|cas|(?:lists\.)?gforge(?:-qualif)?|planete|raweb|site|sympa|utop|www)\.inria\.fr/"
-		to="https://$1.inria.fr/" />
-
-	<rule from="^https?://en\.inria\.fr/"
+	<rule from="^http://en\.inria\.fr/"
 		to="https://www.inria.fr/en/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

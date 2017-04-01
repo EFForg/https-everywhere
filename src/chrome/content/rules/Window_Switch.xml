@@ -1,16 +1,30 @@
-<ruleset name="Window Switch">
+<!--
+	Insecure cookies are set for these hosts: ᶜ
+
+		- winswitch.org
+		- www.winswitch.org
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Win Switch.org">
 
 	<target host="winswitch.org" />
 	<target host="www.winswitch.org" />
 
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://winswitch.org/trac/" /-->
 
-	<securecookie host="^winswitch\.org$" name=".+" />
 
-
-	<!--	www redirects to ^ over http,
-		so copy that behavior:
+	<!--	Not secured by server:
 					-->
-	<rule from="^http://(?:www\.)?winswitch\.org/"
-		to="https://winswitch.org/" />
+	<!--securecookie host="^(?:www\.)?winswitch\.org$" name="^trac_(?:form_token|session)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

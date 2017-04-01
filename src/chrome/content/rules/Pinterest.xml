@@ -1,4 +1,9 @@
 <!--
+	Other Pinterest rulesets:
+
+		- Pinimg.com.xml
+
+
 	Yo Dawg:
 
 		- a248.e.akamai.net/media.pinterest.com.s3.amazonaws.com/
@@ -10,40 +15,22 @@
 
 		- wac.7a97.edgecastcdn.net/...
 
-			- media-cache-is0.pinimg.com
-			- media-cache-ec0.pinterest.com
 			- passets-ec.pinterest.com
-
-		- cs89.wac.edgecastcdn.net/...
-
-			- s-passets-ec.pinimg.com
-			- s-media-cache-ec\d.pinimg.com
 
 		- cs30\d.wac.edgecastcdn.net/...
 
 			- media-cache-ec\d.pinterest.com
 
 		- media-cache\d.pinterest.com.edgesuite.net
-
-			- media-cache\d.pinterest.com
-
 		- media-cdn.pinterest.com.edgesuite.net
-
-			- passets-cdn.pinterest.com
-
 		- passets-ak.pinterest.com.edgesuite.net
-
 		- pinit-cdn.pinterest.com.edgesuite.net
-
-			- pinit-cdn.pinterest.com
 
 		- assets.cdn.pinterest.com.c.footprint.net
 
 			- passets-lt.pinterest.com
 
 		- cdn.pinterest.com.c.footprint.net/...
-
-			- media-cache-lt\d.pinterest.com
 
 		- pinterest.zendesk.com
 
@@ -53,118 +40,108 @@
 	Nonfunctional domains:
 
 		- blog.pinterest.com		(tumblr)
-		- business.pinterest.com
 
 
 	Problematic domains:
 
-		- media-cache-is0.pinimg.com *
-
 		- pinterest.com subdomains:
 
 			- blog-assets	(cloudfront)
+			- media-cache-ec[01] *
 			- passets-ak **
-			- passets-cdn **
-			- passets-ec *
 			- passets-lt	(times out)
-			- pinit-cdn **
 
 	* CN: gp1.wac.edgecastcdn.net
 	** akamai
 
 
-	Partially covered domains:
-
-		- (www.)pinterest.com
-
-			-  At least the homepage started redirecting to http:
-
-				https://mail1.eff.org/pipermail/https-everywhere-rules/2012-October/001339.html
-
-			- pin/ started redirecting to http
-
-			- as did:
-
-				- ${user}/
-				- ${user}/${gallery}/
-
-
 	Fully covered domains:
-
-		- pinimg.com subdomains:
-
-			- media-cache-is\d	(→ a248.e.akamai.net/media.pinterest.com.s3.amazonaws.com/)
-			- s-media-cache-ec\d
-			- s-passets-ec
 
 		- pinterest.com subdomains:
 
+			- (www.)?
 			- about
 			- api
 			- assets
 			- blog-assets
+			- business
+			- ct
 			- help
 
 			- *.help:
 
 				- en
 
+			- in
 			- log
 			- m
-			- media-cache
-			- media-cache\d
-			- media-cache-ec\d
-			- media-cache-lt\d
+			- media-cache-ec[01]	(→ akamai)
 			- partners-api
-			- passets-ak
+			- passets-ak	(→ akamai)
 			- passets-cdn
 			- passets-ec
 			- passets-lt	(→ akamai)
-			- pinit-cdn
 			- support
+			- uk
 			- widgets
 
+
+	Insecure cookies are set for these domains:
+
+		- .pinterest.com
+
 -->
-<ruleset name="Pinterest (partial)">
+<ruleset name="Pinterest.com (partial)">
 
-	<target host="*.pinimg.com" />
+	<!--	Direct rewrites:
+				-->
 	<target host="pinterest.com" />
-	<target host="*.pinterest.com" />
-		<!--exclusion pattern="^http://(www\.)?pinterest\.com/($|\?|favicon\.ico|_/_/about/)" /-->
-		<exclusion pattern="^http://(?:www\.)?pinterest\.com/(?:board/|pin/|(?:\w+/)?\w+/*(?:$|\?))" />
+	<target host="about.pinterest.com" />
+	<target host="api.pinterest.com" />
+	<target host="assets.pinterest.com" />
+	<target host="business.pinterest.com" />
+	<target host="ct.pinterest.com" />
+	<target host="help.pinterest.com" />
+	<target host="*.help.pinterest.com" />
+	<target host="log.pinterest.com" />
+	<target host="in.pinterest.com" />
+	<target host="m.pinterest.com" />
+	<target host="partners-api.pinterest.com" />
+	<target host="passets-cdn.pinterest.com" />
+	<target host="passets-ec.pinterest.com" />
+	<target host="support.pinterest.com" />
+	<target host="widgets.pinterest.com" />
+	<target host="uk.pinterest.com" />
+	<target host="www.pinterest.com" />
+
+	<!--	Special cases:
+				-->
+	<target host="blog-assets.pinterest.com" />
+	<target host="media-cache-ec0.pinterest.com" />
+	<target host="media-cache-ec1.pinterest.com" />
+	<target host="passets-ak.pinterest.com" />
+	<target host="passets-lt.pinterest.com" />
 
 
-	<!--securecookie host="^\.pinterest\.com$" name="^(csrftoken|_pinterest_sess|__utm\w|_zendesk_session|_zendesk_shared_session)$" /-->
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.pinterest\.com$" name="^csrftoken$" /-->
+
+	<!--securecookie host="^\.pinterest\.com$" name="^(_pinterest_sess|__utm\w|_zendesk_session|_zendesk_shared_session)$" /-->
 	<securecookie host="^\.pinterest\.com$" name="^(?:__utm\w|_zendesk_session|_zendesk_shared_session)$" />
 	<securecookie host="^(?:\w\w\.)?help\.pinterest\.com$" name=".+" />
 
 
-	<!--	Handles s-media-cache-ec\d & s-passets-ec.
-								-->
-	<rule from="^http://s-([\w-]+)-ec(\d)?\.pinimg\.com/"
-		to="https://s-$1-ec$2.pinimg.com/" />
-
-	<rule from="^http://((?:about|api|assets|help|\w\w\.help|log|m|partners-api|support|widgets|www)\.)?pinterest\.com/"
-		to="https://$1pinterest.com/" />
-
 	<rule from="^http://blog-assets\.pinterest\.com/"
 		to="https://d5eppwnwxs8d9.cloudfront.net/" />
 
-	<rule from="^http://media-cache(?:\d|-\w\w\d)?\.pin(?:img|terest)\.com/"
-		to="https://a248.e.akamai.net/media.pinterest.com.s3.amazonaws.com/" />
+	<rule from="^http://media-cache-ec[01]\.pinterest\.com/"
+		to="https://s-media-cache-ec0.pinimg.com/" />
 
-	<!--	We can't rewrite this stylesheet to akamai,
-		as it links resources relative to /
+	<rule from="^http://passets-(?:ak|lt)\.pinterest\.com/"
+		to="https://s-passets-cache-ak0.pinimg.com/" />
 
-			https://mail1.eff.org/pipermail/https-everywhere-rules/2013-August/001663.html
-													-->
-	<rule from="^http://passets-\w\w\.pinterest\.com/webapp/app/desktop/bundle\.(\w{8})\.css"
-		to="https://s-passets-ec.pinimg.com/webapp/app/desktop/bundle.$1.css" />
-
-	<rule from="^http://passets-ak\.pinterest\.com/"
-		to="https://a248.e.akamai.net/f/1586/2045/10m/passets-ak.pinterest.com/" />
-
-	<rule from="^http://p(?:assets-(?:cdn|ec|lt)|init-cdn)\.pinterest\.com/"
-		to="https://a248.e.akamai.net/passets.pinterest.com.s3.amazonaws.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

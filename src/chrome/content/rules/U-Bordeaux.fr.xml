@@ -1,0 +1,45 @@
+<!--
+	Problematic hosts in *u-bordeaux.fr:
+
+		- ^ ¹
+		- activation ²
+
+	¹ Mismatched
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- personnels.u-bordeaux.fr
+
+-->
+<ruleset name="U-Bordeaux.fr (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="activation.u-bordeaux.fr" /-->
+	<target host="cas.u-bordeaux.fr" />
+	<target host="ent.u-bordeaux.fr" />
+	<target host="personnels.u-bordeaux.fr" />
+	<target host="www.u-bordeaux.fr" />
+
+	<!--	Complications:
+				-->
+	<target host="u-bordeaux.fr" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^ent\.u-bordeaux\.fr$" name="^TOMCAT_STICKY$" /-->
+	<!--securecookie host="^personnels\.u-bordeaux\.fr$" name="^eZSESSID$" /-->
+
+	<securecookie host="^(?:ent|personnels)\.u-bordeaux\.fr$" name=".+" />
+
+
+	<rule from="^http://u-bordeaux\.fr/"
+		to="https://www.u-bordeaux.fr/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

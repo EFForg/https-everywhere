@@ -1,37 +1,38 @@
 <!--
-	Nonfunctional:
+	Nonfunctional subdomains:
 
-		- blog.proofpoint.com		(times out; hosted on Typepad)
-		- investors.proofpoint.com	(cert: *.shareholder.com; 403)
+		- blog ¹
+		- investors ²
+
+	¹ Typepad
+	² Shareholder
 
 -->
 <ruleset name="Proofpoint (partial)">
 
 	<target host="proofpoint.com" />
 	<target host="*.proofpoint.com" />
-
-
-	<rule from="^http://proofpoint\.com/"
-		to="https://proofpoint.com/" />
-
-	<!--	At least these paths redirect to http:
-
-			- $
-			- favicon.ico$
-			- id/gartner-email-security-magic-quadrant/index.php
+		<!--
+			Redirect to http:
 						-->
-	<rule from="^http://www\.proofpoint\.com/(asset|cs|image|partner)s/"
-		to="https://www.proofpoint.com/$1s/" />
+		<!--exclusion pattern="^http://www\.proofpoint\.com/($|favicon\.ico|id/gartner-email-security-magic-quadrant/index\.php)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.proofpoint\.com/(?!(?:asset|cs|image|partner)s/)" />
 
-	<!--	These paths 404:
 
-			- formstandard-2column.html
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^urldefense\.proofpoint\.com$" name="^_redirector_session$" /-->
 
-				-->
-	<rule from="^https?://go\.proofpoint\.com/(css|images)/"
-		to="https://na-n.marketo.com/$1/" />
+	<securecookie host="^urldefense\.proofpoint\.com$" name=".+" />
 
-	<rule from="^http://support\.proofpoint\.com/"
-		to="https://support.proofpoint.com/" />
+
+	<rule from="^http://((?:support|urldefense|www)\.)?proofpoint\.com/"
+		to="https://$1proofpoint.com/" />
+
+	<rule from="^http://go\.proofpoint\.com/(?=css/|images/|js/|rs/)"
+		to="https://na-n.marketo.com/" />
 
 </ruleset>

@@ -1,13 +1,69 @@
-<ruleset name="Federal Office of Administration">
+<!--
+	Federal Office of Administration
 
-	<target host="bva.bund.de" />
+
+	^bva.bund.de: Mismatched
+
+
+	These altnames don't exist:
+
+		- bafoegonline.bva.bund.de
+
+
+	Insecure cookies are set for these hosts:
+
+		- bezuegerechner.bva.bund.de
+		- gsb.download.bva.bund.de
+		- www.bva.bund.de
+
+
+	Mixed content:
+
+		- Image on gsb.download from www.adobe.com ˢ
+
+	ˢ Secured by us
+
+
+	Invalid certificate:
+		- gsb.download.bva.bund.de
+		- test7.gsb.bva.bund.de
+
+
+	For other bund.de coverages, see Verwaltung_Online.xml.
+
+-->
+<ruleset name="BVA.bund.de">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.bafoegonline.bva.bund.de" />
+	<target host="bezuegerechner.bva.bund.de" />
+	<target host="kolep.bva.bund.de" />
+	<target host="isasonline.bva.bund.de" />
 	<target host="www.bva.bund.de" />
 
+	<!--	Complications:
+				-->
+	<target host="bva.bund.de" />
 
-	<securecookie host="^www\.bva\.bund\.de$" name=".+" />
+		<!--	Mixed images:
+					-->
+		<!--test url="http://gsb.download.bva.bund.de/BPRA/Bellevue/" /-->
 
 
-	<rule from="^https?://(?:www\.)?bva\.bund\.de/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^bezuegerechner\.bva\.bund\.de$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^gsb\.download\.bva\.bund\.de$" name="^(?:TS[\da-f]{8}|server-id)$" /-->
+	<!--securecookie host="^www\.bva\.bund\.de$" name="^(?:JSESSIONID|TS[\da-f]{8}|server-id)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://bva\.bund\.de/"
 		to="https://www.bva.bund.de/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

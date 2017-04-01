@@ -1,0 +1,96 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/stores4stores-gc-images-admin-dev/
+
+
+	Nonfunctional subdomains:
+
+		- platinum ¹
+		- used ²
+
+	¹ Dropped
+	² Refused
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- sessions ²
+
+	¹ Mismatched, CN: *.music123.com
+	² Works; self-signed, CN: Parallels Panel
+
+
+	Partially covered subdomains:
+
+		- (www.) *	(^ → www)
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- clearance
+		- gc
+		- images
+		- m
+		- stores
+
+
+	These altnames don't exist:
+
+		- www.clearance.guitarcenter.com
+		- www.gc.guitarcenter.com
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- m from images.miretail.com ¹
+			- sessions from i\d.ytimg.com ¹
+
+			- stores, from:
+
+				- images ¹
+				- s3.amazonaws.com ¹
+				- www.gcpro.com ²
+
+			- www from images ¹
+
+		- Web bugs, on:
+
+			- clearance from www ¹
+			- stores from medals.bizrate.com ¹
+
+	¹ Secured by us
+	² Unsecurable <= interrupted
+
+-->
+<ruleset name="Guitar Center.com (partial)">
+
+	<target host="guitarcenter.com" />
+	<target host="*.guitarcenter.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?guitarcenter\.com/+($|\?|MyAccount/Cart\.aspx)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(www\.)?guitarcenter\.com/+(?!Ajax/|favicon\.ico|[iI]ncludes/)" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^(?:clearance|gc)\.guitarcenter\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?guitarcenter\.com/(?=Ajax/|favicon\.ico|[iI]ncludes/)"
+		to="https://www.guitarcenter.com/" />
+
+	<rule from="^http://(clearance|gc|images|m|stores)\.guitarcenter\.com/"
+		to="https://$1.guitarcenter.com/" />
+
+</ruleset>

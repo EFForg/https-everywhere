@@ -1,27 +1,73 @@
 <!--
 	Tenable Network Security
 
-
-	Nonfunctional subdomains:
-
-		- (www.)	(dropped)
+	For rules causing false/broken MCB, see Tenable.com-falsemixed.xml.
 
 
-	Fully covered subdomains:
+	Problematic hosts in *tenable.com:
 
-		- store
-		- support
+		- elearn *
+
+	* Mixed css
+
+
+	Insecure cookies are set for these hosts and domains:
+
+		- discussions.tenable.com
+		- elearn.tenable.com
+		- store.tenable.com
+		- .support.tenable.com
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- www from $self *
+			- www from cdn.vidyard.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Tenable.com (partial)">
 
-	<target host="*.tenable.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="tenable.com" />
+	<target host="discussions.tenable.com" />
+	<target host="elearn.tenable.com" />
+	<target host="static.tenable.com" />
+	<target host="store.tenable.com" />
+	<target host="support.tenable.com" />
+	<target host="www.tenable.com" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://elearn\.tenable\.com/+(?!theme/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://elearn.tenable.com/course/category.php?id=3" />
+			<test url="http://elearn.tenable.com/login/forgot_password.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://elearn.tenable.com/theme/tenablethirteenmoodle/css/main.css" />
+			<test url="http://elearn.tenable.com/theme/tenablethirteenmoodle/img/logo.png" />
 
 
-	<securecookie host="^(?:store|\.support)\.tenable\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^discussions\.tenable\.com$" name="^(BIGipServer[\w-]+|JSESSIONID|jive\.security\.context)$" /-->
+	<!--securecookie host="^elearn\.tenable\.com$" name="^MoodleSession$" /-->
+	<!--securecookie host="^store\.tenable\.com$" name="^zenid$" /-->
+	<!--securecookie host="^\.support\.tenable\.com$" name="^CerberusPublicGUI$" /-->
+
+	<!--securecookie host="^\w" name="." /-->
+	<securecookie host="^(?!elearn)\w" name="." />
 
 
-	<rule from="^http://s(tore|upport)\.tenable\.com/"
-		to="https://s$1.tenable.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,11 +1,33 @@
-<ruleset name="jolexa.net (partial)" default_off="mismatch" platform="cacert">
+<!--
+	For rules subject to CAcert, see Jolexa.net-cacert.xml.
 
-	<target host="jolexa.net"/>
-	<target host="*.jolexa.net"/>
 
-	<securecookie host="^(.*\.)?jolexa\.net$" name=".*"/>
+	Problematic subdomains:
 
-	<rule from="^http://(\w+\.)?jolexa\.net/"
-		to="https://$1jolexa.net/"/>
+		- ^ ¹ ²
+		- www.blog ¹
+		- www ²
+
+	¹ Mismatched
+	² CAcert
+
+-->
+<ruleset name="jolexa.net (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="blog.jolexa.net" />
+
+	<!--	Complications:
+				-->
+	<target host="www.blog.jolexa.net" />
+
+	<securecookie host="^(?:www\.)?blog\.jolexa\.net$" name=".*"/>
+
+	<rule from="^http://www\.blog\.jolexa\.net/"
+		to="https://blog.jolexa.net/"/>
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

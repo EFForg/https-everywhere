@@ -1,26 +1,70 @@
-<ruleset name="Beyond Security">
+<!--
+	Other Beyond Security rulesets:
+
+		- ScanMyServer.com.xml
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- cloud2.beyondsecurity.com
+		- cloud3.beyondsecurity.com
+		- sp-us.beyondsecurity.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Beyond Security.com (partial)">
 
 	<target host="beyondsecurity.com" />
 	<target host="*.beyondsecurity.com" />
-		<!--
-			Pages started redirecting to http.
+
+		<exclusion pattern="^http://(?:[^./]+\.){2,}beyondsecurity\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.beyondsecurity.com/" />
+			<test url="http://exists.not.beyondsecurity.com/" />
+
+		<!--	Pages started redirecting to http.
 								-->
-		<exclusion pattern="^http://(?:www\.)?beyondsecurity\.com/(?:.+\.html)?(?:$|\?)" />
-
-
-	<!--	Observed cookies:
-
-			- sp-us
+		<!--exclusion pattern="^http://www\.beyondsecurity\.com/(?:.+\.html)?(?:$|\?)" /-->
+		<!--
+			Now others have started to 404...:
+								-->
+		<!--exclusion pattern="^http://www\.beyondsecurity\.com/scan_pentest_network_vulnerabilities_web_server_cross_site_scripting$" /-->
+		<!--
+			Exceptions:
 					-->
-	<securecookie host="^.*\.beyondsecurity\.com$" name=".*" />
+		<exclusion pattern="^http://www\.beyondsecurity\.com/(?!/*assets/)" />
 
-	<!--	Observed subdomains:
-
-			- secure
-			- sp-us
-			- www
+			<!--	+ve:
 					-->
-	<rule from="^http://(\w+\.)?beyondsecurity\.com/"
-		to="https://$1beyondsecurity.com/" />
+			<test url="http://www.beyondsecurity.com/2logins.html" />
+			<test url="http://www.beyondsecurity.com/network_scanner.html" />
+			<test url="http://www.beyondsecurity.com/network_security.html" />
+			<test url="http://www.beyondsecurity.com/pen_testing.html" />
+			<test url="http://www.beyondsecurity.com/scan_pentest_network_vulnerabilities_web_server_cross_site_scripting" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.beyondsecurity.com/assets/css/default/default.css" />
+			<test url="http://www.beyondsecurity.com/assets/img/beyond-security-logo.png" />
+
+		<test url="http://cloud2.beyondsecurity.com/" />
+		<test url="http://cloud3.beyondsecurity.com/" />
+		<test url="http://seal.beyondsecurity.com/verification-images/scanmyserver.com/vulnerability-scanner-8.gif" />
+		<test url="http://secure.beyondsecurity.com/verification-images/forum-tc.msi.com/vulnerability-scanner-2.gif" />
+		<test url="http://sp-us.beyondsecurity.com/my_account" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:cloud[23]|sp-us)\.beyondsecurity\.com$" name="^CGISESSID$" /-->
+
+	<securecookie host="^(?!www\.)." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,23 +1,98 @@
 <!--
-	http://recs.../$ & https://recs.../$ differ.
+	http://media.../$ & https://media.../$ differ.
 
 
 	Nonfunctional subdomains:
 
-		- engineering	(shows www, valid cert)
 		- ics	(times out)
 
+
+	Problematic hosts in *richrelevance.com:
+
+		- eurm.recs ᵐ
+		- rm.recs ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- cas.richrelevance.com
+		- integration.richrelevance.com
+		- portal.richrelevance.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- engineering, www from $self ˢ
+			- engineering from www.richrelevance.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
 -->
-<ruleset name="RichRelevance (partial)">
+<ruleset name="RichRelevance.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="richrelevance.com" />
-	<target host="*.richrelevance.com" />
+	<target host="cas.richrelevance.com" />
+	<target host="confluence.richrelevance.com" />
+	<target host="demo.richrelevance.com" />
+	<target host="developer.richrelevance.com" />
+	<target host="e4b-2.richrelevance.com" />
+	<target host="image.richrelevance.com" />
+	<target host="integration.richrelevance.com" />
+	<target host="jira.richrelevance.com" />
+	<target host="media.richrelevance.com" />
+	<target host="portal.richrelevance.com" />
+	<target host="recs.richrelevance.com" />
+	<target host="www.richrelevance.com" />
+
+		<!--	401 vs 200 blank page => fetch check would fail:
+									-->
+		<exclusion pattern="^http://media\.richrelevance\.com/$" />
+
+			<!--	-ve:
+					-->
+			<test url="http://media.richrelevance.com/rrserver/images/sampleimage.jpg" />
+			<test url="http://media.richrelevance.com/rrserver/js/1.1/p13n.js" />
+
+		<test url="http://cdn.richrelevance.com/dashboard/img/rr2.0/dashboard-rc-login-bg.jpg" />
+
+		<!--	$ 404s, so:
+					-->
+		<test url="http://image.richrelevance.com/rrmail/click/recs?apiKey=7acb638e84ceb389&amp;userId=1&amp;campaign=campaign01&amp;date=2016-06-15&amp;placement=r01&amp;layout=email&amp;slot=2" />
+		<test url="http://integration.richrelevance.com/rrserver/adclick?pcam=869057&amp;pcre=39979&amp;vg=d46006fc-3366-452f-343a-1e53bc618f0e&amp;propt=home_page.promo_1&amp;rp=true&amp;a=a43d5330e9172221&amp;sgs=&amp;ct=http%3A%2F%2Fwww.morphsuits.com%2Fbrands%2Fpower-rangers-costumes" />
+		<test url="http://recs.richrelevance.com/rrserver/apiclick?a=e8da9bb22c38c228&amp;cak=21280b5d95ea9121&amp;ct=http%3A%2F%2Fwww.americanmuscle.com%2Frelocoarstpe.html&amp;vg=5d400dac-edbc-4f13-35e0-6454bb7ff521&amp;stid=4&amp;pti=1&amp;pa=20040&amp;pos=3&amp;p=30000&amp;channelId=21280b5d95ea9121&amp;s=pmtmomnbntc10t3ypt14upm5" />
+
+	<!--	Complications:
+				-->
+	<target host="eurm.recs.richrelevance.com" />
+	<target host="rm.recs.richrelevance.com" />
+
+		<!--	$ 404s, so:
+					-->
+		<test url="http://eurm.recs.richrelevance.com/rrmail/rmclick?a=4ccda6fabc7e1e30&amp;cpi=16_03_11_WoW_Sun&amp;userId=7912334&amp;seedProductIds=&amp;seedCategoryIds=&amp;zoneName=toplevel_6&amp;strategySet=&amp;date=20160313&amp;ln=email_mobile&amp;version=3&amp;lid=3&amp;cm_mmc=Email-_-TBP%20326-_-16_03_11_WoW_Sun-_-rr-horizontal-16_03_11_WoW_Sun-link3&amp;istCompanyId=9E28718B-80EC-4C70-9F52-4431EC3FF1DE&amp;istItemId=ilmaaxaw&amp;utm_source=email&amp;utm_medium=newsletter&amp;utm_campaign=16_03_11_WoW_Sun" />
+		<test url="http://rm.recs.richrelevance.com/rrmail/rmclick?a=8791bbd765435838&amp;cpi=RR1&amp;userId=1237298170&amp;seedProductIds=&amp;seedCategoryIds=&amp;zoneName=responsive&amp;strategySet=&amp;date=05182015&amp;ln=email_mobile&amp;version=3&amp;lid=3" />
 
 
-	<securecookie host="^www\.richrelevance\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^cas\.richrelevance\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^integration\.richrelevance\.com$" name="^(?:m|n|s|uc)$" /-->
+	<!--securecookie host="^portal\.richrelevance\.com$" name="^rememberMe$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://((?:confluence|demo|e4b-2|jira|media|portal|www)\.)?richrelevance\.com/"
-		to="https://$1richrelevance.com/" />
+	<rule from="^http://(?:eu)?rm\.recs\.richrelevance\.com/"
+		to="https://recs.richrelevance.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -11,7 +11,6 @@
 
 	Nonfunctional subdomains:
 
-		- ^
 		- downloads *
 		- downloads-akm *
 		- mystatus
@@ -22,60 +21,70 @@
 
 	Problematic domains:
 
+		- ^ ¹
+		- beta ¹
 		- blogs.skype.com	(wordpress)
 		- metrics.skype.com	(mismatched, CN: *.d2.sc.omtrdc.net)
-		- www.skypeassets.com	(works, akamai)
+
+	¹ Refused
 
 
-	Partially covered domains:
+	Fully covered hosts in *skype.com:
 
-		- www.skypeassets.com	(→ secure.skypeassets.com)
+		- (www.)?	(^ → www)
+		- beta		(→ go.skype.com)
+		- go
+		- login
+		- metrics	(→ smetrics.skype.com)
+		- secure
+		- smetrics
+		- support
 
 
-	Fully covered domains:
+	Insecure cookies are set for these domains:
 
-		- skype.com subdomains:
-
-			- ^		(→ www.skype.com)
-			- beta
-			- blogs
-			- login
-			- metrics	(→ skype.d2.sc.omtrdc.net)
-			- secure
-			- smetrics
-			- support
-			- www
-
-		- skypeassets.com subdomains:
-
-			- apps
-			- beta
-			- secure
+		- .skype.com
 
 -->
-<ruleset name="Skype (partial)" platform="mixedcontent">
+<ruleset name="Skype.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<!--target host="blogs.skype.com" /-->
+	<target host="go.skype.com" />
+	<target host="login.skype.com" />
+	<target host="secure.skype.com" />
+	<target host="smetrics.skype.com" />
+	<target host="support.skype.com" />
+	<target host="www.skype.com" />
+
+	<!--	Complications:
+				-->
 	<target host="skype.com" />
-	<target host="*.skype.com" />
-	<target host="*.skypeassets.com" />
+	<target host="beta.skype.com" />
+	<target host="metrics.skype.com" />
 
 
-	<securecookie host="^.*\.skype\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.skype\.com$" name="^(SC|frmrgtpe|s_vi)$" /-->
+
+	<securecookie host=".*\.skype\.com$" name=".+" />
 
 
-	<rule from="^https?://(?:www\.)?skype\.com/"
+	<rule from="^http://skype\.com/"
 		to="https://www.skype.com/" />
 
-	<rule from="^http://(beta|login|secure|smetrics|support)\.skype\.com/"
-		to="https://$1.skype.com/" />
+	<!--	Redirect keeps path, args,
+		and forward slash:
+					-->
+	<rule from="^http://beta\.skype\.com/"
+		to="https://go.skype.com/api/v1/domainRedirect/beta.skype.com/" />
 
-	<rule from="^https?://metrics\.skype\.com/"
-		to="https://skype.d2.sc.omtrdc.net/" />
+	<rule from="^http://metrics\.skype\.com/"
+		to="https://smetrics.skype.com/" />
 
-	<rule from="^https?://www\.skypeassets\.com/"
-		to="https://secure.skypeassets.com/" />
-
-	<rule from="^http://(apps|beta|secure)\.skypeassets\.com/"
-		to="https://$1.skypeassets.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

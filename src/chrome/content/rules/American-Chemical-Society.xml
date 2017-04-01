@@ -1,82 +1,191 @@
 <!--
-	For problematic rules, see American_Chemical_Society-problematic.xml.
+	American Chemical Society
 
+	For problematic rules, see American_Chemical_Society-problematic.xml.
 
 	Other American Chemical Society rulesets:
 
 		- Chemical_Abstracts_Service.xml
 
 
-	Nonfunctional domains:
+	CDN buckets:
 
-		- cenm.ag	(replies with http)
-
-
-	Problematic subdomains:
-
-		- chemistryjobs		(mismatched, CN: secure.boxwoodtech.com)
-		- ewebtest		(mismatched)
+		- assets.acs.org.s3-website-us-east-1.amazonaws.com
 
 
-	Partially covered subdomains:
+	Nonfunctional hosts in *acs.org:
 
-		- pubs			(most pages redirect to http)
+		- cenm.ag ¹
+		- tog ²
+
+	¹ Plaintext reply
+	² Shows another domain
 
 
-	Fully covered subdomains:
+	Problematic hosts in *acs.org:
 
-		- (www.)
-		- assets
-		- www.awards
-		- www.awardstest
-		- www.akzonobel
-		- www.ccedlookup
-		- cen
-		- communities
-		- communitiestest
-		- www.donate
-		- (www.)emailpref
-		- eweb
-		- (www.)ewebtest	(^ → www)
-		- www.fellowselection
-		- www.fellowselectiontest
-		- www.giving
-		- www.givingtest
-		- portal
-		- (www.)join
-		- www.meetings
-		- www.membernumberlookup
-		- www.ncwlookup
-		- www.nominate
-		- www.nominatefellow
-		- www.nominatetest
-		- www.profed
-		- www.profedtest
-		- www.pubsbenefits
-		- www.register
-		- www.registertest
-		- www.renew
-		- www.store
-		- www.yellowbook
+		- bulkdocsapp ¹
+		- cvapp ¹
+		- renew ²
+		- webanalytics ²
+
+	¹ Missing certificate chain
+	² Mismatched
+
+
+	These altnames don't exist:
+
+		- www.awardstest.acs.org
+		- apps.communities.acs.org
+		- www.communities.acs.org
+		- apps.communitiestest.acs.org
+		- www.donatetest.acs.org
+		- www.emailpreftest.acs.org
+		- www.eweb.acs.org
+		- www.ewebtest.acs.org
+		- www.fellowselectiontest.acs.org
+		- www.givingtest.acs.org
+		- www.global.acs.org
+		- jointest.acs.org
+		- www.jointest.acs.org
+		- www.meetingstest.acs.org
+		- www.profed.acs.org
+		- www.ncwlookuptest.acs.org
+		- www.nominatetest.acs.org
+		- www.register.acs.org
+		- studentchaptersreview.acs.org
+		- www.studentchaptersreview.acs.org
+		- studentgrantreviewtest.acs.org
+		- www.studentgrantreviewtest.acs.org
+		- www.yellowbooktest.acs.org
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- .acs.org
+		- chemistryjobs.acs.org
+		- cvapp.acs.org
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		Images, on:
+
+			- cen from $self *
+
+		- Ads/bugs, on:
+
+			- cen from ad.doubleclick.net
+			- cen from pagead2.googlesyndication.com *
+			- communities from achsportal.122.2o7.net *
+			- (www.)?join from webanalytics.acs.org *
+
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="American Chemical Society (partial)">
+<ruleset name="ACS.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="acs.org" />
-	<target host="*.acs.org" />
-		<exclusion pattern="^http://pubs\.acs\.org/(?!appl/|action/showLogin|sda/|templates/)" />
+	<target host="acswebcontent.acs.org" />
+	<target host="www.akzonobel.acs.org" />
+	<target host="assets.acs.org" />
+	<target host="assetstest.acs.org" />
+	<target host="www.awards.acs.org" />
+	<!--target host="bulkdocsapp.acs.org" /-->
+	<target host="www.ccedlookup.acs.org" />
+	<target host="cen.acs.org" />
+	<target host="chemistryjobs.acs.org" />
+	<target host="communities.acs.org" />
+	<target host="communitiestest.acs.org" />
+	<!--target host="cvapp.acs.org" /-->
+	<target host="www.donate.acs.org" />
+	<target host="emailcenter.acs.org" />
+	<target host="www.emailcenter.acs.org" />
+	<target host="emailpref.acs.org" />
+	<target host="www.emailpref.acs.org" />
+	<target host="eweb.acs.org" />
+	<target host="www.fellowselection.acs.org" />
+	<target host="www.giving.acs.org" />
+	<target host="global.acs.org" />
+	<target host="join.acs.org" />
+	<target host="www.join.acs.org" />
+	<target host="www.meetings.acs.org" />
+	<target host="www.membernumberlookup.acs.org" />
+	<target host="www.ncwlookup.acs.org" />
+	<target host="www.nominate.acs.org" />
+	<target host="www.nominatefellow.acs.org" />
+	<target host="portal.acs.org" />
+	<target host="www.profed.acs.org" />
+	<!--target host="pubs.acs.org" />	<- needs ruleset tests	-->
+	<target host="www.pubsbenefits.acs.org" />
+	<target host="www.register.acs.org" />
+	<target host="www.renew.acs.org" />
+	<target host="sso.acs.org" />
+	<target host="www.store.acs.org" />
+	<target host="studentchaptergrants.acs.org" />
+	<target host="www.studentchaptergrants.acs.org" />
+	<target host="www.studentchaptersonline.acs.org" />
+	<target host="studentchaptersreview.acs.org" />
+	<target host="www.studentchaptersreview.acs.org" />
+	<target host="studentgrantreview.acs.org" />
+	<target host="www.studentgrantreview.acs.org" />
+	<target host="www.acs.org" />
+	<target host="www.yellowbook.acs.org" />
+
+	<!--	Complications:
+				-->
+	<target host="renew.acs.org" />
+	<target host="webanalytics.acs.org" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://pubs\.acs\.org/(?:$|page/subscribe\.html)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://pubs\.acs\.org/+(?!appl/|action/(?:clickThrough|showLogin)|sda/|subscribe/covers/|templates/|userimages/)" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://pubs.acs.org/page/subscribe.html" /-->
+
+			<!--	-ve:
+					-->
+			<!--test url="http://pubs.acs.org/action/clickThrough?id=" /-->
+			<!--test url="http://pubs.acs.org/appl/literatum/publisher/achs/journals/covergifs/cmatex/title.gif" /-->
+			<!--test url="http://pubs.acs.org/sda/1199984/atypon-logo.png" /-->
+			<!--test url="http://pubs.acs.org/subscribe/covers/cen/cencover_h.jpg" /-->
+			<!--test url="http://pubs.acs.org/templates/jsp/_style2/_achs/css/atypon-print.css" /-->
+			<!--test url="http://pubs.acs.org/templates/jsp/_style2/_achs/images/acsLogo.png" /-->
+			<!--test url="http://pubs.acs.org/userimages/ContentEditor/1324074653607/subscription-institutional.png" /-->
 
 
-	<securecookie host="^(?!pu)(?:.*\.)?acs\.org$" name=".+" />
+		<test url="http://www.acs.org/content/acs/en.html" />
 
 
-	<rule from="^http://((?:cen|communities(?:test)?|eweb|(?:www\.)?(?:emailpref|join)|portal|pubs|www(?:(?:(?:awards|fellowselection|giving|nominate|profed|register)(?:test)?|akzonobel|ccedlookup|donate|meetings|membernumberlookup|ncwlookup|nominatefellow|pubsbenefits|renew|store|yellowbook)\.)?)\.)?acs\.org/"
-		to="https://$1acs.org/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.acs\.org$" name="^s_vi$" /-->
+	<!--securecookie host="^chemistryjobs\.acs\.org$" name="(?:^AWSELB|^AnonId|_JobSeekerSiteSession)$" /-->
+	<!--securecookie host="^assetstest\.acs\.org$" name="^TS[\da-f]{8}$" /-->
+	<!--securecookie host="^communities\.acs\.org$" name="^(?:BIGipServer.*|jive\.login\.ts|jive\.security\.context)$" /-->
+	<!--securecookie host="^cvapp\.acs\.org$" name="^GEAR$" /-->
 
-	<rule from="^https?://assets(?:test)?\.acs\.org/"
-		to="https://assets.acs.org/" />
+	<securecookie host="^\." name="^s_v" />
+	<securecookie host="^(?!pubs\.)\w" name="." />
 
-	<rule from="^https?://(?:www\.)?ewebtest\.acs\.org/"
-		to="https://www.ewebtest.acs.org/" />
+
+	<rule from="^http://renew\.acs\.org/"
+		to="https://www.renew.acs.org/" />
+
+	<rule from="^http://webanalytics\.acs\.org/"
+		to="https://achsportal.122.2o7.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

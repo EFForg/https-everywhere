@@ -1,28 +1,37 @@
 <!--
+	Other Mixpanel rulesets:
+
+		- Mxpnl.com.xml
+
+
 	CDN buckets:
 
 		- mpdocs.s3.amazonaws.com/mpdocs/
 
 
-	cdn sets mp_\w{32}_mixpanel wildcard cookie
-	on whichever domain it is loaded from.
+	Insecure cookies are set for these domains:
+
+		- .mixpanel.com
 
 -->
-<ruleset name="Mixpanel (partial)">
+<ruleset name="Mixpanel.com">
 
 	<target host="mixpanel.com" />
 	<target host="*.mixpanel.com" />
-		<exclusion pattern="^http://blog\." />
-	<target host="cdn.mxpnl.com" />
+
+		<test url="http://blog.mixpanel.com/" />
+		<test url="http://code.mixpanel.com/" />
+		<test url="http://www.mixpanel.com/" />
 
 
-	<securecookie host="^(.*\.)?mixpanel\.com$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.mixpanel\.com$" name="^mp_metrics-1_mixpanel$" /-->
+
+	<securecookie host="^(?:.*\.)?mixpanel\.com$" name=".*" />
 
 
-	<rule from="^http://(\w+\.)?mixpanel\.com/"
-		to="https://$1mixpanel.com/" />
-
-	<rule from="^http://cdn\.mxpnl\.com/"
-		to="https://cdn.mxpnl.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

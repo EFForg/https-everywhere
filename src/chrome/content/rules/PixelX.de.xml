@@ -1,0 +1,49 @@
+<!--
+	Nonfunctional hosts in *pixelx.de:
+
+		- blog *
+		- piwik *
+
+	* Redirects to www.pixelx.de
+
+
+	STS header includes includeSubdomains
+
+
+	Insecure cookies are set for these hosts:
+
+		- domain.pixelx.de
+
+
+	Mixed content:
+
+		- Bug on www from piwik.pixelx.de
+
+-->
+<ruleset name="PixelX.de (partial)">
+
+	<target host="pixelx.de" />
+	<target host="*.pixelx.de" />
+
+		<exclusion pattern="^http://(?:blog|piwik)\.pixelx\.de/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://blog.pixelx.de/" />
+			<test url="http://piwik.pixelx.de/" />
+
+		<test url="http://domain.pixelx.de/" />
+		<test url="http://www.pixelx.de/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^domain\.pixelx\.de$" name="^PHPSESSID$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

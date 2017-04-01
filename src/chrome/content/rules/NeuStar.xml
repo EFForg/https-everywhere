@@ -1,42 +1,126 @@
 <!--
-	Other NeuStar rulesets:
+	Other Neustar rulesets:
 
+		- Browsermob.com.xml
+		- NPAC.com.xml
+		- Neustar_Localeze.biz.xml
+		- Neuweb.biz.xml
+		- TCPA_Compliance.us.xml
 		- UltraDNS.xml
+		- UltraDNS.com.xml
+		- Webmetrics.com.xml
+		- Neustar.com.xml
+		- UltraTools.com.xml
 
 
 	Nonfunctional domains:
 
-		- blog.neustar.biz
 		- (www.)neustarlife.biz	(cert: www.neustarlife.biz; shows blank page)
 
+
+	Problematic hosts:
+
+		- community.neustar.biz *
+		- ipintelligence.neustar.biz *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Fully covered hosts:
+
+		- (www.)?
+		- atsevents
+		- blog
+		- ebill
+		- hello
+		- leap
+		- ns-cdn
+		- numbering
+		- platformone
+		- registry
+		- siteprotect
+
+		- alert.wpm
+		- crowd.wpm
+		- diagnostics.wpm
+		- home.wpm
+		- load.wpm
+		- monitor.wpm
+		- rum.wpm
+		- script.wpm
+		- static.wpm
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .neustar.biz
+		- community.neustar.biz
+		- hello.neustar.biz
+		- leap.neustar.biz
+		- registry.neustar.biz
+		- siteprotect.neustar.biz
+
+		- alert.wpm.neustar.biz
+		- crowd.wpm.neustar.biz
+		- diagnostics.wpm.neustar.biz
+		- home.wpm.neustar.biz
+		- load.wpm.neustar.biz
+		- monitor.wpm.neustar.biz
+		- rum.wpm.neustar.biz
+		- script.wpm.neustar.biz
+		- static.wpm.neustar.biz
+
 -->
-<ruleset name="NeuStar">
+<ruleset name="Neustar.biz (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="neustar.biz" />
+	<target host="atsevents.neustar.biz" />
+	<target host="blog.neustar.biz" />
+	<!--target host="community.neustar.biz" /-->
+	<target host="ebill.neustar.biz" />
+	<target host="hello.neustar.biz" />
+	<!--target host="ipintelligence.neustar.biz" /-->
+	<target host="leap.neustar.biz" />
+	<target host="ns-cdn.neustar.biz" />
+	<target host="numbering.neustar.biz" />
+	<target host="platformone.neustar.biz" />
+	<target host="registry.neustar.biz" />
+	<target host="siteprotect.neustar.biz" />
+
+	<target host="alert.wpm.neustar.biz" />
+	<target host="crowd.wpm.neustar.biz" />
+	<target host="diagnostics.wpm.neustar.biz" />
+	<target host="home.wpm.neustar.biz" />
+	<target host="load.wpm.neustar.biz" />
+	<target host="monitor.wpm.neustar.biz" />
+	<target host="rum.wpm.neustar.biz" />
+	<target host="script.wpm.neustar.biz" />
+	<target host="static.wpm.neustar.biz" />
+
 	<target host="www.neustar.biz" />
-	<target host="neustar.com" />
-	<target host="*.neustar.com" />
-	<target host="neustarultraservices.biz" />
-	<target host="www.neustarultraservices.biz" />
+
+	<!--	Mismatched:
+				-->
+	<!--target host="neustarultraservices.biz" /-->
+	<!--target host="www.neustarultraservices.biz" /-->
 
 
-	<securecookie host="^(www\.)?neustar\.biz$" name=".*" />
-	<securecookie host="^payment\.neustar\.com$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.neustar\.biz$" name="^(PS_TOKEN|\w+-\d+-PORTAL-PSJSESSIONID)$" /-->
+	<!--securecookie host="^(community|hello)\.neustar\.biz$" name="^BIGipServer[\w-]+$" /-->
+	<!--securecookie host="^community\.neustar\.biz$" name="^(JSESSIONID|jive\.server\.info)$" /-->
+	<!--securecookie host="^leap\.neustar\.biz$" name="^(JSESSIONID|neustar\.cookie-\d+)$" /-->
+	<!--securecookie host="^registry\.neustar\.biz$" name="^\w{10}$" /-->
+	<!--securecookie host="^(registry|siteprotect|load\.wpm)\.neustar\.biz$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^(alert|crowd|diagnostics|home|load|monitor|rum|script|static)\.wpm\.neustar\.biz$" name="^neustar_cookie$" /-->
+
+	<securecookie host="^(?:(?:hello|leap|registry|siteprotect|\w+\.wpm|www)\.)?neustar\.biz$" name=".*" />
 
 
-	<rule from="^http://(www\.)?neustar\.biz/"
-		to="https://$1neustar.biz/" />
-
-	<!--	- Cert only matches (*.)neustar.biz
-		- .com 301s like so
-		- ...services.biz 301s:
-
-			neustarultraservices.biz → ultradns.com → neustar.biz
-										-->
-	<rule from="^https?://(?:www\.)?neustar\.com/"
-		to="https://www.neustar.biz/" />
-
-	<rule from="^http://payment\.neustar\.com/"
-		to="https://payment.neustar.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,15 +1,27 @@
+<!--
+	Expired:
+		- jasperserver.aboutads.info
+
+	Mixed JS:
+		- www.aboutads.info/choices/
+-->
 <ruleset name="About Ads (partial)">
-
 	<target host="aboutads.info" />
-	<target host="*.aboutads.info" />
-		<exclusion pattern="^http://(?:www\.)?aboutads\.info/(choices)/" />
+	<target host="www.aboutads.info" />
+		<exclusion pattern="^http://(www\.)?aboutads\.info/choices/" />
+			<test url="http://aboutads.info/choices/" />
+			<test url="http://www.aboutads.info/choices/" />
+		<!-- XMLHttpRequest cannot load https://www.aboutads.info/actionlog/post/.
+			No 'Access-Control-Allow-Origin' header is present on the requested resource.
+			Origin 'http://www.aboutads.info' is therefore not allowed access. -->
+		<exclusion pattern="^http://(www\.)?aboutads\.info/actionlog/post/" />
+			<test url="http://aboutads.info/actionlog/post/" />
+			<test url="http://www.aboutads.info/actionlog/post/" />
+	<target host="staging.aboutads.info" />
 
-        <!-- comment this out so that www.aboutads.info/choices page
-	     will not throw a "First Party Cookies Not Enabled" error 
-	<securecookie host="^(?:.*\.)?aboutads\.info$" name=".+" /> -->
+	<!-- comment this out so that www.aboutads.info/choices page
+			will not throw a "First Party Cookies Not Enabled" error
+	<securecookie host="^(?:.*\.)?aboutads\.info$" name=".+" /-->
 
-
-	<rule from="^http://(?:www\.)?aboutads\.info/"
-		to="https://www.aboutads.info/" />
-
+	<rule from="^http:"	to="https:" />
 </ruleset>

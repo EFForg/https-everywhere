@@ -1,0 +1,200 @@
+<!--
+	For other Yahoo coverage, see Yahoo.xml.
+
+
+	CDN buckets:
+
+		- contextualads.yahoo.net.edgesuite.net
+
+			- a1907.g.akamai.net
+
+		- health.yahoo.net.edgesuite.net
+
+		- yahoogames.minver.com
+
+			- uk.slot.games.yahoo.net
+
+
+	Nonfunctional subdomains:
+
+		- br.autos	(redirects to http; mismatched, CN: www.webmotors.com.br)
+		- mx.autocosmos ⁴
+		- tw.fashion.campaign ⁴
+		- clube ¹
+		- games ²
+		- health ³
+		- co.horoscopo ⁴
+		- espanol.horoscopo ⁴
+		- ar.juegos ¹
+		- espanol.juegos ¹
+		- uk.match ⁴
+		- uk.matchaffinity ⁴
+		- tw.music ⁴
+		- es.shopping ¹
+		- fr.shopping ¹
+		- i1.discount.vip.tw1 ⁴
+		- r1.discount.vip.tw1 ⁴
+		- i1.campaign.fashion.vip.tw1 ⁴
+
+	¹ Refused
+	² Recursive redirect
+	³ 504, akamai
+	⁴ Dropped
+
+
+	Problematic subdomains:
+
+		- tw.marketing.campaign		(mismatched, CN: *.tw.campaign.yahoo.net)
+		- tw.house.campaign		(mismatched, CN: *.tw.campaign.yahoo.net)
+		- contextualads ¹
+		- br.games ²
+		- uk.slot.games ³
+		- hk.realestate	(works; mismatched, CN: *.vicosys.com.hk)
+		- replay ⁵
+		- rp1.monday.vip.tw1 ⁶
+
+	¹ Works, akamai
+	² Works; mismatched, CN: secure.atrativa.com.br
+	³ Redirects to yahoogames.minver.com; mismatched, CN: *.st-minver.com
+	⁵ Works; mismatched, CN: replay.yahoo.com
+	⁶ Mismatched, CN: tw.m.yimg.com
+
+
+	Partially covered subdomains:
+
+		- contextualads		(→ akamai, avoiding user-visible paths)
+		- br.games		(→ secure.atrativa.com.br)
+		- investor		(→ investor.shareholder.com)
+		- uk.health.lifestyle	(→ s.yimg.com)
+
+
+	Fully covered subdomains:
+
+		- \w\w.autocosmos:
+
+			- ar
+			- co
+			- mx
+
+		- tw.bigdeals
+		- m.tw.bigdeals
+		- tw.house.campaign	(→ house.tw.campaign)
+
+		- tw.campaign subdomains:
+
+			- fashion
+			- house
+			- games.m
+			- promo
+			- travel
+			- yimg
+
+		- tw.marketing.campaign		(→ marketing.tw.campaign)
+		- espanol.cine
+		- cinema
+		- developer			(→ developer.yahoo.com)
+		- tw.rimg.discount
+		- tw.discount
+		- tw.uimg.fashion
+		- tw.urcosme.fashion
+		- tw.quote.finance
+		- tw.screener.finance
+		- tw.gamedb.games
+
+		- games subdomains:
+
+			- es
+			- fr
+			- uk
+			- uk.slot		(→ yahoogames.minver.com)
+
+		- investor
+		- image-c.c.yom.mail
+		- tw.music
+		- hk.promotion
+		- lib.store
+		- order.store
+		- rp1.monday.vip.tw1	(→ tw.m.yimg.com)
+		- s.wc
+
+
+	Observed cookie domains:
+
+		- . *
+		- fashion.tw.campaign **
+		- promo.tw.campaign **
+		- tw.discount **
+		- tw.screener.finance ²
+		- investor ²
+		- hk.promotion **
+
+	* Not secured by use <= accounting for possible use on unsecurable domains
+	** Secured by us
+	² Secured by server
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- espanol.cine from movienewsletters.o.yimg.com ²
+
+			- hk.realestate from $self
+
+	¹ Unsecurable
+	² Secured by us
+
+-->
+<ruleset name="Yahoo.net (partial)">
+
+	<target host="*.yahoo.net" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<!--exclusion pattern="^http://contextualads\.yahoo\.net/(?!js/|style/)" /-->
+		<!--
+			Links images relative to /
+							-->
+		<!--exclusion pattern="^http://contextualads\.yahoo\.net/style/screen\.css" /-->
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^tw\.screener\.finance\.yahoo\.net$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^\.investor\.yahoo\.net$" name="^(YHOO_BRIEFCASE|YHOO_SESSION)$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^\.yahoo\.net$" name="^BX$" /-->
+	<!--securecookie host="^(fashion|promo)\.tw\.campaign\.yahoo\.net$" name="^PHPSESSID$" /-->
+	<securecookie host="^hk\.promotion\.yahoo\.net$" name="^YLBID$" />
+
+	<securecookie host="(?:(?:fashion|promo)\.tw\.campaign|tw\.discount|.+-c\.c\.yom\.mail|hk\.promotion)\.yahoo\.net$" name=".+" />
+
+
+	<rule from="^http://br\.games\.yahoo\.net/img/"
+		to="https://secure.atrativa.com.br/img/" />
+
+	<rule from="^http://(\w\w\.autocosmos|(?:m\.)?tw\.bigdeals|(?:fashion|house|games\.m|marketing|promo|travel|yimg)\.tw\.campaign|espanol\.cine|cinema|tw\.(?:rimg\.)?discount|tw\.uimg\.fashion|tw\.urcosme\.fashion|tw\.(?:quote|screener)\.finance|tw\.gamedb\.games|(?:es|fr|uk)\.games|investor|[\w-]+\.c\.yom\.mail|tw\.music|hk\.promotion|(?:lib|order)\.store|s\.wc)\.yahoo\.net/"
+		to="https://$1.yahoo.net/" />
+
+	<!--	Redirects like so:
+					-->
+	<rule from="^http://tw\.(house|marketing)\.campaign\.yahoo\.net/+"
+		to="https://$1.tw.campaign.yahoo.net/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://developer\.yahoo\.net/[^?]*"
+		to="https://developer.yahoo.com/" />
+
+	<rule from="^http://uk\.slot\.games\.yahoo\.net/"
+		to="https://yahoogames.minver.com/" />
+
+	<rule from="^http://uk\.health\.lifestyle\.yahoo\.net/images/"
+		to="https://s.yimg.com/lq/lib/lsl/i/uk/" />
+
+	<rule from="^http://rp1\.monday\.vip\.tw1\.yahoo\.net/"
+		to="https://tw.m.yimg.com/" />
+
+</ruleset>

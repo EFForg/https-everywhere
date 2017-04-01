@@ -1,7 +1,26 @@
 <!--
-	Nonfunctional subdomains:
+	CDN buckets:
 
-		- blog	(dropped)
+		- dou14x5jx22mo.cloudfront.net	← static
+
+
+	Nonfunctional hosts in *shareasale.com:
+
+		- blog ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *shareasale.com:
+
+		- static ᵐ
+
+	ᵐ Cloudfront/mismatched
+
+
+	Insecure cookies are set for these domains:
+
+		- .shareasale.com
 
 
 	Click/referral tracking.
@@ -9,14 +28,30 @@
 -->
 <ruleset name="ShareASale.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="shareasale.com" />
-	<target host="*.shareasale.com" />
+	<target host="i.shareasale.com" />
+	<target host="www.shareasale.com" />
+
+	<!--	Complications:
+				-->
+	<target host="static.shareasale.com" />
+
+		<test url="http://static.shareasale.com/image/43811/Affiliates150x150.png" />
 
 
-	<securecookie host="^\.shareasale\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.shareasale\.com$" name="^(AFFTRACK\d+|DATA\d+|GC|MERCHANT\d+|UNDER\d+)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(www\.)?shareasale\.com/"
-		to="https://$1shareasale.com/" />
+	<rule from="^http://static\.shareasale\.com/"
+		to="https://dou14x5jx22mo.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

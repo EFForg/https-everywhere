@@ -1,7 +1,130 @@
-<ruleset name="CompaniesHouse">
-  <target host="*.companieshouse.gov.uk" />
+<!--
+	For rules causing MCB, see companieshouse.gov.uk-falsemixed.xml.
 
-  <securecookie host="^(direct|ebilling|ewf)\.companieshouse\.gov\.uk$" name=".*"/>
+	For other UK government coverage, see GOV.UK.xml.
 
-  <rule from="^http://(direct|ebilling|ewf)\.companieshouse\.gov\.uk/" to="https://$1.companieshouse.gov.uk/"/>
+
+	CDN buckets:
+
+		- d29r66hvgbhps3.cloudfront.net
+
+
+	Nonfunctional hosts in *companieshouse.gov.uk:
+
+		- data ᵃ
+		- download ᵈ
+		- resources ᵈ
+
+	ᵃ Shows another domain
+	ᵈ Dropped
+
+
+	Problematic hosts in *companieshouse.gov.uk:
+
+		- (www.)? ᵐ
+		- xmlgw ˣ
+
+	ᵐ Mismatched
+	ˣ Mixed css
+
+
+	Partially covered hosts in *companieshouse.gov.uk:
+
+		- (www.)? *
+		- wck2		(at least /wcframe redirects to http)
+
+	* >= /\w does not redirect
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .companieshouse.gov.uk
+		- beta.companieshouse.gov.uk
+		- ebilling.companieshouse.gov.uk
+		- wck2.companieshouse.gov.uk
+
+
+	Mixed content:
+
+		- css on xmlgw from resources.companieshouse.gov.uk ᵈ
+		- Images on xmlgw from resources.companieshouse.gov.uk ᵈ
+		- Bug on ewf from stats.companieshouse.gov.uk ˢ
+
+	ᵈ Unsecurable <= dropped
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="CompaniesHouse (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="account.companieshouse.gov.uk" />
+	<target host="beta.companieshouse.gov.uk" />
+	<target host="developer.companieshouse.gov.uk" />
+	<target host="direct.companieshouse.gov.uk" />
+	<target host="ebilling.companieshouse.gov.uk" />
+	<target host="ewf.companieshouse.gov.uk" />
+	<target host="extractives.companieshouse.gov.uk" />
+	<target host="piwik.companieshouse.gov.uk" />
+	<target host="stats.companieshouse.gov.uk" />
+	<target host="wck2.companieshouse.gov.uk" />
+	<!--target host="xmlgw.companieshouse.gov.uk" /-->
+
+
+	<!--	Complications:
+				-->
+	<target host="companieshouse.gov.uk" />
+	<target host="www.companieshouse.gov.uk" />
+
+		<exclusion pattern="^http://wck2\.companieshouse\.gov\.uk//?wcframe" />
+
+			<!--	ve:
+					-->
+			<test url="http://wck2.companieshouse.gov.uk//wcframe" />
+			<test url="http://wck2.companieshouse.gov.uk//wcframe?name=accessCompanyInfo" />
+
+			<!--	ve:
+					-->
+			<test url="http://wck2.companieshouse.gov.uk/com-remindaccount" />
+			<test url="http://wck2.companieshouse.gov.uk/goWCK/help/en/stdwc/priv_ch.html" />
+			<test url="http://wck2.companieshouse.gov.uk/images/com/en/spacer.gif" />
+			<test url="http://wck2.companieshouse.gov.uk/register" />
+			<test url="http://wck2.companieshouse.gov.uk/wclogin?rt=login" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.companieshouse\.gov\.uk$" name="^chcookie$" /-->
+	<!--securecookie host="^beta\.companieshouse\.gov\.uk$" name="^(?:__prefs|sft)$" /-->
+	<!--securecookie host="^ebilling\.companieshouse\.gov\.uk$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^wck2\.companieshouse\.gov\.uk$" name="^ch_session" /-->
+
+	<securecookie host="^(?!wck2\.)\w" name="." />
+
+
+	<!--	Redirect drops forward slash andargs:
+							-->
+	<rule from="^http://(?:www\.)?companieshouse\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/companies-house" />
+
+		<!--	/\w does not redirect:
+						-->
+		<exclusion pattern="^http://(?:www\.)?companieshouse\.gov\.uk/(?!/*(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.companieshouse.gov.uk/DS01Checklist" />
+			<test url="http://www.companieshouse.gov.uk/about/" />
+			<test url="http://www.companieshouse.gov.uk/about/informalCorrection.shtml" />
+			<test url="http://www.companieshouse.gov.uk/about/listCurrentContracts.shtml" />
+			<test url="http://www.companieshouse.gov.uk/eventbooking" />
+			<test url="http://www.companieshouse.gov.uk/infoAndGuide/faq/changeCompNameRes.shtml" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.companieshouse.gov.uk/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

@@ -1,0 +1,54 @@
+<!--
+	Other PressReader rulesets:
+
+		- NewspaperDirect.xml
+
+
+	Nonfunctional hosts in *pressreader.com:
+
+		- about ᵈ
+		- www.about ʰ
+		- cache-res ⁴
+
+	⁴ 404
+	ᵈ Dropped
+	ʰ Redirects to http
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- secure.pressreader.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on secure from fonts.googleapis.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="PressReader.com (partial)">
+
+	<target host="pressreader.com" />
+	<target host="cache3-res.pressreader.com" />
+	<target host="cdn-res.pressreader.com" />
+	<target host="secure.pressreader.com" />
+	<target host="services.pressreader.com" />
+	<target host="www.pressreader.com" />
+
+		<test url="http://cdn-res.pressreader.com/res/en-us/g1722/t220133984/images/se_nytimes_gfx_body.gif" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^secure\.pressreader\.com$" name="^AProfile$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

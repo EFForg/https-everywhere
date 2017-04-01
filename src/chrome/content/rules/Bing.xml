@@ -7,79 +7,66 @@
 		- a134.lm.akamai.net
 
 			- akam.bing.com
-			- ts[1-4].mm.bing.net
-
-		- ssl.bing.com.edgekey.net
-
-			- ssl.bing.com
+			- *.mm.bing.net
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *bing.com:
 
-		- bing.com:
-
-			images/ *
-			notifications/ *	not in fd/
-			thumb/ *
-
-		- api.bing.com			(404, akamai)
-		- db3.api.bing.com		(404; mismatched, CN: bedrock.msn.com)
-
-	* Redirects to http
+		- m2.cn
+		- origin.bj1
 
 
-	Problematic domains:
-
-		- www.bing.com		(redirects to http, akamai)
-		- ts[1-4].mm.bing.net	(akamai)
+	bat, c: Tracking beacons
 
 
-	Partially covered domains:
+	Insecure cookies are set for these domains and hosts:
 
-		- (www.)bing.com	(→ ssl.bing.com)
+		- .bing.com
+		- .bat.bing.com
+		- www.bing.com
 
 
-	Fully covered domains:
+	Mixed content:
 
-		- bing.com subdomains:
+		- Images on blogs from bingblog.blob.core.windows.net *
+		- Bug on blogs from c.microsoft.com *
 
-			- c.bing		(tracking beacons)
-			- h.bing
-			- ssl.bing
-			- udc.bing
-
-		- ts[1-4].mm.bing.net
+	* Secured by us
 
 -->
-<ruleset name="Bing (partial, buggy)" default_off="breaks points dashboard" platform="mixedcontent">
+<ruleset name="Bing.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="bing.com" />
-	<target host="*.bing.com" />
-	<target host="*.mm.bing.net" />
-		<!--
-			Breaks login menu
+	<target host="bat.bing.com" />
+	<target host="blog.bing.com" />
+	<target host="blogs.bing.com" />
+	<target host="c.bing.com" />
+	<target host="cn.bing.com" />
+	<target host="h.bing.com" />
+	<target host="ssl.bing.com" />
+	<target host="testfamilysafety.bing.com" />
+	<target host="udc.bing.com" />
+	<target host="www.bing.com" />
+	<target host="*.api.bing.com" />
 
-				https://trac.torproject.org/projects/tor/ticket/7092
-										-->
-		<exclusion pattern="^https?://(?:www\.)?bing\.com/fd/fb/mulmfg" />
+
+	<test url="http://db1.api.bing.com/" />
+	<test url="http://db2.api.bing.com/" />
+	<test url="http://db3.api.bing.com/" />
 
 
-	<securecookie host="^(?:\.c|ssl)\.bing\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.bing\.com$" name="^(?:_EDGE_V|_FS|_SS|MUID|SRCHD|SRCHUSR)$" /-->
+	<!--securecookie host="^\.bat\.bing\.com$" name="^MR$" /-->
+	<!--securecookie host="^www\.bing\.com$" name="^(?:MUIDB|SRCHUID)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:www\.)?bing\.com/(az/|fd/|HPImageArchive\.aspx|mm/|news/s/|s/as/|sa/|th(?:$|\?))"
-		to="https://ssl.bing.com/$1" />
-
-	<!--	- fd/s/ is equivalent and fd/ seems to work always, so redirect there
-		- /bing and /ssl.bing are the same here, but ssl has an EV
-								-->
-	<rule from="^http://(?:www\.)?bing\.com/s/"
-		to="https://ssl.bing.com/fd/s/" />
-
-	<rule from="^http://(c|h|ssl|udc)\.bing\.com/"
-		to="https://$1.bing.com/" />
-
-	<rule from="^http://ts[1-4]\.mm\.bing\.net/"
-		to="https://ssl.bing.com/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

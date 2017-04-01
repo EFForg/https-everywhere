@@ -1,14 +1,28 @@
+<!--
+	Insecure cookies are set for these hosts: ᶜ
+
+		- help.premiumize.me
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
 <ruleset name="Premiumize.me">
 
 	<target host="premiumize.me" />
-	<target host="*.premiumize.me" />
+	<target host="help.premiumize.me" />
+	<target host="secure.premiumize.me" />
+	<target host="www.premiumize.me" />
 
 
-	<securecookie host="^secure\.premiumize\.me$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^help\.premiumize\.me$" name="^SWIFT_(?:client|sessionid40)$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
 
 
-	<!--	Server redirects as so.		-->
-	<rule from="^http://(secure\.|www\.)?premiumize\.me/"
-		to="https://secure.premiumize.me/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -9,37 +9,52 @@
   <target host="*.startssl.eu" />
   <target host="startssl.us" />
   <target host="*.startssl.us" />
+  <!-- host startcom.org responds neither on 80 nor on 443,
+    but should be protected from MitM and redirected to https://www.startcom.org -->
   <target host="startcom.org" />
   <target host="*.startcom.org" />
 
   <!-- since these resources are required for establishing HTTPS connections,
-       they need to be available over HTTP
-  <Piet> OCSP: URI: http://ocsp.startssl.com/sub/class4/server/ca
-  <Piet> CA Issuers: URI: http://www.startssl.com/certs/sub.class4.server.ca.crt
-  <Piet> URI: http://www.startssl.com/crt4-crl.crl
-  <Piet> URI: http://crl.startssl.com/crt4-crl.crl
-  (and from the SSL observatory):
-  http://cert.startcom.org/sfsca-crl.crl
-  http://crl.startcom.org/sfsca-crl.crl
-  http://crl.startssl.com/sfsca.crl
-  http://cert.startcom.org/ca-crl.crl
-  http://crl.startcom.org/crl/ca-crl.crl
-  (and from Eddy Nigg):
-  http://ocsp.startssl.com/*
-  http://www.startssl.com/certs/*.crt
-  http://www.startssl.com/*.crl
-  http://crl.startssl.com/*.crl
-  http://cert.startcom.org/*.crl
-  http://cert.startcom.org/*.crt
-  -->
-  <exclusion pattern="ocsp\.startcom" />
+       they need to be available over HTTP -->
+  <!-- from Piet: -->
+  <test url="http://ocsp.startssl.com/sub/class4/server/ca" />
+  <test url="http://www.startssl.com/certs/sub.class4.server.ca.crt" />
+  <test url="http://www.startssl.com/crt4-crl.crl" />
+  <test url="http://crl.startssl.com/crt4-crl.crl" />
+  <!-- and from the SSL observatory: -->
+  <test url="http://cert.startcom.org/sfsca-crl.crl" />
+  <test url="http://crl.startcom.org/sfsca-crl.crl" />
+  <test url="http://crl.startssl.com/sfsca.crl" />
+  <test url="http://cert.startcom.org/ca-crl.crl" />
+  <test url="http://crl.startcom.org/crl/ca-crl.crl" />
+  <!-- and from Eddy Nigg: -->
+  <test url="http://ocsp.startssl.com/sub/class1/server/ca/a" />
+  <test url="http://www.startssl.com/certs/sub.class3.server.ca.crt" />
+  <test url="http://www.startssl.com/crtu1-crl.crl" />
+  <test url="http://crl.startssl.com/crtu1-crl.crl" />
+  <test url="http://cert.startcom.org/crtu1-crl.crl" />
+  <test url="http://cert.startcom.org/sub.class3.server.ca.crt" />
+
   <exclusion pattern="ocsp\.startssl" />
   <exclusion pattern="\.crl$" />
   <exclusion pattern="\.crt$" />
 
   <!-- should mitigate against exploitation of the above exclusions -->
   <securecookie host=".*" name=".*" />
+  
+  <test url="http://linux.startcom.org/" />
+  <test url="http://forum.startcom.org/" />
+  
+  <test url="http://www.startssl.com/" />
+  <test url="http://www.startssl.net/" />
+  <test url="http://www.startssl.org/" />
+  <test url="http://www.startssl.eu/" />
+  <test url="http://www.startssl.us/" />
+  
+  <test url="http://startcom.org/" />
 
-  <rule from="^http://([^/:@\.]*\.)?startssl\.(com|net|org|eu|us)/" to="https://$1startssl.$2/"/>
-  <rule from="^http://([^/:@\.]*\.)?startcom\.org/" to="https://$1startcom.org/"/>
+  <!-- host startcom.org responds neither on 80 nor on 443,
+    but should be protected from MitM and redirected to https://www.startcom.org -->
+  <rule from="^http://startcom\.org/" to="https://www.startcom.org/" />
+  <rule from="^http:" to="https:" />
 </ruleset>

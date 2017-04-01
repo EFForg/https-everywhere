@@ -4,6 +4,9 @@
 
 	CDN buckets:
 
+		- s3.amazonaws.com/actionkit.moveon.org/
+		- s3.amazonaws.com/s3.moveon.org/
+
 		- d83190g0d3lhr.cloudfront.net
 
 			- static.petitions.moveon.org
@@ -13,9 +16,13 @@
 			- front.moveon.org
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *moveon.org:
 
-		- front.moveon.org	(redirects to http, valid cert)
+		- front ʰ
+		- old-site ᵈ
+
+	ᵈ Dropped
+	ʰ WP Engine / redirects to http
 
 
 	Fully covered domains:
@@ -23,57 +30,63 @@
 		- static.petitions.moveon.org	(→ d83190g0d3lhr.cloudfront.net)
 
 
+	Insecure cookies are set for these domains and hosts:
+
+		- .moveon.org
+		- act.moveon.org
+
+
 	Mixed content:
-
-		- Videos on petitions.moveon.org from www.youtube.com ¹
-
-		- css, on petitions.moveon.org from:
-
-			- ^ ¹
-			- fonts.google.com ¹
 
 		- Images, on petitions.moveon.org from:
 
+			- front.moveon.org
 			- moveon.wpengine.netdna-cdn.com ²
 
-	¹ Secured by us
+	¹ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 	² Unsecurable
 
 -->
-<ruleset name="MoveOn">
+<ruleset name="MoveOn.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="moveon.org" />
-	<target host="*.moveon.org" />
-	<target host="moveonpac.org" />
-	<target host="www.moveonpac.org" />
+	<target host="act.moveon.org" />
+	<target host="civ.moveon.org" />
+	<target host="civic.moveon.org" />
+	<target host="petitions.moveon.org" />
+	<target host="pol.moveon.org" />
+	<target host="www.moveon.org" />
 
-	<!-- For a URL such as http://www.moveon.org/press where
-	there is no trailing slash, add a trailing slash when
-	changing the URL to HTTPS (the previous URL becomes
-	https://www.moveon.org/press/ for instance.) -->
-	<rule from="^https?://(?:www\.)?moveon\.org/([a-z0-9]+)$" to="https://www.moveon.org/$1/" />
-	<rule from="^https?://(pol|civic|civ)\.moveon\.org/([a-z0-9]+)$" to="https://$1.moveon.org/$2/" />
+	<!--	Complications:
+				-->
+	<target host="static.petitions.moveon.org" />
+	<target host="s3.moveon.org" />
 
-	<!-- As of April 23, 2011, the URL https://www.moveon.org/keepmeposted/ redirects to the
-	https://civic.moveon.org/keepmeposted// URL. This is probably an error-the correct URL
-	should be https://civic.moveon.org/keepmeposted/ instead. The rule that comes next tries
-	to correct this error by adjusting certain URLs that end with two or more slashes. -->
-	<rule from="^https?://civic\.moveon\.org/([a-z0-9]+){1}/{2,}" to="https://civic.moveon.org/$1/" />
 
-	<!-- Change URLs that start with http://www.moveon.org/r? to start with
-	https://www.moveon.org/r/? instead. -->
-	<rule from="^http://(?:www\.)?moveon\.org/r\?" to="https://www.moveon.org/r/?" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.moveon\.org$" name="^SO_SESSION$" /-->
+	<!--securecookie host="^act\.moveon\.org$" name="^sid$" /-->
 
-	<!-- Handle URLs that do not fall within the previously mentioned
-	special cases. -->
-	<rule from="^http://(?:www\.)?moveon\.org/((?:[^a-z0-9]+)|(?:[a-z0-9]{2,}\?)|(?:[a-qs-z0-9]\?)|(?:[a-z0-9]+[^a-z0-9?]+)){1}" to="https://www.moveon.org/$1" />
-	<rule from="^http://(pol|civ)\.moveon\.org/([^a-z0-9]+|(?:[a-z0-9]+[^a-z0-9]+)|$){1}" to="https://$1.moveon.org/$2" />
-	<rule from="^http://civic\.moveon\.org/((?:[^a-z0-9]+)|(?:[a-z0-9]+[^a-z0-9/]+)|(?:[a-z0-9]+/(?:$|[^/]+))|$){1}" to="https://civic.moveon.org/$1" />
+	<securecookie host="^\w" name="." />
 
-	<!--	A protocol-relative reference exists on petitions.moveon.org:
-										-->
+
+	<rule from="^http://s3\.moveon\.org/"
+		to="https://s3.amazonaws.com/s3.moveon.org/" />
+
+	<!--	A protocol-relative reference
+		exists on petitions.moveon.org:
+						-->
 	<rule from="^https?://static\.petitions\.moveon\.org/"
 		to="https://d83190g0d3lhr.cloudfront.net/" />
 
-	<!-- Handle URLs for the moveonpac.org domain. -->
-	<rule from="^http://(?:www\.)?moveonpac\.org/" to="https://www.moveonpac.org/" />
+		<!--	Specifically:
+					-->
+		<test url="https://static.petitions.moveon.org/css/front.css" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

@@ -1,69 +1,42 @@
 <!--
-	Nonfunctional domains:
+	Insecure cookies are set for these domains and hosts:
 
-		- zunzi.com subdomains:
-
-			- img *
-			- s **
-			- ss *
-
-		- afiliere.zumzi.ro *
-
-	* Dropped
-	** Redirects to www.zumzi.ro; mismatched, CN: www.zumzi.ro
-
-
-	Problematic domains:
-
-		- biz.zumzi.md		(works; mismatched, CN: www.zumzi.md)
-		- biz.zumzi.ro		(works; mismatched, CN: www.zumzi.ro)
+		- .zumzi.com
+		- biz.zumzi.com
+		- .biz.zumzi.com
+		- www.zumzi.com
 
 
 	Mixed content:
 
-		- Script, on www from:
+		- css on biz from fonts.googleapis.com *
 
-			- ss *
-			- maps.google.com **
-			- www.google.com **
-			- maps.googleapis.com **
-			- maps.gstatic.com **
-
-		- css on www from ss *
-
-		- Images, on www from:
-
-			- img *
-			- s *
-			- www.google.com **
-			- mt[01].googleapis.com **
-			- maps.gstatic.com **
-
-		- Ads/web bugs, on www from:
-
-			- afiliere *
-			- www.google.com **
-			- www.googleadservices.com **
-
-	* Unsecurable
-	** Secured by us
-
-
-	NB: We cannot remove platform until an alternative
-	path for ss scripts and css is provided/found.
+	* Secured by us
 
 -->
-<ruleset name="Zumzi (partial)" platform="mixedcontent">
+<ruleset name="Zumzi.com">
 
-	<target host="zumzi.*" />
-	<target host="*.zumzi.md" />
-	<target host="*.zumzi.ro" />
+	<!--	Direct rewrites:
+				-->
+	<target host="zumzi.com" />
+	<target host="biz.zumzi.com" />
+	<target host="img.zumzi.com" />
+	<target host="s.zumzi.com" />
+	<target host="ss.zumzi.com" />
+	<target host="www.zumzi.com" />
 
 
-	<securecookie host="^(?:www)?\.zumzi\.(?:md|ro)$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www)?\.zumzi\.com$" name="^(zum_country|zimzi_city|zumzi2)" /-->
+	<!--securecookie host="^\.?biz\.zumzi\.com$" name="^country$" /-->
+	<!--securecookie host="^\.biz\.zumzi\.com$" name="^pzumzi2$" /-->
+	<!--securecookie host="^www\.zumzi\.com$" name="^country_geoip$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(www\.)?zumzi\.(md|ro)/"
-		to="https://$1zumzi.$2/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

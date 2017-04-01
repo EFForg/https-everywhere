@@ -1,27 +1,42 @@
 <!--
+	NB: If a host ceases to exist, just remove the respective test.
+
+
 	Other Mozilla rulesets:
 
+		- Allizom.org.xml
+		- Are_We_Slim_Yet.com.xml
+		- BadgeKit.org.xml
 		- BrowserID.xml
 		- Bugzilla.xml
+		- Firefox.com.xml
 		- GetPersonas.xml
 		- Lizard_Wrangler.com.xml
+		- Makes.org.xml
+		- Mozilla.com.xml
 		- Mozilla.com.tw.xml
+		- Mozilla.jp.xml
+		- Mozilla.net.xml
+		- Mozilla-Community.org.xml
+		- Mozilla_Demos.org.xml
+		- Mozilla_Ignite.org.xml
+		- Mozilla_Labs.com.xml
+		- Mozilla_Messaging.com.xml
 		- Mozilla_Persona.xml
 		- Mozilla_Webmaker.xml
+		- Mozillians.org.xml
+		- Moztw.org.xml
+		- mzl.la (via Bitly_branded_short_domains.xml)
 		- Open_Badges.xml
+		- Public_Suffix.org.xml
+		- TaskCluster.net
+		- TogetherJS.com.xml
+		- WebFWD.org.xml
 
 
 	CDN buckets:
 
-		- 2-01-2967-0005.cdx.cedexis.net
-
-			- cdn.mozilla.net
-
-		- wac.1237.edgecastcdn.net/??1237/
-
-			- getpersonas-cdn.mozilla.net
-
-		- images.s4.exacttarget.com.edgesuite.net
+		- a248.e.akamai.net/f/1/1/1/image.e.mozilla.org/
 
 			- image.e.mozilla.org
 
@@ -36,310 +51,263 @@
 
 	Nonfunctional domains:
 
-		- www.authstage.mozilla.com ³
-		- identity.mozilla.com ¹
-		- www-trunk.stage.mozilla.com ³
+		- (www.)?drumbeat.org ³
 
-		- mozilla.org subdomains:
+		- in *mozilla.org:
 
-			- bonsai		(prompts for LDAP login; mismatched, CN: tinderbox.mozilla.org)
-			- browserquest ²
-			- dxr ²
-			- view.e ³
-			- graphs ²
-			- planet ²
-			- releases ³
-			- sfx-images ²		(banners)
-			- start ²
-			- telemetry ²
-			- website-archive ²
-			- www-archive		(prompts for LDAP login, CN: static-san.mozilla.org)
+			- bonsai ³
+			- browserquest ³
+			- view.e ¹
+			- graphs ³
+			- krakenbenchmark ³
+			- mig ³
+			- sfx-images ³		(banners)
+			- alerts.telemetry *
+			- website-archive ³
+			- www-archive ³
 
-		- blog.webfwd.org ³
-
-	¹ Hosted on tumblr
-	² Refused
-	³ Dropped
+	¹ Dropped
+	³ Refused
+	* https://github.com/EFForg/https-everywhere/issues/1374
 
 
-	Problematic domains:
+	Problematic hosts in *mozilla.org:
 
-		- firefox.com
-		- www.firefox.com		(works; mismatched, CN: static-san.mozilla.org)
-		- cdn.mozilla.net		(404; mismatched, CN: gp1.wac.edgecastcdn.net)
-		- download.cdn.mozilla.net	(503, akamai)
-		- getpersonas-cdn.mozilla.net	(mismatched, CN: ssl2.cdngc.net)
+		- affiliates-cdn ⁵
+		- click.e ⁶
+		- image.e ⁷
+		- labs ¹
+		- talkback-public ⁴
 
-		- mozilla.org subdomains:
-
-			- affiliates-cdn	(works; mismatched, CN: affiliates.mozilla.org)
-			- beta *
-			- click.e		(works; mismatched, CN: *.virt.s4.exacttarget.com)
-			- image.e		(works, akamai)
-			- krakenbenchmark	(works; mismatched, CN: static-san.mozilla.org)
-			- labs *
-			- talkback-public *
-			- videos		(works; mismatched, CN: static-cdn.addons.mozilla.net)
-
-	* Prompts for LDAP login; mismatched, CN: static-san.mozilla.org
+	¹ https://labs.mozilla.org refuses connections.
+	  http://labs.mozilla redirects to http://mozillalabs.com, and
+	  https://mozillalabs.com uses a mismatched certificate.
+	* Mismatched, CN: status.io.watchmouse.com
+	⁴ Prompts for LDAP login; mismatched, CN: static-san.mozilla.org
+	⁵ Works; mismatched, CN: affiliates.mozilla.org
+	⁷ Works, akamai
 
 
-	Fully covered domains:
+	Observed working hosts in *mozilla.org:
 
-		- drumbeat.org
-		- www.drumbeat.org
-		- (www.)firefox.com		(→ www.mozilla.org)
-		- marketplace.firefox.com
+		- (www.)?
+		- activations
+		- advocacy
 
-		- mozilla.com subdomains:
+		- in *addons:
 
-			- (www.)
-			- addons
-			- air
-			- basket
-			- blog
-			- brasstacks
-			- crash-analysis
-			- crash-stats
-			- data
-			- input
-			- mail
-			- people
-			- mail.corp.phx1
-			- location.services
-			- support
-
-		- mozilla.net subdomains:
-
-			- (www.)		(→ www.mozilla.org)
-			- static-cdn.addons
-			- static-ssl-cdn.addons
-
-			- cdn subdomains:
-
-				- addons
-				- developer
-				- download		(→ ftp.mozilla.org)
-				- download-installer
-				- fhr
-				- getpersonas
-				- marketplace
-				- mozorg
-				- support
-				- versioncheck
-
-			- getpersonas-cdn	(→ getpersonas.cdn)
-			- videos-cdn
-
-		- mozilla.org subdomains:
-
-			- (www.)
-
-			- addons subdomains:
-
-				- ^
-				- forums
-				- pyrepo
-				- services
-
-			- affiliates
-			- affiliates-cdn	(→ affiliates)
-			- air
-			- basket
-			- beta		(→ mozilla.org/en-US/firefox/channel/)
-			- blog
-			- boardwiki
-			- bugzilla
-			- bzr
-			- careers
-			- communitystore
-			- creative
-			- developer
-			- directory
-			- dnt
-			- donate
-			- download
-			- education
-			- etherpad
-			- fb-affiliates
-			- firefoxflicks
-			- firefoxlive
+			- ^
+			- blocklist
 			- forums
-			- foundationwiki
-			- ftp
-			- gameon
-			- gpg
-			- hacks
-			- hg
-			- inform
-			- input
-			- intlstore
-			- join
-                        - keys
-                        - keyserver
-			- l10n
-			- labs		(→ mozillalabs.com)
-			- ldap
-			- lists
-			- localize
-			- mail
-			- mana
-			- marketplace
-			- metrics
-			- moztrap
-			- mpl
-			- mxr
-			- nightly
-			- outgoing
-			- people	(→ people.mozilla.com)
-			- quality
-			- reps
-			- securitywiki
-			- sendto
-			- studentreps
-			- support
-			- talkback-public	(→ crash-stats.mozilla.com)
-			- tbpl
-			- videos	(→ videos-cdn.mozilla.net)
-			- wiki
+			- pyrepo
+			- services
+			- versioncheck
 
-		- mdn.mozillademos.org
-		- (www.)mozillaignite.org
-		- blog.mozillaignite.org
+		- affiliates
+		- affiliates-cdn	(→ affiliates.mozilla.org)
+		- archive
+		- air
+		- aus3
+		- aus4
+		- basket
+		- beta
+		- blog
+		- boardwiki
+		- bugzilla
+		- secure.pub.build
+		- bzr
+		- calendar
+		- careers
+		- communitystore
+		- creative
+		- developer
+		- directory
+		- dnt
+		- donate
+		- download
+		- dragnet
+		- dxr
+		- education
+		- etherpad
+		- fb-affiliates
+		- firefoxflicks
+		- firefoxlive
+		- forums
+		- foundationwiki
+		- ftp
+		- gameon
+		- gear
+		- git
+		- gpg
+		- hacks
+		- hg
+		- inform
+		- input
+		- intlstore
+		- intranet
+		- join
+		- keys
+		- keyserver
+		- l10n
+		- labs			(→ mozillalabs.com)
+		- ldap
+		- lists
+		- localize
+		- m
+		- svc.m
+		- mail
+		- mana
+		- marketplace
+		- metrics
+		- moztrap
+		- mpl
+		- mxr
+		- nightly
+		- outgoing
+		- people
+		- pfs
+		- planet
+		- pulse
+		- quality
+		- releases
+		- reps
+		- securitywiki
+		- sendto
+		- start
+		- status
+		- studentreps
+		- support
+		- talkback-public	(→ crash-stats.mozilla.com)
+		- telemetry
+		- tbpl
 
-		- mozillalabs.com subdomains:
+		- telemetry
+		- fxos.telemetry
+		- hotfix.telemetry
+		- incoming.telemetry
+		- loop.telemetry
 
-			- (www.)
-			- apps
-			- bespin
-			- bespinplugins
-			- gaming
-			- heatmap
-			- jetpack
-			- testpilot
-			- webmaker
-
-		- planet.mozillamessaging.com
-		- support.mozillamessaging.com
-		- (www.)webfwd.org
+		- telemetry-dash
+		- treeherder
+		- videos
+		- wiki
+		- www
 
 
-	Cookie domains:
+	These altnames don't exist:
 
-		- mail.mozilla.com
-		- mail.corp.phx1.mozilla.com
+		- generic-san.mozilla.org
+		- analysis.telemetry.mozilla.org
+
+
+	Insecure cookies are set for these domains:
+
+		- .mozilla.org
 		- addons.mozilla.org
-		- reps.mozilla.org
+		- bugzilla.mozilla.org
+		- .sendto.mozilla.org
+		- support.mozilla.org
+		- telemetry.mozilla.org
 
 
 	Mixed content:
 
-		- Image on www.mozilla.org from www.seamonkey-project.org
+		- Images, on:
+
+			- blog.mozilla.org from $self *
+			- www.mozilla.org from www.seamonkey-project.org
+
+	* Secured by us
 
 -->
-<ruleset name="Mozilla">
+<ruleset name="Mozilla.org">
 
-	<target host="drumbeat.org" />
-	<target host="www.drumbeat.org" />
-	<target host="firefox.com" />
-	<target host="*.firefox.com" />
-	<target host="mozilla.com" />
-	<target host="*.mozilla.com" />
-		<exclusion pattern="^http://(?:www\.authstage|identity|www-trunk\.stage)\.mozilla\.com/" />
-	<target host="mozilla.net" />
-	<target host="*.mozilla.net" />
-		<exclusion pattern="^http://cdn\.mozilla\.net/" />
 	<target host="mozilla.org" />
 	<target host="*.mozilla.org" />
 		<!--
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2013-July/001649.html
-													-->
-		<exclusion pattern="^http://(?:bonsai|browserquest|dxr|graphs|krakenbenchmark|planet|releases|sfx-images|start|telemetry|w(?:ebsite|ww)-archive)\.mozilla\.org/" />
-		<!--
-			Breaks newsletter:
+
+			\w+.e.mozilla.org breaks newsletter:
 
 				https://mail1.eff.org/pipermail/https-everywhere-rules/2013-June/001635.html
-									-->
-		<exclusion pattern="^http://\w+\.e\.mozilla\.org/" />
-	<target host="mdn.mozillademos.org" />
-	<target host="mozillaignite.com" />
-	<target host="*.mozillaignite.com" />
-	<target host="mozillalabs.com" />
-	<target host="*.mozillalabs.com" />
-	<target host="*.mozillamessaging.com" />
-	<target host="webfwd.org" />
-	<target host="www.webfwd.org" />
+													-->
+		<exclusion pattern="^http://(europe|bonsai|browserquest|trychooser\.pub\.build|(?!image)\w+\.e|graphs|krakenbenchmark|mig|sfx-images|symbolapi|symbols|alerts\.telemetry|w(ebsite|ww)-archive)\.mozilla\.org/" />
+
+			<test url="http://bonsai.mozilla.org/" />
+			<test url="http://browserquest.mozilla.org/" />
+			<test url="http://trychooser.pub.build.mozilla.org/" />
+			<test url="http://click.e.mozilla.org/" />
+			<test url="http://graphs.mozilla.org/" />
+			<test url="http://krakenbenchmark.mozilla.org/" />
+			<test url="http://mig.mozilla.org/" />			
+			<test url="http://sfx-images.mozilla.org/" />
+			<test url="http://symbolapi.mozilla.org/" />
+			<test url="http://symbols.mozilla.org/" />
+			<test url="http://alerts.telemetry.mozilla.org/" />
+			<test url="http://website-archive.mozilla.org/" />
+			<test url="http://www-archive.mozilla.org/" />
+			<test url="http://www-archive.mozilla.org//" />
+
+		<test url="http://addons.mozilla.org/" />
+		<test url="http://advocacy.mozilla.org/" />
+		<test url="http://affiliates.mozilla.org/" />
+		<test url="http://air.mozilla.org/" />
+		<test url="http://archive.mozilla.org/" />
+		<test url="http://bonsai.mozilla.org/" />
+		<test url="http://bugzilla.mozilla.org/" />
+		<test url="http://bzr.mozilla.org/" />
+		<test url="http://careers.mozilla.org/" />
+		<test url="http://developer.mozilla.org/" />
+		<test url="http://dxr.mozilla.org/" />
+		<test url="http://europe.mozilla.org/" />
+		<test url="http://ftp.mozilla.org/" />
+		<test url="http://git.mozilla.org/" />
+		<test url="http://hg.mozilla.org/" />
+		<test url="http://lists.mozilla.org/" />
+		<test url="http://planet.mozilla.org/" />
+		<test url="http://pulse.mozilla.org/" />
+		<test url="http://releases.mozilla.org/" />
+		<test url="http://sendto.mozilla.org/page/-/ssou-logos/twitter-bird-white-on-blue.png" />
+		<test url="http://start.mozilla.org/" />
+		<test url="http://support.mozilla.org/" />
+		<test url="http://telemetry.mozilla.org/" />
+		<test url="http://wiki.mozilla.org/" />
+		<test url="http://videos.mozilla.org/" />
+		<test url="http://www.mozilla.org/" />
 
 
-	<securecookie host="^marketplace\.firefox\.com$" name=".+" />
-	<securecookie host="^.*\.mozilla\.(?:com|org)$" name=".+" />
-	<securecookie host="^mozilla(?:ignite|labs)\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.mozilla\.org$" name="^(optimizelyBuckets|optimizelyEndUserId|optimizelyPendingLogEvents|optimizelySegments)$" /-->
+	<!--securecookie host="^addons\.mozilla\.org$" name="^(apps/files/tabstops|multidb_pin_writes|recently-viewed-collections|search-appver|search-platform|visitor-seen_impala_first_visit)$" /-->
+	<!--securecookie host="^bugzilla\.mozilla\.org$" name="^(BUGLIST|LASTORDER)$" /-->
+	<!--securecookie host="^\.sendto\.mozilla\.org$" name="^X-CheckNode$" /-->
+	<!--securecookie host="^support\.mozilla\.org$" name="^dwf_surveygizmo$" /-->
+	<!--securecookie host="^telemetry-dash\.mozilla\.org$" name="^session$" /-->
+
+	<securecookie host=".*\.mozilla\.org$" name=".+" />
 
 
-	<rule from="^http://(www\.)?(drumbeat|webfwd)\.org/"
-		to="https://$1$2.org/" />
-
-	<!--	Redirects like so over http.
-						-->
-	<rule from="^https?://(?:www\.)?firefox\.com/"
-		to="https://www.mozilla.org/firefox/" />
-
-	<rule from="^http://marketplace\.firefox\.com/"
-		to="https://marketplace.firefox.com/" />
-
-	<rule from="^http://([\w.-]+\.)?mozilla\.com/"
-		to="https://$1mozilla.com/" />
-
-	<!--	Redirects as so over http.
-						-->
-	<rule from="^https?://(?:www\.)?mozilla\.net/"
-		to="https://www.mozilla.org/" />
-
-	<rule from="^https?://download\.cdn\.mozilla\.net/"
-		to="https://ftp.mozilla.org/" />
-
-	<rule from="^https?://getpersonas-cdn\.mozilla\.net/"
-		to="https://getpersonas.cdn.mozilla.net/" />
-
-	<rule from="^http://([\w\.-]+)\.mozilla\.net/"
-		to="https://$1.mozilla.net/" />
-
-	<rule from="^https?://affiliates-cdn\.mozilla\.org/"
+	<rule from="^http://affiliates-cdn\.mozilla\.org/"
 		to="https://affiliates.mozilla.org/" />
 
-	<rule from="^https?://beta\.mozilla\.org/"
-		to="https://www.mozilla.org/firefox/channel/" />
+		<test url="http://affiliates-cdn.mozilla.org/" />
 
-	<rule from="^http://labs\.mozilla\.org/"
-		to="https://mozillalabs.com/" />
+	<!--	Would this rule be safe?
 
-	<rule from="^https?://people\.mozilla\.org/"
-		to="https://people.mozilla.com/" />
+	<rule from="^http://click\.e\.mozilla\.org/"
+		to="https://click.virt.s4.exacttarget.com/" /-->
+
+		<test url="http://image.e.mozilla.org/" />
 
 	<!--	Redirects like so over http.
 						-->
-	<rule from="^https?://talkback-public\.mozilla\.org/"
+	<rule from="^http://talkback-public\.mozilla\.org/"
 		to="https://crash-stats.mozilla.com/" />
 
-	<rule from="^https?://videos\.mozilla\.org/"
-		to="https://videos-cdn.mozilla.net/" />
+		<test url="http://talkback-public.mozilla.org/" />
 
-	<rule from="^http://([\w\.-]+\.)?mozilla\.org/"
-		to="https://$1mozilla.org/" />
-
-	<rule from="^http://mdn\.mozillademos\.org/"
-		to="https://mdn.mozillademos.org/" />
-
-	<rule from="^http://(\w+\.)?mozillaignite\.com/"
-		to="https://$1mozillaignite.com/" />
-
-	<rule from="^http://(www\.)?mozillalabs\.com/"
-		to="https://$1mozillalabs.com/" />
-
-	<rule from="^http://(\w+)\.mozillalabs\.com/"
-		to="https://$1.mozillalabs.com/"/>
-
-	<rule from="^http://(planet|support)\.mozillamessaging\.com/"
-		to="https://$1.mozillamessaging.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

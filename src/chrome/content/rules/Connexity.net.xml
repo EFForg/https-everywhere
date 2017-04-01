@@ -3,19 +3,34 @@
 
 		- www	(reset; mismatched, CN: pro.connexity.net)
 
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .connexity.net
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
 -->
 <ruleset name="Connexity.net">
 
 	<target host="connexity.net" />
-	<target host="*.connexity.net" />
+	<target host="rd.connexity.net" />
 
+		<!--	Sets cookies without Secure:
+							-->
+		<test url="http://rd.connexity.net/rd2?mid=&amp;catId=&amp;prodId=&amp;tokenId=&amp;lg=&amp;bAmt=&amp;ppr=&amp;oid=&amp;atom=&amp;bidType=&amp;bId=&amp;mpid=&amp;countryCode=US&amp;t=&amp;br=&amp;rf=&amp;vsc=&amp;rdrSerial=" />
+
+
+	<!--	Not secured by server, set by rd:
+							-->
+	<!--securecookie host="^\.connexity\.net$" name="^(?:COu|br|rf)$" /-->
 
 	<!--	Tracking cookies:
 					-->
-	<securecookie host="^\.connexity\.net$" name="^(?:COu|refresh|sync)$" />
+	<securecookie host="^\." name="^(?:COu|br|refresh|rf|sync)$" />
 
 
-	<rule from="^http://connexity\.net/"
-		to="https://connexity.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

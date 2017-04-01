@@ -1,0 +1,82 @@
+<!--
+	Nonfunctional hosts in *sparebank1.no:
+
+		- epost ⁴
+
+	⁴ 404
+
+
+	Problematic hosts in *sparebank1.no:
+
+		- gientier ᵐ
+		- investor ᵘ
+
+	ᵐ Mismatched
+	ᵘ Untrusted root
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .sparebank1.no
+		- portal01.sparebank1.no
+		- sikkerhetsbutikken.sparebank1.no
+		- spabol.sparebank1.no
+		- spacom.sparebank1.no
+		- www.sparebank1.no
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="SpareBank 1.no (partial)">
+
+	<target host="sparebank1.no" />
+	<target host="bolig.sparebank1.no" />
+	<target host="boligprat.sparebank1.no" />
+	<target host="demo.sparebank1.no" />
+	<target host="forsikring.sparebank1.no" />
+	<target host="helse.sparebank1.no" />
+	<target host="kfb.sparebank1.no" />
+	<target host="kredittkort.sparebank1.no" />
+	<target host="kundeforsikring.sparebank1.no" />
+	<target host="www.liv.sparebank1.no" />
+	<target host="login.sparebank1.no" />
+	<target host="m.sparebank1.no" />
+	<target host="mobil.sparebank1.no" />
+	<target host="mobildemo.sparebank1.no" />
+	<target host="nyheter.sparebank1.no" />
+	<target host="personforsikring.sparebank1.no" />
+	<target host="portal01.sparebank1.no" />
+	<target host="pressesenter.sparebank1.no" />
+	<target host="sikkerhetsbutikken.sparebank1.no" />
+	<target host="spabol.sparebank1.no" />
+	<target host="spacom.sparebank1.no" />
+	<target host="statistikk.sparebank1.no" />
+	<target host="webskjema.sparebank1.no" />
+	<target host="www.sparebank1.no" />
+	<target host="www2.sparebank1.no" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://statistikk.sparebank1.no/sensor/statistic" />
+
+		<!--	$ 404s, so:
+					-->
+		<test url="http://webskjema.sparebank1.no/erstatning" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.sparebank1\.no$" name="^Spor$" /-->
+	<!--securecookie host="^portal01\.sparebank1\.no$" name="^DSESSIONID$" /-->
+	<!--securecookie host="^sikkerhetsbutikken\.sparebank1\.no$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^spabol\.sparebank1\.no$" name="^spabol__(?:csrf_token|last_activity|last_visit|tracker)$" /-->
+	<!--securecookie host="^spacom\.sparebank1\.no$" name="^spabol__(?:last_activity|last_visit|tracker)$" /-->
+	<!--securecookie host="^www\.sparebank1\.no$" name="^(?:DSESSIONID|cxm)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

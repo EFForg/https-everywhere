@@ -1,35 +1,74 @@
 <!--
-	Nonfunctional domains:
+	Other MediaTemple rulesets:
 
-		- weblog.mediatemple.net
-		- wiki.mediatemple.net
+		- Gridserver.com.xml
+		- MT-CDN.net.xml
+
+
+	Nonfunctional hosts in *mediatemple.net:
+
+		- weblog
+
+
+	Problematic hosts in *mediatemple.net:
+
+		- status *
+
+	* StatusPage.io
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .mediatemple.net
+		- ac.mediatemple.net
 
 -->
-<ruleset name="Media Temple (partial)" platform="mixedcontent">
+<ruleset name="Media Temple.net (partial)">
 
-	<target host="gridserver.com" />
-	<target host="*.gridserver.com" />
+	<!--	Direct rewrites:
+				-->
 	<target host="mediatemple.net" />
-	<target host="*.mediatemple.net" />
-	<target host="*.mt-cdn.net" />
+	<target host="ac.mediatemple.net" />
+	<target host="accountcenter.mediatemple.net" />
+	<target host="affiliate.mediatemple.net" />
+	<target host="api.mediatemple.net" />
+	<target host="bin.mediatemple.net" />
+	<target host="forum.mediatemple.net" />
+	<target host="forums.mediatemple.net" />
+	<target host="kb.mediatemple.net" />
+	<target host="nova.mediatemple.net" />
+	<target host="static.mediatemple.net" />
+	<target host="wiki.mediatemple.net" />
+	<target host="www.mediatemple.net" />
 
+	<!--	Complications:
+				-->
+	<target host="status.mediatemple.net" />
 
-	<securecookie host=".*\.mediatemple\.net$" name=".*" />
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://mediatemple\.net/blog(?:$|[?/])" />
 
-
-	<!--	e.g.
-		s69107.gridserver.com/wp-content/themes/pixel/img/interface/88x31.png
+			<!--	+ve:
 					-->
-	<rule from="^http://(s\d+\.)?gridserver\.com/"
-		to="https://$1gridserver.com/" />
+			<test url="http://mediatemple.net/blog" />
+			<test url="http://mediatemple.net/blog/madeonmt/" />
+			<test url="http://mediatemple.net/blog/news/" />
+			<test url="http://mediatemple.net/blog/tips/" />
 
-	<rule from="^http://mediatemple\.net/"
-		to="https://mediatemple.net/" />
 
-	<rule from="^http://(ac|affiliate|api|bin|forum|www)\.mediatemple\.net/"
-		to="https://$1.mediatemple.net/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.mediatemple\.net$" name="^(ipb_session_id|session)$" /-->
+	<!--securecookie host="^ac\.mediatemple\.net$" name="^psc$" /-->
 
-	<rule from="^http://(?:origin|s\d)\.mt-cdn\.net/"
-		to="https://www.mediatemple.net/" />
+	<securecookie host=".*\.mediatemple\.net$" name=".+" />
+
+
+	<rule from="^http://status\.mediatemple\.net/"
+		to="https://mtmediatemple.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

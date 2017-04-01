@@ -1,0 +1,38 @@
+<!--
+	Problematic hosts in *madadsmedia.com:
+
+		- ads-by ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- madadsmedia.com
+		- www.madadsmedia.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="MadAds Media.com (partial)">
+
+	<target host="madadsmedia.com" />
+	<!--target host="ads-by.madadsmedia.com" /-->
+	<target host="www.madadsmedia.com" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://www.madadsmedia.com/landing/1/ref/1/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?madadsmedia\.com$" name="^(?:PHPSESSID|referral_id)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

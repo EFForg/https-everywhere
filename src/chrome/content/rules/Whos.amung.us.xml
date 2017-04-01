@@ -2,38 +2,83 @@
 	whos.amung.us Inc
 
 
-	Nonfunctional subdomains:
+	Problematic hosts in *amung.us:
 
-		- (www.)	(403, valid cert)
+		- feeds ¹
+		- whos ²
 
-
-	Problematic subdomains:
-
-		- whos		(some paths 403)
-
-
-	Partially covered subdomains:
-
-		- whos
+	¹ Feedburner
+	² Mixed css
 
 
-	Fully covered subdomains:
+	Mixed content:
 
-		- assets
-		- widgets
+		- css, on:
+
+			- whos from assets.amung.us *
+			- whos from fonts.googleapis.com *
+
+		- Images, on:
+
+			- whos from assets.amung.us *
+			- whos from widgets.amung.us *
+
+		- Bug on whos from $self *
+
+	* Secured by us
 
 -->
 <ruleset name="whos.amung.us (partial)">
 
-	<target host="*.amung.us" />
-		<!--
-			403:
+	<!--	Direct rewrites:
 				-->
-		<!--exclusion pattern="^http://whos\.amung\.us/+($|\?|(about|blog|contact|learnmore|legal|pro(?!/login/)|showcase)($|[?/])|favicon\.ico|widget/)" /-->
-		<exclusion pattern="^http://whos\.amung\.us/(?!colorgen/|flash/|pro/login/)" />
+	<target host="amung.us" />
+	<target host="assets.amung.us" />
+	<target host="whos.amung.us" />
+	<target host="widgets.amung.us" />
+	<target host="www.amung.us" />
+
+	<!--	Complications:
+				-->
+	<target host="feeds.amung.us" />
+
+		<!--	Mixed css:
+					-->
+		<!--exclusion pattern="^http://whos\.amung\.us/(?:$|(?:about|blog|contact|help|legal|learnmore|showcase|stats)/?$|pro(?!/login/))" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://whos\.amung\.us/(?!colorgen/|favicon\.ico|flash/|pro/login/|show/|swidget/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://whos.amung.us/about" />
+			<test url="http://whos.amung.us/blog" />
+			<test url="http://whos.amung.us/contact" />
+			<test url="http://whos.amung.us/help" />
+			<test url="http://whos.amung.us/learnmore" />
+			<test url="http://whos.amung.us/legal" />
+			<test url="http://whos.amung.us/pro" />
+			<test url="http://whos.amung.us/showcase" />
+			<test url="http://whos.amung.us/stats" />
+
+			<!--	-ve:
+					-->
+			<test url="http://whos.amung.us/favicon.ico" />
+			<test url="http://whos.amung.us/pro/login/" />
+
+		<test url="http://widgets.amung.us/small/00/1.png" />
 
 
-	<rule from="^http://(asset|who|widget)s\.amung\.us/"
-		to="https://$1s.amung.us/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^whos\.amung\.us$" name="^uid$" /-->
+
+
+	<rule from="^http://feeds\.amung\.us/"
+		to="https://feeds.feedburner.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

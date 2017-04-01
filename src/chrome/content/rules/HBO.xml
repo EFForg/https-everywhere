@@ -1,27 +1,89 @@
 <!--
+	Split per https://github.com/EFForg/https-everywhere/issues/1393
+
+	For rules causing false/broken MCB, see hbo.com-falsemixed.xml.
+
+	Other Home Box Office rulesets:
+
+		- hbokids.com.xml
+		- hbonow.com.xml
+		- hboshopeu.com.xml
+		- itsh.bo (via Bitly_branded_short_domains.xml)
+
+
 	CDN buckets:
 
-		- i.lv3.hbo.com.c.footprint.net	
+		- d2fb3habz60ldm.cloudfront.net
+		- i.lv3.hbo.com.c.footprint.net
+		- hbob2b.vo.llnwd.net	(400 over https)
 
 
-	Nonfunctional subdomains:
+	Problematic hosts in *hbo.com:
 
-		- i.lv3		(times out; data are also on www)
+		- i.lv3 *
+		- render.lv3 *
+		- cdn.www ᵐ
+
+	* Dropped, data are also on www.hbo.com
+	ᵐ Cloudfront / mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- talk.hbo.com
+
+
+	Mixed content:
+
+		- css on www from cdn.www.hbo.com ˢ
+
+		- Images, on:
+
+			- www from i.lv3.hbo.com ˢ
+			- www from render.lv3.hbo.com ˢ
+			- www from cdn.www.hbo.com ˢ
+
+	ˢ Secured by us
 
 -->
-<ruleset name="HBO">
+<ruleset name="HBO.com (partial)">
 
-	<target host="hbo.com" />
-	<target host="*.hbo.com" />
-	<target host="i.lv3.hbo.com" />
+	<!--	Direct rewrites:
+				-->
+	<!--target host="hbo.com" /-->
+	<target host="connect.hbo.com" />
+	<target host="secure.hbo.com" />
+	<target host="shop.hbo.com" />
+	<target host="talk.hbo.com" />
+	<!--target host="watch.hbo.com" />	needs testing from U.S. -->
+	<!--target host="www.hbo.com" /-->
+
+	<!--	Complications:
+				-->
+	<!--target host="i.lv3.hbo.com" /-->
+	<!--target host="render.lv3.hbo.com" /-->
+	<!--target host="cdn.www.hbo.com" /-->
+
+		<!--test url="http://www.hbo.com/game-of-thrones" /-->
 
 
-	<!--	!www: cert only matches www.
+	<!--	Not secured by server:
 					-->
-	<rule from="^https?://(?:i\.lv3\.|www\.)?hbo\.com/"
-		to="https://www.hbo.com/" />
+	<!--securecookie host="^talk\.hbo\.com$" name="^Lithium(?:UserInfo|UserSecure|Visitor)$" /-->
 
-	<rule from="^http://secure\.hbo\.com/"
-		to="https://secure.hbo.com/" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--rule from="^http://(?:i|render)\.lv3\.hbo\.com/"
+		to="https://www.hbo.com/" /-->
+
+	<!--rule from="^http://cdn\.www\.hbo\.com/"
+		to="https://???.cloudfront.net/" /-->
+
+	<!--rule from="^http://cdn\.www\.hbo\.com/"
+		to="https://www.hbo.com/" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,4 +1,5 @@
 <!--
+	Disabled per https://trac.torproject.org/projects/tor/ticket/15878
 	For rules causing false/broken MCB, see Channel_4-falsemixed.xml.
 
 
@@ -66,22 +67,33 @@
 	* Secured by us
 
 -->
-<ruleset name="Channel 4 (partial)">
+<ruleset name="Channel 4.com (partial)" default_off="Breaks video">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="channel4.com" />
-	<target host="*.channel4.com" />
+	<target host="4id.channel4.com" />
+	<target host="ais.channel4.com" />
+	<target host="mailing.channel4.com" />
+	<target host="test.channel4.com" />
+	<target host="www.channel4.com" />
+
+	<!--	Complications:
+				-->
+	<target host="realmedia.channel4.com" />
+
 		<!--exclusion pattern="^http://(www\.)?channel4\.com/+(assets|media)/" /-->
 		<exclusion pattern="^http://(?:www\.)?channel4\.com/(?!4me(?:$|[?/])|static/)" />
-		<!--
-			Avoid false/broken MCB:
+
+		<!--	Avoid false/broken MCB:
 						-->
 		<exclusion pattern="^http://mailing\.channel4\.com/public/snowmail/remotebox\.jsp" />
 
 
-	<rule from="^http://((?:4id|ais|mailing|test|www)\.)?channel4\.com/"
-		to="https://$1channel4.com/" />
-
-	<rule from="^https?://realmedia\.channel4\.com/"
+	<rule from="^http://realmedia\.channel4\.com/"
 		to="https://2a7e9.v.fwmrm.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

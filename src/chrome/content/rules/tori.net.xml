@@ -1,0 +1,84 @@
+<!--
+	Note: platform is so as not to increase non-Tor
+	distinguishability, given that no pages are covered
+	and no mixed content secured.
+
+
+	CDN buckets:
+
+		- ??????????????.cloudfront.net	← media
+		- d38a5rkle4vfil.cloudfront.net	← static
+
+
+	(www.)?tori.net: dropped
+
+
+	Problematic hosts in *tori.net:
+
+		- cp ᶜ
+		- media ᵐ
+		- static ᵐ
+		- www2 ᵉ ᵘ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵉ Expired
+	ᵐ Cloudfront / mismatched
+	ᵘ Untrusted root
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .tori.net
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on cp from www.tori.fi ᵈ
+		- Images on cp from www.tori.fi ᵈ
+
+		- Bugs, on:
+		
+			- cp from logc183.xiti.com ˢ
+			- www2 from tori.spring-tns.net ˢ
+
+	ᵈ Unseurable <= dropped
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="tori.net (partial)" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="cp.tori.net" /-->
+
+	<!--	Complications:
+				-->
+	<target host="media.tori.net" />
+	<!--target host="static.tori.net" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.tori\.fi$" name="^s$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://media\.tori\.net/"
+		to="https://d38a5rkle4vfil.cloudfront.net/" />
+
+		<test url="http://media.tori.net/image/images_150x100/42/4263752581.jpg" />
+
+	<!--rule from="^http://static\.tori\.net/"
+		to="https://???.cloudfront.net/" /-->
+
+		<!--
+		<test url="http://static.tori.net/img/transparent.gif" />
+		-->
+
+	<!--rule from="^http:"
+		to="https:" /-->
+
+</ruleset>

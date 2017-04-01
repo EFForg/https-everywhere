@@ -1,9 +1,26 @@
-<ruleset name="HotUKDeals (mismatches)" default_off="mismatch">
+<!--
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.bitterwallet.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Bitterwallet.com">
 
 	<target host="bitterwallet.com"/>
 	<target host="www.bitterwallet.com"/>
 
-	<rule from="^http://(www\.)?bitterwallet\.com/"
-		to="https://www.bitterwallet.com/"/>
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.bitterwallet\.com$" name="^(?:bitterwallet|has_viewed_notice)$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

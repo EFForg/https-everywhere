@@ -1,27 +1,60 @@
 <!--
-	Nonfunctional domains:
+	Other Lead Forensics rulesets:
 
-		- (www.)leadforensics.com *
-		- new.leadforensics.com *
+		- chrs-mln-krs.com.xml
+		- gblwebcen.com.xml
+		- lead-analytics-1000.com.xml
+		- Path-follower.com.xml
+		- path-trail.com.xml
+		- srv2020real.com.xml
 
-	* Reset
+
+	(www.)?leadforensics.com: Refused
 
 
-	Problematic domains:
+	Problematic hosts in *leadforensics.com:
 
-		- tracker.leadforensics.com *
-		- (www.)path-follower.com *
+		- tracker *
 
-	* Mismatched, CN: secure.leadforensics.com
+	* Dropped
+
+
+	These altnames do not exist:
+
+		- www.new.leadforensics.com
+		- www.secure.leadforensics.com
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- new.leadforensics.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Lead Forensics (partial)">
+<ruleset name="Lead Forensics.com (partial)">
 
-	<target host="*.leadforensics.com" />
-	<target host="path-follower.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="new.leadforensics.com" />
+	<target host="secure.leadforensics.com" />
+
+	<!--	Complications:
+				-->
+	<target host="tracker.leadforensics.com" />
 
 
-	<rule from="^http://(?:(?:secure|tracker)\.leadforensics|(?:www\.)?path-follower)\.com/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^new\.leadforensics\.com$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://tracker\.leadforensics\.com/"
 		to="https://secure.leadforensics.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

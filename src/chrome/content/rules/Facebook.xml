@@ -1,7 +1,15 @@
 <!--
 	Other Facebook rulesets:
 
+		- Facebook.net.xml
 		- Facebook_Studio.xml
+		- Facebook_ccTLDs.xml
+		- Fb.com.xml
+		- Fb.me.xml
+		- FbCDN.net.xml
+		- Messenger.com.xml
+		- PrivateCore.com.xml
+		- FacebookCoreWWWi.onion.xml
 
 
 	CDN buckets:
@@ -11,11 +19,12 @@
 		- fbcdn-profile-a.akamaihd.net
 		- fbcdn-sphotos-a.akamaihd.net
 		- fbcdn-sphotos-[a-h]-a.akamaihd.net
+		- fbcdn-vthumb-a.akamaihd.net
 		- fbexternal-a.akamaihd.net
 		- fbstatic-a.akamaihd.net
 		- s-static.ak.facebook.com.edgekey.net
 		- s-static.ak.fbcdn.net.edgekey.net
-		- profile.ak.facebook.com.edgesuite.net 
+		- profile.ak.facebook.com.edgesuite.net
 		- dragon.ak.fbcdn.net.edgesuite.net
 		- external.ak.fbcdn.net.edgesuite.net
 
@@ -29,188 +38,91 @@
 
 		- static.ak.connect.facebook.com.edgesuite.net
 
-	foo.ak.fbcdn.net	<=>	fb(cdn-)?foo-a.akamaihd.net
 
+	Problematic hosts in *facebook.com:
 
-	Nonfunctional domains:
-
-		investor.fb.com		(504, valid cert)
-
-
-	Problematic domains:
-
-		- facebook.com:
-
-			- external.ak *
-			- profile.ak *
-			- connect *
-			- www.connect	(shows www)
-
-		- on.fb.me
-		- dragon.ak.fbcdn.net *
-		- photos-[a-h].ak.fbcdn.net	*
+		- external.ak *
+		- profile.ak *
+		- connect *
+		- www.connect	(shows www)
+		- l.prod ³
 
 	* akamai
+	³ Fails to redirect
 
 
-	Fully covered domains:
+	These altnames don't exist:
 
-		- facebook.com subdomains:
+		- prod.facebook.com
+		- www.v6.facebook.com
 
-			- (www.)
-			- s-static.ak
-			- b.s-static.ak
-			- api
-			- api-read
-			- apps
-			- connect
-			- developers
-			- graph
-			- login
-			- m
-			- pixel
-			- ssl
-			- static-ak
-			- www.v6
-			- \w\w-\w\w 	(language-specific subdomains)
 
-		- connect.facebook.net
-		- newsroom.fb.com
-		- on.fb.me
+	Insecure cookies are set for these domains: ᶜ
 
-		- fbcdn.net subdomains:
+		- .facebook.com
 
-			- dragon.ak		(→ fbcdn-dragon-a.akamaihd.net)
-			- photos-[a-h].ak
-			- s-static.ak
-
-			- *.xx:
-
-				- profile-a
-				- profile-a-ord
-				- scontent-02
-				- scontent-b-ord
-				- sphotos
-				- sphotos-b
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Facebook">
+<ruleset name="Facebook.com">
 
-	<target host="facebook.*" />
-	<target host="www.facebook.*" />
-	<target host="*.facebook.com" />
-	<target host="*.facebook.de" />
-	<target host="*.facebook.dk" />
-	<target host="*.facebook.es" />
-	<target host="*.facebook.fr" />
-	<target host="*.facebook.jp" />
-	<target host="*.facebook.mx" />
-	<target host="connect.facebook.net" />
-	<target host="*.facebook.no" />
-	<target host="*.facebook.se" />
-	<target host="fb.com" />
-	<target host="*.fb.com" />
-	<target host="on.fb.me" />
-	<target host="*.fbcdn.net" />
+	<!--	Direct rewrites:
+				-->
+	<target host=              "facebook.com" />
+	<target host=  "s-static.ak.facebook.com" />
+	<target host="b.s-static.ak.facebook.com" />
+	<target host=          "api.facebook.com" />
+	<target host=     "api-read.facebook.com" />
+	<target host=         "apps.facebook.com" />
+	<target host=        "badge.facebook.com" />
+	<target host=         "blog.facebook.com" />
+	<target host=         "code.facebook.com" />
+	<target host=      "connect.facebook.com" />
+	<target host=        "da-dk.facebook.com" />
+	<target host=        "de-de.facebook.com" />
+	<target host=   "developers.facebook.com" />
+	<target host=        "es-es.facebook.com" />
+	<target host=        "fr-fr.facebook.com" />
+	<target host= "govtrequests.facebook.com" />
+	<target host=        "graph.facebook.com" />
+	<target host=        "ja-jp.facebook.com" />
+	<target host=            "l.facebook.com" />
+	<target host=           "lm.facebook.com" />
+	<target host=        "login.facebook.com" />
+	<target host=            "m.facebook.com" />
+	<target host=       "mbasic.facebook.com" />
+	<target host=        "nb-no.facebook.com" />
+	<target host=        "pixel.facebook.com" />
+	<target host=    "code.prod.facebook.com" />
+	<target host=     "www.prod.facebook.com" />
+	<target host=     "research.facebook.com" />
+	<target host=        "sv-se.facebook.com" />
+	<target host=          "ssl.facebook.com" />
+	<target host=    "static-ak.facebook.com" />
+	<target host=        "touch.facebook.com" />
+	<target host=          "www.facebook.com" />
+
+	<!--	Complications:
+				-->
+	<target host=    "static.ak.facebook.com" />
 
 
-	<securecookie host="^(?:.*\.)?facebook\.com$" name="(?:c_user|lu|sct|xs)" />
-    <securecookie host="^\.facebook\.com$" name=".+" />
-	<securecookie host="^newsroom\.fb\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.facebook\.com$" name="^(datr|m_ts|reg_ext_ref|reg_fb_gate|reg_fb_ref)$" /-->
+	<!--
+		Others observed:
+				-->
+	<!--securecookie host="^(?:.*\.)?facebook\.com$" name="(?:c_user|lu|sct|xs)" /-->
 
-	<rule from="^https?://f(?:acebook|b)\.com/"
-		to="https://www.facebook.com/" />
+	<securecookie host="." name="." />
 
-	<rule from="^https?://www\.f(?:acebook|b)\.com/"
-		to="https://www.facebook.com/" />
 
-	<rule from="^https?://(\w\w-\w\w|(?:b\.)?s-static\.ak|api|api-read|apps|badge|blog|connect|developers|graph|login|m|pixel|ssl|static-ak|www\.v6)\.facebook\.com/"
-		to="https://$1.facebook.com/" />
-
-	<!--	Also on fbstatic-a.akamaihd.net, but this is what the servers do.
+	<!--	Cert doesn't match. Also on fbstatic-a.akamaihd.net, but this is what the servers do.
 								-->
-	<rule from="^https?://static\.ak\.facebook\.com/"
+	<rule from="^http://static\.ak\.facebook\.com/"
 		to="https://s-static.ak.facebook.com/" />
 
-	<rule from="^http://www\.connect\.facebook\.com/"
-		to="https://connect.facebook.com/" />
-
-	<!--		Cert doesn't match and
-		this is what the server does.
-						-->
-	<rule from="^https?://(?:www\.)?facebook\.(?:be|is|it|nl|us)/"
-		to="https://www.facebook.com/" />
-
-	<!--	Ditto.
-			-->
-	<rule from="^https?://(?:de-de\.|fr-fr\.|www\.)?facebook\.(de|fr)/"
-		to="https://$1-$1.facebook.com/"/>
-
-	<!--	Ditto.
-			-->
-	<rule from="^https?://(?:da-dk\.|www\.)?facebook\.dk/"
-		to="https://da-dk.facebook.com/" />
-
-	<!--	Ditto.
-			-->
-	<rule from="^https?://(?:es-es\.|www\.)?facebook\.(?:es|mx)/"
-		to="https://es-es.facebook.com/" />
-
-	<!--	Ditto.
-			-->
-	<rule from="^https?://(?:ja-jp\.|www\.)?facebook\.jp/"
-		to="https://ja-jp.facebook.com/" />
-
-	<!--	Ditto.
-			-->
-	<rule from="^https?://(?:nb-no\.|www\.)?facebook\.no/"
-		to="https://nb-no.facebook.com/" />
-
-	<!--	Ditto.
-			-->
-	<rule from="^https?://(?:sv-se\.|www\.)?facebook\.se/"
-		to="https://sv-se.facebook.com/" />
-
-	<rule from="^https?://connect\.facebook\.net/"
-		to="https://connect.facebook.net/"/>
-
-	<rule from="^https?://newsroom\.fb\.com/"
-		to="https://newsroom.fb.com/" />
-
-	<rule from="^https?://on\.fb\.me/"
-		to="https://bit.ly/" />
-
-	<rule from="^https?://dragon\.ak\.fbcdn\.net/"
-		to="https://fbcdn-dragon-a.akamaihd.net/" />
-
-	<!--	Akamai.
-			-->
-	<rule from="^https?://external\.ak\.fbcdn\.net/"
-		to="https://fbexternal-a.akamaihd.net/" />
-
-	<rule from="^https?://photos-([a-h])\.ak\.fbcdn\.net/"
-		to="https://fbcdn-sphotos-$1-a.akamaihd.net/" />
-
-	<rule from="^https?://profile\.ak\.fbcdn\.net/"
-		to="https://fbcdn-profile-a.akamaihd.net/" />
-
-	<rule from="^https?://(?:a\d\.)?sphotos\.ak\.fbcdn\.net/"
-		to="https://fbcdn-sphotos-a.akamaihd.net/" />
-
-	<!--	- Akamai
-		- Data are also on static.facebook.com
-							-->
-	<rule from="^https?://(?:static\.connect|(?:s-)?static)\.ak\.fbcdn\.net/"
-		to="https://s-static.ak.fbcdn.net/" />
-
-	<rule from="^https?://([^@:\./]+)(\.xx)?\.fbcdn\.net/"
-		to="https://$1$2.fbcdn.net/" />
-
-	<!--	Bing maps. Should be generalized and moved at some point.
-
-		Cert only matches *.tiles.virtualearth.net.
-								-->
-	<rule from="^https?://fb\.ecn\.api\.tiles\.virtualearth\.net/"
-		to="https://api.tiles.virtualearth.net/" />
-
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

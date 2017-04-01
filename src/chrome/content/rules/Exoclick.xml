@@ -1,39 +1,57 @@
 <!--
 	Nonfunctional domains:
 
-		- ads.exoclick.com *
 		- custom.exoclick.com *
 		- (www.)exoclickmobile.com
 
 	* Dropped
 
 
-	Problematic domains:
+	Problematic hosts in *exoclick.com:
 
-		- exoclick.com 			(refused)
-		- www-static.exoclick.com	(dropped)
+		- www-static *
+
+	* Dropped, equivalent to another domain
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains:
 
-		- www-static	(→ www)
+		- .exoclick.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Exoclick (partial)">
+<ruleset name="Exoclick.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="exoclick.com" />
-	<target host="*.exoclick.com" />
+	<target host="ads.exoclick.com" />
+	<target host="main.exoclick.com" />
+	<target host="static.exoclick.com" />
+	<target host="static-ssl.exoclick.com" />
+	<target host="syndication.exoclick.com" />
+	<target host="www.exoclick.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www-static.exoclick.com" />
+
+		<test url="http://main.exoclick.com/img-click.php?idzone=" />
+		<test url="http://syndication.exoclick.com/ads-iframe-display.php?idzone=&amp;output=img&amp;type=" />
 
 
-	<!--	name="^(impressions|lng|PHPSESSID|tag|__utm\w)$"
-								-->
-	<securecookie host="^\.exoclick\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.exoclick\.com$" name="^(?:img_click_\d+|impressions|lng|PHPSESSID|tag|__utm\w|__uvt)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:www\.|www-static\.)?exoclick\.com/"
+	<rule from="^http://www-static\.exoclick\.com/"
 		to="https://www.exoclick.com/" />
 
-	<rule from="^http://syndication\.exoclick\.com/"
-		to="https://syndication.exoclick.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

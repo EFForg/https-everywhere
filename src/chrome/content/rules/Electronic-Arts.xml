@@ -3,14 +3,8 @@
 
 		- BioWare.xml
 		- EA_Sports.com.xml
+		- Origin.com.xml
 		- Sim_City.com.xml
-
-
-	CDN buckets:
-
-		- a248.e.akamai.net/static.ea.com/
-		- a248.e.akamai.net/vassets.ea.com/
-
 
 	!functional:
 		- eu.dragonage.com		(cert: socialsignup.ea.com; shows that domain)
@@ -26,14 +20,12 @@
 		- eamobile.com			(cert: synergy-stage.eamobile.com; shows that domain's data)
 		- insideea.com			(ssl_error_rx_record_too_long)
 -->
-<ruleset name="Electronic Arts (partial)" platform="mixedcontent">
+<ruleset name="Electronic Arts (partial)" platform="mixedcontent" default_off='failed ruleset test'>
 
 	<target host="ea.com"/>
 	<target host="*.ea.com"/>
 	<target host="om.eamobile.com"/>
 	<target host="synergy-stage.eamobile.com"/>
-	<target host="origin.com"/>
-	<target host="*.origin.com"/>
 	<target host="thesims3.com"/>
 	<target host="*.thesims3.com"/>
 	<target host="*.store.thesims3.com"/>
@@ -41,10 +33,9 @@
 
 	<!--	incomplete
 		.ea s_ : omniture cookies	-->
-	<securecookie host="^\.ea\.com$" name="^(CEM-session|s_.*)$"/>
-	<securecookie host="^(help|jobs|profile|ssl\.resources)\.ea\.com$" name=".*"/>
-	<securecookie host="^sso\.origin\.com$" name=".*"/>
-	<securecookie host="^(forum|\w\w|www)?\.thesims\.com$" name=".*"/>
+	<securecookie host="^\.ea\.com$" name="^(?:CEM-session|s_.*)$"/>
+	<securecookie host="^(?:help|jobs|profile|ssl\.resources)\.ea\.com$" name=".*"/>
+	<securecookie host="^(?:forum|\w\w|www)?\.thesims\.com$" name=".*"/>
 
 
 	<!--	cert !match !www	-->
@@ -57,9 +48,6 @@
 	<rule from="^http://(?:ssl\.)?resources\.ea\.com/"
 		to="https://ssl.resources.ea.com/"/>
 
-	<rule from="^http://(?:web-)?(static|vassets)\.ea\.com/"
-		to="https://a248.e.akamai.net/$1.ea.com/"/>
-
 	<!--	cert !match support, redirects to help	-->
 	<rule from="^http://support\.ea\.com/"
 		to="https://help.ea.com/"/>
@@ -69,20 +57,6 @@
 
 	<rule from="^http://synergy-stage\.eamobile\.com/"
 		to="https://synergy-stage.eamobile.com/"/>
-
-	<!--	cert !match !www	-->
-	<rule from="^http://origin\.com/"
-		to="https://www.origin.com/"/>
-
-	<!--	most images served by Digital River	-->
-	<rule from="^http://www\.origin\.com/favicon\.ico"
-		to="https://www.origin.com/favicon.ico"/>
-
-	<rule from="^http://(activate|sso)\.origin\.com/"
-		to="https://$1.origin.com/"/>
-
-	<rule from="^http://store\.origin\.com/DRHM/Storefront/Site/"
-		to="https://store.origin.com/DRHM/Storefront/Site/"/>
 
 	<!--	llnw:	*.hs.llnwd.net
 		cert !match !www	-->

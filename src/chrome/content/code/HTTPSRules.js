@@ -30,6 +30,7 @@ function RuleSet(id, name, xmlName, match_rule, default_off, platform) {
   this.name = name;
   this.xmlName = xmlName;
   this.notes = "";
+
   if (match_rule)   this.ruleset_match_c = new RegExp(match_rule);
   else              this.ruleset_match_c = null;
   if (default_off) {
@@ -108,7 +109,11 @@ RuleSet.prototype = {
     for (i = 0; i < this.rules.length; ++i) {
       // This is just for displaying inactive rules
       returl = urispec.replace(this.rules[i].from_c, this.rules[i].to);
-      if (returl != urispec) return returl;
+      if (returl != urispec) {
+        // we rewrote the uri
+        this.log(DBUG, "Rewrote " + urispec + " -> " + returl + " using " + this.xmlName + ": " + this.rules[i].from_c + " -> " + this.rules[i].to);
+        return returl;
+      }
     }
 
     return null;
@@ -134,13 +139,13 @@ RuleSet.prototype = {
     var urispec = uri.spec;
 
     this.ensureCompiled();
- 
+
     if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) 
       return false;
- 
+
     for (var i = 0; i < this.exclusions.length; ++i) 
       if (this.exclusions[i].pattern_c.test(urispec)) return false;
- 
+
     for (var i = 0; i < this.rules.length; ++i) 
       if (this.rules[i].from_c.test(urispec)) return true;
     return false;
@@ -155,7 +160,7 @@ RuleSet.prototype = {
       return null;
     var newuri = Components.classes["@mozilla.org/network/standard-url;1"].
                  createInstance(CI.nsIStandardURL);
-    newuri.init(CI.nsIStandardURL.URLTYPE_STANDARD, 80,
+    newuri.init(CI.nsIStandardURL.URLTYPE_STANDARD, 443,
              newurl, uri.originCharset, null);
     newuri = newuri.QueryInterface(CI.nsIURI);
     return newuri;
@@ -241,11 +246,33 @@ const RuleWriter = {
     return rv;
   },
 
-  read: function(file, rule_store, ruleset_id) {
+  readFromUrl: function (url) {
+    var ios = CC['@mozilla.org/network/io-service;1']
+        .getService(CI.nsIIOService);
+    var encoding = "UTF-8";
+    var channel = ios.newChannel(url, encoding, null);
+    var stream = channel.open();
+    var streamSize = stream.available();
+
+    if (!streamSize) {
+      return null;
+    }
+
+    var convStream = CC["@mozilla.org/intl/converter-input-stream;1"]
+        .createInstance(CI.nsIConverterInputStream);
+
+    convStream.init(stream, encoding, streamSize,
+        convStream.DEFAULT_REPLACEMENT_CHARACTER);
+
+    var data = {};
+    convStream.readString(streamSize, data);
+
+    return data.value;
+  },
+
+  readFromFile: function(file) {
     if (!file.exists())
       return null;
-    if ((rule_store.targets == null) && (rule_store.targets != {}))
-      this.log(WARN, "TARGETS IS NULL");
     var data = "";
     var fstream = CC["@mozilla.org/network/file-input-stream;1"]
         .createInstance(CI.nsIFileInputStream);
@@ -262,6 +289,28 @@ const RuleWriter = {
 
     sstream.close();
     fstream.close();
+    return data;
+  },
+
+  write: function(file, data) {
+    //if (!file.exists())
+    //  return null;
+    this.log(DBUG, "Opening " + file.path + " for writing");
+    var fstream = CC["@mozilla.org/network/file-output-stream;1"]
+        .createInstance(CI.nsIFileOutputStream);
+    fstream.init(file, -1, -1, 0);
+
+    var retval = fstream.write(data, data.length);
+    this.log(DBUG, "Got retval " + retval);
+    fstream.close();
+    return data;
+  },
+
+  rulesetFromFile: function(file, rule_store, ruleset_id) {
+    if ((rule_store.targets == null) && (rule_store.targets != {}))
+      this.log(WARN, "TARGETS IS NULL");
+    var data = this.readFromFile(file);
+    if (!data) return null;
     return this.readFromString(data, rule_store, ruleset_id);
   },
 
@@ -299,7 +348,7 @@ const RuleWriter = {
     // Add this ruleset id into HTTPSRules.targets if it's not already there.
     // This should only happen for custom user rules. Built-in rules get
     // their ids preloaded into the targets map, and have their <target>
-    // tags stripped when the sqlite database is built.
+    // tags stripped when the JSON database is built.
     var targets = xmlruleset.getElementsByTagName("target");
     for (var i = 0; i < targets.length; i++) {
       var host = targets[i].getAttribute("host");
@@ -365,51 +414,30 @@ const HTTPSRules = {
       var t1 = new Date().getTime();
       this.checkMixedContentHandling();
       var rulefiles = RuleWriter.enumerate(RuleWriter.getCustomRuleDir());
+
+      this.loadTargets();
       this.scanRulefiles(rulefiles);
 
-      // Initialize database connection.
-      var dbFile = FileUtils.getFile("ProfD",
-        ["extensions", "https-everywhere@eff.org", "defaults", "rulesets.sqlite"]);
-      var rulesetDBConn = Services.storage.openDatabase(dbFile);
-      this.queryForRuleset = rulesetDBConn.createStatement(
-        "select contents from rulesets where id = :id");
-
-      // Preload the mapping of hostname target -> ruleset ID from DB.
-      // This is a little slow (287 ms on a Core2 Duo @ 2.2GHz with SSD),
-      // but is faster than loading all of the rulesets. If this becomes a
-      // bottleneck, change it to load in a background webworker, or load
-      // a smaller bloom filter instead.
-      var targetsQuery = rulesetDBConn.createStatement("select host, ruleset_id from targets");
-      this.log(DBUG, "Loading targets...");
-      while (targetsQuery.executeStep()) {
-        var host = targetsQuery.row.host;
-        var id = targetsQuery.row.ruleset_id;
-        if (!this.targets[host]) {
-          this.targets[host] = [id];
-        } else {
-          this.targets[host].push(id);
-        }
-      }
-      this.log(DBUG, "Loading adding targets.");
     } catch(e) {
       this.log(DBUG,"Rules Failed: "+e);
     }
     var t2 =  new Date().getTime();
     this.log(NOTE,"Loading targets took " + (t2 - t1) / 1000.0 + " seconds");
 
-    var gitCommitQuery = rulesetDBConn.createStatement("select git_commit from git_commit");
-    if (gitCommitQuery.executeStep()) {
-      this.GITCommitID = gitCommitQuery.row.git_commit;
-    }
-
-    try {
-      if (HTTPSEverywhere.instance.prefs.getBoolPref("performance_tests")) {
-        this.testRulesetRetrievalPerformance();
-      }
-    } catch(e) {
-      this.log(WARN, "Exception during testing " + e);
-    }
     return;
+  },
+
+  /**
+   * Read and parse the ruleset JSON.
+   * Note: This only parses the outer JSON wrapper. Each ruleset is itself an
+   * XML string, which will be parsed on an as-needed basis.
+   */
+  loadTargets: function() {
+    var loc = "chrome://https-everywhere/content/rulesets.json";
+    var data = RuleWriter.readFromUrl(loc);
+    var rules = JSON.parse(data);
+    this.targets = rules.targets;
+    this.rulesetStrings = rules.rulesetStrings;
   },
 
   checkMixedContentHandling: function() {
@@ -443,7 +471,7 @@ const HTTPSRules = {
       try {
         this.log(DBUG,"Loading ruleset file: "+rulefiles[i].path);
         var ruleset_id = "custom_" + i;
-        RuleWriter.read(rulefiles[i], this, ruleset_id);
+        RuleWriter.rulesetFromFile(rulefiles[i], this, ruleset_id);
       } catch(e) {
         this.log(WARN, "Error in ruleset file: " + e);
         if (e.lineNumber)
@@ -460,6 +488,7 @@ const HTTPSRules = {
     }
   },
 
+
   rewrittenURI: function(alist, input_uri) {
     // This function oversees the task of working out if a uri should be
     // rewritten, what it should be rewritten to, and recordkeeping of which
@@ -472,7 +501,7 @@ const HTTPSRules = {
                               // Why does JS have no tuples, again?
     var blob = {}; blob.newuri = null;
     if (!alist) this.log(DBUG, "No applicable list rewriting " + input_uri.spec);
-    this.log(NOTE, "Processing " + input_uri.spec);
+    this.log(DBUG, "Processing " + input_uri.spec);
 
     var uri = this.sanitiseURI(input_uri);
 
@@ -494,8 +523,6 @@ const HTTPSRules = {
       } 
       blob.newuri = rs[i].transformURI(uri);
       if (blob.newuri) {
-        // we rewrote the uri
-        this.log(DBUG, "Rewrote "+input_uri.spec);
         if (alist) {
           if (uri.spec in https_everywhere_blacklist) 
             alist.breaking_rule(rs[i]);
@@ -549,7 +576,7 @@ const HTTPSRules = {
         }
     } catch(e3) {
       this.log(INFO, "uri.host is explosive!");
-      try       { this.log(INFO, "(" + uri.spec + ")"); }  // happens for about: uris and soforth
+      try       { this.log(INFO, "(" + uri.spec + ")"); }  // happens for about: uris and so forth
       catch(e4) { this.log(WARN, "(and unprintable!!!!!!)"); }
     }
     return uri;
@@ -565,24 +592,8 @@ const HTTPSRules = {
   },
 
   // Load a ruleset by numeric id, e.g. 234
-  // NOTE: This call runs synchronously, which can lock up the browser UI. Is
-  // there any way to fix that, given that we need to run blocking in the request
-  // flow? Perhaps we can preload all targets from the DB into memory at startup
-  // so we only hit the DB when we know there is something to be had.
   loadRulesetById: function(ruleset_id) {
-    this.log(DBUG, "Querying DB for ruleset id " + ruleset_id);
-    this.queryForRuleset.params.id = ruleset_id;
-
-    try {
-      if (this.queryForRuleset.executeStep()) {
-        this.log(INFO, "Found ruleset in DB for id " + ruleset_id);
-        RuleWriter.readFromString(this.queryForRuleset.row.contents, this, ruleset_id);
-      } else {
-        this.log(WARN,"Couldn't find ruleset for id " + ruleset_id);
-      }
-    } finally {
-      this.queryForRuleset.reset();
-    }
+    RuleWriter.readFromString(this.rulesetStrings[ruleset_id], this, ruleset_id);
   },
 
   // Get all rulesets matching a given target, lazy-loading from DB as necessary.
@@ -602,13 +613,20 @@ const HTTPSRules = {
         }
       }
     } else {
-      this.log(INFO, "For target " + target + ", found no ids in DB");
+      this.log(DBUG, "For target " + target + ", found no ids in DB");
     }
     return output;
   },
 
+  /**
+   * Return a list of rulesets that declare targets matching a given hostname.
+   * The returned rulesets include those that are disabled for various reasons.
+   * This function is only defined for fully-qualified hostnames. Wildcards and
+   * cookie-style domain attributes with a leading dot are not permitted.
+   * @param host {string}
+   * @return {Array.<RuleSet>}
+   */
   potentiallyApplicableRulesets: function(host) {
-    // Return a list of rulesets that declare targets matching this host
     var i, tmp, t;
     var results = [];
 
@@ -617,6 +635,12 @@ const HTTPSRules = {
     }.bind(this);
 
     attempt(host);
+
+    // Ensure host is well-formed (RFC 1035)
+    if (host.indexOf("..") != -1 || host.length > 255) {
+      this.log(WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
+      return null;
+    }
 
     // replace each portion of the domain with a * in turn
     var segmented = host.split(".");
@@ -639,53 +663,48 @@ const HTTPSRules = {
     return results;
   },
 
-  testRulesetRetrievalPerformance: function() {
-    // We can use this function to measure the impact of changes in the ruleset
-    // storage architecture, potentiallyApplicableRulesets() caching
-    // implementations, etc. 
-    var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
-                 .createInstance(Ci.nsIXMLHttpRequest);
-    req.open("GET", "https://eff.org/files/alexa-top-10000-global.txt", false);
-    req.send();
-    var domains = req.response.split("\n");
-    var domains_l = domains.length - 1; // The last entry in this thing is bogus
-    var prefix = "";
-    this.log(WARN, "Calling potentiallyApplicableRulesets() with " + domains_l + " domains");
-    var count = 0;
-    var t1 = new Date().getTime();
-    for (var n = 0; n < domains_l; n++) {
-      if (this.potentiallyApplicableRulesets(prefix + domains[n]).length != 0)
-        count++;
+  /**
+   * If a cookie's domain attribute has a leading dot to indicate it should be
+   * sent for all subdomains (".example.com"), return the actual host part (the
+   * part after the dot).
+   *
+   * @param cookieDomain {string} A cookie domain to strip a leading dot from.
+   * @return {string} a fully qualified hostname.
+   */
+  hostFromCookieDomain: function(cookieDomain) {
+    if (cookieDomain.length > 0 && cookieDomain[0] == ".") {
+      return cookieDomain.slice(1);
+    } else {
+      return cookieDomain;
     }
-    var t2 = new Date().getTime();
-    this.log(NOTE, count + " hits: average call to potentiallyApplicableRulesets took " + (t2 - t1) / domains_l + " milliseconds");
-    count = 0;
-    t1 = new Date().getTime();
-    for (var n = 0; n < domains_l; n++) {
-      if (this.potentiallyApplicableRulesets(prefix + domains[n]).length != 0)
-        count++;
-    }
-    t2 = new Date().getTime();
-    this.log(NOTE, count + " hits: average subsequent call to potentiallyApplicableRulesets took " + (t2 - t1) / domains_l + " milliseconds");
   },
 
+  /**
+   * Check to see if the Cookie object c meets any of our cookierule criteria
+   * for being marked as secure.
+   *
+   * @param applicable_list {ApplicableList} an ApplicableList for record keeping
+   * @param c {nsICookie2} The cookie we might secure.
+   * @param known_https {boolean} True if the cookie appeared in an HTTPS request and
+   *   so we know it is okay to mark it secure (assuming a cookierule matches it.
+   *   TODO(jsha): Double-check that the code calling this actually does that.
+   * @return {boolean} True if the cookie in question should have the 'secure'
+   *   flag set to true.
+   */
   shouldSecureCookie: function(applicable_list, c, known_https) {
-    // Check to see if the Cookie object c meets any of our cookierule citeria
-    // for being marked as secure.
-    // @applicable_list : an ApplicableList or record keeping
-    // @c : an nsICookie2
-    // @known_https : true if we know the page setting the cookie is https
-
-    this.log(DBUG,"  rawhost: " + c.rawHost + "\n  name: " + c.name + "\n  host" + c.host);
+    this.log(DBUG,"  rawhost: " + c.rawHost + " name: " + c.name + " host" + c.host);
     var i,j;
-    var rs = this.potentiallyApplicableRulesets(c.host);
+    // potentiallyApplicableRulesets is defined on hostnames not cookie-style
+    // "domain" attributes, so we strip a leading dot before calling.
+    var rs = this.potentiallyApplicableRulesets(this.hostFromCookieDomain(c.host));
     for (i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
       if (ruleset.active) {
         ruleset.ensureCompiled();
         // Never secure a cookie if this page might be HTTP
-        if (!known_https && !this.safeToSecureCookie(c.rawHost))
+        if (!(known_https || this.safeToSecureCookie(c.rawHost))) {
           continue;
+        }
         for (j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
           if (cr.host_c.test(c.host) && cr.name_c.test(c.name)) {
@@ -694,29 +713,38 @@ const HTTPSRules = {
             return true;
           }
         }
-        if (ruleset.cookierules.length > 0)
-          if (applicable_list) applicable_list.moot_rule(ruleset);
+        if (ruleset.cookierules.length > 0 && applicable_list) {
+          applicable_list.moot_rule(ruleset);
+        }
       } else if (ruleset.cookierules.length > 0) {
-        if (applicable_list) applicable_list.inactive_rule(ruleset);
+        if (applicable_list) {
+          applicable_list.inactive_rule(ruleset);
+        }
         this.log(INFO,"Inactive cookie rule " + ruleset.name);
       }
     }
     return false;
   },
 
+  /**
+   * Check if the domain might be being served over HTTP.  If so, it isn't
+   * safe to secure a cookie!  We can't always know this for sure because
+   * observing cookie-changed doesn't give us enough context to know the
+   * full origin URI. In particular, if cookies are set from Javascript (as
+   * opposed to HTTP/HTTPS responses), we don't know what page context that
+   * Javascript ran in.
+
+   * First, if there are any redirect loops on this domain, don't secure
+   * cookies.  XXX This is not a very satisfactory heuristic.  Sometimes we
+   * would want to secure the cookie anyway, because the URLs that loop are
+   * not authenticated or not important.  Also by the time the loop has been
+   * observed and the domain blacklisted, a cookie might already have been
+   * flagged as secure.
+   *
+   * @param domain {string} The cookie's 'domain' attribute.
+   * @return {boolean} True if it's safe to secure a cookie on that domain.
+   */
   safeToSecureCookie: function(domain) {
-    // Check if the domain might be being served over HTTP.  If so, it isn't
-    // safe to secure a cookie!  We can't always know this for sure because
-    // observing cookie-changed doesn't give us enough context to know the
-    // full origin URI.
-
-    // First, if there are any redirect loops on this domain, don't secure
-    // cookies.  XXX This is not a very satisfactory heuristic.  Sometimes we
-    // would want to secure the cookie anyway, because the URLs that loop are
-    // not authenticated or not important.  Also by the time the loop has been
-    // observed and the domain blacklisted, a cookie might already have been
-    // flagged as secure.
-
     if (domain in https_blacklist_domains) {
       this.log(INFO, "cookies for " + domain + "blacklisted");
       return false;
@@ -724,7 +752,6 @@ const HTTPSRules = {
 
     // If we passed that test, make up a random URL on the domain, and see if
     // we would HTTPSify that.
-
     try {
       var nonce_path = "/" + Math.random().toString();
       nonce_path = nonce_path + nonce_path;
@@ -735,17 +762,19 @@ const HTTPSRules = {
       return false;
     }
 
-    this.log(INFO, "Testing securecookie applicability with " + test_uri);
-    var rs = this.potentiallyApplicableRulesets(domain);
+    this.log(DBUG, "Testing securecookie applicability with " + test_uri);
+    // potentiallyApplicableRulesets is defined on hostnames not cookie-style
+    // "domain" attributes, so we strip a leading dot before calling.
+    var rs = this.potentiallyApplicableRulesets(this.hostFromCookieDomain(domain));
     for (var i = 0; i < rs.length; ++i) {
       if (!rs[i].active) continue;
       var rewrite = rs[i].apply(test_uri);
       if (rewrite) {
-        this.log(INFO, "Yes: " + rewrite);
+        this.log(DBUG, "Safe to secure cookie for " + test_uri + ": " + rewrite);
         return true;
       }
     }
-    this.log(INFO, "(NO)");
+    this.log(DBUG, "Unsafe to secure cookie for " + test_uri);
     return false;
   }
 };

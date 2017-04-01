@@ -1,0 +1,82 @@
+<!--
+	For rules covering resources which do not secure
+	mixed content, see sirsidynix.com-resources.xml.
+
+
+	Nonfunctional hosts in *sirsidynix.com:
+
+		- (www.)? ᵇ
+		- cosabeta ᵈ
+		- enhancements ᵇ
+		- go ᵃ
+		- marcom2 ᵇ
+
+	ᵃ Marketo / shows another domain
+	ᵇ Shows default page
+	ᵈ Dropped
+
+
+	These altnames do not exist:
+
+		- www.support.sirsidynix.com
+
+-->
+<ruleset name="SirsiDynix.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="support.sirsidynix.com" />
+
+	<!--	Complications:
+				-->
+	<target host="go.sirsidynix.com" />
+
+		<!--exclusion pattern="^http://go\.sirsidynix\.com/(?!/*(?:cs|image|r)s/)" /-->
+		<!--
+			Reduce non-Tor distinguishability:
+								-->
+		<exclusion pattern="^http://go\.sirsidynix\.com/(?!/*rs/.+\.(?:docx?|pdf)(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://go.sirsidynix.com/2015-12-01-Item-Report-Everyones-Best-Friend.html" />
+			<test url="http://go.sirsidynix.com/2016-02-10-Selecting-Your-ILS-Part-1-Wbr.html" />
+			<test url="http://go.sirsidynix.com/BLUEcloud-Analytics-Overview-On-Demand.html" />
+			<test url="http://go.sirsidynix.com/BLUEcloud-Lists-On-Demand.html" />
+			<test url="http://go.sirsidynix.com/BLUEcloud-Visibility-The-Visible-Advantage-SD-Webinar.html" />
+			<test url="http://go.sirsidynix.com/Embedding-Your-Public-Library-as-a-Community-Anchor_Download-eBook-LP.html" />
+			<test url="http://go.sirsidynix.com/Horizon-Ninja-Series-Damaged-Books-On-Demand.html" />
+			<test url="http://go.sirsidynix.com/Horizon-Ninja-Series-Item-Group-Editor-On-Demand.html" />
+			<!--
+			<test url="http://go.sirsidynix.com/How-to-Lead-Your-Library-Part-Three-Evaluation-SD-Webinar.html" />
+			<test url="http://go.sirsidynix.com/Inspired-Team-How-to-create-a-motivating-workplace-and-engage-your-employees-SD-Webinar.html" />
+			<test url="http://go.sirsidynix.com/Inspired-Team-How-to-create-a-motivating-workplace-and-engage-your-employees-SD-Webinar.html" />
+			<test url="http://go.sirsidynix.com/Kickstart-Your-RFP-eBook.html" />
+			<test url="http://go.sirsidynix.com/Library-Linked-Data-on-the-Open-Web-SD-Webinar.html" />
+			<test url="http://go.sirsidynix.com/Linked-Data-101-Introduction-to-Linked-Data-Wbr.html" />
+			<test url="http://go.sirsidynix.com/MobileCirc-Product-Overview-On-Demand.html" />
+			<test url="http://go.sirsidynix.com/SD-Request-a-Demo.html" />
+			<test url="http://go.sirsidynix.com/Selecting-and-Implementing-an-ILS-Part-2-On-Demand.html" />
+			<test url="http://go.sirsidynix.com/Symphony-Ninja-Series-Searching-Tips-in-Symphony-On-Demand.html" />
+			<test url="http://go.sirsidynix.com/Symphony-Ninja-Series-Searching-Tips-in-Symphony-SD-Webinar.html" />
+			<test url="http://go.sirsidynix.com/Where-Should-I-Host-My-ILS-On-Demand.html" />
+			-->
+
+			<!--	-ve:
+					-->
+			<!--
+			<test url="http://go.sirsidynix.com/rs/325-MEI-708/images/socialmedia-01.png" />
+			-->
+			<test url="http://go.sirsidynix.com/rs/sirsidynix1/images/STEMtoolkit.pdf" />
+
+
+	<securecookie host="^(?!go\.)\w" name="." />
+
+
+	<rule from="^http://go\.sirsidynix\.com/"
+		to="https://na-ab02.marketo.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

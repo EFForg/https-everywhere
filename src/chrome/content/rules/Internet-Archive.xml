@@ -1,29 +1,72 @@
 <!--
+	Internet Archive
+
 	Other Internet Archive rulesets:
 
 		- Archive.org_Way_Back_Machine.xml
+		- Archive-It.org.xml
+		- Open_Library.org.xml
+		- Political-TV-Ad-Archive.xml
 
 
-	Nonfunctional subdomains:
+	Problematic domains:
 
-		- blog	(refused)
+		- ait.blog.archive.org		(cert mismatch)
+		- crawler.archive.org		(refused)
+		- gmeta[0-7].us.archive.org	(refused)
+		- graphite.us.archive.org	(refused)
+		- lending.us.archive.org	(time out)
+		- *.s3dns.us.archive.org	(cert mismatch)
+		- www\d\d.us.archive.org	(cert mismatch)
+
+
+	Fully covered hosts in *archive.org:
+
+		- (www.)?
+		- analytics
+		- blog
+		- bt1
+		- bt2
+		- builds
+		- developers
+		- store
+		- *.us
 
 -->
-<ruleset name="Internet Archive">
+<ruleset name="Archive.org">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="archive.org" />
-	<target host="*.archive.org" />
-		<exclusion pattern="^http://(?:graphite|s3)\.us\.archive\.org/" />
-		<!--
-			The rule does not handle web anyway:
+	<target host="www.archive.org" />
+	<target host="analytics.archive.org" />
+	<target host="blog.archive.org" />
+	<target host="bt1.archive.org" />
+	<target host="bt2.archive.org" />
+	<target host="builds.archive.org" />
+	<target host="developers.archive.org" />
+	<target host="store.archive.org" />
+	<target host="*.us.archive.org" />
 
-		<exclusion pattern="^http://web\.archive\.org/" /-->
+
+	<securecookie host="^(www|analytics|bt[12]|builds|developers|store)\.archive\.org$"
+			name=".+" />
 
 
-	<securecookie host="^\.archive\.org$" name=".+" />
+	<test url="http://ia301543.us.archive.org/" />
+	<exclusion pattern="^http://gmeta[0-7]\.us\.archive\.org/" />
+		<test url="http://gmeta4.us.archive.org/" />
+	<exclusion pattern="^http://(graphite|lending)\.us\.archive\.org/" />
+		<test url="http://graphite.us.archive.org/" />
+		<test url="http://lending.us.archive.org/" />
+	<exclusion pattern="^http://([\w-]+\.)+s3dns\.us\.archive\.org/" />
+		<test url="http://stats.ia902706.s3dns.us.archive.org/" />
+		<test url="http://hom.3d.ia802600.s3dns.us.archive.org/" />
+		<test url="http://djaj-zine.ia601509.s3dns.us.archive.org/" />
+	<exclusion pattern="^http://www\d\d\.us\.archive\.org/" />
+		<test url="http://www17.us.archive.org/" />
 
-
-	<rule from="^http://(\w+\.us\.|www\.)?archive\.org/"
-		to="https://$1archive.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

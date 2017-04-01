@@ -11,22 +11,41 @@
 		- cdn	(400, CN: *.hs.llnwd.net)
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
-		- cdn	(→ server)
+		- ssl.cdne.cpmstar.com
+		- .server.cpmstar.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="CPMStar">
+<ruleset name="CPMStar.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="cpmstar.com" />
-	<target host="*.cpmstar.com" />
+	<target host="ssl.cdne.cpmstar.com" />
+	<target host="forum.cpmstar.com" />
+	<target host="server.cpmstar.com" />
 	<target host="www.server.cpmstar.com" />
+	<target host="www.cpmstar.com" />
+
+	<!--	Complications:
+				-->
+	<target host="cdn.cpmstar.com" />
 
 
-	<rule from="^http://(www\.)?(server\.)?cpmstar\.com/"
-		to="https://$1$2cpmstar.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.server\.cpmstar\.com$" name="^(USER_ID|n15)$" /-->
+
+	<securecookie host="^\.server\." name="." />
+
 
 	<rule from="^http://cdn\.cpmstar\.com/"
 		to="https://server.cpmstar.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

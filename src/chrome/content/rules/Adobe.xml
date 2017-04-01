@@ -1,181 +1,327 @@
+
 <!--
 	For problematic rules, see Adobe-mismatches.xml.
 
 
 	Other Adobe rulesets:
 
+		- 2o7.net.xml
+		- Acrobat.com.xml
+		- Acrocomcontent.com.xml
 		- Adobe_Connect.xml
 		- Adobe-Digital-Marketing.xml
+		- Adobe_Exchange.com.xml
+		- Adobe_forms_central.com.xml
+		- Adobe_login.com.xml
 		- Adobetag.com.xml
+		- Acrobat_Users.com.xml
 		- Hitbox.com.xml
+		- Macromedia.com.xml
 		- Offermatica.com.xml
 		- Scene7.xml
 		- Typekit.xml
+		- Typekit.net.xml
 
 
 	CDN buckets:
+
+		- s3.amazonaws.com/images.groups.adobe.com/
 
 		- thumbnails-tv.adobe.com.edgekey.net
 		- wwwimages2.adobe.com.edgekey.net
 
 		- airdownload.adobe.com.edgesuite.net
-
-			- a1396.b.akamai.net
-
 		- new-tv.adobe.com.edgesuite.net
-
-			- a1355.d.akamai.net
-			- thumbnails.tv
-
 		- wwwimages.adobe.com.edgesuite.net
 
-			- a1953.x.akamai.net
-
 		- adobe.com.d1.sc.omtrdc.net
-
-			- stats.adobe.com
-
 		- adobe.com.ssl.d1.sc.omtrdc.net
-
-			- sstats.adobe.com
 
 
 	Nonfunctional subdomains:
 
-		- experiencedelivers	(redirects to www; mismatched, CN: *.day.com)
-		- forums		(dropped)
-		- labs *
-		- training *
+		- c00 ²
+		- community **
+		- acroeng **
+		- experiencedelivers ¹
+		- feeds *
+		- training ²
 
-	* Refused
+	** Dropped
+	¹ Redirects to www; mismatched, CN: *.day.com
+	* 404
+	² Refused
 
 
-	Problematic domains:
+	Problematic subdomains:
 
-		- adobe.com subdomains:
+		- airdownload ²
+		- community	(Dropped)
+		- cookbooks	(404)
+		- edex ***
+		- cem.events	(Shows discoverwem.adobe.com)
+		- forums *
+		- gaming ¹
+		- get2 ⁴
+		- groups **
+		- images.groups ***
+		- html ¹
+		- kb2 ¹
+		- labs ¹
+		- ns ¹
+		- stats ⁶
+		- techlive	(404)
+		- thumbnails.tv ²
+		- webplatform	(Github)
+		- wwwimages ²
 
-			- ^ *
-			- airdownload **
-			- gaming *
-			- get2		(mismatched, CN: get.adobe.com)
-			- html *
-			- kb2 *
-			- ns		(404; mismatched, CN: www.adobe.com)
-			- stats		(mismatched, CN: *.d1.sc.omtrdc.net)
-			- thumbnails.tv **
-			- wwwimages **
-
-		- macromedia.com	(cert only matches www)
-
-	* Works, mismatched, CN: www.adobe.com
-	** Works, akamai
+	¹ Works, mismatched, CN: www.adobe.com
+	* Blocks Tor users
+	² Works, akamai
+	⁴ Mismatched, CN: get.adobe.com
+	** Server sends no certificate chain
+	*** Mismatched
+	⁶ Mismatched, CN: *.d1.sc.omtrdc.net
 
 
 	Partially covered subdomains:
 
-		- blogs		(webplatform blog redirects to http)
-		- fpdownload	(crossdomain.xml excluded)
+		- community ¹
+		- fpdownload ³
 		- ns		(→ www)
 
+	¹ /+[^?] 404s
+	³ crossdomain.xml excluded
 
-	Fully covered domains:
 
-		- adobe.com subdomains:
+	Fully covered subdomains:
 
-			- (www.)
-			- entitlement.auth
-			- sp.auth
-			- bugbase
-			- community
-			- cookbooks
-			- creative
+		- (www.)
+		- demand.assets
+		- entitlement.auth
+		- sp.auth
+		- blogs
+		- cookbooks	(→ forums)
+		- bugbase
+		- communities
+		- creative
 
-			- \w\w.creative:
+		- *.creative:
 
-				- ap
-				- d[0-3]
-				- eu
-				- us
+			- ap
+			- d[0-3]
+			- eu
+			- us
 
-			- edexchange
-			- cem.events
-			- get
-			- get2		(→ get)
-			- get3
-			- helpx
-			- images-tv
-			- kuler
-			- max
-			- adobeid-na1.services
-			- sstats
-			- stats		(→ mxmacromedia.d1.sc.omtrdc.net)
-			- store1
-			- success
-			- thumbnails-tv
-			- tv
-			- thumbnails.tv *
-			- verify
-			- wwwimages *
-			- wwwimages2
-
-		- macromedia.com subdomains:
-
-			- (www.)		(^ → www)
-			- download
-			- fpdownload
+		- discoverwem
+		- www.echosign
+		- edex
+		- edexchange	(→ edex.adobe.com)
+		- cem.events	(→ www.adobe.com)
+		- forums
+		- get
+		- get2		(→ get)
+		- get3
+		- images.groups	(→ s3.amazonaws.com)
+		- helpx
+		- images-tv
+		- kuler
+		- max
+		- adobeid-na1.services
+		- sstats
+		- stats		(→ mxmacromedia.d1.sc.omtrdc.net)
+		- store1
+		- success
+		- techlive	(→ www.adobe.com)
+		- thumbnails-tv
+		- tv
+		- thumbnails.tv *
+		- verify
+		- wwwimages *
+		- wwwimages2
 
 	* → akamai
 
 
+	These altnames don't exist:
+
+		- scs.adobe.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .adobe.com
+		- communities.adobe.com
+		- edex.adobe.com
+		- forums.adobe.com
+		- www.adobe.com
+
+
 	Mixed content:
 
-		- Images, on
+		- css, on:
 
+			- blogs from use.typekit.com *
+			- labs from wwwimages.adobe.com *
+
+		- Images, on:
+
+			- blogs from $self *
+			- blogs from dev.w3.org
+			- edex from ex-cms.s3.amazonaws.com *
+			- groups from $self
+			- groups from images.groups *
 			- tv from thumbnails.tv *
-			- www from wwwimages *
+			- labs, www from wwwimages *
+
+		- favicon on blogs from html
 
 		- Ads/web bugs, on:
 
 			- get from stats *
 			- helpx from events.foreseeresults.com *
+			- labs from stats.adobe.com *
 			- tv from www.facebook.com *
+			- www from stats.adobe.com *
 			- www from wwwimages *
 
 	* Secured by us
 
 -->
-<ruleset name="Adobe">
+<ruleset name="Adobe.com">
 
 	<target host="adobe.com" />
-	<target host="*.adobe.com" />
-		<!--
-			Some pages redirect to http:
+	<target host="demand.assets.adobe.com" />
+	<target host="entitlement.auth.adobe.com" />
+	<target host="sp.auth.adobe.com" />
+	<target host="blogs.adobe.com" />
+	<target host="bugbase.adobe.com" />
+	<target host="communities.adobe.com" />
+	<target host="creative.adobe.com" />
+	<target host="*.creative.adobe.com" />
+	<target host="www.echosign.adobe.com" />
+	<target host="edex.adobe.com" />
+	<target host="discoverwem.adobe.com" />
+	<target host="forums.adobe.com" />
+	<target host="fpdownload.adobe.com" />
+	<target host="get.adobe.com" />
+	<target host="get3.adobe.com" />
+	<target host="helpx.adobe.com" />
+	<target host="images-tv.adobe.com" />
+	<target host="kuler.adobe.com" />
+	<target host="max.adobe.com" />
+	<target host="adobeid-na1.services.adobe.com" />
+	<target host="sstats.adobe.com" />
+	<target host="store1.adobe.com" />
+	<target host="success.adobe.com" />
+	<target host="thumbnails-tv.adobe.com" />
+	<target host="tv.adobe.com" />
+	<target host="verify.adobe.com" />
+	<target host="www.adobe.com" />
+	<target host="wwwimages2.adobe.com" />
 
-				https://trac.torproject.org/projects/tor/ticket/8604
-											-->
-		<exclusion pattern="^http://blogs\.adobe\.com/webplatform(?:$|[?/])" />
-		<!--exclusion pattern="^http://blogs\.adobe\.com/(?!$|\?|(?:acrobat|adobe(connect|ingovernment|life)|aftereffects|captivate|conversations|creativelayer|digital(marketing|dmedia|publishing)|dreamweaver|educationleaders|experiencedelivers|globalization|gunar|indesigndocs|iwamoto|lightroomjournal|photoshopdotcom|premierepro|presenter|readermobile|vikrant)($|\?|/)|wp-content/)" /-->
+	<!--	Complications:
+				-->
+	<target host="community.adobe.com" />
+	<target host="cookbooks.adobe.com" />
+	<target host="edexchange.adobe.com" />
+	<target host="cem.events.adobe.com" />
+	<target host="get2.adobe.com" />
+	<target host="images.groups.adobe.com" />
+	<target host="ns.adobe.com" />
+	<target host="stats.adobe.com" />
+	<target host="techlive.adobe.com" />
+
+		<!--	/+[^?] 404s:
+					-->
+		<exclusion pattern="^http://community\.adobe\.com/+(?!$|\?)" />
+
+			<test url="http://community.adobe.com/f" />
+			<test url="http://community.adobe.com/o" />
+			<test url="http://community.adobe.com//o" />
+			<test url="http://community.adobe.com/b" />
+			<test url="http://community.adobe.com/a" />
 		<!--
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2013-May/001605.html
 
 			Breaks video playback:
 						-->
 		<exclusion pattern="^http://fpdownload\.adobe\.com/(?:pub/swz/)?crossdomain\.xml$" />
-	<target host="macromedia.com" />
-	<target host="*.macromedia.com" />
+
+			<test url="http://fpdownload.adobe.com/crossdomain.xml" />
+			<test url="http://fpdownload.adobe.com/pub/swz/crossdomain.xml" />
+
+		<!--
+			These stylesheets reference resources relative to root:
+										-->
+		<!--exclusion pattern="^http://wwwimages\.adobe.com/www\.adobe\.com/css/labs_import\.css" /-->
+		<!--
+			While these do not:
+						-->
+		<!--exclusion pattern="^http://wwwimages\.adobe.com/www\.adobe\.com/css/(?!assistive|features_test|handheld|print)\.css" /-->
+
+		<exclusion pattern="^http://ns\.adobe\.com/(?!$|xap/)" />
+
+			<test url="http://ns.adobe.com//" />
+			<test url="http://ns.adobe.com/?foo" />
+			<test url="http://ns.adobe.com/foo" />
+
+			<!--	-ve:
+					-->
+			<test url="http://ns.adobe.com/xap/" />
 
 
-	<securecookie host=".*\.adobe\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.adobe\.com$" name="^(ITEMSINCART|TID|UID)$" /-->
+	<!--securecookie host="^communities\.adobe\.com$" name="^MDPCush-Cookie$" /-->
+	<!--securecookie host="^edex\.adobe\.com$" name="^(CFID|CFTOKEN|DEFAULTLOCALE|EDEXLOCALE)$" /-->
+	<!--securecookie host="^forums\.adobe\.com$" name="^BIGipServer[\w-]+$" /-->
+	<!--securecookie host="^www\.adobe\.com$" name="^(CFID|CFTOKEN|DYLANSESSIONID|DylanApp-BigIP)$" /-->
+
+	<securecookie host=".+\.adobe\.com$" name=".+" />
 
 
-	<rule from="^http://adobe\.com/"
-		to="https://www.adobe.com/" />
+	<!--	Redirect drops forward slash
+		but not args:
+				-->
+	<rule from="^http://community\.adobe\.com/+"
+		to="https://www.adobe.com/communities" />
 
-	<rule from="^http://((?:entitlement|sp)\.auth|blogs|bugbase|community|cookbooks|(?:\w\w\.)?creative|edexchange|cem\.events|fpdownload|get3?|helpx|images-tv|kuler|max|adobeid-na1\.services|sstats|store1|success|thumbnails-tv|tv|verify|www|wwwimages2)\.adobe\.com/"
-		to="https://$1.adobe.com/" />
+		<test url="http://community.adobe.com/?" />
+		<test url="http://community.adobe.com//" />
+
+	<!--	Redirect drops forward slash
+		and path, but not args:
+					-->
+	<rule from="^http://cookbooks\.adobe\.com/[^?]*"
+		to="https://forums.adobe.com/" />
+
+		<test url="http://cookbooks.adobe.com/livecycle" />
+		<test url="http://cookbooks.adobe.com/post_AIR_Encrypted_SQLite_Database-16250.html" />
+
+	<!--	Redirect drops forward slash,
+		path, and args:
+				-->
+	<rule from="^http://edexchange\.adobe\.com/.*"
+		to="https://edex.adobe.com/" />
+
+		<test url="http://edexchange.adobe.com/pages/home" />
+
+	<!--	Redirect drops forward slash
+		and path, but not args:
+					-->
+	<rule from="^http://cem\.events\.adobe\.com/[^?]*"
+		to="https://www.adobe.com/solutions/web-experience-management.html" />
+
+		<test url="http://cem.events.adobe.com/?" />
+		<test url="http://cem.events.adobe.com//" />
 
 	<rule from="^http://get2\.adobe\.com/"
 		to="https://get.adobe.com/" />
+
+	<rule from="^http://images\.groups\.adobe\.com/"
+		to="https://s3.amazonaws.com/images.groups.adobe.com/" />
 
 	<rule from="^http://ns\.adobe\.com/$"
 		to="https://www.adobe.com/" />
@@ -186,19 +332,22 @@
 	<rule from="^http://stats\.adobe\.com/"
 		to="https://mxmacromedia.d1.sc.omtrdc.net/" />
 
-	<rule from="^http://thumbnails\.tv\.adobe\.com/"
-		to="https://a248.e.akamai.net/f/1355/4224/3m/thumbnails.tv.adobe.com/" />
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://techlive\.adobe\.com/[^?]*"
+		to="https://www.adobe.com/devnet/archive/techlive.html" />
 
-	<!--rule from="^http://wwwimages\.adobe\.com/www\.adobe\.com/"
-		to="https://www.adobe.com/" /-->
+		<test url="http://techlive.adobe.com/?foo" />
+		<test url="http://techlive.adobe.com/foo" />
 
-	<rule from="^http://wwwimages\.adobe\.com/"
-		to="https://a248.e.akamai.net/f/1953/8974/2h/wwwimages.adobe.com/" />
+	<!--	First, rewrite css to www:
+						-->
+	<rule from="^http://wwwimages\.adobe\.com/www\.adobe\.com/css/"
+		to="https://www.adobe.com/css/" />
 
-	<rule from="^http://(?:www\.)?macromedia\.com/"
-		to="https://www.macromedia.com/" />
+		<test url="http://wwwimages.adobe.com/www.adobe.com/css/labs_import.css" />
 
-	<rule from="^http://(fp)?download\.macromedia\.com/"
-		to="https://$1download.macromedia.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,42 @@
+<!--
+	For other MAGIX coverage, see MAGIX.xml.
+
+
+	Problematic hosts in *xaraonline.com:
+
+		- app ¹ ²
+		- secure ² ³
+
+	¹ Mismatched
+	² Expired
+	³ Mixed iframe
+
+
+	Mixed content:
+
+		- iframe on secure from www.xara.com
+
+-->
+<ruleset name="Xara online.com (partial)" platform="mixedcontent" default_off="expired">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="secure.xaraonline.com" />
+
+	<!--	Complications:
+				-->
+	<target host="app.xaraonline.com" />
+
+		<!--	Mixed iframe:
+					-->
+		<test url="http://app.xaraonline.com/_stratus/readcookie.aspx?passto=" />
+		<test url="http://secure.xaraonline.com/_stratus/readcookie.aspx?passto=" />
+
+
+	<rule from="^http://app\.xaraonline\.com/"
+		to="https://secure.xaraonline.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

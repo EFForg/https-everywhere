@@ -1,21 +1,59 @@
+<!--
+	(www.)?localsearchassociation.org: Some pages redirect to http
+
+
+	Other Yellow Pages IMA rulesets:
+
+		- Yellow_Pages_Opt_Out.com.xml
+
+-->
 <ruleset name="Yellow Pages IMA (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="localsearchassociation.org"/>
-	<target host="*.localsearchassociation.org"/>
-	<target host="yellowpagesoptout.com"/>
-	<target host="*.yellowpagesoptout.com"/>
+	<target host="www.localsearchassociation.org"/>
+
+	<!--	Complications:
+				-->
 	<target host="ypassociation.org"/>
 	<target host="www.ypassociation.org"/>
 
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.localsearchassociation\.org/Main/(Home|JoinNow)\.aspx" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.localsearchassociation\.org/(?!Integrations/|Modules/|SiteTypes/Default\.master\.css\.aspx|[Uu]ploads/[Pp]ublic/)" />
 
-	<securecookie host="^(.*\.)?localsearchassociation\.org$" name=".*"/>
-	<securecookie host="^(.*\.)?yellowpagesoptout\.com$" name=".*"/>
+			<!--	+ve:
+					-->
+			<test url="http://www.localsearchassociation.org/Home.aspx" />
+			<test url="http://www.localsearchassociation.org/Index.aspx" />
+			<test url="http://www.localsearchassociation.org/Main/Home.aspx" />
+			<test url="http://www.localsearchassociation.org/Main/JoinNow.aspx" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.localsearchassociation.org/Integrations/JQuery/Themes/Stable/Root/jquery-ui.css" />
+			<test url="http://www.localsearchassociation.org/Modules/DynamicNavigation/Styles.css.aspx" />
+			<test url="http://www.localsearchassociation.org/SiteTypes/Default.master.css.aspx" />
+			<test url="http://www.localsearchassociation.org/Uploads/Public/Documents/Styles/lsa-3-31-14.css" />
+			<test url="http://www.localsearchassociation.org/Uploads/Public/Images/Design/top_nav_bg_left.jpg" />
 
 
-	<rule from="^http://(?:www\.)?(?:localsearch|yp)association\.org/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?localsearchassociation\.org$" name="^(ASP\.NET_SessionId|CPAUDIENCEID_CDA2)$" /-->
+
+	<!--securecookie host="^(?:.*\.)?localsearchassociation\.org$" name=".*"/-->
+
+
+	<rule from="^http://(?:www\.)?ypassociation\.org/"
 		to="https://localsearchassociation.org/"/>
 
-	<rule from="^http://(?:www\.)?yellowpagesoptout\.com/"
-		to="https://www.yellowpagesoptout.com/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

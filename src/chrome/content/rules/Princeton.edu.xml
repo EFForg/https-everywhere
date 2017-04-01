@@ -1,39 +1,54 @@
 <!--
-	Nonfunctional subdomains:
+Disabled by https-everywhere-checker because:
+Fetch error: http://princeton.edu/ => https://www.princeton.edu/: Redirect for 'http://princeton.edu/' missing Location
+  Nonfunctional subdomains:
 
-		- arks *
-		- crcw *
-		- digilab **
-		- findingaids **
-		- pudl **
+    - arks *
+    - crcw *
+    - digilab **
+    - findingaids **
+    - pudl **
+    - tigernet ***
 
-	* Refused
-	** Dropped
+  * Refused
+  ** Dropped
+  *** Mismatch
 
+  UNIX homedirs are also broken, eg:
 
-	Fully covered subdomains:
+  http://www.princeton.edu/~achaney/tmve/wiki100k/docs/Conjunctive_normal_form.html
 
-		- (www.)	(^ → www)
-		- blogs
-		- citp
-		- fed
-		- lists
+  ^ In what way? (not broken anymore?)
+
+  Fully covered subdomains:
+    - alumni
+    - alumnicas
+    - blogs
+    - citp
+    - fed
+    - lists
+    - paw
+
+  These altnames don't exist:
+
+    - www.citp.princeton.edu
 
 -->
-<ruleset name="Princeton.edu">
 
-	<target host="princeton.edu" />
-	<target host="*.princeton.edu" />
+<ruleset name="Princeton.edu (partial)">
+  <securecookie host="^(?:alumnicas|blogs|fed)\.princeton\.edu$" name=".+" />
+  
+  <target host="princeton.edu" />
+  <target host="www.princeton.edu" />
+  <target host="alumni.princeton.edu" />
+  <target host="alumnicas.princeton.edu" />
+  <target host="blogs.princeton.edu" />
+  <target host="citp.princeton.edu" />
+  <target host="fed.princeton.edu" />
+  <target host="lists.princeton.edu" />
+  <target host="paw.princeton.edu" />
 
-
-	<securecookie host="^(?:blogs|fed)\.princeton\.edu$" name=".+" />
-
-
-	<rule from="^http://(?:www\.)?princeton\.edu/"
-		to="https://www.princeton.edu/"/>
-
-	<rule from="^http://(blogs|citp|fed|lists)\.princeton\.edu/"
-		to="https://$1.princeton.edu/" />
-
+  <rule from="^http:" to="https:" />
 </ruleset>
+
 

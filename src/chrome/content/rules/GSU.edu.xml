@@ -1,0 +1,149 @@
+<!--
+	For rules causing false/broken MCB, see GSU.edu-falsemixed.xml.
+
+
+	Nonfunctional subdomains:
+
+		- admissions ¹
+		- advisement ¹
+		- aeadmin1 ¹
+		- aysps ¹
+		- banner ¹
+		- biomedical ¹
+		- calendar ¹
+		- campuslife ¹
+		- career ¹
+		- (www.)cas ¹
+		- codeofconduct ¹
+		- dining ¹
+		- education ¹
+		- emeriti ¹
+		- employment ¹
+		- enrollment
+		- events ¹
+		- facilities ¹
+		- faculty ¹
+		- finance ¹
+		- tools.finance ¹
+		- ga ¹
+		- giving ¹
+		- graduate ¹
+		- health ¹
+		- honors ¹
+		- hr ¹
+		- employees.hr ¹
+		- managers.hr ¹
+		- retirees.hr ¹
+		- innovation ¹
+		- international ¹
+		- isss ¹
+		- law ¹
+		- lawlibrary ¹
+		- library ¹
+		- magazine ¹
+		- map ¹
+		- myhousing ¹
+		- mystudyabroad ¹
+		- news ¹
+		- hyperphysics.phy-astr ¹
+		- policies.oie ¹
+		- parking ¹
+		- pr ¹
+		- president ¹
+		- provost ¹
+		- publichealth ¹
+		- recreation ¹
+		- registrar ¹
+		- research ¹
+		- ursa.research ¹
+		- robinson ¹
+		- safety ¹
+		- senate ¹
+		- services ¹
+		- sfs ¹
+		- snhp ¹
+		- strategic ¹
+		- studentaffairs ¹
+		- studenthandbook ¹
+		- success.students ¹
+		- technology ¹
+		- travel ²
+		- universityattorney ¹
+		- veterans ¹
+		- welcome ¹
+
+	¹ Refused
+	² Shows webservices; mismatched, CN: webservices.gsu.edu
+
+
+	^: refused
+
+
+	Fully covered subdomains:
+
+		- campusid
+		- inb.gosolar
+		- www.gosolar
+		- paws
+		- sendafile
+		- gsu.view
+		- webservices
+
+
+	These altnames don't exist:
+
+		- www.campusid.gsu.edu
+		- www.paws.gsu.edu
+		- www.sendafile.gsu.edu
+		- www.webservices.gsu.edu
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www from $self ¹
+			- www from fonts.googleapis.com ¹
+
+		- Images, on:
+
+			- www from $self ¹
+			- www from aeadmin1 ²
+			- www from scontent-a.cdninstagram.com ¹
+
+	¹ Secured by us
+	² Unsecurable <= refused
+
+-->
+<ruleset name="GSU.edu (partial)">
+
+	<target host="gsu.edu" />
+	<target host="*.gsu.edu" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<!--exclusion pattern="^http://(www\.)?gsu\.edu/+(?!wp-content/|wp-includes/)" /-->
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^\.gsu\.edu$" name="^fos\.secure\.web\.server$" /-->
+	<!--securecookie host="^sendafile\.gsu\.edu$" name="^_filetransfer_session$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^\.gsu\.edu$" name="^(fos\.web\.server|runId)$" /-->
+	<!--securecookie host="^campusid\.gsu\.edu$" name="^(ASP\.NET_SessionId|TestCookieName|language\.User)$" /-->
+	<!--securecookie host="^paws\.gsu\.edu$" name="^(BIPIPLuminisProd|JSESSIONID|UserAgentId|cookies)$" /-->
+	<!--securecookie host="^www\.gsu\.edu$" name="^X-Mapping-\w{9]$" /-->
+
+	<securecookie host="^(?:campusid|paws)\.gsu\.edu$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?gsu\.edu/(?=wp-content/|wp-includes/)"
+		to="https://www.gsu.edu/" />
+
+	<rule from="^http://(campusid|(?:inb|www)\.gosolar|paws|sendafile|gsu\.view|webservices)\.gsu\.edu/"
+		to="https://$1.gsu.edu/" />
+
+</ruleset>

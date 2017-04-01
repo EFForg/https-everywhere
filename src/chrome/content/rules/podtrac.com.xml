@@ -1,0 +1,48 @@
+<!--
+	CDN buckets:
+
+		- podtrac-hosting.s3.amazonaws.com
+
+
+	Mixed content:
+
+		- Image on play from www.podtrac.com ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Podtrac.com (partial)">
+
+	<!--target host="podtrac-hosting.s3.amazonaws.com" /-->
+
+	<target host="podtrac.com" />
+	<target host="dts.podtrac.com" />
+	<target host="feeds.podtrac.com" />
+	<target host="play.podtrac.com" />
+	<target host="www.podtrac.com" />
+
+		<!--	Redirects are protocol-relative regardless
+			of destinations' support.
+
+			(ideally this would not exclude destinations
+			that do support tls, but for now...:)
+								-->
+		<exclusion pattern="^http://dts\.podtrac\.com/redirect\.(?!mp3/rss\.art19\.com/)" />
+		<exclusion pattern="^http://www\.podtrac\.com/pts/redirect\." />
+
+			<!--	+ve:
+					-->
+			<test url="http://dts.podtrac.com/redirect.mp3/" />
+			<test url="http://dts.podtrac.com/redirect.mp3/index.html" />
+			<test url="http://www.podtrac.com/pts/redirect.mp3/" />
+
+		<test url="http://feeds.podtrac.com/LhS5ax2CPGou" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

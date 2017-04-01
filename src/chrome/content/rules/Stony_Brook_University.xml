@@ -1,24 +1,111 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional domains:
 
-		- (www.)		(times out)
+		- (www.)?stonybrook.edu ¹
+		- sb.cc.stonybrook.edu ¹
+		- itsm.stonybrook.edu ¹
+		- (www.)?library.stonybrook.edu ¹
+		- research.dev.sinc.stonybrook.edu ³
+
+		- (www.)?sunysb.edu ¹
+		- fsl-gw.fsl.cs.sunysb.edu ⁴
+		- lists.fsl.cs.sunysb.edu ⁴
+		- ssh.fsl.cs.sunysb.edu ⁴
+
+	¹ Refused
+	¹ Dropped
+	³ 404
+	⁴ Data differ from http
+
+
+	Problematic domains:
+
+		- service.stonybrook.edu *
+
+		- fsl.cs.sunysb.edu *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- blackboard.stonybrook.edu
+
+		- avatar.fsl.cs.sunysb.edu
+		- bugzilla.fsl.cs.sunysb.edu
+		- rt.fsl.cs.sunysb.edu
+		- eweb.research.sunysb.edu
+
+
+	Mixed content:
+
+		- css, on:
+
+			- research from fonts.googleapis.com
+			- (www.)?studentaffairs from fast.fonts.net
+			- (www.)?studentaffairs from ^stonybrook.edu
+			- (www.)?studentaffairs from www.stonybrook.edu
+
+		- Images, on:
+
+			- career, (www.)?studentaffairs from $self
+			- (www.)?studentaffairs from ^stonybrook.edu
+			- (www.)?studentaffairs from mobile.cc.stonybrook.edu
+			- (www.)?studentaffairs from www.stonybrook.edu
+
+		- favicon on research from www.stonybrook.edu
+		- Bug on (www.)?studentaffairs from snapwidget.com
 
 -->
 <ruleset name="Stony Brook University (partial)">
 
-	<target host="*.cs.stonybrook.edu" />
+	<!--	Direct rewrites:
+				-->
+	<target host="blackboard.stonybrook.edu" />
+	<target host="career.stonybrook.edu" />
+	<target host="mobile.cc.stonybrook.edu" />
+	<target host="sso.cc.stonybrook.edu" />
+
+	<target host="hiring.cs.stonybrook.edu" />
+	<target host="set-hiring.cs.stonybrook.edu" />
+	<target host="www.cs.stonybrook.edu" />
+	<target host="www3.cs.stonybrook.edu" />
+
+	<target host="www.grad.stonybrook.edu" />
+	<target host="it.stonybrook.edu" />
+	<target host="policy.stonybrook.edu" />
+	<target host="research.stonybrook.edu" />
+	<target host="studentaffairs.stonybrook.edu" />
+	<target host="www.studentaffairs.stonybrook.edu" />
+
+	<target host="avatar.fsl.cs.sunysb.edu" />
+	<target host="bugzilla.fsl.cs.sunysb.edu" />
+	<target host="rt.fsl.cs.sunysb.edu" />
+	<target host="www.fsl.cs.sunysb.edu" />
 	<target host="www.cs.sunysb.edu" />
-		<!--
-			- $ prompts for login
-			- js/ 404s
-						-->
-		<exclusion pattern="^http://www\.cs\.s(?:tonybrook|unysb)\.edu/(?!~|all\.css|css/|images/)" />
+	<target host="www3.cs.sunysb.edu" />
+
+	<target host="eweb.research.sunysb.edu" />
+
+	<!--	Complications:
+				-->
+	<target host="fsl.cs.sunysb.edu" />
 
 
-	<rule from="^http://(www|(?:set-)?hiring)\.cs\.stonybrook\.edu/"
-		to="https://$1.cs.stonybrook.edu/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^blackboard\.stonybrook\.edu$" name="^session_id$" /-->
+	<!--securecookie host="^(?:avatar|rt)\.fsl\.cs\.subysb\.edu$" name="^(?:_collaboration_session|cc\.collabd_session_guid)$" /-->
+	<!--securecookie host="^bugzilla\.fsl\.cs\.subysb\.edu$" name="^(?:Bugzilla_login_request_cookie|DEFAULTFORMAT)$" /-->
+	<!--securecookie host="^eweb.research.sunysb.edu$" name="^ASP\.NET_SessionId$" /-->
 
-	<rule from="^http://www\.cs\.sunysb\.edu/"
-		to="https://www.cs.sunysb.edu/" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://fsl\.cs\.sunysb\.edu/"
+		to="https://www.fsl.cs.sunysb.edu/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -3,17 +3,93 @@
 
 		- Alumniconnections.com.xml
 
+
+	Problematic hosts in *imodules.com:
+
+		- ^ ᵈ
+		- go ᵐ
+
+	ᵈ Dropped, preemptable redirect
+	ᵐ Pardot / mismatched
+
+
+	Mixed content:
+
+		- iframe on www from player.vimeo.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
 -->
-<ruleset name="iModules">
+<ruleset name="iModules.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="admin.imodules.com" />
+	<target host="adminlb.imodules.com" />
+	<target host="clients.imodules.com" />
+	<target host="securelb.imodules.com" />
+	<target host="support.imodules.com" />
+	<target host="www.imodules.com" />
+
+	<!--	(accounts:)	-->
+	<target host="culinary.imodules.com" />
+	<target host="iuaa.imodules.com" />
+	<target host="niu.imodules.com" />
+	<target host="northernillinois.imodules.com" />
+	<target host="ucsb.imodules.com" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://securelb.imodules.com/s/1686/alumni/giving.aspx?sid=1686&amp;gid=4&amp;pgid=476" /-->
+
+	<!--	Complications:
+				-->
 	<target host="imodules.com" />
-	<target host="*.imodules.com" />
+	<target host="go.imodules.com" />
+
+		<exclusion pattern="^http://go\.imodules\.com/(?!/*(?:$|\?|[els]/|emailPreference/|unsubscribe/|webmail/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://go.imodules.com/default.asp" />
+			<test url="http://go.imodules.com/default.aspx" />
+			<test url="http://go.imodules.com/favicon.ico" />
+			<test url="http://go.imodules.com/home.htm" />
+			<test url="http://go.imodules.com/home.html" />
+			<test url="http://go.imodules.com/index.htm" />
+			<test url="http://go.imodules.com/index.html" />
+			<test url="http://go.imodules.com/index.jsp" />
+			<test url="http://go.imodules.com/index.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://go.imodules.com/l/92862/2016-05-18/2n6bmk" />
+			<test url="http://go.imodules.com/l/92862/2016-06-30/2ykfx1" />
+			<test url="http://go.imodules.com/s/92862/wfQHnqYui9sEd7sNVrWZ0EZca05tCvlR?q=training" />
 
 
-	<securecookie host="^(?:iuaa|securelb)\.imodules\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^securelb\.imodules\.com$" name="^(CCS|DBMS_RETURNURL_\d+|ENCOMPASSSESSIONID_\d+|EncompassAuth)$" /-->
+	<!--securecookie host="^(?:clients|www|(account_vhost))\.imodules\.com$" name="^CCS$" /-->
+
+	<securecookie host="^(?!go\.)\w" name="." />
 
 
-	<rule from="^http://((?:admin(?:lb)?|clients|culinary|iuaa|niu|securelb|ucsb|www)\.)?imodules\.com/"
-		to="https://$1imodules.com/" />
+	<rule from="^http://imodules\.com/"
+		to="https://www.imodules.com/" />
+
+	<!--	Redirect drops args and forward slash and args:
+								-->
+	<rule from="^http://go\.imodules\.com/+(?:\?.*)?$"
+		to="https://www.imodules.com/" />
+
+		<test url="http://go.imodules.com/?" />
+
+	<rule from="^http://go\.imodules\.com/"
+		to="https://go.pardot.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

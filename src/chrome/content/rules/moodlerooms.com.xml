@@ -1,0 +1,89 @@
+<!--
+	For rules causing false/broken MCB, see moodlerooms.com-falsemixed.xml.
+
+
+	Nonfunctional hosts in *moodlerooms.com:
+
+		- anz ⁴
+		- asia ⁴
+		- br ⁴
+		- crowdsource ᵃ
+		- de ⁴
+		- es ⁴
+		- fi ⁴
+		- fr ⁴
+		- jp ⁴
+		- lac ⁴
+		- nl ⁴
+		- uki ⁴
+		- www ⁴
+
+	ᵃ Shows another domain
+	⁴ 404
+
+
+	Problematic hosts in *moodlerooms.com:
+
+		- page ᵐ
+		- train ˣ
+
+	ᵐ Pardot / mismatched
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- learn2.moodlerooms.com
+		- train.moodlerooms.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on train from $self ˢ
+		- Images on train from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="MoodleRooms.com (partial)">
+
+	<!--target host="moodlerooms.com" /-->
+	<target host="kb.moodlerooms.com" />
+	<target host="learn2.moodlerooms.com" />
+	<!--target host="train.moodlerooms.com" /-->
+
+	<!--	Complications:
+				-->
+	<target host="page.moodlerooms.com" />
+
+		<exclusion pattern="^http://page\.moodlerooms\.com/(?!/*(?:[els]|emailPreference|unsubscribe|webmail)/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://page.moodlerooms.com/about.htm" />
+			<test url="http://page.moodlerooms.com/default.aspx" />
+			<test url="http://page.moodlerooms.com/favicon.ico" />
+			<test url="http://page.moodlerooms.com/index.htm" />
+			<test url="http://page.moodlerooms.com/index.html" />
+			<test url="http://page.moodlerooms.com/index.php" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:learn2|train)\.moodlerooms\.com$" name="^MoodleSession$" /-->
+
+	<securecookie host="^(?!page\.)\w" name="." />
+
+
+	<rule from="^http://page\.moodlerooms\.com/"
+		to="https://go.pardot.com/" />
+
+		<test url="http://page.moodlerooms.com/l/1662/2012-02-08/2hxv68" />
+		<test url="http://page.moodlerooms.com/l/1662/2011-05-03/KAJGB/1662/111461/ComparisonMatrix_5211.pdf" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

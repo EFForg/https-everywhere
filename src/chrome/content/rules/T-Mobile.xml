@@ -1,4 +1,6 @@
 <!--
+	For rules causing false/broken MCB, see T-Mobile.com-falsemixed.xml.
+
 	For other Deutsche Telekom coverage, see Deutsche_Telekom.xml.
 
 
@@ -12,142 +14,147 @@
 		- wac.04c7.edgecastcdn.net/0004C7/
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *t-mobile.com:
 
-		- t-mobile.com subdomains:
+		- explore.business ¹
+		- cache.deals ¹
+		- htc ³
+		- cache.htc ³
+		- investor ⁴
+		- locator ⁵
+		- cache.newsroom ¹
+		- sdc ⁴
+		- t-mobile-coverage ⁶
 
-			- newsroom
-			- cache.deals *
-			- htc **
-			- cache.htc **
-			- locator			(404, mismatched, CN: *.spatialpoint.com)
-			- cache.newsroom *
-			- t-mobile-coverage		(shows videos, mismatched, CN: videos.t-mobile.com)
-
-	* 404, CN: gp1.wac.edgecastcdn.net
-	** Revoked cert
+	¹ Handshake fails
+	¹ 404, CN: gp1.wac.edgecastcdn.net
+	³ Revoked cert
+	⁴ Dropped
+	⁵ 404
+	⁶ Shows another domain
 
 
-	Problematic domains:
+	Problematic hosts in *t-mobile.com:
 
-		- (www.)tmobile.com *
-		- my.tmobile.com *
+		- cache.business ¹
+		- es.explore.business ²
+		- images.businessresources ³
+		- cache.explore	 ¹
+		- find ⁴
+		- cache.prepaid-phones ¹
+		- videos ⁵
+		- cache.videos ⁶
+		- es.videos ⁵
 
-		- t-mobile.com subdomains:
-
-			- ^				(cert only matches www)
-			- deals				(shows videos, mismatched, CN: videos.t-mobile.com)
-			- find **
-			- cache.prepaid-phones		(works, CN: gp1.wac.edgecastcdn.net)
-			- cache.videos			(404, CN: gp1.wac.edgecastcdn.net)
-
-		- (www.)tmobile.nl		(redirects to t-mobile.nl over http)
-
-	* Redirects to t-mobile.com over http, mismatched, CN: vip.t-mobile.com
-	** Works, mismatched, CN: find.my.t-mobile.com. Functionally
+	¹ Expired
+	² TLS unsupported at redirect destination
+	³ Akamai
+	⁴ Works, mismatched, CN: find.my.t-mobile.com. Functionally
 	   equivalent to the latter, but visually different.
+	⁵ Mixed css
+	⁶ Mismatched, CN: gp1.wac.edgecastcdn.net
 
 
-	Partially covered domains:
+	Insecure cookies are set for these domains and hosts:
 
-		- deals.t-mobile.com	(→ www.t-mobile.com)
+		- .t-mobile.com
+		- account.t-mobile.com
+		- es.account.t-mobile.com
+		- .ebill.t-mobile.com
+		- explore.t-mobile.com
+		- es.explore.t-mobile.com
+		- my.t-mobile.com
+		- .my.t-mobile.com
+		- account.my.t-mobile.com
+		- es.my.t-mobile.com
+		- m.my.t-mobile.com
+		- newsroom.t-mobile.com
+		- es.support.t-mobile.com
+		- videos.t-mobile.com
+		- es.videos.t-mobile.com
 
 
-	Fully covered domains:
+	Mixed content:
 
-		- tmobileuk.blackberry.com
-		- www.tmobileuk.blackberry.com		(→ tmobileuk.blackberry.com)
-		- (www.)tmobile.com			(→ www.t-mobile.com)
-		- my.tmobile.com			(→ my.t-mobile.com)
+		- css, on:
 
-		- t-mobile.com subdomains:
+			- videos from www.t-mobile.com *
+			- es.videos from es.t-mobile.com *
 
-			- (www.)			(^ → www)
-			- business
-			- cache.business
-			- ebill
-			- es
-			- explore
-			- cache.explore
-			- my
-			- find.my
-			- prepaid-phones
-			- cache.prepaid-phones		(→ prepaid-phones)
-			- secure-checkout
-			- support
-			- videos
-			- cache.videos			(→ videos)
-			- www
+		- Images, on:
 
-		- (www.)t-mobile.co.uk			(^ → www)
-		- (www.)instantemail.t-mobile.co.uk	(→ tmobileuk.blackberry.com)
-		- (www.)tmobile.nl			(→ www.t-mobile.nl)
-		- (www.)t-mobile.nl			(^ → www)
-		- gsm.t-mobile.nl
+			- find.es from www.t-mobile.com *
+			- find.es from s.tmocache.com *
 
-		- tmocache.com subdomains:
+		- favicon on es.videos from www.t-mobile.com *
 
-			- s.my
-			- s
-
-        - t-mobile.net subdomains:
-
-            - hotspot
+	* Secured by us
 
 -->
-<ruleset name="T-Mobile" platform="mixedcontent">
+<ruleset name="T-Mobile.com (partial)">
 
-	<target host="tmobileuk.blackberry.com" />
-	<target host="www.tmobileuk.blackberry.com" />
-	<target host="tmobile.com" />
-	<target host="*.tmobile.com" />
+	<!--	Direct rewrites:
+				-->
 	<target host="t-mobile.com" />
-	<target host="*.t-mobile.com" />
-	<target host="t-mobile.co.uk" />
-	<target host="*.t-mobile.co.uk" />
-	<target host="www.*.t-mobile.co.uk"/>
-	<target host="tmobile.nl" />
-	<target host="www.tmobile.nl" />
-	<target host="t-mobile.nl" />
-	<target host="*.t-mobile.nl" />
-	<target host="*.tmocache.com" />
-	<target host="hotspot.t-mobile.net" />
+	<target host="account.t-mobile.com" />
+	<target host="es.account.t-mobile.com" />
+	<target host="b2b.t-mobile.com" />
+	<target host="business.t-mobile.com" />
+
+	<!--target host="cache.business.t-mobile.com" /-->
+	<target host="es.business.t-mobile.com" />
+	<target host="find.business.t-mobile.com" />
+
+	<target host="ebill.t-mobile.com" />
+	<target host="es.t-mobile.com" />
+	<target host="find.es.t-mobile.com" />
+	<target host="explore.t-mobile.com" />
+	<!--target host="cache.explore.t-mobile.com" /-->
+	<target host="es.explore.t-mobile.com" />
+	<target host="find.t-mobile.com" />
+	<target host="my.t-mobile.com" />
+
+	<target host="account.my.t-mobile.com" />
+	<target host="es.account.my.t-mobile.com" />
+	<target host="es.my.t-mobile.com" />
+	<target host="find.my.t-mobile.com" />
+	<target host="m.my.t-mobile.com" />
+	<target host="manage.my.t-mobile.com" />
+	<target host="es.manage.my.t-mobile.com" />
+
+	<target host="newsroom.t-mobile.com" />
+	<target host="prepaid-phones.t-mobile.com" />
+	<!--target host="cache.prepaid-phones.t-mobile.com" /-->
+	<target host="es.prepaid-phones.t-mobile.com" />
+	<target host="secure-checkout.t-mobile.com" />
+	<target host="support.t-mobile.com" />
+	<target host="apps.support.t-mobile.com" />
+	<target host="es.support.t-mobile.com" />
+	<!--target host="videos.t-mobile.com" /-->
+	<!--target host="es.videos.t-mobile.com" /-->
+	<!--target host="cache.videos.t-mobile.com" /-->
+	<target host="vip.t-mobile.com" />
+	<target host="www.t-mobile.com" />
 
 
-	<securecookie host="^(?:business|ebill|explore|my|find\.my|support|videos)\.t-mobile\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.t-mobile\.com$" name="^(?:HRERITRUL|MYTMobileSingleUseCouponPromotions|MyTMobile(?:L|Navigation)?|TMobile(?:Spanish|TradeIn)|TradeInQuoteInfoCookie|mpSbNoCacheES|incap_ses_\d+_\d+|nlbi_\d+|provstatus|tmocusttoken|visid_incap_\d+)$" /-->
+	<!--securecookie host="^(?:es\.)?account\.t-mobile\.com$" name="^(?:__utmv[abm]\w+|E-UI-session|EUI-TRANS-ID|JSESSIONID|amfID)$" /-->
+	<!--securecookie host="^\.ebill\.t-mobile\.com$" name="^BIGipServer.*" /-->
+	<!--securecookie host="^(?:es\.)?explore\.t-mobile\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^(?:es\.|m\.)?my\.t-mobile\.com$" name="^(?:___utmv[abm]\w+|IIII)$" /-->
+	<!--securecookie host="^account\.my\.t-mobile\.com$" name="^___utmv[abm]\w+$" /-->
+	<!--securecookie host="^\.my\.t-mobile\.com$" name="^(?:JSESSIONID|TLT[SU]ID|incap_ses_\d+_\d+|nlbi_\d+|visid_incap_\d+)$" /-->
+	<!--securecookie host="^newsroom\.t-mobile\.com$" name="^DARKSITE$" /-->
+	<!--securecookie host="^es\.support\.t-mobile\.com$" name="^(?:BIGipServer.*|JSESSIONID|jive\.login\.ts|jive\.security\.context)$" /-->
+	<!--securecookie host="^(?:es\.)?videos\.t-mobile\.com$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\." name="^(?:incap_ses_\d+|nlbi|visid_incap)_\d+$" />
 
 
-	<rule from="^http://(?:www\.)?tmobileuk\.blackberry\.com/"
-		to="https://tmobileuk.blackberry.com/" />
-
-	<rule from="^http://(?:www\.)?t-?mobile\.(com|nl)/"
-		to="https://www.t-mobile.$1/" />
-
-	<rule from="^https?://deals\.t-mobile\.com/(?:\?.*)?$"
-		to="https://www.t-mobile.com/shop/phones/?pricerange=0-0&amp;features=371e5c4a-3dc6-4404-86d0-c59f8d8baa3b" />
-
-	<rule from="^http://((?:cache\.)?(?:business|explore)|ebill|es|my|find\.my|secure-checkout|support)\.t-mobile\.com/"
-		to="https://$1.t-mobile.com/" />
-
-	<rule from="^http://my\.t-?mobile\.com/"
-		to="https://my.t-mobile.com/" />
-
-	<rule from="^https?://(?:cache\.)?(prepaid-phone|video)s\.t-mobile\.com/"
-		to="https://$1s.t-mobile.com/" />
-
-	<rule from="^http://(?:www\.)?t-mobile\.co\.uk/"
-		to="https://www.t-mobile.co.uk/" />
-
-	<rule from="^http://(?:www\.)?instantemail\.t-mobile\.co\.uk/"
-		to="https://tmobileuk.blackberry.com/" />
-
-	<rule from="^http://gsm\.t-mobile\.nl/"
-		to="https://gsm.t-mobile.nl/" />
-
-	<rule from="^http://s(\.my)?\.tmocache\.com/"
-        to="https://s$1.tmocache.com/" />
-
-	<rule from="^http://hotspot\.t-mobile\.net/"
-		to="https://hotspot.t-mobile.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

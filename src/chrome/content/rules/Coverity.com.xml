@@ -1,56 +1,121 @@
 <!--
+	Nonfunctional hosts in *coverity.com:
 
-	CDN buckets:
+		- blog ¹
+		- go *
+		- scan6 ²
+		- security ²
+		- softwareintegrity *
 
-		- coverity.mktoweb.com
-
-			- softwareintegrity
-
-
-	Nonfunctional subdomains:
-
-		- (www.)	(dropped)
-		- scan		(refused)
-
-
-	Problematic subdomains:
-
-		- autodiscover		(refused)
-		- blog			(dropped)
-		- softwareintegrity	(redirects to app-sjf.marketo.com)
+	¹ 403
+	* Marketo
+	² Refused
 
 
-	Partially covered subdomains:
+	Problematic hosts in *coverity.com:
 
-		- blpg			(→ communities)
-		- softwareintegrity	(→ na-sjf.marketo.com)
+		- ^ ¹
+		- autodiscover ²
+		- webstaging ¹
+
+	¹ Missing certificate chain
+	² Refused
 
 
-	Fully covered subdomains:
+	These altnames don't exist:
 
-		- communities
-		- uat.communities
-		- apps.uat
+		- apps.communities.coverity.com
+		- www.communities.coverity.com
+		- scan7.coverity.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- communities.coverity.com
+		- uat.communities.coverity.com
+		- apps.uat.communities.coverity.com
+
+		- scan.coverity.com
+
+
+	Mixed content:
+
+		- Image on www from webstaging.coverity.com
+		- favicon on www from $self *
+
+	* Secured by us
 
 -->
 <ruleset name="Coverity.com (partial)">
 
-	<target host="*.coverity.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="communities.coverity.com" />
+	<target host="uat.communities.coverity.com" />
+	<target host="apps.uat.communities.coverity.com" />
+	<target host="scan.coverity.com" />
+	<target host="scan5.coverity.com" />
+	<target host="trial.coverity.com" />
+	<!--target host="webstaging.coverity.com" /-->
+	<target host="www.coverity.com" />
+
+	<!--	Complications:
+				-->
+	<target host="coverity.com" />
+	<target host="autodiscover.coverity.com" />
+	<target host="go.coverity.com" />
+	<target host="softwareintegrity.coverity.com" />
+
+		<exclusion pattern="^http://(?:go|softwareintegrity)\.coverity\.com/+(?!css/|images/|rs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://go.coverity.com/register-for-gartner-mq-report.html" />
+			<test url="http://softwareintegrity.coverity.com/free-trial-3.html" />
+			<test url="http://softwareintegrity.coverity.com/free-trial-coverity.html" />
+			<test url="http://softwareintegrity.coverity.com/free-trial.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://go.coverity.com/css/mktLPSupport.css" />
+			<test url="http://go.coverity.com/rs/coverity/images/body-bg.gif" />
+			<test url="http://softwareintegrity.coverity.com/css/mktLPSupport.css" />
+			<test url="http://softwareintegrity.coverity.com/rs/coverity/images/coverity-logo-white.png" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(uat\.|apps\.uat\.)?communities\.coverity\.com$" name="^BIGipServer\+-11-pool$" /-->
+	<!--securecookie host="^communities\.coverity\.com$" name="^(JSESSIONID|jive\.server\.info)$" /-->
+	<!--securecookie host="^scan\.coverity\.com$" name="^(_session_id|request_method)$" /-->
+
+	<securecookie host="^\." name="^__qca$" />
+	<securecookie host="^\w" name="." />
 
 
-	<securecookie host="^(?:(?:uat\.)?communities|apps\.uat)\.coverity\.com$" name=".+" />
+	<rule from="^http://coverity\.com/"
+		to="https://www.coverity.com/" />
 
+	<!--	For /+\w.*, redirect keeps path but not args:
+								-->
+	<rule from="^http://autodiscover\.coverity\.com/+([^?]+).*"
+		to="https://outlook.office365.com/$1" />
 
-	<rule from="^http://autodiscover\.coverity\.com/"
-		to="https://autodiscover-s.outlook.com/" />
+		<test url="http://autodiscover.coverity.com/index.aspx" />
+		<test url="http://autodiscover.coverity.com/index.htm" />
+		<test url="http://autodiscover.coverity.com/index.php" />
 
-	<rule from="^http://blog\.coverity\.com/[^?]*(\?.*)?"
-		to="https://communities.coverity.com/blogs/software-integrity-blog/$1" />
+	<!--	For /+\?.*, drops args:
+						-->
+	<rule from="^http://autodiscover\.coverity\.com/.*"
+		to="https://outlook.office365.com/owa/" />
 
-	<rule from="^http://((?:uat\.)?communities|apps\.uat)\.coverity\.com/"
-		to="https://$1.coverity.com/" />
+		<test url="http://autodiscover.coverity.com/?foo" />
+		<test url="http://autodiscover.coverity.com//?bar" />
 
-	<rule from="^http://softwareintegrity\.coverity\.com/(cs|image|j|r)s/"
-		to="https://na-sjf.marketo.com/$1s/" />
+	<rule from="^http://(?:go|softwareintegrity)\.coverity\.com/"
+		to="https://na-sjf.marketo.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

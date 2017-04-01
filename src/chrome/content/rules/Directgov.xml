@@ -1,19 +1,56 @@
 <!--
 	For rules that are off by default, see Directgov-mismatches.xml.
 
-
 	For other UK government coverage, see GOV.UK.xml.
 
+
+	Nonfunctional:
+
+		- (campaigns|mycouncil|origin).direct.gov.uk	(EdgeCast CDN)
+		- innovate-apps.direct.gov.uk			(self-signed)
+		- jobseekers.direct.gov.uk			(timeout)
+		- local.direct.gov.uk ᵈ
+		- think.direct.gov.uk ᵃ
+		- unistats.direct.gov.uk
+
+	ᵃ Shows another domain
+	ᵈ Dropped
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .direct.gov.uk
+		- nationalcareersservice.direct.gov.uk
+
 -->
-<ruleset name="Directgov (partial)">
+<ruleset name="Direct.gov.uk (partial)">
 
-	<target host="*.epetitions.direct.gov.uk" />
+	<!--	Direct rewrites:
+				-->
+	<target host="submissions.epetitions.direct.gov.uk" />
+	<target host="adminnationalcareersservice.direct.gov.uk" />
+	<target host="nationalcareersservice.direct.gov.uk" />
+	<target host="www.nationalcareersservice.direct.gov.uk" />
+	<target host="www.direct.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="direct.gov.uk" />
 
 
-	<securecookie host="^.*\.epetitions\.direct\.gov\.uk$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.direct\.gov\.uk$" name="^BC_HA_[\da-f]{16}_[\dA-F]{8}$" /-->
+	<!--securecookie host="^nationalcareersservice\.direct\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\.epetitions\." name="." />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://submissions\.epetitions\.direct\.gov\.uk/"
-		to="https://submissions.epetitions.direct.gov.uk/" />
+	<rule from="^http://direct\.gov\.uk/"
+		to="https://www.direct.gov.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,62 @@
+<!--
+
+	Nonfunctional hosts in *onfleet.com:
+
+		- support *
+
+	* Zendesk
+
+
+	Problematic hosts in *onfleet.com:
+
+		- blog ¹
+		- docs ¹
+		- status ²
+		- www ¹
+
+	¹ Mismatched
+	² StatusPage.io
+
+
+	Fully covered hosts in *onfleet.com:
+
+		- (www.)?	(www → ^)
+		- status	(→ onfleet.statuspage.io)
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .onfleet.com
+		- docs.onfleet.com
+
+-->
+<ruleset name="Onfleet.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="onfleet.com" />
+
+	<!--	Complications:
+				-->
+	<target host="status.onfleet.com" />
+	<target host="www.onfleet.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.onfleet\.com$" name="^onfleet_lang$" /-->
+	<!--securecookie host="^docs\.onfleet\.com$" name="^(XSRF-TOKEN|connect\.sid)$" /-->
+
+	<securecookie host="^\.onfleet\.com$" name=".+" />
+
+
+	<rule from="^http://status\.onfleet\.com/"
+		to="https://onfleet.statuspage.io/" />
+
+	<rule from="^http://www\.onfleet\.com/"
+		to="https://onfleet.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

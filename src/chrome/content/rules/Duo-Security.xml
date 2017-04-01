@@ -1,28 +1,37 @@
 <!--
 	Nonfunctional subdomains:
 
-		- go		(redirects to app-sj02.marketo.com)
 		- guide		(interrupted)
 
 
-	Problematic subdomains:
+	Fully covered subdomains:
 
-		- jobs		(mismatched, CN: *.theresumator.com)
+		- go
+		- jobs
+
+
+	Insecure cookies are set for these domains:
+
+		- go
+		- jobs
+		- signup
 
 -->
-<ruleset name="Duo Security (partial)">
+<ruleset name="Duo Security.com (partial)">
 
 	<target host="duosecurity.com" />
 	<target host="*.duosecurity.com" />
 
 
-	<securecookie host="^admin\.duosecurity\.com$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^go\.duosecurity\.com$" name="^BIGipServersj02web-ssl4_https$" /-->
+	<!--securecookie host="^signup\.duosecurity\.com$" name="^_xsrf$" /-->
+
+	<securecookie host="^(?:admin|go|signup)\.duosecurity\.com$" name=".*" />
 
 
-	<rule from="^http://((?:admin|blog|dl|www)\.)?duosecurity\.com/"
+	<rule from="^http://((?:admin|blog|dl|go|jobs|signup|www)\.)?duosecurity\.com/"
 		to="https://$1duosecurity.com/" />
-
-	<rule from="^https?://jobs\.duosecurity\.com/(css|img)/"
-		to="https://duo.theresumator.com/$1/" />
 
 </ruleset>

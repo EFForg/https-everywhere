@@ -1,18 +1,68 @@
-<ruleset name="EDGAR Online">
+<!--
+	Nonfunctional hosts in *edgar-online.com:
+
+		- sec ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *edgar-online.com:
+
+		- b2i.api ᵐ
+		- shareholder.api ᵐ
+
+		- google.brand ᵐ
+		- edgar.brand ᵐ
+		- yahoo.brand ᵐ
+
+		- developer ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- access.edgar-online.com
+		- help.edgar-online.com
+		- pro.edgar-online.com
+		- signup.edgar-online.com
+		- www.edgar-online.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Image on access, pro from www.edgar-online.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="EDGAR-Online.com (partial)">
 
 	<target host="edgar-online.com"/>
-	<target host="*.edgar-online.com"/>
+	<target host="access.edgar-online.com"/>
+	<target host="charts.edgar-online.com"/>
+	<target host="content.edgar-online.com"/>
+	<target host="help.edgar-online.com"/>
+	<target host="pro.edgar-online.com"/>
+	<target host="signup.edgar-online.com"/>
+	<target host="www.edgar-online.com"/>
 
-	<securecookie host="^(.*\.)edgar-online\.com$" name=".*"/>
+		<test url="http://content.edgar-online.com/chartiq/images/brand-edgar.png" />
 
-	<!--	!www doesn't work over https, redirects to homepage over http.	-->
-	<rule from="^http://edgar-online\.com/"
-		to="https://www.edgar-online.com/"/>
 
-	<!--	charts are embedded on 3rd-party websites.
-		!found any nonfunctional subdomains, encountered:
-		charts, pro, signup, www	-->
-	<rule from="^http://(\w+)\.edgar-online\.com/"
-		to="https://$1.edgar-online.com/"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:access|pro)\.edgar-online\.com$" name="^(?:ASP\.NET_SessionId|AuthorizeUser)$" /-->
+	<!--securecookie host="^(?:signup|www)\.edgar-online\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^help\.edgar-online\.com$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+
+	<securecookie host="^\." name="^__qca$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

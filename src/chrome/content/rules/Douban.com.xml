@@ -1,0 +1,85 @@
+<!--
+	Nonfunctional hosts in *douban.com:
+
+		- brand ʰ
+
+	ʰ Redirects to http
+
+
+	Problematic hosts in *douban.com:
+
+		- fm ᵐ
+		- img3 ²
+		- img6 ᵐ
+
+	² 502, equivalent to another domain
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .douban.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Douban (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="douban.com" />
+	<target host="accounts.douban.com" />
+	<target host="artist.douban.com" />
+	<target host="beijing.douban.com" />
+	<target host="blackpit.douban.com" />
+	<target host="blog.douban.com" />
+	<target host="book.douban.com" />
+	<target host="developers.douban.com" />
+	<target host="dongxi.douban.com" />
+	<target host="guangzhou.douban.com" />
+	<target host="help.douban.com" />
+	<target host="jobs.douban.com" />
+	<target host="labs.douban.com" />
+	<target host="m.douban.com" />
+	<target host="market.douban.com" />
+	<target host="moment.douban.com" />
+	<target host="movie.douban.com" />
+	<target host="music.douban.com" />
+	<target host="pypi.douban.com" />
+	<target host="read.douban.com" />
+	<target host="shanghai.douban.com" />
+	<target host="site.douban.com" />
+	<target host="thing.douban.com" />
+	<target host="wap.douban.com" />
+	<target host="www.douban.com" />
+	<target host="ypy.douban.com" />
+
+	<!--	Complications:
+				-->
+	<target host="fm.douban.com" />
+	<target host="img3.douban.com" />
+	<target host="img6.douban.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.douban\.com$" name="^(?:bid|ll)$" /-->
+
+	<securecookie host="." name="^__utm" />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://fm\.douban\.com/+"
+		to="https://douban.fm/" />
+
+		<test url="http://fm.douban.com/index.htm" />
+
+	<rule from="^http://img([36])\.douban\.com/"
+		to="https://img$1.doubanio.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

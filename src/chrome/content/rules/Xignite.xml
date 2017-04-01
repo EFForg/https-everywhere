@@ -32,20 +32,42 @@
 		- Support/SupportPlans.aspx$
 
 -->
-<ruleset name="Xignite (partial)">
+<ruleset name="Xignite.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="xignite.com" />
-	<target host="*.xignite.com" />
-		<exclusion pattern="^http://(?:www\.)?xignite\.com/(?:$|\?|Documents/|market-data/|Products/|Support/)" />
+	<target host="www.xignite.com" />
+
+	<!--	Complications:
+				-->
+	<target host="cdn.xignite.com" />
+
+		<!--	Redirects to http:
+					-->
+		<exclusion pattern="^http://www\.xignite\.com/(?:$|\?|Documents/|market-data/|Products/|Support/)" />
+
+			<test url="http://www.xignite.com/?" />
+			<test url="http://www.xignite.com/Documents/" />
+			<test url="http://www.xignite.com/market-data/" />
+			<test url="http://www.xignite.com/market-data/contact-us/" />
+			<test url="http://www.xignite.com/Products/" />
+			<test url="http://www.xignite.com/Support/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.xignite.com/Register" />
+			<test url="http://www.xignite.com/css/global/ie8.css" />
+			<test url="http://www.xignite.com/img/global/logo-text.png" />
 
 
 	<!--securecookie host="^(?:www\.)?xignite\.com$" name=".+" /-->
 
 
-	<rule from="^http://(www\.)?xignite\.com/"
-		to="https://$1xignite.com/" />
-
-	<rule from="^https?://cdn\.xignite\.com/"
+	<rule from="^http://cdn\.xignite\.com/"
 		to="https://d238gk3mw72oe2.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

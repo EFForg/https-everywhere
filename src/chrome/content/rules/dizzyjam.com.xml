@@ -1,0 +1,47 @@
+<!--
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .dizzyjam.com
+		- www.dizzyjam.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- iframe from player.vimeo.com ˢ
+		- Images from $self ˢ
+		- favicon from $self ˢ
+		- Bug from www.facebook.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Dizzyjam.com">
+
+	<target host="dizzyjam.com" />
+	<target host="www.dizzyjam.com" />
+
+		<!--	Sets cookie without Secure;
+			mixed images, bug:
+						-->
+		<!--test url="http://www.dizzyjam.com/blog/" /-->
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://www.dizzyjam.com/images/phpThumb.php/q=100;f=jpg;aoe=1;70x70;/var/devmedia/shops/shop13302/shop_logo/534337_10151326023259060_1812863688_n.jpg" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.dizzyjam\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^www\.dizzyjam\.com$" name="^(?:[\da-f]{32}|wmp_load_app)$" /-->
+
+	<securecookie host="^\." name="^PHPSESSID" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

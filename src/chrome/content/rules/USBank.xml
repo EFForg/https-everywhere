@@ -1,7 +1,59 @@
+<!--
+	Fully covered subdomains:
+
+		- (www.)
+		- access
+		- espanol
+		- m
+		- mm
+		- ms
+		- ms2
+		- onlinebanking
+		- trustnowessentials
+		- wwws
+
+
+	Insecure cookies are set for these domains:
+
+		- ^
+		- access
+		- m
+		- mm
+		- ms
+		- ms2
+		- onlinebanking
+		- trustnowessentials
+		- www
+		- wwws
+
+
+	These altnames don't exist:
+
+		- MS3.USBANK.COM
+
+-->
 <ruleset name="USBank">
-<target host="usbank.com" />
-<target host="www.usbank.com" />
 
-<rule from="^http://(?:www\.)?usbank\.com/" to="https://www.usbank.com/"/>
+	<target host="usbank.com" />
+	<target host="*.usbank.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(m\.|www\.)?usbank\.com$" name="^www-OBC-https$" /-->
+	<!--securecookie host="^access\.usbank\.com$" name="^(LBACCESS|ObFormLoginCookie)$" /-->
+	<!--securecookie host="^(mm|ms|ms2)\.usbank\.com$" name="^(ASPSESSIONID[A-Z]{8}|uniquesig[\dA-F]{95})$" /-->
+	<!--securecookie host="^mm\.usbank\.com$" name="^(EXTMM|MM)$" /-->
+	<!--securecookie host="^ms\.usbank\.com$" name="^EXTMS-EP$" /-->
+	<!--securecookie host="^ms2\.usbank\.com$" name="^EXTMS2$" /-->
+	<!--securecookie host="^onlinebanking\.usbank\.com$" name="^(ASP.NET_SessionId|EXTOLB|OLBWeb)$" /-->
+	<!--securecookie host="^trustnowessentials\.usbank\.com$" name="^(JSESSIONID_Trust|ObFormLoginCookie|TNEPROD|coreidLogin)$" /-->
+	<!--securecookie host="^wwws\.usbank\.com$" name="^wwws-EP-https$" /-->
+
+	<securecookie host="^(?:(?:access|mm?|ms2?|onlinebanking|trustnowessentials|wwws?)\.)?usbank\.com$" name=".+" />
+
+
+	<rule from="^http://((?:access|espanol|mm?|ms2?|onlinebanking|trustnowessentials|wwws?)\.)?usbank\.com/"
+		to="https://$1usbank.com/" />
+
 </ruleset>
-

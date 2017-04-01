@@ -1,62 +1,115 @@
 <!--
 	CDN buckets:
 
+		- s3.amazonaws.com/flx-content-prod/
+		- s3-us-west-2.amazonaws.com/flx-editorial-wordpress/
 		- content[89].flixster.com.cdngc.net
+		- d13ep5guamtyyh.cloudfront.net
+		- d24r6fwyxzsri1.cloudfront.net
 
 		- flixster-001.inscname.net
 
 			- instart[0-3]
 
 
+	Nonfunctional hosts in *flixster.com:
+
+		- careers *
+
+	* No supported ciphers
+
+
 	Problematic domains:
 
 		- content[89].flixster.com	(403; mismatched, CN: ssl2.cdngc.net)
 		- instart[0-3].flixster.com	(504; mismatched, CN: ssl001.insnw.net)
+		- support.dcplus.flixster.com	(Parature / mismatched)
+		- support.ultraviolet.flixster.com	(Parature / mismatched)
 
 
-	Partially covered domains:
+	These altnames do not exist:
 
-		- (www.)flixster.com	(some pages redirect to http)
+		- www.de.flixster.com
 
 
-	Fully covered domains:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
-		- flixster.com subdomains:
+		- .flixster.com
+		- admin.flixster.com
+		- de.flixster.com
+		- se.flixster.com
+		- support.ultraviolet.flixster.com
+		- video.flixster.com
+		- www.flixster.com
 
-			- community
-			- content[67]
-			- content8	(→ content6)
-			- content9	(→ content7)
-			- instart[02]	(→ content6)
-			- instart[13]	(→ content7)
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
-		- static.flixstercdn.com
+
+	Mixed content:
+
+		- Images, on:
+
+			- support.ultraviolet from $self
+			- support.ultraviolet from d1.parature.com
+			- www from d18i5l0cp5i5h1.cloudfront.net ˢ
+			- www from resizing.flixster.com ˢ
+
+		- Bugs, on:
+
+			- www from warnerbros.112.2o7.net ˢ
+			- www from b.scorecardresearch.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="Flixster (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="flixster.com" />
-	<target host="*.flixster.com" />
-		<!--
-			Redirect to http:
-						-->
-		<exclusion pattern="^http://(?:www\.)?flixster\.com/(?!docs/|favicon\.ico|(?:login|register)(?:$|[?/])|login-gate/|register-frame/|site/)" />
+	<target host="admin.flixster.com" />
+	<target host="community.flixster.com" />
+	<target host="content6.flixster.com" />
+	<target host="content7.flixster.com" />
+	<target host="de.flixster.com" />
+	<target host="resizing.flixster.com" />
+	<target host="se.flixster.com" />
+	<target host="redeem.flixster.com" />
+	<target host="static6.flixster.com" />
+	<target host="video.flixster.com" />
+	<target host="www.flixster.com" />
+
 	<target host="static.flixstercdn.com" />
 
+	<!--	Complications:
+				-->
+	<target host="content8.flixster.com" />
+	<target host="content9.flixster.com" />
+	<target host="instart0.flixster.com" />
+	<target host="instart1.flixster.com" />
+	<target host="instart2.flixster.com" />
+	<target host="instart3.flixster.com" />
 
-	<securecookie host="^community\.flixster\.com$" name=".+" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.flixster\.com$" name="^(?:country|language|login_notice|prev_lang)$" /-->
+	<!--securecookie host="^admin\.flixster\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^(?:de|se|video)\.flixster\.com$" name="^_Web_session$" /-->
+	<!--securecookie host="^support\.ultraviolet\.flixster\.com$" name="^(FM_PERSIST|ParaturePortalSessionID|newMetricsView)$" /-->
+	<!--securecookie host="^www\.flixster\.com$" name="^ServerID$" /-->
+
+	<securecookie host="^\." name="^(?:__qca$|s_v)" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(community\.|www\.)?flixster\.com/"
-		to="https://$1flixster.com/" />
-
-	<rule from="^http://(?:instart[02]|content[68])\.flixster\.com/"
+	<rule from="^http://(?:instart[02]|content8)\.flixster\.com/"
 		to="https://content6.flixster.com/" />
 
-	<rule from="^http://(?:content[79]|instart[13])\.flixster\.com/"
+	<rule from="^http://(?:content9|instart[13])\.flixster\.com/"
 		to="https://content7.flixster.com/" />
 
-	<rule from="^http://static\.flixstercdn\.com/"
-		to="https://static.flixstercdn.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

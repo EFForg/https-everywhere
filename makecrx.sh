@@ -19,77 +19,57 @@
 # but these .crx files won't detect and upgrade to official HTTPS Everywhere
 # releases signed by EFF :/.  We should find a more elegant arrangement.
 
+cd $(dirname $0)
+RULESETS_JSON=pkg/rulesets.json
+
 if [ -n "$1" ]; then
-  if [ "$1" = today ] ; then
-    python chromium/setversion.py
-  else
-    BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
-    SUBDIR=checkout
-    [ -d $SUBDIR ] || mkdir $SUBDIR
-    cp -r -f -a .git $SUBDIR
-    cd $SUBDIR
-    git reset --hard "$1"
-  fi
+  BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
+  SUBDIR=checkout
+  [ -d $SUBDIR ] || mkdir $SUBDIR
+  cp -r -f -a .git $SUBDIR
+  cd $SUBDIR
+  git reset --hard "$1"
 fi
 
-VERSION=`python -c "import json ; print(json.loads(open('chromium/manifest.json').read())['version'])"`
+VERSION=`python2.7 -c "import json ; print(json.loads(open('chromium/manifest.json').read())['version'])"`
 
 echo "Building chrome version" $VERSION
 
-if [ -f utils/trivial-validate.py ]; then
-	VALIDATE="./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
-elif [ -x utils/trivial-validate ] ; then
-  # This case probably never happens
-	VALIDATE=./utils/trivial-validate
-else
-	VALIDATE=./trivial-validate
-fi
+[ -d pkg ] || mkdir -p pkg
+[ -e pkg/crx ] && rm -rf pkg/crx
 
-if $VALIDATE src/chrome/content/rules >&2
-then
-  echo Validation of included rulesets completed. >&2
-  echo >&2
-else
-  echo ERROR: Validation of rulesets failed. >&2
-  exit 1
-fi
+# Clean up obsolete ruleset databases, just in case they still exist.
+rm -f src/chrome/content/rules/default.rulesets src/defaults/rulesets.sqlite
 
-if [ -f utils/relaxng.xml -a -x "$(which xmllint)" ] >&2
-then
-  # Use find and xargs to avoid "too many args" error on Mac OS X
-  if find src/chrome/content/rules/ -name "*.xml" | xargs xmllint --noout --relaxng utils/relaxng.xml
-  then
-    echo Validation of rulesets with RELAX NG grammar completed. >&2
-  else
-    echo ERROR: Validation of rulesets with RELAX NG grammar failed. >&2
-    exit 1
-  fi
-else
-  echo Validation of rulesets with RELAX NG grammar was SKIPPED. >&2
+# Only generate the ruleset database if any rulesets have changed. Tried
+# implementing this with make, but make is very slow with 15k+ input files.
+needs_update() {
+  find src/chrome/content/rules/ -newer $RULESETS_JSON |\
+    grep -q .
+}
+if [ ! -f "$RULESETS_JSON" ] || needs_update ; then
+  echo "Generating ruleset DB"
+  python2.7 ./utils/make-json.py && bash utils/validate.sh && cp pkg/rulesets.json src/chrome/content/rulesets.json
 fi
 
 sed -e "s/VERSION/$VERSION/g" chromium/updates-master.xml > chromium/updates.xml
 
-[ -d pkg ] || mkdir -p pkg
-[ -e pkg/crx ] && rm -rf pkg/crx
 mkdir -p pkg/crx/rules
 cd pkg/crx
-cp -a ../../chromium/* .
+rsync -aL ../../chromium/ ./
+# Turn the Firefox translations into the appropriate Chrome format:
+rm -rf _locales/
+mkdir _locales/
+python2.7 ../../utils/chromium-translations.py ../../translations/ _locales/
+python2.7 ../../utils/chromium-translations.py ../../src/chrome/locale/ _locales/
 do_not_ship="*.py *.xml icon.jpg"
 rm -f $do_not_ship
 cd ../..
 
-python ./utils/merge-rulesets.py
+. ./utils/merge-rulesets.sh || exit 1
 
-export RULESETS=chrome/content/rules/default.rulesets
 cp src/$RULESETS pkg/crx/rules/default.rulesets
 
-echo 'var rule_list = [' > pkg/crx/rule_list.js
-for i in $(find pkg/crx/rules/ -maxdepth 1 \( -name '*.xml' -o -name '*.rulesets' \))
-do
-    echo "\"rules/$(basename $i)\"," >> pkg/crx/rule_list.js
-done
-echo '];' >> pkg/crx/rule_list.js
 sed -i -e "s/VERSION/$VERSION/g" pkg/crx/manifest.json
 #sed -i -e "s/VERSION/$VERSION/g" pkg/crx/updates.xml
 #sed -e "s/VERSION/$VERSION/g" pkg/updates-master.xml > pkg/crx/updates.xml
@@ -118,7 +98,7 @@ trap 'rm -f "$pub" "$sig" "$zip"' EXIT
 # zip up the crx dir
 cwd=$(pwd -P)
 (cd "$dir" && ../../utils/create_xpi.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
-echo >&2 "Unsigned package has shasum: `shasum "$cwd/$zip"`" 
+echo >&2 "Unsigned package has sha1sum: `sha1sum "$cwd/$zip"`"
 
 # signature
 openssl sha1 -sha1 -binary -sign "$key" < "$zip" > "$sig"
@@ -136,12 +116,12 @@ version_hex="0200 0000" # 2
 pub_len_hex=$(byte_swap $(printf '%08x\n' $(ls -l "$pub" | awk '{print $5}')))
 sig_len_hex=$(byte_swap $(printf '%08x\n' $(ls -l "$sig" | awk '{print $5}')))
 (
-  echo "$crmagic_hex $version_hex $pub_len_hex $sig_len_hex" | xxd -r -p
+  echo "$crmagic_hex $version_hex $pub_len_hex $sig_len_hex" | sed -e 's/\s//g' -e 's/\([0-9A-F]\{2\}\)/\\\\\\x\1/gI' | xargs printf
   cat "$pub" "$sig" "$zip"
 ) > "$crx"
 #rm -rf pkg/crx
 
-#python githubhelper.py $VERSION
+#python2.7 githubhelper.py $VERSION
 
 #git add chromium/updates.xml
 #git commit -m "release $VERSION"

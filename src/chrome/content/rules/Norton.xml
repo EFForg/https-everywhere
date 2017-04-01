@@ -2,10 +2,7 @@
 	For other Symantec coverage, see Symantec.xml.
 
 
-	norton.i.lithium.com
-
-
-	Nonfunctional norton.com subdomains:
+	Nonfunctional hosts in *norton.com:
 
 		- apps *
 		- appstore *
@@ -14,51 +11,179 @@
 	* At least $ redirects to http
 
 
-	Problematic domains:
+	Problematic hosts in *norton.com:
 
-		- ^ *
 		- arabic *
 		- asia *
-		- at *
-		- il *
 		- lu *
-		- ro *
+		- static-safeweb ²
+		- store ʰ
 
 	* Mismatched
+	² Akamai
+	ʰ Redirects to http
+
+
+	Insecure cookies are set for these domains:
+
+		- .norton.com
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- us from now-static.norton.com ˢ
+			- us from now.symassets.com ˢ
+
+	ˢ Secured by us
 
 -->
-<ruleset name="Norton (partial)" platform="mixedcontent">
+<ruleset name="Norton (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="mynortonaccount.com" />
 	<target host="www.mynortonaccount.com" />
 
 	<target host="norton.com" />
-	<target host="*.norton.com" />
-	<target host="*.nortoncdn.com" />
+	<target host="account.norton.com" />
+	<target host="www.account.norton.com" />
+	<target host="antitheft.norton.com" />
+	<target host="buy.norton.com" />
+	<target host="buy-static.norton.com" />
+	<target host="cloudconnect.norton.com" />
+	<target host="community.norton.com" />
+	<target host="dns.norton.com" />
+	<target host="hotspot.norton.com" />
+	<target host="login.norton.com" />
+	<target host="manage.norton.com" />
+	<target host="mobilesecurity.norton.com" />
+	<target host="now-static.norton.com" />
+	<target host="onlinefamily.norton.com" />
+	<target host="renew.norton.com" />
+	<target host="safeweb.norton.com" />
+	<target host="search.norton.com" />
+	<target host="static-wap.norton.com" />
+	<target host="static-wap-stg.norton.com" />
+	<target host="support.norton.com" />
+	<target host="support-stg.norton.com" />
+	<!--target host="static-safeweb.norton.com" /-->
+	<target host="updatecenter.norton.com" />
+	<target host="sealinfo.websecurity.norton.com" />
+	<target host="trustsealinfo.websecurity.norton.com" />
+	<target host="www.norton.com" />
+	
+	<target host="ae.norton.com" />
+	<target host="ar.norton.com" />
+	<target host="at.norton.com" />
+	<target host="au.norton.com" />
+	<target host="be.norton.com" />
+	<target host="be-nl.norton.com" />
+	<target host="br.norton.com" />
+	<target host="ca.norton.com" />
+	<target host="ca-fr.norton.com" />
+	<target host="ch.norton.com" />
+	<target host="ch-fr.norton.com" />
+	<target host="ch-it.norton.com" />
+	<target host="cl.norton.com" />
+	<target host="cn.norton.com" />
+	<target host="co.norton.com" />
+	<target host="cz.norton.com" />
+	<target host="de.norton.com" />
+	<target host="dk.norton.com" />
+	<target host="es.norton.com" />
+	<target host="fi.norton.com" />
+	<target host="fr.norton.com" />
+	<target host="gr.norton.com" />
+	<target host="hk.norton.com" />	
+	<target host="hk-en.norton.com" />
+	<target host="hu.norton.com" />
+	<target host="id.norton.com" />
+	<target host="ie.norton.com" />
+	<target host="il.norton.com" />
+	<target host="in.norton.com" />
+	<target host="it.norton.com" />
+	<target host="japan.norton.com" />
+	<target host="jp.norton.com" />
+	<target host="kh.norton.com" />
+	<target host="kr.norton.com" />
+	<target host="lam.norton.com" />
+	<target host="malaysia.norton.com" />
+	<target host="mx.norton.com" />
+	<target host="nl.norton.com" />
+	<target host="no.norton.com" />
+	<target host="nz.norton.com" />
+	<target host="ph.norton.com" />
+	<target host="pl.norton.com" />
+	<target host="pr.norton.com" />
+	<target host="pt.norton.com" />
+	<target host="ro.norton.com" />
+	<target host="ru.norton.com" />
+	<target host="se.norton.com" />
+	<target host="sg.norton.com" />
+	<target host="th.norton.com" />
+	<target host="tr.norton.com" />
+	<target host="tw.norton.com" />
+	<target host="vn.norton.com" />
+	<target host="uk.norton.com" />
+	<target host="us.norton.com" />
+	<target host="za.norton.com" />
+	
+	<target host="stage.nortoncdn.com" />
+	<target host="static.nortoncdn.com" />
+
+	<!--	Complications:
+				-->
+	<target host="arabic.norton.com" />
+	<target host="asia.norton.com" />
+	<target host="lu.norton.com" />
+	<target host="store.norton.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://store\.norton\.com/$" /-->
+
+		<!--	Mixed images:
+					-->
+		<!--test url="http://us.norton.com/free-tools-trial/promo" /-->
+	
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.norton\.com$" name="^v1st$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<securecookie host="^(?:.*\.)?norton\.com$" name=".+" />
-
-
-	<rule from="^https?://(mynortonaccount|norton)\.com/"
-		to="https://www.$1.com/" />
-
-	<rule from="^http://((?:www\.)?account|au|be|be-nl|br|buy|buy-static1?|c[ahlnz]|ca-fr|community|de|dk|dns|es|fi|fr|gr|hk|hk-en|hotspot|hu|i[ent]|jp|kr|login|malaysia|mx|n[loz]|now-static|onlinefamily|p[lrt]|ru|safeweb|se|sg|static-wap(?:-stg)?|store|support(?:-stg)?|tr|tw|uk|us|www|za)\.norton\.com/"
-		to="https://$1.norton.com/" />
-
-	<rule from="^https?://(?:arabic|il|ro)\.norton\.com/(?:.*)"
+	<rule from="^http://arabic\.norton\.com/.*"
 		to="https://uk.norton.com/" />
 
-	<rule from="^https?://asia\.norton\.com/(?:.*)"
+		<test url="http://arabic.norton.com/products" />
+
+	<rule from="^http://asia\.norton\.com/.*"
 		to="https://sg.norton.com/" />
 
-	<rule from="^https?://at\.norton\.com/(?:.*)"
-		to="https://de.norton.com/" />
+		<test url="http://asia.norton.com/products" />
 
-	<rule from="^https?://lu\.norton\.com/(?:.*)"
+	<rule from="^http://lu\.norton\.com/.*"
 		to="https://fr.norton.com/" />
 
-	<rule from="^http://sta(ge|tic)\.nortoncdn\.com/"
-		to="https://sta$1.nortoncdn.com/" />
+		<test url="http://lu.norton.com/products" />
 
+	<rule from="^http://store\.norton\.com/+(.*)\.html"
+		to="https://buy.norton.com/en-us/$1" />
+
+		<test url="http://store.norton.com/.html" />
+		<test url="http://store.norton.com/home.html" />
+		<test url="http://store.norton.com/norton-software.html" />
+
+	<rule from="^http://store\.norton\.com/[^?]*"
+		to="https://buy.norton.com/" />
+
+		<test url="http://store.norton.com/norton-software" />
+
+	<rule from="^http:"
+		to="https:" />
+	
 </ruleset>

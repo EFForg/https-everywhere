@@ -1,17 +1,28 @@
-<!--
-	^: cert only matches www
+<ruleset name="KnCMiner.com (partial)">
 
--->
-<ruleset name="KnCMiner.com">
-
+	<!--	Direct rewrites:
+				-->
 	<target host="kncminer.com" />
-	<target host="*.kncminer.com" />
+	<!--target host="www.kncminer.com" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.kncminer\.com/($|bundles/|css/images/)" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://www.kncminer.com/bundles/bmatznerjqueryui/css/smoothness/jquery.ui.theme.css" /-->
+			<!--test url="http://www.kncminer.com/images/KnCMinerLogo.png" /-->
 
 
-	<securecookie host="^(?:www)?\.kncminer\.com$" name=".+" />
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.kncminer\.com$" name="^(__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\.kncminer\.com$" name="^__cfduid$" />
 
 
-	<rule from="^http://(?:www\.)?kncminer\.com/"
-		to="https://www.kncminer.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

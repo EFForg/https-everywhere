@@ -1,21 +1,32 @@
 <!--
-	Expired 2013-07-01
+	Problematic subdomains:
+
+		- bugzilla *
+
+	* Shows www
 
 -->
-<ruleset name="Mozdev (partial, expired)" default_off="expired">
+<ruleset name="Mozdev (expired cert)" default_off="cert expired">
 
 	<target host="mozdev.org"/>
 	<target host="bugzilla.mozdev.org"/>
 	<target host="hg.mozdev.org"/>
 	<target host="svn.mozdev.org"/>
 	<target host="www.mozdev.org"/>
+	<target host="*.www.mozdev.org"/>
 
-	<securecookie host="^(.*\.)?mozdev\.org$" name=".*"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.www\.mozdev\.org$" name="^DEFAULTFORMAT$"/-->
+
+	<securecookie host="^(?:.*\.)?mozdev\.org$" name=".*"/>
 
 	<rule from="^http://(hg\.|svn\.|www\.)?mozdev\.org/"
 		to="https://$1mozdev.org/"/>
 
-	<rule from="^http://bugzilla\.mozdev\.org/"
+	<!--	Redirects like so:
+					-->
+	<rule from="^http://bugzilla\.mozdev\.org/+"
 		to="https://www.mozdev.org/bugs/"/>
 
 </ruleset>

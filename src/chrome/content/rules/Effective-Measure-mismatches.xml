@@ -1,17 +1,68 @@
 <!--
-	For rules that are on by default, see Effective-Measure.xml.
+	Other Effective Measure rulesets:
+
+		- Effective-Measure.xml
+
+
+	Problematic hosts in *effectivemeasure.com:
+
+		- ^ ¹
+		- login ²
+		- www ²
+
+	¹ Dropped
+	² Mismatched
+
+
+	Fully covered hosts in *effectivemeasure.com:
+
+		- (www.)?	(^ → www)
+		- login
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.effectivemeasure.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www from $self
+			- www from fonts.googleapis.com *
+
+		- Images, on:
+
+			- login from www.adobe.com *
+			- www from $self
+
+	* Secured by us
 
 -->
-<ruleset name="Effective Measure (mismatches)" default_off="mismatch">
+<ruleset name="Effective Measure.com" default_off="mismatch" platform="mixedcontent">
 
-	<target host="effectivemeasure.net" />
-	<target host="www.effectivemeasure.net" />
+	<!--	Direct rewrites:
+				-->
+	<target host="login.effectivemeasure.com" />
+	<target host="www.effectivemeasure.com" />
+
+	<!--	Complications:
+				-->
+	<target host="effectivemeasure.com" />
 
 
-	<!--	- !www times out
-		- Akamai
+	<!--	Not secured by server:
 					-->
-	<rule from="^https?://(?:www\.)?effectivemeasure\.net/"
-		to="https://www.effectivemeasure.net/" />
+	<!--securecookie host="^www\.effectivemeasure\.com$" name="edd_items_in_cart$" /-->
+
+	<securecookie host="^www\.effectivemeasure\.com$" name=".+" />
+
+
+	<rule from="^http://effectivemeasure\.com/"
+		to="https://www.effectivemeasure.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

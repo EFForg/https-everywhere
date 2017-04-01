@@ -1,5 +1,5 @@
 <!--
-	For other Yahoo coverage, see YahooNew.xml.
+	For other Yahoo coverage, see Yahoo.xml.
 
 
 	CDN buckets:
@@ -16,6 +16,7 @@
 
 	Problematic domains:
 
+		- ccpui.yieldmanager.com	(mixed content from yui.yahooapis.com)
 		- l.yieldmanager.net	(404; mismatched, CN: s.yimg.com)
 		- ads.yldmgrimg.net	(works, akamai)
 
@@ -33,47 +34,64 @@
 			- csc.beap.ad
 			- open.ad
 
+
+	Mixed content:
+
+		- css on ccpui.yieldmanager.com from yui.yahooapis.com *
+
+	* Secured by us
+
 -->
 <ruleset name="Right Media">
 
-	<target host="ad.adorika.com" />
+	<!--	Direct rewrites:
+				-->
 	<target host="ads.bluelithium.com" />
-	<target host="*.rmxads.com" />
-	<target host="*.yieldmanager.com" />
-	<target host="*.ad.yieldmanager.com" />
-	<target host="*.yieldmanager.net" />
+
+	<target host="ad.rmxads.com" />
+	<target host="optimizedby.rmxads.com" />
+
+	<target host="ad.yieldmanager.com" />
+	<target host="ui.ad.yieldmanager.com" />
+	<target host="ycpi.ad.yieldmanager.com" />
+
+	<target host="community.yieldmanager.com" />
+	<target host="content-ssl.yieldmanager.com" />
+	<target host="my.yieldmanager.com" />
+	<target host="rm.yieldmanager.com" />
+	<target host="yahoo.yieldmanager.com" />
+
+	<target host="ci.beap.ad.yieldmanager.net" />
+	<target host="clicks.beap.ad.yieldmanager.net" />
+	<target host="csc.beap.ad.yieldmanager.net" />
 	<target host="open.ad.yieldmanager.net" />
+
 	<target host="*.dp.yieldmanager.net" />
-	<target host="*.eu.dp.yieldmanager.net" />
-	<target host="tm.*.dp.yieldmanager.net" />
+	<!--target host="*.eu.dp.yieldmanager.net" /-->
+	<!--target host="tm.*.dp.yieldmanager.net" /-->
+
+	<!--	Complications:
+				-->
+	<target host="ad.adorika.com" />
+	<target host="content.yieldmanager.com" />
+
+		<test url="http://ad.yieldmanager.com/pixel?id=&amp;id=&amp;id=&amp;id=&amp;t=" />
 
 
-	<securecookie host="^(.*\.)?yieldmanager\.(com|net)$" name=".*" />
+	<securecookie host="^(?:.*\.)?yieldmanager\.(?:com|net)$" name="." />
 
 
 	<!--	Cert mismatch.
 				-->
-	<rule from="^https?://ad\.adorika\.com/"
+	<rule from="^http://ad\.adorika\.com/"
 		to="https://ad.rmxads.com/" />
-
-	<rule from="^http://ads\.bluelithium\.com/"
-		to="https://ads.bluelithium.com/" />
-
-	<rule from="^http://(ad|optimizedby)\.rmxads\.com/"
-		to="https://$1.rmxads.com/" />
 
 	<!--	content: Akamai
 						-->
-	<rule from="^https?://content(?:-ssl)?\.yieldmanager\.com/"
+	<rule from="^http://content\.yieldmanager\.com/"
 		to="https://content-ssl.yieldmanager.com/" />
 
-	<rule from="^http://(ad|ui\.ad|ycpi\.ad|community|my|rm|yahoo)\.yieldmanager\.com/"
-		to="https://$1.yieldmanager.com/" />
-
-	<rule from="^http://((?:ci|clicks)\.beap|csc\.beap|open)\.ad\.yieldmanager\.net/"
-		to="https://$1.ad.yieldmanager.net/" />
-
-	<rule from="^http://((?:\w+)(?:\.\w+)?)\.dp\.yieldmanager\.net/"
-		to="https://$1.dp.yieldmanager.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

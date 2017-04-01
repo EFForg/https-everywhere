@@ -1,0 +1,53 @@
+<!--
+	For other Reddit coverage, see Reddit.xml.
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/(\w\.)?thumbs.redditmedia.com/
+
+
+	Wildcards covered in *redditmedia.com:
+
+		- *.thumbs:
+
+			- a
+			- b
+			- f
+
+
+	Insecure cookies are set for these domains:
+
+		- .redditmedia.com
+
+-->
+<ruleset name="Reddit media.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="redditmedia.com" />
+	<target host="events.redditmedia.com" />
+	<target host="pixel.redditmedia.com" />
+	<target host="stats.redditmedia.com" />
+	<target host="*.thumbs.redditmedia.com" />
+	<target host="www.redditmedia.com" />
+
+	<!--	Complications:
+				-->
+	<target host="thumbs.redditmedia.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.redditmedia\.com$" name="^(__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://thumbs\.redditmedia\.com/"
+		to="https://s3.amazonaws.com/thumbs.redditmedia.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

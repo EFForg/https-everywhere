@@ -1,105 +1,914 @@
 <!--
+	Ohio State University
 
-	s3.amazonaws.com/pa-hrsuite-production/
+	For rules causing false/broken MCB, see OSU.edu-falsemixed.xml.
 
+	Other Ohio State University rulesets:
 
-	Nonfunctional:
-
-		.ohio-state.edu:
-
-			- cse		(times out)
-			- www.cse	(shows test page)
-
-		.osu.edu:
-			- 8help		(403; 404)
-			- buckeyeemail	(times out)
-			- buckeyelink	(403)
-			- carmen
-			- connect	(cert: secure2.convio.com; shows that domain's data)
-			- cse		(cert: www.cse.ohio-state.edu; shows test page)
-			- www.cse	(ditto)
-			- digitalunion	(cert: lt.osu.edu; shows that domain's data [i.e. redirects to ocio.osu.edu/elearning])
-			- jobs		(cert: hr.osu.edu; shows that domain's data)
-			- oaa		(cert valid; shows login page)
+		- Jobs_at_OSU.com.xml
+		- Ohio-State.edu.xml
+		- Ohio_State_Alumni.org.xml
 
 
-	See Ohio-State-University-self-signed.xml for problematic rules.
+	CDN buckets:
+
+		- s3.amazonaws.com/pa-hrsuite-production/
 
 
-	Fully covered domains:
+	Nonfunctional hosts in *osu.edu:
 
-		- osu.edu subdomains:
+		- 8help ³
+		- aede ᵃ
+		- airquality ᵃ
+		- ap ᵃ
+		- (www.)?ati ᵃ
+		- buckeyalert ᵈ
+		- busfin ᵃ
+		- ced ³
+		- cem ʳ
+		- cfaes ᵃ
+		- cfaesfinance ᵃ
+		- chadwickarboretum ᵃ
+		- (www.)?cmif ᵈ
+		- ctc ᵃ
+		- energydashboard ᵈ
+		- epn ᵃ
+		- (www.)?exploration ʰ
+		- extension ᵃ
+		- fabe ᵃ
+		- field2faucet ᵃ
+		- fsr ᵃ
+		- fyfamilies ᵃ
+		- greatvision ᵈ
+		- hscounselors ᵃ
+		- ilo ʳ
+		- imr ʳ
+		- innovativefunding ³
+		- ise ³
+		- leadershipcenter ᵃ
+		- majors ᵃ
+		- medicalcenter ʰ
+		- mynewark ʳ
+		- oardc ᵃ
+		- oee ³
+		- ohioline ᵃ
+		- ohioseagrat	Differs from http
+		- oma ⁴
+		- oncampus ³
+		- optometry ᵈ
+		- orc ʳ
+		- orientation ᵃ
+		- orrp ʳ
+		- osp ʳ
+		- osura ⁴
+		- osustores ᶠ
+		- ouab ᵈ
+		- professional ᵃ
+		- research ʳ
+		- researchcalendar ʳ
+		- rna ʳ
+		- (www.)?scsc ᵃ
+		- senate ᵃ
+		- senr ᵃ
+		- serc ᵃ
+		- stemm ʳ
+		- alumni.techhub ᵃ
+		- ular ʳ
+		- veterans ᵈ
 
-			- mooculus
+	³ 403
+	⁴ 404
+	ᵃ Shows another domain
+	ᵈ Dropped
+	ᶠ Handshake fails
+	ʰ Redirects to http
+	ʳ Refused
 
 
-	Observed cookie domains:
+	Problematic hosts in *osu.edu:
 
-		- osu.edu subdomains:
+		- www.ada ᵐ
+		- www.advancement ᵐ
+		- apply ᵐ
+		- www.artsandsciences ᵐ
+		- www.asc ᵐ
+		- autodiscover	Redirect differs
+		- www.box ᵐ
+		- www.brand ᵐ
+		- www.buckeyemail ᵐ
+		- www.buckeyevoices ᵐ
+		- cancer ᶜ ᵉ
+		- ccapp ᶜ ᵐ
+		- www.carmen ᵐ
+		- carmenconnect ˣ
+		- www.cgs ᵐ
+		- www.changingclimate ᵐ
+		- www.classes ᵐ
+		- www.code ᵐ
+		- www.courses ᵐ
+		- www.cse ᵐ
+		- www.degreeaudit ᵐ
+		- www.dentistry ᵐ
+		- www.dimauro ᵐ
+		- www.disabilitystudies ᵐ
+		- www.ece ᵐ
+		- www.eleave ᵐ
+		- www.ercnsm ᵐ
+		- www.fml ᵐ
+		- fod ˣ
+		- www.fod ᵐ
+		- food ᵐ
+		- www.fye ᵐ
+		- gradadmissions ᵐ
+		- (www.)?gradsch ᵐ
+		- www.hhg ᵐ
+		- www.housing ᵐ
+		- jobs ⁴
+		- investments ˣ
+		- www.investments ᵐ
+		- itunes ᵃ
+		- libanswers ᵐ
+		- liblearn ˣ
+		- lpsi ᵐ
+		- lt ᵃ
+		- www.mansfield ᵐ
+		- www.marionlibrary ᵐ
+		- www.mooculus ᵐ
+		- www.my ᵐ
+		- mybenefitsplan ⁴
+		- www.news ᵐ
+		- www.oaa ᵐ
+		- www.oesar ᵐ
+		- www.offcampus ᵐ
+		- www.ohiounion ᵐ
+		- www.online ᵐ
+		- osucentralreceiving ᵐ
+		- www.osumarion ᵐ
+		- www.osutravel ᵐ
+		- outreach ˣ
+		- www.physics ᵐ
+		- ppcw ˣ
+		- www.ppcw ᵐ
+		- www.president ᵐ
+		- www.registrar ᵐ
+		- www.researchnews ᵐ
+		- www.rf ᵐ
+		- www.shakespeare ᵐ
+		- www.slfacilities ᵐ
+		- www.slts ᵐ
+		- www.smileexperts ᵐ
+		- www.ssc ᵐ
+		- www.studentlife ᵐ
+		- tobaccofree ˣ
+		- www.tobaccofree ᵐ
+		- trustees ˣ
+		- www.trustees ᵐ
+		- streaming ᵐ
+		- www.tco ᵐ
+		- www.ucat ᵐ
+		- www.undergraduateresearch ᵐ
+		- viewbook ᵉ
+		- wiredout ᵉ
+		- www.yp4h ᵐ
 
-			- mooculus
+	ᵃ Shows another domain
+	ᶜ Missing certificate chain
+	ᵉ Expired
+	ᵐ Mismatched
+	ˣ Mixed css
+
+
+	Partially covered hosts in *osu.edu:
+
+		- research.bpcrc ʰ
+		- cartoons ʰ
+		- wexnermedical ʰ
+
+	ʰ Some pages redirect to http
+
+
+	These altnames don't exist:
+
+		- osuad.osu.edu
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .osu.edu
+		- advancement.osu.edu
+		- advisingconnect.osu.edu
+		- armstrong.osu.edu
+		- brand.osu.edu
+		- buckeyevoices.osu.edu
+		- buckeyelink.osu.edu
+		- campusvisit.osu.edu
+		- www.campusvisit.osu.edu
+		- cgs.osu.edu
+		- dining.osu.edu
+		- diningservices.osu.edu
+		- fml.osu.edu
+		- food.osu.edu
+		- footprint.osu.edu
+		- giveto.osu.edu
+		- www.giveto.osu.edu
+		- go.osu.edu
+		- housing.osu.edu
+		- innovateeu.osu.edu
+		- investments.osu.edu
+		- library.osu.edu
+		- lima.osu.edu
+		- mediasite.osu.edu
+		- my.osu.edu
+		- newark.osu.edu
+		- nursing.osu.edu
+		- .blogs.nursing.osu.edu
+		- oaa.osu.edu
+		- odee.osu.edu
+		- offcampus.osu.edu
+		- orhelp.osu.edu
+		- president.odee.osu.edu
+		- resourcecenter.odee.osu.edu
+		- odi.osu.edu
+		- ohiounion.osu.edu
+		- orapps.osu.edu
+		- osumarion.osu.edu
+		- osutravel.osu.edu
+		- outreach.osu.edu
+		- parent.osu.edu
+		- purchasing.osu.edu
+		- www.purchasing.osu.edu
+		- rf.osu.edu
+		- slfacilities.osu.edu
+		- slts.osu.edu
+		- studentlife.osu.edu
+		- tco.osu.edu
+		- trustees.osu.edu
+		- u.osu.edu
+		- ucom.osu.edu
+		- www.osu.edu
+
+
+	Mixed content:
+
+		- iframe on footprint from www.youtube.com ˢ
+
+		- css, on:
+
+			- carmenconnect, fod, footprint, investments, outreach, tobaccofree from $self ˢ
+			- fod, footprint, gradsch, tco, trustees from www.osu.edu ˢ
+			- liblearn from library.osu.edu ˢ
+			- carmenconnect, changingclimate, cics, blogs.nursing, stonelab from fonts.googleapis.com ˢ
+			- online from live-osuonline.gotpantheon.com *
+			- trustees from www.trustees.osu.edu ˢ
+
+		- Images, on:
+
+			- ada, dimauro, fod, footprint, investments, library, odee, uas, ucat, outreach, tobaccofree from $self ˢ
+			- artsinitiative, uas from www.oac.state.oh.us
+			- connect1 from regional.osu.edu ˢ
+			- footprint from www.osu.edu ˢ
+			- tobaccofree from img.youtube.com ˢ
+			- trustees from www.trustees.osu.edu ˢ
+
+		- Bugs, on:
+
+			- ada from jigsaw.w3.org ˢ
+			- ada from www.w3.org ˢ
+			- mooculus from i.creativecommons.org ˢ
+			- stonelab from icons-ak.wxug.com
+
+	* Just fonts
+	ˢ Secured by us
 
 -->
-<ruleset name="Ohio State University (partial)">
+<ruleset name="OSU.edu (partial)">
 
-	<target host="jobsatosu.com" />
-	<target host="www.jobsatosu.com" />
-	<target host="esue.ohio-state.edu" />
-	<target host="www.esue.ohio-state.edu" />
-	<target host="ohiostatealumni.org" />
-	<target host="www.ohiostatealumni.org" />
+	<!--	Direct rewrites:
+				-->
 	<target host="osu.edu" />
-	<target host="*.osu.edu" />
-	<target host="*.ohio-state.edu" />
+	<target host="acell.osu.edu" />
+	<target host="acml.osu.edu" />
+	<target host="ada.osu.edu" />
+	<target host="adl.osu.edu" />
+	<target host="admissions.osu.edu" />
+	<target host="www.admissions.osu.edu" />
+	<target host="advancement.osu.edu" />
+	<target host="advisingconnect.osu.edu" />
+	<target host="aerosollab.osu.edu" />
+	<target host="aerospace.osu.edu" />
+	<target host="afcad.osu.edu" />
+	<target host="airport-store.osu.edu" />
+	<target host="aises.osu.edu" />
+	<target host="apel.osu.edu" />
+	<target host="apl.osu.edu" />
+	<target host="appstatus.osu.edu" />
+	<target host="arc.osu.edu" />
+	<target host="armstrong.osu.edu" />
+	<target host="artsandsciences.osu.edu" />
+	<target host="artsinitiative.osu.edu" />
+	<target host="asc.osu.edu" />
+	<target host="asee.osu.edu" />
+	<target host="assist-erp.osu.edu" />
+	<target host="research.bpcrc.osu.edu" />
+	<target host="aviation.osu.edu" />
+	<target host="baja.osu.edu" />
+	<target host="biomechanics.osu.edu" />
+	<target host="biotronicslab.osu.edu" />
+	<target host="bme.osu.edu" />
+	<target host="box.osu.edu" />
+	<target host="bprc.osu.edu" />
+	<target host="bpte.osu.edu" />
+	<target host="brand.osu.edu" />
+	<target host="buckeyelink.osu.edu" />
+	<target host="buckeyelink3.osu.edu" />
+	<target host="buckeyemail.osu.edu" />
+	<target host="buckeyevoices.osu.edu" />
+	<target host="buckid.osu.edu" />
+	<target host="www.buckid.osu.edu" />
+	<target host="camm.osu.edu" />
+	<target host="campusvisit.osu.edu" />
+	<target host="www.campusvisit.osu.edu" />
+	<target host="carmen.osu.edu" />
+	<!--target host="carmenconnect.osu.edu" /-->
+	<target host="cartoons.osu.edu" />
+	<target host="car.osu.edu" />
+	<target host="careereagles.osu.edu" />
+	<target host="catalysts.osu.edu" />
+	<target host="research.cbc.osu.edu" />
+	<target host="cbe.osu.edu" />
+	<target host="cce.osu.edu" />
+	<target host="ccem.osu.edu" />
+	<target host="ccp.osu.edu" />
+	<target host="cdme.osu.edu" />
+	<target host="cdmi.osu.edu" />
+	<target host="ceaa.osu.edu" />
+	<target host="ceas.osu.edu" />
+	<target host="ceg.osu.edu" />
+	<target host="cemas.osu.edu" />
+	<target host="cgs.osu.edu" />
+	<target host="changingclimate.osu.edu" />
+	<target host="chppe.osu.edu" />
+	<target host="cics.osu.edu" />
+	<target host="cimjsea.osu.edu" />
+	<target host="classes.osu.edu" />
+	<target host="cmnf.osu.edu" />
+	<target host="cmt.osu.edu" />
+	<target host="code.osu.edu" />
+	<target host="coham.osu.edu" />
+	<target host="connect.osu.edu" />
+	<target host="connect1.osu.edu" />
+	<target host="controller.osu.edu" />
+	<target host="courses.osu.edu" />
+	<target host="cpf.osu.edu" />
+	<target host="crnt.osu.edu" />
+	<target host="cse.osu.edu" />
+	<target host="csmm.osu.edu" />
+	<target host="csr.osu.edu" />
+	<target host="decs.osu.edu" />
+	<target host="degreeaudit.osu.edu" />
+	<target host="delegated.osu.edu" />
+	<target host="denman.osu.edu" />
+	<target host="dentistry.osu.edu" />
+	<target host="digitalunion.osu.edu" />
+	<target host="dimauro.osu.edu" />
+	<target host="dining.osu.edu" />
+	<target host="diningservices.osu.edu" />
+	<target host="directory.osu.edu" />
+	<target host="disabilitystudies.osu.edu" />
+	<target host="disl.osu.edu" />
+	<target host="drupal.osu.edu" />
+	<target host="ec.osu.edu" />
+	<target host="e-cosm2015.osu.edu" />
+	<target host="ece.osu.edu" />
+	<target host="ecocar.osu.edu" />
+	<target host="ecocar2.osu.edu" />
+	<target host="ecocar3.osu.edu" />
+	<target host="ecos.osu.edu" />
+	<target host="ecs.osu.edu" />
+	<target host="eed.osu.edu" />
+	<target host="eeic.osu.edu" />
+	<target host="ehs.osu.edu" />
+	<target host="ehsa.osu.edu" />
+	<target host="eleave.osu.edu" />
+	<target host="electroscience.osu.edu" />
+	<target host="email.osu.edu" />
+	<target host="emdl.osu.edu" />
+	<target host="englearn.osu.edu" />
+	<target host="engineering.osu.edu" />
+
+	<target host="acml.engineering.osu.edu" />
+	<target host="adl.engineering.osu.edu" />
+	<target host="advising.engineering.osu.edu" />
+	<target host="afcad.engineering.osu.edu" />
+	<target host="airport-store.engineering.osu.edu" />
+	<target host="atohio.engineering.osu.edu" />
+	<target host="biomechanics.engineering.osu.edu" />
+	<target host="bme.engineering.osu.edu" />
+	<target host="boc.engineering.osu.edu" />
+	<target host="catalysts.engineering.osu.edu" />
+	<target host="cbe.engineering.osu.edu" />
+	<target host="cce.engineering.osu.edu" />
+	<target host="cdme.engineering.osu.edu" />
+	<target host="cdmi.engineering.osu.edu" />
+	<target host="chppe.engineering.osu.edu" />
+	<target host="cimjsea.engineering.osu.edu" />
+	<target host="cmnf.engineering.osu.edu" />
+	<target host="cpf.engineering.osu.edu" />
+	<target host="crnt.engineering.osu.edu" />
+	<target host="csmm.engineering.osu.edu" />
+	<target host="csr.engineering.osu.edu" />
+	<target host="ctc.engineering.osu.edu" />
+	<target host="drupal.engineering.osu.edu" />
+	<target host="e-cosm2015.engineering.osu.edu" />
+	<target host="ece.engineering.osu.edu" />
+	<target host="ecr6.engineering.osu.edu" />
+	<target host="ecs-store.engineering.osu.edu" />
+	<target host="eeiccourses.engineering.osu.edu" />
+	<target host="electroscience-backup.engineering.osu.edu" />
+	<target host="electroscience-new.engineering.osu.edu" />
+	<target host="emdl.engineering.osu.edu" />
+	<target host="englearn.engineering.osu.edu" />
+	<target host="ese.engineering.osu.edu" />
+	<target host="expo.engineering.osu.edu" />
+	<target host="fluiddynamics.engineering.osu.edu" />
+	<target host="formulabuckeyes.engineering.osu.edu" />
+	<target host="gdtl.engineering.osu.edu" />
+	<target host="ghazisaeidigroup.engineering.osu.edu" />
+	<target host="global.engineering.osu.edu" />
+	<target host="guatemala.engineering.osu.edu" />
+	<target host="hallgroup.engineering.osu.edu" />
+	<target host="hebook.engineering.osu.edu" />
+	<target host="hecourse.engineering.osu.edu" />
+	<target host="heeseminars.engineering.osu.edu" />
+	<target host="hevcp.engineering.osu.edu" />
+	<target host="honda.engineering.osu.edu" />
+	<target host="hwang.engineering.osu.edu" />
+	<target host="ileansigma.engineering.osu.edu" />
+	<target host="imsl.engineering.osu.edu" />
+	<target host="intranet.engineering.osu.edu" />
+	<target host="ismart.engineering.osu.edu" />
+	<target host="istem.engineering.osu.edu" />
+	<target host="koellinglab.engineering.osu.edu" />
+	<target host="leightlab.engineering.osu.edu" />
+	<target host="lmsl.engineering.osu.edu" />
+	<target host="lsvr.engineering.osu.edu" />
+	<target host="ma2jic.engineering.osu.edu" />
+	<target host="mae-hpc.engineering.osu.edu" />
+	<target host="mep.engineering.osu.edu" />
+	<target host="mep-store.engineering.osu.edu" />
+	<target host="mip2014.engineering.osu.edu" />
+	<target host="mirg.engineering.osu.edu" />
+	<target host="mnmdl.engineering.osu.edu" />
+	<target host="msns.engineering.osu.edu" />
+	<target host="muri.engineering.osu.edu" />
+	<target host="myersgroup.engineering.osu.edu" />
+	<target host="nars.engineering.osu.edu" />
+	<target host="nlbb.engineering.osu.edu" />
+	<target host="nmbl.engineering.osu.edu" />
+	<target host="nmfc.engineering.osu.edu" />
+	<target host="osuhe.engineering.osu.edu" />
+	<target host="ozkanhcrg.engineering.osu.edu" />
+	<target host="pcvlab.engineering.osu.edu" />
+	<target host="professionals.engineering.osu.edu" />
+	<target host="ramsis.engineering.osu.edu" />
+	<target host="resilience.engineering.osu.edu" />
+	<target host="simcenter.engineering.osu.edu" />
+	<target host="solar.engineering.osu.edu" />
+	<target host="supermileage.engineering.osu.edu" />
+	<target host="svc.engineering.osu.edu" />
+	<target host="swe.engineering.osu.edu" />
+	<target host="swefair.engineering.osu.edu" />
+	<target host="tamlab.engineering.osu.edu" />
+	<target host="tcrl.engineering.osu.edu" />
+	<target host="thl.engineering.osu.edu" />
+	<target host="tme.engineering.osu.edu" />
+	<target host="tml.engineering.osu.edu" />
+	<target host="uam.engineering.osu.edu" />
+	<target host="sitemgr.web.engineering.osu.edu" />
+	<target host="windlgroup.engineering.osu.edu" />
+	<target host="www.engineering.osu.edu" />
+
+	<target host="eprofile.osu.edu" />
+	<target host="ercnsm.osu.edu" />
+	<target host="eresearch.osu.edu" />
+	<target host="ergonomics.osu.edu" />
+	<target host="esac.osu.edu" />
+	<target host="ese.osu.edu" />
+	<target host="esw.osu.edu" />
+	<target host="ews.osu.edu" />
+	<target host="fcc.osu.edu" />
+	<target host="fders.osu.edu" />
+	<target host="fluiddynamics.osu.edu" />
+	<target host="fml.osu.edu" />
+	<!--target host="fod.osu.edu" /-->
+	<!--target host="footprint.osu.edu" /-->
+	<target host="fye.osu.edu" />
+	<target host="gearlab.osu.edu" />
+	<target host="gdtl.osu.edu" />
+	<target host="giveto.osu.edu" />
+	<target host="www.giveto.osu.edu" />
+	<target host="go.osu.edu" />
+	<target host="gpadmissions.osu.edu" />
+	<target host="www.gpadmissions.osu.edu" />
+	<target host="gtl.osu.edu" />
+	<target host="hboc.osu.edu" />
+	<target host="hhg.osu.edu" />
+	<target host="housing.osu.edu" />
+	<target host="hr.osu.edu" />
+	<target host="hvpe.osu.edu" />
+	<target host="ieee.osu.edu" />
+	<target host="ileansigma.osu.edu" />
+	<target host="iml.osu.edu" />
+	<target host="ims.osu.edu" />
+	<target host="innovateu.osu.edu" />
+	<!--target host="investments.osu.edu" /-->
+	<target host="kb.osu.edu" />
+	<!--target host="liblearn.osu.edu" /-->
+	<target host="library.osu.edu" />
+	<target host="lima.osu.edu" />
+	<target host="lsvr.osu.edu" />
+	<target host="ma2jic.osu.edu" />
+	<target host="mae.osu.edu" />
+	<target host="mae-hpc.osu.edu" />
+	<target host="mansfield.osu.edu" />
+	<target host="manufacturing.osu.edu" />
+	<target host="marionlibrary.osu.edu" />
+	<target host="mbdcs.osu.edu" />
+	<target host="mediasite.osu.edu" />
+	<target host="mekar.osu.edu" />
+	<target host="meso.osu.edu" />
+	<target host="mgel.osu.edu" />
+	<target host="millionhearts.osu.edu" />
+	<target host="mirg.osu.edu" />
+	<target host="mnmdl.osu.edu" />
+	<target host="mooculus.osu.edu" />
+	<target host="motorsports.osu.edu" />
+	<target host="mse.osu.edu" />
+	<target host="msns.osu.edu" />
+	<target host="muri.osu.edu" />
+	<target host="my.osu.edu" />
+	<target host="nano.osu.edu" />
+	<target host="nbl.osu.edu" />
+	<target host="newark.osu.edu" />
+	<target host="news.osu.edu" />
+	<target host="nars.osu.edu" />
+	<target host="nlbb.osu.edu" />
+	<target host="nmbl.osu.edu" />
+	<target host="nmfc.osu.edu" />
+	<target host="nsec.osu.edu" />
+	<target host="nuclear.osu.edu" />
+	<target host="nursing.osu.edu" />
+
+	<target host="blogs.nursing.osu.edu" />
+	<target host="cdn.nursing.osu.edu" />
+	<target host="elearning.nursing.osu.edu" />
+	<target host="nucleus.nursing.osu.edu" />
+	<target host="production.nursing.osu.edu" />
+	<target host="www.nursing.osu.edu" />
+
+	<target host="oaa.osu.edu" />
+	<target host="ocio.osu.edu" />
+	<target host="ociolaportal.osu.edu" />
+	<target host="odee.osu.edu" />
+	<target host="resourcecenter.odee.osu.edu" />
+	<target host="odi.osu.edu" />
+	<target host="ohiounion.osu.edu" />
+	<target host="oia.osu.edu" />
+	<target host="oesar.osu.edu" />
+	<target host="offcampus.osu.edu" />
+	<target host="omi.osu.edu" />
+	<target host="online.osu.edu" />
 	<target host="opensource.osu.edu" />
-	<target host="opensource.cse.ohio-state.edu" />
+	<target host="optics.osu.edu" />
+	<target host="orapps.osu.edu" />
+	<target host="orhelp.osu.edu" />
+	<target host="osemagazine.osu.edu" />
+	<target host="osmi.osu.edu" />
+	<target host="osumarion.osu.edu" />
+	<target host="osutravel.osu.edu" />
+	<!--target host="outreach.osu.edu" /-->
+	<target host="pac.osu.edu" />
+	<target host="parent.osu.edu" />
+	<target host="peem.osu.edu" />
+	<target host="physics.osu.edu" />
+	<target host="ppc.osu.edu" />
+	<!--target host="ppcw.osu.edu" /-->
+	<target host="president.osu.edu" />
+	<target host="pse.osu.edu" />
+	<target host="purchasing.osu.edu" />
+	<target host="www.purchasing.osu.edu" />
+	<target host="radar.osu.edu" />
+	<target host="ramsis.osu.edu" />
+	<target host="reactor.osu.edu" />
+	<target host="receivingmail.osu.edu" />
+	<target host="recsports.osu.edu" />
+	<target host="regional.osu.edu" />
+	<target host="registrar.osu.edu" />
+	<target host="researchnews.osu.edu" />
+	<target host="rf.osu.edu" />
+	<target host="rise.osu.edu" />
+	<target host="rrl.osu.edu" />
+	<target host="sdm.osu.edu" />
+	<target host="seal.osu.edu" />
+	<target host="seo.osu.edu" />
+	<target host="sfa.osu.edu" />
+	<target host="www.sfa.osu.edu" />
+	<target host="simcenter.osu.edu" />
+	<target host="slfacilities.osu.edu" />
+	<target host="slts.osu.edu" />
+	<target host="smileexperts.osu.edu" />
+	<target host="smsl.osu.edu" />
+	<target host="spine.osu.edu" />
+	<target host="spinlab.osu.edu" />
+	<target host="ssc.osu.edu" />
+	<target host="stonelab.osu.edu" />
+	<target host="studentlife.osu.edu" />
+	<target host="supermileage.osu.edu" />
+	<target host="surplus.osu.edu" />
+	<target host="www.surplus.osu.edu" />
+	<target host="svc.osu.edu" />
+	<target host="swe.osu.edu" />
+	<target host="tamlab.osu.edu" />
+	<target host="tbp.osu.edu" />
+	<target host="tco.osu.edu" />
+	<target host="tcrl.osu.edu" />
+	<target host="techhub.osu.edu" />
+	<target host="thl.osu.edu" />
+	<target host="tme.osu.edu" />
+	<target host="tml.osu.edu" />
+	<!--target host="tobaccofree.osu.edu" /-->
+	<target host="transitlab.osu.edu" />
+	<!--target host="trustees.osu.edu" /-->
+	<target host="u.osu.edu" />
+	<target host="uam.osu.edu" />
+	<target host="uas.osu.edu" />
+	<target host="ucat.osu.edu" />
+	<target host="ucom.osu.edu" />
+	<target host="undergrad.osu.edu" />
+	<target host="undergraduateresearch.osu.edu" />
+	<target host="www.undergrad.osu.edu" />
+	<target host="vet.osu.edu" />
+	<!--target host="viewbook.osu.edu" /-->
+	<target host="vscl.osu.edu" />
+	<target host="wecar.osu.edu" />
+	<target host="webmail.osu.edu" />
+	<target host="wexnermedical.osu.edu" />
+	<target host="wie.osu.edu" />
+	<target host="wrc.osu.edu" />
+	<target host="www.osu.edu" />
+	<target host="yp4h.osu.edu" />
 
+	<!--	Complications:
+				-->
+	<target host="www.ada.osu.edu" />
+	<target host="www.advancement.osu.edu" />
+	<target host="www.artsandsciences.osu.edu" />
+	<target host="www.asc.osu.edu" />
+	<target host="autodiscover.osu.edu" />
+	<target host="www.box.osu.edu" />
+	<target host="www.bprc.osu.edu" />
+	<target host="www.brand.osu.edu" />
+	<target host="www.buckeyemail.osu.edu" />
+	<target host="www.buckeyevoices.osu.edu" />
+	<target host="www.car.osu.edu" />
+	<target host="www.carmen.osu.edu" />
+	<target host="www.cgs.osu.edu" />
+	<target host="www.changingclimate.osu.edu" />
+	<target host="www.classes.osu.edu" />
+	<target host="www.code.osu.edu" />
+	<target host="www.courses.osu.edu" />
+	<target host="www.cse.osu.edu" />
+	<target host="www.degreeaudit.osu.edu" />
+	<target host="www.dentistry.osu.edu" />
+	<target host="www.dimauro.osu.edu" />
+	<target host="www.disabilitystudies.osu.edu" />
+	<target host="www.ece.osu.edu" />
+	<target host="www.eleave.osu.edu" />
+	<target host="www.ercnsm.osu.edu" />
+	<target host="www.fml.osu.edu" />
+	<!--target host="www.fod.osu.edu" /-->
+	<!--target host="www.investments.osu.edu" /-->
+	<target host="food.osu.edu" />
+	<target host="www.fye.osu.edu" />
+	<target host="gradadmissions.osu.edu" />
+	<target host="gradsch.osu.edu" />
+	<target host="www.gradsch.osu.edu" />
+	<target host="www.hhg.osu.edu" />
+	<target host="www.housing.osu.edu" />
+	<target host="itunes.osu.edu" />
+	<target host="jobs.osu.edu" />
+	<target host="lt.osu.edu" />
+	<target host="www.mansfield.osu.edu" />
+	<target host="www.marionlibrary.osu.edu" />
+	<target host="www.mooculus.osu.edu" />
+	<target host="www.my.osu.edu" />
+	<target host="mybenefitsplan.osu.edu" />
+	<target host="www.news.osu.edu" />
+	<target host="www.oaa.osu.edu" />
+	<target host="www.oesar.osu.edu" />
+	<target host="www.offcampus.osu.edu" />
+	<target host="www.online.osu.edu" />
+	<target host="www.ohiounion.osu.edu" />
+	<target host="osucentralreceiving.osu.edu" />
+	<target host="www.osumarion.osu.edu" />
+	<target host="www.osutravel.osu.edu" />
+	<target host="www.physics.osu.edu" />
+	<!--target host="www.ppcw.osu.edu" /-->
+	<target host="www.president.osu.edu" />
+	<target host="www.recsports.osu.edu" />
+	<target host="www.registrar.osu.edu" />
+	<target host="www.researchnews.osu.edu" />
+	<target host="www.rf.osu.edu" />
+	<target host="www.shakespeare.osu.edu" />
+	<target host="www.slfacilities.osu.edu" />
+	<target host="www.slts.osu.edu" />
+	<target host="www.smileexperts.osu.edu" />
+	<target host="www.ssc.osu.edu" />
+	<target host="streaming.osu.edu" />
+	<target host="www.studentlife.osu.edu" />
+	<target host="www.tco.osu.edu" />
+	<!--target host="www.tobaccofree.osu.edu" /-->
+	<!--target host="www.trustees.osu.edu" /-->
+	<target host="www.ucat.osu.edu" />
+	<target host="www.undergraduateresearch.osu.edu" />
+	<target host="wiredout.osu.edu" />
+	<target host="www.yp4h.osu.edu" />
 
-	<securecookie host="^www\.jobsatosu\.com$" name=".*" />
-	<!--	Observed cookie domains:
-
-			- ^carmen
-			- ^.ced
-			- ^www.ced
-			- ^go
-			- ^ocio
-			- ^my
-			- ^registrar
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://research\.bpcrc\.osu\.edu/(?:$|favicon\.ico)" /-->
+		<!--
+			Exceptions:
 					-->
-	<securecookie host="^.*\.osu\.edu$" name=".*" />
-	<securecookie host="^.*\.ohio\-state\.edu$" name=".*" />
-	<securecookie host="^.*opensource\.osu\.edu$" name=".*" />
-	<securecookie host="^.*opensource\.ohio\-state\.edu$" name=".*" />
+		<exclusion pattern="^http://research\.bpcrc\.osu\.edu/+(?!assets/|data/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://research.bpcrc.osu.edu/LARISSA/" />
+			<test url="http://research.bpcrc.osu.edu/favicon.ico" />
+			<test url="http://research.bpcrc.osu.edu/geo/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://research.bpcrc.osu.edu/assets/images/logo_bpcrc_32px.png" />
+			<test url="http://research.bpcrc.osu.edu/data/osu_navbar/images/osu_name.png" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://cartoons\.osu\.edu/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://cartoons\.osu\.edu/+(?!wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://cartoons.osu.edu/about-us/" />
+			<test url="http://cartoons.osu.edu/search/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://cartoons.osu.edu/wp-content/plugins/hours-widget/css/widget.css?ver=4.4.1" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://wexnermedical\.osu\.edu/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://wexnermedical\.osu\.edu/+(?!_Images/|stylesbundle(?:$|[?/])|~/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://wexnermedical.osu.edu/about-us/rankings-and-awards" />
+			<test url="http://wexnermedical.osu.edu/careers" />
+			<test url="http://wexnermedical.osu.edu/mediaroom/pressreleaselisting/mcquaid-ceo-and-coo" />
+			<test url="http://wexnermedical.osu.edu/patient-care/find-a-doctor" />
+			<test url="http://wexnermedical.osu.edu/patient-care/locations-and-parking" />
+			<test url="http://wexnermedical.osu.edu/patient-care/participate-in-research" />
+
+			<!--	-ve:
+					-->
+			<test url="http://wexnermedical.osu.edu/_Images/WexnerMedical/icon-sprite.png" />
+			<test url="http://wexnermedical.osu.edu/stylesbundle" />
+			<test url="http://wexnermedical.osu.edu/stylesbundle/wexner2" />
+			<test url="http://wexnermedical.osu.edu/~/media/Images/WexnerMedical/Global/Modules/Global/Header/OSUWexMedCtr.png?mw=1382" />
+
+		<!--	Set cookie without Secure:
+							-->
+		<!--test url="http://courses.osu.edu/psp/csosuct/EMPLOYEE/PUB/c/COMMUNITY_ACCESS.OSR_CAT_SRCH.GBL" /-->
+		<!--test url="http://delegated.osu.edu/psp/csosuda/EMPLOYEE/CAMP/c/OAD_GEA.OAD_GEA_NUR_APL.GBL" /-->
+		<!--test url="http://go.osu.edu/remoteaccess" /-->
+		<!--test url="http://orapps.osu.edu/webmaster/" /-->
+		<!--test url="http://www.osu.edu/giving/" /-->
 
 
-	<!--	!www doesn't work over https.
-		Redirects to www over http.	-->
-	<rule from="^http://(?:www\.)?jobsatosu\.com/"
-		to="https://www.jobsatosu.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.osu\.edu$" name="^[\w-]+-PSJSESSIONID$" /-->
+	<!--securecookie host="^(?:advancement|brand|buckeyelink|buckeyevoices|footprint|investments|lima|newark|oaa|odi|osumarion|outreach|president|tco|trustees|ucom|www)\.osu\.edu$" name="^sess_id$" /-->
+	<!--securecookie host="^advisingconnect\.osu\.edu$" name="^_session_id$" /-->
+	<!--securecookie host="^armstrong\.osu\.edu$" name="^Elgg$" /-->
+	<!--securecookie host="^(?:(?:www\.)?campusvisit|cgs|food|dining|diningservices|fml|(?:www\.)?giveto|housing|mediasite|offcampus|ohiounion|parent|(?:www\.)?purchasing|slfacilities|slts|studentlife)\.osu\.edu$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^go\.osu\.edu$" name="^symfony$" /-->
+	<!--securecookie host="^(?:innovateu|odee|resourcecenter\.odee)\.osu\.edu$" name="^SimpleSAMLSessionID$" /-->
+	<!--securecookie host="^library\.osu\.edu$" name="^NSC_" /-->
+	<!--securecookie host="^my\.osu\.edu$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^(?:\.blogs\.)?nursing\.osu\.edu$" name="^osuconSession$" /-->
+	<!--securecookie host="^orapps\.osu\.edu$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^orhelp\.osu\.edu$" name="^SWIFT_(?:client|sessionid40)$" /-->
+	<!--securecookie host="^osutravel\.osu\.edu$" name="^wfvt_\d+$" /-->
+	<!--securecookie host="^rf\.osu\.edu$" name="^CF(?:ID|TOKEN)$" /-->
+	<!--securecookie host="^u\.osu\.edu$" name="^xid$" /-->
 
-	<rule from="^http://(www\.)?esue\.ohio-state\.edu/"
-		to="https://$1esue.ohio-state.edu/" />
+	<securecookie host="^\." name="^_(?:gat?$|_utm)" />
+	<securecookie host="^(?!(?:research\.bpcrc|cartoons|wexnermedical)\.)\w" name="." />
+	<securecookie host="^\.blogs\.nursing\." name="." />
 
-	<!--	!www throws error.	-->
-	<rule from="^http://(?:www\.)?ohiostatealumni\.org/"
-		to="https://www.ohiostatealumni.org/" />
 
-	<!--	Cert only matches *.osu.edu.	-->
-	<rule from="^http://(?:www\.)?osu\.edu/(\d{4})/(css|images|inc)/"
-		to="https://www.osu.edu/$1/$2/" />
-
-	<!--	At least some www.ced data aren't available over https.		-->
-	<rule from="^http://(carmen|ced|contoller|email|go|hr|library|lt|my|ocio|mooculus|registrar|webmail)\.osu\.edu/"
+	<rule from="^http://www\.(ada|advancement|artsandsciences|asc|box|bprc|brand|buckeyemail|buckeyevoices|car|carmen|cgs|changingclimate|classes|code|courses|cse|degreeaudit|dentistry|dimauro|disabilitystudies|ece|eleave|ercnsm|fml|fye|hhg|housing|marionlibrary|mooculus|my|news|oaa|oesar|ohiounion|offcampus|online|osumarion|osutravel|physics|president|recsports|registrar|researchnews|rf|shakespeare|slfacilities|slts|smileexperts|ssc|studentlife|tco|ucat|undergraduateresearch|yp4h)\.osu\.edu/"
 		to="https://$1.osu.edu/" />
 
-	<!--	Cert doesn't match !www.	-->
-	<rule from="^http://(?:www\.)?giveto\.osu\.edu/"
-		to="https://www.giveto.osu.edu/" />
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://autodiscover\.osu\.edu/+"
+		to="https://email.osu.edu/" />
 
-	<rule from="^http://opensource\.osu\.edu/"
-		to="https://opensource.osu.edu/" />
+		<test url="http://autodiscover.osu.edu/Default.aspx" />
 
-	<rule from="^http://opensource\.cse\.ohio\-state\.edu/"
-		to="https://opensource.cse.ohio-state.edu/" />
+	<!--rule from="^http://www\.(fod|investments|ppcw|tobaccofree|trustees)\.osu\.edu/"
+		to="https://$1.osu.edu/" /-->
+
+	<rule from="^http://food\.osu\.edu/"
+		to="https://dining.osu.edu/" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://gradadmissions\.osu\.edu/+(?:\?.*)?$"
+		to="https://gpadmissions.osu.edu/" />
+
+		<test url="http://gradadmissions.osu.edu//" />
+
+	<rule from="^http://gradadmissions\.osu\.edu/"
+		to="https://gpadmissions.osu.edu/" />
+
+		<test url="http://gradadmissions.osu.edu/Default.aspx" />
+
+	<rule from="^http://(?:www\.)?gradsch\.osu\.edu/"
+		to="https://www.gradsch.ohio-state.edu/" />
+
+	<!--	Redirect drops forward slash
+		and path, but not args:
+					-->
+	<rule from="^http://itunes\.osu\.edu/[^?]*"
+		to="https://odee.osu.edu/itunes-u" />
+
+		<test url="http://itunes.osu.edu/home.php" />
+
+	<rule from="^http://jobs\.osu\.edu/"
+		to="https://hr.osu.edu/jobs" />
+
+	<!--	Redirect drops forward slash
+		and path, but not args:
+					-->
+	<rule from="^http://lt\.osu\.edu/[^?]*"
+		to="https://ocio.osu.edu/elearning" />
+
+		<test url="http://lt.osu.edu/index.htm" />
+
+	<!--	Redirect drops forward slash,
+		path, and args:
+				-->
+	<rule from="^http://mybenefitsplan\.osu\.edu/.*"
+		to="https://hr.osu.edu/oe" />
+
+		<test url="http://mybenefitsplan.osu.edu/Default.aspx" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://osucentralreceiving\.osu\.edu/+(?:\?.*)?$"
+		to="https://osu.sclintra.com/Enterprise/SCLIntraOmni/etix7f/search" />
+
+		<test url="http://osucentralreceiving.osu.edu//" />
+
+	<rule from="^http://osucentralreceiving\.osu\.edu/"
+		to="https://osu.sclintra.edu/" />
+
+		<test url="http://osucentralreceiving.osu.edu/Default.aspx" />
+
+	<rule from="^http://streaming\.osu\.edu/"
+		to="https://streamwww.classroom.ohio-state.edu/" />
+
+	<!--	Redirect drops forward slash,
+		path, and args:
+				-->
+	<rule from="^http://wiredout\.osu\.edu/.*"
+		to="https://techhub.osu.edu/" />
+
+		<test url="http://wiredout.osu.edu/Default.aspx" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

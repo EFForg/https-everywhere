@@ -1,16 +1,17 @@
 <!--
-	For problematic rules, see 0x539-dev-group-mismatches.xml.
-
 
 	Nonfunctional subdomains:
 
 		- releases	(shows hosting, CN: hosting)
 
 
-	Problematic subdomains:
+	Fully covered subdomains:
 
-		- ^		(shows hosting, CN: hosting)
-		- www		(works, CN: gobby)
+		- gobby		(→ gobby.github.io)
+		- hosting
+
+
+	(www.)? doesn't exist.
 
 -->
 <ruleset name="0x539 dev group (partial)">
@@ -18,11 +19,16 @@
 	<target host="hosting.0x539.de" />
 	<target host="gobby.0x539.de" />
 
+	<test url="http://gobby.0x539.de/download" />
 
-	<securecookie host="^\w+\.0x539\.de$" name=".*" />
+	<securecookie host="^\w+\.0x539\.de$" name=".+" />
 
 
-	<rule from="^http://(gobby|hosting)\.0x539\.de/"
-		to="https://$1.0x539.de/" />
+	<!--	Redirect drops path and args:      -->
+	<rule from="^http://gobby\.0x539\.de/.*"
+		to="https://gobby.github.io/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

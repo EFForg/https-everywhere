@@ -1,0 +1,78 @@
+<!--
+	For rules causing MCB, see Double_Robotics.com-mixedcontent.xml.
+
+	For problematic rules, see Double_Robotics.com-problematic.xml.
+
+
+	Nonfunctional hosts in *doublerobotics.com:
+
+		- support *
+
+	* Desk.com
+
+
+	Problematic hosts in *doublerobotics.com:
+
+		- blog ¹
+		- stories ²
+		- www ³
+
+	¹ Mismatched, CN: posthaven.com
+	² Mixed css
+	³ Cloudfront/mismatched
+
+
+	Mixed content:
+
+		- css on stories from www.doublerobotics.com
+
+		- Videos, on blog from:
+
+			- eplayer.clipsyndicate.com ¹
+			- media.mtvnservices.com
+			- player.vimeo.com ²
+			- www.youtube.com ²
+
+	¹ Unsecurable
+	² Secured by us
+
+-->
+<ruleset name="Double Robotics.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="doublerobotics.com" />
+	<target host="developer.doublerobotics.com" />
+	<target host="drive.doublerobotics.com" />
+	<target host="secure.doublerobotics.com" />
+	<!--target host="stories.doublerobotics.com" /-->
+
+	<!--	Complications:
+				-->
+	<target host="support.doublerobotics.com" />
+
+		<exclusion pattern="^http://support\.doublerobotics\.com/+(?!favicon\.ico|images/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://support.doublerobotics.com/customer/en/portal/articles/1379820-double-specifications" />
+			<test url="http://support.doublerobotics.com/customer/en/portal/articles/1843456-how-to-setup-your-double" />
+			<test url="http://support.doublerobotics.com/customer/en/portal/topics/551578-quick-troubleshooting-tips/articles" />
+
+			<!--	-ve:
+					-->
+			<test url="http://support.doublerobotics.com/favicon.ico" />
+
+
+	<!--securecookie host="^\.doublerobotics\.com$" name="^source$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://support\.doublerobotics\.com/"
+		to="https://doublerobotics.desk.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

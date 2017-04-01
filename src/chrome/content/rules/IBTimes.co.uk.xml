@@ -1,0 +1,52 @@
+<!--
+	For other IBTimes coverage, see International-Business-Times.xml.
+
+
+	CDN buckets:
+
+		- wac.923F.edgecastcdn.net/??923F/
+
+			- d
+			- g
+
+
+	Nonfunctional hosts in *ibtimes.co.uk:
+
+		- d *
+		- g *
+
+	* 404; mismatched, CN: gp1.wac.edgecastcdn.net
+
+-->
+<ruleset name="IBTimes.co.uk" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ibtimes.co.uk" />
+	<target host="www.ibtimes.co.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="d.ibtimes.co.uk" />
+	<target host="g.ibtimes.co.uk" />
+
+		<exclusion pattern="^http://[dg]\.ibtimes\.co\.uk/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://d.ibtimes.co.uk/" />
+			<test url="http://g.ibtimes.co.uk/" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+	<!--	Protocol-relative embeds:
+						-->
+	<rule from="^https://(d|g)\.ibtimes\.co\.uk/"
+		to="http://$1.ibtimes.co.uk/" downgrade="1" />
+
+		<test url="https://d.ibtimes.co.uk/" />
+		<test url="https://g.ibtimes.co.uk/" />
+
+</ruleset>

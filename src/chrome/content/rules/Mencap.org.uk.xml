@@ -1,0 +1,85 @@
+<!--
+	Nonfunctional hosts in *mencap.org.uk:
+
+		- mylife ᵈ
+		- snap ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *mencap.org.uk:
+
+		- old ᵀ
+
+	ᵀ Blocks Tor users
+
+
+	These altnames do not exist:
+
+		- www.jobs.mencap.org.uk
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- mencap.org.uk
+		- .donate.mencap.org.uk
+		- jobs.mencap.org.uk
+		- old.mencap.org.uk
+		- .old.mencap.org.uk
+		- www.mencap.org.uk
+		- yournetwork.mencap.org.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	STS header includes includeSubdomains
+	for ^, donate, www, yournetwork
+
+-->
+<ruleset name="Mencap.org.uk">
+
+	<target host="mencap.org.uk" />
+	<target host="*.mencap.org.uk" />
+
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?:(?!donate\.|www\.|yournetwork\.)(?:[^./]+\.){2,}|(?:[^./]+\.)+(?:donate|www|yournetwork)\.|mylife\.|snap\.|tributefunds\.)mencap\.org\.uk/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.mencap.org.uk/" />
+			<test url="http://exists.not.mencap.org.uk/" />
+			<test url="http://really.host.mencap.org.uk/" />
+			<test url="http://honestly.not.mencap.org.uk/" />
+			<test url="http://this.host.donate.mencap.org.uk/" />
+			<test url="http://exists.not.donate.mencap.org.uk/" />
+			<test url="http://mylife.mencap.org.uk/" />
+			<test url="http://snap.mencap.org.uk/" />
+			<test url="http://tributefunds.mencap.org.uk/" />
+			<test url="http://www.tributefunds.mencap.org.uk/" />
+			<test url="http://this.host.www.mencap.org.uk/" />
+			<test url="http://exists.not.www.mencap.org.uk/" />
+			<test url="http://this.host.yournetwork.mencap.org.uk/" />
+			<test url="http://exists.not.yournetwork.mencap.org.uk/" />
+
+		<test url="http://donate.mencap.org.uk/" />
+		<test url="http://jobs.mencap.org.uk/" />
+		<test url="http://www.jobs.mencap.org.uk/" />
+		<test url="http://old.mencap.org.uk/" />
+		<test url="http://www.mencap.org.uk/" />
+		<test url="http://yournetwork.mencap.org.uk/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:old\.|yournetwork\.|www\.)?mencap\.org\.uk$" name="^SERVERID$" /-->
+	<!--securecookie host="^\.(?:donate|old)\.mencap\.org\.uk$" name="^SESS[\da-f]{32}$" /-->
+	<!--securecookie host="^jobs\.mencap\.org\.uk$" name="^CultureSystem(?:Cod|Languag)eID$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

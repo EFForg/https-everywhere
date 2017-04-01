@@ -1,7 +1,5 @@
 <!--
-	Other Vox Media rulesets:
-
-		- SB-Nation.xml
+	For other Vox Media coverage, see Vox.com.xml.
 
 
 	CDN buckets:
@@ -9,52 +7,63 @@
 		- d35lb3dl296zwu.cloudfront.net
 
 
-	Problematic subdomains:
-
-		- ^	(dropped)
-		- mobile *
-		- www *
-
-	* Works; mismatched, CN: *.a.ssl.fastly.net
+	www.theverge.com: Redirects to http
 
 
-	Mixed content:
+	Problematic hosts in *theverge.com:
 
-		- css on mobile and www from cdn[0-3].sbnation.com *
+		- mobile ᵈ
+		- status ᵈ
 
-		- Images on mobile and www from cdn[0-3].sbnation.com *
+	ᵈ Dropped, preemptable redirect
 
-		- Web bugs, on mobile and www from:
 
-			- apeture.displaymarketplace.com *
-			- pixel.quantserve.com *
-			- ox-d.sbnation.com *
-			- b.scorecardresearch.com *
+	Insecure cookies are set for these hosts:
 
-	* Secured by us
+		- www.theverge.com
 
 -->
-<ruleset name="The Verge (buggy)" default_off="breaks comments, mismatched">
+<ruleset name="The Verge.com (partial)">
 
-	<target host="theverge.com" />
-	<target host="*.theverge.com" />
-		<!--
-			Redrects to http.
-						-->
-		<!--exclusion pattern="^http://(?:www\.)?theverge\.com/(?:\w+/)?\d{4}/\d\d?/\d\d?/\d+/[\w-]+(?:$|\?)" /-->
+	<!--	Direct rewrites:
+				-->
+	<!--target host="theverge.com" /-->
 
+		<exclusion pattern="^http://www\.theverge\.com/comments/load_comments/" />
+
+			<test url="http://www.theverge.com/comments/load_comments/" />
+
+	<!--	Complications:
+				-->
+	<!--target host="mobile.theverge.com" /-->
+	<target host="status.theverge.com" />
 
 	<!--	Set by beacons.
 				-->
-	<securecookie host="^.*\.theverge\.com$" name=".+" />
+	<!--securecookie host="www\.theverge\.com$" name="^umbel_api_key$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
 
 
 	<!--	Doesn't redirect back, but updates fail to load when rewritten.
 
-	<rule from="https?://live\.theverge\.com/"
+	<rule from="^http://live\.theverge\.com/"
 		to="https://d35lb3dl296zwu.cloudfront.net/" /-->
 
-	<rule from="^http://(mobile\.|www\.)?theverge\.com/"
-		to="https://$1theverge.com/" />
+	<!--	Redirect keeps all:
+					-->
+	<!--rule from="^http://mobile\.theverge\.com/"
+		to="https://www.theverge.com/" /-->
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://status\.theverge\.com/[^?]*"
+		to="https://voxmedia.statuspage.io/" />
+
+		<test url="http://status.theverge.com/index.htm" />
+
+	<!--rule from="^http:"
+		to="https:" /-->
 
 </ruleset>

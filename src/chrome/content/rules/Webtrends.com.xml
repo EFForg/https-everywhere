@@ -5,12 +5,11 @@
 
 	Other Webtrends rulesets:
 
+		- Reinvigorate.net.xml
 		- Webtrendslive.com.xml
 
 
 	CDN buckets:
-
-		- denvua8xbp3vs.cloudfront.net
 
 		- optimize.webtrends.com.edgekey.net
 
@@ -19,48 +18,117 @@
 
 	Nonfunctional webtrends.com subdomains:
 
-		- (www.)	(kind folks at Webtrends saw fit to break us [now redirects to http])
-		- blog		(shows CentOS Apache 2 test page, CN: pweb2.wt.redux)
-		- engage *
-		- forums	(redirects to http, mismatched, CN: *.getsatisfaction.com)
-		- go		(shows app-q.marketo.com, mismatched, CN: *.marketo.com)
-		- help
-		- kb		(reset, CN: webtrends.com)
-		- optimize	(503, cert valid; hosted on Akamai)
-		- portal	(redirects to http, mismatched, CN: slotmatching5.salesforce.com)
-		- releasenotes *
-		- sharepoint *
+		- developer ¹
+		- go		(Marketo)
+		- kb		(Salesforce)
+		- optimize	(503)
 
-	* Redirects to http, mismatched, CN: webtrends.com
+	¹ Dropped
+
+
+	Problematic hosts in *webtrends.com:
+
+		- forums *
+
+	* Untrusted root
 
 
 	Fully covered subdomains:
 
+		- (www.)?
+		- ads
+		- analytics
+		- autodiscover
+		- blog
+		- cdn
+		- connect
+		- email
+		- engage
+		- generator
+		- help
+		- itservices
+		- m
+		- mobile
+		- ondemand
+		- ondemandui
 		- ots.optimize
+		- portal
+		- producthelp
+		- s
+		- sauth
+		- segmentssocial
+		- sharepoint
+		- releasenotes
+		- tagbuilder
+
+
+	auth: Dropped over http & https
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .webtrends.com
+		- blog.webtrends.com
+		- cdn.webtrends.com
+		- engage.webtrends.com
+		- help.webtrends.com
+		- itservices.webtrends.com
+		- m.webtrends.com
+		- portal.webtrends.com
+		- producthelp.webtrends.com
+		- releasenotes.webtrends.com
+		- sharepoint.webtrends.com
+		- www.webtrends.com
+		- .www.webtrends.com
 
 -->
-<ruleset name="Webtrends (partial)" platform="mixedcontent">
+<ruleset name="Webtrends.com (partial)">
 
-	<target host="reinvigorate.net" />
-	<target host="*.reinvigorate.net" />
-	<target host="*.webtrends.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="webtrends.com" />
+	<target host="ads.webtrends.com" />
+	<target host="analytics.webtrends.com" />
+	<target host="autodiscover.webtrends.com" />
+	<target host="blog.webtrends.com" />
+	<target host="cdn.webtrends.com" />
+	<target host="connect.webtrends.com" />
+	<target host="email.webtrends.com" />
+	<target host="engage.webtrends.com" />
+	<!--target host="forums.webtrends.com" /-->
+	<target host="generator.webtrends.com" />
+	<target host="help.webtrends.com" />
+	<target host="itservices.webtrends.com" />
+	<target host="m.webtrends.com" />
+	<target host="mobile.webtrends.com" />
+	<target host="ondemand.webtrends.com" />
+	<target host="ondemandui.webtrends.com" />
+	<target host="ots.optimize.webtrends.com" />
+	<target host="producthelp.webtrends.com" />
+	<target host="releasenotes.webtrends.com" />
+	<target host="s.webtrends.com" />
+	<target host="sauth.webtrends.com" />
+	<target host="segments.webtrends.com" />
+	<target host="social.webtrends.com" />
+	<target host="sharepoint.webtrends.com" />
+	<target host="tagbuilder.webtrends.com" />
+	<target host="www.webtrends.com" />
 
 
-	<securecookie host="^.*\.webtrendslive\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.webtrends\.com$" name="^(incap_ses_\d+_\d+|visid_incap_\d+)$" /-->
+	<!--securecookie host="^(blog|cdn|engage|help|itservices|portal|producthelp|releasenotes|sharepoint|www)\.webtrends\.com$" name="^___utmv[abm][A-Za-z]+$" /-->
+	<!--securecookie host="^help\.webtrends\.com$" name="^help\.webtrends\.com$" /-->
+	<!--securecookie host="^m\.webtrends\.com$" name="^ACOOKIE$" /-->
+	<!--securecookie host="^www\.webtrends\.com$" name="^_icl_current_language$" /-->
+	<!--securecookie host="^\.www\.webtrends\.com$" name="^wt_session$" /-->
+
+	<securecookie host="^\.webtrends\.com$" name="^(?:incap_ses_\d+|visid_incap)_\d+$" />
+	<securecookie host="^(?:blog|cdn|engage|help|itservices|m|portal|producthelp|releasenotes|sharepoint|\.?www)\.webtrends\.com$" name=".+" />
 
 
-	<!--	data are also on track.
-						-->
-	<rule from="^http://include\.reinvigorate\.net/"
-		to="https://denvua8xbp3vs.cloudfront.net/" />
-
-	<rule from="^http://(report\.|track\.|www\.)?reinvigorate\.net/"
-		to="https://$1reinvigorate.net/" />
-
-	<rule from="^http://(ads|analytics|s?auth|autodiscover|blackberry|(?:(?:apps\.)?uat\.)?connect|developer|email|generator|itservices|m|mobile|ondemand(?:ui)?|ots\.optimize|s|segments|social|tagbuilder)\.webtrends\.com/"
-		to="https://$1.webtrends.com/"/>
-
-	<rule from="^http://forums\.webtrends\.com/(assets/|favicon\.png)"
-		to="https://getsatisfaction.com/$1" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

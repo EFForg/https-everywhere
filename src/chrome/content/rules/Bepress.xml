@@ -1,11 +1,44 @@
-<ruleset name="bepress" platform="mixedcontent">
+<!--
+	Problematic hosts in *bepress.com:
 
-	<target host="bepress.com"/>
-	<target host="*.bepress.com"/>
+		- blog.digitalcommons *
 
-	<securecookie host="^(.*\.)?bepress\.com$" name=".*"/>
+	* Mismatched
 
-	<rule from="^http://(\w+\.)?bepress\.com/"
-		to="https://$1bepress.com/"/>
+
+	Mixed content:
+
+		- css on digitalcommons, law, www from fonts.googleapis.com *
+		- Images on digitalcommons from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="bepress.com (partial)">
+
+	<target host="bepress.com" />
+	<target host="*.bepress.com" />
+
+		<exclusion pattern="^http://[^/]+\.[^/]+\.bepress\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://blog.digitalcommons.bepress.com/" />
+			<test url="http://blog.digitalcommons.bepress.com/index.htm" />
+			<test url="http://blog.digitalcommons.bepress.com/index.php" />
+
+		<test url="http://assets.bepress.com/" />
+		<test url="http://digitalcommons.bepress.com/" />
+		<test url="http://law.bepress.com/" />
+		<test url="http://network.bepress.com/" />
+		<test url="http://works.bepress.com/" />
+		<test url="http://www.bepress.com/" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

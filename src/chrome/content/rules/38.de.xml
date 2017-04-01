@@ -1,37 +1,38 @@
 <!--
-	Problematic subdomains:
-
-		- ^
-
-			- [^?].* redirects to login 
+	NB: Server sends no certificate chain, see https://whatsmychaincert.com
 
 
-	Mixed content:
-
-		Videos from www.youtube-nocookie.com *
-
-	* Secured by us
+	^38.de: Mismatched
 
 
-	NB: We secure all resources, and thus
-	platform should be removed with Ffx 24.
+	STS header includes includeSubdomains
 
 -->
-<ruleset name="38.de" platform="mixedcontent">
+<ruleset name="38.de" default_off="missing certificate chain">
 
-	<target host="38.de" />
+	<!--	Direct rewrites:
+				-->
 	<target host="*.38.de" />
 
+	<!--	Complications:
+				-->
+	<target host="38.de" />
 
-	<securecookie host="^\.38\.de$" name=".+" />
+		<test url="http://www.38.de/" />
+	
+
+	<securecookie host="." name="." />
 
 
-	<!--	Server drops path:
+	<!--	Server drops path, args,
+		and forward slash:
 					-->
 	<rule from="^http://38\.de/.*"
 		to="https://www.38.de/" />
 
-	<rule from="^http://www\.38\.de/"
-		to="https://www.38.de/" />
+		<test url="http://38.de//index.php" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

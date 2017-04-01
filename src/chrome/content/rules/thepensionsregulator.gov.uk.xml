@@ -1,0 +1,77 @@
+<!--
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Problematic hosts in *thepensionsregulator.gov.uk:
+
+		- help ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- administration.thepensionsregulator.gov.uk
+		- education.thepensionsregulator.gov.uk
+		- help.thepensionsregulator.gov.uk
+		- login.thepensionsregulator.gov.uk
+		- trusteetoolkit.thepensionsregulator.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on automation from fonts.googleapis.com ˢ
+		- Images on forms, trusteetoolkit from www.thepensionsregulator.gov.uk ⁴
+		- Bugs on automation, forms, help from logw309.ati-host.net ʳ
+
+	⁴ Unsecurable <= 404
+	ʳ Unsecurable <= refused
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="The Pensions Regulator.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="administration.thepensionsregulator.gov.uk" />
+	<target host="automation.thepensionsregulator.gov.uk" />
+	<target host="education.thepensionsregulator.gov.uk" />
+	<target host="exchange.thepensionsregulator.gov.uk" />
+	<target host="forms.thepensionsregulator.gov.uk" />
+	<target host="helpfiles.thepensionsregulator.gov.uk" />
+	<target host="login.thepensionsregulator.gov.uk" />
+	<target host="secure.thepensionsregulator.gov.uk" />
+	<target host="trusteetoolkit.thepensionsregulator.gov.uk" />
+
+		<!--	$ 404s, so:
+					-->
+		<test url="http://forms.thepensionsregulator.gov.uk/subscribe.aspx" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://secure.thepensionsregulator.gov.uk/toolkit-survey.aspx" />
+
+	<!--	Complications:
+				-->
+	<target host="help.thepensionsregulator.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:automation|login)\.thepensionsregulator\.gov\.uk$" name="^__RequestVerificationToken$" /-->
+	<!--securecookie host="^(?:education|trusteetoolkit)\.thepensionsregulator\.gov\.uk$" name="^MoodleSession$" /-->
+	<!--securecookie host="^help\.thepensionsregulator\.gov\.uk$" name="^(?:identitytoken|vsid)$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://help\.thepensionsregulator\.gov\.uk/"
+		to="https://tpr.metafaq.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

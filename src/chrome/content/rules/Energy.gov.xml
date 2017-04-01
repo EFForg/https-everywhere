@@ -1,46 +1,254 @@
 <!--
+	NB: sp2.oata.../$ redirects to 401
+	?=> fetch check failure
+
 	For other U.S. government coverage, see US-government.xml.
 
 
 	Nonfunctional subdomains:
 
-		- (www.) *
-		- blogs *
-		- www.eere		(redirects to http)
-		- (www.)eereblogs	(shows www3)
+		- (www.)? ᵈ
+		- www.annualmeritreview ᵈ
+		- artificialretina ᵃ
+		- betterbuildingsinitiative ᵃ
+		- betterbuildingssolutioncenter ᵃ
+		- blogs ᵈ
 
-	* Blogs
+		- apps1.eere *
+		- apps2.eere ʳ
+		- apps3.eere ʳ
+		- buildingsdatabook.eere ᵈ
+
+		- (www.)?eereblogs ᵃ
+		- www.etec ᵈ
+		- genomics ᵃ
+		- genomicscience ᵃ
+		- hhs ʰ
+		- www.id ³
+		- inlcab ᵈ
+		- www.pgdpcab ᵈ
+		- science ʳ
+
+		- ars.science ʳ
+		- climatemodeling.science ᵃ
+		- doeic.science ⁴
+		- emforum.science ⁴
+		- pamsexternalhelp.science ʷ
+		- tes.science ᵃ
+
+		- solaramericacommunities ʳ
+		- (www.)?wipp **
+
+	* Redirects to www.eere.energy.gov
+	** Login page
+	³ 403
+	⁴ 404
+	ᵃ Shows another domain
+	ᵈ Dropped
+	ʰ Redirects to http
+	ʳ Refused
+	ʷ Weak ephemereal keys
 
 
-	Problematic subdomains:
+	Problematic hosts in *energy.gov:
 
-		- afdc		(cert only matches www.afdc)
+		- basc ᵃ
+		- catalyst ᵐ
+		- app.fossil ᵉ ᵘ
+		- www.fossil ᵐ
+		- minorityinternships ᵐ
+		- (www.)?shalegas ᴬ
+		- unconventional ᴬ
+
+	ᴬ Akamai / mismatched
+	ᵃ Shows www4.eere.energy.gov, preemptable redirect
+	ᵉ Expired
+	ᵐ Mismatched
+	ᵘ Untrusted root
 
 
 	Partially covered subdomains:
 
-		- (www.)afdc	(^ → www, some pages redirects to http)
+		- (www.)?afdc ʰ
+
+	ʰ Some pages redirect to http
 
 
-	Fully covered subdomains:
+	These altnames do not exist:
 
-		- www1.eere
-		- www3.eere
+		- heatingoil-test.fossil.energy.gov
+		- refinedproduct-test.fossil.energy.gov
+		- gnda2.energy.gov
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- www.afdc.energy.gov
+		- .buildingdata.energy.gov
+		- buildingenergyscore.energy.gov
+		- cleancities.energy.gov
+		- techportal.eere.energy.gov
+		- www.hydrogen.energy.gov
+		- .federalfleets.energy.gov
+		- mailinglist.science.energy.gov
+		- pamspublic.science.energy.gov
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- www.afdc, cleancities from www.eereblogs.energy.gov ⁴
+			- nnsa from $self *
+
+	⁴ Unsecurable <= 404
+	* See https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="Energy.gov (partial)">
 
-	<target host="*.energy.gov" />
-		<!--exclusion pattern="^http://(www\.)?afdc\.energy\.gov/(?!(\w+/)?(asset|image)s/)" /-->
+	<!--	Direct rewrites:
+				-->
+	<target host="afdc.energy.gov" />
+	<target host="www.afdc.energy.gov" />
+	<target host="buildingdata.energy.gov" />
+	<target host="buildingenergyscore.energy.gov" />
+	<target host="cleancities.energy.gov" />
+	<target host="eere.energy.gov" />
+
+	<target host="techportal.eere.energy.gov" />
+	<target host="www.eere.energy.gov" />
+	<target host="www1.eere.energy.gov" />
+	<target host="www4.eere.energy.gov" />
+	<target host="www5.eere.energy.gov" />
+
+	<target host="sp.eota.energy.gov" />
+	<target host="etrans.energy.gov" />
+	<target host="federalfleets.energy.gov" />
+	<target host="fossil.energy.gov" />
+	<target host="heatingoil.fossil.energy.gov" />
+	<target host="refinedproduct.fossil.energy.gov" />
+	<target host="gnda.energy.gov" />
+	<target host="hydrogen.energy.gov" />
+	<target host="www.hydrogen.energy.gov" />
+	<target host="nnsa.energy.gov" />
+	<target host="www.nnsa.energy.gov" />
+	<target host="sp2.eota.energy.gov" />
+	<target host="olc.energy.gov" />
+	<target host="rpsc.energy.gov" />
+	<target host="mailinglist.science.energy.gov" />
+	<target host="pamspublic.science.energy.gov" />
+	<target host="www1.energy.gov" />
+	<target host="www3.energy.gov" />
+
+	<!--	Complications:
+				-->
+	<target host="basc.energy.gov" />
+	<target host="www.fossil.energy.gov" />
+	<target host="minorityinternships.energy.gov" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.afdc\.energy\.gov/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?afdc\.energy\.gov/(?!/*(?:(?:\w+/)?(?:asset|image|pdf)s/|(?:prep|publications|widgets)(?:$|[?/])))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.afdc.energy.gov/calc/" />
+			<test url="http://www.afdc.energy.gov/case/" />
+			<test url="http://www.afdc.energy.gov/case/9" />
+			<test url="http://www.afdc.energy.gov/data/" />
+			<test url="http://www.afdc.energy.gov/data/10322" />
+			<test url="http://www.afdc.energy.gov/laws/11382" />
+			<test url="http://www.afdc.energy.gov/laws/6449" />
+			<test url="http://www.afdc.energy.gov/locator/" />
+			<test url="http://www.afdc.energy.gov/states/" />
+			<test url="http://www.afdc.energy.gov/states/mi" />
+			<test url="http://www.afdc.energy.gov/tools" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.afdc.energy.gov/assets/print-8338c21247074a3b58385cfa89b6cd21.css" />
+			<test url="http://www.afdc.energy.gov/images/station_loc_icon_29_r.png" />
+			<!--test url="http://www.afdc.energy.gov/pdfs/freedomcar_plan.pdf" /-->
+			<test url="http://www.afdc.energy.gov/prep/" /><!--	sets cookies without Secure -->
+			<test url="http://www.afdc.energy.gov/publications/" />
+			<test url="http://www.afdc.energy.gov/widgets/" /><!--	mixed images -->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.eere\.energy\.gov/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?eere\.energy\.gov/(?!/*i(?:mag|nclud)es/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.eere.energy.gov/financing/" />
+			<test url="http://www.eere.energy.gov/islandsplaybook/" />
+			<test url="http://www.eere.energy.gov/site_administration/privacy.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://eere.energy.gov/images/spacer.gif" />
+			<test url="http://www.eere.energy.gov/includes/reset.css" />
+
+		<!--	Mixed images:
+					-->
+		<!--test url="http://cleancities.energy.gov/blog" /-->
+		<!--test url="http://nnsa.energy.gov/aboutus/ourprograms/defenseprograms/futurescienceandtechnologyprograms/asc/ascnewsletters/ascmar13" /-->
+
+		<!--	$ prints "NOTICE", so:
+							-->
+		<test url="http://www1.eere.energy.gov/guidance/default.aspx?pid=2&amp;spid=1" />
+		<test url="http://www4.eere.energy.gov/seeaction/resources" />
+		<test url="http://www5.eere.energy.gov/office_eere/current_budget.php" />
+
+		<!--	$ redirects to ^energy.gov, so:
+							-->
+		<test url="http://fossil.energy.gov/facilities/netl" />
 
 
-	<securecookie host="^$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.afdc\.energy\.gov$" name="PHPSESSID$" /-->
+	<!--securecookie host="^\.(?:buildingdata|federalfleets)\.energy\.gov$" name="^BNI_" /-->
+	<!--securecookie host="^buildingenergyscore\.energy\.gov$" name="^(?:_session_id|TS[\da-f]{8})$" /-->
+	<!--securecookie host="^(?:cleancities|techportal\.eere|www\.hydrogen)\.energy\.gov$" name="^BNI_$" /-->
+	<!--securecookie host="^(?:mailinglist|pamspublic)\.science\.energy\.gov$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^(?!www\.afdc\.)\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?afdc\.energy\.gov/(?=(?:\w+/)?(?:asset|image)s/)"
-		to="https://www.afdc.energy.gov/" />
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://basc\.energy\.gov/+"
+		to="https://basc.pnnl.gov/" />
 
-	<rule from="^http://www(1|3)\.eere\.energy\.gov/"
-		to="https://www$1.eere.energy.gov/" />
+		<test url="http://basc.energy.gov/content/help" />
+
+	<rule from="^http://www\.fossil\.energy\.gov/"
+		to="https://fossil.energy.gov/" />
+
+	<!--	Redirect keeps path but not forward slash
+		nor args, and appends forward slash:
+							-->
+	<rule from="^http://minorityinternships\.energy\.gov/+([^?]*).*"
+		to="https://www.doemeispp.org/$1/" />
+
+		<test url="http://minorityinternships.energy.gov/blog" />
+		<test url="http://minorityinternships.energy.gov/faq" />
+		<test url="http://minorityinternships.energy.gov/home" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

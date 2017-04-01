@@ -1,18 +1,208 @@
 <!--
-	Nonfunctional:
+	French National Centre for Scientific Research
 
-		- www.insu.cnrs.fr	(ssl_error_rx_record_too_long)
+
+	Nonfunctional subdomains:
+
+		- cartedevoeux ¹
+		- www.cil ⁷
+		- (www.)?ccsd ²
+		- blog.ccsd ³
+		- heloise.ccsd ²
+		- support.ccsd ⁴
+		- devlog		Dropped
+		- www.dr6 ⁸
+		- crls.dsi ⁷
+		- dossiers.dsi ⁷
+		- ecoinfo ⁷
+		- edutheque ⁵
+		- www.insu.cnrs.fr *
+		- www.iscc ⁶
+		- calcul.math ¹
+		- images.math ⁷
+		- obtenir ⁶
+		- phototheque ³
+		- qualite-en-recherche *
+		- rbdd *
+		- www.urec		400
+		- videotheque ⁸
+		- wikiradio ³
+		- www ⁸
+		- www2 ⁸
+
+	¹ Shows default page
+	² Handshake fails
+	³ Refused
+	⁴ Plaintext reply
+	⁵ Redirects to www.artifica.fr
+	⁶ Redirects to www.dsi
+	⁷ Shows another domain
+	⁸ 403
+	* Redirects to http
+
+
+	Problematic subdomains:
+
+		- wayf.dsi ¹
+		- lpmmc.grenoble *
+		- intranet ¹
+		- igc.services *
+		- www.sg ²
+
+	¹ Insecure renegotiation
+	* Untrusted root
+	² Mismatched, CN: www.dgdr.cnrs.fr
+
+
+	Partially covered subdomains:
+
+		- www *
+
+	* $ 403s, some paths redirect to http
+
+
+	Fully covered subdomains:
+
+		- ccsdlib.ccsd
+		- ccsdlib-preprod.ccsd
+		- thumb.ccsd
+
+		- cnrsformation
+		- www.dgdr
+		- docutiles
+		- wayf.dsi
+		- emploi
+		- intranet
+		- lejournal
+		- www.sg	(→ www.dgdr)
+		- www2
+
+
+	^cnrs.fr doesn't exist.
+
+
+	These altnames don't exist:
+
+		- default.https.cnrs.fr
+		- igh.cnrs.fr
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- nouba.dsi.cnrs.fr
+		- support.dsi.cnrs.fr
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- emploi from $self ˢ
+			- emploi from www ˢ
+			- lpmmc.grenoble from $self
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="French National Centre for Scientific Research (partial)" default_off="self-signed">
+<ruleset name="CNRS.fr (partial)">
 
-	<target host="cnrs.fr" />
+	<!--	Direct rewrites:
+				-->
+	<target host="cas.cnrs.fr" />
+
+	<target host="ccsdlib.ccsd.cnrs.fr" />
+	<target host="ccsdlib-preprod.ccsd.cnrs.fr" />
+	<target host="thumb.ccsd.cnrs.fr" />
+	<target host="piwik-hal.ccsd.cnrs.fr" />
+
+	<target host="cnrsformation.cnrs.fr" />
+	<target host="www.dgdr.cnrs.fr" />
+	<target host="docutiles.cnrs.fr" />
+
+	<target host="aresu.dsi.cnrs.fr" />
+	<target host="infocentre.dsi.cnrs.fr" />
+	<target host="intranet.dsi.cnrs.fr" />
+	<target host="janus.dsi.cnrs.fr" />
+	<target host="labintel.dsi.cnrs.fr" />
+	<target host="nouba.dsi.cnrs.fr" />
+	<target host="sesame.dsi.cnrs.fr" />
+	<target host="support.dsi.cnrs.fr" />
+	<target host="vhphttp.dsi.cnrs.fr" />
+	<target host="wayf.dsi.cnrs.fr" />
+	<target host="web-ast.dsi.cnrs.fr" />
+	<target host="www.dsi.cnrs.fr" />
+
+	<target host="emploi.cnrs.fr" />
+	<!--target host="lpmmc.grenoble.cnrs.fr" /-->
+	<target host="www.igh.cnrs.fr" />
+	<target host="intranet.cnrs.fr" />
+	<target host="janus.cnrs.fr" />
+	<target host="labintel.cnrs.fr" />
+	<target host="lejournal.cnrs.fr" />
+	<!--target host="igc.services.cnrs.fr" /-->
+	<target host="sesame.cnrs.fr" />
+	<target host="www.simbad.cnrs.fr" />
+	<target host="tempo.cnrs.fr" />
+	<target host="www.utinam.cnrs.fr" />
 	<target host="www.cnrs.fr" />
 
-	<!--	!www doesn't work.
-		cnrs.fr/$ throws 403.
-		cnrs.fr/ins2i/$ redirects to www.	-->
-	<rule from="^http://(?:www\.)?cnrs\.fr/ins2i/(images|IMG|plugins|styles)/"
-		to="https://www.cnrs.fr/ins2i/$1/" />
+	<!--	Complications:
+				-->
+	<target host="www.sg.cnrs.fr" />
+
+		<!--	403:
+				-->
+		<!--exclusion pattern="http://www2?\.cnrs\.fr/$" /-->
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="http://www\.cnrs\.fr/ins2i/($|spip\.php)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.cnrs\.fr/(?!/*ins2i/(?:images|IMG|plugins|squelettes/css|styles)/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.cnrs.fr/aquitaine/" />
+			<test url="http://www.cnrs.fr/climate" />
+			<test url="http://www.cnrs.fr/dgds/" />
+			<test url="http://www.cnrs.fr/editions" />
+			<test url="http://www.cnrs.fr/in2p3" />
+			<test url="http://www.cnrs.fr/ins2i/spip.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.cnrs.fr/ins2i/images/logo-cnrs.gif" />
+			<test url="http://www.cnrs.fr/ins2i/plugins/auto/Lecteur_multimedia/player.css" />
+			<test url="http://www.cnrs.fr/ins2i/squelettes/css/enluminurestypo.css" />
+			<test url="http://www.cnrs.fr/ins2i/styles/print.css" />
+			<test url="http://www.cnrs.fr/ins2i/IMG/png/idris-web.png" />
+
+		<!--	404:
+				-->
+		<!--exclusion pattern="^http://www2\.cnrs\.fr/(band/3\.htm|presse/communique/|sites/)" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^nouba\.dsi\.cnrs\.fr$" name="^BIGipServer[\w-]+$" /-->
+	<!--securecookie host="^support\.dsi\.cnrs\.fr$" name="^WEBXI_ID$" /-->
+
+	<securecookie host="^(?:nouba|support)\.dsi\.cnrs\.fr$" name=".+" />
+
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://www\.sg\.cnrs\.fr/[^?]*"
+		to="https://www.dgdr.cnrs.fr/" />
+
+		<test url="http://www.sg.cnrs.fr/?" />
+		<test url="http://www.sg.cnrs.fr//" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

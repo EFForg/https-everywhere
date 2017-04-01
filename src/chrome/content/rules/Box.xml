@@ -1,35 +1,58 @@
 <!--
+	Other Box rulesets:
+
+		- Box_Cloud.com.xml
+
+
 	CDN buckets:
 
 		- boxemail.s3.amazonaws.com
 		- whatsnew.s3.amazonaws.com
+		- box.github.io
 
 
-	Fully covered domains:
+	Nonfunctional hosts in *box.com:
 
-		- box.com subdomains:
+		- opensource *
 
-			- (www.)
-			- blog
-			- developers.blog
-			- developers
-			- forum.developers	(→ getsatisfaction.com)
-			- *.files
-			- support
-			- *			(per-client subdomains)
-
-		- e[123].boxcdn.net
-		- s5.boxcdn.net
+	* Github
 
 -->
-<ruleset name="Box">
+<ruleset name="Box (partial)">
 
 	<target host="box.com" />
 	<target host="*.box.com" />
-	<target host="*.boxcdn.net" />
+
+		<exclusion pattern="^http://opensource\.box\.com/" />
+
+			<test url="http://opensource.box.com/" />
+
+	<target host="ak3.boxcdn.net" />
+	<target host="cdn01.boxcdn.net" />
+	<target host="e1.boxcdn.net" />
+	<target host="e2.boxcdn.net" />
+	<target host="e3.boxcdn.net" />
+	<target host="s5.boxcdn.net" />
+
+		<test url="http://cloud.app.box.com/" />
+		<test url="http://blog.box.com/" />
+		<test url="http://developers.blog.box.com/" />
+		<test url="http://cloud.box.com/" />
+		<test url="http://community.box.com/" />
+		<test url="http://developers.box.com/" />
+		<test url="http://forum.developers.box.com/" />
+		<test url="http://success.box.com/" />
+		<test url="http://support.box.com/" />
+		<test url="http://uofi.box.com/" />
+		<test url="http://www.box.com/" />
 
 
-	<securecookie host=".*\.box\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.boxcdn\.net$" name="^(?:__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^community\.box\.com$" name="^Lithium(?:UserInfo|UserSecure|Visitor)$" /-->
+
+	<securecookie host="." name="." />
 
 
 	<!--	302s like so.
@@ -37,10 +60,7 @@
 	<rule from="^http://forum\.developers\.box\.com/"
 		to="https://getsatisfaction.com/" />
 
-	<rule from="^http://([\w\.-]+\.)?box\.com/"
-		to="https://$1box.com/" />
-
-	<rule from="^http://(e[123]|s5)\.boxcdn\.net/"
-		to="https://$1.boxcdn.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

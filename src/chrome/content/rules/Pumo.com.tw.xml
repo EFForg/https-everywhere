@@ -1,0 +1,46 @@
+<!--
+	For rules causing false/broken MCB, see Pumo.com.tw-falsemixed.xml.
+
+
+	Problematic subdomains:
+
+		- webmail *
+
+	* Works; expired, self-signed
+
+
+	^: expired, self-signed, CN: webmail.pumo.com.tw
+
+
+	!www differs from www
+
+
+	Mixed content:
+
+		- css from $self *
+
+		- Images from $self *
+
+		- favicon from $self *
+
+	Secured by us
+
+-->
+<ruleset name="Pumo.com.tw (partial)">
+
+	<target host="www.pumo.com.tw" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<!--exclusion pattern="^http://(www\.)?pumo\.com\.tw/+(?!www/+([\w-]+/+)?(css/|favicon\.ico|images/|inc/|top/))" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.pumo\.com\.tw$" name="^JSESSIONID$" /-->
+
+
+	<rule from="^http://www\.pumo\.com\.tw/(?=/*www/+(?:[\w-]+/+)?(?:css/|favicon\.ico|images/|inc/|top/))"
+		to="https://www.pumo.com.tw/" />
+
+</ruleset>

@@ -1,28 +1,47 @@
 <!--
-	Poblematic subdomains:
-
-		- ^	(mismatched, CN: *.tribalfusion.com)
+	For other Exponential coverage, see Exponential.com.xml.
 
 
-	Fully covered subdomains:
+	^tribalfusion.com: Server sends no certificate chain, see https://whatsmychaincert.com
 
-		- (www.)	(^ → www)
-		- a
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .tribalfusion.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Tribal Fusion.com (partial)">
+<ruleset name="Tribal Fusion.com">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="a.tribalfusion.com" />
+	<target host="s.tribalfusion.com" />
+	<target host="www.tribalfusion.com" />
+
+	<!--	Complications:
+				-->
 	<target host="tribalfusion.com" />
-	<target host="*.tribalfusion.com" />
+
+		<test url="http://a.tribalfusion.com/i.match?p=&amp;u=&amp;google_error=3" />
+		<test url="http://a.tribalfusion.com/z/i.cid?c=&amp;d=&amp;page=landingPage" />
+		<test url="http://a.tribalfusion.com/z/i.match?p=&amp;u=&amp;google_error=3" />
+		<test url="http://s.tribalfusion.com/z/i.cid?c=&amp;d=&amp;page=" />
+		<test url="http://www.tribalfusion.com/adapp/login/expo9" />
 
 
-	<securecookie host="^(?:www)?\.tribalfusion\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.tribalfusion\.com$" name="^(?:ANON_ID|RealLoginName|SAccess|Tkt1|copyFlightId|tfre)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:www\.)?tribalfusion\.com/"
+	<rule from="^http://tribalfusion\.com/"
 		to="https://www.tribalfusion.com/" />
 
-	<rule from="^http://a\.tribalfusion\.com/"
-		to="https://a.tribalfusion.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

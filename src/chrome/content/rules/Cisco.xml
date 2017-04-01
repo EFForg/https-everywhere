@@ -1,61 +1,213 @@
 <!--
-	Nonfunctional subdomains:
+	Other Cisco rulesets:
+
+		- Cisco.mobi.xml
+		- Cisco_Connect_Cloud.com.xml
+		- Cisco_Learning_System.com.xml
+		- Cisco_Live.com.xml
+		- Sourcefire.com.xml
+		- Static-Cisco.com.xml
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/cisco-partnerpedia-production/
+
+
+	Nonfunctional hosts in *cisco.com:
 
 		- bam-prd1
-		- blogs		(cert: 184964-nc-web1.cisco.com, self-signed, expired; shows RHEL Apache test page)
+		- csc-stage ᵈ
+		- gblogs ⁴
 		- homecommunity
-		- newsroom	(times out)
+		- investor ʳ
+		- mkto ᴹ
+		- newsroom ᵈ
+
+	ᴹ Marketo / shows another domain
+	⁴ 404
+	ᵈ Dropped
+	ʳ Refused
 
 
-	Fully covered subdomains:
+	Problematic hosts in *cisco.com:
 
-		- csc-stage
-		- csc-test[1-4]
-		- learningnetwork
-		- supportforums
+		- csc-test2 ᵉ ᵐ ᵘ
+		- csc-test[3-5] ᵐ
+		- eir-stage ˢ
+		- home ᵈ
+		- homesupport ᵈ
+		- sso-marketplace ᵉ
+		- video ᵐ ˣ
+
+	ᵈ Dropped, preemptable redirect
+	ᵉ Expired
+	ᵐ Mismatched
+	ˢ Self-signed, CN: eir-stage
+	ᵘ Untrusted root
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 
-	Observed cookie domains:
+	Partially covered hosts in *cisco.com:
 
-		- csc-stage
-		- csc-test[1-4]
-		- learningnetwork
-		- supportforums
+		- csr *
+		- www
+
+	* Some pages redirect to http
+
+
+	These altnames don't exist:
+
+		- cloudsso3.cisco.com
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .cisco.com
+		- blogs.cisco.com
+		- communities.cisco.com
+		- jobs.cisco.com
+		- learningnetwork.cisco.com
+		- learningnetworkstore.cisco.com
+		- sso.cisco.com
+		- sso-marketplace.cisco.com
+		- tools.cisco.com
+		- www.cisco.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on video from www.cisco.com ˢ
+
+		- Images, on:
+
+			- armadaworkplace from cdn.ciscosmb.psdops.com ᵐ
+			- cisco-images, software from www.cisco.com ˢ
+			- csr, eir, solutionpartnerdashboard, www, www1, www2, www3 from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+	ᵐ Not secured by us <= mismatched
 
 -->
-<ruleset name="Cisco" default_off="Needs review">
+<ruleset name="Cisco.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="cisco.com" />
-	<target host="*.cisco.com" />
-		<exclusion pattern="^http://www\.cisco\.com/cgi-bin/login" />
+	<target host="apps.cisco.com" />
+	<target host="armadaworkplace.cisco.com" />
+	<target host="ausmbmarketplace.cisco.com" />
+	<target host="beli.cisco.com" />
+	<target host="blogs.cisco.com" />
+	<target host="chinasmbmarketplace.cisco.com" />
+	<target host="cisco-images.cisco.com" />
+	<target host="ciscobusinesslink.cisco.com" />
+	<target host="cloudsso.cisco.com" />
+	<target host="cloudsso1.cisco.com" />
+	<target host="cloudsso2.cisco.com" />
+	<target host="cms-smbmarketplace.cisco.com" />
+	<target host="communities.cisco.com" />
+	<target host="csc-test1.cisco.com" />
+	<target host="developer.cisco.com" />
+	<target host="eir.cisco.com" />
+	<target host="indiasmbmarketplace.cisco.com" />
+	<target host="jobs.cisco.com" />
+	<target host="learningnetwork.cisco.com" />
+	<target host="learningnetworkstore.cisco.com" />
+	<target host="marketplace.cisco.com" />
+	<target host="marketplaceondemand.cisco.com" />
+	<target host="ondemand.cisco.com" />
+	<target host="smbmarketplace.cisco.com" />
+	<target host="software.cisco.com" />
+	<target host="solucoespme.cisco.com" />
+	<target host="solucionespyme.cisco.com" />
+	<target host="solutionpartner.cisco.com" />
+	<target host="solutionpartnerdashboard.cisco.com" />
+	<!--target host="sso-marketplace.cisco.com" /-->
+	<target host="sso-prod0.cisco.com" />
+	<target host="sso-prod1.cisco.com" />
+	<target host="sso-prod2.cisco.com" />
+	<target host="sso-prod3.cisco.com" />
+	<target host="sso.cisco.com" />
+	<target host="supportforums.cisco.com" />
+	<target host="tools.cisco.com" />
+	<target host="tools1.cisco.com" />
+	<target host="tools2.cisco.com" />
+	<target host="tools3.cisco.com" />
+	<target host="www.cisco.com" />
+	<target host="www1.cisco.com" />
+	<target host="www2.cisco.com" />
+	<target host="www3.cisco.com" />
+
+	<!--	Complications:
+				-->
+	<target host="home.cisco.com" />
+	<target host="homesupport.cisco.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://csr\.cisco\.com/(?:casestudy|pages)/" /-->
 		<!--
-			Cisco redirection pages do not support HTTPS, so we exclude them.
-			They redirect to HTTPS secured pages, though.
-									-->
-		<exclusion pattern="^https?://(?:www\.)?cisco\.com/go" />
-	<target host="ciscoconnectcloud.com" />
-	<target host="www.ciscoconnectcloud.com" />
-	<target host="www.static-cisco.com" />
-
-
-	<securecookie host="^[chlst].*\.cisco\.com$" name=".*" />
-
-
-	<!--	Default: Replace with HTTPS.  Redirect at Logout
-		is still bugged, but the logout itself works.
-								-->
-	<rule from="^https?://(?:www\.)?cisco\.com/"
-		to="https://www.cisco.com/" />
-
-	<rule from="^http://(csc-stage|csc-test\d|home|homesupport|learningnetwork|sso|supportforums|tools)\.cisco\.com/"
-		to="https://$1.cisco.com/" />
-
-	<rule from="^http://(www\.)?ciscoconnectcloud\.com/"
-		to="https://$1ciscoconnectcloud.com/" />
-
-	<!--	!www doesn't exist.
+			Exceptions:
 					-->
-	<rule from="^http://www\.static-cisco\.com/"
-		to="https://www.static-cisco.com/" />
+		<exclusion pattern="^http://csr\.cisco\.com/(?!/*(?:$|\?|cdnorigin/|content/|favicon\.ico))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://csr.cisco.com/casestudy/be-the-bridge" />
+			<test url="http://csr.cisco.com/casestudy/flow" />
+			<test url="http://csr.cisco.com/casestudy/inveneo" />
+			<test url="http://csr.cisco.com/casestudy/veterans" />
+			<test url="http://csr.cisco.com/pages/education" />
+			<test url="http://csr.cisco.com/pages/environment" />
+			<test url="http://csr.cisco.com/pages/measure-impact" />
+			<test url="http://csr.cisco.com/pages/resources" />
+
+			<!--	-ve:
+					-->
+			<test url="http://csr.cisco.com/cdnorigin/content/images/layout/intwhitebg1025.png" />
+			<test url="http://csr.cisco.com/cdnorigin/content/scripts/Libs/fancybox/source/helpers/jquery.fancybox-thumbs.css" />
+			<test url="http://csr.cisco.com/cdnorigin/content/styles/idangerous.swiper.css" />
+			<test url="http://csr.cisco.com/cdnorigin/content/themes/base/jquery.ui.dialog.css" />
+			<test url="http://csr.cisco.com/cdnorigin/media/images/original/icon-pdf.png" />
+			<test url="http://csr.cisco.com/content/Scripts/Libs/fancybox/source/jquery.fancybox.css" />
+			<test url="http://csr.cisco.com/favicon.ico" />
+
+		<exclusion pattern="^http://www\.cisco\.com/cgi-bin/login" />
+
+			<test url="http://www.cisco.com/cgi-bin/login" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://tools.cisco.com/RPF/register/register.do?exit_url=" /-->
+
+		<!--	Formerly didn't work:
+						-->
+		<test url="http://www.cisco.com/go/smallbizsupport" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.cisco\.com$" name="^(?:CP_GUTC|ObSSOCookie|TOOLS-Loc)$" /-->
+	<!--securecookie host="^blogs\.cisco\.com$" name="^wpmp_switcher$" /-->
+	<!--securecookie host="^communities\.cisco\.com$" name="^(BIGipServerm\w+-\d+-pool|JSESSIONID|jive\.security\.context)$" /-->
+	<!--securecookie host="^jobs\.cisco\.com$" name="^(?:JSESSIONID|PERSIST)$" /-->
+	<!--securecookie host="^learningnetwork\.cisco\.com$" name="^(?:BIGipServer|jive\.(?:login\.ts|security\.context)$)" /-->
+	<!--securecookie host="^learningnetworkstore\.cisco\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^sso\.cisco\.com$" name="^ObFormLoginCookie$" /-->
+	<!--securecookie host="^sso-marketplace\.cisco\.com$" name="^PF$" /-->
+	<!--securecookie host="^(?:learningnetworkstore|tools|www)\.cisco\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\." name="^(?:_ga|s_v)" />
+	<securecookie host="^[bhjlst]" name="." />
+
+
+	<rule from="^http://home(?:support)?\.cisco\.com/+"
+		to="https://support.linksys.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

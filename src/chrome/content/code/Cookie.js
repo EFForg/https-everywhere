@@ -1,3 +1,5 @@
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+
 function Cookie(s, host) {
   this.parse(s, host);
 }
@@ -70,7 +72,7 @@ Cookie.prototype = {
     this.value = nv.join('=') || '';
     
     var n, v;
-    for each (p in parts) {
+    for (p of parts) {
       nv = p.split("=");
       switch (n = nv[0].toLowerCase()) {
         case 'expires':
@@ -143,6 +145,6 @@ Cookie.prototype = {
   get isDomain() { return this.domain && this.domain[0] == '.'; },
   policy: 0,
   status: 0,
-  QueryInterface: xpcom_generateQI([Ci.nsICookie, Ci.nsICookie2])
+  QueryInterface: XPCOMUtils.generateQI([Ci.nsICookie, Ci.nsICookie2])
   
 };

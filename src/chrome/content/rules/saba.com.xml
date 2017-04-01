@@ -1,0 +1,71 @@
+<!--
+	Nonfunctional hosts in *saba.com:
+
+		- www1 ᵃ
+
+	ᵃ Marketo / shows another domain
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- saba.com
+		- www.saba.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on help from fonts.googleapis.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Saba.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="saba.com" />
+	<target host="help.saba.com" />
+	<target host="support.saba.com" />
+	<target host="www.saba.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www1.saba.com" />
+
+		<exclusion pattern="^http://www1\.saba\.com/(?!/*(?:$|\?|css/|images/|rs/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www1.saba.com/MobileLearning5.html" />
+			<test url="http://www1.saba.com/PartnerLandingPages_become-a-partner.html" />
+			<test url="http://www1.saba.com/SummerSeriesCourse2.html" />
+			<test url="http://www1.saba.com/SummerSeriesCourse3.html" />
+			<test url="http://www1.saba.com/complimentaryassessment.html" />
+			<test url="http://www1.saba.com/dist/styles/main.css" />
+			<test url="http://www1.saba.com/five-steps-to-selecting-tms.html" />
+			<test url="http://www1.saba.com/index.html" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.saba\.com$" name="^(?:ABTestFieldId|ASP\.NET_SessionId)$" /-->
+
+	<securecookie host="^(?!www1\.)\w" name="." />
+
+
+	<rule from="^http://www1\.saba\.com/+(?:\?.*)?$"
+		to="https://www.saba.com/" />
+
+		<test url="http://www1.saba.com/?" />
+
+	<rule from="^http://www1\.saba\.com/"
+		to="https://na-sj07.marketo.com/" />
+
+		<test url="http://www1.saba.com/rs/196-PVO-328/images/BrittanyMcClain-100.png" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 
 # Make a list of the current top 1,000 certs to whitelist from the
 # Decentralized SSL Observatory's client submissions, to live in
@@ -19,7 +19,7 @@ cutoff = time.strftime("%Y-%m-%d", few_days_ago)
 q = """
 SELECT hex(reports.chain_fp), count, `Validity:Not After`, Subject 
 FROM reports JOIN chains       ON reports.chain_fp = chains.chain_fp 
-             JOIN parsed_certs ON reports.cert_fp  = parsed_certs.cert_fp 
+             JOIN new_parsed_certs ON reports.cert_fp  = new_parsed_certs.cert_fp
 WHERE count > 1000 AND 
       `Validity:Not After` > "%s" 
 GROUP BY reports.chain_fp 
@@ -30,9 +30,9 @@ LIMIT 1000
 dbc.execute(q)
 results = dbc.fetchmany(1000)
 
-sys.stderr.write("TOP 100:\n")
-for n in range(100):
-  sys.stderr.write(repr(results[n][1:4]) + '\n')
+sys.stderr.write("TOP 1000:\n")
+for n in range(1000):
+    sys.stderr.write(repr(results[n][1:4]) + results[n][0][:4]+ '\n')
 
 header = """
 // These are SHA256 fingerprints for the most common chains observed by the

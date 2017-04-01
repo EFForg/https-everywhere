@@ -1,0 +1,40 @@
+<!--
+	Server sends no certificate chain *
+
+	* See https://whatsmychaincert.com
+
+
+	www.gpgauth.org: Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- forums.gpgauth.org
+
+-->
+<ruleset name="gpgAuth.org" default_off="expired, missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="gpgauth.org" />
+	<target host="forums.gpgauth.org" />
+
+	<!--	Complications:
+				-->
+	<target host="www.gpgauth.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^forums\.gpgauth\.org$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^forums\.gpgauth\.org$" name=".+" />
+
+
+	<rule from="^http://www\.gpgauth\.org/"
+		to="https://gpgauth.org/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

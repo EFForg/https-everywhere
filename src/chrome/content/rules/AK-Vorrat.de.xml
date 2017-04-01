@@ -1,13 +1,43 @@
-<ruleset name="AK-Vorrat" platform="cacert mixedcontent">
+<!--
+	AK-Vorrat
 
+
+	Insecure cookies are set for these hosts:
+
+		- vorratsdatenspeicherung.de
+		- tiki.vorratsdatenspeicherung.de
+		- www.vorratsdatenspeicherung.de
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- (www.)? from www.openrightsgroup.org *
+			- (www.)? from wiki.vorratsdatenspeicherung.de *
+
+	* Secured by us
+
+-->
+<ruleset name="Vorratsdatenspeicherung.de" platform="cacert">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="vorratsdatenspeicherung.de" />
-	<target host="*.vorratsdatenspeicherung.de" />
+	<target host="tiki.vorratsdatenspeicherung.de" />
+	<target host="wiki.vorratsdatenspeicherung.de" />
+	<target host="www.vorratsdatenspeicherung.de" />
 
 
-	<securecookie host="^(?:wiki\.|www\.)?vorratsdatenspeicherung\.de$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?vorratsdatenspeicherung\.de$" name="^[\da-f]{32}$" /-->
+	<!--securecookie host="^tiki\.vorratsdatenspeicherung\.de$" name="^(?:PHPSESSID|PHPSESSIDCV|javascript_enabled_detect)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(wiki\.|www\.)?vorratsdatenspeicherung\.de/"
-		to="https://$1vorratsdatenspeicherung.de/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

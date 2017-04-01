@@ -1,0 +1,93 @@
+<!--
+	Walsall Metropolitan Borough Council
+
+	For rules causing MCB, see walsall.gov.uk-mixedcontent.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *walsall.gov.uk:
+
+		- cms ᵖ
+		- planning ᵈ
+
+	ᵈ Dropped
+	ᵖ Plaintext reply
+
+
+	Problematic hosts in *walsall.gov.uk:
+
+		- ^ ᵉ ᵐ
+		- www2 ˣ
+
+	ᵉ Expired
+	ᵐ Mismatched
+	ˣ Mixed css
+
+
+	Insecure cookies are set for these hosts:
+
+		- cmispublic.walsall.gov.uk
+		- pref.walsall.gov.uk
+		- www.walsall.gov.uk
+		- www4.walsall.gov.uk
+
+
+	Mixed content:
+
+		- css, on:
+		
+			- www2 from cms.walsall.gov.uk ᵖ
+			- www2 from $self ᵖ
+
+		- Images, on:
+		
+			- cmispublic, www2, www4 from cms.walsall.gov.uk ᵖ
+			- www4 from www.walsall.gov.uk ᵖ
+
+		- Bug on www2 from www.4fieldroad.co.uk ʳ
+
+	ᵖ Unsecurable <= plaintext reply
+	ʳ Unsecurable <= refused
+
+-->
+<ruleset name="Walsall.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="cmispublic.walsall.gov.uk" />
+	<target host="libcat.walsall.gov.uk" />
+	<target host="pref.walsall.gov.uk" />
+	<target host="www.walsall.gov.uk" />
+	<!--target host="www2.walsall.gov.uk" /-->
+	<target host="www4.walsall.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="walsall.gov.uk" />
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://www2.walsall.gov.uk/jobshop/JobDetails.asp?JobRef=RS31915" /-->
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://www4.walsall.gov.uk/Northgate/M3ScriptingEngine/process.aspx?pageid=50106" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^cmispublic\.walsall\.gov\.uk$" name="^(?:\.ASPXANONYMOUS|ASP\.NET_SessionId|language)$" /-->
+	<!--securecookie host="^(?:pref|www)\.walsall\.gov\.uk$" name="^__RequestVerificationToken$" /-->
+	<!--securecookie host="^www4\.walsall\.gov\.uk$" name="^(?:\.MVMONLINE|ASP\.NET_SessionId|MVMSession)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://walsall\.gov\.uk/"
+		to="https://www.walsall.gov.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

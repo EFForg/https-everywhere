@@ -1,7 +1,10 @@
 <!--
+	For other IBM coverage, see IBM.xml.
+
 	Other Silverpop rulesets:
 
 		- CoreMotives.com.xml
+		- mkt51.net.xml
 		- Pages05.net.xml
 
 
@@ -32,6 +35,7 @@
 
 	Fully covered domains:
 
+		- *.links.mkt41.net
 		- contenta.mkt1710.com	(→ d35xxa4d4yp600.cloudfront.net)
 		- (www.)pages03.net	(^ → www)
 
@@ -43,24 +47,68 @@
 			- www1
 
 
+	Insecure cookies are set for these hosts: ᶜ
+
+		- silverpop.com
+		- loginpilot.silverpop.com
+		- portal.silverpop.com
+		- visitorinsight.silverpop.com
+		- www.silverpop.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
 	Mixed content:
 
-		- css on www.silverpop.com from www.silverpop.com
+		- css on (www.)?silverpop.com from fast.fonts.com
+		- favicon on (www.)?silverpop.com from www.silverpop.com
 
-		- favicon on www.silverpop.com from www.silverpop.com
+		- Web bugs, on:
 
-		- Web bug on www.silverpop.com from portal.mxlogic.com *
+			- (www.)?silverpop.com from \d+.fls.doubleclick.net *
+			- (www.)?silverpop.com from portal.mxlogic.com *
 
-	* Secured by us
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="Silverpop (partial)">
 
-	<target host="content.mkt941.com" />
-	<target host="contenta.mkt1710.com" />
-	<target host="pages03.net" />
+	<!--	Direct rewrites:
+				-->
+	<target host="*.links.mkt41.net" />
 	<target host="www.pages03.net" />
-	<target host="*.vtrenz.net"/>
+
+	<target host="silverpop.com" />
+	<target host="loginpilot.silverpop.com" />
+	<target host="portal.silverpop.com" />
+	<target host="visitorinsight.silverpop.com" />
+	<target host="www.silverpop.com" />
+
+	<target host="gw.vtrenz.net"/>
+	<target host="login1.vtrenz.net"/>
+	<target host="www.vtrenz.net"/>
+	<target host="www1.vtrenz.net"/>
+
+		<exclusion pattern="^http://(?:[^./]+\.){2,}links\.mkt41\.net/" />
+
+			<test url="http://this.host.links.mkt41.net/" />
+			<test url="http://exists.not.links.mkt41.net/" />
+
+	<!--	Complications:
+				-->
+	<target host="contenta.mkt1710.com" />
+	<target host="content.mkt941.com" />
+	<target host="pages03.net" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?silverpop\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^loginpilot\.silverpop\.com$" name="^Silverpop_cookie$" /-->
+	<!--securecookie host="^portal\.silverpop\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^visitorinsight\.silverpop\.com$" name="^(?:PHPSESSID|Silverpop_cookie)$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
 	<rule from="^http://content\.mkt941\.com/"
@@ -69,10 +117,10 @@
 	<rule from="^http://contenta\.mkt1710\.com/"
 		to="https://d35xxa4d4yp600.cloudfront.net/" />
 
-	<rule from="^http://(www\.)?pages03\.net/"
+	<rule from="^http://pages03\.net/"
 		to="https://www.pages03.net/" />
 
-	<rule from="^http://(gw|login1|www1?)\.vtrenz\.net/"
-		to="https://$1.vtrenz.net/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

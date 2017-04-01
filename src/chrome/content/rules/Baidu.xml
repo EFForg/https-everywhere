@@ -1,56 +1,312 @@
 <!--
+	For rules causing MCB, see baidu.com-mixedcontent.xml.
 
-	Nonfunctional domains:
+	Other Baidu rulesets:
+		- Baidu_CN.xml	( Only avaiable in China. )
+		- Baifubao.com.xml
+		- bcebos.com.xml
+		- Bdimg.com.xml
+		- bdstatic.com.xml
+		- duapp.com.xml
+		- hao123img.com.xml
 
-
-		- baidu.com subdomains:
-
-			- eiv *
-			- gimg *
-			- img *
-			- imgsrc *
-			- bdimg.share *
-			- tieba *
-			- static.tieba *
-			- wap *
-
-		- cdn.iknow.bdimg.com *
-		- tb[12].bdstatic.com *
-
+	Nonfunctional hosts in *baidu.com:
+		- adm *
+		- antivirus ᵃ
+		- forum.antivirus ᵃ
+		- apistore *
+		- bbs.apistore *
+		- appsearchcdn *
+		- xuxuhong.baijia *
+		- zhengshangcanyue.baijia *
+		- ticket.bce *
+		- dl.browser *
+		- dl2.browser *
+		- en.browser ᶠ
+		- cleaner ᵃ
+		- dida *
+		- duokoo *
+		- e *
+		- echarts *
+		- eiv *
+		- fanyi *
+		- finance *
+		- gate		405
+		- gimg *
+		- global *
+		- help *
+		- hi *
+		- tb.himg *
+		- hiphotos *
+		- [a-h].hiphotos *
+		- home *
+		- index *
+		- is *
+		- italk *
+		- iwan
+		- jingyan *
+		- jp *
+		- lbsyun *
+		- bbs.lbsyun *
+		- libs *
+		- licai *
+		- r.m *
+		- map *
+		- mo *
+		- mp3 *
+		- music *
+		- news *
+		- shehui.news *
+		- op *
+		- ours *
+		- pcappstore *
+		- pos *
+		- cm.pos *
+		- wn.pos *
+		- qianbao *
+		- qingting ᶠ
+		- r *
+		- research ᵇ
+		- rj *
+		- share *
+		- bdimg.share *
+		- shouji *
+		- m.site ᶠ
+		- siteapp *
+		- m.siteapp *
+		- sparksecurity ᶠ
+		- su **
+		- t[012] *
+		- talent *
+		- static.tieba *
+		- top *
+		- tousu *
+		- translate *
+		- trends *
+		- tvg		(Shows default page)
+		- tvgame	(Shows tvg)
+		- usa ᵇ
+		- utility *
+		- wanba *
+		- wangmeng *
+		- wapmap *
+		- wapp *
+		- wubi *
+		- xteam *
+		- xueshu	(405)
+		- yingxiao *
+		- static.youhua **
+		- yunjiasu *
+		- yuqing *
+	ᵃ Shows another domain
+	ᵇ Shows default page
 	* Times out
+	ᶠ Handshake fails
+	** Internal error
 
+	Problematic hosts:
+		- baike ˣ
+		- bdl ²
+		- bs ᵉ
+		- hm ¹
+		- financestatic ²
+		- ir ²
+		- msh ²
+		- musicdata ²
+		- pcfaster ᵉ ¹ ᵘ
+		- tieba ˣ
+		- trends ᵉ
+		- list.video ²
+		- www.video ²
+		- wenku ˣ
+		- zoo ²
+	* Dropped
+	ᵉ Expired
+	¹ Insecure renegotiation
+	² Mismatched
+	³ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵘ Untrusted root
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
-	Problematic domains:
+	Partially covered hosts:
+		- baiku ˣ
+		- baishi *
+		- v *
+		- (www.)?video *
+		- list.video *
+	* Some pages redirect to http
+	ˣ Avoiding MCB
 
-		- developer.baidu.com	(mismatched, CN: openapi.baidu.com)
-		- apps.bdimg.com *
-		- apps[123].bdimg.com *
+	Insecure cookies are set for these domains and hosts: ᶜ
+		- baidu.com
+		- .baidu.com
+		- 8.baidu.com
+		- cas.baidu.com
+		- ce.baidu.com
+		- .m.baidu.com
+		- m1.baidu.com
+		- m5.baidu.com
+		- m7.baidu.com
+		- open2.baidu.com
+		- openapi.baidu.com
+		- pda.baidu.com
+		- www.baidu.com
+		- .www.baidu.com
+		- .yun.baidu.com
+		- zhanzhang.baidu.com
+		- zhitongche.baidu.com
+		- zoo.baidu.com
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
-	* Times out
+	Mixed content:
+		- css, on:
+			- adscdn
+			- baike from baike.bdimg.com
+			- baishi.baidu.com	( break the username and so on in the right-top of page. )
+			- wenku from static.wenku.bdimg.com
+		- Images, on:
+			- bdl from thumb-bdl.bj.bcebos.com ¹
+			- openapi from gimg ²
+			- openapi from apps.bdimg.com ¹
+			- m, m1, wap from m.baidu.com
+			- wenku from static.wenku.bdimg.com
+			- zhanzhang from op.baidu.com ²
+	¹ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+	* Not secured by us <= missing certificate chain
+	² Unsecurable <= dropped
 
-
-	Fully covered domains:
-
-		- baidu.com subdomains:
-
-			- developer	(→ openapi)
-			- openapi
-			- passport
-
-		- apps.bdimg.com	(→ openapi.baidu.com)
-		- apps\d.bdimg.com	(→ openapi.baidu.com)
-
+	Redirect to http:
+		baike.baidu.com	( some pages. )
+		pay.baidu.com
+		v,video	( part of them, like v.baidu.com/$ )
+		zns.baidu.com	https://znsv.baidu.com/customer_search/api/js?sid=8725453834531596266
 -->
+
 <ruleset name="Baidu (partial)">
 
-	<target host="*.baidu.com" />
-	<target host="*.bdimg.com" />
+	<!--	Direct rewrites:	-->
+	<target host="baidu.com" />
+	<target host="1.baidu.com" />
+	<target host="8.baidu.com" />
+	<target host="baifubao.baidu.com" />
+	<!--target host="baike.baidu.com" /-->
+	<!--target host="baishi.baidu.com" /-->
+	<target host="bce.baidu.com" />
+	<target host="login.bce.baidu.com" />
+	<!--target host="bs.baidu.com" /-->
+	<target host="cas.baidu.com" />
+	<target host="ce.baidu.com" />
+	<target host="cpro.baidu.com" />
+	<target host="datax.baidu.com" />
+		<test url="http://datax.baidu.com/x.js?si=6ab7a391c8d69b4f62b7c54b2d70919c&amp;dm=2345.com" />
+	<target host="developer.baidu.com" />
+	<target host="downapp.baidu.com" />
+		<test url="http://downapp.baidu.com/baiduzhidao/AndroidPhone/7.3.4/1/pcbutton/20161017221135/baiduzhidao_AndroidPhone_7-3-4_pcbutton.apk" />
+	<target host="flight.baidu.com" />
+	<target host="gaokao.baidu.com" />
+	<target host="gsp0.baidu.com" />
+	<target host="gsp1.baidu.com" />
+		<test url="http://gsp1.baidu.com/84oSdTum2Q5BphGlnYG/timg" />
+	<target host="gsp2.baidu.com" />
+	<target host="gsp3.baidu.com" />
+	<target host="gss0.baidu.com" />
+		<test url="http://gss0.baidu.com/6qVTsjikBxIFlNKl8IuM_a/browse_static/https/index/widget/video/videoItem_change/getmore_d9e112a.gif" />
+	<target host="gss1.baidu.com" />
+	<target host="gss2.baidu.com" />
+	<target host="gss3.baidu.com" />
+	<target host="haoma.baidu.com" />
+	<target host="hm.baidu.com" />
+		<test url="http://hm.baidu.com/h.js" />
+	<target host="image.baidu.com" />
+	<target host="img.baidu.com" />
+		<test url="http://img.baidu.com/hunter/alog/alog.min.js" />
+	<target host="m.baidu.com" />
+	<target host="m1.baidu.com" />
+	<target host="m2.baidu.com" />
+	<target host="m3.baidu.com" />
+	<target host="m4.baidu.com" />
+	<target host="m5.baidu.com" />
+	<target host="m6.baidu.com" />
+	<target host="m7.baidu.com" />
+	<target host="m8.baidu.com" />
+	<target host="m9.baidu.com" />
+	<target host="m10.baidu.com" />
+	<target host="m11.baidu.com" />
+	<target host="m12.baidu.com" />
+	<target host="m13.baidu.com" />
+	<target host="api.map.baidu.com" />
+	<target host="muzhi.baidu.com" />
+	<target host="open2.baidu.com" />
+	<target host="openapi.baidu.com" />
+	<target host="pan.baidu.com" />
+	<target host="passport.baidu.com" />
+	<target host="pcs.baidu.com" />
+	<target host="c.pcs.baidu.com" />
+	<target host="d.pcs.baidu.com" />
+	<target host="pda.baidu.com" />
+	<target host="qianbao.baidu.com" />
+	<target host="shoujiweishi.baidu.com" />
+	<target host="sp0.baidu.com" />
+	<target host="ss0.baidu.com" />
+	<target host="su.baidu.com" />
+	<!--target host="v.baidu.com" /-->
+	<!--target host="video.baidu.com" /-->
+	<target host="wallet.baidu.com" />
+	<target host="wap.baidu.com" />
+	<target host="wapbaike.baidu.com" />
+	<!--target host="wenku.baidu.com" /-->
+	<target host="www.baidu.com" />
+	<target host="yun.baidu.com"/>
+	<target host="zhanzhang.baidu.com" />
+	<target host="zhitongche.baidu.com" />
 
+	<!--	Complications:	-->
 
-	<rule from="^https?://(?:(?:developer|openapi)\.baidu|apps\d?\.bdimg)\.com/"
-		to="https://openapi.baidu.com/" />
+	<target host="downpack.baidu.com" />
+		<exclusion pattern="^http://downpack\.baidu\.com/$" />
+		<test url="http://downpack.baidu.com/doctorthumb_AndroidPhone_1012469d.apk" />
 
-	<rule from="^http://passport\.baidu\.com/"
-		to="https://passport.baidu.com/" />
+	<target host="bdl.baidu.com" />
+	<rule from="^http://bdl\.baidu\.com/"
+		to="https://bdltest.duapp.com/" />
 
+	<target host="financestatic.baidu.com" />
+	<rule from="^http://financestatic\.baidu\.com/"
+		to="https://8.baidu.com/" />
+
+	<target host="tieba.baidu.com" />
+		<!--	MCB:	-->
+		<exclusion pattern="^http://tieba\.baidu\.com/(?!mo/|mo_wowap_pb/)" />
+		<test url="http://tieba.baidu.com/kb/" />
+		<test url="http://tieba.baidu.com/zjstv/" />
+		<test url="http://tieba.baidu.com/mo/" />	
+		<test url="http://tieba.baidu.com/mo_wowap_pb/" />
+
+	<target host="zhidao.baidu.com" />
+		<!--	MCB:	-->
+		<exclusion pattern="^http://zhidao\.baidu\.com/s/" />
+		<exclusion pattern="^http://zhidao\.baidu\.com/zhima/" />
+		<exclusion pattern="^http://zhidao\.baidu\.com/zt/" />
+		<test url="http://zhidao.baidu.com/s/8year/#home" />
+		<test url="http://zhidao.baidu.com/s/activity/index.html" />
+		<test url="http://zhidao.baidu.com/s/gglft/" />
+		<test url="http://zhidao.baidu.com/s/quality/" />
+		<test url="http://zhidao.baidu.com/zhima/" />
+		<test url="http://zhidao.baidu.com/s/zhidaodata1.html" />
+		<test url="http://zhidao.baidu.com/zt/ikapp/index.html" />
+		<test url="http://zhidao.baidu.com/zt/liulanqi/index.html" />
+
+	<target host="cpro.baidustatic.com"/>
+		<test url="http://cpro.baidustatic.com/cpro/ui/c.js" />
+		<test url="http://cpro.baidustatic.com/cpro/ui/f.js" />
+	<target host="cpro2.baidustatic.com"/>
+		<test url="http://cpro2.baidustatic.com/cpro/ui/c.js" />
+		<test url="http://cpro2.baidustatic.com/cpro/ui/f.js" />
+	<target host="dup.baidustatic.com"/>
+		<test url="http://dup.baidustatic.com/js/ds.js" />
+	<target host="ubmcmm.baidustatic.com"/>
+		<test url="http://ubmcmm.baidustatic.com/media/v1/0f000a-JueNIFPmTOLDxY6.jpg" />
+		<test url="http://ubmcmm.baidustatic.com/media/v1/0f0005lK65iQdUtS56W--f.swf" />
+
+	<rule from="^http:" to="https:" />
 </ruleset>

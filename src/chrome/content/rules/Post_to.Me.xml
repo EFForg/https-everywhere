@@ -1,19 +1,37 @@
 <!--
-	Problematic subdomains:
+	Problematic hosts in *postto.me:
 
 		- cat	(503)
+
+
+	Insecure cookies are set for these domains:
+
+		- .postto.me
 
 -->
 <ruleset name="Post to.Me">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="postto.me" />
-	<target host="*.postto.me" />
+	<target host="www.postto.me" />
+
+	<!--	Complications:
+				-->
+	<target host="cat.postto.me" />
 
 
-	<securecookie host="^\.postto\.me$" name=".+" />
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.postto\.me$" name="^(__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:cat\.|(www\.))?postto\.me/"
-		to="https://$1postto.me/" />
+	<rule from="^http://cat\.postto\.me/"
+		to="https://postto.me/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

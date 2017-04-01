@@ -1,0 +1,88 @@
+<!--
+	Newcastle upon Tyne City Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *newcastle.gov.uk:
+
+		- democracy ᵈ
+		- library ᵖ
+		- www2 ᵈ
+
+	ᵈ Dropped
+	ᵖ Plaintext reply
+
+
+	^newcastle.gov.uk: Dropped
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .newcastle.gov.uk
+		- buslanepayments.newcastle.gov.uk
+		- .community2.newcastle.gov.uk
+		- envirocall.newcastle.gov.uk
+		- myaccount.newcastle.gov.uk
+
+
+	Mixed content:
+
+		- css on jobs from fonts.googleapis.com ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Newcastle.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="buslanepayments.newcastle.gov.uk" />
+	<target host="community2.newcastle.gov.uk" />
+	<target host="envirocall.newcastle.gov.uk" />
+	<target host="envirocallservice.newcastle.gov.uk" />
+	<target host="jobs.newcastle.gov.uk" />
+	<target host="myaccount.newcastle.gov.uk" />
+	<target host="newcastlecollection.newcastle.gov.uk" />
+	<target host="parking.newcastle.gov.uk" />
+	<target host="publicaccessapplications.newcastle.gov.uk" />
+	<target host="securenscb.newcastle.gov.uk" />
+	<target host="www.newcastle.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="newcastle.gov.uk" />
+
+		<!--	200 default page over http, 403 over
+			https => would make fetch test fail.
+
+			This makes us stand out more, but that's
+			better than this ruleset being disabled.
+								-->
+		<exclusion pattern="http://buslanepayments\.newcastle\.gov\.uk/$" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://buslanepayments.newcastle.gov.uk/live-3sc-user/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:\.community2)?\.newcastle\.gov\.uk$" name="^SESS[\da-f]{32}$" /-->
+	<!--securecookie host="^buslanepayments\.newcastle\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^envirocall\.newcastle\.gov\.uk$" name="^WWV_CUSTOM-F[\d_]+$" /-->
+	<!--securecookie host="^myaccount\.newcastle\.gov\.uk$" name="^(?:JSESSIONID|cookietest)$" /-->
+
+	<!--	No known problems with wildcard
+		cookies, just being cautious.
+						-->
+	<securecookie host="^(?!\.newcastle\.gov\.uk$)." name="." />
+
+
+	<rule from="^http://newcastle\.gov\.uk/"
+		to="https://www.newcastle.gov.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

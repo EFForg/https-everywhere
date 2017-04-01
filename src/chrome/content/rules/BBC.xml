@@ -1,10 +1,16 @@
 <!--
+	For rules covering resources which do not secure
+	mixed content, see bbc.co.uk-resources.xml.
+
 	For problematic rules, see BBC-mismatches.xml.
 
 
 	Other BBC rulesets:
 
 		- BBC.com.xml
+		- BBC_Children_In_Need.xml
+		- bbci.co.uk.xml
+		- bbcimg.co.uk.xml
 
 
 	CDN buckets:
@@ -22,16 +28,6 @@
 		- bbcmedia.fcod.llnwd.net
 
 
-	Problematic domains:
-
-		- polling.bbc.co.uk	(akamai)
-		- wwwimg.bbc.co.uk	(redirects to http)
-		- ichef.bbci.co.uk *
-		- news.bbcimg.co.uk *
-		- tile[1-4].bbcimg.co.uk	(works, akamai)
-
-	* 503, akamai
-
 
 	Nonfunctional domains:
 
@@ -40,191 +36,144 @@
 			- cdnedge *
 			- confluence.dev	(handshake error)
 			- ftp.kw	(401, self-signed)
-			- open.live
-			- m **
-
-
+			- m ʰ
+			- news ʳ
 			- newsbeta	(no https)
-
 			- newsforums
-
-			- newsimg
-				- When rewritten news, doesn't redirect back to newsimg..
-				- When rewritten to www, redirects to http =(
-				- Not on static.
-
 			- newsvote
 			- playlists **
 			- r **
 
-			- stats **
-
 		- (www.)bbcamerica.com	(reset)
-		- feeds.bbci.co.uk *
-		- open.bbci.co.uk *
 
 	* 503, akamai
+	ʰ Redirects to http
 	** Refused
+	ʳ Refused
 
 
-	Problematic domains:
+	Problematic hosts in *bbc.co.uk:
 
-		- news.bbc.co.uk	(refused)
-					When rewritten to www, redirects back to news
-		- emp.bbci.co.uk *
-		- feeds.bbci.co.uk *
-		- node1.bbcimg.co.uk	(works, akamai)
+		- careerssearch ᵐ
 
-	* 503, akamai
+	ᵐ Mismatched
 
 
-	Partially covered domains:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
-		- open.live.bbc.co.uk
+		- .bbc.co.uk
+		- careershub.bbc.co.uk
+		- iplayerhelp.external.bbc.co.uk
 
-			- crossdomain.xml causes videos to fail; "media selection request failed"
-
-		- news.bbc.co.uk	(→ beta.bbc.co.uk)
-
-		- emp.bbci.co.uk	(→ www.bbc.co.uk)
-		- feeds.bbci.co.uk	(→ www.bbc.co.uk)
-
-
-	Fully covered domains:
-
-		- www.live.bbc.co.uk
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
 
-		- Flash on www from airdownload.adobe.com
-
-		- Scripts:
-
-			- On www from www *
-			- On www from static.bbci.co.uk *
-			- On www from node1.bbcimg.co.uk *
-
-		- css:
-
-			- On www from static.bbci.co.uk *
-			- On www from node1.bbcimg.co.uk *
-
-		- Images:
-
-			- On www from ichef.bbci.co.uk *
-			- On www from static.bbci.co.uk *
-
-		- Web bug on www from stats.bbc.co.uk **
-
-	* Secured by us
-	** Unsecurable, good riddance for MCB
-
-
-	NB: iplayer has been excluded so as to work around broken MCB.
+		- css on careerssearch from $self
+		- Images on careerssearch from $self
+		- favicon on careerssearch from $self
 
 -->
-<ruleset name="BBC (partial)">
+<ruleset name="BBC.co.uk (partial)">
 
-	<target host="sa.bbc.com" />
 	<target host="bbc.co.uk" />
-	<target host="*.bbc.co.uk" />
-		<!--
-			Causes censorship bypass to fail.
-								-->
-		<exclusion pattern="^http://www\.bbc\.co\.uk/iplayer/episode/\w+/(?:hd/)?\w+/?(?:$|\?)" />
-		<!--
-			Avoid false mixed content until MCB works properly:
-										-->
-		<exclusion pattern="^http://(?:www\.)?bbc\.co\.uk/iplayer(?:/?\?|/?$|/radio(?:$|[?/]))" />
-		<!--
-			https://trac.torproject.org/projects/tor/ticket/9136
-
-			Breaks archived radio streams:
-
-				"This content doesn't seem to be working"
-										-->
-		<exclusion pattern="^http://www\.bbc\.co\.uk/iplayer/playlist/\w+$" />
-		<exclusion pattern="^http://open\.live\.bbc\.co\.uk/(?!mediaselector/|wurfldemi/(?:network|useragent)\.jsonp|weather/feeds/\w\w/maps/forecast\.json)" />
+	<target host="ssc.api.bbc.co.uk" />
+	<target host="careers.bbc.co.uk" />
+	<target host="careershub.bbc.co.uk" />
+	<!--target host="downloads.bbc.co.uk" /-->
 	<target host="iplayerhelp.external.bbc.co.uk" />
-	<target host="*.bbci.co.uk" />
-	<!--	Akamai	-->
-	<target host="*.bbcimg.co.uk" />
+	<target host="id.bbc.co.uk" />
+	<!--target host="open.live.bbc.co.uk" /-->
+	<!--target host="www.live.bbc.co.uk" /-->
+	<!--target host="newsimg.bbc.co.uk" /-->
+	<!--target host="polling.bbc.co.uk" /-->
+	<target host="sa.bbc.co.uk" />
+	<target host="ssl.bbc.co.uk" />
+	<!--target host="static.bbc.co.uk" /-->
+	<target host="stats.bbc.co.uk" />
+	<target host="www.bbc.co.uk" />
 
+		<!--
+		<test url="http://downloads.bbc.co.uk/errors/btm.gif" />
+		-->
+		<test url="http://id.bbc.co.uk/users/help/" />
+		<!--
+		<test url="http://newsimg.bbc.co.uk/shared/img/v4/skip_to_top_arrow.gif" />
+		<test url="http://sa.bbc.co.uk/bbc/bbc/s?name=&amp;ns_m2=&amp;ns_setsiteck=&amp;ml_name=&amp;ml_version=&amp;blq_js_enabled=&amp;blq_s=&amp;blq_r=&amp;blq_v=&amp;blq_e=&amp;app_name=&amp;app_version=&amp;app_edition=&amp;is_app=&amp;page_type=&amp;pal_route=&amp;app_type=&amp;language=&amp;pal_webapp=&amp;prod_name=" />
+		-->
+		<test url="http://ssl.bbc.co.uk/musicautoclearindies" />
+		<!--
+		<test url="http://static.bbc.co.uk/id/0.34.96/img/bbcid_orb_signin_light.png" />
+		-->
+		<test url="http://stats.bbc.co.uk/o.gif" />
 
-	<!--	Tracking cookie set by sa	-->
-	<securecookie host="^\.bbc\.co\.uk$" name="^s1$" />
-	<!--
-		Can any of these be secured safely?
-							-->
-	<!--securecookie host="^\.bbc\.co\.uk$" name="^(BBC-UID|ckns_policy|BGUID|sa_labels|X-AB-iplayer-emp31|X-AB-iplayer-qunit1)" /-->
-	<securecookie host="^(?:iplayerhelp\.external|ssl)\.bbc\.co\.uk$" name=".+" />
-
-
-	<rule from="^http://sa\.bbc\.com/"
-		to="https://bbc.112.2o7.net/" />
-
-	<rule from="^http://(?:www(?:img)?\.)?bbc\.co\.uk/(aboutthebbc/override\.css|a-z/style|cbbc/(?:all/homepage-background|img|structure)|help/404_img|help/style|inc|nfp/holepunched/api|news/special/shared|player/emp|survey/pulse|tv/js|view/1_0_\d\d/wide|weather/locales)/"
-		to="https://beta.bbc.co.uk/$1/" />
-
-	<rule from="^http://feeds\.bbc\.co\.uk/modules/comments/"
-		to="https://www.bbc.co.uk/modules/comments/" />
-
-	<!--	ichef: Images.
+		<!--	Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.bbc\.co\.uk/(?:arts$|blogs/tv/$|contact$|faqs$|faqs/assets/|id/status\?|iplayer$|news/(?:\d+$|contact-us/editorial$|privacy/$|science_and_environment$|uk-\d+$|weather$))" /-->
+		<!--
+			Exceptions:
 					-->
-	<rule from="^http://(ichef|www\.live|sa|static)\.bbci?\.co\.uk/"
-		to="https://$1.bbc.co.uk/" />
-
-	<rule from="^http://(?:www\.)?bbc\.co\.uk/(emp/|favicon\.ico$|glow/|guidance/|iplayer/|podcasts/assets/)"
-		to="https://www.bbc.co.uk/$1" />
-
-	<rule from="^http://(?:www\.)?bbc\.co\.uk/programmes/branding/"
-		to="https://ssl.bbc.co.uk/programmes/branding/" />
-
-	<rule from="^http://www\.bbc\.co\.uk/webwise/static/"
-		to="https://static.bbc.co.uk/webwise/" />
-
-	<rule from="^http://(beta|careers|downloads|iplayerhelp\.external|id|ssl)\.bbc\.co\.uk/"
-		to="https://$1.bbc.co.uk/" />
-
-	<rule from="^http://open\.live\.bbc\.co\.uk/"
-		to="https://open.live.bbc.co.uk/" />
-
-	<rule from="^http://news\.bbc\.co\.uk/(css|furniture|stylesheets|js/app/av/emp)/"
-		to="https://beta.bbc.co.uk/$1/" />
-
-	<rule from="^http://newsimg\.bbc\.co\.uk/(media/images|shared/img)/"
-		to="https://beta.bbc.co.uk/$1/" />
-
-	<rule from="^http://news\.bbcimg\.co\.uk/media/images/"
-		to="https://ssl.bbc.co.uk/media/images/" />
-
-	<rule from="^http://node[12]\.bbcimg\.co\.uk/(crossdomain\.xml$|glow/|iplayer/)"
-		to="https://www.bbc.co.uk/$1" />
-
-	<rule from="^http://node\d\.bbcimg\.co\.uk/(podcasts|tv/p2)/"
-		to="https://beta.bbc.co.uk/$1/" />
-
-	<rule from="^http://polling\.bbc\.co\.uk/modules/onairpanel/include/"
-		to="https://ssl.bbc.co.uk/modules/onairpanel/include/" />
-
-	<!--	This may be needed again in the future:
+		<!--exclusion pattern="^http://(?:www\.)?bbc\.co\.uk/(?!/*(?:$|\?|favicon\.ico|travel(?:$|[?/])))" /-->
+		<!--
+			Reduce non-Tor distinguishability:
 							-->
-	<!--rule from="^https://www\.bbc\.co\.uk/iplayer/episode/(\w+/(?:hd/)?[\w\.]+/?(?:$|\?))"
-		to="http://www.bbc.co.uk/iplayer/episode/$1" downgrade="1" /-->
+		<exclusion pattern="^http://(?:www\.)?bbc\.co\.uk/(?!/*(?:$|\?|travel(?:$|[?/])))" />
 
-	<rule from="^http://emp\.bbci\.co\.uk/emp/(bump|releases)/"
-		to="https://www.bbc.co.uk/emp/$1/" />
+			<!--	+ve:
+					-->
+			<test url="http://www.bbc.co.uk/arts" />
+			<test url="http://www.bbc.co.uk/blogs/internet/entries/f6f50d1f-a879-4999-bc6d-6634a71e2e60" />
+			<test url="http://www.bbc.co.uk/blogs/tv/" />
+			<test url="http://www.bbc.co.uk/contact" />
+			<test url="http://www.bbc.co.uk/faqs" />
+			<test url="http://www.bbc.co.uk/faqs/assets/faqs-site/resources/icon-search-black.png" />
+			<test url="http://www.bbc.co.uk/id/status" />
+			<test url="http://www.bbc.co.uk/iplayer" />
+			<test url="http://www.bbc.co.uk/news/20039682" />
+			<test url="http://www.bbc.co.uk/news/contact-us/editorial" />
+			<test url="http://www.bbc.co.uk/news/science_and_environment" />
+			<test url="http://www.bbc.co.uk/news/uk-politics-eu-referendum-36304729" />
+			<test url="http://www.bbc.co.uk/privacy/" />
+			<test url="http://www.bbc.co.uk/weather" />
 
-        <!--    iPlayer points here, but only when fetched via https.
+			<!--	-ve:
+					-->
+			<test url="http://www.bbc.co.uk/?" />
+			<!--
+			<test url="http://www.bbc.co.uk/favicon.ico" />
+			-->
+			<test url="http://www.bbc.co.uk/travel" />
+			<test url="http://www.bbc.co.uk/travel/8714914/incidents/road" />
 
-	<rule from="^https://open\.bbci\.co\.uk/buzz/shares($|\?)"
-		to="http://open.bbci.co.uk/buzz/shares$1" downgrade="1" /-->
+		<!--	Avoid potential XHR or flash policy problems:
+									-->
+		<!--exclusion pattern="^http://(?!(?!(?:careers|careershub|iplayerhelp\.external|id|sa|ssl|www)\.bbc\.co\.uk/).+\.(?:bmp|css|gifv?|ico|jpe?g|pdf|png|svg|tiff?|ttf|woff)(?:$|\?))" /-->
 
-	<rule from="^http://news\.bbcimg\.co\.uk/"
-		to="https://beta.bbc.co.uk/" />
+			<!--	+ve:
+					-->
+			<!--
+			<test url="http://open.live.bbc.co.uk/crossdomain.xml" />
+			<test url="http://open.live.bbc.co.uk/weather/feeds/en/2650225/3dayforecast.rss" />
+			<test url="http://polling.bbc.co.uk/appconfig/iplayerradio/tablet/android/2.0.0/info.html" />
+			<test url="http://www.live.bbc.co.uk/crossdomain.xml" />	secure="false"
+			-->
 
-	<rule from="^http://tile\d\.bbcimg\.co\.uk/"
-		to="https://static.bbc.co.uk/" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.bbc\.co\.uk$" name="^(?:BBC-UID|BGUID|IDENTITY_SESSION|locserv|s1)$" /-->
+	<!--securecookie host="^careershub\.bbc\.co\.uk$" name="^X-Mapping-" /-->
+	<!--securecookie host="^iplayerhelp\.external\.bbc\.co\.uk$" name="^identitytoken$" /-->
+
+	<!--	BGUID: Tracking cookie set by stats
+		a1: Tracking cookie set by sa
+						-->
+	<securecookie host="^\." name="^(?:BGUID|s1)$" />
+	<securecookie host="^[^.w]" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

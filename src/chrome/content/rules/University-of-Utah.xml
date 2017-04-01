@@ -1,4 +1,9 @@
-<!--	!functional:
+<!--
+	University of Utah
+
+
+	Nonfunctional hosts in *utah.edu:
+
 		- (www.)
 		- (www.)admissions
 		- (www.)bannerserve
@@ -7,6 +12,7 @@
 		- (www.)campusrec
 		- (www.)careers
 		- (www.)commuterservices
+		- (www.)?csbs		(Refused)
 		- (www.)diversity
 		- (www.)employment
 		- (www.)events	(ssl_error_rx_record_too_long)
@@ -25,49 +31,55 @@
 		- (www.)ucard	(ssl_error_rx_record_too_long)
 		- umail		(prompts for pw)
 		- (www.)unews
--->
-<ruleset name="University of Utah (partial)" platform="mixedcontent">
 
-	<target host="dailyutahchronicle.com"/>
-	<target host="www.dailyutahchronicle.com"/>
-	<target host="uofulaw.org"/>
-	<target host="www.uofulaw.org"/>
+
+	Problematic domains:
+
+		- (www.)?dailyutahchronicle.com ¹
+
+		- in *utah.edu:
+
+			- muss.alumni ²
+
+	¹ Self-signed
+	² Expired
+
+-->
+<ruleset name="Utah.edu (partial)">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="fbs.admin.utah.edu"/>
-	<target host="alumni.utah.edu"/>
-	<target host="muss.alumni.utah.edu"/>
+	<!--target host="muss.alumni.utah.edu"/-->
 	<target host="www.alumni.utah.edu"/>
-	<target host="cs.utah.edu"/>
+	<target host="www-misc.chpc.utah.edu"/>
+	<target host="embed.cs.utah.edu" />
 	<target host="www.cs.utah.edu"/>
-	<target host="csbs.utah.edu"/>
 	<target host="support.csbs.utah.edu"/>
-	<target host="www.csbs.utah.edu"/>
+
+	<target host="ftp.flux.utah.edu" />
+	<target host="web.flux.utah.edu" />
+	<target host="www.flux.utah.edu" />
+
 	<target host="go.utah.edu"/>
 	<target host="gradschool.utah.edu"/>
 	<target host="www.gradschool.utah.edu"/>
-	<target host="law.utah.edu"/>
-	<target host="www.law.utah.edu"/>
 	<target host="www.umail.utah.edu"/>
 	<target host="unid.utah.edu"/>
 
+	<!--	Complications:
+				-->
+	<target host="alumni.utah.edu"/>
+	<target host="cs.utah.edu"/>
 
-	<securecookie host="^(.*\.)?dailyutahchronicle\.com$" name=".*"/>
-	<securecookie host="^(.*\.)?utah\.edu$" name=".*"/>
+
+	<securecookie host="." name="."/>
 
 
-	<rule from="^http://(www\.)?dailyutahchronicle\.com/"
-		to="https://$1dailyutahchronicle.com/"/>
-
-	<rule from="^http://(www\.)?uofulaw\.org/"
-		to="https://$1uofulaw.org/"/>
-
-	<rule from="^http://(fbs\.admin|muss\.alumni|www-misc\.chpc|(www\.)?csbs|go|(www\.)?gradschool|www\.umail|unid)\.utah\.edu/"
-		to="https://$1.utah.edu/"/>
-
-	<rule from="^http://(?:www\.)?(cs|alumni)\.utah\.edu/"
+	<rule from="^http://(cs|alumni)\.utah\.edu/"
 		to="https://www.$1.utah.edu/"/>
 
-	<!--	presents uofulaw.org cert	-->
-	<rule from="^http://(?:www\.)?law\.utah\.edu/"
-		to="https://uofulaw.org/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

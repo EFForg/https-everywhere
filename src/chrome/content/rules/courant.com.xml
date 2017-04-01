@@ -1,0 +1,103 @@
+<!--
+	For rules causing false/broken MCB, see courant.com-falsemixed.xml.
+
+	For other Tribune coverage, see Tribune.xml.
+
+
+	CDN buckets:
+
+		- courant.chictrib.netdna-cdn.com
+
+
+	Nonfunctional hosts in *courant.com:
+
+		- ^ ᵈ
+		- articles ʳ
+		- classifieds ʳ
+		- www ʰ
+
+	ᵈ Times out
+	ʰ Redirects to http
+	ʳ Refused
+
+
+	Problematic hosts in *courant.com:
+
+		- advertise ᵐ ˢ
+		- digitaledition ᵐ
+		- store ˣ
+		- tearsheets ᵐ
+
+	ᵐ Mismatched
+	ˢ Self-signed
+	ˣ Mixed css and iframe, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	These altnames do not exist:
+
+		- www.placeanad.courant.com
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- advertising.courant.com
+		- .store.courant.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- iframe on store from $self ˢ
+		- css on store from courant.chictrib.netdna-cdn.com ˢ
+		- Images on store from courant.chictrib.netdna-cdn.com ˢ
+		- Bug on digitaledition from reports.pagesuite-professional.co.uk ᵃ
+
+	ᵃ Unsecurable <= shows another domain
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Courant.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="advertising.courant.com" />
+	<target host="checkout.courant.com" />
+	<target host="myaccount2.courant.com" />
+	<target host="paypanel.courant.com" />
+	<target host="placeanad.courant.com" />
+	<!--target host="store.courant.com" /-->
+
+	<!--	Complications:
+				-->
+	<target host="advertise.courant.com" />
+
+	<!--target host="courant.chictrib.netdna-cdn.com" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^advertising\.courant\.com$" name="^Trib$" /-->
+	<!--securecookie host="^\.store\.courant\.com$" name="^frontend$" /-->
+
+	<securecookie host="^\." name="^(?:_gat?$|_gat_|optimizely)" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://advertise\.courant\.com/[^?]*"
+		to="https://placeanad.courant.com/" />
+
+		<test url="http://advertise.courant.com/index.htm" />
+
+	<!--rule from="^http://courant\.chictrib\.netdna-cdn\.com/"
+		to="https://courant-chictrib.netdna-ssl.com/" /-->
+
+		<!--test url="http://courant.chictrib.netdna-cdn.com/js/am/revslider/rs-plugin/css/settings.css" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

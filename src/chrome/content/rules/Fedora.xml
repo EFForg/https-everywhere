@@ -2,91 +2,65 @@
 	For problematic rules, see Fedora_Project-problematic.xml.
 
 
-	Other Fedora Project rulesets:
+	Nonfunctional hosts in *fedoraproject.org:
 
-		- Fedora_Hosted.org.xml
+		- infrastructure ²
+		- kojipkgs ²
+		- ols ³
+		- pki ¹
+		- planet ³
+		- publictest04 ³
+		- torrent ³
 
-
-	Nonfunctional domains:
-
-		- \w+.fedorapeople.org		(unique domain per person)
-
-		- fedoraproject.org subdomains:
-
-			- directory ¹
-			- infrastructure ²
-			- kojipkgs ²
-			- ols ³
-			- pki ¹
-			- planet ³
-			- publictest04 ³
-			- torrent ³
-
-	¹ Redirects to www.aeolusproject.org; mismatched, CN: *.aeolusproject.org
 	² Dropped
 	³ Refused
+	¹ Shows another domain
 
 
-	Problematic domains:
+	Problematic hosts in fedoraproject.org:
 
-		- pkgs.fedoraproject.org	(works, self-signed)
-		- koji.fedoraproject.org	(works mostly, self-signed)
+		- blogs
+		- directory	Mismatched
+		- koji		(works mostly, self-signed)
+		- arm.koji	Untrusted root
+		- pkgs		Mismatched
 
 
-	Fully covered domains:
+	Insecure cookies are set for these hosts:
 
-		- fedoraproject.org subdomains:
-
-			- (www.)
-			- admin
-			- alt
-			- apps
-			- archives
-			- ask
-			- badges
-			- blogs
-			- boot
-			- dl
-			- docs
-			- download
-			- get
-			- join
-			- lists
-			- meetbot
-			- mirrors
-			- paste
-			- retrace
-			- spins
-			- start
-			- talk		
+		- bodhi.fedoraproject.org
+		- directory.fedoraproject.org
 
 
 	Mixed content:
-
-		- css on start from ^ ¹
 
 		- Images, on:
 
 			- badges from infrastructure ²
 			- badges from cdn.libravatar.org ³
-			- start from ^ ³
-			- start from www ³
 
-	¹ Secured by us, seems to affect printing only
 	² Unsecurable, doesn't trip MCB
 	³ Secured by us
 
 -->
-<ruleset name="Fedora Project">
-
+<ruleset name="Fedora Project.org">
 	<target host="fedoraproject.org" />
-	<target host="*.fedoraproject.org" />
+	<target host="alt.fedoraproject.org" />
+	<target host="archives.fedoraproject.org" />
+	<target host="boot.fedoraproject.org" />
+	<target host="dl.fedoraproject.org" />
+	<target host="docs.fedoraproject.org" />
+	<target host="download.fedoraproject.org" />
+	<target host="get.fedoraproject.org" />
+	<target host="join.fedoraproject.org" />
+	<target host="mirrors.fedoraproject.org" />
+	<target host="paste.fedoraproject.org" />
+	<target host="people.fedoraproject.org" />
+	<target host="retrace.fedoraproject.org" />
+	<target host="start.fedoraproject.org" />
+	<target host="www.fedoraproject.org" />
 
+	<securecookie host="." name="." />
 
-	<securecookie host="^(?:.*\.)?fedoraproject\.org$" name=".+" />
-
-
-	<rule from="^http://((?:admin|alt|apps|archives|ask|badges|blogs|boot|dl|docs|download|get|join|lists|meetbot|mirrors|paste|retrace|spins|start|talk|www)\.)?fedoraproject\.org/"
-		to="https://$1fedoraproject.org/" />
-
+	<rule from="^http:"	to="https:" />
 </ruleset>

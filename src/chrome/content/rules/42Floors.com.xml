@@ -1,0 +1,48 @@
+<!--
+	Nonfunctional subdomains:
+
+		- blog *
+
+	* WP Engine
+
+
+	Insecure cookies are set for these hosts:
+
+		- 42floors.com
+		- www.42floors.com
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- ^ from blog.42floors.com ¹
+			- ^ from \d.gravatar.com ²
+
+	¹ Unsecurable <= WP Engine
+	² Secured by us
+
+-->
+<ruleset name="42Floors.com (partial)">
+
+	<target host="42floors.com" />
+	<target host="cdn.42floors.com" />
+	<target host="images.42floors.com" />
+	<target host="www.42floors.com" />
+
+		<!--	Mixed images:
+					-->
+		<test url="http://42floors.com/blog/cre/landlords-are-trying-not-to-rent-startups" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?42floors\.com$" name="^SERVERID$" /-->
+
+	<securecookie host="^(?:www\.)?42floors\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

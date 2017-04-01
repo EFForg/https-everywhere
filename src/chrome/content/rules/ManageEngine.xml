@@ -2,53 +2,54 @@
 	For other Zoho coverage, see Zoho.xml.
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *manageengine.com:
 
-		- www.manageengine.jp	(shows zoho.jp; mismatched, CN: www.zoho.jp)
-		- blogs.manageengine.jp	(403, valid cert)
+		- pl ᵈ
+		- se ᵈ
 
-
-	Problematic domains:
-
-		- training.manageengine.com	(shows www)
-
-
-	Fully covered domains:
-
-		- manageengine.com subdomains:
-
-			- (www.)
-			- blogs
-			- community
-			- forums
-			- ondemand
-			- pitstop *
-			- store
-
-	* Server is configured for rc4 only
+	ᵈ Dropped
 
 
 	Mixed content:
 
+		- css on www from fonts.googleapis.com ¹
+
 		- Images, on:
 
-			- blogs.manageengine.com from blogs.manageengine.com ¹
-			- forums.manageengine.com from uploads.zohocorp.com ²
+			- blogs from blogs.manageengine.com ¹
+			- forums from uploads.zohocorp.com ²
+			- newsletter from tools.manageengine.com ¹
+			- newsletter from www.manageengine.com ¹
 
 	¹ Secured by us
 	² Unsecurable
 
 -->
-<ruleset name="ManageEngine">
+<ruleset name="ManageEngine.com (partial)">
 
 	<target host="manageengine.com" />
-	<target host="*.manageengine.com" />
+	<target host="blogs.manageengine.com" />
+	<target host="community.manageengine.com" />
+	<target host="forums.manageengine.com" />
+	<target host="newsletter.manageengine.com" />
+	<target host="ondemand.manageengine.com" />
+	<target host="partners.manageengine.com" />
+	<target host="pitstop.manageengine.com" />
+	<target host="store.manageengine.com" />
+	<target host="tools.manageengine.com" />
+	<target host="training.manageengine.com" />
+	<target host="www.manageengine.com" />
+
+		<!--	Mixed css from fonts.googleapis.com:
+								-->
+		<test url="http://www.manageengine.com/training/training.html" />
 
 
-	<securecookie host="^forums\.manageengine\.com$" name=".+" />
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://((?:blogs|community|forums|ondemand|pitstop|store|www)\.)?manageengine\.com/"
-		to="https://$1manageengine.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

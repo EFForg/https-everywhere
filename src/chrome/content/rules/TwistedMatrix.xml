@@ -1,36 +1,58 @@
-<ruleset name="TwistedMatrix">
 <!--
 	As of 2012-06-11, known unprotected subdomains are...
-        Using ghs-ssl.googlehosted.com certificate:
-        - glyph
-        - washort
-        - labs
-        - radix
-        Using *.ik.nu certificate:
-        - planet
-        Not listening on HTTPS:
-        - svn
-        - cvs
-        - wolfwood
-        Non-web/unused subdomains:
-        - ftp
-        - mail
-        - smtp
-        - oloid
-        - irc
-        - projects
-        - xpdev
+
+	Using ghs-ssl.googlehosted.com certificate:
+
+		- washort
+		- labs
+		- radix
+
+	Using *.ik.nu certificate:
+
+		- planet
+
+	Not listening on HTTPS:
+
+		- svn
+		- cvs
+		- wolfwood
+
+	Non-web/unused subdomains:
+
+		- ftp
+		- mail
+		- smtp
+		- oloid
+		- irc
+		- projects
+		- xpdev
+
+
+	Problematic hosts in *twistedmatrix.com:
+
+		- buildbot *
+
+	* Mismatched, CN: www.twistedmatrix.com
+
 -->
-  <target host="twistedmatrix.com" />
-  <target host="www.twistedmatrix.com" />
-  <target host="buildbot.twistedmatrix.com" />
-  <target host="java.twistedmatrix.com" />
-  <target host="saph.twistedmatrix.com" />
-  <target host="speed.twistedmatrix.com" />
+<ruleset name="TwistedMatrix.com">
 
-  <rule from="^http://(www\.)?twistedmatrix\.com/"
-          to="https://twistedmatrix.com/" />
+	<target host="twistedmatrix.com" />
+	<target host="glyph.twistedmatrix.com" />
+	<target host="java.twistedmatrix.com" />
+	<target host="saph.twistedmatrix.com" />
+	<target host="speed.twistedmatrix.com" />
+	<target host="www.twistedmatrix.com" />
 
-  <rule from="^http://(java|saph|speed)\.twistedmatrix\.com/"
-          to="https://$1.twistedmatrix.com/" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^twistedmatrix\.com$" name="(trac_form_token|trac_session)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

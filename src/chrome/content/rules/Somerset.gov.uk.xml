@@ -1,0 +1,91 @@
+<!--
+	Somerset County Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *somerset.gov.uk:
+
+		- amv ⁴
+		- carewithus ⁴
+		- www.governorservices ʳ
+		- lea-owa ᵈ
+		- r4l ⁴
+		- swineflu ⁴
+		- webapp1 ⁴
+		- www1 ʳ
+
+	⁴ 404
+	ᵈ Dropped
+	ʳ Refused
+
+
+	^somerset.gov.uk: 404
+	www.somerset.gov.uk: Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	These altnames don't exist:
+
+		- autodiscover.educ.somerset.gov.uk
+		- lea-eas.somerset.gov.uk
+
+
+	Insecure cookies are set for these hosts:
+
+		- secure.somerset.gov.uk
+
+-->
+<ruleset name="Somerset.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="autodiscover.somerset.gov.uk" />
+	<target host="emsonline.somerset.gov.uk" />
+	<target host="mysite.somerset.gov.uk" />
+	<target host="slp.somerset.gov.uk" />
+	<target host="slp1.somerset.gov.uk" />
+	<target host="slp2.somerset.gov.uk" />
+	<target host="slp3.somerset.gov.uk" />
+	<target host="slp4.somerset.gov.uk" />
+	<target host="secure.somerset.gov.uk" />
+	<!--target host="www.somerset.gov.uk" /-->
+
+	<!--	Complications:
+				-->
+	<!--target host="somerset.gov.uk" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.somerset\.gov\.uk/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(?:www\.)?somerset\.gov\.uk/+(?![Ee]asy[Ss]ite(?:[Ww]eb)?/)" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://www.somerset.gov.uk/enp/" /-->
+			<!--test url="http://www.somerset.gov.uk/organisation/" /-->
+			<!--test url="http://www.somerset.gov.uk/yoursomerset/" /-->
+
+			<!--	-ve:
+					-->
+			<!--test url="http://somerset.gov.uk/EasySiteWeb/EasySite/StyleData/Somerset_gov_uk_MASTER/Images/bck_tab_bottom_border.gif" /-->
+			<!--test url="http://www.somerset.gov.uk/EasySiteWeb/style/faux/css/ux.net.css" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^secure.somerset.gov.uk$" name="^ASP.NET_SessionId$" /-->
+
+	<!--securecookie host="^(?!www\.)\w" name="." /-->
+	<securecookie host="^\w" name="." />
+
+
+	<!--rule from="^http://somerset\.gov\.uk/"
+		to="https://www.somerset.gov.uk/" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

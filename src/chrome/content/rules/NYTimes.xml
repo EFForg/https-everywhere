@@ -1,11 +1,15 @@
 <!--
-	NB: https prevents comment threads from
-	loading, with or https-everywhere.
-
-
 	Other New York Times rulesets:
 
+		- Boston.com.xml
+		- INYT.com.xml
+		- NYT.com.xml
+		- New_York_Times.com.xml
+		- O0bc.com.xml
 		- The_Boston_Globe.xml
+
+
+	nytim.es is handled in Bit.ly_vanity_domains.xml.
 
 
 	CDN buckets:
@@ -15,80 +19,248 @@
 			- pimage.timespeople.nytimes.com
 
 		- pnytimes.chartbeat.net
-		- js.nyt.com.edgesuite.net
 		- graphics478.nytimes.com.edgesuite.net
 		- json8.nytimes.com.edgesuite.net
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *nytimes.com:
 
-		- (www.)nytco.com
+		- eedition ⁴
+		- dealbook.on ʳ
+		- spiderbites ᵈ
+		- topics ʳ
 
-		- nytimes.com subdomains:
-
-			- firstlook.blogs *
-			- dealbook
-			- documents
-			- dealbook.on
-			- firstlook *
-			- query		(redirects to www, valid cert)
-			- topics
-
-	* No https
+	⁴ 404
+	ᵈ Dropped
+	ʳ Refused
 
 
-	Problematic domains:
+	Problematic hosts in *nytimes.com:
 
-		- pimage.timespeople.nytimes.com	(amazonaws)
+		- assets ¹
+		- documents ᶜ ᵐ
+		- jobs ᶜ
+		- jobmarket ʰ
+		- json8 ʰ
+		- wt.o ᵐ
+		- pimage.timespeople ¹
+		- travel ᵈ
+
+	¹ AmazonAWS / mismatched
+	ᶜ Missing certificate chain
+	ᵈ Dropped, preemptable redirect
+	ʰ Redirects to http
+	ᵐ Mismatched
+	⁴ Mixed css
 
 
-	Fully covered domains:
+	Mixed content:
 
-		- nytimes.com subdomains:
+		- Images, on:
 
-			- et
-			- graphics
-			- markets.on
-			- meter-svc
-			- tagx
-			- pimage.timespeople	(→ amazonaws)
+			- international from graphics.nytimes.com ˢ
+			- query from i1.nyt.com
+			- query from static01.nyt.com ˢ
+			- query from graphics.nytimes.com ˢ
 
+		- favicon on jobs from static01.nyt.com ˢ
 
-	This ruleset currently prevents comment threads loading.  Example:
+		- Ads, on:
 
-		nytimes.com/2013/07/07/us/in-secret-court-vastly-broadens-powers-of-nsa.html?target=comments
+			- international from static.nytimes.com ˢ
+			- homedelivery, query from wt.o.nytimes.com ᵐ
+			- query from up.nytimes.com ˢ
+
+	ᵐ Not secured by us <= mismatched
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="NYTimes (breaks comments)" default_off="comment threads fail to load" platform="mixedcontent">
+<ruleset name="NYTimes.com">
 
-	<target host="newyorktimes.com" />
-	<target host="www.newyorktimes.com" />
-	<target host="nyt.com" />
-	<target host="*.nyt.com" />
+	<!--	Direct rewrites:
+				-->
 	<target host="nytimes.com" />
-	<target host="*.nytimes.com" />
-		<exclusion pattern="^http://(?:www\.)?nytimes\.com/(?:200[0-4]|info)/" />
-		<exclusion pattern="^http://(?:www\.)?nytimes\.com/(?:roomfordebate|services/xml/rss/index\.html)" />
+	<target host="ads.nytimes.com" />
+	<target host="assets-origin.nytimes.com" />
+	<target host="beta620.nytimes.com" />
+	<target host="*.blogs.nytimes.com" />
+	<target host="cn.nytimes.com" />
+	<target host="dealbook.nytimes.com" />
+	<target host="developer.nytimes.com" />
+	<target host="developers.nytimes.com" />
+	<target host="et.nytimes.com" />
+	<target host="global.nytimes.com" />
+	<target host="graphics.nytimes.com" />
+	<target host="graphics8.nytimes.com" />
+	<target host="homedelivery.nytimes.com" />
+	<target host="international.nytimes.com" />
+	<!--target host="jobs.nytimes.com" /-->
+	<target host="meter-svc.nytimes.com" />
+	<target host="mirror-svc.nytimes.com" />
+	<target host="myaccount.nytimes.com" />
+	<target host="markets.on.nytimes.com" />
+	<target host="query.nytimes.com" />
+	<target host="regilite.nytimes.com" />
+	<target host="static.nytimes.com" />
+	<target host="store-media.nytimes.com" />
+	<target host="store-skin.nytimes.com" />
+	<target host="typeface.nytimes.com" />
+	<target host="up.nytimes.com" />
+	<target host="tagx.nytimes.com" />
+	<target host="www.nytimes.com" />
+
+	<!--	Complications:
+				-->
+	<!--target host="assets.nytimes.com" /-->
+	<target host="documents.nytimes.com" />
+	<target host="jobmarket.nytimes.com" />
+	<target host="json8.nytimes.com" />
+	<target host="pimage.timespeople.nytimes.com" />
+	<target host="travel.nytimes.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.nytimes\.com/(?:$|alweekend$|citiesfortomorrow$|educationleftnav$|elections(?:$|/)|leadership$|marketing/nytvr/$|mem/email\.html|mostpopular$|newsletters(?:$|/)|newwork$|pages/(?:books|todayspaper)/|ref/|roomfordebate$|rss$|search/|services/mobile/|tpnav$|twitter$|vrlpsublink$)" /-->
+		<!--	Some preemptable subset thereof:
+							-->
+		<!--exclusion pattern="^http://www\.nytimes\.com/(?!/*twitter(?:$|\?))" /-->
 		<!--
-			404s over https.
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://www\.nytimes\.com/(?!/*(?:$|(?:interactive/)?\d{4}/\d\d/\d\d/|adx/|by/|content/help/|column/|favicon\.ico|(?:books|membercenter|events|podcasts|store|trending|times-journeys|video|watching)(?:$|[?/])|section/))" /-->
+		<!--
+			Combined:
+					-->
+		<exclusion pattern="^http://www\.nytimes\.com/(?!/*(?:$|(?:interactive/)?\d{4}/\d\d/\d\d/|adx/|by/|content/help/|column/|favicon\.ico|(?:books|membercenter|events|podcasts|store|trending|times-journeys|video|watching)(?:$|[?/])|section/|twitter(?:$|\?)))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.nytimes.com/alweekend" />
+			<test url="http://www.nytimes.com/citiesfortomorrow" />
+			<test url="http://www.nytimes.com/educationleftnav" />
+			<test url="http://www.nytimes.com/elections" />
+			<test url="http://www.nytimes.com/elections/results/president" />
+			<test url="http://www.nytimes.com/elections/results/tennessee" />
+			<test url="http://www.nytimes.com/leadership" />
+			<test url="http://www.nytimes.com/marketing/nytvr/" />
+			<test url="http://www.nytimes.com/mem/email.html" />
+			<test url="http://www.nytimes.com/mostpopular" />
+			<test url="http://www.nytimes.com/newsletters" />
+			<test url="http://www.nytimes.com/newsletters/dealbook" />
+			<test url="http://www.nytimes.com/newsletters/newyorktoday" />
+			<test url="http://www.nytimes.com/newwork" />
+			<test url="http://www.nytimes.com/pages/books/index.html" />
+			<test url="http://www.nytimes.com/pages/todayspaper/index.html" />
+			<test url="http://www.nytimes.com/ref/membercenter/help/infoservdirectory.html" />
+			<test url="http://www.nytimes.com/ref/membercenter/help/infoservdirectory.html" />
+			<test url="http://www.nytimes.com/roomfordebate" />
+			<test url="http://www.nytimes.com/rss" />
+			<test url="http://www.nytimes.com/search/" />
+			<test url="http://www.nytimes.com/services/mobile/" />
+			<test url="http://www.nytimes.com/tpnav" />
+			<test url="http://www.nytimes.com/vrlpsublink" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.nytimes.com/2017/03/07/opinion/peanut-butter-on-the-trump-teams-chins.html" />
+			<test url="http://www.nytimes.com/books/first/n/novick-holocaust.html" />
+			<test url="http://www.nytimes.com/by/eduardo-porter" />
+			<test url="http://www.nytimes.com/column/fixes" />
+			<test url="http://www.nytimes.com/column/trilobites" />
+			<test url="http://www.nytimes.com/content/help/contact/directory.html" />
+			<test url="http://www.nytimes.com/content/help/front.html" />
+			<test url="http://www.nytimes.com/events" />
+			<test url="http://www.nytimes.com/favicon.ico" />
+			<test url="http://www.nytimes.com/interactive/2017/03/08/upshot/who-wins-and-who-loses-under-republicans-health-care-plan.html" />
+			<test url="http://www.nytimes.com/membercenter" />
+			<test url="http://www.nytimes.com/membercenter/help.html" />
+			<test url="http://www.nytimes.com/podcasts/" />
+			<test url="http://www.nytimes.com/section/arts" />
+			<test url="http://www.nytimes.com/section/fashion" />
+			<test url="http://www.nytimes.com/section/jobs" />
+			<test url="http://www.nytimes.com/store" />
+			<test url="http://www.nytimes.com/times-journeys" />
+			<test url="http://www.nytimes.com/times-journeys/travel/a-transatlantic-crossing-with-the-times-crossword/" />
+			<test url="http://www.nytimes.com/trending" />
+			<test url="http://www.nytimes.com/video" />
+			<test url="http://www.nytimes.com/video/sports" />
+			<test url="http://www.nytimes.com/watching" />
+			<test url="http://www.nytimes.com/watching/recommendations/train-to-busan" />
+
+		<!--exclusion pattern="^http://(?:www\.)?nytimes\.com/(?:200[0-4]|info)/" /-->
+		<!--exclusion pattern="^http://(?:www\.)?nytimes\.com/(?:roomfordebate|services/xml/rss/index\.html)" /-->
+
+		<!--	404s over https.
 
 			https://mail1.eff.org/pipermail/https-everywhere/2012-June/001448.html
 												-->
-		<exclusion pattern="^http://(?:www\.)?nytimes\.com/svc/community/V3/requestHandler(?:$|\?)" />
-		<!--
-			404s when rewritten to www:
+		<!--exclusion pattern="^http://(?:www\.)?nytimes\.com/svc/community/V3/requestHandler" /-->
+
+			<!--	+ve:
+					-->
+			<test url="http://nytimes.com/svc/community/V3/requestHandler" />
+			<test url="http://www.nytimes.com/svc/community/V3/requestHandler" />
+
+		<exclusion pattern="^http://(?:[^.]+\.){2,}blogs\.nytimes\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.blogs.nytimes.com/" />
+			<test url="http://exists.not.blogs.nytimes.com/" />
+
+		<!--	Avoid potential XHR problems:
 							-->
-		<exclusion pattern="^https?://graphics8\.nytimes\.com/bi/js/tagx/tagx\.js" />
-		<!--
-			Breaks slideshow.
+		<exclusion pattern="^http://(?:graphics\d?|json8)\.nytimes\.com/.+\.js(?:$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://graphics8.nytimes.com/bi/js/tagx/tagx.js" />
+			<test url="http://graphics8.nytimes.com/this.js" />
+			<test url="http://graphics8.nytimes.com/script.js" />
+			<test url="http://graphics8.nytimes.com/does.js" />
+			<test url="http://graphics8.nytimes.com/not.js" />
+			<test url="http://graphics8.nytimes.com/exist.js" />
+
+		<!--	Breaks slideshow.
 
 				- Lens/data/\d{8}POD.xml redirects to login page
 				- Lens/swfs/ & Lens/lens_post.swf fail to load
 										-->
-		<exclusion pattern="^https?://graphics8\.nytimes\.com/packages/flash/multimedia/" />
+		<exclusion pattern="^http://graphics8\.nytimes\.com/packages/flash/multimedia/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://graphics8.nytimes.com/packages/flash/multimedia/" />
+
+		<test url="http://firstlook.blogs.nytimes.com/" />
+		<test url="http://lens.blogs.nytimes.com/" />
+		<test url="http://newoldage.blogs.nytimes.com/" />
+
+		<test url="http://cn.nytimes.com/business/20170308/zte-china-fine/zh-hant/" />
+		<test url="http://cn.nytimes.com/help/ad/zh-hant/zh-hant" />
+		<test url="http://cn.nytimes.com/zh-hant/" />
+
+		<test url="http://graphics.nytimes.com/subscriptions/components/img/icons/icons_gift.png" />
+		<test url="http://graphics8.nytimes.com/css/common/global.css" />
+		<test url="http://graphics8.nytimes.com/images/blogs_v5/artsbeat/artsbeat_main.png" />
+		<test url="http://graphics8.nytimes.com/images/misc/nytlogo153x23.gif" />
+
+		<!--	Mixed images:
+					-->
+		<test url="http://query.nytimes.com/gst/fullpage.html?res=9C06E5D7103FF930A35757C0A9649D8B63" />
+
+		<!--	Mixed ad on international:
+							-->
+		<test url="http://static.nytimes.com/ab/scripts/landing_page/assets/adx_integration.css" />
 
 
-	<!--	Other cross-domain cookies:
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.nytimes\.com$" name="^(?:NYT-S|RMID|incap_ses_\d+_\d+|visid_incap_\d+)$" /-->
+	<!--securecookie host="^jobs\.nytimes\.com$" name="^(?:___utm[abm]\w+|IFrameCurrentUrl|IfReferrerIsIFrame|TopPageCurrentUrl|ck_AffCountryId|ck_AffiliateId|ck_Rm_Activity)$" /-->
+	<!--securecookie host="^wt\.o\.nytimes\.com$" name="^ACOOKIE$" /-->
+
+	<!--	Other wildcard cookies:
 
 			- nyt-a
 			- nyt-m		(set by meter-svc)
@@ -108,30 +280,58 @@
 
 		Tracking cookies:
 					-->
-	<securecookie host="^\.nytimes\.com$" name="^(?:adxc\w|_chartbeat2)$" />
-	<securecookie host="^(?:homedelivery|markets\.on|wt\.o)\.nytimes\.com$" name=".+" />
+	<securecookie host="^\.nytimes\.com$" name="^(?:___utm\w+|__cfduid|_ga\w*|adxc\w|_chartbeat2|incap_ses_\d+_\d+|visid_incap_\d+)$" />
+	<securecookie host="^(?:homedelivery|markets\.on|wt\.o)\.nytimes\.com$" name="." />
+
+		<!--	Mixed ad on international:
+							-->
+		<test url="http://static.nytimes.com/ab/scripts/landing_page/assets/adx_integration.css" />
 
 
-	<rule from="^http://(?:www\.)?newyorktimes\.com/"
-		to="https://www.nytimes.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.nytimes\.com$" name="^(?:NYT-S|RMID|incap_ses_\d+_\d+|visid_incap_\d+)$" /-->
+	<!--securecookie host="^jobs\.nytimes\.com$" name="^(?:___utm[abm]\w+|IFrameCurrentUrl|IfReferrerIsIFrame|TopPageCurrentUrl|ck_AffCountryId|ck_AffiliateId|ck_Rm_Activity)$" /-->
+	<!--securecookie host="^wt\.o\.nytimes\.com$" name="^ACOOKIE$" /-->
 
-	<rule from="^http://(?:www\.)?nyt(?:imes)?\.com/"
-		to="https://www.nytimes.com/" />
+	<!--	Other wildcard cookies:
 
-	<rule from="^http://(?:css|i1|js)\.nyt\.com/"
-		to="https://www.nytimes.com/" />
+			- nyt-a
+			- nyt-m		(set by meter-svc)
+			- nyt-recommend
+			- nyt5_disable
+			- RMID *
+			- tagx-[lps]
+			- WT_FPC
 
-	<rule from="^http://\w+\.blogs\.nytimes\.com/favicon\.ico"
-		to="https://www.nytimes.com/favicon.ico" />
+		* Used on mobile.
 
-	<rule from="^http://(et|global|graphics|homedelivery|meter-svc|mirror-svc|myaccount|wt\.o|markets\.on|static|tagx|up)\.nytimes\.com/"
-		to="https://$1.nytimes.com/" />
+	NYT-S is the paywall cookie. Securing it may break random bits of the NYTimes site:
 
-	<rule from="^http://graphics\d\.nytimes\.com/"
-		to="https://www.nytimes.com/" />
+		https://trac.torproject.org/projects/tor/ticket/7690
 
-	<rule from="^http://jobmarket\.nytimes\.com/(adx|images)/"
-		to="https://www.nytimes.com/$1/" />
+	<securecookie host="^\.nytimes\.com$" name="^NYT-S$" />
+
+		Tracking cookies:
+					-->
+	<securecookie host="^\.nytimes\.com$" name="^(?:___utm\w+|adxc\w|_chartbeat2|incap_ses_\d+_\d+|visid_incap_\d+)$" />
+	<securecookie host="^(?:homedelivery|markets\.on|wt\.o)\.nytimes\.com$" name="." />
+
+
+	<!--	Redirect keeps path, but not args nor forward slash:
+								-->
+	<rule from="^http://documents\.nytimes\.com/+([^?]*)"
+		to="https://www.nytimes.com/interactive/projects/documents/$1" />
+
+		<test url="http://documents.nytimes.com/index.htm" />
+		<test url="http://documents.nytimes.com/index.html" />
+
+	<!--	Redirect drops path and forward slash, but not args:
+								-->
+	<rule from="^http://jobmarket\.nytimes\.com/[^?]*"
+		to="https://www.nytimes.com/section/jobs" />
+
+		<test url="http://jobmarket.nytimes.com/index.html" />
 
 	<rule from="^http://json8\.nytimes\.com/"
 		to="https://static.nytimes.com/" />
@@ -139,19 +339,28 @@
 	<rule from="^http://pimage\.timespeople\.nytimes\.com/"
 		to="https://s3.amazonaws.com/pimage.timespeople.nytimes.com/" />
 
-	<!--		travel.nytimes.com doesn't work, but
-		articles on travel appear to be on www too.
-
-			Ditto for adverts and scripts.
+	<!--	Redirect drops args and forward slash:
 							-->
-	<rule from="^http://travel\.nytimes\.com/(\d{4}/\d\d/\d\d|adx|js)/"
-		to="https://www.nytimes.com/$1/" />
+	<rule from="^http://travel\.nytimes\.com/(?:$|\?.*)"
+		to="https://www.nytimes.com/section/travel" />
 
-	<!--	404s over https.
+		<test url="http://travel.nytimes.com/?" />
+		<test url="http://travel.nytimes.com//?" />
 
-		https://mail1.eff.org/pipermail/https-everywhere/2012-June/001448.html
-											-->
-	<rule from="^https://www\.nytimes\.com/svc/community/V3/requestHandler($|\?)"
-		to="http://www.nytimes.com/svc/community/V3/requestHandler$1" downgrade="1" />
+	<rule from="^http://travel\.nytimes\.com/"
+		to="https://www.nytimes.com/" />
+
+		<test url="http://travel.nytimes.com/section/realestate" />
+
+	<!--	Redirects to http first:
+					-->
+	<rule from="^http://www\.nytimes\.com/+twitter(?=$|\?)"
+		to="https://twitter.com/nytimes" />
+
+		<test url="http://www.nytimes.com/twitter" />
+		<test url="http://www.nytimes.com/twitter?" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

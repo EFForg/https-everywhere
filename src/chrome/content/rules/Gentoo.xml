@@ -1,33 +1,41 @@
 <!--
+	NB: If a host ceases to exist, just remove the respective test.
+
 	Nonfunctional subdomains:
 
-		- anoncvs *
-		- distfiles	(support varies between mirrors resolved to)
-		- mirrorstats *
-		- sources *
-		- viewcvstest *
+		- distfiles ᵐ
+		- forums-web1 ³
 
-	* Times out
+	ᵐ Mismatched
+	³ Shows bugs
 
 
 	Fully covered subdomains:
 
-		- (www.)
-		- ads
+		- (www.)?
+		- anoncvs
+		- anongit
 		- archives
 		- blogs
 		- bouncer
 		- bugs
 		- \d+.bugs
+		- cgit
 		- council
 		- council-webapp
 		- dev
 		- devmanual
+		- distfiles	(→ gentoo.osuosl.org)
 		- foundation
 		- forums
 		- forums-lb
-		- forums-web[12]
+		- forums-web2
 		- games
+		- get
+		- gitweb
+		- infra-status
+		- kde
+		- mirrorstats
 		- overlays
 		- git.overlays
 		- svn.overlays
@@ -36,33 +44,87 @@
 		- planet
 		- qa-reports
 		- security
-		- sidebar
+		- sources
 		- store
+		- viewcvstest
 		- wiki
 
 
-	Mixed images on planet from various domains.
+	Insecure cookies are set for these hosts:
+
+		- bugs.gentoo.org
+
+
+	Mixed content:
+
+		- Images on planet from various domains
+
+		- favicon on anoncvs from www.gentoo.org *
+
+		- Ads/bugs, on archive from:
+
+			- images.paypal.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Gentoo (partial) ">
+<ruleset name="Gentoo.org (partial)">
 
 	<target host="gentoo.org" />
 	<target host="*.gentoo.org" />
-		<exclusion pattern="^http://(?:anoncvs|distfiles|mirrorstats|sources|viewcvstest)\." />
+
+		<exclusion pattern="^http://forums-web1\.gentoo\.org/" />
+
+			<test url="http://forums-web1.gentoo.org/" />
+
+		<test url="http://anoncvs.gentoo.org/" />
+		<test url="http://anongit.gentoo.org/" />
+		<test url="http://archives.gentoo.org/" />
+		<test url="http://blogs.gentoo.org/" />
+		<test url="http://bouncer.gentoo.org/" />
+		<test url="http://bugs.gentoo.org/" />
+		<test url="http://cgit.gentoo.org/" />
+		<test url="http://council.gentoo.org/" />
+		<test url="http://council-webapp.gentoo.org/" />
+		<test url="http://dev.gentoo.org/" />
+		<test url="http://devmanual.gentoo.org/" />
+		<test url="http://foundation.gentoo.org/" />
+		<test url="http://forums.gentoo.org/" />
+		<test url="http://forums-lb.gentoo.org/" />
+		<test url="http://forums-web2.gentoo.org/" />
+		<test url="http://games.gentoo.org/" />
+		<test url="http://get.gentoo.org/" />
+		<test url="http://gitweb.gentoo.org/" />
+		<test url="http://infra-status.gentoo.org/" />
+		<test url="http://kde.gentoo.org/" />
+		<test url="http://mirrorstats.gentoo.org/" />
+		<test url="http://overlays.gentoo.org/" />
+		<!--test url="http://git.overlays.gentoo.org/" /-->
+		<test url="http://packages.gentoo.org/" />
+		<test url="http://piwik.gentoo.org/" />
+		<test url="http://planet.gentoo.org/" />
+		<test url="http://qa-reports.gentoo.org/" />
+		<test url="http://security.gentoo.org/" />
+		<test url="http://sources.gentoo.org/" />
+		<test url="http://store.gentoo.org/" />
+		<test url="http://viewcvstest.gentoo.org/" />
+		<test url="http://wiki.gentoo.org/" />
+		<test url="http://www.gentoo.org/" />
 
 
-	<!--	Observed cookie subdomains:
-
-			- blogs
-			- bugs
-			- ^\.forums
-			- overlays
-			- wiki
+	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^bugs\.gentoo\.org$" name="^(BUGLIST|LASTORDER)$" /-->
+
 	<securecookie host=".*\.gentoo\.org$" name=".+" />
 
 
-	<rule from="^http://([\w\.-]+\.)?gentoo\.org/"
-		to="https://$1gentoo.org/" />
+	<rule from="^http://distfiles\.gentoo\.org/"
+		to="https://gentoo.osuosl.org/" />
+
+		<test url="http://distfiles.gentoo.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

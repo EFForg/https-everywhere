@@ -1,32 +1,39 @@
 <!--
+	Carl Zeiss
+
+
 	Nonfunctional domains:
 
-		- www.zeiss.de		(shows www.zeiss.com)
+		- www.zeiss.de *
+
+	* Shows www.zeiss.com
 
 
 	Problematic domains:
 
-		- applications.zeiss.com	(mismatched, CN: www.zeiss.com)
+		- applications.zeiss.com *
+
+	* Mismatched, CN: www.zeiss.com
 
 
 	^zeiss.com doesn't exist.
 
 -->
-<ruleset name="Carl Zeiss (partial)">
+<ruleset name="Zeiss.com (partial)">
 
 	<target host="*.zeiss.com" />
 
 
-	<securecookie host="^.+\.zeiss\.com$" name=".+" />
+	<securecookie host=".+\.zeiss\.com$" name=".+" />
 
+
+	<rule from="^http://applications\.zeiss\.com/\??$"
+		to="https://corporate.zeiss.com/gateway/en_de/home.html" />
+
+	<rule from="^http://applications\.zeiss\.com/(?=\w{16}/Index\?ReadForm)"
+		to="https://www.zeiss.com/" />
 
 	<rule from="^http://(corporate|meditec|microscopy|www)\.zeiss\.com/"
 		to="https://$1.zeiss.com/" />
-
-	<rule from="^https?://applications\.zeiss\.com/\??$"
-		to="https://corporate.zeiss.com/gateway/en_de/home.html" />
-
-	<rule from="^https?://applications\.zeiss\.com/(\w{16})/Index\?ReadForm"
-		to="https://www.zeiss.com/$1/Index?ReadForm" />
 
 </ruleset>

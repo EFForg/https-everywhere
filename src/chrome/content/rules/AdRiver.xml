@@ -1,3 +1,4 @@
+
 <!--
 	Problematic subdomains:
 
@@ -13,12 +14,53 @@
 		- edp[12]
 		- masterh[1-8]
 
+
+	Insecure cookies are set for these domains:
+
+		- .adriver.ru
+
+
+	Mixed content:
+
+		- css on content from masterh1.adriver.ru *
+		- Image on content from masterh1.adriver.ru *
+
+	* Secured by us
+
 -->
-<ruleset name="AdRiver">
+<ruleset name="AdRiver.ru (partial)">
 
 	<target host="adriver.ru" />
-	<target host="*.adriver.ru" />
+	<target host="ad.adriver.ru" />
+	<target host="adr.adriver.ru" />
+	<target host="ads.adriver.ru" />
+	<target host="content.adriver.ru" />
+	<target host="edp1.adriver.ru" />
+	<target host="edp2.adriver.ru" />
+	<target host="masterh1.adriver.ru" />
+	<target host="masterh2.adriver.ru" />
+	<target host="masterh3.adriver.ru" />
+	<target host="masterh4.adriver.ru" />
+	<target host="masterh5.adriver.ru" />
+	<target host="masterh6.adriver.ru" />
+	<target host="masterh7.adriver.ru" />
+	<target host="masterh8.adriver.ru" />
 
+		<exclusion pattern="^http://content\.adriver\.ru/+(?:$|\?)" />
+
+			<test url="http://content.adriver.ru/?" />
+			<test url="http://content.adriver.ru//" />
+			<test url="http://content.adriver.ru//?" />
+		
+	<!-- Flash-based players fails load ads if detect redirects. It can issue lower video quality on videohostings like on rutube.ru -->
+	<exclusion pattern="^http://ad\.adriver\.ru/crossdomain.xml" />
+	
+		<test url="http://ad.adriver.ru/crossdomain.xml" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.adriver\.ru$" name="^(cid|uid)$" /-->
 
 	<!--	Tracking cookies:
 
@@ -27,12 +69,12 @@
 	<securecookie host="^\.adriver\.ru$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?adriver\.ru/"
+	<rule from="^http://adriver\.ru/"
 		to="https://www.adriver.ru/" />
 
 	<!--	Included on 3rd-party websites.
 						-->
-	<rule from="^http://(ad[rs]?|content|edp[12]|masterh\d)\.adriver\.ru/"
-		to="https://$1.adriver.ru/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

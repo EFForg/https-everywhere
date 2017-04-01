@@ -1,20 +1,32 @@
 <!--
 	Nonfunctional subdomains:
 
+		- (www.) ¹
+		- download ¹
+		- www.download ²
+		- investor ³
 		- powershift
-		- (www.)	(times out)
+		- support ³
+
+	¹ Refused
+	² 400; mismatched, CN: ssl2.cdngc.net
+	³ Dropped
 
 -->
-<ruleset name="Netgear (partial)" platform="mixedcontent">
+<ruleset name="Netgear (partial)">
 
 	<target host="netgear.com" />
 	<target host="*.netgear.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^my\.netgear\.com$" name="^(ASP\.NET_SessionId|l)$" /-->
+
 	<securecookie host="^my\.netgear\.com$" name=".*" />
 
 
-	<rule from="^https?://(?:www\.)?netgear\.com/css/img/(?:(backgrounds/(?:body|nav)_bg\.jpg)|logos/(logo-netgear\.gif))"
+	<rule from="^http://(?:www\.)?netgear\.com/css/img/(?:(backgrounds/(?:body|nav)_bg\.jpg)|logos/(logo-netgear\.gif))"
 		to="https://my.netgear.com/myNETGEAR/includes/images/$1$2" />
 
 	<rule from="^http://my\.netgear\.com/"

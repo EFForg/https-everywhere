@@ -1,14 +1,37 @@
-<ruleset name="Sudo Room">
+<!--
+	Problematic hosts in *sudoroom.org:
 
+		- door ᵐ
+		- lists ᵉ
+
+	ᵉ Expired
+	ᵐ Mismatched
+
+-->
+<ruleset name="Sudo Room.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="sudoroom.org" />
-	<target host="door.sudoroom.org" />
-	<target host="lists.sudoroom.org" />
 	<target host="www.sudoroom.org" />
 
-	<securecookie host="^(?:www\.|lists\.|door\.)?sudoroom\.org$" name=".*" />
+	<!--	Complications:
+				-->
+	<target host="lists.sudoroom.org" />
 
-	<rule from="^http://(www\.)?sudoroom\.org/" to="https://sudoroom.org/" />
-	<rule from="^http://door\.sudoroom\.org/" to="https://door.sudoroom.org/" />
-	<rule from="^http://lists\.sudoroom\.org/" to="https://lists.sudoroom.org/" />
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://lists\.sudoroom\.org/+"
+		to="https://sudoroom.org/lists/" />
+
+		<test url="http://lists.sudoroom.org/listinfo/sudo-announce" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

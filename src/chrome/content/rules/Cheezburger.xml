@@ -3,14 +3,11 @@
 
 		- wac.1ddb.edgecastcdn.net/??1DDB/
 
-			- images.cheezburger.com
+			- images.cheezburger.com (mismatched, CN: *.chzbgr.com)
 
 		- cheezburger.freshdesk.com
 
-			- support.cheezburger.com
-
-
-	As of 2012-08-22, known unprotected subdomains are:
+	As of 2016-04-05, known unprotected subdomains are:
 
 		- advertising	(unbounce.com certificate)
 		- blog		(not listening on https)
@@ -18,13 +15,13 @@
 		- feedback	(uservoice.com certificate)
 		- jobs		(theresumator.com certificate)
 		- sites		(unbounce.com certificate)
+		- support	(freshdesk.com certificate)
 
 	However, there are tens (hundreds?) of subdomains supporting https with
 	a wildcard certificate, so it's not worth whitelisting them one by one.
 
 	Other related unprotected hosts:
 
-		- chzb.gr
 		- knowyourmeme.com
 
 
@@ -37,18 +34,14 @@
 <ruleset name="Cheezburger" platform="mixedcontent">
 
 	<target host="cheezburger.com" />
-	<target host="*.cheezburger.com" />
-		<exclusion pattern="^http://(?:advertising|blog|corp|feedback|jobs|sites)\.cheezburger\.com/" />
-		<!--
-			Exclude what *shouldn't* be downgraded:
-								-->
-		<exclusion pattern="^https://corp\.cheezburger\.com/(?!(?:copyright-infringement-notification|privacy-policy|terms-of-service)/$)" />
-	<target host="chzb.gr" />
-	<target host="*.chzbgr.com" />
-
+	<target host="www.cheezburger.com" />
+	<target host="images.cheezburger.com" />
+	<target host="support.cheezburger.com" />
+	<target host="i.chzbgr.com" />
+	<target host="s.chzbgr.com" />
+	<target host="t.chzbgr.com" />
 
 	<securecookie host="^www\.cheezburger\.com$" name=".+" />
-
 
 	<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2013-August/001665.html
 							-->
@@ -64,13 +57,7 @@
 	<rule from="^http://([\w-]+\.)?cheezburger\.com/"
 		to="https://$1cheezburger.com/" />
 
-	<rule from="^https?://chzb\.gr/"
-		to="https://bit.ly/" />
-
 	<rule from="^http://(i|s|t)\.chzbgr\.com/"
 		to="https://$1.chzbgr.com/" />
-
-	<rule from="^https://(advertising|blog|corp|feedback|jobs|sites)\.cheezburger\.com/?$"
-		to="http://$1.cheezburger.com/" downgrade="1" />
 
 </ruleset>

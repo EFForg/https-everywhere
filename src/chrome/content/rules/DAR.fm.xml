@@ -1,14 +1,38 @@
-<ruleset name="DAR.fm">
+<!--
+	Problematic hosts in *dar.fm:
+
+		- api ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- dar.fm
+		- .dar.fm
+		- www.dar.fm
+
+
+	Mixed content:
+
+		- Images from various domains
+
+-->
+<ruleset name="DAR.fm (partial)">
 
 	<target host="dar.fm" />
-	<!--	* for cross-domain cookie.	-->
-	<target host="*.dar.fm" />
+	<target host="www.dar.fm" />
 
 
-	<securecookie host="^(.*\.)?dar\.fm$" name=".*" />
-	
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?dar\.fm$" name="^app_sell$" /-->
+	<!--securecookie host="^\.dar\.fm$" name="^PHPSESSID$" /-->
 
-	<rule from="^http://(www\.)?dar\.fm/"
-		to="https://$1dar.fm/" />
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

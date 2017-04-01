@@ -1,0 +1,68 @@
+<!--
+	Johns Manville
+
+	Other Johns Manville rulesets:
+
+		- jmconnexus.com.xml
+
+
+	^jm.com: Dropped
+	www.jm.com: 504
+
+
+	Problematic hosts in *jm.com:
+
+		- media ᴬ
+		- msds ᶜ
+		- my ᶜ
+		- www2 ᵐ
+
+	ᴬ Akamai / mismatched
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Pardot / mismatched
+
+-->
+<ruleset name="JM.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="e-commerce.jm.com" />
+	<!--target host="msds.jm.com" /-->
+	<!--target host="my.jm.com" /-->
+
+	<!--	Complications:
+				-->
+	<target host="www2.jm.com" />
+
+		<exclusion pattern="^http://www2\.jm\.com/(?!/*[el]/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www2.jm.com/bursi_signup" />
+			<test url="http://www2.jm.com/commercial-roofing/contact-form" />
+			<test url="http://www2.jm.com/contact/general" />
+			<test url="http://www2.jm.com/info_update" />
+			<test url="http://www2.jm.com/mechblogsubscribe" />
+			<test url="http://www2.jm.com/ww/lowes/ins-acc" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www2.jm.com/l/84262/2016-06-09/4x82gr" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.jm\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^e-commerce\.jm\.com$" name="^(?:JSESSIONID|saplb_\*)$" /-->
+	<!--securecookie host="^msds\.jm\.com$" name="^(?:PortalAlias$|X-Mapping-|saplb_\*$)" /-->
+
+	<securecookie host="^(?!www2\.)\w" name="." />
+
+
+	<rule from="^http://www2\.jm\.com/"
+		to="https://go.pardot.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

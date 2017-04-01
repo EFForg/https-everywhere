@@ -1,40 +1,46 @@
 <!--
 	CDN buckets:
 
-		- dnv9my2eseobd.cloudfront.net
+		- d3eju24r2ptc5d.cloudfront.net
 
 			- api.tiles.mapbox.com
 
-		- mapbox.tenderapp.com
-
-			- support.mapbox.com
+		- dnv9my2eseobd.cloudfront.net
 
 
-	Nonfunctional subdomains:
+	Problematic hosts in *mapbox.com:
 
-		- (www.)
+		- support *
 
-
-	Problematic subdomains:
-
-		- support	(works; mismatched, CN: *.tenderapp.com)
+	* Refused
 
 -->
-<ruleset name="MapBox (partial)">
+<ruleset name="MapBox.com">
 
-	<target host="*.mapbox.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="mapbox.com" />
+	<target host="tiles.mapbox.com" />
+	<target host="api.tiles.mapbox.com" />
+	<target host="www.mapbox.com" />
+
+	<!--	Complications:
+				-->
+	<target host="support.mapbox.com" />
 
 
-	<securecookie host="^mapbox\.tenderapp\.com$" name=".+" />
+	<securecookie host="." name="." />
 
 
-	<rule from="^https?://support\.mapbox\.com/"
-		to="https://mapbox.tenderapp.com/" />
+	<!--	Redirect drops path, args,
+		and forward slash:
+					-->
+	<rule from="^http://support\.mapbox\.com/.*"
+		to="https://www.mapbox.com/help/" />
 
-	<rule from="^http://tiles\.mapbox\.com/"
-		to="https://tiles.mapbox.com/" />
+		<test url="http://support.mapbox.com/home" />
 
-	<rule from="^https?://api\.tiles\.mapbox\.com/"
-		to="https://dnv9my2eseobd.cloudfront.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

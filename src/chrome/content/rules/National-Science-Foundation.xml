@@ -1,62 +1,74 @@
 <!--
+	National Science Foundation
+
 	For other US government coverage, see US-government.xml.
 
+
+	Nonfunctional hosts in *nsf.gov:
+
+		- dellweb.bfa *
+
+	* Refused
+
+
+	Problematic hosts in *nsf.gov:
+
+		- fastlane *
+		- fldemo *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- nsf.gov
+		- www.nsf.gov
+
+
+	Mixed content:
+
+		- Bug on www from wt.research.gov *
+
+	* Not secured by us <= missing certificate chain
+
 -->
-<ruleset name="National Science Foundation (partial)">
+<ruleset name="NSF.gov (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="nsf.gov" />
-	<target host="*.nsf.gov" />
-		<exclusion pattern="^http://www\.nsf\.gov/($|\?|index\.jsp|awardsearch|statistics)" />
-	<target host="www.*.nsf.gov" />
+	<target host="www.fastlane.nsf.gov" />
+	<target host="www.fldemo.nsf.gov" />
+	<target host="www.nsf.gov" />
+
+	<!--	Complications:
+				-->
+	<target host="fastlane.nsf.gov" />
+	<target host="fldemo.nsf.gov" />
+
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://www\.nsf\.gov/(?:$|\?|awardsearch|index\.jsp|statistics)" />
+
+			<test url="http://www.nsf.gov/index.jsp" />
+			<test url="http://www.nsf.gov/awardsearch" />
+			<test url="http://www.nsf.gov/awardsearch/" />
+			<test url="http://www.nsf.gov/statistics" />
+			<test url="http://www.nsf.gov/statistics/" />
 
 
-	<securecookie host="^.*\.nsf\.gov$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?nsf\.gov$" name="^JSESSIONID$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<!--	These paths redirect to http:
+	<rule from="^http://(fastlane|fldemo)\.nsf\.gov/"
+		to="https://www.$1.nsf.gov/" />
 
-			- $
-			- awardsearch$
-			- awardsearch/$
-			- awardsearch/common/images/
-			- awardsearch/style/
-			- index.jsp$
-			- statistics/$
-			- statistics/about.cfm$
-			- statistics/css/
-			- statistics/graphics/
-			- statistics/profiles/$
-			- statistics/showpub.cfm
-
-		These paths don't (shh!):
-
-			- about
-			- awards
-			- bfa
-			- cgi-bin
-			- css
-			- discoveries
-			- email.jsp
-			- funding
-			- help
-			- images
-			- news
-			- oirm
-			- policies
-			- staff
-
-
-		Cert only matches www.
-						
-	<rule from="^https?://(?:www\.)?nsf\.gov/((?:about|awards|bfa|cgi-bin|css|discoveries|funding|help|images|news|oirm|policies|publications|staff)(?:$|/|\?)|email\.jsp)"
-		to="https://www.nsf.gov/$1" /-->
-
-	<rule from="^https?://(?:www\.)?nsf\.gov/"
-		to="https://www.nsf.gov/" />
-
-	<!--	Cert only matches www.foo	-->
-	<rule from="^https?://(?:www\.)?f(astlane|ldemo)\.nsf\.gov/"
-		to="https://www.f$1.nsf.gov/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
 

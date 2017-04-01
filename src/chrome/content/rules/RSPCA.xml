@@ -21,14 +21,6 @@
 		- (www.)rspca.org.uk	(home pages redirects to http)
 
 
-	Fully covered domains:
-
-		- donations.rspca.org.uk *
-		- content.www.rspca.org.uk	(→ www)
-
-	* Server is configured for rc4 only
-
-
 	Mixed content:
 
 		- Images, on www from:
@@ -48,11 +40,9 @@
 <ruleset name="RSPCA (partial)">
 
 	<target host="rspca.org.uk" />
-	<target host="*.rspca.org.uk" />
-		<!--
-			Homepage redirects to http
-							-->
-		<exclusion pattern="^http://www\.rspca\.org\.uk/+(?:home)?(?:\?.*)?$" />
+	<target host="www.rspca.org.uk" />
+	<target host="content.www.rspca.org.uk" />
+	<target host="donations.rspca.org.uk" />
 
 
 	<securecookie host="^donations\.rspca\.org\.uk$" name=".+" />
@@ -62,10 +52,17 @@
 	<securecookie host="^www\.rspca\.org\.uk$" name="^CMS_PRD_SESSIONID$" />
 
 
-	<rule from="^http://(?:(?:content\.)?www\.)?rspca\.org\.uk/"
+	<test url="http://www.rspca.org.uk/home" />
+	<test url="http://www.rspca.org.uk/home?foo" />
+
+
+	<rule from="^http://www\.rspca\.org\.uk/home"
+		to="https://www.rspca.org.uk/home/" />
+
+	<rule from="^http://content\.www\.rspca\.org\.uk/"
 		to="https://www.rspca.org.uk/" />
 
-	<rule from="^http://donations\.rspca\.org\.uk/"
-		to="https://donations.rspca.org.uk/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,28 +1,49 @@
 <!--
 	For other 2K Games coverage, see 2K_Games.xml.
 
+
+	Problematic domains:
+
+		- (www.)?finkmanufacturing.com *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.bioshockinfinite.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
 -->
 <ruleset name="BioShock Infinite">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="bioshockinfinite.com" />
 	<target host="www.bioshockinfinite.com" />
+
+	<!--	Complications:
+				-->
 	<target host="finkmanufacturing.com" />
 	<target host="www.finkmanufacturing.com" />
 
 
-	<securecookie host="^www\.bioshockinfinite\.com$" name=".+" />
-	<securecookie host="^(?:www\.)?finkmanufacturing\.com$" name=".+" />
-
-
-	<rule from="^http://(www\.)?bioshockinfinite\.com/"
-		to="https://$1bioshockinfinite.com/" />
-
-	<!--	Fails to redirect
+	<!--	Not secured by server:
 					-->
-	<rule from="^http://finkmanufacturing\.com/(?:\?.*)?$"
-		to="https://www.finkmanufacturing.com/" />
+	<!--securecookie host="^www\.bioshockinfinite\.com$" name="^(?:PHPSESSID|exp_last_activity|exp_last_visit|exp_tracker|exp_transcribe)$" /-->
 
-	<rule from="^http://(www\.)?finkmanufacturing\.com/"
-		to="https://$1finkmanufacturing.com/" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirects like so:
+					-->
+	<rule from="^http://(?:www\.)?finkmanufacturing\.com/+([^?/]*).*"
+		to="https://www.bioshockinfinite.com/faq$1" />
+
+		<test url="http://www.finkmanufacturing.com/dlc1/adjust-difficulty" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

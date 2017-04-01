@@ -1,21 +1,62 @@
 <!--
-	Nonfunctional subdomains:
+	Other ProfitBricks rulesets:
+
+		- ProfitBricks.co.uk.xml
+		- ProfitBricks.de.xml
+
+
+	Nonfunctional hosts in *profitbricks.com:
 
 		- blog-us
+		- info *
+
+	* Marketo
+
+
+	Mixed content:
+
+		- Images on blog from $self *
+		- favicon on blog from www *
+
+	* Secured by us
 
 -->
-<ruleset name="ProfitBricks (partial)">
+<ruleset name="ProfitBricks.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="profitbricks.com" />
+	<target host="analytics.profitbricks.com" />
+	<target host="blog.profitbricks.com" />
+	<target host="devops.profitbricks.com" />
+	<target host="my.profitbricks.com" />
 	<target host="www.profitbricks.com" />
 
+	<!--	Complications:
+				-->
+	<target host="info.profitbricks.com" />
 
-	<securecookie host="^www\.profitbricks\.com$" name=".+" />
+		<exclusion pattern="^http://info\.profitbricks\.com/(?!css/|images/|js/|rs/)" />
+
+			<test url="http://info.profitbricks.com/Cloud-Computing-Demo.html" />
+			<test url="http://info.profitbricks.com/Cloud-Computing-Performance-Comparison.html" />
+			<test url="http://info.profitbricks.com/SasS-ISV-whitepaper.html" />
+			<test url="http://info.profitbricks.com/meet-the-new-cloud.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://info.profitbricks.com/css/mktLPSupport.css" />
+
+		<test url="http://analytics.profitbricks.com/piwik.php?idsite=2" />
 
 
-	<!--	Cert only matches *.profitbricks.com.
-							-->
-	<rule from="^https?://(?:www\.)?profitbricks\.com/"
-		to="https://www.profitbricks.com/" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://info\.profitbricks\.com/"
+		to="https://na-sj02.marketo.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -3,17 +3,27 @@
 
 		- vdio-a.akamaihd.net
 
+
+	(www.)?vdio.com: Refused
+
 -->
-<ruleset name="Vdio">
+<ruleset name="Vdio.com">
 
+	<!--	Complications:
+				-->
 	<target host="vdio.com" />
-	<target host="*.vdio.com" />
+	<target host="www.vdio.com" />
 
 
-	<securecookie host="^\.vdio\.com$" name=".+" />
+	<!--	Redirect keeps path, but not
+		args nor forward slash:
+					-->
+	<rule from="^http://(?:www\.)?vdio\.com/+([^?]*).*"
+		to="https://www.rdio.com/$1" />
 
-
-	<rule from="^http://(www\.)?vdio\.com/"
-		to="https://$1vdio.com/" />
+		<test url="http://vdio.com//" />
+		<test url="http://vdio.com/?" />
+		<test url="http://www.vdio.com//" />
+		<test url="http://www.vdio.com/?" />
 
 </ruleset>

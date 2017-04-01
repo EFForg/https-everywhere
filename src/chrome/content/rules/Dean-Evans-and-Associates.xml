@@ -1,14 +1,79 @@
-<ruleset name="Dean Evans &amp; Associates">
+<!--
+	Dean Evans & Associates
 
-	<target host="dea.com" />
+
+	Nonfunctional hosts in *dea.com:
+
+		- pages ᵃ
+
+	ᵃ Marketo / shows another domain
+
+
+	^dea.com: Cert only matches *.dea.com
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.dea.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="DEA.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="asd.dea.com" />
 	<target host="www.dea.com" />
 
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://www.dea.com/NewsAndEvents/Article371.aspx" /-->
 
-	<securecookie host="^www\.dea\.com$" name=".*" />
+	<!--	Complications:
+				-->
+	<target host="dea.com" />
+	<target host="pages.dea.com" />
+
+		<exclusion pattern="^http://pages\.dea\.com/(?!/*(?:$|\?|css/|images/|rs/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://pages.dea.com/Benchmark-Survey.html" />
+			<test url="http://pages.dea.com/Changing-Workplace-Webinar-Landing-Page.html" />
+			<test url="http://pages.dea.com/Demo-Information-Request-Form.html" />
+			<test url="http://pages.dea.com/Outgrowing-Outlook-Landing-Page.html" />
+			<test url="http://pages.dea.com/Preference-Center.html" />
+			<test url="http://pages.dea.com/RSM-Smart-Workspace.html" />
+			<test url="http://pages.dea.com/RSM-Smart-Workspace.html" />
+			<test url="http://pages.dea.com/Webinar-1-14-2016-Registration.html" />
 
 
-	<!--	Cert only matches *.dea.com	-->
-	<rule from="^https?://(?:www\.)?dea\.com/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.dea\.com$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^(?!pages\.)\w" name="." />
+
+
+	<rule from="^http://dea\.com/"
 		to="https://www.dea.com/" />
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://pages\.dea\.com/+(?:\?.*)?$"
+		to="https://www.dea.com/" />
+
+		<test url="http://pages.dea.com/?" />
+
+	<rule from="^http://pages\.dea\.com/"
+		to="https://na-ab04.marketo.com/" />
+
+		<test url="http://pages.dea.com/css/mktLPSupport.css" />
+		<test url="http://pages.dea.com/rs/deanevansassoc/images/DEA-2001-LP-TY-Facebook-White.png" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

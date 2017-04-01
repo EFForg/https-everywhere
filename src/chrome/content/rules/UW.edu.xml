@@ -1,0 +1,100 @@
+<!--
+	For other University of Washington coverage, see University-of-Washington.xml.
+
+	For problematic rules, see University-of-Washington-self-signed.xml.
+
+
+	Nonfunctional hosts in *uw.edu:
+
+		- gmail ʰ
+		- www.health-informatics ᵈ
+		- hsl		Redirects to weblogin.washington.edu
+		- www.ielp ʳ
+		- www.osher ʳ
+		- www.summer-camp ᵈ
+
+	ʰ Handshake fails
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *uw.edu:
+
+		- www.eveningdegreecompletion ᵐ
+		- expd ᵐ
+		- www.healthinformationmanagement ᵐ
+		- honors ᵖ
+		- guides.lib ᵐ
+		- www.pce ᵐ
+		- tacoma ᵐ
+		
+	ᵐ Mismatched
+	ᵖ Shows default page
+
+
+	Mixed content:
+
+		- Images, on:
+		
+			- (www.)?grad from depts.washington.edu *
+			- www.pce from www.washington.edu *
+
+		- Bug on www.pce from \d+.fls.doubleclick.net
+
+	* Secured by us
+
+-->
+<ruleset name="UW.edu (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="uw.edu" />
+	<target host="aa.uw.edu" />
+	<target host="www.aa.uw.edu" />
+	<target host="blogs.uw.edu" />
+	<target host="canvas.uw.edu" />
+	<target host="apps.canvas.uw.edu" />
+	<target host="dental.uw.edu" />
+	<target host="www.dental.uw.edu" />
+	<target host="engr.uw.edu" />
+	<target host="www.engr.uw.edu" />
+	<target host="grad.uw.edu" />
+	<target host="apps.grad.uw.edu" />
+	<target host="www.grad.uw.edu" />
+	<target host="www.law.uw.edu" />
+	<target host="m.uw.edu" />
+	<target host="mdot.uw.edu" />
+	<target host="mobile.uw.edu" />
+	<target host="my.uw.edu" />
+	<target host="myuw.uw.edu" />
+	<target host="pce.uw.edu" />
+	<target host="spacescout.uw.edu" />
+	<target host="www.tacoma.uw.edu" />
+	<target host="www.uw.edu" />
+
+	<!--	Complications:
+				-->
+	<target host="honors.uw.edu" />
+	<target host="tacoma.uw.edu" />
+
+
+	<securecookie host="^\." name="^_gat$" />
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\.tacoma\.uw\.edu$" name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://honors\.uw\.edu/+"
+		to="https://depts.washington.edu/uwhonors/" />
+
+		<test url="http://honors.uw.edu//home.aspx" />
+
+	<rule from="^http://tacoma\.uw\.edu/"
+		to="https://www.tacoma.uw.edu/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

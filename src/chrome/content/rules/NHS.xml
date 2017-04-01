@@ -1,47 +1,640 @@
-<ruleset name="NHS (partial)">
+<!--
+	For rules causing false/broken MCB, see NHS.uk-falsemixed.xml.
 
-	<target host="healthunlocked.com"/>
-	<target host="*.healthunlocked.com"/>
-	<target host="nhs.uk"/>
-	<target host="*.nhs.uk"/>
-	<target host="talkhealthpartnership.com"/>
-	<target host="*.talkhealthpartnership.com"/>
+	Other NHS rulesets:
 
-
-	<securecookie host="^(www2?\.)?healthunlocked\.com$" name=".*"/>
-	<securecookie host="^(.*\.)?talkhealthpartnership\.com$" name=".*"/>
+		- mystar.org.uk.xml
+		- NHS_ePortfolios.org.xml
 
 
-	<rule from="^http://(www2?\.)?healthunlocked\.com/"
-		to="https://$1healthunlocked.com/"/>
+	Nonfunctional hosts in *nhs.uk:
 
-	<!--	communities pages redirect to http	-->
-	<rule from="^http://([\w\-]+)\.healthunlocked\.com/(assets/|images/)"
-		to="https://$1.healthunlocked.com/$2"/>
+		- www.awp ᶠ
+		- berkshirehealthcare ᵇ
+		- www.berkshirehealthcare ᶠ
+		- bhamcrosscityccg ᵈ
+		- www.brighterfuturesgwh ᵇ
+		- www.connectingforhealth ᵈ
+		- www.corelearningunit ᵇ
+		- dudleygroup ᵈ
+		- egap.evidence ʰ
+		- www.foundationprogramme ᶠ
+		- www.gwh ᵇ
+		- www.iapt ʳ
+		- www.ic ᵈ
+		- jobs.kch ᵃ
+		- insights.london ᵃ
+		- www.londonhp ᵖ
+		- www.medicinesresources ᵗ
+		- www.midlandsmedicines ᵃ
+		- guide.moh ʰ
+		- www.nhsbsa ᵈ
+		- www.nhscarerecords ᵈ
+		- (www.)?northwestcsu ᶠ
+		- www.nrls.npsa ʰ
+		- www.qualityobservatory ᶠ
 
-	<rule from="^http://(?:www\.)?nhs\.uk/(\?.*)?$"
-		to="https://www.nhs.uk/Pages/HomePage.aspx$1" />
+		- (www.)?scot ᵃ
+		- www.cen.scot ᵃ
+		- cfs.scot ᵃ
+		- www.cleftsis.scot ᵃ
+		- www.communitypharmacy.scot ᵃ
+		- www.cso.scot ᵃ
+		- www.elib.scot ᵃ
+		- www.fitfortravel.scot ᵃ
+		- www.qifv.scot ᵃ
+		- www.isdscotland.scot ᵃ
+		- auth.knowledge.scot ᵃ
+		- www.lsamoforumuk.scot ᵃ
+		- www.mcs.scot ʰ
+		- www.moodjuice.scot ᵈ
+		- www.mydiabetesmyway.scot ᵈ
+		- www.supportworkercentral.nes.scot ᵃ
+		- www.nes.scot ᵃ
+		- www.nisg.scot ᵃ
+		- www.nhsborders.scot ᵃ
+		- www.nhsfife.scot ᵃ
+		- www.ohb.scot ᶠ
+		- peopleconnect.scot ʰ
+		- www.promotion.scot ᵃ
+		- www.promotionswi.scot ᵃ
+		- www.rehabilitationmkn.scot ʰ
+		- www.scan.scot ᵃ
+		- www.sci-diabetes.scot ᵃ
+		- www.sharedlearning.scot ᵃ
+		- www.show.scot ᵃ
+		- www.sma.scot ᵃ
+		- www.smvn.scot ᵃ
+		- www.travax.scot ᵃ
 
-	<!--	everything on login page and a little more, namely:
+		- www.swpho ᶠ
+		- www.childrenandyoungpatients.uclh ᵇ
+		- www.ukmi ᵃ
 
-			- NHSEngland/Healthcosts/Pages/Dentalcosts.aspx
-			- NHSEngland/Healthcosts/Pages/PPC.aspx
-			- NHSEngland/Healthcosts/Pages/universal-credit.aspx
-			- NHSEngland/Pages/NHSEngland.aspx
-			- Pages/HomePage.aspx
-			- PublishingImages/PersonalisationModules/Modules/newsletterpromo.jpg
+		- (www.)?wales ʳ
+		- www.1000liveplus.wales ʳ
+		- www.1000ofywydauamwy.wales ʳ
+		- www.abm.wales ʳ
+		- ambulance.wales ʰ
+		- www.bcu.wales ʳ
+		- www.cancerservicesdirectory.wales ʳ
+		- www.cardiffandvaleuhb.wales ʳ
+		- www.e-das.wales ʳ
+		- www.eiapractice.wales ʳ
+		- www.hywelddalhb.wales ʳ
+		- nww.immunisation.wales ʳ
+		- www.nwisinformationstandards.wales ʳ
+		- www.p2.wales ʳ
+		- www.patientsafety.wales ᵃ
+		- www.powysthb.wales ʳ
+		- www.publichealthwales.wales ʳ
+		- static.wales ʳ
+		- www.theroom.wales ᵃ
+		- www.velindrecc.wales ʳ
+		- www.wcisu.wales ʳ
+		- www.weds.wales ʳ
+		- www.wemerec.wales ᵈ
+		- www.wmic.wales ᵈ
 
-			And most probably a fair bit more.
+	ᵃ Shows another domain
+	ᵇ Shows default page
+	ᵈ Dropped
+	ᶠ Handshake fails
+	ʰ Redirects to http
+	ᵖ Plaintext reply
+	ʳ Refused
+	ᵗ Reset
 
-			No discernable pattern for which work and which don't.
-							-->
-	<rule from="^http://(?:www\.)?nhs\.uk/(_layouts/\d\d\d\d/styles/Menu\.css|conditions/|css/(?:base|find-services|personalisation|print|reset|screen)\.css|img/(?:buttons/btn-arrow\.gif|header/|(?:chevron-grey|directgov|information-standards|sprite-footer)\.gif|sub-nav-b(?:g|order))|News/|NHSEngland/(?:Healthcosts/Pages/(?:Dentalcosts|PPC|universal-credit)|Pages/NHSEngland)\.aspx|Pages/HomePage\.aspx|Personalisation/|PublishingImages/PersonalisationModules/Modules/newsletterpromo\.jpg)"
-		to="https://www.nhs.uk/$1"/>
 
-	<rule from="^http://(www\.)?wales\.nhs\.uk/"
-		to="https://$1wales.nhs.uk/" />
+	Problematic hosts in *nhs.uk:
 
-	<rule from="^http://(www\.)?talkhealthpartnership\.com/"
-		to="https://$1talkhealthpartnership.com/"/>
+		- ^ ᵐ
+		- www.cancerscreening ᵐ
+		- (www.)?cpft ᵐ
+		- www.cscsu ᶜ
+		- elft		404
+		- live2.evidence ᵉ ᵐ
+		- www.haringeyccg ᵐ
+		- healthcareers ᵈ
+		- healthiernorthwestlondon	200 "could not find key"
+		- healthystart ʳ
+		- www.hey ᵐ
+		- www.hps ᵐ
+		- www.humber ᵐ
+		- indicators.ic ˣ
+		- kentsexualhealth ᵐ
+		- neas ᵐ
+		- blogs.nhsbt ᵐ
+		- www.nhsbt ᵐ
+		- www.nhscareers ᵈ
+		- www.nice ᵐ
+		- www.nnuh ᵐ ˢ
+		- www.noo ᵐ
+		- www.northumbria ᵒ
+		- helpdesk.pcc ᵐ
+		- (www.)?royalmarsden ᶜ
+		- isdscotland.scot ˣ
+		- www.knowledge.scot ᵉ
+		- www.midwiferysupervision.scot ᵐ
+		- www.sphil ᵐ
+		- www.tamesidehospital ˣ
+
+		- www.myhealthonline-inps.wales ᶜ
+		- www.procurement.wales ᵉ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵈ Dropped
+	ᵉ Expired
+	ᵐ Mismatched
+	ˢ Self-signed
+	ᵒ Tor users blocked by CloudFlare settings
+	ʳ Refused
+	ˣ Mixed css
+
+
+	These altnames don't exist:
+
+		- hpac.nhs.uk
+		- jobs.nhs.uk
+		- nwppn.nhs.uk
+		- poole.nhs.uk
+		- frameworks-scotland2.scot.nhs.uk
+		- www.quitnow.smokefree.nhs.uk
+		- uclh.nhs.uk
+		- e-learning2.wales.nhs.uk
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- www.aquanw.nhs.uk
+		- www.croydonhealthservice.nhs.uk
+		- www.farehamandgosportccg.nhs.uk
+		- intranet.humber.nhs.uk
+
+		- esuppliers.ic.nhs.uk
+		- extranet.ic.nhs.uk
+		- groups.ic.nhs.uk
+		- indicators.ic.nhs.uk
+		- panelsurveys.ic.nhs.uk
+
+		- www.jobs.nhs.uk
+		- .kch.nhs.uk
+		- www.kmpt.nhs.uk
+		- .moh.nhs.uk
+		- apps.nhsbsa.nhs.uk
+		- .nhsbt.nhs.uk
+		- .blogs.nhsbt.nhs.uk
+		- www.nwppn.nhs.uk
+		- .organdonation.nhs.uk
+		- helpdesk.pcc.nhs.uk
+		- primarycare.nhs.uk
+		- www.primarycare.nhs.uk
+		- www.royalfree.nhs.uk
+		- www.sbs.nhs.uk
+
+		- www.frameworks-scotland2.scot.nhs.uk
+		- isdscotland.scot.nhs.uk
+		- .nes.scot.nhs.uk
+		- scotpho.nhsnss.scot.nhs.uk
+		- peopleconnect.scot.nhs.uk
+		- youngcancer.scot.nhs.uk
+		- www.youngcancer.scot.nhs.uk
+
+		- www.sheffieldchildrens.nhs.uk
+		- www.staffordshireandstokeontrent.nhs.uk
+		- www.southeasternhampshireccg.nhs.uk
+		- www.tamesidehospital.nhs.uk
+
+		- addtoyourlife.wales.nhs.uk
+		- www.myhealthonline-emisweb.wales.nhs.uk
+		- www.myhealthonline-inps.wales.nhs.uk
+		- www.nhsdirect.wales.nhs.uk
+		- www.procurement.wales.nhs.uk
+		- securefileshare.wales.nhs.uk
+
+		- www.nhs.uk
+		- . . .
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- iframe, on:
+
+			- indicators.ic from $self ˢ
+			- www.tamesidehospital from player.vimeo.com
+
+		- css, on:
+
+			- www.cscsu, www.elft from fonts.googleapis.com ˢ
+			- specialitytraining.hee, indicators.ic, www.tamesidehospital from $self ˢ
+			- blogs.nhsbt from $self
+			- isdscotland.scot from $self
+
+		- Images, on:
+
+			- www.croydonhealthservices from mhn2065.sitekit.net
+			- www.elft, www.nwas from pbs.twimg.com ˢ
+			- healthiertogethergm from www.image-maps.com ˢ
+			- intranet.humber, www.leadershipacademy, www.rdash, www.tamesidehospital from $self ˢ
+			- blogs.nhsbt from $self
+			- isdscotland.scot from $self
+			- www.walsallhealthcare from demo.walsallhealthcare.nhs.uk.smart-hosting.co.uk
+
+		- Bug on jobs.scot from logger.scot.nhs.uk ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="NHS.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.aquanw.nhs.uk" />
+	<target host="iapt-sglos.awp.nhs.uk" />
+	<target host="lift.awp.nhs.uk" />
+	<target host="www.barnsley.nhs.uk" />
+	<target host="bedfordhospital.nhs.uk" />
+	<target host="www.bedfordhospital.nhs.uk" />
+	<target host="www.bedfordshireccg.nhs.uk" />
+	<target host="bhamcommunity.nhs.uk" />
+	<target host="www.bhamcommunity.nhs.uk" />
+	<target host="www.chesterfieldroyal.nhs.uk" />
+	<target host="www.cheshiremerseysidecsu.nhs.uk" />
+	<target host="opis.cmft.nhs.uk" />
+	<target host="www.croydonhealthservices.nhs.uk" />
+	<!--target host="www.cscsu.nhs.uk" /-->
+	<target host="cumbriapartnership.nhs.uk" />
+	<target host="www.cumbriapartnership.nhs.uk" />
+	<target host="digital.nhs.uk" />
+	<target host="www.easterncheshireccg.nhs.uk" />
+	<target host="www.elft.nhs.uk" />
+	<target host="www.england.nhs.uk" />
+	<target host="www.performer.england.nhs.uk" />
+	<target host="epsom-sthelier.nhs.uk" />
+	<target host="www.epsom-sthelier.nhs.uk" />
+	<target host="www.evidence.nhs.uk" />
+	<target host="www.farehamandgosportccg.nhs.uk" />
+	<target host="gmw.nhs.uk" />
+	<target host="www.gmw.nhs.uk" />
+	<target host="members.gwh.nhs.uk" />
+	<target host="www.healthcareers.nhs.uk" />
+	<target host="healthiertogethergm.nhs.uk" />
+	<target host="www.healthiertogethergm.nhs.uk" />
+	<target host="www.healthiernorthwestlondon.nhs.uk" />
+	<target host="www.healthystart.nhs.uk" />
+	<target host="hee.nhs.uk" />
+
+	<target host="www.genomicseducation.hee.nhs.uk" />
+	<target host="gprecruitment.hee.nhs.uk" />
+	<target host="specialitytraining.hee.nhs.uk" />
+	<target host="www.hee.nhs.uk" />
+
+	<target host="www.hpac.nhs.uk" />
+	<target host="hps.nhs.uk" />
+	<target host="intranet.humber.nhs.uk" />
+
+	<target host="catalogue.ic.nhs.uk" />
+	<target host="esuppliers.ic.nhs.uk" />
+	<target host="extranet.ic.nhs.uk" />
+	<target host="groups.ic.nhs.uk" />
+	<target host="imca.ic.nhs.uk" />
+	<!--target host="indicators.ic.nhs.uk" /-->
+	<target host="panelsurveys.ic.nhs.uk" />
+	<target host="projects.ic.nhs.uk" />
+	<target host="rocrsubmissions.ic.nhs.uk" />
+
+	<target host="www.imperial.nhs.uk" />
+	<target host="www.institute.nhs.uk" />
+	<target host="www.jobs.nhs.uk" />
+	<target host="kch.nhs.uk" />
+	<target host="careers.kch.nhs.uk" />
+	<target host="www.kch.nhs.uk" />
+	<target host="www.kmpt.nhs.uk" />
+	<target host="leadershipacademy.nhs.uk" />
+
+	<target host="anderson.leadershipacademy.nhs.uk" />
+	<target host="anderson-stage.leadershipacademy.nhs.uk" />
+	<target host="www.leadershipacademy.nhs.uk" />
+
+	<target host="modalitypartnership.nhs.uk" />
+	<target host="www.modalitypartnership.nhs.uk" />
+	<target host="moh.nhs.uk" />
+	<target host="www.moh.nhs.uk" />
+	<target host="www.ebs.ncrs.nhs.uk" />
+	<target host="www.neas.nhs.uk" />
+	<target host="www.neqos.nhs.uk" />
+
+	<target host="*.networks.nhs.uk" /><!-- STS header includes includeSubdomains	-->
+
+		<test url="http://www.networks.nhs.uk/" />
+
+	<target host="apps.nhsbsa.nhs.uk" />
+	<target host="www.nhsbsadental.nhs.uk" />
+	<!--target host="www.northumbria.nhs.uk" />	Needs clearnet testing	-->
+	<target host="report.nrls.nhs.uk" />
+	<target host="www.ntw.nhs.uk" />
+	<target host="www.nwas.nhs.uk" />
+	<target host="www.nwppn.nhs.uk" />
+	<target host="www.nycris.nhs.uk" />
+	<target host="www.organdonation.nhs.uk" />
+	<target host="penninecare.nhs.uk" />
+
+	<target host="*.penninecare.nhs.uk" /><!--	STS header includes includeSubdomains	-->
+
+		<test url="http://www.penninecare.nhs.uk/" />
+
+	<target host="www.peterboroughandstamford.nhs.uk" />
+	<target host="www.poole.nhs.uk" />
+	<target host="primarycare.nhs.uk" />
+	<target host="www.primarycare.nhs.uk" />
+	<target host="www.rdash.nhs.uk" />
+
+	<target host="*.reportnhsfraud.nhs.uk" /><!--	STS header includes includeSubdomains	-->
+
+		<test url="http://www.reportnhsfraud.nhs.uk/" />
+
+	<target host="www.royalfree.nhs.uk" />
+	<!--target host="royalmarsden.nhs.uk" /-->
+	<!--target host="www.royalmarsden.nhs.uk" /-->
+	<target host="www.safetythermometer.nhs.uk" />
+	<target host="www.sbs.nhs.uk" />
+	<target host="quitnow.smokefree.nhs.uk" />
+
+	<target host="babylink.scot.nhs.uk" />
+	<target host="dmp.scot.nhs.uk" />
+	<target host="gohealthservices.scot.nhs.uk" />
+	<target host="www.frameworks-scotland2.scot.nhs.uk" />
+	<!--target host="isdscotland.scot.nhs.uk" /-->
+	<target host="jobs.scot.nhs.uk" />
+	<!--target host="www.knowledge.scot.nhs.uk" /-->
+	<target host="logger.scot.nhs.uk" />
+	<target host="intranet.nes.scot.nhs.uk" />
+	<target host="nam.nes.scot.nhs.uk" />
+	<target host="namgate.nes.scot.nhs.uk" />
+	<target host="scotpho.nhsnss.scot.nhs.uk" />
+	<target host="www.peopleconnect.scot.nhs.uk" />
+	<target host="portal.scot.nhs.uk" />
+	<target host="www.portal.scot.nhs.uk" />
+	<target host="youngcancer.scot.nhs.uk" />
+	<target host="www.youngcancer.scot.nhs.uk" />
+
+	<target host="www.sheffieldchildrens.nhs.uk" />
+	<target host="www.southeasternhampshireccg.nhs.uk" />
+	<target host="www.staffordshireandstokeontrent.nhs.uk" />
+	<target host="stgeorges.nhs.uk" />
+	<target host="www.stgeorges.nhs.uk" />
+	<target host="stockport.nhs.uk" />
+	<target host="www.stockport.nhs.uk" />
+
+	<target host="media.supplychain.nhs.uk" />
+	<target host="my.supplychain.nhs.uk" />
+	<target host="www.supplychain.nhs.uk" />
+
+	<target host="www.swft.nhs.uk" />
+	<!--target host="www.tamesidehospital.nhs.uk" /-->
+	<target host="www.uclh.nhs.uk" />
+
+	<target host="addtoyourlife.wales.nhs.uk" />
+	<target host="learning.wales.nhs.uk" />
+	<target host="www.myhealthonline-emisweb.wales.nhs.uk" />
+	<!--target host="www.myhealthonline-inps.wales.nhs.uk" /-->
+	<target host="www.nhsdirect.wales.nhs.uk" />
+	<!--target host="www.procurement.wales.nhs.uk" /-->
+	<target host="securefileshare.wales.nhs.uk" />
+
+	<target host="www.walsallhealthcare.nhs.uk" />
+	<target host="www.wirralccg.nhs.uk" />
+	<target host="www.nhs.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="nhs.uk" />
+	<target host="elft.nhs.uk" />
+	<target host="healthcareers.nhs.uk" />
+	<target host="healthiernorthwestlondon.nhs.uk" />
+	<target host="healthystart.nhs.uk" />
+	<target host="kentsexualhealth.nhs.uk" />
+	<target host="neas.nhs.uk" />
+	<target host="www.nhscareers.nhs.uk" />
+	<target host="www.nice.nhs.uk" />
+	<target host="www.noo.nhs.uk" />
+	<target host="helpdesk.pcc.nhs.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="http://(?:www\.)?bhamcommunity\.nhs\.uk/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="http://(?:www\.)?bhamcommunity\.nhs\.uk/(?!/*(?:[Ee]asy[Ss]ite[Ww]eb/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://bhamcommunity.nhs.uk/about-us/" />
+			<test url="http://www.bhamcommunity.nhs.uk/contact/" />
+			<test url="http://www.bhamcommunity.nhs.uk/professionals/medicines-management/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://bhamcommunity.nhs.uk/EasySiteWeb/EasySite/StyleData/Birmingham2015_Master/Images/footer-divider.png" />
+			<test url="http://www.bhamcommunity.nhs.uk/EasySiteWeb/EasySite/SupportFiles/jquery/ui.css" />
+			<test url="http://www.bhamcommunity.nhs.uk/EasysiteWeb/getresource.axd?AssetID=20251&amp;type=custom&amp;servicetype=Inline&amp;customSizeId=1" />
+			<test url="http://www.bhamcommunity.nhs.uk/easysiteweb/style/faux/css/ux.paux.css" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.knowledge\.scot\.nhs\.uk/home\.aspx$" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://www\.knowledge\.scot\.nhs\.uk/(?!ImageGen\.ashx)" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://www.knowledge.scot.nhs.uk/home.aspx" /-->
+
+			<!--	-ve:
+					-->
+			<!--test url="http://www.knowledge.scot.nhs.uk/ImageGen.ashx?image=/media/9683435/people%20connect.jpg&amp;width=192" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.mcs\.scot\.nhs\.uk/home\.aspx" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://www.mcs.scot.nhs.uk/home.aspx" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.procurement\.wales\.nhs\.uk/(?:$|favicon\.ico)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://www\.procurement\.wales\.nhs\.uk/(?!css/|resource/)" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://www.procurement.wales.nhs.uk/favicon.ico" /-->
+
+			<!--	-ve:
+					-->
+			<!--test url="http://www.procurement.wales.nhs.uk/css/sIFR-print.css" /-->
+			<!--test url="http://www.procurement.wales.nhs.uk/images/searcharrow.gif" /-->
+			<!--test url="http://www.procurement.wales.nhs.uk/resource/16573.24155.imgRandom.eng.jpg" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.nhs\.uk/($|Conditions/Pages/hub\.aspx|IPS$|NHSEngland/Pages/NHSEngland\.aspx|Personalisation$|aboutNHSChoices$|aboutNHSChoices/Pages/ContactUs\.aspx|favicon\.ico|find$|ipg/Pages/IPStart\.aspx|medicine-guides$|pages/(?:home|languagehub)\.aspx|press$|[Ss]ervice-[Ss]earch$|video$|yourhealth$)" /-->
+		<!--
+			Exceptions include everything on login page and a little more, namely:
+
+				- NHSEngland/Healthcosts/Pages/Dentalcosts.aspx
+				- NHSEngland/Healthcosts/Pages/PPC.aspx
+				- NHSEngland/Healthcosts/Pages/universal-credit.aspx
+
+			This needs lots and lots and lots ... of tests
+									-->
+		<!--exclusion pattern="^http://(?:www\.)?nhs\.uk/(?!sub-nav-b(?:g|order))|News/|NHSEngland/Healthcosts/Pages/(?:Dentalcosts|PPC|universal-credit)\.aspx|Personalisation/)" /-->
+		<exclusion pattern="^http://(?:www\.)?nhs\.uk/(?!/*(?:_layouts/\d\d\d\d/|(?:10-minute-shake-up|change4life-beta/campaigns/sugar-smart/home|[Ss]ervice-[Ss]earch/performance/search|start4life/signups/new)(?:$|\?)|Personalisation/(?:Login|Registration|ResetPassword)\.aspx|(?:[\w/-]+/)?PublishingImages/|[Ss]ervice-[Ss]earch/[Cc]ontent/(?:css|img)/|Tools/Documents/|aboutNHSChoices/aboutnhschoices/e-newsletters/Pages/newsletters-home\.aspx|ipgcontrols/(?:css|image)s/|ipgmedia/|css/|img/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.nhs.uk/Conditions/Pages/hub.aspx" />
+			<test url="http://www.nhs.uk/IPS" />
+			<test url="http://www.nhs.uk/NHSEngland" />
+			<test url="http://www.nhs.uk/Personalisation" />
+			<test url="http://www.nhs.uk/PersonalisationModules/PublishingImages/logo-giveblood.png" />
+			<test url="http://www.nhs.uk/Service-Search" />
+			<test url="http://www.nhs.uk/aboutNHSChoices" />
+			<test url="http://www.nhs.uk/conditions/measles/Pages/Introduction.aspx" />
+			<test url="http://www.nhs.uk/conditions/social-care-and-support-guide/pages/nhs-continuing-care.aspx" />
+			<test url="http://www.nhs.uk/favicon.ico" />
+			<test url="http://www.nhs.uk/ipg/Pages/AboutThisService.aspx" />
+			<test url="http://www.nhs.uk/ipg/Pages/IPStart.aspx" />
+			<test url="http://www.nhs.uk/livewell/fitness/Pages/Fitnesshome.aspx" />
+			<test url="http://www.nhs.uk/medicine-guides" />
+			<test url="http://www.nhs.uk/news/Pages/NewsIndex.aspx" />
+			<test url="http://www.nhs.uk/pages/home.aspx" />
+			<test url="http://www.nhs.uk/press" />
+			<test url="http://www.nhs.uk/service-search" />
+			<test url="http://www.nhs.uk/service-search/dentist/locationsearch/3" />
+			<test url="http://www.nhs.uk/video" />
+			<test url="http://www.nhs.uk/yourhealth" />
+			<test url="http://www.nhs.uk/pages/languagehub.aspx" />
+
+			<!--	-ve:
+					-->
+			<test url="http://nhs.uk/10-minute-shake-up" />
+			<test url="http://nhs.uk/_layouts/1033/styles/Menu.css" />
+			<test url="http://www.nhs.uk/Conditions/PublishingImages/For%20hub%20page.jpg" />
+			<!--test url="http://www.nhs.uk/NHSEngland/ARC/PublishingImages/2016/S_0416_antibiotics_C0150331_ST.jpg" /-->
+			<!--test url="http://www.nhs.uk/NHSEngland/Healthcareabroad/PublishingImages/T_0416_healthcare-abroad_468044224_st.jpg" /-->
+			<test url="http://www.nhs.uk/NHSEngland/PublishingImages/2015/my-nhs.jpg" />
+			<!--test url="http://www.nhs.uk/NHSEngland/bruce-keogh-review/PublishingImages/2016/MS_0416_bruce-keogh_ST.jpg" /-->
+			<test url="http://www.nhs.uk/NHSEngland/complaints-and-feedback/PublishingImages/complaints_183x90_ThinkstockPhotos-515056570.jpg" />
+			<test url="http://www.nhs.uk/Personalisation/Login.aspx" />
+			<test url="http://www.nhs.uk/Personalisation/Registration.aspx" />
+			<test url="http://www.nhs.uk/Personalisation/ResetPassword.aspx" />
+			<test url="http://www.nhs.uk/PersonalisationModules/PublishingImages/logo-giveblood.png" />
+			<test url="http://www.nhs.uk/PublishingImages/PersonalisationModules/Modules/newsletterpromo.jpg" />
+			<test url="http://www.nhs.uk/PublishingImages/nhs-services.jpg" />
+			<test url="http://www.nhs.uk/Service-Search/Content/css/reset.css" />
+			<test url="http://www.nhs.uk/Service-Search/Content/img/geolocation.png" />
+			<!--test url="http://www.nhs.uk/Tools/Documents/NHS_ExercisesForOlderPeople.pdf" />	too large for automated check -->
+			<test url="http://www.nhs.uk/aboutNHSChoices/aboutnhschoices/e-newsletters/Pages/newsletters-home.aspx" />
+			<!--test url="http://www.nhs.uk/aboutNHSChoices/PublishingImages/2015/about-us_183x90.jpg" /-->
+			<test url="http://www.nhs.uk/aboutNHSChoices/professionals/developments/PublishingImages/analytics_183x90_DFHAW6.jpg" />
+			<test url="http://www.nhs.uk/change4life-beta/campaigns/sugar-smart/home" />
+			<test url="http://www.nhs.uk/choiceintheNHS/Yourchoices/personal-health-budgets/PublishingImages/personal-health-budgets_183x90_GP031-5510.jpg" />
+			<test url="http://www.nhs.uk/css/reset.css" />
+			<test url="http://www.nhs.uk/img/login.png" />
+			<test url="http://www.nhs.uk/ipgcontrols/css/reset.css" />
+			<test url="http://www.nhs.uk/ipgcontrols/images/buttons/btn-arrow.gif" />
+			<test url="http://www.nhs.uk/ipgmedia/local/Pauls%20Cancer%20Support%20Centre/paulscancersupport.jpg" />
+			<test url="http://www.nhs.uk/ipgmedia/national/Royal%20College%20of%20Psychiatrists/RCP2~2513995.jpg" />
+			<test url="http://www.nhs.uk/service-search/performance/Consultants" />
+			<test url="http://www.nhs.uk/service-search/performance/search" />
+			<test url="http://www.nhs.uk/start4life/signups/new" />
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://indicators.ic.nhs.uk/webview/index/en/MyServer/NHS-Information-Centre-indicators.c.MyServer/GP-Practice-data.d.48/Demography.d.77/Deprivation.d.202/Income-Deprivation-Affecting-Older-People-Index-IDAOPI-2010-practice-attributed-dataset-/fStudy/P01114" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.(?:aquanw|croydonhealthservice|farehamandgosportccg|kmpt|sheffieldchildrens|southeasternhampshireccg|staffordshireandstokeontrent|tamesidehospital)\.nhs\.uk$" name="^SKSession$" /-->
+	<!--securecookie host="^(?:esuppliers|extranet|groups|panelsurveys)\.ic\.nhs\.uk$" name="^IC\.SP\.(?:HasRedirectedAfterLogin|RedirectURLCookie)$" /-->
+	<!--securecookie host="^indicators\.ic\.nhs\.uk$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^www\.jobs\.nhs\.uk$" name="^X-Mapping-\w+$" /-->
+	<!--securecookie host="^\.kch\.nhs\.uk$" name="^KCHCookies(?:_Banner)?$" /-->
+	<!--securecookie host="^\.moh\.nhs\.uk$" name="^SESS[\da-f]{32}$" /-->
+	<!--securecookie host="^\.(?:nhsbt|blogs\.nhsbt|organdonation)\.nhs\.uk$" name="^ARRAffinity$" /-->
+	<!--securecookie host="^apps\.nhsbsa\.nhs\.uk$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^www\.nhsbsadental\.nhs\.uk$" name="^PROXY_SESSIONID$" /-->
+	<!--securecookie host="^www\.(?:nwppn|sbs)\.nhs\.uk$" name="^[\da-f]{32}$" /-->
+	<!--securecookie host="^helpdesk\.pcc\.nhs\.uk$" name="^SWIFT_(?:client|sessionid40)$" /-->
+	<!--securecookie host="^(?:www\.)?primarycare\.nhs\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^www\.royalfree\.nhs\.uk$" name="^(?:PHPSESSID|rf_(?:csrf_token|last_ativity|last_visit|stashid|tracker))$" /-->
+	<!--securecookie host="^www\.frameworks-scotland2\.scot\.nhs\.uk$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^isdscotland\.scot\.nhs\.uk$" name="^ASPSESSIONID[A-Z]+$" /-->
+	<!--securecookie host="^jobs\.scot\.nhs\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^\.nes\.scot\.nhs\.uk$" name="^IPCZQX[\da-f]$" /-->
+	<!--securecookie host="^scotpho\.nhsnss\.scot\.nhs\.uk$" name="^(?:JSESSIONID|OASINET)$" /-->
+	<!--securecookie host="^peopleconnect\.scot\.nhs\.uk$" name="^(?:__RequestVerificationToken|ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^(?:www\.)?youngcancer\.scot\.nhs\.uk$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^addtoyourlife\.wales\.nhs\.uk$" name="^(?:LANG|PIENAV$)" /-->
+	<!--securecookie host="^www\.(?:myhealthonline-emisweb|procurement)\.wales\.nhs\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^www\.myhealthonline-inps\.wales\.nhs\.uk$" name="^TS[\da-f]+$" /-->
+	<!--securecookie host="^www\.nhsdirect\.wales\.nhs\.uk$" name="^(?:ASP\.NET_SessionId|NHSDWCookieSettings)$" /-->
+	<!--securecookie host="^securefileshare\.wales\.nhs\.uk$" name="^(?:DesignModeTest|DMZCookieTest|JavascriptTest|LongTermCookieExpireDate|MIDMZLang|TS[\da-f]+|WizardVersions|siLockLongTermInstID)$" /-->
+	<!--securecookie host="^www\.nhs\.uk$" name="^(?:_isp-form_session|_ten-minute-shake-up_session|CAM|WFE)$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^(?!(?:www\.)?bhamcommunity\.|www\.)\w" name="." />
+
+
+	<rule from="^http://nhs\.uk/"
+		to="https://www.nhs.uk/" />
+
+	<rule from="^http://(elft|healthcareers|healthiernorthwestlondon|healthystart|neas)\.nhs\.uk/"
+		to="https://www.$1.nhs.uk/" />
+
+	<!--	Redirect drops forward slash
+		and path, but not args:
+						-->
+	<rule from="^http://kentsexualhealth\.nhs\.uk/[^?]*"
+		to="https://www.kent.gov.uk/sexualhealth" />
+
+		<test url="http://kentsexualhealth.nhs.uk/home.htm" />
+
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://www\.nhscareers\.nhs\.uk/.*"
+		to="https://www.healthcareers.nhs.uk/" />
+
+		<test url="http://www.nhscareers.nhs.uk/index.php" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://www\.n(ice|oo)\.nhs\.uk/+"
+		to="https://www.n$1.org.uk/" />
+
+		<test url="http://www.nice.nhs.uk/index.htm" />
+		<test url="http://www.noo.nhs.uk/index.htm" />
+
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://helpdesk\.pcc\.nhs\.uk/.*"
+		to="https://helpdesk.pcc-cic.org.uk/" />
+
+		<test url="http://helpdesk.pcc.nhs.uk/Default.aspx" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,45 +1,85 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *ukfast.co.uk:
 
-		- pdf	(redirects to www; mismatched, CN: www.ukfast.co.uk)
+		- blog *
+		- mirrors ʳ
+		- pdf **
 
-
-	Problematic subdomains:
-
-		- images	(redirects to www; self-signed, CN: 80.244.177.63.srvlist.ukfast.net)
-		- my2		(expired 2011-06-26, mismatched, CN: my.ukfast.co.uk)
-
-
-	Partially covered subdomains:
-
-		- (www.)	(some pages redirect to http)
+	* Differs from http
+	** Redirects to www.pdf.ukfast.co.uk
+	ʳ Refused
 
 
+	Problematic hosts in *ukfast.co.uk:
 
-	Fully covered subdomains:
+		- srvlist-24-146-108-109.static ᵉ ᵐ
 
-		- images	(→ www)
-		- my
-		- my2		(→ my)
+	ᵉ Expired
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- ukfast.co.uk
+		- .ukfast.co.uk
+		- www.ukfast.co.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images on www from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="UKFast.co.uk (partial)">
 
 	<target host="ukfast.co.uk" />
-	<target host="*.ukfast.co.uk" />
-		<exclusion pattern="^http://www\.ukfast\.co\.uk/(?!favicon\.ico|images/|myukfast\.html|scripts/|stylesheets/)" />
+	<target host="images.ukfast.co.uk" />
+	<target host="my.ukfast.co.uk" />
+	<target host="my2.ukfast.co.uk" />
+	<target host="www.ukfast.co.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://(?:www\.)?ukfast\.co\.uk/blog/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.ukfast.co.uk/blog/" />
+			<test url="http://www.ukfast.co.uk/blog/page/2/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.ukfast.co.uk/about.html" />
+			<test url="http://www.ukfast.co.uk/blog/wp-content/plugins/jetpack/css/jetpack.css" />
+			<test url="http://www.ukfast.co.uk/careers.html" />
+			<test url="http://www.ukfast.co.uk/cloud-hosting.html" />
+			<test url="http://www.ukfast.co.uk/cloud-success-stories.html" />
+			<test url="http://www.ukfast.co.uk/colocation-data-centres-manchester.html" />
+			<test url="http://www.ukfast.co.uk/contact.html" />
+			<test url="http://www.ukfast.co.uk/images/icons/info.gif" />
+			<test url="http://www.ukfast.co.uk/managed-dedicated-servers.html" />
+			<test url="http://www.ukfast.co.uk/partner-programme.html" />
+			<test url="http://www.ukfast.co.uk/public-sector-case-studies.html" />
+			<test url="http://www.ukfast.co.uk/public-sector.html" />
+			<test url="http://www.ukfast.co.uk/request-a-server-quote.html" />
+			<test url="http://www.ukfast.co.uk/stylesheets/module_clientarea_login_whois.css" />
 
 
-	<securecookie host="^(?:my\.)?ukfast\.co\.uk$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^ukfast\.co\.uk$" name="^SERVERID$" /-->
+	<!--securecookie host="^\.ukfast\.co\.uk$" name="^marketing_campaign$" /-->
+	<!--securecookie host="^www\.ukfast\.co\.uk$" name="^(?:PHPSESSID|SERVERID)$" /-->
+
+	<securecookie host="^\." name="^(?:_gat?$|_gat_|marketing_campaign$)" />
+	<securecookie host="^[^.uw]" name="." />
 
 
-	<rule from="^http://(www\.)?ukfast\.co\.uk/"
-		to="https://$1ukfast.co.uk/" />
-
-	<rule from="^http://images\.ukfast\.co\.uk/"
-		to="https://www.ukfast.co.uk/images/" />
-
-	<rule from="^http://my2?\.ukfast\.co\.uk/"
-		to="https://my.ukfast.co.uk/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -27,28 +27,43 @@
 		- secserv
 		- ums
 
+
+	Insecure cookies are set for these domains:
+
+		- .adtech.de
+
 -->
 <ruleset name="Adtech.de (partial)">
 
-	<target host="*.adtech.de" />
-		<!--
-			Breaks videos:
+	<!--	Direct rewrites:
+				-->
+	<target host="adserver.adtech.de" />
+	<target host="adserverams.adtech.de" />
+	<target host="adserver-sb-fra.adtech.de" />
+	<target host="aka-cdn.adtech.de" />
+	<target host="secserv.adtech.de" />
+	<target host="ums.adtech.de" />
 
-				https://trac.torproject.org/projects/tor/ticket/7670
-											-->
-		<exclusion pattern="http://(?:adserver\.)?adtech\.de/(?:\?adrawdata/|crossdomain\.xml)" />
+	<!--	Complications:
+				-->
+	<target host="aka-cdn-ns.adtech.de" />
+	<target host="ad.dc2.adtech.de" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.adtech\.de" name="^CfP$" /-->
 
 	<securecookie host="^\.adtech\.de" name=".+" />
 
-
-	<rule from="^http://(adserver(?:ams|-sb-fra)?|aka-cdn|secserv|ums)\.adtech\.de/"
-		to="https://$1.adtech.de/" />
 
 	<rule from="^http://aka-cdn-ns\.adtech\.de/"
 		to="https://aka-cdn.adtech.de/" />
 
 	<rule from="^http://ad\.dc2\.adtech\.de/"
 		to="https://adserver.adtech.de/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

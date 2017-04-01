@@ -1,0 +1,51 @@
+<!--
+	For other Just Develop It coverage, see Just-Develop-It.xml.
+
+
+	Problematic hosts in *justcloud.com:
+
+		- affiliates ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- justcloud.com
+		- .justcloud.com
+		- www.justcloud.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Image on support from login.justcloud.com ˢ
+		- favicon on www from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="JustCloud.com (partial)">
+
+	<target host="justcloud.com" />
+	<target host="login.justcloud.com" />
+	<target host="my.justcloud.com" />
+	<target host="support.justcloud.com" />
+	<target host="www.justcloud.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^justcloud\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.justcloud\.com$" name="^(?:CUBEXSESSIONID|LC_CURRENCY)$" /-->
+	<!--securecookie host="^www\.justcloud\.com$" name="^(?:LC_DROPDOWN|PHPSESSID)$" /-->
+
+	<securecookie host="^\." name="^(?:CUBEXSESSIONID|LC_CURRENCY)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

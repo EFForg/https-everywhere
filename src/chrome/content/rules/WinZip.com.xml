@@ -1,4 +1,8 @@
 <!--
+Disabled by https-everywhere-checker because:
+Non-2xx HTTP code: http://download.winzip.com/ (200) => https://a248.e.akamai.net/f/4695/10/download.winzip.com/ (400)
+Fetch error: http://inst.winzip.com/ => https://inst.avg.com/: (51, "SSL: no alternative certificate subject name matches target host name 'inst.avg.com'")
+Non-2xx HTTP code: http://install.winzip.com/ (200) => https://98acdc60cb7e28f9e56a-c9c8355414dceb2e62093c8746e20714.ssl.cf2.rackcdn.com/ (404)
 	For rules causing false/broken MCB, see WinZip.com-falsemixed.xml.
 
 
@@ -11,6 +15,7 @@
 		- www.winzip.com.edgesuite.net
 
 			- a486.g.akamai.net
+			- download
 			- image
 
 		- 98acdc60cb7e28f9e56a-c9c8355414dceb2e62093c8746e20714.r4.cf2.rackcdn.com
@@ -37,6 +42,7 @@
 
 	Problematic subdomains:
 
+		- download ¹
 		- inst		(works; mismatched, CN: *.inst.avg.com)
 		- install ¹
 		- image ¹
@@ -59,12 +65,13 @@
 		- store
 
 -->
-<ruleset name="WinZip.com (partial)">
+<ruleset name="WinZip.com (partial)" default_off='failed ruleset test'>
 
 	<!--	Enumerate domains in order to avoid one
 		of two duplicate target warnings.
 						-->
 	<target host="winzip.com" />
+	<target host="download.winzip.com" />
 	<target host="image.winzip.com" />
 	<target host="imagewz.winzip.com" />
 		<!--
@@ -83,7 +90,7 @@
 		<!--
 			Avoid false/broken MCB:
 						-->
-		<exclusion pattern="^http://(?:www\.)?winzip\.com/(?!cgi-bin/|.+/css/|favicon\.ico|lang\.json|static/)" />
+		<exclusion pattern="^http://(?:www\.)?winzip\.com/(?!cgi-bin/|.+/css/|favicon\.ico|lang\.json|static/|/win/\w\w/order\.cgi)" />
 
 
 	<securecookie host="^\.store\.winzip\.com$" name=".+" />
@@ -91,12 +98,6 @@
 
 	<rule from="^http://(store\.|www\.)?winzip\.com/"
 		to="https://$1winzip.com/" />
-
-	<!--	First, rewrite all but stylesheets, or children thereof,
-		which reference resources relative to root to akamai:
-									-->
-	<rule from="^http://image(wz)?\.winzip\.com/(?!.+/css/(?!(?:colorbox_common|dropdownbase|dropdown_common|footer|footer_common|jquery-ui-custom_common|layout|newsroom|print)\.css))"
-		to="https://a248.e.akamai.net/f/1449/2216/6/image$1.winzip.com/" />
 
 	<!--	And then everything else to ^:
 							-->

@@ -1,0 +1,71 @@
+<!--
+	Note: platform is so as not to increase non-Tor
+	distinguishability, given that no pages are covered
+	and no mixed content secured.
+
+
+	Nonfunctional hosts in *mtv.fi:
+
+		- blogit ʳ
+		- m ʰ
+		- www ʰ
+
+	ʰ Redirects to http
+	ʳ Refused
+
+
+	Problematic hosts in *mtv.fi:
+
+		- admp-tc ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .mtv.fi
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="MTV.fi (partial)" platform="mixedcontent">
+
+	<target host="mtv.fi" />
+	<!--target host="admp-tc.mtv.fi" /-->
+	<target host="im.mtv.fi" />
+	<target host="s.mtv.fi" />
+
+		<!--	Redirect to http:
+						-->
+		<!--exclusion pattern="^http://m\.mtv\.fi/(?:$|chat$|lifestyle$|sport$)" /-->
+		<!--exclusion pattern="^http://www\.mtv\.fi/(?:$|api/servies/|include/footer_frame\.shtml|lifestyle$|saa/$|sport$)" /-->
+
+			<!--	+ve:
+					-->
+			<!--
+			<test url="http://www.mtv.fi/api/services/bauermedia/files/media/image/2016/30/2016_30_08_57c5836db179a_320.jpg" />
+			-->
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://admp-tc.mtv.fi/getCampaigns.do?includeSegments=true&amp;callback=" /-->
+
+		<test url="http://im.mtv.fi/resources/5605450/2/article-inline-extra.css" />
+		<!--
+		<test url="http://st.mtv.fi/static/javascripts/external-js/remarketing.js" />
+		-->
+		<test url="http://st.mtv.fi/static/images/arrow-related-white.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.mtv\.fi$" name="^evid_\d+$" /-->
+
+	<securecookie host="^\." name="^(?:_ga|evid_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

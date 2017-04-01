@@ -1,23 +1,50 @@
 <!--
 	Problematic domains:
 
-		- hush.com *
-		- hushmail.com *
+		- (www.)?hush.com *
 
-	* Cert only matches www
+	* Redirect differs
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .hushmail.com
+		- m.hushmail.com
+		- www.hushmail.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="Hushmail">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="hushmail.com" />
+	<target host="help.hushmail.com" />
+	<target host="m.hushmail.com" />
+	<target host="www.hushmail.com" />
+
+	<!--	Complications:
+				-->
 	<target host="hush.com" />
 	<target host="www.hush.com" />
-	<target host="www.hushmail.com" />
-	<target host="hushmail.com" />
 
 
-	<securecookie host="^www\.hushmail\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.hushmail\.com$" name="^(?:incap_ses_\d+|visid_incap)_\d+$" /-->
+	<!--securecookie host="^(?:m|www)\.hushmail\.com$" name="^(?:___utm[abm]\w+|PHPSESSID2)$" /-->
+
+	<securecookie host="^\." name="^(?:incap_ses|visid_incap)_" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?hush(mail)?\.com/"
-		to="https://www.hush$1.com/" />
+	<!--	Redirect keeps all:
+					-->
+	<rule from="^http://(?:www\.)?hush\.com/"
+		to="https://www.hushmail.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

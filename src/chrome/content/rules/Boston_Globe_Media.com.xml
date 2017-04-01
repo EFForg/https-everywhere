@@ -1,0 +1,66 @@
+<!--
+	For rules causing false/broken MCB, see Boston_Globe_Media.com-falsemixed.xml.
+
+	Other Boston Globe Media rulesets:
+
+		- The_Boston_Globe.xml
+
+
+	Problematic hosts in *bostonglobemedia.com:
+
+		- ^ ¹
+		- go ²
+		- www ³
+
+	¹ Refused
+	² Pardot
+	³ Mixed css
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www from $self *
+			- www from fonts.googleapis.com *
+
+		- Images on www from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Boston Globe Media.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="advertising.bostonglobemedia.com" />
+	<!--target host="www.bostonglobemedia.com" /-->
+
+	<!--	Complications:
+				-->
+	<!--target host="bostonglobemedia.com" /-->
+	<target host="go.bostonglobemedia.com" />
+
+		<exclusion pattern="^http://go\.bostonglobemedia\.com/+(?!l/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://go.bostonglobemedia.com/home.htm" />
+			<test url="http://go.bostonglobemedia.com/index.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://go.bostonglobemedia.com/l/36752/2015-06-09/xzd53" />
+			<test url="http://go.bostonglobemedia.com/l/36752/2015-01-23/37crk" />
+
+
+	<!--rule from="^http://bostonglobemedia\.com/"
+		to="https://www.bostonglobemedia.com/" /-->
+
+	<rule from="^http://go\.bostonglobemedia\.com/"
+		to="https://pi.pardot.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

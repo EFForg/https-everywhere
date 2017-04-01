@@ -1,41 +1,70 @@
 <!--
-	Nonfunctional:
+	Nonfunctional hosts in *adblade.com:
 
-        - https://(www.)adblade.com
-		- (pwik.|www.)adiant.com
+		- blog *
 
-			- Cert: savegeorge.com.
-			- Display savegeorge.com data (i.e., a blank page).
+	* Dropped
+
+
+	Nonfunctional hosts in *adblade.com:
+
+		- blog ˣ
+		- static ᵐ
+
+	ᵐ Mismatched
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .adblade.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on blog from $self
+
+		- Images, on:
+
+			- blog from echidnainc.com ⁴
+			- blog from www.mdgadvertising.com ʳ
+
+	⁴ Unsecurable <= 404
+	ʳ Unsecurable <= refused
 
 -->
-<ruleset name="Adblade (partial)">
+<ruleset name="Adblade.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="adblade.com" />
-	<target host="*.adblade.com" />
-	<target host="reachmode.com" />
-	<target host="*.reachmode.com" />
+	<target host="pixel.adblade.com" />
+	<target host="web.adblade.com" />
+	<target host="www.adblade.com" />
+
+		<!--	Previously redirected to http:
+							-->
+		<test url="http://adblade.com/adblade-adspecs" />
+		<test url="http://adblade.com/doc/about" />
+		<test url="http://adblade.com/doc/contact" />
+		<test url="http://www.adblade.com/adblade-adspecs" />
+		<test url="http://www.adblade.com/doc/about" />
+		<test url="http://www.adblade.com/doc/contact" />
+
+		<test url="http://pixel.adblade.com/imps.php?sgms=" />
 
 
-	<securecookie host="^web\.reachmode\.com$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.adblade\.com$" name="^__sgs$" /-->
+
+	<securecookie host="^\." name="^__(?:qca|sgs$)" />
+	<securecookie host="^\w" name="." />
 
 
-	<!--	Registration pages are polluted by unsecurable
-		beacons from piwik.adiant.com.  Tut tut.	-->
-	<rule from="^http://(www\.)?adblade\.com/(css|images|img|registration)/"
-		to="https://$1adblade.com/$2/" />
-
-	<rule from="^http://(pixel|web)\.adblade\.com/"
-		to="https://$1.adblade.com/" />
-
-	<!--	Redirects as so, sans-https.	-->
-    <!-- No longer works.
-	<rule from="^http://(?:www\.)?reachmode\.com/"
-		to="https://www.adblade.com/" />
-        -->
-
-	<!--	This domain is used for advertising
-		on third-party websites.	-->
-	<rule from="^http://web\.reachmode\.com/"
-		to="https://web.reachmode.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

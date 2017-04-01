@@ -1,41 +1,62 @@
 <!--
+	Other MasterCard rulesets:
+
+		- mastercard.us.xml
+
+
 	Nonfunctional domains:
 
-		- mastercard.us			(reset)
-		- www.mastercard.us		(redirects to 127986/alternate/index.html, akamai)
 		- www.priceless.com		($ redirects to http, content/ 404s)
 
 
 	Problematic domains:
 
-		- mastercard.com				(mismatched, CN: www.securecode.com)
+		- mastercard.com	>= 1 path 404s
 		- investorrelations.mastercardintl.com		(works, akamai)
-		- securecode.com				(cert only matches www)
+		- securecode.com	404
+
+
+	These altnames do not exist:
+
+		- sea.mastercard.com
+
+
+	Mixed content:
+
+		- css on www.mastercard.com from fast.fonts.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="MasterCard">
 
-	<target host="mastercard.com" />
-	<target host="*.mastercard.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="newsroom.mastercard.com" />
+	<target host="www.mastercard.com" />
+
 	<target host="smetrics.mastercardintl.com" />
-	<target host="securecode.com" />
+
 	<target host="www.securecode.com" />
 
+	<!--	Complications:
+				-->
+	<target host="mastercard.com" />
+	<target host="securecode.com" />
 
-	<securecookie host="^.*\.mastercard\.com$" name=".+" />
-	<securecookie host="^www\.securecode\.com$" name=".+" />
+
+	<securecookie host="\.mastercard\.com$" name="." />
+	<securecookie host="^www\.securecode\.com$" name="." />
 
 
-	<rule from="^https?://(?:www\.)?mastercard\.com/"
-		to="https://www.mastercard.com/" />
+	<rule from="^http://(mastercard|securecode)\.com/"
+		to="https://www.$1.com/" />
 
-	<rule from="^http://newsroom\.mastercard\.com/"
-		to="https://newsroom.mastercard.com/" />
+		<!--	404:
+				-->
+		<test url="http://mastercard.com/index.html" />
 
-	<rule from="^http://smetrics\.mastercardintl\.com/"
-		to="https://smetrics.mastercardintl.com/" />
-
-	<rule from="^https?://(?:www\.)?securecode\.com/"
-		to="https://www.securecode.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

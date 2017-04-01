@@ -1,5 +1,5 @@
 <!--
-	For other New York Times coverage, see NYTimes.xml.
+	For other Boston Globe Media coverage, see Boston_Globe_Media.com.xml.
 
 
 	CDN buckets:
@@ -7,83 +7,50 @@
 		- nytbglobe.112.2o7.net
 		- s3.amazonaws.com/static.rondavu.com/C/Boston_PROD/
 
-		- wac.493C.edgecastcdn.net
 
-			- cinesport.boston.com
+	Nonfunctional hosts in *bostonglobe.com:
 
-		- bostoncom.http.internapcdn.net
+		- epaper *
+		- spiderbites
 
-			- c.o0bc.com
-			- cache.boston.com
-
-
-	Nonfunctional domains:
-
-		- cinesport.boston.com		(404; mismatched, CN: gp1.wac.edgecastcdn.net)
+	* 404
 
 
-	Problematic domains:
+	Mixed content:
 
-		- c.o0bc.com	(404; mismatched, CN: *.internapcdn.net)
-		- boston.com *
-		- deals.boston.com ³
-		- bostonglobe.com	(dropped)
+		- Images, on:
 
-	* Expired 2014-02-07, ocsp request failure
-	³ Works; mismatched, CN: finds.boston.com
+			- www from cache.boston.com
+			- www from p.o0bc.com
 
+		- Bugs, on:
 
-	Fully covered domains:
+			- digitalaccess, www from newyorktimes.112.2o7.net *
+			- digitalaccess from b.scorecardresearch.com *
 
-		- (www.)bostonglobe.com	(^ → www)
+	* Secured by us
 
 -->
-<ruleset name="The Boston Globe (partial)" platform="mixedcontent">
+<ruleset name="Boston Globe.com (partial)">
 
-	<target host="c.o0bc.com" />
-	<target host="boston.com" />
-	<target host="*.boston.com" />
+	<!--	Direct rewrites:
+				-->
 	<target host="bostonglobe.com" />
-	<target host="*.bostonglobe.com" />
-		<!--
-			- Doesn't work
-			- epaper CN: www.pressdisplay.com
-							-->
-		<exclusion pattern="http://(epaper|spiderbites)\.bostonglobe\.com/" />
+	<target host="digitalaccess.bostonglobe.com" />
+	<target host="services.bostonglobe.com" />
+	<target host="www.bostonglobe.com" />
 
 
-	<securecookie host="^(?:.*\.)?boston\.com$" name=".+" />
-	<securecookie host=".*\.bostonglobe\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.bostonglobe\.com$" name="^meclabsBostonGlobe$" /-->
+	<!--securecookie host="digitalaccess\.bostonglobe\.com$" name="^(?:PHPSESSID|bg_csrf_cookie)" /-->
+	<!--securecookie host="www\.bostonglobe\.com$" name="^(?:BIGipServer|JSESSIONID$)" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://c\.o0bc\.com/"
-		to="https://www.boston.com/" />
-
-	<rule from="^http://(?:www\.)?boston\.com/"
-		to="https://www.boston.com/" />
-
-	<rule from="^http://graphics\.boston\.com/"
-		to="https://graphics.boston.com/" />
-
-	<!--	- cache doesn't work
-		- cache CN: *.https.internapcdn.net
-							-->
-	<rule from="^http://cache\.boston\.com/"
-		to="https://graphics.boston.com/" />
-
-	<rule from="^http://deals\.boston\.com/+(favicon\.ico|signup|views/)"
-		to="https://finds.boston.com/$1" />
-
-	<!--	- Weather doesn't work
-		- This is what the server does, aside from https
-							-->
-	<rule from="^http://weather\.boston\.com/"
-		to="https://www.boston.com/weather/" />
-
-	<rule from="^http://services\.bostonglobe\.com/"
-		to="https://services.bostonglobe.com/" />
-
-	<rule from="^http://(?:www\.)?bostonglobe\.com/"
-		to="https://www.bostonglobe.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

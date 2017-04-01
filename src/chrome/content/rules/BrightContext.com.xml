@@ -2,45 +2,28 @@
 	CDN buckets:
 
 		- s3.amazonaws.com/static.brightcontext.com/
-
 		- d21tvy0y59wl26.cloudfront.net
-
-			- www
 
 
 	Problematic subdomains:
 
-		- www	(works, cloudfront)
+		- (www.)? *
 
-
-	Partially covered subdomains:
-
-		- www	(→ d21tvy0y59wl26.cloudfront.net)
+	* Expired
 
 
 	Fully covered subdomains:
 
-		- ^
-		- mgr
+		- (www.)?
 
 -->
-<ruleset name="BrightContext.com (partial)">
+<ruleset name="BrightContext.com" default_off="expired">
 
 	<target host="brightcontext.com" />
-	<target host="*.brightcontext.com" />
-		<!--
-			Avoid user-visible paths:
-							-->
-		<exclusion pattern="^http://www\.brightcontext\.com/(?!favicon\.ico|wp-content/|wp-includes/)" />
+	<target host="www.brightcontext.com" />
 
 
-	<securecookie host="^mgr\.brightcontext\.com$" name=".+" />
-
-
-	<rule from="^http://(mgr\.)?brightcontext\.com/"
-		to="https://$1brightcontext.com/" />
-
-	<rule from="^http://www\.brightcontext\.com/"
-		to="https://d21tvy0y59wl26.cloudfront.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

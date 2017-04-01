@@ -3,18 +3,42 @@
 
 		- BSD.net.xml
 
+
+	Problematic subdomains:
+
+		- tools *
+
+	* Works; mismatched, CN: *.a.ssl.fastly.net
+
+
+	Mixed content:
+
+		- Images on tools and www from www *
+
+	* Secured by us
+
 -->
-<ruleset name="Blue State Digital">
+<ruleset name="Blue State Digital.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="bluestatedigital.com" />
-	<target host="*.bluestatedigital.com" />
-	<target host="*.www.bluestatedigital.com" />
+	<target host="www.bluestatedigital.com" />
+
+		<!--exclusion pattern="http://tools\.bluestatedigital\.com/" /-->
 
 
-	<securecookie host="^\.(?:www\.)?bluestatedigital\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^tools\.bluestatedigital\.com$" name="^(exp_cp_last_site_id|exp_last_activity|exp_last_visit|exp_tracker)" /-->
+	<!--securecookie host="^.tools\.bluestatedigital\.com$" name="^X-CheckNode$" /-->
+	<!--securecookie host="^www\.bluestatedigital\.com$" name="^(exp_cp_last_site_id|exp_last_activity|exp_last_visit|exp_tracker)" /-->
 
 
-	<rule from="^http://(www\.)?bluestatedigital\.com/"
-		to="https://$1bluestatedigital.com/" />
+	<securecookie host="^(?:\.|\.?www\.)?bluestatedigital\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

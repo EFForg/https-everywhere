@@ -1,40 +1,65 @@
 <!--
-	Nonfunctional visiblemeasures.com subdomains:
+	Other Visible Measures rulesets:
 
-		- $
-		- corp
-		- www	(interrupted)
+		- viewablemedia.net.xml
 
 
 	Problematic domains:
 
-		- viewablemedia.net		(times out)
-		- od2.visiblemeasures.com	(cert only matches [www.]video.od)
+		- ^ ᵈ
+		- video.od ᵐ
+
+	ᵈ Dropped, preemptable redirect
+	ᵐ Mismatched
 
 
-	visiblemeasures.hubspot.com/$ redirects to visiblemeasures.com.
+	Insecure cookies are set for these hosts: ᶜ
+
+		- auth.visiblemeasures.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- www from vmcdev2016.wpengine.com
+			- www from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Visible Measures (partial)">
+<ruleset name="Visible Measures.com (partial)">
 
-	<target host="*.visiblemeasures.com" />
-	<target host="viewablemedia.net" />
-	<target host="*.viewablemedia.net" />
+	<!--	Direct rewrites:
+				-->
+	<target host="auth.visiblemeasures.com" />
+	<target host="cdn.visiblemeasures.com" />
+	<target host="corp.visiblemeasures.com" />
+	<target host="od2.visiblemeasures.com" />
+	<target host="www.visiblemeasures.com" />
+
+	<!--	Complications:
+				-->
+	<target host="visiblemeasures.com" />
+	<target host="video.od.visiblemeasures.com" />
 
 
-	<securecookie host="^auth\.visiblemeasures\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^auth\.visiblemeasures\.com$" name="^_session_id$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(auth|cdn)\.visiblemeasures\.com/"
-		to="https://$1.visiblemeasures.com/" />
+	<rule from="^http://visiblemeasures\.com/"
+		to="https://www.visiblemeasures.com/" />
 
-	<rule from="^https?://(?:od2|video\.od)\.visiblemeasures\.com/"
-		to="https://video.od.visiblemeasures.com/" />
+	<rule from="^http://video\.od\.visiblemeasures\.com/"
+		to="https://od2.visiblemeasures.com/" />
 
-	<rule from="^http://(?:www\.)?viewablemedia\.net/"
-		to="https://www.viewablemedia.net/" />
-
-	<rule from="^http://ad\.viewablemedia\.net/"
-		to="https://ad.viewablemedia.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

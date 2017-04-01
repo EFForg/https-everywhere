@@ -1,26 +1,43 @@
 <!--
-	Problematic domains:
+	For other Laprox Group coverage, see laproxgroup.com.xml.
 
-		- (www.)laprox.com	(mismatched, CN: support.laprox.com)
-		- www.laproxsites.com	(cert only matches ^laproxsites.com)
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- laproxsites.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on seo from fonts.googleapis.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Laprox Sites">
+<ruleset name="Laprox Sites.com">
 
-	<target host="laprox.com" />
-	<target host="*.laprox.com" />
 	<target host="laproxsites.com" />
-	<target host="www.laproxsites.com" />
+	<target host="domains.laproxsites.com" />
+	<target host="monitor.laproxsites.com" />
+	<target host="seo.laproxsites.com" />
+	<target host="ssl.laproxsites.com" />
+	<target host="wwwyy.laproxsites.com" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://laproxsites.com/wp-admin/admin-ajax.php?action=alaskaajax_enqueue_custom_style_via_ajax&amp;ver=1.0.0.0" /-->
 
 
-	<securecookie host="^support\.laprox.com$" name=".+" />
-	<securecookie host="^laproxsites\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^laproxsites\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?laprox(?:sites)?\.com/"
-		to="https://laproxsites.com/" />
-
-	<rule from="^http://support\.laprox\.com/"
-		to="https://support.laprox.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

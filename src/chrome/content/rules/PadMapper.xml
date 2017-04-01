@@ -1,20 +1,51 @@
-<ruleset name="PadMapper (partial)">
+<!--
+	Other PadMapper rulesets:
 
-	<target host="padlister.com" />
-	<target host="www.padlister.com" />
+		- PadLister.com.xml
+
+
+	Nonfunctional hosts in *padmapper.com:
+
+		- blog *
+
+	* Refused
+
+-->
+<ruleset name="PadMapper.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="padmapper.com" />
 	<target host="www.padmapper.com" />
 
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.padmapper\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.padmapper\.com/+(?!favicon\.ico|images/|pad(?:$|[?/])|static/)" />
 
-	<securecookie host="^www\.padmapper\.com$" name=".+" />
+			<!--	+ve:
+					-->
+			<test url="http://www.padmapper.com/listings/6126244" />
+			<test url="http://www.padmapper.com/post" />
+			<test url="http://www.padmapper.com/search/apartments/Alaska/alaska/" />
+			<test url="http://www.padmapper.com/search/apartments/Hawaii/hawaii/" />
+			<test url="http://www.padmapper.com/search/apartments/Massachusetts/" />
+			<test url="http://www.padmapper.com/search/apartments/New-Mexico/albuquerque/" />
+			<test url="http://www.padmapper.com/search/apartments/New-York/" />
+			<test url="http://www.padmapper.com/search/apartments/Quebec/Grenville/" />
+			<test url="http://www.padmapper.com/search/apartments/Wisconsin/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.padmapper.com/favicon.ico" />
+			<test url="http://www.padmapper.com/images/PadLogoSmallV2.png" />
+			<test url="http://www.padmapper.com/static/css/ui.stripped.css" />
 
 
-	<rule from="^http://(www\.)?padmapper\.com/"
-		to="https://$1padmapper.com/" />
-
-	<!--	At least some pages 302 to http.
-							-->
-	<rule from="^http://(www\.)?padlister\.com/(assets/|images/|users/login(?:$|\?))"
-		to="https://$1padlister.com/$2" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

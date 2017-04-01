@@ -4,6 +4,7 @@
 
 	CDN buckets:
 
+		- content.developer.mashery.com.s3.amazonaws.com
 		- cache.gettyimages.com.edgesuite.net
 
 
@@ -31,48 +32,520 @@
 
 	Problematic domains:
 
-		- gettyimages.(ae|at|be|ca|ch|co.jp|co.nz|co.uk|com.au|de|dk|es|fi|fr|ie|in|it|nl|no|pt|se) *
-		- www.gettyimages.(ae|at|be|ca|ch|co.jp|co.nz|co.uk|com.au|de|dk|es|fi|fr|ie|in|it|nl|no|pt|se) **
+		- gettyimages.(ae|at|be|ca|ch|co.jp|co.nz|co.uk|com.au|de|dk|es|fi|fr|ie|in|it|nl|no|pt|se) ᵐ
 
 		- gettyimages.com subdomains:
 
-			- ^			(redirects to secure; mismatched, CN: SECURE.GETTYIMAGES.COM)
+			- ^ ᵐ
+			- assigments ᶜ
 			- cache			(works, akamai)
+			- contribute ᶜ
 			- contributors		(works; expired 2012-03-04, self-signed)
 			- e			(works; mismatched, CN: secure.eloqua.com)
-			- www			(redirects to www.secure, akamai)
+			- licensecompliance ᵐ
+			- mediamanager ᵐ
+			- remote ᵐ
+			- upload ᶜ
 
-	* Pages redirect to http; mismatched, CN: SECURE.GETTYIMAGES.COM
-	** Pages redirect to http, akamai
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	Partially covered domains:
+
+		- (www.)?gettyimages.(ae|at|be|ca|ch|co.jp|co.nz|co.uk|com|com.au|de|dk|es|fi|fr|ie|in|it|nl|no|pt|se) ʰ
+		- developer.gettyimages.com ʰ
+
+	ʰ Some pages redirect to http
+
+
+	These altnames do not exist:
+
+		- www.api.gettyimages.com
+		- www.assignments.gettyimages.com
+		- www.citrix.gettyimages.com
+		- www.contribute.gettyimages.com
+		- www.copyrightcompliance.gettyimages.com
+		- www.delivery.gettyimages.com
+		- www.mail.gettyimages.com
+		- www.spectrum.gettyimages.com
+		- www.upload.gettyimages.com
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .gettyimages.ae
+		- secure.gettyimages.ae
+		- www.gettyimages.ae
+		- .gettyimages.at
+		- secure.gettyimages.at
+		- www.gettyimages.at
+		- .gettyimages.be
+		- secure.gettyimages.be
+		- www.gettyimages.be
+		- .gettyimages.ca
+		- secure.gettyimages.ca
+		- www.gettyimages.ca
+		- .gettyimages.ch
+		- secure.gettyimages.ch
+		- www.gettyimages.ch
+		- .gettyimages.co.jp
+		- secure.gettyimages.co.jp
+		- www.gettyimages.co.jp
+		- .gettyimages.co.nz
+		- secure.gettyimages.co.nz
+		- www.gettyimages.co.nz
+		- .gettyimages.co.uk
+		- secure.gettyimages.co.uk
+		- www.gettyimages.co.uk
+
+		- .gettyimages.com
+		- api.gettyimages.com
+		- assignments.gettyimages.com
+		- contribute.gettyimages.com
+		- copyrightcompliance.gettyimages.com
+		- .copyrightcompliance.gettyimages.com
+		- developer.gettyimages.com
+		- mail.gettyimages.com
+		- maildr.gettyimages.com
+		- mediamanager.gettyimages.com
+		- mm.gettyimages.com
+		- secure.gettyimages.com
+		- upload.gettyimages.com
+		- www.gettyimages.com
+
+		- .gettyimages.com.au
+		- secure.gettyimages.com.au
+		- www.gettyimages.com.au
+		- .gettyimages.de
+		- secure.gettyimages.de
+		- www.gettyimages.de
+		- .gettyimages.dk
+		- secure.gettyimages.dk
+		- www.gettyimages.dk
+		- .gettyimages.es
+		- secure.gettyimages.es
+		- www.gettyimages.es
+		- .gettyimages.fi
+		- secure.gettyimages.fi
+		- www.gettyimages.fi
+		- .gettyimages.fr
+		- secure.gettyimages.fr
+		- www.gettyimages.fr
+		- .gettyimages.ie
+		- secure.gettyimages.ie
+		- www.gettyimages.ie
+		- .gettyimages.in
+		- secure.gettyimages.in
+		- www.gettyimages.in
+		- .gettyimages.it
+		- secure.gettyimages.it
+		- www.gettyimages.it
+		- .gettyimages.nl
+		- secure.gettyimages.nl
+		- www.gettyimages.nl
+		- .gettyimages.no
+		- secure.gettyimages.no
+		- www.gettyimages.no
+		- .gettyimages.pt
+		- secure.gettyimages.pt
+		- www.gettyimages.pt
+		- .gettyimages.se
+		- secure.gettyimages.se
+		- www.gettyimages.se
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- api, developer from gettyimages.mashery.com
+			- mediamanager from $self
+
+		- favicons, on:
+
+			- api from $self ˢ
+			- developer from api.gettyimages.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="Getty Images (partial)">
 
-	<target host="gettyimages.*" />
-	<target host="secure.gettyimages.*" />
-	<target host="www.gettyimages.*" />
-	<target host="gettyimages.co.*" />
-	<target host="secure.gettyimages.co.*" />
-	<target host="www.gettyimages.co.*" />
-	<target host="*.gettyimages.com" />
-	<target host="gettyimages.com.au" />
-	<target host="*.gettyimages.com.au" />
-		<exclusion pattern="^https?://www\.gettyimages\.(?:ae|at|be|ca|ch|co\.(?:jp|nz|uk)|com\.au|de|dk|es|fi|fr|i[ent]|nl|no|pt|se)/(?!cms/|CMS/|favicon\.ico|[iI]mages/|jQuery/|scripts/|style/)" />
-	<target host="secure.stage-gettyimages.*" />
-	<target host="secure.stage-gettyimages.co.*" />
+	<!--	Direct rewrites:
+				-->
+	<target host="secure.gettyimages.ae" />
+	<target host="www.gettyimages.ae" />
+
+	<target host="secure.gettyimages.at" />
+	<target host="www.gettyimages.at" />
+
+	<target host="secure.gettyimages.be" />
+	<target host="www.gettyimages.be" />
+
+	<target host="secure.gettyimages.ca" />
+	<target host="www.gettyimages.ca" />
+
+	<target host="secure.gettyimages.ch" />
+	<target host="www.gettyimages.ch" />
+
+	<target host="secure.gettyimages.co.jp" />
+	<target host="www.gettyimages.co.jp" />
+
+	<target host="secure.gettyimages.co.nz" />
+	<target host="www.gettyimages.co.nz" />
+
+	<target host="secure.gettyimages.co.uk" />
+	<target host="www.gettyimages.co.uk" />
+
+	<target host="api.gettyimages.com" />
+	<!--target host="assignments.gettyimages.com" /-->
+	<target host="autodiscover.gettyimages.com" />
+	<target host="citrix.gettyimages.com" />
+	<target host="connect.gettyimages.com" />
+	<!--target host="contribute.gettyimages.com" /-->
+	<target host="contributorsystems.gettyimages.com" />
+	<target host="copyrightcompliance.gettyimages.com" />
+	<target host="delivery.gettyimages.com" />
+	<target host="developer.gettyimages.com" />
+	<target host="developers.gettyimages.com" />
+	<target host="embed.gettyimages.com" />
+	<target host="embed-cdn.gettyimages.com" />
+	<target host="mail.gettyimages.com" />
+	<target host="maildr.gettyimages.com" />
+	<target host="mixer.gettyimages.com" />
+	<target host="mm.gettyimages.com" />
+	<target host="secure.gettyimages.com" />
+	<target host="spectrum.gettyimages.com" />
+	<!--target host="upload.gettyimages.com" /-->
+	<target host="www.gettyimages.com" />
+
+	<target host="secure.gettyimages.com.au" />
+	<target host="www.gettyimages.com.au" />
+
+	<target host="secure.gettyimages.de" />
+	<target host="www.gettyimages.de" />
+
+	<target host="secure.gettyimages.dk" />
+	<target host="www.gettyimages.dk" />
+
+	<target host="secure.gettyimages.es" />
+	<target host="www.gettyimages.es" />
+
+	<target host="secure.gettyimages.fi" />
+	<target host="www.gettyimages.fi" />
+
+	<target host="secure.gettyimages.fr" />
+	<target host="www.gettyimages.fr" />
+
+	<target host="secure.gettyimages.ie" />
+	<target host="www.gettyimages.ie" />
+
+	<target host="secure.gettyimages.in" />
+	<target host="www.gettyimages.in" />
+
+	<target host="secure.gettyimages.it" />
+	<target host="www.gettyimages.it" />
+
+	<target host="secure.gettyimages.nl" />
+	<target host="www.gettyimages.nl" />
+
+	<target host="secure.gettyimages.no" />
+	<target host="www.gettyimages.no" />
+
+	<target host="secure.gettyimages.pt" />
+	<target host="www.gettyimages.pt" />
+
+	<target host="secure.gettyimages.se" />
+	<target host="www.gettyimages.se" />
+
+	<target host="secure.stage-gettyimages.ae" />
+	<target host="secure.stage-gettyimages.be" />
+	<target host="secure.stage-gettyimages.ca" />
+	<target host="secure.stage-gettyimages.ch" />
+	<target host="secure.stage-gettyimages.co.nz" />
+	<target host="secure.stage-gettyimages.co.uk" />
+	<target host="secure.stage-gettyimages.com" />
 	<target host="secure.stage-gettyimages.com.au" />
+	<target host="secure.stage-gettyimages.de" />
+	<target host="secure.stage-gettyimages.es" />
+	<target host="secure.stage-gettyimages.ie" />
+	<target host="secure.stage-gettyimages.in" />
+	<target host="secure.stage-gettyimages.it" />
+	<target host="secure.stage-gettyimages.nl" />
+	<target host="secure.stage-gettyimages.se" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.gettyimages\.(?:a[et]|be|c[ah]|co\.(?:jp|nz|uk)|com|com\.au|d[ek]|es|f[ir]|i[ent]|n[lo]|pt|se)/(?:$|company/privacy-policy$|contactus$|creative-images$|editorial-images$|feedback$|favicon\.ico|footage$|landing/assets/|music$|stories$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?gettyimages\.(?:a[et]|be|c[ah]|co\.(?:jp|nz|uk)|com|com\.au|d[ek]|es|f[ir]|i[ent]|n[lo]|pt|se)/(?!/*(?:[Cc][Mm][Ss]/|Fonts/|gi-resources/|[Ii]mages/|(?:cart|purchase/cart|register|sign-in)(?:$|[?/])|[Ss]tyle/|Views/\w+/Shared/images/|purchase-assets/|sign-in/assets/))" />
+
+			<!--	+ve:
+					-->
+			<!--
+			<test url="http://gettyimages.ae/Scripts/html5.js" />
+			<test url="http://gettyimages.ae/company/privacy-policy" />
+			-->
+			<test url="http://gettyimages.ae/contactus" />
+			<!--
+			<test url="http://gettyimages.ae/creative-images" />
+			<test url="http://gettyimages.ae/editorial-images" />
+			<test url="http://gettyimages.ae/favicon.ico" />
+			<test url="http://gettyimages.ae/feedback" />
+			<test url="http://gettyimages.ae/footage" />
+			<test url="http://gettyimages.ae/landing/assets/unisporkal_engine/images/getty-logo-1816218381653e0c1ea3a09df6a70b97.svg" />
+			<test url="http://gettyimages.ae/scripts/CookieAlert/CookieAlertBootStrapper.js" />
+			<test url="http://gettyimages.ae/scripts/FontTracking.js" />
+			<test url="http://gettyimages.ae/scripts/LiveChat.js" />
+			<test url="http://www.gettyimages.ae/scripts/Music/Shared.js" />
+			<test url="http://www.gettyimages.ae/scripts/Tracking/AppMeasurement.js" />
+			<test url="http://www.gettyimages.ae/scripts/Tracking/VisitorAPI.js" />
+			<test url="http://www.gettyimages.ae/scripts/core.js" />
+			<test url="http://www.gettyimages.ae/scripts/head.js" />
+			<test url="http://www.gettyimages.ae/scripts/mobile.js" />
+			<test url="http://www.gettyimages.ae/scripts/mobile/viewport_size.js" />
+			<test url="http://www.gettyimages.ae/scripts/shared-high-traffic.js" />
+			<test url="http://www.gettyimages.ae/scripts/thirdparty.js" />
+			-->
+			<test url="http://www.gettyimages.ae/music" />
+			<!--
+			<test url="http://www.gettyimages.ae/stories" />
+			-->
+
+			<test url="http://gettyimages.at/contactus" />
+			<test url="http://www.gettyimages.at/music" />
+
+			<test url="http://gettyimages.be/contactus" />
+			<test url="http://www.gettyimages.be/music" />
+
+			<test url="http://gettyimages.ca/contactus" />
+			<test url="http://www.gettyimages.ca/music" />
+
+			<test url="http://gettyimages.ch/contactus" />
+			<test url="http://www.gettyimages.ch/music" />
+
+			<test url="http://gettyimages.co.jp/contactus" />
+			<test url="http://www.gettyimages.co.jp/music" />
+
+			<test url="http://gettyimages.co.nz/contactus" />
+			<test url="http://www.gettyimages.co.nz/music" />
+
+			<test url="http://gettyimages.co.uk/contactus" />
+			<test url="http://www.gettyimages.co.uk/music" />
+
+			<test url="http://gettyimages.com/contactus" />
+			<test url="http://www.gettyimages.com/music" />
+
+			<test url="http://gettyimages.com.au/contactus" />
+			<test url="http://www.gettyimages.com.au/music" />
+
+			<test url="http://gettyimages.de/contactus" />
+			<test url="http://www.gettyimages.de/music" />
+
+			<test url="http://gettyimages.dk/contactus" />
+			<test url="http://www.gettyimages.dk/music" />
+
+			<test url="http://gettyimages.es/contactus" />
+			<test url="http://www.gettyimages.es/music" />
+
+			<test url="http://gettyimages.fi/contactus" />
+			<test url="http://www.gettyimages.fi/music" />
+
+			<test url="http://gettyimages.fr/contactus" />
+			<test url="http://www.gettyimages.fr/music" />
+
+			<test url="http://gettyimages.ie/contactus" />
+			<test url="http://www.gettyimages.ie/music" />
+
+			<test url="http://gettyimages.in/contactus" />
+			<test url="http://www.gettyimages.in/music" />
+
+			<test url="http://gettyimages.it/contactus" />
+			<test url="http://www.gettyimages.it/music" />
+
+			<test url="http://gettyimages.nl/contactus" />
+			<test url="http://www.gettyimages.nl/music" />
+
+			<test url="http://gettyimages.no/contactus" />
+			<test url="http://www.gettyimages.no/music" />
+
+			<test url="http://gettyimages.pt/contactus" />
+			<test url="http://www.gettyimages.pt/music" />
+
+			<test url="http://gettyimages.se/contactus" />
+			<test url="http://www.gettyimages.se/music" />
+
+			<!--	-ve:
+					-->
+			<test url="http://gettyimages.ae/CMS/Styles/imports/widgets/bootstrap/primary_hgroup.css" />
+			<test url="http://gettyimages.ae/Fonts/LubalinMd-eot.eot" />
+			<test url="http://gettyimages.ae/Style/Responsive.css" />
+			<test url="http://gettyimages.ae/Views/Music/Shared/images/music-cart.png" />
+			<test url="http://gettyimages.ae/cart" />
+			<test url="http://gettyimages.ae/gi-resources/css/arrows.png" />
+			<test url="http://gettyimages.ae/gi-resources/images/Editorial-Images/self_select_panel.png" />
+			<test url="http://www.gettyimages.ae/images/HomePage/GettyImagesDark.png" />
+			<test url="http://www.gettyimages.ae/purchase-assets/unisporkal_engine/images/down_arrow.png" />
+			<test url="http://www.gettyimages.ae/register" />
+			<test url="http://www.gettyimages.ae/sign-in" />
+			<test url="http://www.gettyimages.ae/sign-in/assets/unisporkal_engine/images/down_arrow.png" />
+			<test url="http://www.gettyimages.ae/style/compiled/HeaderFooter.css?v=0707" />
+
+			<test url="http://gettyimages.at/cart" />
+			<test url="http://www.gettyimages.at/sign-in" />
+
+			<test url="http://gettyimages.be/cart" />
+			<test url="http://www.gettyimages.be/sign-in" />
+
+			<test url="http://gettyimages.ca/cart" />
+			<test url="http://www.gettyimages.ca/sign-in" />
+
+			<test url="http://gettyimages.ch/cart" />
+			<test url="http://www.gettyimages.ch/sign-in" />
+
+			<test url="http://gettyimages.co.jp/cart" />
+			<test url="http://www.gettyimages.co.jp/sign-in" />
+
+			<test url="http://gettyimages.co.nz/cart" />
+			<test url="http://www.gettyimages.co.nz/sign-in" />
+
+			<test url="http://gettyimages.co.uk/cart" />
+			<test url="http://www.gettyimages.co.uk/sign-in" />
+
+			<test url="http://gettyimages.com/cart" />
+			<test url="http://www.gettyimages.com/sign-in" />
+
+			<test url="http://gettyimages.com.au/cart" />
+			<test url="http://www.gettyimages.com.au/sign-in" />
+
+			<test url="http://gettyimages.de/cart" />
+			<test url="http://www.gettyimages.de/sign-in" />
+
+			<test url="http://gettyimages.es/cart" />
+			<test url="http://www.gettyimages.es/sign-in" />
+
+			<test url="http://gettyimages.nl/cart" />
+			<test url="http://www.gettyimages.nl/sign-in" />
+
+			<test url="http://gettyimages.no/cart" />
+			<test url="http://www.gettyimages.no/sign-in" />
+
+			<test url="http://gettyimages.pt/cart" />
+			<test url="http://www.gettyimages.pt/sign-in" />
+
+			<test url="http://gettyimages.se/cart" />
+			<test url="http://www.gettyimages.se/sign-in" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://developer\.gettyimages\.com/(?:$|\w\w$|contact$|docs/Home$|forum$|forum\.rss$|faq_general$|page/FAQ_content$|profile/\d+$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://developer\.gettyimages\.com/(?!/*(?:files/|(?:login|member/(?:lost|lost-username|register))(?:$|[?/])|public/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://developer.gettyimages.com/contact" />
+			<test url="http://developer.gettyimages.com/de" />
+			<test url="http://developer.gettyimages.com/docs/Home" />
+			<test url="http://developer.gettyimages.com/forum" />
+			<test url="http://developer.gettyimages.com/forum.rss" />
+			<test url="http://developer.gettyimages.com/faq_general" />
+			<test url="http://developer.gettyimages.com/page/FAQ_content" />
+			<test url="http://developer.gettyimages.com/page/FAQ_search" />
+			<test url="http://developer.gettyimages.com/profile/1862552" />
+
+			<!--	-ve:
+					-->
+			<test url="http://developer.gettyimages.com/files/divider.png" />
+			<test url="http://developer.gettyimages.com/login" /><!--	sets cookie without Secure -->
+			<test url="http://developer.gettyimages.com/member/lost-username" />
+			<test url="http://developer.gettyimages.com/member/register" />
+			<test url="http://developer.gettyimages.com/member/lost" />
+			<test url="http://developer.gettyimages.com/public/Mashery/images/required.gif" />
+
+		<!--	Set cookie without Secure:
+							-->
+		<test url="http://api.gettyimages.com/member/register" />
+		<test url="http://embed.gettyimages.com/embed/185730400?et=&amp;SeoLinks=&amp;sig=" />
+
+		<test url="http://delivery.gettyimages.com/comp/56283680.jpg?x=x&amp;dasite=GettyImages&amp;ef=2&amp;ev=1&amp;dareq=AB27D0502010942195534B1B9E10FCFB9824E6268726A00CAC9EDBE4E6F952F6" />
+		<test url="http://embed-cdn.gettyimages.com/css/214/normalize.css" />
+
+	<!--	Complications:
+				-->
+	<target host="gettyimages.ae" />
+	<target host="gettyimages.at" />
+	<target host="gettyimages.be" />
+	<target host="gettyimages.ca" />
+	<target host="gettyimages.ch" />
+	<target host="gettyimages.co.jp" />
+	<target host="gettyimages.co.uk" />
+	<target host="gettyimages.co.nz" />
+
+	<target host="gettyimages.com" />
+	<target host="licensecompliance.gettyimages.com" />
+	<target host="remote.gettyimages.com" />
+
+	<target host="gettyimages.com.au" />
+	<target host="gettyimages.de" />
+	<target host="gettyimages.dk" />
+	<target host="gettyimages.es" />
+	<target host="gettyimages.fi" />
+	<target host="gettyimages.fr" />
+	<target host="gettyimages.ie" />
+	<target host="gettyimages.in" />
+	<target host="gettyimages.it" />
+	<target host="gettyimages.nl" />
+	<target host="gettyimages.no" />
+	<target host="gettyimages.pt" />
+	<target host="gettyimages.se" />
 
 
-	<securecookie host="^.+\.gettyimages\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.gettyimages\.(?:ae|at|be|ca|ch|co\.(?:jp|nz|uk)|com|com\.au|de|dk|es|fi|fr|ie|in|it|nl|no|pt|se)$" name="^(?:ASP\.NET_SessionId|auth|gig|giu|tg|uc|unisess|vis)$" /-->
+	<!--securecookie host="^(?:secure|www)\.gettyimages\.(?:ae|at|be|ca|ch|co\.(?:jp|nz|uk)|com|com\.au|de|dk|es|fi|fr|ie|in|it|nl|no|pt|se)$" name="^(?:gilp|gisi|gisp|trk|nmusicc)$" /-->
+	<!--securecookie host="^(?:api|developer)\.gettyimages\.com$" name="^MASH$" /-->
+	<!--securecookie host="^(?:assigments|mm)\.gettyimages\.com$" name="^(?:JSESSIONID$|NSC_)" /-->
+	<!--securecookie host="^contribute\.gettyimages\.com$" name="^_session_id$" /-->
+	<!--securecookie host="^copyrightcompliance\.gettyimages\.com$" name="^lang$" /-->
+	<!--securecookie host="^\.copyrightcompliance\.gettyimages\.com$" name="^lcuc$" /-->
+	<!--securecookie host="^mail\.gettyimages\.com$" name="^(?:cadata|sessionid)$" /-->
+	<!--securecookie host="^upload\.gettyimages\.com$" name="^_aip_session_id$" /-->
+
+	<securecookie host="^\." name="^(?:__qca$|_gat?$|_gat_|s_v)" />
+	<securecookie host="^(?!developer\.|www\.).+\.gettyimages\.com$" name="." />
 
 
-	<rule from="^https?://(?:secure\.|www\.)?(stage-)?gettyimages\.(ae|at|be|ca|ch|co\.(?:jp|nz|uk)|com\.au|de|dk|es|fi|fr|i[ent]|nl|no|pt|se)/"
-		to="https://secure.$1gettyimages.$2/" />
+	<rule from="^http://gettyimages\.([^./]+|co\.(?:jp|nz|uk)|com\.au)/"
+		to="https://www.gettyimages.$1/" />
 
-	<rule from="^https?://(?:cache|delivery)\.gettyimages\.com/"
+	<rule from="^http://cache\.gettyimages\.com/"
 		to="https://delivery.gettyimages.com/" />
 
-	<rule from="^http://(api|assignments|autodiscover|callawaygolf|contribute|contributorsystems|developer|licensecompliance|mail|maildr|mixer|mm|remote|secure|upload)\.gettyimages\.com/"
-		to="https://$1.gettyimages.com/" />
+		<test url="http://cache.gettyimages.com/comp/56283659.jpg?x=x&amp;dasite=GettyImages&amp;ef=2&amp;ev=1&amp;dareq=AB27D0502010942195534B1B9E10FCFB8D2A00A18B2A4DE7AC9EDBE4E6F952F6" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://licensecompliance\.gettyimages\.com/+"
+		to="https://copyrightcompliance.gettyimages.com/" />
+
+		<test url="http://licensecompliance.gettyimages.com/index.htm" />
+
+	<!--	Redirect keeps all:
+					-->
+	<rule from="^http://remote\.gettyimages\.com/"
+		to="https://citrix.gettyimages.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

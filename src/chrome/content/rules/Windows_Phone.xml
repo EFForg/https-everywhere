@@ -2,47 +2,68 @@
 	For other Microsoft coverage, see Microsoft.xml.
 
 
-	Nonfunctional domains:
+	Problematic hosts in *windowsphone.com:
 
-		- wpdev.ms	(times out)
+		- ^ *
+		- images.partner *
+
+	* Mismatched
 
 
 	Fully covered windowsphone.com domains:
 
-		- ^
+		- ^		(^ → www)
+		- assets
 		- cmsresources
 		- dev
 		- developer
-		- images.partner
+		- images.partner	(→ wmoxy.vo.msecnd.net)
 		- resources
-		- www
+
+
+	Insecure cookies are set for these hosts:
+
+		- developer.windowsphone.com
 
 -->
-<ruleset name="Windows Phone (partial)">
+<ruleset name="Windows Phone.com">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="assets.windowsphone.com" />
+	<target host="cmsresources.windowsphone.com" />
+	<target host="dev.windowsphone.com" />
+	<target host="developer.windowsphone.com" />
+	<target host="resources.windowsphone.com" />
+	<target host="www.windowsphone.com" />
+
+	<!--	Complications:
+				-->
 	<target host="windowsphone.com" />
-	<target host="*.windowsphone.com" />
+	<target host="images.partner.windowsphone.com" />
 
+		<test url="http://cmsresources.windowsphone.com/devcenter/en-us/DevCenter_v4/css/site.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^developer\.windowsphone\.com$" name="^(UT|ssostate)$" /-->
 
 	<!--	Observed cookie subdomains:
 
 			- dev
 			- www
 				-->
-	<securecookie host="^.+\.windowsphone\.com$" name=".+" />
+	<securecookie host=".+\.windowsphone\.com$" name=".+" />
 
 
-	<!--	!www: cert only matches resources.windowsphone.com.
-									-->
-	<rule from="^https?://(?:www\.)?windowsphone\.com/"
+	<rule from="^http://windowsphone\.com/"
 		to="https://www.windowsphone.com/" />
 
-	<rule from="^http://((?:cms)?resources|dev|developer|images\.partner)\.windowsphone\.com/"
-		to="https://$1.windowsphone.com/" />
+	<rule from="^http://images\.partner\.windowsphone\.com/"
+		to="https://wmoxy.vo.msecnd.net/" />
 
-	<!--	$ redirects like so.
-					-->
-	<rule from="^https://wpdev\.ms/$"
-		to="https://bitly.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

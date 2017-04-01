@@ -1,38 +1,59 @@
 <!--
+	Other AppNexus rulesets:
+
+		- Adnxs.com.xml
+
+
 	CDN buckets:
 
 		- a248.e.akamai.net/appnexus.download.akamai.com/
+		- anxconsole-a.akamaihd.net
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *appnexus.com:
 
-		- (www.)appnexus.com
+		- blog ᵃ
+		- support ʳ
+		- techblog ʳ
+
+	ᵃ Shows ux-eco.corp.appnexus.com
+	ʳ Refused
 
 
-	Problematic domains:
+	Insecure cookies are set for these hosts:
 
-		- cdn.adnxs.com		(akamai)
+		- console.appnexus.com
+		- wiki.appnexus.com
+
+
+	Mixed content:
+
+		- Bug on www from instansive.com
 
 -->
-<ruleset name="AppNexus (partial)">
+<ruleset name="AppNexus.com (partial)">
 
-	<target host="adnxs.com" />
-	<target host="*.adnxs.com" />
+	<target host="appnexus.com" />
+	<target host="careers.appnexus.com" />
 	<target host="console.appnexus.com" />
+	<target host="ux-eco.corp.appnexus.com" />
+	<target host="wiki.appnexus.com" />
+	<target host="www.appnexus.com" />
+
+		<!--	Mixed bug:
+					-->
+		<!--test url="http://www.appnexus.com/en/company/careers" /-->
 
 
-	<!--securecookie host="^\.adnxs\.com$" name="^(sess|uuid2)$" /-->
-	<securecookie host="^(?:.*\.)?adnxs\.com$" name=".+" />
-	<securecookie host="^console\.appnexus\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^console\.appnexus\.com$" name="^(?:BIGipServer|secure_bucket$)" /-->
+	<!--securecookie host="^wiki\.appnexus\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://cdn\.adnxs\.com/"
-		to="https://secure.adnxs.com/" />
-
-	<rule from="^http://(\w+\.)?adnxs\.com/"
-		to="https://$1adnxs.com/" />
-
-	<rule from="^http://console\.appnexus\.com/"
-		to="https://console.appnexus.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

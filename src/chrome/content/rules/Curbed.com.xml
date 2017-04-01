@@ -1,0 +1,102 @@
+<!--
+	For other Vox Media coverage, see Vox.com.xml.
+
+
+	Nonfunctional hosts in *curbed.com:
+
+		- (www.)? ʳ
+		- (www.)?chicago ʳ
+		- (www.)?la ʳ
+		- (www.)?sf ʳ
+
+	ʳ Refused
+
+
+	Problematic hosts in *curbed.com:
+
+		- www.hamptons ᵐ
+
+	ᵐ Mismatched, CN: ny.curbed.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- hamptons.curbed.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- hamptons, (www.)?ny from cdn.cstatic.net ˢ
+			- hamptons from fonts.googleapis.com ˢ
+
+		- Images, on:
+
+			- hamptons, (www.)?ny from ^curbed.com ʳ
+			- hamptons from hamptons.curbed.com ˢ
+			- (www.)?ny from ny.curbed.com ˢ
+			- hamptons and (www.)?ny from cdn.cstatic.net ˢ
+
+		- favicon on hamptons from hamptons ˢ
+
+		- Bugs, on:
+
+			- hamptons from b\d+.sitemeter.com ʳ
+			- hamptons from www.stumbleupon.com ˢ
+			- (www.)?ny from f.curbed.cc ˢ
+
+	ʳ Unsecurable <= refused
+	ˢ Secured by us
+
+-->
+<ruleset name="Curbed.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="hamptons.curbed.com" />
+	<target host="ny.curbed.com" />
+	<target host="www.ny.curbed.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www.hamptons.curbed.com" />
+
+		<!--	404:
+				-->
+		<!--exclusion pattern="^http://hamptons\.curbed\.com/contact$" /-->
+
+		<!--	Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?(?:hamptons|ny)\.curbed\.com/+(?!favicon\.ico|marketplace/(?:image|stylesheet)s/|uploads/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://hamptons.curbed.com/archives/2016/01/15/traditional_colorful_and_elegant_in_east_hampton_for_875m.php" />
+			<test url="http://hamptons.curbed.com/contact" />
+			<test url="http://hamptons.curbed.com/marketplace/properties" /><!--	Mixed bugs	-->
+			<test url="http://hamptons.curbed.com/tags/top" />
+
+			<!--	-ve:
+					-->
+			<test url="http://hamptons.curbed.com/favicon.ico" />
+			<test url="http://hamptons.curbed.com/marketplace/assets/properties/images/5144/9931/44593.jpg_20160114_polaroid.jpeg" />
+			<test url="http://hamptons.curbed.com/marketplace/images/dingbats/twitter-icon-15x15.png" />
+			<test url="http://hamptons.curbed.com/marketplace/stylesheets/cache/print.css" />
+			<test url="http://www.hamptons.curbed.com/uploads/shutterstock_176666024.jpg" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^hamptons\.curbed\.com$" name="^(?:_hamptons_curbed_com_marketplace_session|identity_client)$" /-->
+
+	<securecookie host="^\." name="^__qca$" />
+
+
+	<rule from="^http://www\.hamptons\.curbed\.com/"
+		to="https://hamptons.curbed.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

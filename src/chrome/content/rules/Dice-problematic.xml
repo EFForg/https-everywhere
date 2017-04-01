@@ -1,20 +1,28 @@
 <!--
-	For rules that are on by default, see Dice.xml.
+	For rules not causing false/broken MCB, see Dice.xml.
 
 -->
-<ruleset name="Dice (problematic)" default_off="mismatch">
+<ruleset name="Dice.com (false MCB)" platform="mixedcontent">
 
 	<target host="dice.com" />
 	<target host="www.dice.com" />
-		<!--
-			Handled in Dice.com.xml.
-							-->
-		<exclusion pattern="^https?://(?:www\.)?dice\.com/assets/" />
 
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="http://www\.dice\.com/+(?:$|\?)" />
 
-	<!--	Cert: secure.dice.com
+			<!--	+ve:
 					-->
-	<rule from="^https?://(?:www\.)?dice\.com/"
+			<test url="http://www.dice.com/?" />
+			<test url="http://www.dice.com//" />
+			<test url="http://www.dice.com//?" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.dice.com/job/advancedSearch.html" />
+
+
+	<rule from="^http://(?:www\.)?dice\.com/"
 		to="https://www.dice.com/" />
 
 </ruleset>

@@ -1,0 +1,70 @@
+<!--
+	American Geophysical Union
+
+
+	Nonfunctional subdomains:
+
+		- (www.) ¹
+		- blogs ²
+		- fromtheprow ²
+		- ja ²
+
+	¹ Shows default RHEL page
+	² Redirects to sites
+
+
+	Partially covered subdomains:
+
+		- ethics *
+		- meetings *
+		- publications *
+		- sciencepolicy *
+		- sharingscience *
+		- sites *
+
+	* Avoiding false/broken MCB
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- about
+		- chapman
+		- education
+		- fallmeeting
+		- geocalendar
+		- giving
+		- honors
+		- membership
+		- news
+		- spc
+		- sites2
+
+
+	Mixed content:
+
+		- css on ethics, meetings, publications, sciencepolicy, sharingscience, and sites from sites *
+
+		- Images, on:
+
+			- about, education, ethics, geocalendar, honors, meetings, news, publications, and sites from sites *
+			- chapman from $self *
+			- spc from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="AGU.org (partial)">
+
+	<target host="*.agu.org" />
+		<!--exclusion pattern="http://(blogs|fromtheprow|ja|www)\.agu\.org/" /-->
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:ethics|meetings|publications|sciencepolicy|sharingscience|sites)\.agu\.org/+(?!favicon\.ico|(?:\w+/)?wp-(?:content|includes)/)" />
+
+
+	<rule from="^http://(about|chapman|education|ethics|fallmeeting|geocalendar|giving|honors|meetings|membership|news|publications|sciencepolicy|sharingscience|sites2?|spc)\.agu\.org/"
+		to="https://$1.agu.org/" />
+
+</ruleset>

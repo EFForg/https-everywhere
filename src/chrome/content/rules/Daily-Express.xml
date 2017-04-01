@@ -1,9 +1,51 @@
-<ruleset name="Daily Express (partial)">
+<!--
+	Disabled per https://github.com/EFForg/https-everywhere/issues/1545
+	CDN buckets:
+
+		- images.dailyexpress.co.uk.s3.amazonaws.com
+		- c0001566.cdn1.cloudfiles.rackspacecloud.com
+
+
+	^express.co.uk: refused
+
+
+	Mixed content:
+
+		- Images on www.express.co.uk from c0001566.cdn1.cloudfiles.rackspacecloud.com *
+
+		- Web bugs, on www.express.co.uk from:
+
+			- widgets.outbrain.com *
+			- b.scorecardresearch.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Daily Express (partial)" default_off="Breaks site">
 
 	<target host="images.dailyexpress.co.uk" />
+	<target host="express.co.uk" />
+	<target host="*.express.co.uk" />
 
 
-	<rule from="^https?://images\.dailyexpress\.co\.uk/"
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^www\.express\.co\.uk$" name="^CAKEPHP$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^www\.express\.co\.uk$" name="^weatherData_Weather$" /-->
+
+	<securecookie host="^www\.express\.co\.uk$" name=".+" />
+
+
+	<rule from="^http://images\.dailyexpress\.co\.uk/"
 		to="https://s3.amazonaws.com/images.dailyexpress.co.uk/" />
+
+	<rule from="^http://(?:www\.)?express\.co\.uk/"
+		to="https://www.express.co.uk/" />
+
+	<rule from="^http://cdn\.images\.express\.co\.uk/"
+		to="https://cdn.images.express.co.uk/" />
 
 </ruleset>

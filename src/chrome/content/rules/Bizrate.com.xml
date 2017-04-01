@@ -9,47 +9,89 @@
 			- about.bizrate.com
 
 
+	Nonfunctional domains:
+
+		- www.bizrate.com *
+
+	* Redirects to http
+
+
 	Problematic domains:
 
-		- (www.)bizrate.com
-
-				- Pages redirect to http
-				- Resources load successfully when forced to ^
-				- But then redirect to http
-				- It's a pity we can't stop that...
-
 		- about.bizrate.com		(works; mismatched, CN: *.blazonco.com)
+		- d[1-4]-pub.bizrate.com ²
+		- img.bizrate.com ²
+
+		- file12.bizrate-images.com ²
 		- image10.bizrate-images.com	(reset)
+		- img02.bizrate-images.com ²
 		- img10.bizrate-images.com	(works, CN: gp1.wac.edgecastcdn.net)
 
+	² Akamai / mismatched
 
-	Fully covered domains:
 
-		- about.bizrate.com		(→ aboutbizrate.blazonco.com)
-		- image10.bizrate-images.com	(→ images.bizrate.com)
-		- img10.bizrate-images.com	(→ images.bizrate.com)
+	Insecure cookies are set for these domains: ᶜ
+
+		- .bizrate.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="Bizrate.com (partial)">
 
-	<!--target host="bizrate.com" /-->
-	<target host="*.bizrate.com" />
-	<target host="*.bizrate-images.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="bizrate.com" />
+	<target host="adverising.bizrate.com" />
+	<target host="images.bizrate.com" />
+	<target host="medals.bizrate.com" />
+	<target host="rd.bizrate.com" />
+	<!--target host="www.bizrate.com" /-->
+
+	<!--	Complications:
+				-->
+	<target host="about.bizrate.com" />
+	<target host="file.bizrate.com" />
+	<target host="img.bizrate.com" />
+
+	<target host="file12.bizrate-images.com" />
+	<target host="image10.bizrate-images.com" />
+	<target host="image12.bizrate-images.com" />
+	<target host="image13.bizrate-images.com" />
+	<target host="img.bizrate-images.com" />
+	<target host="img01.bizrate-images.com" />
+	<target host="img02.bizrate-images.com" />
+	<target host="img13.bizrate-images.com" />
+
+		<!--exclusion pattern="^http://www\.bizrate\.com/(?!favicon\.ico|static/)" /-->
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://rd.bizrate.com/rd2?t=&amp;mid=&amp;catId=&amp;prodId=&amp;tokenId=&amp;lg=&amp;bAmt=&amp;ppr=&amp;oid=&amp;atom=&amp;bidType=&amp;bId=&amp;mpid=&amp;countryCode=US&amp;rf=" /-->
 
 
-	<!--securecookie host="^\.bizrate\.com$" name=".*" /-->
+	<!--	Not secured by server, set by rd:
+							-->
+	<!--securecookie host="^\.bizrate\.com$" name="^(?:_data|br|cnx_sessionid|p13n_id|rng|roi_cookie|sessionid|trafficSourceDebugParam)$" /-->
 
+	<!--securecookie host="." name="." /-->
+	<securecookie host="^\." name="^(?:_data|br|cnx_sessionid|p13n_id|rng|roi_cookie|trafficSourceDebugParam)$" />
 
-	<!--rule from="^http://(?:www\.)?bizrate\.com/(favicon\.ico|static/)"
-		to="https://bizrate.com/$1" /-->
 
 	<rule from="^http://about\.bizrate\.com/"
 		to="https://aboutbizrate.blazonco.com/" />
 
-	<rule from="^http://(image|medal)s\.bizrate\.com/"
-		to="https://$1s.bizrate.com/" />
-
-	<rule from="^http://im(?:age10|g)\.bizrate-images\.com/"
+	<rule from="^http://(?:file|img)\.bizrate\.com/"
 		to="https://images.bizrate.com/" />
+
+		<test url="http://img.bizrate.com/site/smiley_satisfactory_24x23.gif" />
+
+	<rule from="^http://\w+\.bizrate-images\.com/"
+		to="https://images.bizrate.com/" />
+
+		<test url="http://img02.bizrate-images.com/s2static/us/br/cb28aac3/br2/images/ratings/smiley_outstanding_24x23.gif" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

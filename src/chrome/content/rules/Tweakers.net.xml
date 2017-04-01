@@ -1,30 +1,33 @@
 <!--
 	Problematic domains:
 
-		- www.ic.tweakimg.net		(mismatched)
+		- www.ic.tweakimg.net *
+
+	* Mismatched
 
 
-	Mixed images from img.itbanen.nl
+	Mixed content:
+
+		- Images, from:
+
+			- itbanen.nl
+			- tweakimg.net *
+			- ic.tweakimg.net *
+
+	* Secured by us
 
 -->
 <ruleset name="Tweakers.net">
 
-	<target host="tweakers.net" />
-	<target host="*.tweakers.net" />
 	<target host="tweakimg.net" />
 	<target host="*.tweakimg.net" />
+		<!--
+			https://trac.torproject.org/projects/tor/ticket/8340
+										-->
+		<exclusion pattern="^http://(?:ic\.tweakimg)\.net/crossdomain\.xml$" />
 
-
-	<securecookie host="^\.tweakers\.net$" name=".+" />
-
-
-	<rule from="^http://(gathering\.|secure\.|www\.)?tweakers\.net/"
-		to="https://$1tweakers.net/" />
 
 	<rule from="^http://(?:www\.)?(ic\.)?tweakimg\.net/"
 		to="https://$1tweakimg.net/" />
-
-	<!-- https://trac.torproject.org/projects/tor/ticket/8340 -->
-	<exclusion pattern="^http://(?:tweakers|ic\.tweakimg)\.net/crossdomain\.xml$" />
 
 </ruleset>

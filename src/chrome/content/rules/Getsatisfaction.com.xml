@@ -1,7 +1,4 @@
 <!--
-	For problematic rules, see Getsatisfaction.com-mismatches.xml.
-
-
 	Other Getsatisfaction.com rulesets:
 
 		- Gsfn.us.xml
@@ -28,34 +25,92 @@
 	* Equivalent to getsatisfaction.com
 
 
-	Problematic getsatisfaction.com subdomains:
-
-		- blog *
-		- info		(marketo)
-		- product *
-
-	* Mismatched, CN: page.ly
-
-
 	Nonfunctional domains:
 
 		- (www.)ccpact.com
-		- status.getsatisfaction.com
+		- status.getsatisfaction.com *
+
+	* Tumblr / redirects to www.tumblr.com
+
+
+	These altnames don't exist:
+
+		- www.education.getsatisfaction.com
+		- www.info.getsatisfaction.com
+
+
+	Mixed content:
+
+		- css on info from cloud.webtype.com *
+		- Images on info, product from $self *
+		- Bug on product from www.facebook.com *
+
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Getsatisfaction.com" platform="mixedcontent">
+<ruleset name="Getsatisfaction.com (partial)">
 
 	<target host="getsatisfaction.com" />
-	<target host="*.getsatisfaction.com" />
+	<target host="assets1.getsatisfaction.com" />
+	<target host="assets2.getsatisfaction.com" />
+	<target host="assets3.getsatisfaction.com" />
+	<target host="assets4.getsatisfaction.com" />
+	<target host="auth.getsatisfaction.com" />
+	<target host="blog.getsatisfaction.com" />
+	<target host="c.getsatisfaction.com" />
+	<target host="da.getsatisfaction.com" />
+	<target host="education.getsatisfaction.com" />
+	<target host="es.getsatisfaction.com" />
+	<target host="fi.getsatisfaction.com" />
+	<target host="fr.getsatisfaction.com" />
+	<target host="info.getsatisfaction.com" />
+	<target host="it.getsatisfaction.com" />
+	<target host="nb.getsatisfaction.com" />
+	<target host="nl.getsatisfaction.com" />
+	<target host="product.getsatisfaction.com" />
+	<target host="sslproxy.getsatisfaction.com" />
+	<target host="sv.getsatisfaction.com" />
+	<target host="www.getsatisfaction.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://blog\.getsatisfaction\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://blog\.getsatisfaction\.com/(?!/*wp-content/)" /-->
+
+			<!--	+ve:
+					-->
+			<!--
+			<test url="http://blog.getsatisfaction.com/category/infographics/" />
+			<test url="http://blog.getsatisfaction.com/home/page/2/" />
+			-->
+
+			<!--	-ve:
+					-->
+			<!--
+			<test url="http://blog.getsatisfaction.com/wp-content/themes/GetSatisfaction_new/images/default_thumb.png" />
+			-->
+
+		<!--	$ 404s, so:
+					-->
+		<test url="http://c.getsatisfaction.com/freeagent/topics/prepayments_and_general_journal_entries" />
+
+		<!--	$ redirects to ^getsatisfaction.com, so:
+									-->
+		<test url="http://sslproxy.getsatisfaction.com/sslproxy/SWhAdDNLMG5zdGFuVGlWeiuU7qIoMUA0jlW5m_nenARXkCN3FBTVyiSpdB2Xn5SS_rFGAEiKrXPqaCFcc0FQnw==" />
 
 
-	<securecookie host="^\.getsatisfaction\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.getsatisfaction\.com$" name="^(?:_sfn_session|avatar_url|canonical_name|logged_in|token_hash|token_issue_date|user_id|user_name|user_nick|use_real_name)$" /-->
+	<!--securecookie host="^education\.getsatisfaction\.com$" name="^wfvt_\d+$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(assets\d\.|www\.)?getsatisfaction\.com/"
-		to="https://$1getsatisfaction.com/" />
-
-	<rule from="^http://info\.getsatisfaction\.com/(cs|j|r)s/"
-		to="https://na-sjh.marketo.com/$1s/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

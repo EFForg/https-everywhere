@@ -2,19 +2,77 @@
 	For other Gawker coverage, see Gawker.com.xml.
 
 
-	CN: *.a.ssl.fastly.net
+	Problematic hosts in *gizmodo.com:
+
+		- cache ᵐ
+
+	ᵐ Mismatched, CN: *.a.ssl.fastly.net
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- gizmodo.com
+		- (column_name).gizmodo.com
+		- www.gizmodo.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bugs on ^, (column_name) from b.scorecardresearch.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Gizmodo.com" default_off="mismatched">
+<ruleset name="Gizmodo.com">
 
 	<target host="gizmodo.com" />
 	<target host="*.gizmodo.com" />
 
+		<exclusion pattern="^http://(?:[^./]+\.){2,}gizmodo\.com/" />
 
-	<securecookie host="^\.?gizmodo\.com$" name=".+" />
+			<!--	+ve:
+					-->
+			<test url="http://this.host.gizmodo.com/" />
+			<test url="http://exist.not.gizmodo.com/" />
+
+		<!--	Direct rewrites:
+					-->
+		<target host="20khz.gizmodo.com" />
+		<target host="es.gizmodo.com" />
+		<target host="factually.gizmodo.com" />
+		<target host="fieldguide.gizmodo.com" />
+		<target host="homeofthefuture.gizmodo.com" />
+		<target host="indefinitelywild.gizmodo.com" />
+		<target host="io9.gizmodo.com" />
+		<target host="lego.gizmodo.com" />
+		<target host="offworld.gizmodo.com" />
+		<target host="paleofuture.gizmodo.com" />
+		<target host="reframe.gizmodo.com" />
+		<target host="space.gizmodo.com" />
+		<target host="sploid.gizmodo.com" />
+		<target host="throb.gizmodo.com" />
+		<target host="toyland.gizmodo.com" />
+		<target host="us.gizmodo.com" />
+		<target host="www.gizmodo.com" />
+
+		<!--	Complications:
+					-->
+		<target host="cache.gizmodo.com" />
 
 
-	<rule from="^http://(?:(cache\.|us\.)|www\.)?gizmodo\.com/"
-		to="https://$1gizmodo.com//" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:(column_name)\.|www\.)?gizmodo\.com$" name="^geocc$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://cache\.gizmodo\.com/"
+		to="https://cache.gawkerassets.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,15 +1,65 @@
-<ruleset name="North American Network Operators' Group">
+<!--
+	North American Network Operators' Group
 
+
+	Problematic hosts in *nanog.org:
+
+		- bcop ¹
+		- mailtest ²
+
+	¹ Mixed css
+	² Mismatched
+
+
+	Fully covered hosts in *nanog.org:
+
+		- (www.)?
+		- mailman
+		- mailtest	(→ mailman.nanog.org)
+		- secretariat
+		- text
+
+
+	Mixed content:
+
+		- css on bcop from $self
+
+-->
+<ruleset name="NANOG.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="nanog.org" />
-	<target host="*.nanog.org" />
+	<target host="bcop.nanog.org" />
+	<target host="mailman.nanog.org" />
+	<target host="secretariat.nanog.org" />
+	<target host="text.nanog.org" />
+	<target host="www.nanog.org" />
+
+	<!--	Complications:
+				-->
+	<target host="mailtest.nanog.org" />
+
+		<!--	Avoid broken MCB:
+					-->
+		<exclusion pattern="^http://bcop\.nanog\.org/+(?!images/|skins/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://bcop.nanog.org/index.php/BCOP_Drafts" />
+			<test url="http://bcop.nanog.org/index.php/IPv6_Subnetting" />
+			<test url="http://bcop.nanog.org/index.php/Ratified_BCOPs" />
+
+			<!--	-ve:
+					-->
+			<test url="http://bcop.nanog.org/images/thumb/9/9c/Blueworld-sxc-198.jpg/650px-Blueworld-sxc-198.jpg" />
+			<test url="http://bcop.nanog.org/skins/common/images/nanoglogo.gif" />
 
 
-	<rule from="^http://(text\.|www\.)?nanog\.org/"
-		to="https://$1nanog.org/" />
-
-	<!--	Cert doesn't match mailtest.
-						-->
-	<rule from="^https?://mail(?:man|test)\.nanog\.org/"
+	<rule from="^http://mailtest\.nanog\.org/"
 		to="https://mailman.nanog.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

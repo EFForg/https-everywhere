@@ -4,56 +4,134 @@
 	longer the case, see https://blog.wikimedia.org/2011/10/03/native-https-support-enabled-for-all-wikimedia-foundation-wikis/ ,
 	so this file is a lot simpler these days.
 
+	Insecure cookies are set for these domains and hosts:
+
+		- .wikibooks.org
+		- wikidata.org
+		- .wikidata.org
+		- www.wikidata.org
+		- .wikimediafoundation.org
+		- .wikipedia.org
+		- en.wikipedia.org
+		- .wikiversity.org
+
+
 -->
 <ruleset name="Wikimedia">
 
 	<target host="enwp.org" />
 	<target host="frwp.org" />
-	<target host="mediawiki.org" />
-	<target host="www.mediawiki.org" />
-	<target host="wikibooks.org" />
-	<target host="*.wikibooks.org" />
-	<target host="wikidata.org" />
-	<target host="*.wikidata.org" />
-	<target host="wikimedia.org" />
-	<target host="*.wikimedia.org" />
-		<exclusion pattern="^http://(?:apt|bayes|bayle|brewster|bug-attachment|cs|cz|dataset2|download|dumps|ekrem|emery|ersch|etherpad|harmon|hume|(?:ipv4|ipv6and4|results)\.labs|m|project2|search|sitemap|snapshot3|stafford|statu?s|torrus|ubuntu|wiki-mail|wlm|yongle)\.wikimedia\.org" />
-		<!-- https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html -->
-		<exclusion pattern="^http://lists\.wikimedia\.org/pipermail(?:$|/)" />
-	<target host="wikimediafoundation.org" />
-	<target host="www.wikimediafoundation.org" />
-	<target host="wikinews.org" />
-	<target host="*.wikinews.org" />
-	<target host="wikipedia.org" />
-	<target host="*.wikipedia.org" />
-		<exclusion pattern="^http://(?:download|static)\.wikipedia\.org/" />
-	<target host="*.m.wikipedia.org" />
-	<target host="wikiquote.org" />
-	<target host="*.wikiquote.org" />
-	<target host="wikisource.org" />
-	<target host="*.wikisource.org" />
-	<target host="wikiversity.org" />
-	<target host="*.wikiversity.org" />
-	<target host="wikivoyage.org" />
-	<target host="*.wikivoyage.org" />
-	<target host="wiktionary.org" />
-	<target host="*.wiktionary.org" />
 
-	<securecookie host="^.+\.wikipedia\.org$" name=".+" />
+
+	<!-- Wikimedia Tool Labs -->
+	<target host="tools.wmflabs.org" />
+	<target host="accounts.wmflabs.org" />
+	<target host="quarry.wmflabs.org" />
+	<target host="reportcard.wmflabs.org" />
+
+	<!-- Wikimedia chapters that support HTTPS, incomplete list -->
+
+	<target host="wikimedia.ch" />
+	<target host="*.wikimedia.ch" />
+		<test url="http://www.wikimedia.ch/" />
+		<test url="http://glam.wikimedia.ch/" />
+		<test url="http://intern.wikimedia.ch/" />
+		<test url="http://members.wikimedia.ch/" />
+		<test url="http://portal.wikimedia.ch/" />
+		<test url="http://test.wikimedia.ch/" />
+		<test url="http://upload-www.wikimedia.ch/" />
+
+	<!-- wikimedia.cz uses an invalid certificate, redirecting to www -->
+	<target host="wikimedia.cz" />
+	<target host="www.wikimedia.cz" />
+	<target host="lists.wikimedia.cz" />
+	<target host="tracker.wikimedia.cz" />
+	<!--
+		Known subdomains not supporting HTTPS or using an invalid certificate:
+			* blog.wikimedia.cz
+			* ceny.wikimedia.cz
+			* chu.wikimedia.cz
+			* facebook.wikimedia.cz
+			* seniori.wikimedia.cz
+			* studenti.wikimedia.cz
+			* twitter.wikimedia.cz
+	-->
+
+	<target host="wikimedia.de" />
+	<target host="*.wikimedia.de" />
+		<!-- mixed content issues on blog.wikimedia.de -->
+		<exclusion pattern="^http://blog\.wikimedia\.de/" />
+			<test url="http://blog.wikimedia.de/" />
+		<!-- mismatch on tools.wikimedia.de -->
+		<exclusion pattern="^http://tools\.wikimedia\.de/" />
+			<test url="http://tools.wikimedia.de/" />
+		<test url="http://www.wikimedia.de/" />
+		<test url="http://spenden.wikimedia.de/" />
+		<test url="http://test.wikimedia.de/" />
+		<test url="http://civicrm.wikimedia.de/" />
+		<test url="http://backend.wikimedia.de/" />
+		<test url="http://ffw.wikimedia.de/" />
+		<test url="http://wke.wikimedia.de/" />
+		<test url="http://redmine.wikimedia.de/" />
+
+	<target host="wikimedia.es" />
+	<target host="*.wikimedia.es" />
+		<test url="http://www.wikimedia.es/" />
+		<test url="http://blog.wikimedia.es/" />
+		<test url="http://listas.wikimedia.es/" />
+		<test url="http://servidor.wikimedia.es/" />
+	<target host="wikilov.es" />
+	<target host="www.wikilov.es" />
+
+	<!-- (www.)wikimedia.or.id uses invalid certificate 
+	<target host="wikimedia.or.id" />
+	<target host="www.wikimedia.or.id" />
+	-->
+
+	<target host="wikimedia.org.au" />
+	<!-- All subdomains *.wikimedia.org.au use an invalid security certificate. -->
+
+	<target host="wikimedia.org.il" />
+	<target host="www.wikimedia.org.il" />
+	<!--
+		blog.wikimedia.org.il uses an invalid security certificate.
+		The certificate is only valid for www.wikimedia.org.il and wikimedia.org.il.
+	-->
+
+	<target host="wikimedia.org.uk" />
+	<target host="blog.wikimedia.org.uk" />
+	<target host="donate.wikimedia.org.uk" />
+	<target host="office.wikimedia.org.uk" />
+	<target host="tech.wikimedia.org.uk" />
+	<target host="www.wikimedia.org.uk" />
+	<!--
+		Known subdomains not supporting HTTPS or using an invalid certificate:
+			* en.qrwp.wikimedia.org.uk
+			* lists.wikimedia.org.uk
+			* qrpedia.wikimedia.org.uk
+			* qrwp.wikimedia.org.uk (redirects to qrpedia.org)
+	-->
+
+	<!-- Deprecated hosts -->
+	<target host="toolserver.org" />
+	<target host="www.toolserver.org" />
+
+	<!--	Not secured by server: -->
+	<!--securecookie host="^(?:www\.)?wikidata\.org$" name="^WMF-Last-Access$" /-->
+	<!--securecookie host="^en\.wikipedia\.org$" name="^(CentralAuthAnon|mediaWiki\.user\.sessionId|uls-previous-languages)$" /-->
+
+	<securecookie host="^(?:www\.)?mediawiki\.org$" name=".+" />
+	<securecookie host="^\.wik(?:ibooks|idata|imedia|imediafoundation|inews|ipedia|iquote|isource|iversity|ivoyage|tionary)\.org$" name="^GeoIP$" />
+	<securecookie host="^(?:[^@:/]+\.)?wik(?:ibooks|idata|inews|ipedia|iquote|isource|iversity|ivoyage|tionary)\.org$" name=".+" />
+	<securecookie host="^(?:species|commons|meta|incubator|wikitech)\.wikimedia\.org$" name=".+" />
+	<securecookie host="^wikimediafoundation\.org$" name=".+" />
 
 	<rule from="^http://(en|fr)wp\.org/"
 		to="https://$1.wikipedia.org/wiki/" />
 
-	<rule from="^http://(?:www\.)?mediawiki\.org/"
-		to="https://www.mediawiki.org/" />
+	<rule from="^http://wikimedia\.cz/"
+		to="https://www.wikimedia.cz/" />
 
-	<rule from="^http://([^@:/]+\.)?wik(ibooks|idata|imedia|inews|ipedia|iquote|isource|iversity|ivoyage|tionary)\.org/"
-		to="https://$1wik$2.org/" />
-
-	<rule from="^http://([^@:/]+)\.planet\.wikimedia\.org/"
-		to="https://$1.planet.wikimedia.org/" />
-
-	<rule from="^http://(www\.)?wikimediafoundation\.org/"
-		to="https://$1wikimediafoundation.org/" />
-
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

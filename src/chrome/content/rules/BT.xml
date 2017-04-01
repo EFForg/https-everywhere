@@ -5,58 +5,160 @@
 	btbusiness.custhelp.com
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *bt.com:
 
-		- (www.)btlife *
-		- (www.)btvision *
-		- (www.)business	(data differs from http, valid cert)
-		- (www.)insight		(times out)
+		- www.benevolent ᵃ
+		- (www.)?btlife ᵖ
+		- (www.)?btvision ᵖ
+		- www.digitalarchives ʰ
+		- (www.)?insight ᵈ
+		- www.selling2bt ᵃ
+		- www.sinet ᵃ
+		- www.trainingsolutions ʳ
+		- www.thephonebook ⁴
+		- www.wifiinourcommunity ᵃ
 
-	* http reply
-
-
-	Problematic subdomains:
-
-		- globalservices *
-		- productsandservices *
-		- shop			(times out)
-
-	* Cert only matches www.foo
-
-
-	Fully covered subdomains:
-
-		- (www.)			(^ → www)
-		- secure.business
-		- (www.)globalservices		(^ → www)
-		- (www.)productsandservices	(^ → www)
-		- (www.)shop			(^ → www)
-		- www.vouchers
-		- www2
+	⁴ 400
+	ᵃ Shows another domain
+	ᵈ Dropped
+	ʰ Redirects to http
+	ᵖ Plaintext reply
+	ʳ Refused
 
 
-	^vouchers.bt.com doesn't exist
+	Problematic hosts in *bt.com:
+
+		- diagnostics ᵐ
+		- dslchecker ᵐ
+		- btexvip05.extra ᶜ ᵐ
+		- globalservices ᵈ
+		- (www.)?redcare ᵐ
+		- shop ᵈ
+		- www.tvpurchaseshome ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵈ Dropped, preemptable redirect
+	ᵐ Mismatched
+	ʳ Refused, preemptable redirect
+
+
+	^vouchers.bt.com does not exist
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .bt.com
+		- business.bt.com
+		- business.forums.bt.com
+		- home.bt.com
+		- myoffice.bt.com
+		- www.shop.bt.com
+		- .www.shop.bt.com
+		- www.tvpurchaseshome.bt.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- (www.)?home, (www.)?sport from vid01.bt.co.uk
+			- (www.)?home from home.bt.com ˢ
+			- (www.)?sport from sport.bt.com ˢ
+			- tv from assets.bt.com ˢ
+			- tv from home.bt.com ˢ
+
+		- Bugs, on:
+
+			- (www.)?home, signin1, (www.)?sport, tv from britishtelecom.112.2o7.net ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="BT (partial)">
+<ruleset name="BT.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="bt.com" />
-	<target host="*.bt.com" />
-		<exclusion pattern="^http://business\.bt\.com/" />
+	<target host="api.bt.com" />
+	<target host="assets.bt.com" />
+	<target host="www.broadband.bt.com" />
+	<target host="business.bt.com" />
+
+	<target host="btbsecure.business.bt.com" />
+	<target host="secure.business.bt.com" />
+	<target host="www.business.bt.com" />
+
+	<target host="www.businessdirect.bt.com" />
+	<target host="community.bt.com" />
+	<target host="www.dslchecker.bt.com" />
+	<target host="business.forums.bt.com" />
+	<target host="letstalk.globalservices.bt.com" />
+	<target host="www.globalservices.bt.com" />
+	<target host="home.bt.com" />
+	<target host="www.home.bt.com" />
+	<target host="itservices.bt.com" />
+	<target host="www.itservices.bt.com" />
+	<target host="mydonate.bt.com" />
+	<target host="myoffice.bt.com" />
+	<target host="productsandservices.bt.com" />
+	<target host="www.productsandservices.bt.com" />
+	<target host="search.bt.com" />
+	<target host="www.shop.bt.com" />
+	<target host="signin1.bt.com" />
+	<target host="sport.bt.com" />
+	<target host="www.sport.bt.com" />
+	<target host="support.bt.com" />
+	<target host="tv.bt.com" />
+	<!--target host="www.tvpurchaseshome.bt.com" /-->
+	<target host="www.vouchers.bt.com" />
+	<target host="www.bt.com" />
+	<target host="www2.bt.com" />
+
+	<!--	Complications:
+				-->
+	<target host="dslchecker.bt.com" />
+	<target host="globalservices.bt.com" />
+	<target host="redcare.bt.com" />
+	<target host="www.redcare.bt.com" />
+	<target host="shop.bt.com" />
+
+		<test url="http://assets.bt.com/v1/btcomd/privacy/css/reset.css" />
+		<test url="http://support.bt.com/fix/landline/?view=landlinetroubleshooter&amp;s_intcid=help_9941" />
 
 
-	<securecookie host="^.*\.bt\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.bt\.com$" name="^(?:BTMAIL$|BTTVSESSION$|JSESSIONID_|SA-ID$|SMSESSION$|XLOGIN$|avs_cookie$|btcom\.isLoggedIn$|btcom\.userName$|btcomsite$|btsite$|elbc$|s$|s_vi$|sportproduct$|uList$|ytoken$|ytokentmp$)" /-->
+	<!--securecookie host="^business\.bt\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^www\.businessdirect\.bt\.com$" name="^(?:ARPT|ASP\.NET_SessionId|ReferrerId|UniqueSessionGuid|btbus_visitorid)$" /-->
+	<!--securecookie host="^business\.forums\.bt\.com$" name="^Lithium(?:UserInfo|UserSecure|Visitor)$" /-->
+	<!--securecookie host="^(?:home|signin1|sport)\.bt\.com$" name="JSESSIONID" /-->
+	<!--securecookie host="^(?:home|signin1|sport|support)\.bt\.com$" name="^X-Mapping-\w+$" /-->
+	<!--securecookie host="^myoffice\.bt\.com$" name="^(?:\.DBANON|ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^\.search\.bt\.com$" name="^search" /-->
+	<!--securecookie host="^www\.shop\.bt\.com$" name="^(?:ABTest|ARPT|ASP\.NET_SessionId|ShowExVAT|UniqueSessionGuid|btshop_visitorid)$" /-->
+	<!--securecookie host="^\.www\.shop\.bt\.com$" name="^ARRAffinity$" /-->
+	<!--securecookie host="^www\.tvpurchaseshome\.bt\.com$" name="^session" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^https?://(?:www\.)?((?:global|productsand)services\.)?bt\.com/"
-		to="https://www.$1bt.com/" />
+	<rule from="^http://(dslchecker|globalservices)\.bt\.com/"
+		to="https://www.$1.bt.com/" />
 
-	<rule from="^http://(secure\.business|www\.(?:shop|vouchers)|www2)\.bt\.com/"
-		to="https://$1.bt.com/" />
+	<rule from="^http://(?:www\.)?redcare\.bt\.com/"
+		to="https://www.redcare.com/" />
 
 	<!--	Server drops path like so:
 						-->
 	<rule from="^http://shop\.bt\.com/.*"
 		to="https://www.shop.bt.com/" />
+
+		<test url="http://shop.bt.com/Default.aspx" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

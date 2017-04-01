@@ -1,12 +1,101 @@
-<!--	!functional:
-		- ziza.qip.ru	(redirects back to http)
+<!--
+	Nonfunctional subdomains:
+
+		- search.photo ¹
+		- search.video ¹
+		- ziza ²
+
+	¹ Redirects to search
+	² Dropped
+
+
+	Problematic subdomains:
+
+		- mblogi *
+
+	* Redirect differs
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- api
+		- download
+		- help
+		- kards
+		- maps
+		- mail
+		- mblogi	(→ ^)
+		- memori
+		- news
+		- partner
+		- pass
+		- photo
+		- pip
+		- s
+		- search
+		- shot
+		- welcome
+
+
+	Mixed content:
+
+		- css, on:
+
+			- ^, news, and search from fonts.googleapis.com ¹
+
+		- Bugs, on:
+
+			- ^, help, kards, mail, news, shot, and welcome from lstats ¹
+			- ^ from ad.adriver.ru ¹
+			- ^ from engine.mediamir.medialand.ru ²
+			- ^ and photo from count.rbc.ru ³
+			- ^ and photo from www.tns-counter.ru ¹
+			- kards from userapi.com ⁴
+			- search from snext.ru ⁵
+			- shot from welcome ¹
+
+		- Images, on:
+
+			- memori from $self ¹
+			- memory from open.thumbshots.org ⁶
+			- news from fs\d{3}.jpe.ru ⁴
+
+		- favicon, on:
+
+			- kards from $self ¹
+			- partner from ^ ¹
+
+	¹ Secured by us
+	² Unsecurable <= 404
+	³ Unsecurable <= refused
+	⁴ Not secured by us <= mismatched
+	⁵ Unsecurable <= dropped
+	⁶ Unsecurable <= 503
+
 -->
 <ruleset name="QIP">
-  <target host="qip.ru" />
-	<!--	* for cross-domain cookie	-->
-  <target host="*.qip.ru" />
 
-	<securecookie host="^.qip.ru$" name=".*"/>
+	<target host="qip.ru" />
+	<target host="*.qip.ru" />
 
-  <rule from="^http://(?:www\.)?qip\.ru/" to="https://qip.ru/"/>
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.qip\.ru$" name="^(PHPSESSID|qip_uid|sqip_weather_code|startqip_uniq)$" /-->
+
+	<securecookie host="^\.qip\.ru$" name=".+" />
+
+
+	<rule from="^http://((?:api|download|help|kards|lstats|maps|mail|memori|news|partner|pass|photo|pip|s|shot|search|welcome|www)\.)?qip\.ru/"
+		to="https://$1qip.ru/" />
+
+	<!--	Redirect drop path but not args:
+						-->
+	<rule from="^http://mblogi\.qip\.ru/+\??$"
+		to="https://qip.ru/?mblogi" />
+
+	<rule from="^http://mblogi\.qip\.ru/+[^?]*\?"
+		to="https://qip.ru/?mblogi&amp;" />
+
 </ruleset>

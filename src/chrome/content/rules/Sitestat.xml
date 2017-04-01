@@ -1,23 +1,37 @@
 <!--
-	Problematic subdomains:
-
-		- (www.)	(works; mismatched, CN: *.comscore.com)
+	For other comScore coverage, see ComScore.com.xml.
 
 
-	Fully covered subdomains:
+	(www.)?sitestat.com: Mismatched, CN: *.comscore.com
 
-		- int
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- fr.sitestat.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Sitestat">
+<ruleset name="Sitestat.com (partial)">
 
-	<target host="*.sitestat.com" />
+	<target host="de.sitestat.com" />
+	<target host="fr.sitestat.com" />
+	<target host="int.sitestat.com" />
+	<target host="nl.sitestat.com" />
+	<target host="se.sitestat.com" />
+	<target host="uk.sitestat.com" />
+
+		<test url="http://de.sitestat.com/dmag/001/s?" />
 
 
-	<securecookie host="^.*\.sitestat\.com$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="fr\.sitestat\.com$" name="^(c1|s1)" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(de|fr|int|nl|uk)\.sitestat\.com/"
-		to="https://$1.sitestat.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

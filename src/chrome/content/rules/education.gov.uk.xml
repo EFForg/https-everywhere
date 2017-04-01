@@ -1,0 +1,168 @@
+<!--
+	NB: media2.../$ resets connection over https &
+	502s over http ?=> test failure
+
+	Department for Education
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *education.gov.uk:
+
+		- futurescholarawards ᶠ
+		- lists ⁴
+		- publications ᵗ
+		- sta ʳ
+
+	⁴ Redirects to 404
+	ᶠ Handshake fails
+	ʳ Refused
+	ᵗ Reset
+
+
+	Problematic hosts in *education.gov.uk:
+
+		- aka ᵐ
+		- sa ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *education.gov.uk:
+
+		- (www.)? *
+		- aka **
+
+	* Some paths redirect to http, others to 401
+	** Redirect behaviour seems unpredictable
+
+
+	These altnames do not exist:
+
+		- www.collectdata.education.gov.uk
+		- www.consult.education.gov.uk
+		- www.fsm.education.gov.uk
+
+
+	Insecure cookies are set for these hosts:
+
+		- forms.education.gov.uk
+		- ncatools.education.gov.uk
+		- tableschecking.education.gov.uk
+		- www.education.gov.uk
+
+
+	Mixed content:
+
+		- Image on www from $self ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Education.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="education.gov.uk" />
+	<target host="consult.education.gov.uk" />
+	<target host="collectdata.education.gov.uk" />
+	<target host="dataprovision.education.gov.uk" />
+	<target host="efadatacollections.education.gov.uk" />
+	<target host="form.education.gov.uk" />
+	<target host="fsm.education.gov.uk" />
+	<target host="getintoteaching.education.gov.uk" />
+	<target host="ittprovider.education.gov.uk" />
+	<target host="www.keytosuccess.education.gov.uk" />
+	<target host="media.education.gov.uk" />
+	<target host="media2.education.gov.uk" />
+	<target host="ncatools.education.gov.uk" />
+	<!--target host="sa.education.gov.uk" /-->
+	<target host="studentbursarysupport.education.gov.uk" />
+	<target host="tableschecking.education.gov.uk" />
+	<target host="teacherservices.education.gov.uk" />
+	<target host="www.education.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="aka.education.gov.uk" />
+
+		<!--	Redirects to 404:
+						-->
+		<!--exclusion pattern="^http://www\.education\.gov\.uk/cgi-bin/schools/performance/group\.pl" /-->
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.education\.gov\.uk/schools/performance/(?:$|img/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?education\.gov\.uk/+(?!$|\?|(?:help|piwik)(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.education.gov.uk/bullying/" />
+			<test url="http://www.education.gov.uk/cgi-bin/schools/performance/group.pl?qtype=NAT" />
+			<test url="http://www.education.gov.uk/datacollection" />
+			<test url="http://www.education.gov.uk/isa" />
+			<test url="http://www.education.gov.uk/optionals" />
+			<test url="http://www.education.gov.uk/ourfuture" />
+			<test url="http://www.education.gov.uk/schools/performance/" />
+			<test url="http://www.education.gov.uk/schools/performance/img/arrow_small.gif" />
+			<test url="http://www.education.gov.uk/share" />
+			<test url="http://www.education.gov.uk/staff" />
+			<test url="http://www.education.gov.uk/ukccis/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.education.gov.uk/help" />
+			<test url="http://www.education.gov.uk/help/contactus/dfe" />
+			<test url="http://www.education.gov.uk/piwik/" /><!--	mixed image, sets cookie without Secure -->
+			<test url="http://www.education.gov.uk/piwik/piwik.php?idsite=" />
+
+		<test url="http://fsm.education.gov.uk/fsm.laportal/" />
+		<test url="http://media.education.gov.uk/consumption/css/core/print.css" />
+		<test url="http://media2.education.gov.uk/dfe2014/css/legacy.css" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://tableschecking.education.gov.uk/Web14/KS4Progress8Optin/FSG.User/Logout.aspx" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^form\.education\.gov\.uk$" name="^X-FS-RET$" /-->
+	<!--securecookie host="^ncatools\.education\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^tableschecking\.education\.gov\.uk$" name="^(?:\.ASPXANONYMOUS$|ASP\.NET_SessionId$|BIGipServer)" /-->
+	<!--securecookie host="^www\.education\.gov\.uk$" name="^PIWIK_SESSID$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^(?!www\.)\w" name="." />
+	<securecookie host="^www\." name="^PIWIK_" />
+
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://aka\.education\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/department-for-education" />
+
+		<!--	/*\w does not redirect:
+						-->
+		<exclusion pattern="^http://aka\.education\.gov\.uk/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://aka.education.gov.uk/default.aspx" />
+			<test url="http://aka.education.gov.uk/index.htm" />
+			<test url="http://aka.education.gov.uk/index.html" />
+			<test url="http://aka.education.gov.uk/index.jsp" />
+			<test url="http://aka.education.gov.uk/index.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://aka.education.gov.uk/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

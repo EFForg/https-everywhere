@@ -1,0 +1,72 @@
+<!--
+	For other Pulsepoint coverage, see PulsePoint.xml.
+
+
+	CDN buckets:
+
+		- s.amazonaws.com/native-advertising/
+
+			- nm.contextweb.com
+
+
+	Nonfunctional hosts in *contextweb.com:
+
+		- openrtb *
+
+	* Handshake fails
+
+
+	bh & tag: included on 3rd-party websites
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .contextweb.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="contextweb.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="contextweb.com" />
+	<target host="ads.contextweb.com" />
+	<target host="bh.contextweb.com" />
+	<target host="exchange.contextweb.com" />
+	<target host="nm.contextweb.com" />
+	<target host="tag.contextweb.com" />
+	<target host="www.contextweb.com" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.contextweb.com" />
+
+		<exclusion pattern="http://blog\.contextweb\.com/(?!sellingdesk$)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://blog.contextweb.com//" />
+
+			<!--	-ve:
+					-->
+			<test url="http://blog.contextweb.com/sellingdesk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.contextweb\.com$" name="^(V|pb_rtb_ev|sto-id-\d+-bh|sto-id-\d+-exchange)$" /-->
+
+	<securecookie host="^(?!blog\.)." name="." />
+
+
+	<!--	- Cert: *.hubspot.com
+		- Redirects like so.
+				-->
+	<rule from="^http://blog\.contextweb\.com/sellingdesk$"
+		to="https://getsatisfaction.com/contextweb" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,5 +1,5 @@
 <!--
-	For other Microsoft coverage, see Microsoft.xml.
+	For other Facebook coverage, see Facebook.xml.
 
 
 	CDN buckets:
@@ -11,29 +11,65 @@
 			- cdn.atdmt.com
 	
 
-	Problematic subdomains:
+	Problematic hosts in *atdmt.com:
 
 		- cdn		(mismatched, CN: *.sharepointonline.com)
+		- h ¹
+		- img ²
 		- exch-eu	(mismatched, CN: view.atdmt.com)
 		- spe		(akamai)
+
+	¹ Mismatched
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .atdmt.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	c.atdmt.com sets MUID wildcard cookie on
 	whichever domain it is loaded from.
 
 -->
-<ruleset name="Microsoft Atlas">
+<ruleset name="Atdmt.com">
 
-	<target host="*.atdmt.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="ad.atdmt.com" />
+	<target host="c.atdmt.com" />
+	<target host="c1.atdmt.com" />
+	<target host="clk.atdmt.com" />
+	<target host="flex.atdmt.com" />
+	<target host="iact.atdmt.com" />
+	<target host="rad.atdmt.com" />
+	<target host="sact.atdmt.com" />
+	<target host="switch.atdmt.com" />
+	<target host="view.atdmt.com" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://ad.atdmt.com/m/img;m=;cache=?revenue=&amp;order_id=&amp;qty=&amp;currency_code=&amp;country=&amp;region=&amp;product=" /-->
+
+	<!--	Complications:
+				-->
+	<target host="cdn.atdmt.com" />
+	<target host="exch-eu.atdmt.com" />
+	<target host="h.atdmt.com" />
+
 		<exclusion pattern="^http://view\.atdmt\.com/action/windows_downloads_Upgrade" />
 
-
-	<!--securecookie host="^\.atdmt\.com$" name="^(AA002|MUID)$" /-->
-	<securecookie host="^(?:.*\.)?atdmt\.com$" name=".+" />
+			<test url="http://view.atdmt.com/action/windows_downloads_Upgrade" />
 
 
-	<rule from="^http://(c1?|clk|flex|h|image|rad|switch|view)\.atdmt\.com/"
-		to="https://$1.atdmt.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.atdmt\.com$" name="^(?:AA002|ATN|MUID)$" /-->
+
+	<securecookie host="." name="." />
+
 
 	<rule from="^http://cdn\.atdmt\.com/"
 		to="https://atlasdmt.vo.msecnd.net/" />
@@ -41,10 +77,10 @@
 	<rule from="^http://exch-eu\.atdmt\.com/"
 		to="https://view.atdmt.com/" />
 
-	<rule from="^http://img\.atdmt\.com/"
-		to="https://a248.e.akamai.net/img.atdmt.com/" />
+	<rule from="^http://h\.atdmt\.com/"
+		to="https://h.bing.com/" />
 
-	<rule from="^http://spe\.atdmt\.com/"
-		to="https://image.atdmt.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

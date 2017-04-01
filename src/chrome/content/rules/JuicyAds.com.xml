@@ -1,0 +1,45 @@
+<!--
+	Nonfunctional hosts in *juicyads.com:
+
+		- support ²
+		- www ¹
+
+	¹ 503
+	² 403
+
+	Problematic hosts in *juicyads.com:
+
+		- ^ ¹
+		- ads-a *
+
+	¹ tls unsupported at redirect destination
+	* Server sometimes sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .juicyads.com
+		- adserver.juicyads.com
+
+-->
+<ruleset name="JuicyAds.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="ads-a.juicyads.com" /-->
+	<target host="adserver.juicyads.com" />
+	<target host="ck.juicyads.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.juicyads\.com$" name="^(incap_ses_\d+_\d+|imps\d+|juicy_data|juicy_data_1|nlbi_\d+|visid_incap_\d+)$" /-->
+	<!--securecookie host="^adserver\.juicyads\.com$" name="^__utmv\w+$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

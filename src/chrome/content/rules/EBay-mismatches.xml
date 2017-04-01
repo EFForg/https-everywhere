@@ -7,7 +7,6 @@
 		- pages.ebay.com
 		- di\d+.shopping.com		(→ img.shopping.com)
 		- img.shopping.com		(→ img.shopping.com)
-		- img.shoppingshadow.com	(→ img.shopping.com)
 
 -->
 <ruleset name="eBay (mismatches)" default_off="mismatch">
@@ -15,16 +14,23 @@
 	<!--	Cert: spages.half.ebay.com	-->
 	<target host="pages.ebay.com" />
 	<target host="*.shopping.com" />
-	<target host="img.shoppingshadow.com" />
 
+		<exclusion pattern="^http://merchantsupport\.shopping\.com/(?!files/|public/(?!Mashery/styles/clients/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://merchantsupport.shopping.com/" />
+
+		<test url="http://pages.ebay.com/" />
+
+
+	<rule from="^http://di\d+\.shopping\.com/"
+		to="https://img.shopping.com/" />
 
 	<rule from="^http://pages\.ebay\.com/"
 		to="https://pages.ebay.com/" />
 
-	<rule from="^https?://(?:di\d+|img)\.shopping(?:shadow)?\.com/"
-		to="https://img.shopping.com/" />
-
-	<rule from="^http://merchantsupport\.shopping\.com/(files/|public/(?!Mashery/styles/clients/))"
-		to="https://merchantsupport.shopping.com/$1" />
+	<rule from="^http://merchantsupport\.shopping\.com/"
+		to="https://merchantsupport.shopping.com/" />
 
 </ruleset>

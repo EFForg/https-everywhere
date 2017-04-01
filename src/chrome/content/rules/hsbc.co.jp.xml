@@ -1,0 +1,53 @@
+<!--
+	For other HSBC Holdings coverage, see HSBC.xml.
+
+
+	Nonfunctional hosts in *hsbc.co.jp:
+
+		- www.about *
+
+	* Unrecognized name
+
+
+	^hsbc.co.jp: mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.hsbc.co.jp
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bug on www from www1.member-hsbc-group.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="HSBC.co.jp (partial)" default_off="testing">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.hsbc.co.jp" />
+
+	<!--	Complications:
+				-->
+	<target host="hsbc.co.jp" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.hsbc\.co\.jp$" name="^(?:JSESSIONID|TKPTK)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://hsbc\.co\.jp/"
+		to="https://www.hsbc.co.jp/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

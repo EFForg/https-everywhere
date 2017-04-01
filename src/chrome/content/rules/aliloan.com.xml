@@ -1,0 +1,69 @@
+<!--
+	For other Alibaba coverage, see Alibaba.xml.
+
+
+	Problematic hosts in *aliloan.com:
+
+		- alibaba ᵉ
+
+	ᵉ Expired
+
+
+	These altnames do not exist:
+
+		- aliloan.com
+
+
+	Insecure cookies are set for these domains:
+
+		- .aliloan.com
+
+-->
+<ruleset name="Aliloan.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="dai.aliloan.com" />
+	<target host="dk.aliloan.com" />
+	<target host="growing.aliloan.com" />
+	<target host="taobao.aliloan.com" />
+	<target host="www.aliloan.com" />
+
+	<!--	Complications:
+				-->
+	<target host="alibaba.aliloan.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.aliloan\.com$" name="^ali_apache_track$" /-->
+
+	<securecookie host="^\." name="^ali_apache_track" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://alibaba\.aliloan\.com/.*"
+		to="https://loan.mybank.cn/dk/b2bapply/index.htm" />
+
+		<!--	\w$ does not redirect:
+						-->
+		<exclusion pattern="^http://alibaba\.aliloan\.com/(?!/*(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://alibaba.aliloan.com/default.aspx" />
+			<test url="http://alibaba.aliloan.com/favicon.ico" />
+			<test url="http://alibaba.aliloan.com/index.htm" />
+			<test url="http://alibaba.aliloan.com/index.html" />
+			<test url="http://alibaba.aliloan.com/index.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://alibaba.aliloan.com/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

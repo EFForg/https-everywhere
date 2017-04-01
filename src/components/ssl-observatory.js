@@ -5,30 +5,31 @@ const Cr = Components.results;
 const CI = Components.interfaces;
 const CC = Components.classes;
 const CR = Components.results;
-const CU = Components.utils;
 
 // Log levels
-VERB=1;
-DBUG=2;
-INFO=3;
-NOTE=4;
-WARN=5;
+let VERB=1;
+let DBUG=2;
+let INFO=3;
+let NOTE=4;
+let WARN=5;
 
-BASE_REQ_SIZE=4096;
-MAX_OUTSTANDING = 20; // Max # submission XHRs in progress
-MAX_DELAYED = 32;     // Max # XHRs are waiting around to be sent or retried 
-TIMEOUT = 60000;
+let BASE_REQ_SIZE=4096;
+let TIMEOUT = 60000;
+let MAX_OUTSTANDING = 20; // Max # submission XHRs in progress
+let MAX_DELAYED = 32;     // Max # XHRs are waiting around to be sent or retried 
 
-ASN_PRIVATE = -1;     // Do not record the ASN this cert was seen on
-ASN_IMPLICIT = -2;     // ASN can be learned from connecting IP
-ASN_UNKNOWABLE = -3;  // Cert was seen in the absence of [trustworthy] Internet access
+let ASN_PRIVATE = -1;     // Do not record the ASN this cert was seen on
+let ASN_IMPLICIT = -2;    // ASN can be learned from connecting IP
+let ASN_UNKNOWABLE = -3;  // Cert was seen in the absence of [trustworthy] Internet access
 
 // XXX: We should make the _observatory tree relative.
-LLVAR="extensions.https_everywhere.LogLevel";
+let LLVAR="extensions.https_everywhere.LogLevel";
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 Components.utils.import("resource://gre/modules/ctypes.jsm");
 
+// Alias to reduce the number of spurious warnings from amo-validator.
+let tcypes = ctypes;
 
 const OS = Cc['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
 
@@ -52,7 +53,7 @@ const INCLUDE = function(name) {
       dump("INCLUDE " + name + ": " + e + "\n");
     }
   }
-};
+}
 
 INCLUDE('Root-CAs');
 INCLUDE('sha256');
@@ -65,9 +66,12 @@ function SSLObservatory() {
 
   try {
     // Check for torbutton
-    this.tor_logger = CC["@torproject.org/torbutton-logger;1"]
-          .getService(CI.nsISupports).wrappedJSObject;
-    this.torbutton_installed = true;
+    var tor_logger_component = CC["@torproject.org/torbutton-logger;1"];
+    if (tor_logger_component) {
+      this.tor_logger =
+        tor_logger_component.getService(CI.nsISupports).wrappedJSObject;
+      this.torbutton_installed = true;
+    }
   } catch(e) {
     this.torbutton_installed = false;
   }
@@ -98,10 +102,6 @@ function SSLObservatory() {
   // Used to track current number of pending requests to the server
   this.current_outstanding_requests = 0;
 
-  // We can't always know private browsing state per request, sometimes
-  // we have to guess based on what we've seen in the past
-  this.everSeenPrivateBrowsing = false;
-
   // Generate nonce to append to url, to catch in nsIProtocolProxyFilter
   // and to protect against CSRF
   this.csrf_nonce = "#"+Math.random().toString()+Math.random().toString();
@@ -123,12 +123,14 @@ function SSLObservatory() {
     this.setupASNWatcher();
 
   try {
-    NSS.initialize("");
+    NSS.initialize();
   } catch(e) {
     this.log(WARN, "Failed to initialize NSS component:" + e);
   }
 
-  this.testProxySettings();
+  // It is necessary to testProxySettings after the window is loaded, since the
+  // Tor Browser will not be finished establishing a circuit otherwise
+  OS.addObserver(this, "browser-delayed-startup-finished", false);
 
   this.log(DBUG, "Loaded observatory component!");
 }
@@ -176,7 +178,7 @@ SSLObservatory.prototype = {
 
   findSubmissionTarget: function() {
     // Compute the URL that the Observatory will currently submit to
-    var host = this.prefs.getCharPref("extensions.https_everywhere._observatory.server_host");
+    var host = this.myGetCharPref("server_host");
     // Rebuild the regexp iff the host has changed
     if (host != this.submit_host) {
       this.submit_host = host;
@@ -194,7 +196,7 @@ SSLObservatory.prototype = {
   notifyCertProblem: function(socketInfo, status, targetSite) {
     this.log(NOTE, "cert warning for " + targetSite);
     if (targetSite == "observatory.eff.org") {
-      this.log(WARN, "Surpressing observatory warning");
+      this.log(WARN, "Suppressing observatory warning");
       return true;
     }
     return false;
@@ -294,9 +296,36 @@ SSLObservatory.prototype = {
   },
   */
 
+  // Calculate the MD5 fingerprint for a cert. This is the fingerprint of the
+  // DER-encoded form, same as the result of
+  // openssl x509 -md5 -fingerprint -noout
+  // We use this because the SSL Observatory depends in many places on a special
+  // fingerprint which is the concatenation of MD5+SHA1, and the MD5 fingerprint
+  // is no longer available on the cert object.
+  // Implementation cribbed from
+  // https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Reference/Interface/nsICryptoHash
+  md5Fingerprint: function(cert) {
+    var len = new Object();
+    var derData = cert.getRawDER(len);
+    var ch = CC["@mozilla.org/security/hash;1"].createInstance(CI.nsICryptoHash);
+    ch.init(ch.MD5);
+    ch.update(derData,derData.length);
+    var h = ch.finish(false);
+
+    function toHexString(charCode) {
+      return ("0" + charCode.toString(16)).slice(-2);
+    }
+
+    var hexArr = [];
+    for (var i in h){
+      hexArr.push(toHexString(h.charCodeAt(i)));
+    }
+    return hexArr.join("").toUpperCase();
+  },
+
   ourFingerprint: function(cert) {
     // Calculate our custom fingerprint from an nsIX509Cert
-    return (cert.md5Fingerprint+cert.sha1Fingerprint).replace(":", "", "g");
+    return (this.md5Fingerprint(cert)+cert.sha1Fingerprint).replace(":", "", "g");
   },
 
   observe: function(subject, topic, data) {
@@ -327,15 +356,14 @@ SSLObservatory.prototype = {
 
     if ("http-on-examine-response" == topic) {
 
-      var channel = subject;
-      if (!this.observatoryActive(channel)) return;
+      if (!this.observatoryActive()) return;
 
       var host_ip = "-1";
       var httpchannelinternal = subject.QueryInterface(Ci.nsIHttpChannelInternal);
-      try { 
+      try {
         host_ip = httpchannelinternal.remoteAddress;
       } catch(e) {
-          this.log(INFO, "Could not get server IP address.");
+        this.log(INFO, "Could not get server IP address.");
       }
       subject.QueryInterface(Ci.nsIHttpChannel);
       var certchain = this.getSSLCert(subject);
@@ -366,16 +394,20 @@ SSLObservatory.prototype = {
         }
 
         if (subject.URI.port == -1) {
-            this.submitChain(chainArray, fps, new String(subject.URI.host), subject, host_ip, false);
+          this.submitChain(chainArray, fps, new String(subject.URI.host), subject, host_ip, false);
         } else {
-            this.submitChain(chainArray, fps, subject.URI.host+":"+subject.URI.port, subject, host_ip, false);
+          this.submitChain(chainArray, fps, subject.URI.host+":"+subject.URI.port, subject, host_ip, false);
         }
       }
     }
+
+    if (topic == "browser-delayed-startup-finished") {
+      this.testProxySettings();
+    }
   },
 
-  observatoryActive: function(channel) {
-                         
+  observatoryActive: function() {
+
     if (!this.myGetBoolPref("enabled"))
       return false;
 
@@ -400,49 +432,24 @@ SSLObservatory.prototype = {
       // submit certs without strong anonymisation.  Because the
       // anonymisation is weak, we avoid submitting during private browsing
       // mode.
-      var pbm = this.inPrivateBrowsingMode(channel);
-      this.log(DBUG, "Private browsing mode: " + pbm);
-      return !pbm;
-    }
-  },
-
-  inPrivateBrowsingMode: function(channel) {
-    // In classic firefox fashion, there are multiple versions of this API
-    // https://developer.mozilla.org/EN/docs/Supporting_per-window_private_browsing
-    try {
-        // Firefox 20+, this state is per-window;
-        //  should raise an exception on FF < 20
-        CU.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
-        if (!(channel instanceof CI.nsIHttpChannel)) {
-          this.log(NOTE, "observatoryActive() without a channel");
-          // This is a windowless request. We cannot tell if private browsing
-          // applies. Conservatively, if we have ever seen PBM, it might be
-          // active now
-          return this.everSeenPrivateBrowsing;
-        }
-        var win = this.HTTPSEverywhere.getWindowForChannel(channel);
-        if (!win) return this.everSeenPrivateBrowsing;  // windowless request
-
-        if (PrivateBrowsingUtils.isWindowPrivate(win)) {
-          this.everSeenPrivateBrowsing = true;
-          return true;
-        }
-    } catch (e) {
-      // Firefox < 20, this state is global
       try {
         var pbs = CC["@mozilla.org/privatebrowsing;1"].getService(CI.nsIPrivateBrowsingService);
-        if (pbs.privateBrowsingEnabled) {
-          this.everSeenPrivateBrowsing = true;
-          return true;
-        }
-      } catch (e) { /* seamonkey or very old firefox */ }
+        if (pbs.privateBrowsingEnabled) return false;
+      } catch (e) { /* seamonkey or old firefox */ }
+
+      return true;
     }
+
     return false;
   },
 
+  // following two methods are syntactic sugar
   myGetBoolPref: function(prefstring) {
-    // syntactic sugar
     return this.prefs.getBoolPref ("extensions.https_everywhere._observatory." + prefstring);
+  },
+
+  myGetCharPref: function(prefstring) {
+    return this.prefs.getCharPref ("extensions.https_everywhere._observatory." + prefstring);
   },
 
   isChainWhitelisted: function(chainhash) {
@@ -492,7 +499,7 @@ SSLObservatory.prototype = {
     if (!convergence || !convergence.enabled) return null;
 
     this.log(INFO, "Convergence uses its own internal root certs; not submitting those");
-    
+
     //this.log(WARN, convergence.certificateStatus.getVerificiationStatus(chain.certArray[0]));
     try {
       var certInfo = this.extractRealLeafFromConveregenceLeaf(chain.certArray[0]);
@@ -526,7 +533,7 @@ SSLObservatory.prototype = {
                                                 extItem.address());
     if (status != -1) {
       var encoded = '';
-      var asArray = ctypes.cast(extItem.data, ctypes.ArrayType(ctypes.unsigned_char, extItem.len).ptr).contents;
+      var asArray = tcypes.cast(extItem.data, tcypes.ArrayType(tcypes.unsigned_char, extItem.len).ptr).contents;
       var marker = false;
 
       for (var i=0;i<asArray.length;i++) {
@@ -544,7 +551,7 @@ SSLObservatory.prototype = {
   shouldSubmit: function(chain, domain) {
     // Return true if we should submit this chain to the SSL Observatory
     var rootidx = this.findRootInChain(chain.certArray);
-    var ss = false;  // ss: self-signed
+    var ss= false;
 
     if (chain.leaf.issuerName == chain.leaf.subjectName) 
       ss = true;
@@ -647,7 +654,16 @@ SSLObservatory.prototype = {
 
     var that = this; // We have neither SSLObservatory nor this in scope in the lambda
 
-    var win = channel ? this.HTTPSEverywhere.getWindowForChannel(channel) : null;
+    var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
+                            .getService(Components.interfaces.nsISupports)
+                            .wrappedJSObject;
+    var win = null;
+    if (channel) {
+      var browser = this.HTTPSEverywhere.getBrowserForChannel(channel);
+      if (browser) {
+        var win = browser.contentWindow;
+      }
+    }
     var req = this.buildRequest(params);
     req.timeout = TIMEOUT;
 
@@ -659,10 +675,11 @@ SSLObservatory.prototype = {
 
         if (req.status == 200) {
           that.log(INFO, "Successful cert submission");
-          if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory.cache_submitted")) 
-            if (c.fps[0] in that.already_submitted)
-              delete that.already_submitted[c.fps[0]];
-          
+          if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory.cache_submitted") &&
+              c.fps[0] in that.already_submitted) {
+            delete that.already_submitted[c.fps[0]];
+          }
+
           // Retry up to two previously failed submissions
           let n = 0;
           for (let fp in that.delayed_submissions) {
@@ -682,8 +699,9 @@ SSLObservatory.prototype = {
           }
         } else {
           // Submission failed
-          if (c.fps[0] in that.already_submitted)
+          if (c.fps[0] in that.already_submitted) {
             delete that.already_submitted[c.fps[0]];
+          }
           try {
             that.log(WARN, "Cert submission failure "+req.status+": "+req.responseText);
           } catch(e) {
@@ -691,13 +709,12 @@ SSLObservatory.prototype = {
           }
           // If we don't have too many delayed submissions, and this isn't
           // (somehow?) one of them, then plan to retry this submission later
-          if (Object.keys(that.delayed_submissions).length < MAX_DELAYED)
-            if (!(c.fps[0] in that.delayed_submissions)) {
-              that.log(WARN, "Planning to retry submission...");
-              let retry = function() { that.submitChain(certArray, fps, domain, channel, host_ip, true); };
-              that.delayed_submissions[c.fps[0]] = retry;
-            }
-
+          if (Object.keys(that.delayed_submissions).length < MAX_DELAYED &&
+              c.fps[0] in that.delayed_submissions) {
+            that.log(WARN, "Planning to retry submission...");
+            let retry = function() { that.submitChain(certArray, fps, domain, channel, host_ip, true); };
+            that.delayed_submissions[c.fps[0]] = retry;
+          }
         }
       }
     };
@@ -721,7 +738,7 @@ SSLObservatory.prototype = {
 
     // Send the proper header information along with the request
     // Do not set gzip header.. It will ruin the padding
-    req.setRequestHeader("X-Privacy-Info", "EFF SSL Observatory: https://eff.org/r.22c");
+    req.setRequestHeader("X-Privacy-Info", "EFF SSL Observatory: https://www.eff.org/r.22c");
     req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     req.setRequestHeader("Content-length", params.length);
     req.setRequestHeader("Connection", "close");
@@ -760,6 +777,21 @@ SSLObservatory.prototype = {
      * 4. Async result function sets test result status based on check.tp.o
      */
     this.proxy_test_successful = null;
+
+    var proxy_settings = this.getProxySettings();
+    // if proxy_settings is false, we're using tor browser for sure
+    // if tor_safe is false, the user has specified use_custom_proxy
+    // in either case, don't issue request to tor check url
+    if (!proxy_settings) {
+      this.proxy_test_successful = true;
+      this.log(INFO, "Tor check assumed succeeded.");
+      return;
+    }
+    if (proxy_settings.tor_safe == false) {
+      this.proxy_test_successful = false;
+      this.log(INFO, "Tor check failed: Not safe to check.");
+      return;
+    }
 
     try {
       var req = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"]
@@ -819,42 +851,39 @@ SSLObservatory.prototype = {
   getProxySettings: function(testingForTor) {
     // This may be called either for an Observatory submission, or during a test to see if Tor is
     // present.  The testingForTor argument is true in the latter case.
-    var proxy_settings = ["direct", "", 0];
+    var proxy_settings = {
+      type: "direct",
+      host: "",
+      port: 0,
+      tor_safe: false
+    };
     this.log(INFO,"in getProxySettings()");
-    var custom_proxy_type = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_type");
+    var custom_proxy_type = this.myGetCharPref("proxy_type");
     if (this.torbutton_installed && this.myGetBoolPref("use_tor_proxy")) {
-      this.log(INFO,"CASE: use_tor_proxy");
-      // extract torbutton proxy settings
-      proxy_settings[0] = "http";
-      proxy_settings[1] = this.prefs.getCharPref("extensions.torbutton.https_proxy");
-      proxy_settings[2] = this.prefs.getIntPref("extensions.torbutton.https_port");
-
-      if (proxy_settings[2] == 0) {
-        proxy_settings[0] = "socks";
-        proxy_settings[1] = this.prefs.getCharPref("extensions.torbutton.socks_host");
-        proxy_settings[2] = this.prefs.getIntPref("extensions.torbutton.socks_port");
-      }
+      return false;
     /* Regarding the test below:
      *
      * custom_proxy_type == "direct" is indicative of the user having selected "submit certs even if
      * Tor is not available", rather than true custom Tor proxy settings.  So in that case, there's
      * not much point probing to see if the direct proxy is actually a Tor connection, and
-     * localhost:9050 is a better bet.  People whose networks send all traffc through Tor can just
+     * localhost:9050 is a better bet.  People whose networks send all traffic through Tor can just
      * tell the Observatory to submit certs without Tor.
      */
     } else if (this.myGetBoolPref("use_custom_proxy") && !(testingForTor && custom_proxy_type == "direct")) {
       this.log(INFO,"CASE: use_custom_proxy");
-      proxy_settings[0] = custom_proxy_type;
-      proxy_settings[1] = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_host");
-      proxy_settings[2] = this.prefs.getIntPref("extensions.https_everywhere._observatory.proxy_port");
+      proxy_settings.type = custom_proxy_type;
+      proxy_settings.host = this.myGetCharPref("proxy_host");
+      proxy_settings.port = this.prefs.getIntPref("extensions.https_everywhere._observatory.proxy_port");
+      proxy_settings.tor_safe = false;
     } else {
       /* Take a guess at default tor proxy settings */
       this.log(INFO,"CASE: try localhost:9050");
-      proxy_settings[0] = "socks";
-      proxy_settings[1] = "localhost";
-      proxy_settings[2] = 9050;
+      proxy_settings.type = "socks";
+      proxy_settings.host = "localhost";
+      proxy_settings.port = 9050;
+      proxy_settings.tor_safe = true;
     }
-    this.log(INFO, "Using proxy: " + proxy_settings);
+    this.log(INFO, "Using proxy: " + JSON.stringify(proxy_settings));
     return proxy_settings;
   },
 
@@ -885,10 +914,16 @@ SSLObservatory.prototype = {
         // for the torbutton proxy settings.
         try {
           proxy_settings = this.getProxySettings(testingForTor);
-          proxy = this.pps.newProxyInfo(proxy_settings[0], proxy_settings[1],
-                    proxy_settings[2],
-                    Ci.nsIProxyInfo.TRANSPARENT_PROXY_RESOLVES_HOST,
-                    0xFFFFFFFF, null);
+          if(proxy_settings){
+            proxy = this.pps.newProxyInfo(
+              proxy_settings.type,
+              proxy_settings.host,
+              proxy_settings.port,
+              Ci.nsIProxyInfo.TRANSPARENT_PROXY_RESOLVES_HOST,
+              0xFFFFFFFF, null);
+          } else {
+            proxy = aProxy;
+          }
         } catch(e) {
           this.log(WARN, "Error specifying proxy for observatory: "+e);
         }
@@ -909,7 +944,7 @@ SSLObservatory.prototype = {
 
   encString: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
   encStringS: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_',
-  
+
   log: function(level, str) {
     var econsole = CC["@mozilla.org/consoleservice;1"]
       .getService(CI.nsIConsoleService);
@@ -920,8 +955,15 @@ SSLObservatory.prototype = {
       threshold = WARN;
     }
     if (level >= threshold) {
-      dump("SSL Observatory: "+str+"\n");
-      econsole.logStringMessage("SSL Observatory: " +str);
+      var levelName = ["", "VERB", "DBUG", "INFO", "NOTE", "WARN"][level];
+      var prefix = "SSL Observatory " + levelName + ": ";
+      // dump() prints to browser stdout. That's sometimes undesirable,
+      // so only do it when a pref is set (running from test.sh enables
+      // this pref).
+      if (this.prefs.getBoolPref("extensions.https_everywhere.log_to_stdout")) {
+        dump(prefix + str + "\n");
+      }
+      econsole.logStringMessage(prefix + str);
     }
   }
 };

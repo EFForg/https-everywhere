@@ -2,23 +2,59 @@
 	CDN buckets:
 
 		- media.salon.com.edgesuite.net
-			- media.salon.com
-
 		- www.salon.com.edgesuite.net
+
+		- global.prod.fastly.net
+
 			- images.salon.com
+			- media.salon.com
 			- www.salon.com
 
+
+	^salon.com: Expired
+
+
+	Insecure cookies are set for these domains:
+
+		- .salon.com
+
+
+	Mixed content:
+
+		- Images on www from media *
+
+		- Ads/bugs, on www from:
+
+			- s3-ak.buzzfed.com *
+			- b.scorecardresearch.com *
+
+	* Secured by us
+
 -->
-<ruleset name="Salon" default_off="Akamai">
+<ruleset name="Salon.com">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="images.salon.com" />
+	<target host="media.salon.com" />
+	<target host="www.salon.com" />
+
+	<!--	Complications:
+				-->
 	<target host="salon.com" />
-	<target host="*.salon.com" />
 
 
-	<rule from="^https?://(?:images\.|www\.)?salon\.com/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.salon\.com$" name="^__qca$" /-->
+
+	<securecookie host="^\.salon\.com$" name=".+" />
+
+
+	<rule from="^http://salon\.com/"
 		to="https://www.salon.com/" />
 
-	<rule from="^http://media\.salon\.com/"
-		to="https://media.salon.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

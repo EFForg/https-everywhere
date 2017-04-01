@@ -1,21 +1,77 @@
-<ruleset name="Association for Progressive Communications">
+<!--
+	Association for Progressive Communications
 
+
+	Nonfunctional hosts in *apc.org:
+
+		- erotics *
+
+	* Shows another domain
+
+
+	Problematic subdomains:
+
+		- flossprize ¹
+		- gn ²
+
+	¹ Redirect differs
+	² Cert only matches *.gn
+
+
+	Insecure cookies are set for these domains:
+
+		- .apc.org
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- www.gn from $self *
+			- www from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="APC.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="apc.org" />
-	<!--	* for cross-domain cookie.	-->
-	<target host="*.apc.org" />
+	<target host="www.gn.apc.org" />
+	<target host="lists.apc.org" />
+	<target host="www.apc.org" />
+
+	<!--	Complications:
+				-->
+	<target host="flossprize.apc.org" />
 	<target host="gn.apc.org" />
-	<!--	* for cross-subdomain cookie.	-->
-	<target host="*.gn.apc.org" />
 
 
-	<securecookie host="^\.(?:www\.gn\.)?apc\.org$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.apc\.org$" name="^SESS[\da-f]{32}$" /-->
+
+	<securecookie host="^\.(?:www\.gn\.)?apc\.org$" name=".+" />
 
 
-	<rule from="^http://(www\.)?apc\.org/"
-		to="https://$1apc.org/" />
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://flossprize\.apc\.org/[^?]*"
+		to="https://www.apc.org/en/node/1786" />
 
-	<!--	Cert only matches *.gc.apc.org	-->
-	<rule from="^https?://(?:www\.)?gc\.apc\.org/"
-		to="https://www.gc.apc.org/" />
+		<test url="http://flossprize.apc.org/?" />
+		<test url="http://flossprize.apc.org//" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://gn\.apc\.org/[^?]*"
+		to="https://www.gn.apc.org/" />
+
+		<test url="http://gn.apc.org/?" />
+		<test url="http://gn.apc.org//" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

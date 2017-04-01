@@ -1,10 +1,5 @@
 <!--
-	For problematic rules, see SB_Nation.com-problematic.xml.
-
-
-	Other Vox Media rulesets:
-
-		- The-Verge.xml
+	For other Vox Media coverage, see Vox.com.xml.
 
 
 	CDN buckets:
@@ -12,66 +7,48 @@
 	- s3.amazonaws.com/assets.sbnation.com/
 	- chalk-images.s3.amazonaws.com
 
-	- ddrgqsxlcy7wq.cloudfront.net
-
-		- cdn[0-3].sbnation.com
-
 	- 1876.voxcdn.com		(404s over https)
 	- 1876-fonts.voxcdn.com		(403 over http; 404 over -s)
 
-	- sbnation-d3.openxenterprise.com
 	- sbnation.theresumator.com
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *sbnation.com:
 
-		- (www.)voxmedia.com		(ssl_error_rx_record_too_long)
-		- product.voxmedia.com		(hosted on Tumblr)
+		- blog *
+		- www *
+		- ^ *
+		* Redirect to plain
 
+	Problematic hosts in sbnation.com:
 
-	Problematic domains:
+		- assets ²
 
-		- (www.)sbnation.com *
-		- * blog.sbnation.com *
-
-	* Mismatched, CN: *.a.ssl.fastly.net
-
-
-	Fully covered domains:
-
-		- cdn[0-3].sbnation.com	(→ ddrgqsxlcy7wq.cloudfront.net)
-		- fonts.sbnation.com	(→ d1jcofl6pfjesh.cloudfront.net)
-
-
-	Data from cdn[0-3] all appear identical
+	² AmazonAWS
 
 -->
-<ruleset name="SB Nation (partial)">
+<ruleset name="SB Nation.com (partial)">
 
-	<target host="*.sbnation.com" />
-	<target host="share.sbndev.net" />
-	<target host="jobs.voxmedia.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="cdn0.sbnation.com" />
+	<target host="cdn1.sbnation.com" />
+	<target host="cdn2.sbnation.com" />
+	<target host="cdn3.sbnation.com" />
 
+	<!--	Complications:
+				-->
+	<target host="assets.sbnation.com" />
+
+	<!--	Observed cookies:
+			- _session_id
+		-->
+	<securecookie host="^www\.sbnation\.com$" name=".*" />
 
 	<rule from="^http://assets\.sbnation\.com/"
 		to="https://s3.amazonaws.com/assets.sbnation.com/" />
 
-	<rule from="^http://cdn\d\.sbnation\.com/"
-		to="https://ddrgqsxlcy7wq.cloudfront.net/" />
-
-	<rule from="^http://fonts\.sbnation\.com/"
-		to="https://d1jcofl6pfjesh.cloudfront.net/" />
-
-	<!--	cert: *.openxenterprise.com	-->
-	<rule from="^http://ox-d\.sbnation\.com/"
-		to="https://sbnation-d3.openxenterprise.com/" />
-
-	<rule from="^http://share\.sbndev\.net/"
-		to="https://s3.amazonaws.com/share.sbndev.net/" />
-
-	<!--	At least some pages 302 to http.
-							-->
-	<rule from="^http://jobs\.voxmedia\.com/(css/|favicon\.ico|img/)"
-		to="https://sbnation.theresumator.com/$1" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

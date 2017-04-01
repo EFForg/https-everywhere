@@ -1,24 +1,74 @@
 <!--
-	Nonfunctional subdomains:
+	US Department of Housing and Urban Development
 
-		- (www.)	(times out)
-		- espanol	(ditto)
+	For other U.S. government coverage, see US-government.xml.
+
+
+	Nonfunctional hosts in *hud.gov:
+
+		- (www.)? ¹
+		- espanol ²
+		- webtrendscs ²
+
+	¹ Plaintext reply
+	² Dropped
+
+
+	Problematic hosts in *hud.gov:
+
+		- blog ¹ ²
+
+	¹ Mixed css
+	² Self-signed
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .hud.gov
+		- blog.hud.gov
+		- portal.hud.gov
+
+
+	Mixed content:
+
+		- css on blog from $self
+		- Images on blog, portal from $self
+
+		- Bugs, on:
+
+			- portal from s7.addthis.com
+			- portal from webtrendscs.hud.gov
 
 -->
-<ruleset name="US Department of Housing and Urban Development (partial)">
+<ruleset name="HUD.gov (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="entp.hud.gov" />
+	<target host="portal.hud.gov" />
+
+	<!--	Complications:
+				-->
 	<target host="hud.gov" />
-	<target host="*.hud.gov" />
+	<target host="www.hud.gov" />
 
 
-	<securecookie host="^portal\.hud\.gov$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.hud\.gov$" name="^(?:CFID|CFTOKEN)$" /-->
+	<!--securecookie host="^blog\.hud\.gov$" name="^(?:_icl_current_language|wfvt_\d+)$" /-->
+	<!--securecookie host="^portal\.hud\.gov$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<!--	(www.) doesn't work over https, redirects as so over http.	-->
-	<rule from="^https?://(?:www\.)?hud\.gov/"
+	<!--	(www.)? doesn't work over https,
+		redirects as so over http.
+						-->
+	<rule from="^http://(?:www\.)?hud\.gov/"
 		to="https://portal.hud.gov/portal/page/portal/HUD" />
 
-	<rule from="^http://portal\.hud\.gov/"
-		to="https://portal.hud.gov/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,38 @@
+<!--
+	(www.)?fm-world.co.uk: Redirects to http
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- jobs.fm-world.co.uk
+		- recruiter.fm-world.co.uk
+		- subs.fm-world.co.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="FM-World.co.uk (partial)">
+
+	<target host="jobs.fm-world.co.uk" />
+	<target host="recruiter.fm-world.co.uk" />
+	<target host="subs.fm-world.co.uk" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://subs.fm-world.co.uk/subscribe" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^jobs\.fm-world\.co\.uk$" name="^(?:AnonymousUserId|BrowserSession|FixedFacetDefaults)$" /-->
+	<!--securecookie host="^recruiter\.fm-world\.co\.uk$" name="^BrowserSession$" /-->
+	<!--securecookie host="^subs\.fm-world\.co\.uk$" name="^(?:__AntiXsrfToken|ASP\.NET_SessionId)$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

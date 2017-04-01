@@ -1,30 +1,68 @@
 <!--
 	CDN buckets:
 
-		- render-889924663.us-east-1.elb.amazonaws.com
-			- render.fineartamerica.com
-
 		- s3.amazonaws.com/images.fineartamerica.com/
+		- render-889924663.us-east-1.elb.amazonaws.com ← render.fineartamerica.com
 
 
-	Problematic subdomains:
+	Problematic hosts in *fineartamerica.com:
 
-		- render
+		- images ᵐ
+		- imageslocal ᵐ
+		- render ʳ
+
+	ᵐ Mismatched
+	ʳ Refused
+
+
+	Insecure cookies are set for these hosts:
+
+		- fineartamerica.com
+
+
+	Mixed content:
+
+		- iframe on ^ from www.youtube.com *
+
+		- Images, on:
+
+			- ^ from $self *
+			- ^ from images.fineartamerica.com *
+			- ^ from imageslocal.fineartamerica.com *
+			- ^ from render.fineartamerica.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Fine Art America">
+<ruleset name="Fine Art America.com" platform="mixedcontent">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="fineartamerica.com" />
-	<target host="*.fineartamerica.com" />
+	<target host="www.fineartamerica.com" />
+
+	<!--	Complications:
+				-->
+	<target host="images.fineartamerica.com" />
+	<target host="imageslocal.fineartamerica.com" />
+	<target host="render.fineartamerica.com" />
 
 
-	<securecookie host="^(?:www\.)?fineartamerica\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^fineartamerica\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\." name="^__utm" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:render\.|(www\.))?fineartamerica\.com/"
-		to="https://$1fineartamerica.com/" />
-
-	<rule from="^https?://images\.fineartamerica\.com/"
+	<rule from="^http://images\.fineartamerica\.com/"
 		to="https://s3.amazonaws.com/images.fineartamerica.com/" />
+
+	<rule from="^http://(?:imageslocal|render)\.fineartamerica\.com/"
+		to="https://fineartamerica.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

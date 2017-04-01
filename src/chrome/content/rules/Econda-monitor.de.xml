@@ -1,8 +1,18 @@
 <!--
+	For other econda coverage, see Econda.de.xml.
+
+
 	Web bugs.
 
 
 	^econda-monitor.de times out over http.
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- monitor.econda-monitor.de
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	The following cookies are set by hosts loading these bugs:
@@ -14,10 +24,23 @@
 -->
 <ruleset name="econda-monitor.de">
 
+	<target host="monitor.econda-monitor.de" />
+	<target host="ww1.econda-monitor.de" />
 	<target host="www.econda-monitor.de" />
 
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://monitor.econda-monitor.de/r.a.c.e./login.jsp?iframe=1&amp;LOCALE=de&amp;version=2" /-->
 
-	<rule from="^http://www\.econda-monitor\.de/"
-		to="https://www.econda-monitor.de/" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^monitor\.econda-monitor\.de$" name="^emos_jc[sv]id$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

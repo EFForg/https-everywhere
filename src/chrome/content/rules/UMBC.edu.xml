@@ -1,0 +1,37 @@
+<!--
+	University of Maryland Baltimore County
+
+
+	Problematic subdomains:
+
+		- csee *
+
+	* Cert only matches www.foo
+
+
+	Fully covered subdomains:
+
+		- assets[1-4]-my
+		- (www.)csee		(^ → www)
+		- publications.csee
+
+-->
+<ruleset name="UMBC.edu (partial)">
+
+	<target host="*.umbc.edu" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^publications\.csee\.umbc\.edu$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^publications\.csee\.umbc\.edu$" name=".+" />
+
+
+	<rule from="^http://(assets[1-4]-my|publications\.csee)\.umbc\.edu/"
+		to="https://$1.umbc.edu/" />
+
+	<rule from="^http://(?:www\.)?csee\.umbc\.edu/"
+		to="https://www.csee.umbc.edu/" />
+
+</ruleset>

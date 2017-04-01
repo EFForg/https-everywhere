@@ -1,31 +1,361 @@
 <!--
+	NB: p://infocentral.../$ redirects to s:// 404
+	?=> fetch check failure
+
+	U.S. Department of State
+
+	For rules causing false/broken MCB, see state.gov-falsemixed.xml.
+
 	For other U.S. government coverage, see US-government.xml.
 
 
-	Nonfunctional subdomains:
+	CDN buckets:
 
-		- travel	(times out)
+		- s3.amazonaws.com/static.history.state.gov/
 
 
-	Problematic subdomains:
+	Nonfunctional hosts in *state.gov:
 
-		- ^		(interrupted)
-		- oig *
-		- www *
+		- fpc ʰ
+		- (www.)?ibwc ᵈ
+		- mapgive ʳ
+		- overseasbuildings ³
+		- search ᶠ
+		- secondarycities ʳ
+		- translations ᵃ
+		- (www.)?usun *
+		- video ᵈ
 
-	* Works, akamai
+	* Blank page
+	³ 503
+	ᵃ Shows another domain
+	ᵈ Dropped
+	ᶠ Handshake fails
+	ʰ Redirects to http
+	ʳ Refused
+
+
+	Problematic hosts in *state.gov:
+
+		- ^ ᵐ ˢ
+		- 2001-2009 ᴬ
+		- www.adoption ᵐ
+		- aoprals ᶜ
+		- art * ᵉ ᵐ
+		- www.blogs ** ᵐ
+		- campususa ᵐ
+		- www.careers ᵐ
+		- www.conferences ᶜ
+		- contact-us ᴬ
+		- csm ᶜ
+		- diplomacy ˣ
+		- ejusa ᵉ ᵐ ˢ
+		- exportcontrol ᶜ
+		- www.f ᶜ
+		- ghaznitowers ᵐ
+		- www.history ᵐ
+		- hiu ᶜ
+		- www.infocentral ᵐ
+		- isn-bps-bwc ᶜ
+		- m ᴬ
+		- www.managingforresults ᶜ
+		- mobilepa ᵉ
+		- www.oig ᵉ ᵐ ˢ
+		- www.passports ᵐ
+		- pmddtc ᵐ
+		- apps.ssl ᵉ
+		- www.tradepromotion ᶜ
+		- www.travel ᵐ
+		- ttip ᵉ ᵐ ˢ
+		- www.usembassy ᵉ ᵐ ˢ
+		- usspaceobjectsregistry ᶜ
+		- www.usvisas ᵐ
+		- welcomecanada ᶜ
+		- www.yali ³ ᵐ
+
+	* Expired cert at equivalent domain
+	** Differs from ^foo
+	³ 403
+	ᴬ Akamai / mismatched
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵉ Expired
+	ᵐ Mismatched
+	ˢ Self-signed
+	ˣ Mixed css
+
+
+	These altnames do not exist:
+
+		- www.fam.state.gov
+		- www.communitiesx.state.gov
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .state.gov
+		- americanspaces.state.gov
+		- art.state.gov
+		- careers.state.gov
+		- www.careers.state.gov
+		- www.conferences.state.gov
+		- diplomaticrooms.state.gov
+		- eforms.state.gov
+		- eshop.state.gov
+		- evisaforms.state.gov
+		- fam.state.gov
+		- findit.state.gov
+		- fojems.state.gov
+		- history.state.gov
+		- hiu.state.gov
+		- .infocentral.state.gov
+		- j1visa.state.gov
+		- www.j1visa.state.gov
+		- j1visawaiverrecommendation.state.gov
+		- j1visawaiverstatus.state.gov
+		- pabudget.state.gov
+		- paclearances.state.gov
+		- paitstaging.state.gov
+		- pareviews.state.gov
+		- passportstatus.state.gov
+		- pptform.state.gov
+		- pressguidance2.state.gov
+		- register.state.gov
+		- speakerinvitation.state.gov
+		- speakerrequest.state.gov
+		- www.statebuy.state.gov
+		- step.state.gov
+		- timekat.state.gov
+		- welcomecanada.state.gov
+		- yali.state.gov
+		- youngsoutheastasianleaders.state.gov
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- iframes, on:
+
+			- art from www.youtube-nocookie.com ˢ
+			- diplomacy from c.brightcove.com ˢ
+
+		- flash on diplomacy from admin.brightcove.com ˢ
+
+		- css, on:
+
+			- eshop from fonts.googleapis.com ˢ
+			- eshop from code.jquery.com ˢ
+
+		- Images, on:
+
+			- 2001-2009 from www.state.gov ˢ
+			- (www.)?eca from pbs.twimg.com ˢ
+			- diplomaticrooms, j1visa, www.statebuy from $self ˢ
+			- art from $self ᵉ
+			- m from brightcove.vo.llnwd.net
+			- mepi from mepi.seiservices.com
+			- mepi, apps.ssl from photos.state.gov ˢ
+			- openinternet from prod.intgov.getusinfo.com ᶠ
+
+		- Bug on infocentral from sdc.usembassy.com ᶠ
+
+	ᵉ Not secured by us <= expired
+	ᶠ Unsecurable <= handshake fails
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="U.S. State Department (partial)" default_off="mismatched">
+<ruleset name="State.gov (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="adoption.state.gov" />
+	<target host="alumni.state.gov" />
+	<target host="www.alumni.state.gov" />
+	<target host="americanenglish.state.gov" />
+	<target host="www.americanenglish.state.gov" />
+	<target host="americanspaces.state.gov" />
+	<!--target host="aoprals.state.gov" /-->
+	<target host="blogs.state.gov" />
+	<target host="brusselsnewcomernetwork.state.gov" />
+	<target host="careers.state.gov" />
+	<target host="ceac.state.gov" />
+	<target host="childabduction.state.gov" />
+	<target host="communitiesx.state.gov" />
+	<!--target host="www.conferences.state.gov" /-->
+	<!--target host="csm.state.gov" /-->
+	<!--target host="diplomacy.state.gov" /-->
+	<target host="diplomaticrooms.state.gov" />
+	<target host="eca.state.gov" />
+	<target host="www.eca.state.gov" />
+	<target host="educationusa.state.gov" />
+	<target host="www.educationusa.state.gov" />
+	<target host="eforms.state.gov" />
+	<target host="elibraryusa.state.gov" />
+	<target host="eshop.state.gov" />
+	<target host="evaluations.state.gov" />
+	<target host="evisaforms.state.gov" />
+	<target host="exchanges.state.gov" />
+	<target host="www.exchanges.state.gov" />
+	<!--target host="exportcontrol.state.gov" /-->
+	<!--target host="www.f.state.gov" /-->
+	<target host="fam.state.gov" />
+	<target host="fepp.state.gov" />
+	<target host="findit.state.gov" />
+	<target host="foia.state.gov" />
+	<target host="www.foia.state.gov" />
+	<target host="fojems.state.gov" />
+	<target host="future.state.gov" />
+	<target host="gpoi.state.gov" />
+	<target host="gtipphotos.state.gov" />
+	<target host="www.gtipphotos.state.gov" />
+	<!--target host="hiu.state.gov" /-->
+	<target host="history.state.gov" />
+	<target host="*.history.state.gov" /><!--	STS header includes includeSubdomains -->
+	<target host="iiphighlights.state.gov" />
+	<target host="www.iiphighlights.state.gov" />
+	<target host="infocentral.state.gov" />
+	<target host="iocareers.state.gov" />
+	<!--target host="isn-bps-bwc.state.gov" /-->
+	<target host="j1visa.state.gov" />
+	<target host="j1visawaiverrecommendation.state.gov" />
+	<target host="j1visawaiverstatus.state.gov" />
+	<target host="www.j1visa.state.gov" />
+	<target host="leagueofgreenembassies.state.gov" />
+	<!--target host="www.managingforresults.state.gov" /-->
+	<target host="mepi.state.gov" />
+	<target host="mru2.state.gov" />
+	<target host="oig.state.gov" />
+	<target host="openinternet.state.gov" />
+	<target host="www.openinternet.state.gov" />
+	<target host="pabudget.state.gov" />
+	<target host="paclearances.state.gov" />
+	<target host="paie.state.gov" />
+	<target host="paitstaging.state.gov" />
+	<target host="pareviews.state.gov" />
+	<target host="paservices.state.gov" />
+	<target host="passports.state.gov" />
+	<target host="passportstatus.state.gov" />
+	<target host="photos.state.gov" />
+	<target host="www.pmddtc.state.gov" />
+	<target host="parisclubportal.state.gov" />
+	<target host="pptform.state.gov" />
+	<target host="pressguidance.state.gov" />
+	<target host="pressguidance2.state.gov" />
+	<target host="receptiontours.state.gov" />
+	<target host="register.state.gov" />
+	<target host="share.state.gov" />
+	<target host="speakerinvitation.state.gov" />
+	<target host="speakerkit.state.gov" />
+	<target host="speakerrequest.state.gov" />
+	<target host="sppd.state.gov" />
+	<target host="statebuy.state.gov" />
+	<target host="www.statebuy.state.gov" />
+	<target host="step.state.gov" />
+	<target host="studyabroad.state.gov" />
+	<target host="www.studyabroad.state.gov" />
+	<target host="timekat.state.gov" />
+	<target host="touchbase.state.gov" />
+	<!--target host="www.tradepromotion.state.gov" /-->
+	<target host="travel.state.gov" />
+	<target host="travelregistration.state.gov" />
+	<target host="uk.state.gov" />
+	<target host="usembassy.state.gov" />
+	<!--target host="usspaceobjectsregistry.state.gov" /-->
+	<target host="usvisas.state.gov" />
+	<!--target host="welcomecanada.state.gov" /-->
+	<target host="www.state.gov" />
+	<target host="yali.state.gov" />
+	<target host="ylai.state.gov" />
+	<target host="youngafricanleaders.state.gov" />
+	<target host="youngsoutheastasianleaders.state.gov" />
+
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?:[^./]+\.){2,}history\.state\.gov/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.history.state.gov/" />
+			<test url="http://exists.not.history.state.gov/" />
+
+		<!--	$ shows blank page, so:
+						-->
+		<test url="http://passportstatus.state.gov/opss/OPSS_Status_ip.asp" />
+
+		<test url="http://photos.state.gov/libraries/nigeria/487468/images/twitter_icon_16x16.png" />
+
+		<!--	$ shows default page, so:
+							-->
+		<!--test url="http://apps.ssl.state.gov/50states/" /-->
+
+	<!--	Complications:
+				-->
 	<target host="state.gov" />
-	<target host="*.state.gov" />
+	<target host="www.adoption.state.gov" />
+	<!--target host="art.state.gov" /-->
+	<target host="campususa.state.gov" />
+	<target host="www.careers.state.gov" />
+	<target host="ghaznitowers.state.gov" />
+	<target host="www.history.state.gov" />
+	<target host="www.infocentral.state.gov" />
+	<target host="www.oig.state.gov" />
+	<target host="www.passports.state.gov" />
+	<target host="pmddtc.state.gov" />
+	<target host="www.travel.state.gov" />
+	<target host="ttip.state.gov" />
+	<target host="www.usembassy.state.gov" />
+	<target host="www.usvisas.state.gov" />
+	<target host="www.yali.state.gov" />
 
 
-	<rule from="^https?://(?:www\.)?state\.gov/"
-		to="https://www.state.gov/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:americanspaces|eshop)?\.state\.gov$" name="^dancer\.session$" /-->
+	<!--securecookie host="^(?:art|fojems|pabudget|paclearances|paitstaging|pareviews|register|speakerinvitation|speakerrequest|step|timekat)\.state\.gov$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^(?:www\.)?careers\.state\.gov$" name="^wgSession$" /-->
+	<!--securecookie host="^(?:www\.conferences|diplomaticrooms|hiu|www\.statebuy|usspaceobjectsregistry|welcomecanada)\.state\.gov$" name="^BIGipServer" /-->
+	<!--securecookie host="^eforms\.state\.gov$" name="^(?:\.CerenadeES|ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^(?:evisaforms|passportstatus|j1visawaiverrecommendation|j1visawaiverstatus)\.state\.gov$" name="^ASPSESSID[A-Z]{8}$" /-->
+	<!--securecookie host="^fam\.state\.gov$" name="^__AntiXsrfToken$" /-->
+	<!--securecookie host="^findit\.state\.gov$" name="^(?:_session_id|request_method)$" /-->
+	<!--securecookie host="^\.infocentral\.state\.gov$" name="^infocentralsession$" /-->
+	<!--securecookie host="^(?:www\.)?j1visa\.state\.gov$" name="^(?:PHPSESSID|wfvt_\d+)$" /-->
+	<!--securecookie host="^pptform\.state\.gov$" name="^(?:ASP\.NET_SessionId|AspxAutoDetectCookieSupport)$" /-->
+	<!--securecookie host="^pressguidance2\.state\.gov$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^(?:yali|youngsoutheastasianleaders)\.state\.gov$" name="^PHPSESSID$" /-->
 
-	<rule from="^http://oig\.state\.gov/"
-		to="https://oig.state.gov/" />
+	<securecookie host="^\." name="^(?:__cfduid$|_gat?$|_gat_|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://(pmddtc\.)?state\.gov/"
+		to="https://www.$1state.gov/" />
+
+	<rule from="^http://www\.(adoption|careers|history|infocentral|oig|passports|travel|usembassy|usvisas|yali)\.state\.gov/"
+		to="https://$1.state.gov/" />
+
+	<!--rule from="^http://art\.state\.gov/"
+		to="https://aie1.artinembassies.com/" /-->
+
+	<rule from="^http://campususa\.state\.gov/"
+		to="https://educationusa.state.gov/" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://ghaznitowers\.state\.gov/.*"
+		to="https://eca.state.gov/files/bureau/ghazni-towers/index.html" />
+
+		<test url="http://ghaznitowers.state.gov/index.htm" />
+
+	<!--	Redirect drops forward slash
+		and path, but not args:
+					-->
+	<rule from="^http://ttip\.state\.gov/[^?]*"
+		to="https://useu.usmission.gov/ttip.html" />
+
+		<test url="http://ttip.state.gov/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

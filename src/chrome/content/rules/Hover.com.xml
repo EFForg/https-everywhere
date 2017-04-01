@@ -2,47 +2,51 @@
 	For other Tucows coverage, see Tucows.xml.
 
 
-	CDN buckets:
+	Nonfunctional hosts in *hover.com:
 
-		- hover.zendesk.com
+		- about *
 
-			- help.hover.com
-
-
-	Fully covered subdomains:
-
-		- ask
-		- help
-		- mail
+	* Dropped
 
 
-	Partially covered subdomains:
+	Insecure cookies are set for these hosts:
 
-		- (www.)	(blog and blog resources redirect to http)
-
-
-	Observed cookie domains:
-
-		- .
-		- help
-		- mail
-		- www
+		- mail.hover.com
+		- www.hover.com
 
 -->
 <ruleset name="Hover.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="hover.com" />
-	<target host="*.hover.com" />
-		<!--
-			Redirect to http :(
+	<target host="ask.hover.com" />
+	<target host="help.hover.com" />
+	<target host="mail.hover.com" />
+	<target host="www.hover.com" />
+
+		<!--	Redirect to http :(
 						-->
-		<exclusion pattern="^http://(?:www\.)?hover\.com/(?:blog|wp-content|wp-includes)(?:$|[?/])" />
+		<exclusion pattern="^http://www\.hover\.com/(?:blog|wp-content|wp-includes)(?:$|[?/])" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.hover.com/blog" />
+			<test url="http://www.hover.com/blog/page/2/" />
+			<test url="http://www.hover.com/blog/page/5/" />
+			<test url="http://www.hover.com/blog/top-15-blogging-platforms-for-2015/" />
+			<test url="http://www.hover.com/wp-content/uploads/2015/10/infographic-header.png" />
 
 
-	<securecookie host="^(?:.*\.)?hover\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^mail\.hover\.com$" name="(?:bi_wm_p|roundcube_sessid)$" /-->
+	<!--securecookie host="^www\.hover\.com$" name="^hover_session$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://((?:ask|help|mail|www)\.)?hover\.com/"
-		to="https://$1hover.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

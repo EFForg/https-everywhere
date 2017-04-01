@@ -1,7 +1,44 @@
-<ruleset name="Netdoktor.se" platform="mixedcontent">
-  <target host="www.netdoktor.se" />
-  <target host="netdoktor.se" />
-  <rule from="^http://www\.netdoktor\.se/" to="https://www.netdoktor.se/"/>
-  <rule from="^http://netdoktor\.se/" to="https://www.netdoktor.se/"/>
+<!--
+	NB: server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- netdoktor.se
+		- www.netdoktor.se
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css from $self ˢ
+		- Images from $self ˢ
+		- favicon from $self ˢ
+
+		- Ads, from:
+
+			- ad1.emediate.dk ˢ
+			- www.mynewsdesk.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Netdoktor.se (false MCB)" default_off="expired, missing certificate chain" platform="mixedcontent">
+
+	<target host="netdoktor.se" />
+	<target host="www.netdoktor.se" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?netdoktor\.se$" name="^(?:survey_toggle|vepa)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>
 

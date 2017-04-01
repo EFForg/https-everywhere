@@ -1,0 +1,152 @@
+<!--
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *civilservice.gov.uk:
+
+		- agile ᵈ
+		- faststream ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *civilservice.gov.uk:
+
+		- (www.)? ᵐ
+		- www.faststream ᵐ
+		- gcloud ᵐ
+		- it ᵈ
+		- my ᵐ
+		- resources ᵐ
+
+	ᵈ Dropped
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *civilservice.gov.uk:
+
+		- (www.)? *
+		- faststream *
+		- gcloud *
+		- my *
+		- resources *
+
+	* Pattern of redirection is not simple
+
+
+	Insecure cookies are set for these hosts:
+
+		- civilservicelearning.civilservice.gov.uk
+		- gcs.civilservice.gov.uk
+		- gss.civilservice.gov.uk
+
+
+	These altnames do not exist:
+
+		- www.gss.civilservice.gov.uk
+
+-->
+<ruleset name="Civil Service.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="civilservicelearning.civilservice.gov.uk" />
+	<target host="www.digitalmarketplace.civilservice.gov.uk" />
+	<target host="gcs.civilservice.gov.uk" />
+	<target host="gss.civilservice.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="civilservice.gov.uk" />
+	<target host="faststream.civilservice.gov.uk" />
+	<target host="www.faststream.civilservice.gov.uk" />
+	<target host="gcloud.civilservice.gov.uk" />
+	<target host="it.civilservice.gov.uk" />
+	<target host="my.civilservice.gov.uk" />
+	<target host="resources.civilservice.gov.uk" />
+	<target host="www.civilservice.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^civilservicelearning\.civilservice\.gov\.uk$" name="^b1P$" /-->
+	<!--securecookie host="^gcs\.civilservice\.gov\.uk$" name="^AWSELB$" /-->
+	<!--securecookie host="^gss\.civilservice\.gov\.uk$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://(?:(?:my|resources|www)\.)?civilservice\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/civil-service" />
+
+		<!--	/*\w does not redirect:
+						-->
+		<exclusion pattern="^http://(?:(?:my|resources|www)\.)?civilservice\.gov\.uk/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://civilservice.gov.uk/default.aspx" />
+			<test url="http://civilservice.gov.uk/index.htm" />
+			<test url="http://my.civilservice.gov.uk/default.aspx" />
+			<test url="http://my.civilservice.gov.uk/index.htm" />
+			<test url="http://resources.civilservice.gov.uk/default.aspx" />
+			<test url="http://resources.civilservice.gov.uk/index.htm" />
+			<test url="http://www.civilservice.gov.uk/default.aspx" />
+			<test url="http://www.civilservice.gov.uk/index.htm" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://faststream\.civilservice\.gov\.uk/.*"
+		to="https://www.gov.uk/faststream" />
+
+		<!--	/*\w does not redirect:
+						-->
+		<exclusion pattern="^http://faststream\.civilservice\.gov\.uk/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://faststream.civilservice.gov.uk/default.aspx" />
+			<test url="http://faststream.civilservice.gov.uk/index.htm" />
+			<test url="http://faststream.civilservice.gov.uk/index.html" />
+			<test url="http://faststream.civilservice.gov.uk/index.jsp" />
+			<test url="http://faststream.civilservice.gov.uk/index.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://faststream.civilservice.gov.uk/?" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://gcloud\.civilservice\.gov\.uk/.*"
+		to="https://www.gov.uk/how-to-use-cloudstore" />
+
+		<!--	/*\w does not redirect:
+						-->
+		<exclusion pattern="^http://gcloud\.civilservice\.gov\.uk/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://gcloud.civilservice.gov.uk/default.aspx" />
+			<test url="http://gcloud.civilservice.gov.uk/index.htm" />
+			<test url="http://gcloud.civilservice.gov.uk/index.html" />
+			<test url="http://gcloud.civilservice.gov.uk/index.jsp" />
+			<test url="http://gcloud.civilservice.gov.uk/index.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://gcloud.civilservice.gov.uk/?" />
+
+	<!--	Redirect drops forward slash
+		and path, but not args:
+					-->
+	<rule from="^http://it\.civilservice\.gov\.uk/[^?]*"
+		to="https://www.gov.uk/government/organisations/civil-service-government-it-profession/about/" />
+
+		<test url="http://it.civilservice.gov.uk/default.aspx" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

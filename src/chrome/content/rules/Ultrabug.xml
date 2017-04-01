@@ -1,29 +1,38 @@
 <!--
-	CN: ssl14.ovh.net
+	Insecure cookies are set for these hosts: ᶜ
+
+		- ultrabug.fr
+		- www.ultrabug.fr
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
 
-		- css on www from www *
+		- css on www from www ˢ
 
 		- Images on www, from:
 
-			- www *
-			- api.flattr.com *
+			- www ˢ
+			- api.flattr.com ˢ
 
-	* Secured by us
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Ultrabug (false MCB)" default_off="mismatched" platform="mixedcontent">
+<ruleset name="Ultrabug.fr (false MCB)" platform="mixedcontent">
 
 	<target host="ultrabug.fr" />
 	<target host="www.ultrabug.fr" />
 
 
-	<securecookie host="^www\.ultrabug\.fr$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?ultrabug\.fr$" name="^(?:PHPSESSID|start|startBAK)$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?ultrabug\.fr/"
-		to="https://www.ultrabug.fr/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

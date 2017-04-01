@@ -1,55 +1,314 @@
 <!--
+	Cornell University
+
 	Other Cornell University rulesets:
 
 		- ArXiv.xml
+		- weillcornell.org.xml
 
 
 	Nonfunctional subdomains:
 
+		- (www.)?assembly	Redirects to http
 		- marswatch.astro *
 		- cmsv6.cals *
 		- hort.cals *
+		- (www.)?climatechange	404
+		- cmail **
+		- mail.cmail	Handshake fails
+		- courses	Redirects to http
+
+		- compost.css	404
+		- cwmi.css	404
+		- iris.css	404
+
+		- energyinstitute.engineering	404
 		- www.hort *
 		- (www.)law *
 		- lawschool		(shows cls-maila.law; mismatched, CN: cls-maila.law.cornell.edu)
 		- forum.lawschool **
 		- www.lawschool **
-		- (www.)news
+		- resolver.library	Redirects to web2.login.cornell.edu
+		- rmc.library *
+		- www.nrcc *
 		- www.nysaes *
+		- nysipm	Handshake fails
 		- (www.)vivo *
+		- weill ᵃ
 
+		- osra.weill ᵃ
+		- researchintegrity.weill ᵃ
+		- s010.weill ᵃ
+
+	ᵃ Shows another domain
 	* Refused
 	** Dropped
 
 
 	Problematic subdomains:
 
+		- climateinstitute.cals *
+		- css.cals *
+		- (www.)?cce *
+		- nyc.cce *
+		- ciifad *
+		- cio *
+		- www.cipa *
+
+		- acadtech.cit *
+		- collabhelp.cit *
+		- eportfoliohelp.cit *
+		- fws.cit *
+		- labs.cit *
+
+		- cuaes *
+		- dfa *
+		- einaudi	Missing certificate chain
+
+		- cies.einaudi	Missing certificate chain
+		- cmsp.einaudi	Missing certificate chain
+		- eap.einaudi	Missing certificate chain
+		- iad.einaudi	Missing certificate chain
+		- lasp.einaudi	Missing certificate chain
+		- pacs.einaudi	Missing certificate chain
+		- sap.einaudi	Missing certificate chain
+		- seap.einaudi	Missing certificate chain
+		- www.einaudi *
+
+		- global	Missing certificate chain
+		- evidencebasedliving.human *
+		- insidedfa *
+		- itnews *
+		- judicialadministrator	Mixed css
 		- cls-maila.law		(expired 2012-07-18)
+		- emergency.med ᵃ
+		- news *
+		- outlook *
+		- parents	Mixed css
+		- (www.)?socialsciences *
+		- www.sustainablecampus *
+
+	ᵃ Shows another domain, preemptable redirect
+	* Mismatched
 
 
-	Partially covered subdomains:
+	These altnames do not exist:
 
-		- (www.)cals	(some pages redirect to http)
+		- confluence-test.cit.cornell.edu
+		- careers.med.cornell.edu
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these hosts: ᶜ
 
-		- ww3.lawschool
-		- embanner.univcomm
+		- confluence.cornell.edu
+
+		- alumni.weill.cornell.edu
+		- directory.weill.cornell.edu
+		- give.weill.cornell.edu
+		- jcto.weill.cornell.edu
+		- radiology.weill.cornell.edu
+		- wcmcentral.weill.cornell.edu
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+
+			- acadtech.cit, atc.cit, collabhelp.cit, labs.cit, dos, evidencebasedliving.human, www.human, insidedfa, www.news from fonts.googleapis.com *
+			- judicialadministrator, parents from $self
+
+
+		- Images, on:
+
+			- www.acsf, caringcommunity, bbhelp.cit, pollinghelp.cit, videohelp.cit from $self *
+			- www.acsf from news.cornell.edu *
+			- acadtech.cit, atc.cit, collabhelp.cit, evidencebasedliving.human, smallfarms from blogs.cornell.edu *
+			- acadtech.cit, collabhelp.cit, videohelp.cit from bbhelp.cit.cornell.edu *
+			- pollinghelp.cit from cdn.printfriendly.com *
+			- (www.)?cuinfo, www.human, from www.news.cornell.edu *
+			- dos from images-cf.localist.com
+			- www.human from www.cipa.cornell.edu
+			- smallfarms from files.campus.edublogs.org *
+			- events, (www.)?sustainability from www.cornell.edu *
+
+		- favicons, on:
+
+			- caringcommunity from www.cornell.edu *
+			- www.human from $self *
+
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Cornell University (partial)" platform="mixedcontent">
+<ruleset name="Cornell.edu (partial)">
 
-	<target host="cornell.edu"/>
-	<target host="*.cornell.edu"/>
-		<!--exclusion pattern="^http://(?:www\.)?cals\.cornell\.edu/(?:$|\?|twitter/$)" /-->
-		<exclusion pattern="^http://(?:www\.)?cals\.cornell\.edu/(?!assets/|favicon\.ico|twitter/jquery\.tweet\.js)" />
+	<!--	Direct rewrites:
+				-->
+	<target host="cornell.edu" />
+	<target host="aap.cornell.edu" />
+	<target host="blog.acsf.cornell.edu" />
+	<target host="www.acsf.cornell.edu" />
+	<target host="kfs-prod.adminapps.cornell.edu" />
+	<target host="applicantid.cornell.edu" />
+
+	<target host="fws.arts.cornell.edu" />
+	<target host="plagiarism.arts.cornell.edu" />
+	<target host="www.arts.cornell.edu" />
+
+	<target host="as.cornell.edu" />
+	<target host="askezra.cornell.edu" />
+	<target host="bctr.cornell.edu" />
+	<target host="www.bctr.cornell.edu" />
+	<target host="blackboard.cornell.edu" />
+	<target host="www.blackboard.cornell.edu" />
+	<target host="blogs.cornell.edu" />
+	<target host="cals.cornell.edu" />
+
+	<target host="ciifad.cals.cornell.edu" />
+	<target host="cuaes.cals.cornell.edu" />
+	<target host="scs.cals.cornell.edu" />
+	<target host="www.cals.cornell.edu" />
+
+	<target host="caringcommunity.cornell.edu" />
+	<target host="topeka.ccmr.cornell.edu" />
+	<target host="smart.ciifad.cornell.edu" />
+	<target host="cit.cornell.edu" />
+
+	<target host="bbhelp.cit.cornell.edu" />
+	<target host="pollinghelp.cit.cornell.edu" />
+	<target host="videohelp.cit.cornell.edu" />
+	<target host="www.cit.cornell.edu" />
+
+	<target host="classes.cornell.edu" />
+	<target host="confluence.cornell.edu" />
+	<target host="cs.cornell.edu" />
+	<target host="www.cs.cornell.edu" />
+	<target host="www.cuabroad.cornell.edu" />
+	<target host="cuinfo.cornell.edu" />
+	<target host="www.cuinfo.cornell.edu" />
+	<target host="dos.cornell.edu" />
+	<target host="www.dfa.cornell.edu" />
+	<!--target host="einaudi.cornell.edu" /-->
+
+	<!--target host="cies.einaudi.cornell.edu" /-->
+	<!--target host="cmsp.einaudi.cornell.edu" /-->
+	<!--target host="eap.einaudi.cornell.edu" /-->
+	<!--target host="iad.einaudi.cornell.edu" /-->
+	<!--target host="lasp.einaudi.cornell.edu" /-->
+	<!--target host="pacs.einaudi.cornell.edu" /-->
+	<!--target host="sap.einaudi.cornell.edu" /-->
+	<!--target host="seap.einaudi.cornell.edu" /-->
+
+	<target host="emc2.cornell.edu" />
+	<target host="www.emc2.cornell.edu" />
+	<target host="events.cornell.edu" />
+	<target host="mygannett.gannett.cornell.edu" />
+	<target host="www.gannett.cornell.edu" />
+	<target host="giving.cornell.edu" />
+	<target host="www.giving.cornell.edu" />
+	<target host="givingday.cornell.edu" />
+	<!--target host="global.cornell.edu"/-->
+	<target host="sorry.hosting.cornell.edu" />
+	<target host="hazing.cornell.edu" />
+	<target host="www.hazing.cornell.edu" />
+	<target host="www.human.cornell.edu" />
+	<target host="it.cornell.edu" />
+	<target host="www.it.cornell.edu" />
+	<!--target host="judicialadministrator.cornell.edu"/-->
+	<target host="kaust-cu.cornell.edu" />
+	<target host="www.kaust-cu.cornell.edu" />
+	<target host="ww3.lawschool.cornell.edu" />
+	<target host="library.cornell.edu" />
+	<target host="webanalytics.library.cornell.edu" />
+	<target host="www.library.cornell.edu" />
+
+	<target host="web1.login.cornell.edu" />
+	<target host="web2.login.cornell.edu" />
+	<target host="web3.login.cornell.edu" />
+	<target host="web4.login.cornell.edu" />
+
+	<target host="med.cornell.edu" />
+	<target host="its.med.cornell.edu" />
+	<target host="shib.med.cornell.edu" />
+	<target host="www.news.cornell.edu" />
+	<target host="netid.cornell.edu" />
+	<target host="www.netid.cornell.edu" />
+	<!--target host="parents.cornell.edu"/-->
+	<target host="registrar.cornell.edu" />
+	<target host="www.registrar.cornell.edu" />
+	<target host="smallfarms.cornell.edu" />
+	<target host="studentessentials.cornell.edu" />
+	<target host="www.studentessentials.cornell.edu" />
+	<target host="sustainability.cornell.edu" />
+	<target host="www.sustainability.cornell.edu" />
+	<target host="www.sustainablefuture.cornell.edu" />
+
+	<target host="cornell-classic.univcomm.cornell.edu" />
+	<target host="embanner.univcomm.cornell.edu" />
+	<target host="media.univcomm.cornell.edu" />
+
+	<target host="alumni.weill.cornell.edu" />
+	<target host="careers.weill.cornell.edu" />
+	<target host="directory.weill.cornell.edu" />
+	<target host="emergency.weill.cornell.edu" />
+	<target host="give.weill.cornell.edu" />
+	<target host="its.weill.cornell.edu" />
+	<target host="jcto.weill.cornell.edu" />
+	<target host="library.weill.cornell.edu" />
+	<target host="meeting.weill.cornell.edu" />
+	<target host="radiology.weill.cornell.edu" />
+	<target host="studentservices.weill.cornell.edu" />
+	<target host="wcmcentral.weill.cornell.edu" />
+
+	<target host="www.cornell.edu" />
+
+		<!--	$ prints domain name, so:
+							-->
+		<test url="http://s010.med.cornell.edu/wcmc/make-a-donation.html" />
+
+	<!--	Complications:
+				-->
+	<target host="css.cals.cornell.edu" />
+	<target host="ciifad.cornell.edu" />
+	<target host="cuaes.cornell.edu" />
+	<target host="dfa.cornell.edu" />
+	<!--target host="www.einaudi.cornell.edu" /-->
+	<target host="emergency.med.cornell.edu" />
+	<target host="news.cornell.edu" />
 
 
-	<securecookie host="^(?!cals\.)(?:.*\.)?cornell\.edu$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^confluence\.cornell\.edu$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^(?:alumni|careers|give|jcto|radiology)\.weill\.cornell\.edu$" name="^SimpleSAMLSessionId$" /-->
+	<!--securecookie host="^directory\.weill\.cornell\.edu$" name="^JSESSIONI$$" /-->
+	<!--securecookie host="^wcmcentral\.weill\.cornell\.edu$" name="^(?:SimpleSAMLSessionId|simplesamlphp_auth_returnto)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://((?:(?:www\.)?(?:cals|cs|library)|topeka\.ccmr|ww3\.lawschool|embanner\.univcomm|www)\.)?cornell\.edu/"
-		to="https://$1cornell.edu/"/>
+	<rule from="^http://css\.cals\.cornell\.edu/"
+		to="https://scs.cals.cornell.edu/"/>
+
+	<rule from="^http://(ciifad|cuaes)\.cornell\.edu/"
+		to="https://$1.cals.cornell.edu/"/>
+
+	<!--rule from="^http://www\.einaudi\.cornell\.edu/"
+		to="https://einaudi.cornell.edu/"/-->
+
+	<rule from="^http://(dfa|news)\.cornell\.edu/"
+		to="https://www.$1.cornell.edu/"/>
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://emergency\.med\.cornell\.edu/[^?]*"
+		to="https://emergency.weill.cornell.edu/" />
+
+		<test url="http://emergency.med.cornell.edu/index.htm" />
+
+	<rule from="^http:"
+		to="https:"/>
 
 </ruleset>

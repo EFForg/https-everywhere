@@ -1,99 +1,162 @@
 <!--
+	For rules causing false/broken MCB, see Rackspace.com-falsemixed.xml.
+
+
+	Other Rackspace rulesets:
+
+		- Mailgun.com.xml
+		- Mailgun.net.xml
+		- Mosso.com.xml
+		- RackCDN.com.xml
+		- Rackspace.co.uk.xml
+		- Rackspace.co.za.xml
+		- Rackspace.com.hk.xml
+		- Rackspace.dk.xml
+		- Rackspace.hk.xml
+		- Rackspace.nl.xml
+		- Rackspace_Cloud.com.xml
+
+
 	Nonfunctional domains:
 
-		- status.apps.rackspace.com
+		- www.rackertalent.com ¹
+
+		- status.apps.rackspace.com ²
+		- sharepoint.rackspace.com ²
+		- solve.rackspace.com ²
+
 		- (www.)rackspacestartups.com
 
-
-	Problematic domains:
-
-		- mosso.com				(redirects to www.rackspace.com/cloud/; mismatched, CN: *.rackspacecloud.com)
-		- cdn.cloudfiles.mosso.com		(401, akamai)
-		- www.rackspace.com.hk			(mismatched)
-		- (*).cdn.cloudfiles.rackspacecdn.com	(akamai)
-		- (*).cdn1.cloudfiles.rackspacecdn.com	(akamai)
+	¹ Dropped
+	² Refused
 
 
-	Partially covered domains:
+	Problematic hosts in *rackspace.com:
 
-		- (www.)rackspace.com			(cloud/ & knowledge_center/ don't work [NB: elaborate, in what way?])
+		- broadcast ¹
+		- docs ¹
+		- ir ²
+		- jobs ³
+		- support ¹
+		- talent ³
+
+	¹ Server sends no certificate chain, see https://whatsmychaincert.com
+	² Akamai
+	³ Mismatched
 
 
-	Fully covered domains:
+	Insecure cookies are set for these domains and hosts:
 
-		- cdn.cloudfiles.mosso.com/(*)/		(→ (*).ssl.cf0.rackcdn.com)
-		- (*).r\d+.cf[0-3].rackcdn.com		(→ (*).ssl.cf[0-3].rackcdn.com)
+		- .rackspace.com
+		- blog.rackspace.com
+		- broadcast.rackspace.com
+		- cart.rackspace.com
+		- community.rackspace.com
+		- feedback.rackspace.com
+		- ir.rackspace.com
+		- manage.rackspace.com
+		- mycloud.rackspace.com
+		- status.rackspace.com
+		- stories.rackspace.com
+		- www.rackspace.com
 
-		- rackspace.com subdomains:
 
-			- apps
-			- cart
-			- cp
-			- my
+	Mixed content:
 
-		- (*).cdn.cloudfiles.rackspace.com	(→ (*).ssl.cf0.rackcdn.com)
-		- (*).cdn1.cloudfiles.rackspace.com	(→ (*).ssl.cf1.rackcdn.com)
+		- css, on:
 
-		- (www.)rackspace.com.hk		(→ www.rackspace.hk)
-		- (www.)rackspace.co.uk			(^ → www)
-		- (www.)rackspace.co.za			(^ → www)
-		- (www.)rackspace.dk			(^ → www)
-		- (www.)rackspace.hk			(^ → www)
-		- (www.)rackspace.nl			(^ → www)
-		- (www.)rackspace.no			(^ → www)
-		- (www.)rackspace.se			(^ → www)
-		- (www.)rackspacecloud.com		(^ → www)
-		- manage.rackspacecloud.com
-		- lon.manage.rackspacecloud.com
+			- docs from cdn.jsdelivr.net *
+			- ir from phx.corporate-ir.net *
+			- stories, www from fonts.googleapis.com *
+			- www from $self *
+
+		- Images, on:
+
+			- blog, www from *.r\d+.cf\d.rackcdn.com *
+			- blog, cp, www from images.cdn.rackspace.com *
+			- ir from media.corporate-ir.net *
+			- partners, www from broadcast.rackspace.com
+
+		- favicon, on:
+
+			- community, stories from www.rackspace.com *
+			- docs from images.cdn.rackspace.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Rackspace (partial)" platform="mixedcontent">
+<ruleset name="Rackspace.com (partial)">
 
-	<target host="cdn.cloudfiles.mosso.com" />
-	<target host="*.rackcdn.com" />
-	<target host="rackspace.*" />
-	<target host="*.rackspace.com" />
-	<target host="rackspace.com.hk" />
-	<target host="www.rackspace.com.hk" />
-	<target host="rackspace.co.*" />
-	<target host="*.rackspace.co.uk" />
-	<target host="*.rackspace.co.za" />
-	<target host="*.rackspace.dk" />
-	<target host="*.rackspace.hk" />
-	<target host="*.rackspace.nl" />
-	<target host="*.rackspace.no" />
-	<target host="*.rackspace.se" />
-	<target host="rackspacecloud.com" />
-	<target host="*.rackspacecloud.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="rackspace.com" />
+	<target host="apps.rackspace.com" />
+	<target host="blog.rackspace.com" />
+	<!--target host="broadcast.rackspace.com" /-->
+	<target host="cart.rackspace.com" />
+	<target host="cloudtools.rackspace.com" />
+	<target host="community.rackspace.com" />
+	<target host="data.rackspace.com" />
+	<target host="developer.rackspace.com" />
+	<target host="cp.rackspace.com" />
+	<!--target host="docs.rackspace.com" /-->
+	<target host="feedback.rackspace.com" />
+	<target host="marketplace.rackspace.com" />
+	<target host="my.rackspace.com" />
+	<target host="mycloud.rackspace.com" />
+	<target host="partners.rackspace.com" />
+	<target host="status.rackspace.com" />
+	<target host="stories.rackspace.com" />
+	<!--target host="support.rackspace.com" /-->
+	<target host="www.rackspace.com" />
+
+	<!--	Complications:
+				-->
+	<target host="images.cdn.rackspace.com" />
+	<!--target host="talent.rackspace.com" /-->
+
+		<!--	Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://www\.rackspace\.com/+talent(?!/wp-content/|/wp-includes/)" />
+
+			<!--	ve:
+					-->
+			<test url="http://www.rackspace.com/talent/" />
+			<test url="http://www.rackspace.com/talent/culture/" />
+			<test url="http://www.rackspace.com/talent/san-antonio-tx-usa/" />
+			<test url="http://www.rackspace.com/talent/support/" />
+
+			<!--	ve:
+					-->
+			<test url="http://www.rackspace.com/talent/wp-content/plugins/revslider/images/dummy.png" />
+			<test url="http://www.rackspace.com/talent/wp-content/themes/jumpstart/framework/assets/plugins/bootstrap/css/bootstrap.min.css" />
+
+		<!--	Formerly redirected to http:
+							-->
+		<test url="http://www.rackspace.com/knowledge_center/" />
 
 
-	<securecookie host="^(?:www)?\.rackspace\.(?:com|co\.uk|co\.za|dk|nl|no|se)$" name=".+" />
-	<securecookie host="^(?:apps|cart|community|my)\.rackspace\.com$" name=".+" />
-	<securecookie host="^manage\.rackspacecloud\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.rackspace\.com$" name="^(IS_UASrackuid|RackSID|US[0-9a-f]{32}_pagecount|cloud_signup_reminder|keyword|tech_chat)$" /-->
+	<!--securecookie host="^(?:blog|broadcast|manage|stories)\.rackspace\.com$" name="^X-Mapping-\w+$" /-->
+	<!--securecookie host="^cart\.rackspace\.com$" name="^BIGip$" /-->
+	<!--securecookie host="^feedback\.rackspace\.com$" name="^_rf$" /-->
+	<!--securecookie host="^mycloud\.rackspace\.com$" name="^csrftoken$" /-->
+	<!--securecookie host="^(?:status|www)\.rackspace\.com$" name="^BigIP_Cookie$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^https?://cdn\.cloudfiles\.mosso\.com/(\w+)/"
-		to="https://$1.ssl.cf0.rackcdn.com/" />
+	<rule from="^http://images\.cdn\.rackspace\.com/"
+		to="https://034d24a88b3e71fd72a6-f083e9a6295a3f0714fa019ffdca65c3.ssl.cf1.rackcdn.com/" />
 
-	<rule from="^https?://([\w-]+)\.(?:r\d+|ssl)\.cf(\d)\.rackcdn\.com/"
-		to="https://$1.ssl.cf$2.rackcdn.com/" />
+	<!--	Redirect preserves path and args:
+							-->
+	<!--rule from="^http://talent\.rackspace\.com/"
+		to="https://www.rackspace.com/talent/" /-->
 
-	<rule from="^https?://(?:www\.)?rackspace(cloud)?\.(com|co\.uk|co\.za|dk|nl|no|se)/"
-		to="https://www.rackspace$1.$2/" />
-
-	<rule from="^http://(apps|cart|community|cp|my)\.rackspace\.com/"
-		to="https://$1.rackspace.com/" />
-
-	<rule from="^https?://(?:www\.)?rackspace(?:\.com)?\.hk/"
-		to="https://www.rackspace.hk/" />
-
-	<rule from="^http://(lon\.)?manage\.rackspacecloud\.com/"
-		to="https://$1manage.rackspacecloud.com/" />
-
-	<rule from="^https?://(\w+)\.cdn\.cloudfiles\.rackspacecloud\.com/"
-		to="https://$1.ssl.cf0.rackcdn.com/" />
-
-	<rule from="^https?://(\w+)\.cdn(1|2)\.cloudfiles\.rackspacecloud\.com/"
-		to="https://$1.ssl.cf$2.rackcdn.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

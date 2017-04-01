@@ -1,6 +1,41 @@
-<!-- yet another 1px tracking host :-( -->
-<ruleset name="Webtrekk.net">
-	<target host="gigaset01.webtrekk.net" />
-	<rule from="^http://gigaset01\.webtrekk\.net/" to="https://gigaset01.webtrekk.net/"/>
-</ruleset>
+<!--
+	Fully covered hosts in *webtrekk.net:
 
+		- q3
+		- report8
+		- www
+		- \w+ *
+
+	* Clients have unique subdomains, which serve web bugs.
+
+-->
+<ruleset name="Webtrekk.net">
+
+	<target host="*.webtrekk.net" />
+	<target host="*.wt-eu02.net" />
+	<target host="responder.wt-safetag.com" />
+	<target host="www.webtrekk.com" />
+
+		<test url="http://gigaset01.webtrekk.net/" />
+		<test url="http://idealo01.webtrekk.net/" />
+		<test url="http://q3.webtrekk.net/" />
+		<test url="http://www.webtrekk.net/" />
+		<test url="http://grunerjahr01.wt-eu02.net/" />
+		<test url="http://responder.wt-safetag.com/" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<test url="http://tiscaliadv01.webtrekk.net/1/wt.pl?p=," />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(client_domain)\.webtrekk\.net$" name="(wt_nbg_Q3|wteid_\d+|wtsid_\d+)$" /-->
+	<!--securecookie host="www\.webtrekk\.net$" name="^wt_\w+_\w+$" /-->
+
+	<securecookie host=".\.webtrekk\.net$" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

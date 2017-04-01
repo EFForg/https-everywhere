@@ -1,4 +1,6 @@
 <!--
+	United States Nuclear Regulatory Commission
+
 	For other US government coverage, see US-government.xml.
 
 
@@ -6,18 +8,32 @@
 
 		- pbadupws	(times out)
 
--->
-<ruleset name="United States Nuclear Regulatory Commission" platform="mixedcontent">
 
-	<!--	Cert: forms.nrc.gov	-->
-	<target host="nrc.gov" />
+	Problematic hosts in *nrc.gov:
+
+		- (www.)? ᵐ
+		- forms ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+-->
+<ruleset name="NRC.gov" default_off="missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="forms.nrc.gov" />
-	<!--	Akamai	-->
+
+	<!--	Complications:
+				-->
+	<target host="nrc.gov" />
 	<target host="www.nrc.gov" />
 
 
-	<!--	All show the same data.	-->
-	<rule from="^https?://(?:forms\.|www\.)?nrc\.gov/"
+	<rule from="^http://(?:www\.)?nrc\.gov/"
 		to="https://forms.nrc.gov/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

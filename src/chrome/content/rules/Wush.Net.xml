@@ -1,0 +1,52 @@
+<!--
+	Problematic subdomains:
+
+		- status *
+
+	* Shows support; mismatched, CN: wush.net
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- billing
+		- portal
+		- status	(→ portal)
+		- support
+
+
+	Mixed content:
+
+		- Web bugs on (www.) from i.creativecommons.org *
+
+	* Secured by us
+
+-->
+<ruleset name="Wush.Net">
+
+	<target host="wush.net" />
+	<target host="*.wush.net" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^(portal\.|www\.)?wush\.net$" name="^wushapp_session$" /-->
+	<!--securecookie host="^billing\.wush\.net$" name="^PHPSESSID$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?wush\.net$" name="^(trac_form_token|trac_session)$" /-->
+	<!--securecookie host="^(status|support)\.wush\.net$" name="^(SWIFT_client|SWIFT_sessionid\d+)$" /-->
+
+	<securecookie host="^(?:(?:status|support|www)\.)?wush\.net$" name=".+" />
+
+
+	<rule from="^http://((?:billing|portal|support|www)\.)?wush\.net/"
+		to="https://$1wush.net/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://status\.wush\.net/+"
+		to="https://portal.wush.net/" />
+
+</ruleset>

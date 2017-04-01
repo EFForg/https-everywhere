@@ -3,39 +3,41 @@
 
 		- hb-assets.s3.amazonaws.com
 
+
+	Nonfunctional hosts in *hellobar.com:
+
+		- support *
+
+	* WP Engine
+
+
+	Problematic hosts in *hellobar.com:
+
+		- ping *
+
+	* Expired
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.hellobar.com
+
 -->
-<ruleset name="Hello Bar (partial)">
+<ruleset name="Hello Bar.com (partial)">
 
 	<target host="hellobar.com" />
-	<target host="*.hellobar.com" />
-		<!--
-			These paths 302 to http:
-
-				- $
-				- blogs$
-				- demo$
-
-		<exclusion pattern="^http://(www\.)?hellobar\.com/(blogs|demo)?$" /-->
+	<!--target host="ping.hellobar.com" /-->
+	<target host="www.hellobar.com" />
 
 
-	<!--	These paths work:
-
-			- assets/
-			- files/
-			- [^/]+.js$
-			- solo$
-			- solo/$
-			- solo/[^/]+$
-			- solo/images/
-			- solo/javascripts/
-			- solo/styles/
-			- system/
-			- wp-includes/
+	<!--	Not secured by server:
 					-->
-	<rule from="^http://(www\.)?hellobar\.com/([^/]+\.js(?:$|\?)|(?:assets|files|solo|system|wp-includes)/)"
-		to="https://$1hellobar.com/$2" />
+	<!--securecookie host="^www\.hellobar\.com$" name="^(?:_hellobar_session|adxs|vid)$" /-->
 
-	<rule from="^http://ping\.hellobar\.com/"
-		to="https://ping.hellobar.com/" />
+	<securecookie host="^www\.hellobar\.com$" name="" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

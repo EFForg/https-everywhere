@@ -1,40 +1,53 @@
 <!--
+	Other Impact Radius rulesets:
+
+		- 7eer.net.xml
+		- Ojrq.net.xml
+		- R7ls.net.xml
+
+
 	CDN buckets:
 
 		- d295io677a53ae.cloudfront.net
 		- d3vxp0cnzdtyjm.cloudfront.net
 		- dtszyw8w5r8hd.cloudfront.net
+		- dyfw24whmn0ln.cloudfront.net	← adn.impactradius.com
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .impactradius.com
+		- member.impactradius.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Impact Radius">
+<ruleset name="Impact Radius.com">
 
-	<target host="*.r7ls.net" />
-	<target host="7eer.net" />
-	<target host="*.7eer.net" />
+	<!--	Direct rewrites:
+				-->
 	<target host="impactradius.com" />
-	<target host="*.impactradius.com" />
-	<target host="ojrq.net" />
-	<target host="*.ojrq.net" />
+	<target host="filter.impactradius.com" />
+	<target host="member.impactradius.com" />
+	<target host="www.impactradius.com" />
+
+	<!--	Complications:
+				-->
+	<target host="adn.impactradius.com" />
 
 
-	<securecookie host="^\.r7ls\.net$" name=".*" />
-	<securecookie host="^.*\.7eer\.net$" name=".*" />
-	<securecookie host="^(.*\.)?impactradius\.com$" name=".*" />
-	<securecookie host="^(.*\.)?ojrq\.net$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.impactradius\.com$" name="^ESTN$" /-->
+	<!--securecookie host="^member\.impactradius\.com$" name="^(JSESSIONID|epersist)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://tl\.r7ls\.net/"
-		to="https://tl.r7ls.net/" />
+	<rule from="^http://adn\.impactradius\.com/"
+		to="https://dyfw24whmn0ln.cloudfront.net/" />
 
-	<!--	Included on 3rd-party websites.
-						-->
-	<rule from="^http://(manilla\.|www\.)?7eer\.net/"
-		to="https://$17eer.net/" />
-
-	<rule from="^http://(filter\.|member\.|www\.)?impactradius\.com/"
-		to="https://$1impactradius.com/" />
-
-	<rule from="^http://(www\.)?ojrq\.net/"
-		to="https://$1ojrq.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

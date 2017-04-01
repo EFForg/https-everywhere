@@ -1,25 +1,54 @@
 <!--
-	At least some pages redirect to http via JS
+	CDN buckets:
+
+		- s3.amazonaws.com/static.oculus.com/
+		- d11g5bl75h7gks.cloudfront.net
 
 
-	Mixed content:
+	Problematic hosts in *oculusvr.com:
 
-		- Images on www from www *
+		- answers ¹
+		- forums ¹
+		- static ²
+		- storystudio ¹
+		- www1 ¹
 
-	* Secured by us
+	¹ Shows www1.oculus.com
+	² Cloudfront/mismatched
 
 -->
-<ruleset name="Oculus VR (partial)">
+<ruleset name="Oculus VR">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="oculusvr.com" />
-	<target host="*.oculusvr.com" />
-		<exclusion pattern="^http://(?:www\.)?oculusvr\.com/(?!_core/|pre-order|wp-content/|wp-includes/)" />
+	<target host="careers.oculusvr.com" />
+	<target host="developer.oculusvr.com" />
+	<target host="share.oculusvr.com" />
+	<target host="www.oculusvr.com" />
+
+	<!--	Complications:
+				-->
+	<target host="answers.oculusvr.com" />
+	<target host="forums.oculusvr.com" />
+	<target host="static.oculusvr.com" />
+	<target host="storystudio.oculusvr.com" />
+	<target host="www1.oculusvr.com" />
 
 
-	<securecookie host="^(?:careers|developer)\.oculusvr\.com$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://((?:careers|developer|www)\.)?oculusvr\.com/"
-		to="https://$1oculusvr.com/" />
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://(?:answers|forums|storystudio|www1)\.oculusvr\.com/+"
+		to="https://www.oculus.com/" />
+
+	<rule from="^http://static\.oculusvr\.com/"
+		to="https://d11g5bl75h7gks.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

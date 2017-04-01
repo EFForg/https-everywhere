@@ -1,14 +1,43 @@
-<!--	!functional subdomains:
-		- store
-		- support
+<!--
+	For rules causing false/broken MCB, see shopsite.com-falsemixed.xml.
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .forums.shopsite.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www from fonts.googleapis.com ˢ
+			- www from $self ˢ
+
+		- Images on store, www from www.shopsite.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
 -->
-<ruleset name="ShopSite" default_off="expired">
+<ruleset name="ShopSite.com (partial)">
 
-	<target host="shopsite.com"/>
-	<target host="www.shopsite.com"/>
+	<!--target host="shopsite.com" /-->
+	<target host="forums.shopsite.com" />
+	<target host="store.shopsite.com" />
+	<!--target host="support.shopsite.com" /-->
+	<!--target host="www.shopsite.com" /-->
 
-	<!--	cert !valid for !www	-->
-	<rule from="^http://(?:www\.)?shopsite\.com/"
-		to="https://www.shopsite.com/"/>
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.forums\.shopsite\.com$" name="^phpbb3_\w+_(?:k|sid|u)$" /-->
+
+	<securecookie host="^(?!\.shopsite\.com$)." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

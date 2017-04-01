@@ -1,23 +1,52 @@
-<!--	!functional:
-		- imstore	(banners included on 3rd-party websites)
+<!--
+	Other bet365 Group rulesets:
+
+		- bet365affiliates.com.xml
+
+
+	Nonfunctional hosts in *bet365.com:
+
+		- casino ʳ
+		- poker ʳ
+		- vegas ʳ
+
+	ʳ Refused
+
+
+	Insecure cookies are set for these hosts and domains: ᶜ
+
+		- .bet365.com
+		- www.bet365.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
 -->
-<ruleset name="bet365 Group (partial)">
+<ruleset name="bet365.com (partial)">
 
 	<target host="bet365.com"/>
-	<target host="*.bet365.com"/>
-	<target host="bet365affiliates.com"/>
-	<target host="www.bet365affiliates.com"/>
+	<target host="content001.bet365.com" />
+	<target host="games.bet365.com" />
+	<target host="members.bet365.com" />
+	<target host="www.bet365.com"/>
 
-	<securecookie host="^(.*\.)?bet365\.com$" name=".*"/>
-	<securecookie host="^www.bet365affiliates.com$" name=".*"/>
+		<!--	403 vs 200 blank page => fetch test would fail.
+									-->
+		<exclusion pattern="^http://members\.bet365\.com/$" />
 
-	<rule from="^http://bet365\.com/"
-		to="https://www.bet365.com/"/>
+			<!--	-ve:
+					-->
+			<test url="http://members.bet365.com/Members/Helpers/site.aspx" />
 
-	<rule from="^http://(members|www)\.bet365\.com/"
-		to="https://members.bet365.com/"/>
 
-	<rule from="^http://(?:www\.)?bet365affiliates\.com/"
-		to="https://www.bet365affiliates.com/"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.bet365\.com$" name="^pstk$" /-->
+	<!--securecookie host="^www\.bet365\.com$" name="^(?:aps03|rmbs)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

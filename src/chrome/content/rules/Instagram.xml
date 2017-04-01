@@ -1,157 +1,75 @@
 <!--
+	Other Instagram rulesets:
+
+		- CDN_Instagram.com.xml
+		- Instagr.am.xml
+		- Instagrampartners.com.xml
+
+
 	CDN buckets:
+
+		- igcdn-photos-a-a.akamaihd.net
+		- igcdn-photos-b-a.akamaihd.net
+		- igcdn-photos-c-a.akamaihd.net
+		- igcdn-photos-d-a.akamaihd.net
+		- igcdn-photos-e-a.akamaihd.net
+		- igcdn-photos-f-a.akamaihd.net
+		- instagramimages-a.akamaihd.net
+		- instagramstatic-a.akamaihd.net
 
 		- distillery.s3.amazonaws.com | d18txuuu339yuz.cloudfront.net
 
 			- images.instagram.com
 
-		- d17c70w5wkxq2m.cloudfront.net
-			- distilleryimage7.instagram.com
 
-		- distilleryimage1.s3.amazonaws.com | d1ae3bdqlkjebx.cloudfront.net
-			- distilleryimage1.instagram.com
+	Problematic hosts in *instagram.com:
 
-		- d1uysd8m4iv3h8.cloudfront.net
-			- distilleryimage5.instagram.com
+		- images1.ak	(works, akamai)
 
-		- d1z5wd2gcq19yd.cloudfront.net
-			- distilleryimage11.instagram.com
-
-		- d24elmu442q75h.cloudfront.net
-			- distilleryimage4.instagram.com
-
-		- d2aqnk7wh4vqhb.cloudfront.net
-			- distilleryimage0.instagram.com
-
-		- d2nms3640z5x8l.cloudfront.net
-			- distilleryimage8.instagram.com
-
-		- distilleryimage1.s3.amazonaws.com | d2vdurooumowqn.cloudfront.net
-			- distilleryimage2.instagram.com
-
-		- d2x3khweh61zds.cloudfront.net
-			- distilleryimage9.instagram.com
-
-		- d34sa3fuqtuf2w.cloudfront.net
-			- distilleryimage10.instagram.com
-
-		- d36xtkk24g8jdx.cloudfront.net
-
-		- d3v3n0f5b1i27d.cloudfront.net
-			- distilleryimage6.instagram.com
-
-		- doa9ijhk46qwf.cloudfront.net
-			- distilleryimage3.instagram.com
-
-		- instagram-static.s3.amazonaws.com
-
-		- distilleryimage1.ak.instagram.com.edgesuite.net
-
-			- a1402.dspw40.akamai.net
-
-		- images.ak.instagram.com.edgesuite.net
-
-			- a1404.dspw42.akamai.net
+		Mismatch (tumblr):
+			- blog.instagram.com
+			- blog.business.instagram.com
+			- developers.instagram.com
 
 
-	Nonfunctional domains:
+	Insecure cookies are set for these domains and hosts:
 
-		- blog.instagram.com	(tumblr)
-
-
-	Problematic domains:
-
-		- instagram.com subdomains:
-
-			- images1.ak	(works, akamai)
-			- help		(works; mismatched, CN: instagram.com)
-			- www		(works, cert only matches ^instagram.com)
-
-
-	Partially covered domains:
-
-		- instagr.am
-
-
-	Fully covered instagram.com subdomains:
-
-		- images.ak *
-		- images1.ak *
-		- api
-		- badges
-		- distilleryimage[1-9] **
-		- distilleryimage1[12] **
-		- images *
-
-	* → akamai
-	** → cloudfront
+		- instagram.com
+		- badges.instagram.com
+		- .help.instagram.com
 
 -->
-<ruleset name="Instagram (partial)">
+<ruleset name="Instagram.com (partial)">
 
-	<target host="instagr.am" />
+	<!--	Direct rewrites:
+				-->
 	<target host="instagram.com" />
-	<target host="*.instagram.com" />
+	<target host="www.instagram.com" />
+	<target host="api.instagram.com" />
+	<target host="badges.instagram.com" />
+	<target host="business.instagram.com" />
+	<target host="partners.business.instagram.com" />
+	<target host="engineering.instagram.com" />
+	<target host="help.instagram.com" />
+	<target host="l.instagram.com" />
+	<target host="platform.instagram.com" />
+
+	<!--	Complications:
+				-->
+	<target host="images.instagram.com" />
 
 
-	<securecookie host="^badges\.instagram\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(badges\.)?instagram\.com$" name="^(csrftoken|mid)$" /-->
+	<!--securecookie host="^\.help\.instagram\.com$" name="^(datr|noscript|reg_ext_ref|reg_fb_ref|reg_fb_gate)$" /-->
 
-
-	<rule from="^http://instagr\.am/static/images/"
-		to="https://s3.amazonaws.com/instagram-static/images/" />
-
-	<!--	Note that this next rule does not currently work for /static/images
-		but that case is handled by the previous rule.
-								-->
-	<rule from="^http://instagr\.am/(p|static)/"
-		to="https://instagram.com/$1/" />
-
-	<rule from="^http://(?:www\.)?instagram\.com/favicon\.ico"
-		to="https://instagram.com/favicon.ico" />
-
-	<rule from="^http://images\.ak\.instagram\.com/"
-		to="https://a248.e.akamai.net/f/1404/2456/3m/images.ak.instagram.com/" />
-
-	<rule from="^http://images1\.ak\.instagram\.com/"
-		to="https://a248.e.akamai.net/f/1402/3840/4m/images1.ak.instagram.com/" />
-
-	<rule from="^http://(api|badges)\.instagram\.com/"
-		to="https://$1.instagram.com/" />
-
-	<rule from="^http://distilleryimage1\.instagram\.com/"
-		to="https://d1ae3bdqlkjebx.cloudfront.net/" />
-
-	<rule from="^http://distilleryimage2\.instagram\.com/"
-		to="https://d2vdurooumowqn.cloudfront.net/" />
-
-	<rule from="^http://distilleryimage3\.instagram\.com/"
-		to="https://doa9ijhk46qwf.cloudfront.net/" />
-
-	<rule from="^http://distilleryimage4\.instagram\.com/"
-		to="https://d24elmu442q75h.cloudfront.net/" />
-
-	<rule from="^http://distilleryimage5\.instagram\.com/"
-		to="https://d1uysd8m4iv3h8.cloudfront.net/" />
-
-	<rule from="^http://distilleryimage6\.instagram\.com/"
-		to="https://d2aqnk7wh4vqhb.cloudfront.net/" />
-
-	<rule from="^http://distilleryimage7\.instagram\.com/"
-		to="https://d17c70w5wkxq2m.cloudfront.net/" />
-
-	<rule from="^http://distilleryimage8\.instagram\.com/"
-		to="https://d2nms3640z5x8l.cloudfront.net/" />
-
-	<rule from="^http://distilleryimage9\.instagram\.com/"
-		to="https://d2x3khweh61zds.cloudfront.net/" />
-
-	<rule from="^http://distilleryimage10\.instagram\.com/"
-		to="https://d34sa3fuqtuf2w.cloudfront.net/" />
-
-	<rule from="^http://distilleryimage11\.instagram\.com/"
-		to="https://d1z5wd2gcq19yd.cloudfront.net/" />
+	<securecookie host="^(?:badges\.|\.help\.)?instagram\.com$" name=".+" />
 
 	<rule from="^http://images\.instagram\.com/"
 		to="https://d18txuuu339yuz.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,36 +1,32 @@
 <!--
-	Problematic subdomains:
-
-		- (www.) *
-		- shop *
-
-	* Works, cert only matches secure
+	For problematic rules, see dd-wrt.com.xml.
 
 
-	Partially covered subdomains:
+	Problematic hosts in *dd-wrt.com:
 
-		- shop		(→ www)
+		- svn ᵐ ˢ
 
-
-	Fully covered subdomains:
-
-		- (www.)	(→ secure)
-		- secure
+	ᵐ Mismatched
+	ˢ Self-signed
 
 -->
-<ruleset name="DD-WRT">
+<ruleset name="DD-WRT.com (partial)">
 
 	<target host="dd-wrt.com" />
-	<target host="*.dd-wrt.com" />
+	<target host="secure.dd-wrt.com" />
+	<target host="shop.dd-wrt.com" />
+	<target host="www.dd-wrt.com" />
+
+		<test url="http://dd-wrt.com/site/"/>
+		<test url="http://shop.dd-wrt.com/site/"/>
+		<test url="http://www.dd-wrt.com/wiki/"/>
+		<test url="http://www.dd-wrt.com/phpBB2"/>
 
 
-	<securecookie host=".*\.dd-wrt\.com$" name=".+" />
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:secure\.|www\.)?dd-wrt\.com/"
-		to="https://secure.dd-wrt.com/" />
-
-	<rule from="^http://shop\.dd-wrt\.com/(\?.*)?$"
-		to="https://secure.dd-wrt.com/shop/catalog/$1" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,36 +1,51 @@
 <!--
 	Nonfunctional subdomains:
 
-		- (www.)	(redirects to http; CN: ask.linaro.org)
-		- connect	(shows ask; CN: ask.linaro.org)
-		- android.git *
 		- review.android.git *
-		- planet	(dropped)
 
-	* http reply
-	** Dropped
+	* Shows android.git
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains and hosts:
 
-		- android-build
-		- cards
-		- git
-		- lists
-		- patches
-		- releases
-		- status
+		- .linaro.org
+		- connect.linaro.org
+		- www.linaro.org
 
 -->
-<ruleset name="Linaro (partial)" default_off="webmaster request">
+<ruleset name="Linaro.org (partial)" default_off="webmaster request">
 
-	<target host="*.linaro.org" />
+	<!--	Direct rewrites:
+				-->
+	<target host="linaro.org" />
+	<target host="android-build.linaro.org" />
+	<target host="android-git.linaro.org" />
+	<target host="ask.linaro.org" />
+	<target host="cards.linaro.org" />
+	<target host="connect.linaro.org" />
+	<target host="git.linaro.org" />
+	<target host="android.git.linaro.org" />
+	<target host="irclogs.linaro.org" />
+	<target host="lists.linaro.org" />
+	<target host="patches.linaro.org" />
+	<target host="planet.linaro.org" />
+	<target host="releases.linaro.org" />
+	<target host="status.linaro.org" />
+	<target host="support.linaro.org" />
+	<target host="wiki.linaro.org" />
+	<target host="www.linaro.org" />
 
 
-	<securecookie host="^(?:android-built|ask|cards|patches|releases|status|support|wiki)\.linaro\.org$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.linaro\.org$" name="^(?:__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^(?:connect|www)\.linaro\.org$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\.linaro\.org$" name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host=".+\.linaro\.org$" name=".+" />
 
 
-	<rule from="^http://(android-build|ask|cards|git|lists|patches|releases|status|support|wiki)\.linaro\.org/"
-		to="https://$1.linaro.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,18 +1,56 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *stellaservice.com:
 
-		- (www.)
+		- bright ᵗ
 		- business
 		- happycustomer		(rx_record_too_long)
-		- media
+
+	ᵗ Redirects to ^stellaservice.com
+
+
+	Problematic hosts in *stellaservice.com:
+
+		- profile ᵐ
+
+	ᵐ Cloudfront/mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- stellaservice.com
+		- metrics.stellaservice.com
+
+
+	Mixed content:
+
+		- css on profile from fonts.googleapis.com ˢ
+
+		- Images, on:
+
+			- profile from media.stellaservice.com ᵗ
+			- www from bright.stellaservice.com ˢ
+
+	ᵗ Unsecurable <= redirects to ^stellaservice.com
 
 -->
-<ruleset name="STELLAService (partial)">
+<ruleset name="STELLAService.com (partial)">
 
+	<target host="stellaservice.com" />
+	<target host="media.stellaservice.com" />
+	<target host="metrics.stellaservice.com" />
 	<target host="seal.stellaservice.com" />
+	<target host="www.stellaservice.com" />
 
 
-	<rule from="^http://seal\.stellaservice\.com/"
-		to="https://seal.stellaservice.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^stellaservice\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^metrics\.stellaservice\.com$" name="^csrftoken$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

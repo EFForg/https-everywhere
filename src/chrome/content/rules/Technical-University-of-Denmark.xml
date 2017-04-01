@@ -1,43 +1,112 @@
 <!--
-	!functional:
-		- jobbank.dtu.dk		(timeout)
-		- (www.)studievalg.dtu.dk	(self-signed; prints "This is the AIT LAMP 01 server")
--->
-<ruleset name="Technical University of Denmark (partial)" platform="mixedcontent">
+	Technical University of Denmark
 
-	<target host="dtu.dk"/>
-	<target host="alumne.dtu.dk"/>
-	<target host="www.alumne.dtu.dk"/>
+
+	Nonfunctional hosts in *dtu.dk:
+
+		- www.alumne *
+		- www.alumni *
+		- www.bibliotek *
+		- jobbank		(timeout)
+		- (www.)studievalg	(self-signed; prints "This is the AIT LAMP 01 server")
+
+	* Redirects to http
+
+
+	Problematic hosts in *dtu.dk:
+
+		- ^ ¹ ²
+		- alumnea ¹ ²
+		- alumni ¹ ²
+		- bibliotek ¹ ²
+		- (www.)?dtic ¹ ²
+		- www.portalen ¹ ²
+		- space ¹ ²
+
+	¹ Missing certificate chain
+	² Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- auth.dtu.dk
+		- nemid.dtu.dk
+		- portalen.dtu.dk
+		- www.portalen.dtu.dk
+
+-->
+<ruleset name="DTU.dk (partial)">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="backend.alumnenet.dtu.dk"/>
 	<target host="auth.dtu.dk"/>
-	<target host="dtic.dtu.dk"/>
-	<target host="www.dtic.dtu.dk"/>
+	<target host="aezoo.compute.dtu.dk"/>
+	<target host="www.compute.dtu.dk"/>
 	<target host="nemid.dtu.dk"/>
 	<target host="portalen.dtu.dk"/>
-	<target host="www.portalen.dtu.dk"/>
-	<target host="space.dtu.dk"/>
 	<target host="www.space.dtu.dk"/>
 	<target host="mail.win.dtu.dk"/>
 	<target host="www.dtu.dk"/>
 
-	<securecookie host="^(backend\.alumnenet|auth|nemid|portalen|space|www)\.dtu\.dk$" name=".*"/>
+	<!--	Complications:
+				-->
+	<target host="dtu.dk"/>
+	<target host="www.portalen.dtu.dk"/>
+	<target host="space.dtu.dk"/>
 
-	<!--	cert doesn't match www.foo.dtu
-
-		See below if this makes your head hurt.
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.(?:(?:compute|space)\.)?dtu\.dk/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://www\.(?:(?:compute|space)\.)?dtu\.dk/+(?!-/media/|css/|gimage\.ashx|images/)" /-->
+		<!--
+			(Access-Control...: http://*...):
 							-->
-	<rule from="^http://(?:(?:www\.)?((?:(?:alumne|dtic|portalen|space)|backend\.alumnenet|auth|nemid|mail\.win|www)\.))?dtu\.dk/"
-		to="https://$1dtu.dk/"/>
+		<!--exclusion pattern="^http://www\.(?:(?:compute|space)\.)?dtu\.dk/css/" /-->
+		<!--
+			In sum:
+				-->
+		<exclusion pattern="^http://(?:www\.)?(?:(?:compute|space)\.)?dtu\.dk/+(?!-/media/|gimage\.ashx|images/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.compute.dtu.dk/css/common/print.min.css" />
+			<test url="http://www.space.dtu.dk/css/common/init_alldevices.min.css" />
+			<test url="http://www.space.dtu.dk/css/common/print.min.css" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.compute.dtu.dk/-/media/Institutter/Compute/forside/dtu_compute_da_web.ashx?mh=100&amp;mw=600" />
+			<test url="http://www.compute.dtu.dk/gimage.ashx?i=" />
+			<test url="http://www.compute.dtu.dk/images/grid/dtu_logo_servicemenu.png" />
+			<test url="http://space.dtu.dk/images/grid/dtu_logo_servicemenu.png" />
+			<test url="http://www.space.dtu.dk/-/media/DTU_Generelt/Navnetraek/Mobilsite/Lille%20mobiltop%20DTU%20Space%20DK.ashx" />
+			<test url="http://www.space.dtu.dk/gimage.ashx" />
+			<test url="http://www.space.dtu.dk/images/modules/megamenu/megamenu_bg.png" />
+			<test url="http://www.dtu.dk/gimage.ashx" />
+
+		<test url="http://auth.dtu.dk/dtu/login?service=" />
+
+
+	<!--	Direct rewrites:
+				-->
+	<!--securecookie host="^auth\.dtu\.dk$" name="^(?:ASP\.NET_SessionId|Cas\.USERNAMECOOKIE)$" /-->
+	<!--securecookie host="^nemid\.dtu\.dk$" name="^(?:ASP\.NET_SessionId|SamlRequestIdKey)$" /-->
+	<!--securecookie host="^(?:www\.)?portalen\.dtu\.dk$" name="^(?:ASP\.NET_SessionId|loginurl)$" /-->
+
+	<securecookie host="^(?:backend\.alumnenet|auth|nemid|(?:www\.)?portalen)\.dtu\.dk$" name=".+" />
+
+
+	<rule from="^http://(space\.)?dtu\.dk/"
+		to="https://www.$1dtu.dk/"/>
+
+	<rule from="^http://www\.portalen\.dtu\.dk/"
+		to="https://portalen.dtu.dk/"/>
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
-<!--	  from="^http://(?:
-				(?:www\.
-				)?
-				(
-					(?:
-						(?:alumne|dtic|portalen|space
-						)|backend\.alumnenet|auth|nemid|mail\.win|www
-					)\.
-				)
-			)?dtu\.dk/"
--->

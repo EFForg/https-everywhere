@@ -1,0 +1,57 @@
+<!--
+	For rules causing false/broken MCB, see sneakerfreaker.com.xml.
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- forum.sneakerfreaker.com
+		- shop.sneakerfreaker.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+		
+			- archive, forum from $self ˢ
+			- www from fonts.googleapis.com ˢ
+
+		- Images, on:
+		
+			- archive from from $self ˢ
+			- shop from cdn.shopify.com ˢ
+
+		- Ads, on:
+		
+			- archive from au.effectivemeasure.net ˢ
+			- archive from www.facebook.com ˢ
+			- archive from pixel.quantserve.com ˢ
+			- archive from b.scorecardresearch.com ˢ
+			- forum from www.sneakerfreaker.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Sneaker Freaker.com (partial)">
+
+	<target host="sneakerfreaker.com" />
+	<!--target host="archive.sneakerfreaker.com" /-->
+	<!--target host="forum.sneakerfreaker.com" /-->
+	<target host="shop.sneakerfreaker.com" />
+	<target host="www.sneakerfreaker.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^forum\.sneakerfreaker\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^shop\.sneakerfreaker\.com$" name="^(?:_orig_referrer|_landing_page|cart_sig)$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid$|__qca$|_gat?$|_gat_|cf_clearance$)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

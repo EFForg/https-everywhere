@@ -1,13 +1,39 @@
-<ruleset name="RedPlum.com">
+<ruleset name="RedPlum.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="redplum.com" />
-	<target host="*.redplum.com" />
+	<target host="client.redplum.com" />
+	<target host="couponimages.redplum.com" />
+	<target host="vdrn.redplum.com" />
+	<target host="www.redplum.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.redplum\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.redplum\.com/+(?!css/|fonts/|images/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.redplum.com/blog/" />
+			<test url="http://www.redplum.com/coupons/top-ten-coupons.html" />
+			<test url="http://www.redplum.com/local-deals/top-deals" />
+			<test url="http://www.redplum.com/section/printable-coupons" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.redplum.com/css/redplum.css" />
+			<test url="http://www.redplum.com/images/ui/redplum-logo.png" />
+			<test url="http://www.redplum.com/fonts/Roboto-900/Roboto-900.eot" />
 
 
-	<securecookie host="^.*\.redplum\.com$" name=".*" />
+	<securecookie host="^(?!www\.redplum\.com$)\w" name="." />
 
 
-	<rule from="^http://((?:client|couponimages|vdrn|www)\.)?redplum\.com/"
-		to="https://$1redplum.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

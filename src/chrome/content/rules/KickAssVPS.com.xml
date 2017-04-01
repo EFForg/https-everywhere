@@ -1,11 +1,42 @@
-<ruleset name="KickAssVPS.com" platform="mixedcontent">
+<!--
+	Nonfunctional hosts in *kickassvps.com:
 
-	<target host="kickassvps.com" />
-	<target host="*.kickassvps.com" />
+		- manage ᵇ
+		- www ʰ
 
-	<securecookie host="^manage\.kickassvps\.com$" name=".+" />
+	ᵇ Shows default page
+	ʰ Redirects to http
 
-	<rule from="^http://(manage\.|www\.)?kickassvps\.com/"
-          to="https://$1kickassvps.com/" />
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- clients.kickassvps.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="KickAssVPS.com (partial)">
+
+	<target host="clients.kickassvps.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.kickassvps\.com/(?:$|assets/|favicon\.ico)" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://www.kickassvps.com/assets/images/buttons-bg.png" /-->
+			<!--test url="http://www.kickassvps.com/favicon.ico" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^clients\.kickassvps\.com$" name="^WHMCS\w+$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

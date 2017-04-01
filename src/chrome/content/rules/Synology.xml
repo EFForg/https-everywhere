@@ -1,27 +1,48 @@
 <!--
-	Nonfunctional domains:
+	Other Synology rulesets:
 
-		- blog.synology.com
-		- wiki.synology.com
+		- Synology.com.tw.xml
+
+
+	Fully covered hosts:
+
+		- (www.)?
+		- blog
+		- myds
+		- srs
+		- stc
+		- synokm
+
+
+	Insecure cookies are set for these hosts:
+
+		- myds.synology.com
+		- stc.synology.com
+		- synokm.synology.com
+		- www.synology.com
 
 -->
-<ruleset name="Synology (partial)">
+<ruleset name="Synology.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="synology.com" />
-	<target host="*.synology.com" />
-	<target host="synology.com.tw" />
-	<target host="www.synology.com.tw" />
+	<target host="blog.synology.com" />
+	<target host="myds.synology.com" />
+	<target host="srs.synology.com" />
+	<target host="stc.synology.com" />
+	<target host="synokm.synology.com" />
+	<target host="www.synology.com" />
 
 
-	<securecookie host="^.*\.synology\.com(?:\.tw)?$" name=".+" />
-
-
-	<!--	Cert only matches www.
+	<!--	Not secured by server:
 					-->
-	<rule from="^https?://(?:www\.)?synology\.com(\.tw)?/"
-		to="https://www.synology.com$1/" />
+	<!--securecookie host="^(myds|stc|synokm|www)\.synology\.com$" name="^PHPSESSID$" /-->
 
-	<rule from="^http://(myds|srs|stc|synokm)\.synology\.com/"
-		to="https://$1.synology.com/" />
+	<securecookie host=".*\.synology\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

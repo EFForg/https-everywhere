@@ -1,21 +1,36 @@
 <!--
-	Problematic subdomains:
+	Problematic hosts:
 
-		- (www.)	(redirects to http, mismatched)
+		- www.billing *
+
+	* Mismatched
+
+
+	Fully covered hosts:
+
+		- (www.)
+		- blog
+		- (www.)?billing	(www → ^)
 
 -->
-<ruleset name="Helpjuice (partial)">
+<ruleset name="Helpjuice.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="helpjuice.com" />
-	<target host="*.helpjuice.com" />
+	<target host="blog.helpjuice.com" />
+	<target host="billing.helpjuice.com" />
+	<target host="www.helpjuice.com" />
+
+	<!--	Complications:
+				-->
 	<target host="www.billing.helpjuice.com" />
 
 
-	<rule from="^https?://(?:www\.)?helpjuice\.com/(image|stylesheet)s/"
-		to="https://billing.helpjuice.com/$1s/" />
+	<rule from="^http://www\.billing\.helpjuice\.com/"
+		to="https://billing.helpjuice.com/" />
 
-
-	<rule from="^http://(www\.)?billing\.helpjuice\.com/"
-		to="https://$1billing.helpjuice.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

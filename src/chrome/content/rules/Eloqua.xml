@@ -15,25 +15,17 @@
 
 			- images.marketing.eloqua.com
 
-		- wildcard.en25.com.edgekey.net
-
-		- amda-p9fb4.client.shareholder.com
-
-			- investor.eloqua.com
-
 
 	Nonfunctional domains:
 
 		- eloqua.com subdomains:
 
-			- (www.)		(no https)
+			- (www.)? ʰ
 			- businesscenter *
-			- investor *
-			- topliners *
 
 		- eloquaexperience.com
-		- *.en25.com
 
+	ʰ Redirects to http
 	* Times out
 
 
@@ -41,26 +33,36 @@
 
 		-  eloqua.com subdomains:
 
-			- blog			(works; expired 2011-03-04, CN: localhost.localdomain)
+			- blog ¹
+			- elqcdn ᴬ
 			- images.marketing	(works, akamai)
 			- media			(works; mismatched, CN: *.clickability.com)
 			- now *
 			- succeed		(works; mismatched, CN: *.t.eloqua.com)
+			- topliners		(Redirects to http)
 			- web			(works; expired 2013-02-08, self-signed, CN: plesk)
 
 		- (www.)useitandsee.com *
 
+	ᴬ Akamai / mismatched
+	¹ Shows another domain
 	* Mismatched, CN: secure.eloqua.com
+
+
+	Partially covered hosts:
+
+		- now *
+
+	* Satisfying fetch tests
 
 
 	Fully covered domains:
 
-		- (www.)elq.to		(→ bit.ly)
-
 		- eloqua.com subdomains:
 
+			- blog			(→ blogs.oracle.com)
+			- login
 			- images.marketing	(→ s33.t)
-			- now			(→ secure)
 			- secure
 			- static
 
@@ -70,36 +72,86 @@
 				- s2624
 				- s33
 
-		- img.en25.com
+			- topliners		(→ community.oracle.com)
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .eloqua.com
+		- cloudconnectors.eloqua.com
+		- .login.eloqua.com
+		- now.eloqua.com
+		- .secure.p03.eloqua.com
+		- .secure.eloqua.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Eloqua">
+<ruleset name="Eloqua.com (partial)">
 
-	<target host="*.eloqua.com" />
-	<target host="elq.to" />
-	<target host="www.elq.to" />
-	<target host="img.en25.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="cloudconnectors.eloqua.com" />
+	<target host="login.eloqua.com" />
+	<target host="secure.p03.eloqua.com" />
+	<target host="secure.eloqua.com" />
+	<target host="static.eloqua.com" />
+	<target host="*.t.eloqua.com" />
 
+	<!--	Special cases:
+				-->
+	<target host="blog.eloqua.com" />
+	<target host="images.marketing.eloqua.com" />
+	<target host="now.eloqua.com" />
+	<target host="topliners.eloqua.com" />
+
+		<!--	Satisfy fetch tests:
+						-->
+		<exclusion pattern="^http://now\.eloqua\.com/(?!EloquaImages/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://now.eloqua.com/FormsLogin.aspx" />
+
+			<!--	-ve:
+					-->
+			<test url="http://now.eloqua.com/EloquaImages/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.eloqua\.com$" name="^(ELOQUA|ELQSTATUS)$" /-->
+	<!--securecookie host="^cloudconnectors\.eloqua\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^(\.login|now|\.secure\.p03|\.secure)\.eloqua\.com$" name="^culture$" /-->
 
 	<securecookie host="^\.eloqua\.com$" name="^EL(?:OQUA|QSTATUS)$" />
+	<securecookie host="^(?:cloudconnectors|\.login|\.secure)\.eloqua\.com$" name=".+" />
 
 
-	<rule from="^http://investor\.eloqua\.com/common/"
-		to="https://investor.shareholder.com/common/" />
+	<!--	Redirect keeps path, args, and forward slash:
+								-->
+	<rule from="^http://blog\.eloqua\.com/"
+		to="https://blogs.oracle.com/marketingcloud//" />
+
+	<rule from="^http://images\.marketing\.eloqua\.com/$"
+		to="https://login.eloqua.com/" />
 
 	<rule from="^http://images\.marketing\.eloqua\.com/"
 		to="https://s33.t.eloqua.com/" />
 
+		<test url="http://images.marketing.eloqua.com/Web/Eloqua/" />
+
 	<rule from="^http://now\.eloqua\.com/"
 		to="https://secure.eloqua.com/" />
 
-	<rule from="^http://(secure|static|\w\d+\.t)\.eloqua\.com/"
-		to="https://$1.eloqua.com/" />
+	<!--	Redirect drops path, args, and forward slash:
+								-->
+	<rule from="^http://topliners\.eloqua\.com/.*"
+		to="https://community.oracle.com/community/topliners/" />
 
-	<rule from="^http://(?:www\.)?elq\.to/"
-		to="https://bit.ly/" />
+		<test url="http://topliners.eloqua.com/welcomeelcome" />
 
-	<rule from="^http://img\.en25\.com/"
-		to="https://img.en25.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

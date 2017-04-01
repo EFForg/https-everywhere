@@ -1,8 +1,14 @@
 <!--
 	Other Sony rulesets:
 
+		- lbp.me.xml
 		- Naughty_Dog.xml
 		- PlayStation.xml
+		- PlayStation.net.xml
+		- PlayStation_Network.com.xml
+		- SCEA.com.xml
+		- sony.co.uk.xml
+		- Sony.eu.xml
 		- Sony.se.xml
 		- Sony_Computer_Science_Laboratories.xml
 		- Sony_Entertainment_Network.xml
@@ -22,12 +28,13 @@
 			- fp.scea.com
 			- webassets[a-j]?.scea.com
 
+		- sonyglobal.scene7.com
+
 
 	Nonfunctional domains:
 
 		- (www.)imageworks.com *
 		- opensource.imageworks.com *
-		- esupport.sony.com		(redirects to s01.esupport, which has different data)
 		- www.kb.sony.com
 		- sonypictures.com		(times out)
 		- www.sonypictures.com *
@@ -35,54 +42,77 @@
 	* Refused
 
 
-	Partially covered domains:
+	Problematic hosts in *sony.com:
 
-		- (www.)sony.co.uk	(at least some pages redirect to http)
+		- s01.esupport ᵐ
+		- store ᵀ
+
+	ᵀ Blocks Tor users
+	ᵐ Mismatched
 
 
-	Fully covered domains:
+	These altnames do not exist:
 
-		- shop.sony.co.uk
-		- outlet.sony.co.uk
-		- blog.sony.com
+		- www.subscribe.sel.sony.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .sony.com
+		- community.sony.com
+		- docs.sony.com
+		- www.docs.sony.com
+		- productregistration.sony.com
+		- www.sony.com
+
+
+	Mixed content:
+
+		- Image on us.en.kb www.docs.sony.com ˢ
+		- Bug on us.en.kb from sony.112.2o7.net ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Sony (partial)" platform="mixedcontent">
+<ruleset name="Sony.com (partial)">
 
-	<target host="webassets.scea.com" />
-	<target host="*.webassets.scea.com" />
-	<target host="sony.com" />
-	<target host="*.sony.com" />
-	<target host="s01.esupport.sony.com" />
-	<target host="sony.co.uk" />
-	<target host="*.sony.co.uk" />
-
-
-	<securecookie host="^.*\.sony\.com$" name=".*" />
-	<securecookie host="^outlet\.sony\.co\.uk$" name=".+" />
-
-
-	<!--	- Cert doesn't match
-		- Redirects as so
+	<!--	Direct rewrites:
 				-->
-	<rule from="^https?://(?:www\.)?scea\.com/"
-		to="https://us.playstation.com/" />
+	<target host="sony.com" />
+	<target host="blog.sony.com" />
+	<target host="docs.sony.com" />
+	<target host="www.docs.sony.com" />
+	<target host="community.sony.com" />
+	<target host="eservice.sony.com" />
+	<target host="esupport.sony.com" />
+	<target host="content.esupport.sony.com" />
+	<target host="us.en.kb.sony.com" />
+	<target host="productregistration.sony.com" />
+	<target host="products.sel.sony.com" />
+	<target host="subscribe.sel.sony.com" />
+	<target host="store.sony.com" />
+	<target host="www.sony.com" />
 
-	<!--	webassets[a-j]?.scea.com: time out	-->
-	<rule from="^https?://(?:\w+\.)?webassets\w?\.scea\.com/"
-		to="https://secure.webassets.scea.com/" />
+	<!--	Complications:
+				-->
+	<target host="s01.esupport.sony.com" />
 
-	<!--	Cert only matches www.	-->
-	<rule from="^https?://(?:www\.)?sony\.com/"
-		to="https://www.sony.com/" />
 
-	<rule from="^http://(www\.)?sony\.co\.uk/(bravia|res)/"
-		to="https://$1sony.co.uk/$2/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.sony\.com$" name="^session_id$" /-->
+	<!--securecookie host="^community\.sony\.com$" name="^Lithium(?:UserInfo|UserSecure|Visitor)$" /-->
+	<!--securecookie host="^(?:www\.)?docs\.sony\.com$" name="^(?:ASPSESSIONID[A-Z]{8}|cookie-insert_8hrs)$" /-->
+	<!--securecookie host="^productregistration\.sony\.com$" name="^__RequestVerificationToken$" /-->
+	<!--securecookie host="^www\.sony\.com$" name="^geofilter_country$" /-->
 
-	<rule from="^http://(outlet|shop)\.sony\.co\.uk/"
-		to="https://$1.sony.co.uk/" />
+	<securecookie host="." name="." />
 
-	<rule from="^http://(blog|s01\.esupport|store)\.sony\.com/"
-		to="https://$1.sony.com/" />
+
+	<rule from="^http://s01\.esupport\.sony\.com/"
+		to="https://esupport.sony.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

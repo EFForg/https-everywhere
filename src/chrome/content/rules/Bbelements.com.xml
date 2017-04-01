@@ -1,18 +1,57 @@
 <!--
-	Problematic subdomains:
+	(www.)?bbelements.com: Refused
 
-		- go.gz		(mismatched, CN: go.eu.bbelements.com)
+
+	Problematic hosts in *bbelements.com:
+
+		- go.arbopl ¹
+		- go.cz		(mismatched, CN: go.eu.bbelements.com)
+		- go.evolutionmedia ²
+		- go.pl ²
+
+	¹ Mismatched, CN: go.goldbachpoland.bbelements.com
+	² Mismatched, CN: go.eu.bbelements.com
+	³ Untrusted root
+
+
+	Insecure cookies are set for these domains:
+
+		- .go.eu.bbelements.com
+		- .go.goldbachpoland.bbelements.com
+		- .go.pol.bbelements.com
+		- . . .
 
 -->
-<ruleset name="bbelements.com">
+<ruleset name="bbelements.com (partial)">
 
-	<target host="*.bbelements.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="go.eu.bbelements.com" />
+	<target host="go.goldbachpoland.bbelements.com" />
+	<target host="go.idmnet.bbelements.com" />
+	<target host="go.pol.bbelements.com" />
+
+	<!--	Complications:
+				-->
+	<target host="go.arbopl.bbelements.com" />
+	<target host="go.cz.bbelements.com" />
+	<target host="go.pl.bbelements.com" />
 
 
-	<securecookie host="^\.go\.eu\.bbelements\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.go\.\w+\.bbelements\.com$" name="^(?:bm2|bm2uu|bmsaw1)$" /-->
+
+	<securecookie host="^\.go\." name="." />
 
 
-	<rule from="^http://go\.(?:cz|eu)\.bbelements\.com/"
+	<rule from="^http://go\.arbopl\.bbelements\.com/"
+		to="https://go.goldbachpoland.bbelements.com/" />
+
+	<rule from="^http://go\.(?:cz|pl)\.bbelements\.com/"
 		to="https://go.eu.bbelements.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

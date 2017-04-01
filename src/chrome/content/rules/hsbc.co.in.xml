@@ -1,0 +1,74 @@
+<!--
+	For other HSBC Holdings coverage, see HSBC.xml.
+
+
+	Nonfunctional hosts in *hsbc.co.in:
+
+		- www.about *
+		- www.business *
+
+	* Unrecognized name
+
+
+	Problematic hosts in *hsbc.co.in:
+
+		- ^ ᵐ
+		- (www.)?assetmanagement ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- services.assetmanagement.hsbc.co.in
+		- www.hsbc.co.in
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bugs, on:
+		
+			- services.assetmanagement from www1.member-hsbc-group.com ˢ
+			- www from ad.doubleclick.net
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="HSBC.co.in (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="services.assetmanagement.hsbc.co.in" />
+	<target host="www.hsbc.co.in" />
+
+	<!--	Complications:
+				-->
+	<target host="hsbc.co.in" />
+	<target host="www.assetmanagement.hsbc.co.in" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^services\.assetmanagement\.hsbc\.co\.in$" name="^(?:JSESSIONID|locale)$" /-->
+	<!--securecookie host="^www\.hsbc\.co\.in$" name="^(?:JSESSIONID|INPTK)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://hsbc\.co\.in/"
+		to="https://www.hsbc.co.in/" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+						-->
+	<rule from="^http://www\.assetmanagement\.hsbc\.co\.in/+"
+		to="https://www.assetmanagement.hsbc.com/in" />
+
+		<test url="http://www.assetmanagement.hsbc.co.in/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

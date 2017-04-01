@@ -1,15 +1,73 @@
 <!--
-	- ^tigerdirect.com presents a different, mismatched, cert
-	- At least some pages redirect to http
+	^tigerdirect.com: Akamai
+	www.tigerdirect.com: "Blocked Request"
+
+
+	Insecure cookies are set for these hosts:
+
+		- biz.tigerdirect.com
+		- www.tigerdirect.com
+
+
+	Mixed content:
+
+		- Image on biz from i\d+.geccdn.net
 
 -->
-<ruleset name="TigerDirect (partial)">
+<ruleset name="TigerDirect.com (partial)">
 
-	<target host="tigerdirect.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="biz.tigerdirect.com" />
+	<target host="orders.tigerdirect.com" />
 	<target host="www.tigerdirect.com" />
 
+	<!--	Complications:
+				-->
+	<target host="tigerdirect.com" />
 
-	<rule from="^https?://(?:www\.)?tigerdirect\.com/css/"
-		to="https://www.tigerdirect.com/css/" />
+		<!--	"Blocked Request":
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?tigerdirect\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?tigerdirect\.com/+(?!(?:cgi|secure)(?:$|[?/])|css/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.tigerdirect.com/applications/campaigns/deals.asp?campaignid=" />
+			<test url="http://www.tigerdirect.com/applications/email/emailafriend.asp" />
+			<test url="http://www.tigerdirect.com/rss/index.asp" />
+			<test url="http://www.tigerdirect.com/sectors/help/index.asp" />
+			<test url="http://www.tigerdirect.com/sectors/livechat/popup.asp" />
+
+			<!--	-ve:
+					-->
+			<test url="http://tigerdirect.com/css/global-mobile.css" />
+			<test url="http://tigerdirect.com/cgisec/orderTrack.asp" />
+			<test url="http://tigerdirect.com/secure/captcha/Default.aspx" />
+			<test url="http://tigerdirect.com/secure/orderlogin.asp" />
+			<test url="http://www.tigerdirect.com/css/global-mobile.css" />
+			<test url="http://www.tigerdirect.com/cgisec/orderTrack.asp" />
+			<test url="http://www.tigerdirect.com/secure/captcha/Default.aspx" />
+			<test url="http://www.tigerdirect.com/secure/orderlogin.asp" />
+
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^biz\.tigerdirect\.com$" name="^(?:JSESSIONID|TS[\da-f]{8}|gec-pcs_al_hash)$" /-->
+	<!--securecookie host="^www\.tigerdirect\.com$" name="^(?:ACKOFR|ASP\.NET_SessionId|DB|SRCCODE|SRVR)$" /-->
+
+	<securecookie host="^biz\.tigerdirect\.com$" name=".+" />
+
+
+
+	<rule from="^http://tigerdirect\.com/"
+		to="https://www.tigerdirect.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

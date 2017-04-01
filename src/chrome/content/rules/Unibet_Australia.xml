@@ -1,22 +1,32 @@
 <!--
-	Problematic subdomains:
+	Unibet Australia
 
-		- ^	(cert only matches *.unibet.com.au)
+
+	Insecure cookies are set for these domains and hosts:
+
+		- www.unibet.com.au
+		- .www.unibet.com.au
 
 -->
-<ruleset name="Unibet Australia">
+<ruleset name="Unibet.com.au">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="unibet.com.au" />
-	<target host="*.unibet.com.au" />
+	<target host="cdn.unibet.com.au" />
+	<target host="m.unibet.com.au" />
+	<target host="www.unibet.com.au" />
 
 
-	<securecookie host="^(?:www)?\.unibet\.com\.au$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.unibet\.com\.au$" name="^BIGipServer\w+$" /-->
+	<!--securecookie host="^\.www\.unibet\.com\.au$" name="^clientId$" /-->
+
+	<securecookie host="^(?:\.?www)?\.unibet\.com\.au$" name=".+" />
 
 
-	<rule from="^https?://(?:www\.)?unibet\.com\.au/"
-		to="https://www.unibet.com.au/" />
-
-	<rule from="^http://(cdn|m)\.unibet\.com\.au/"
-		to="https://$1.unibet.com.au/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,13 +1,36 @@
-<ruleset name="Russia Beyond the Headlines" default_off="expired, self-signed">
+<!--
+	For other Russia Beyond the Headlines coverage, see rbth.com.xml.
 
+
+	CDN buckets:
+
+		- d227diz1d7fwfb.cloudfront.net	← nl.media
+
+
+	(www.)?rbth.ru: Mismatched
+
+-->
+<ruleset name="RBTH.ru">
+
+	<!--	Complications:
+				-->
 	<target host="rbth.ru" />
+	<target host="nl.media.rbth.ru" />
 	<target host="www.rbth.ru" />
 
 
-	<securecookie host="^rbth\.ru$" name=".*" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^https?://(?:www\.)?rbth\.ru/"
-		to="https://rbth.ru/" />
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://(?:www\.)?rbth\.ru/+"
+		to="https://rbth.com/" />
+
+	<rule from="^http://nl\.media\.rbth\.ru/"
+		to="https://d227diz1d7fwfb.cloudfront.net/" />
+
+		<test url="http://nl.media.rbth.ru/149x81/images/travel/arctic_rosturism/3_top.jpg" />
 
 </ruleset>

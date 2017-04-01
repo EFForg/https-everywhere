@@ -1,0 +1,113 @@
+<!--
+	Note: p://registrationbooking.../$ redirects
+	to 403 ?=> fetch test failure
+
+	Oxfordshire County Council
+
+	For rules causing false/broken MCB, see oxfordshire.gov.uk-falsemixed.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *oxfordshire.gov.uk:
+
+		- apps *
+		- domino2 ʳ
+		- jobs ʳ
+		- myeplanning ³
+		- myeplanning2 ³
+		- mycases ʳ
+		- www.netloan ³
+		- voyager ʳ
+
+	* Wrong MAC
+	³ 403
+	ᶠ Handshake fails
+	ʳ Refused
+
+
+	Problematic hosts in *oxfordshire.gov.uk:
+
+		- fisd ᵐ
+		- fixmystreet ᵐ
+		- insight ˣ
+		- myopac ᵐ
+		- schools ˣ
+		- volunteering ˣ
+		- winter ˣ
+
+	ᵐ Mismatched
+	ˣ Mixed css; see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Insecure cookies are set for these hosts:
+
+		- mycouncil.oxfordshire.gov.uk
+		- publicapps.oxfordshire.gov.uk
+
+
+	Mixed content:
+
+		- css on insight, schools, volunteering, winter from $self ˢ
+
+		- Images, on:
+		
+			- insight, schools, volunteering, winter from $self ˢ
+			- schools from www.oxfordshire.gov.uk ˢ
+
+	ˢ Secured by us; see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Oxfordshire.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="oxfordshire.gov.uk" />
+	<target host="admissions.oxfordshire.gov.uk" />
+	<target host="consultations.oxfordshire.gov.uk" />
+	<!--target host="insight.oxfordshire.gov.uk" /-->
+	<target host="learning.oxfordshire.gov.uk" />
+	<target host="libcat.oxfordshire.gov.uk" />
+	<target host="www.libcat.oxfordshire.gov.uk" />
+	<target host="m.oxfordshire.gov.uk" />
+	<target host="mycouncil.oxfordshire.gov.uk" />
+	<target host="mycrm360pubsvc.oxfordshire.gov.uk" />
+	<target host="myonecitizenportallive.oxfordshire.gov.uk" />
+	<target host="owls.oxfordshire.gov.uk" />
+	<target host="portal.oxfordshire.gov.uk" />
+	<target host="publicapps.oxfordshire.gov.uk" />
+	<target host="registrationbooking.oxfordshire.gov.uk" />
+	<!--target host="schools.oxfordshire.gov.uk" /-->
+	<target host="services.oxfordshire.gov.uk" />
+	<!--target host="volunteering.oxfordshire.gov.uk" /-->
+	<!--target host="winter.oxfordshire.gov.uk" /-->
+	<target host="www.oxfordshire.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="myopac.oxfordshire.gov.uk" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://publicapps.oxfordshire.gov.uk/srvClosures/ClosuresAdmin" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^mycouncil\.oxfordshire\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^publicapps\.oxfordshire\.gov\.uk$" name="^(?:JSESSIONID|WASReqURL)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://myopac\.oxfordshire\.gov\.uk/.*"
+		to="https://libcat.oxfordshire.gov.uk/web/opac" />
+
+		<test url="http://myopac.oxfordshire.gov.uk/default.aspx" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

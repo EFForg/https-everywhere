@@ -2,46 +2,60 @@
 	Other AudienceScience rulesets:
 
 		- Audience_Targeting.xml
+		- RevSci.net.xml
 
 
-	Nonfunctional domains:
+	Nonfunctional subdomains:
 
-		- (www.)audiencescience.com
+		- (www.) ¹
+		- login ²
+
+	¹ Shows default page
+	² Reset
+
+
+	Problematic subdomains:
+
+		- demand *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- gateway.audiencescience.com
+
+
+	Mixed content:
+
+		- css on demand from fonts.googleapis.com *
+
+	* Secured by us
 
 -->
 <ruleset name="AudienceScience">
 
-	<target host="login.audiencescience.com" />
-	<target host="*.revsci.net" />
+	<!--	Direct rewrites:
+				-->
+	<target host="gateway.audiencescience.com" />
+
+	<!--	Complications:
+				-->
 	<target host="ad.targetingmarketplace.com" />
-	<target host="wunderloop.net" />
-	<target host="*.wunderloop.net" />
-	<target host="req.connect.wunderloop.net" />
 
 
-	<securecookie host="^login\.audiencescience\.com$" name=".*" />
-	<securecookie host="^\.revsci\.net$" name=".*" />
-	<securecookie host="^.+\.wunderloop\.net$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^demand\.audiencescience\.com$" name="^hsPagesViewedThisSession$" />
+	<securecookie host="^gateway\.audiencescience\.com$" name="^JSESSIONID$" />
+
+	<securecookie host="^gateway\.audiencescience\.com$" name=".+" />
 
 
-	<rule from="^http://login\.audiencescience\.com/"
-		to="https://login.audiencescience.com/" />
-
-	<rule from="^http://(ads|js|pix|pix0[124])\.revsci\.net/"
-		to="https://$1.revsci.net/" />
-
-	<rule from="^https?://ad.targetingmarketplace.com/"
+	<rule from="^http://ad\.targetingmarketplace\.com/"
 		to="https://ad.yieldmanager.com/" />
 
-	<!--	- (www.) doesn't work over https
-		- 301s over http
-					-->
-	<rule from="^https?://(?:connect\.|www\.)?wunderloop\.net/"
-		to="https://connect.wunderloop.net/" />
-
-	<!--	req: included on 3rd-party websites.
-							-->
-	<rule from="^http://req\.connect\.wunderloop\.net/"
-		to="https://req.connect.wunderloop.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

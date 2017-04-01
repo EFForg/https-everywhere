@@ -1,35 +1,47 @@
 <!--
 	Other News Corporation rulesets:
-
 		- News-Corporation.xml
 		- News-Corporation-mismatches.xml
 
+	Non-functional hosts:
+		Certificate mismatch:
+			- i.marketwatch.com
+			- communitycontent.marketwatch.com
+			- static.marketwatch.com
+
+		Certificate expire:
+			- store.marketwatch.com
+
+		Refused:
+			- sm.marketwatch.com
+
+		Timeout:
+			- admin.marketwatch.com
+
+  		Redirect to HTTP:
+			- blogs.marketwatch.com
+
+		4xx client error:
+			 - accounts.marketwatch.com
+			 - dev.accounts.marketwatch.com
+			 - int.accounts.marketwatch.com
+
+		5xx server error:
+			 - portfolio.marketwatch.com
 -->
 <ruleset name="Marketwatch.com">
-
-	<target host="marketwatch.com" />
-	<target host="*.marketwatch.com" />
-	<target host="i.mktw.net" />
-	<target host="i.origin.mktw.net" />
-
-
-	<securecookie host="^\.marketwatch\.com$" name=".*" />
-
-
-	<!--	Data appear identical.
-		Since we know the CDN, be kind and point there.		-->
-	<rule from="^https?://(communitycontent|[is]|static)\.marketwatch\.com/"
-		to="https://a248.e.akamai.net/f/1731/67675/12h/$1.marketwatch.com/" />
-
-	<rule from="^https?://i\.mktw\.net/"
-		to="https://a248.e.akamai.net/f/1731/67675/12h/i.mktw.net/" />
-
-	<!--	If they're pointing explicitly to origin, there's
-		probably a good reason for that, so stick with it.	-->
-	<rule from="^http://i\.origin\.mktw\.net/"
-		to="https://i.origin.mktw.net/" />
-
-	<rule from="^http://(?:secure\.|www\.)?marketwatch\.com/"
-		to="https://secure.marketwatch.com/" />
-
+	<!-- <target host="marketwatch.com" /> #8123 -->
+	<!-- <target host="www.marketwatch.com" /> #8123 -->
+	<target host="id.marketwatch.com" />
+	<target host="s.marketwatch.com" />
+	<target host="s1.marketwatch.com" />
+	<target host="s2.marketwatch.com" />
+	<target host="s3.marketwatch.com" />
+	<target host="s4.marketwatch.com" />
+	<target host="secure.marketwatch.com" />
+	
+	<securecookie host="secure\.marketwatch\.com$" name=".+" />
+	
+	<!-- <rule from="^http://(www\.)?marketwatch\.com/" to="https://secure.marketwatch.com/" /> #8123 -->
+	<rule from="^http:" to="https:" />
 </ruleset>

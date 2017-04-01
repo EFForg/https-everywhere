@@ -1,22 +1,62 @@
 <!--
 	Other Springshare rulesets:
 
+		- Guide_FAQ.com.xml
 		- LibAnswers.xml
+		- LibApps.com.xml
+		- LibCal.com.xml
 		- LibGuides.xml
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *springshare.com:
 
-		- lgproc.aws.springshare.com
+		- lgproc.aws
+		- help *
+
+	* Redirects to http
+
+
+	Problematic hosts in *springshare.com:
+
+		- blog *
+		- buzz *
+		- calendar *
+		- support *
+
+	* Mismatched
+
+
+	Mixed content:
+
+		- css on blog from fonts.googleapis.com *
+		- Images on calendar from lgimages.s3.amazonaws.com
+
+	* Secured by us
 
 -->
-<ruleset name="Springshare">
+<ruleset name="Springshare.com (partial)">
 
 	<target host="springshare.com" />
-	<target host="www.springshare.com" />
+	<target host="ask.springshare.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.springshare\.com/(?:$|favicon\.ico|images/|img/|style\.css)" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://www.springshare.com/favicon.ico" /-->
+			<!--test url="http://www.springshare.com/images/blue-bullet.png" /-->
+			<!--test url="http://www.springshare.com/images/icon-lc-88.png" /-->
+			<!--test url="http://www.springshare.com/images/top_logo.png" /-->
+			<!--test url="http://www.springshare.com/img/white_menu_divider.gif" /-->
+			<!--test url="http://www.springshare.com/styles.css" /-->
 
 
-	<rule from="^http://(www\.)?springshare\.com/"
-		to="https://$1springshare.com/" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,32 +1,69 @@
 <!--
-	Other Oracle rulesets:
-
-		- MySQL.xml
-		- Oracle.xml
-		- Oracle-mismatches.xml
+	For other Oracle coverage, see Oracle.xml.
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *netbeans.org:
 
-		- bits		(times out)
-		- edu		(cert: forums; displays planetnetbeans.org data)
-		- plugins	(times out)
-		- wiki		(ditto)
-		- (www.)	(cert: forums; displays planetnetbeans.org data)
+		- bits ¹
+		- plugins ²
+		- wiki ¹
+
+	¹ Refused
+	² Handshake fails
 
 
-	See Oracle-mismatches for problematic rules.
+	www.netbeans.org: redirect differs
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- netbeans.org
+		- .netbeans.org
+		- forums.netbeans.org
+
+
+	Mixed content:
+
+		- Images on edu from (www.)?netbeans.org *
+
+	* Secured by us
 
 -->
-<ruleset name="NetBeans (partial)">
+<ruleset name="NetBeans.org (partial)">
 
-	<target host="forums.netbeans.org"/>
+	<!--	Direct rewrites:
+				-->
+	<target host="netbeans.org" />
+	<target host="asset-0.netbeans.org" />
+	<target host="asset-1.netbeans.org" />
+	<target host="asset-2.netbeans.org" />
+	<target host="asset-3.netbeans.org" />
+	<target host="edu.netbeans.org" />
+	<target host="forums.netbeans.org" />
+	<target host="services.netbeans.org" />
+
+	<!--	Complications:
+				-->
+	<target host="www.netbeans.org" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<test url="http://netbeans.org/projects/www/" />
 
 
-	<securecookie host="^forums\.netbeans\.org$" name=".*"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^netbeans\.org$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.netbeans\.org$" name="^_junction2_session$" /-->
+	<!--securecookie host="^forums\.netbeans\.org$" name="^(phpbb2mysql_data|phpbb2mysql_sid)$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://forums\.netbeans\.org/"
-		to="https://forums.netbeans.org/"/>
+	<rule from="^http://www\.netbeans\.org/"
+		to="https://netbeans.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,127 @@
+<!--
+	CDN buckets:
+
+		- www.outbrain.com.edgesuite.net
+
+			- wp
+
+
+	Nonfunctional subdomains:
+
+		- help *
+
+	* Desk.com / redirects to http
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- wp ⁴
+
+	¹ Cert only matches *.outbrain.com
+	⁴ Akamai / mismatched
+
+
+	Partially covered hosts in *outbrain.com:
+
+		- www
+
+
+	These altnames don't exist:
+
+		- www.lp.outbrain.com
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .outbrain.com
+		- lp.outbrain.com
+		- my.outbrain.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+
+			- selfserve from unbouncepages-com.s3.amazonaws.com *
+			- selfserve from dl.dropbox.com *
+
+		- Images on selfserve from dl.dropbox.com *
+		- favicon on lp from www.outbrain.com *
+
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Outbrain.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="amplifypixel.outbrain.com" />
+	<target host="blog.outbrain.com" />
+	<target host="editorial.outbrain.com" />
+	<target host="images.outbrain.com" />
+	<target host="log.outbrain.com" />
+	<target host="lp.outbrain.com" />
+	<target host="my.outbrain.com" />
+	<target host="odb.outbrain.com" />
+	<target host="paid.outbrain.com" />
+	<target host="selfserve.outbrain.com" />
+	<target host="storage.outbrain.com" />
+	<target host="traffic.outbrain.com" />
+	<target host="u.outbrain.com" />
+	<target host="u2.outbrain.com" />
+	<target host="vra.outbrain.com" />
+	<target host="vrp.outbrain.com" />
+	<target host="vrt.outbrain.com" />
+	<target host="widgets.outbrain.com" />
+	<target host="www.outbrain.com" />
+
+	<!--	Complications:
+				-->
+	<target host="outbrain.com" />
+	<target host="wp.outbrain.com" />
+
+		<!--exclusion pattern="^http://(help|selfserve)\.outbrain\.com/" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.outbrain\.com/($|blog$)" /-->
+
+		<exclusion pattern="^http://www\.outbrain\.com/(?!/*(?:assets/|favicon\.ico|images/|wp-content/|wp-includes/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.outbrain.com/about/company" />
+			<test url="http://www.outbrain.com/blog" />
+			<test url="http://www.outbrain.com/contact" />
+			<test url="http://www.outbrain.com/de/contact" />
+			<test url="http://www.outbrain.com/engage" />
+			<test url="http://www.outbrain.com/es/amplify" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.outbrain.com/favicon.ico" />
+			<test url="http://www.outbrain.com/images/logo.png" />
+			<test url="http://www.outbrain.com/wp-content/themes/outbrain_2014/images/global/logo.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.outbrain\.com$" name="^(?:obuid|ubvt)$" /-->
+	<!--securecookie host="^editorial\.outbrain\.com$" name="^obroute$" /-->
+	<!--securecookie host="^lp\.outbrain\.com$" name="^(ubpv|ubvs)$" /-->
+	<!--securecookie host="^my\.outbrain\.com$" name="^(JSESSIONID|obroute2)$" /-->
+
+	<securecookie host="^\." name="^ubvt$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://(?:wp\.)?outbrain\.com/"
+		to="https://www.outbrain.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

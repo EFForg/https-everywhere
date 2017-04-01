@@ -1,25 +1,47 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *tiscali.it:
 
-		- abbonati *
-		- business *
-		- fax *
-		- servizi *
+		- (www.)? ᵈ
+		- ambiente ʳ
+		- business ᵈ
+		- cloud ᵈ
+		- fax ᵈ
+		- gamesurf ᵈ
+		- lifestyle ᵃ
+		- meteo ᵃ
+		- motori ʳ
+		- notizie ᵈ
+		- archivio.notizie ᵃ
+		- rd ᵃ
+		- rubriche ʳ
+		- servizi ᵈ
+		- socialwifi ᵃ
+		- speedtest ʳ
+		- spettacoli ᵈ
+		- sport ᵃ
+		- tecnologia ᵃ
+		- vacanze ᵈ
+		- viaggi ᶠ
 
-	* Dropped
+	ᵃ Shows another domain
+	ᵈ Dropped
+	ᶠ Handshake fails
+	ʳ Refused
 
 
-	Problematic subdomains:
+	Problematic hosts in *tiscali.it:
 
-		- mobile	(works, expired 2012-09-09)
+		- incontri ᵐ
+
+	ᵐ Mismatched
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these hosts:
 
-		- assistenza
-		- mail
-		- selfcare
-		- webcenter
+		- aziende.tiscali.it
+		- casa.tiscali.it
+		- freelosophy.tiscali.it
+		- partitaiva.tiscali.it
 
 
 	Mixed content:
@@ -32,8 +54,9 @@
 
 		- Web bugs, on:
 
-			- assistenza from tiscaliadv01.webtrekk.net *
-			- assistenza from statse.webtrendslive.com *
+			- abbonati, aziende, casa, freelosophy, partitaiva from bs.serving-sys.com *
+			- abbonati, assistenza, aziende, casa, freelosophy, partitaiva from tiscaliadv01.webtrekk.net *
+			- abbonati, assistenza, aziende, casa, freelosophy, partitaiva from statse.webtrendslive.com *
 			- assistenza.business from tiscaliadv01.webtrekk.net *
 			- assistenza.business from statse.webtrendslive.com *
 			- webcenter from tiscaliadv01.webtrekk.net *
@@ -44,13 +67,39 @@
 -->
 <ruleset name="Tiscali.it (partial)">
 
-	<target host="*.tiscali.it" />
+	<!--	Direct rewrites:
+				-->
+	<target host="abbonati.tiscali.it" />
+	<target host="assistenza.tiscali.it" />
+	<target host="aziende.tiscali.it" />
+	<target host="casa.tiscali.it" />
+	<target host="freelosophy.tiscali.it" />
+	<target host="mail.tiscali.it" />
+	<target host="mobile.tiscali.it" />
+	<target host="partitaiva.tiscali.it" />
+	<target host="selfcare.tiscali.it" />
+	<target host="servizi.tiscali.it" />
+	<target host="webcenter.tiscali.it" />
+
+	<!--	Complications:
+				-->
+	<target host="incontri.tiscali.it" />
 
 
-	<securecookie host="^mail\.tiscali\.it$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:aziende|casa|freelosophy|partitaiva)\.tiscali\.it$" name="^PHPSESSID$" /-->
+
+	<!--	Breaks login:
+				-->
+	<!--securecookie host="^mail\.tiscali\.it$" name="." /-->
+	<securecookie host="^(?!mail\.)." name="." />
 
 
-	<rule from="^http://(assistenza|mail|selfcare|webcenter)\.tiscali\.it/"
-		to="https://$1.tiscali.it/" />
+	<rule from="^http://incontri\.tiscali\.it/"
+		to="https://www.meetic.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

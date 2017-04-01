@@ -1,0 +1,90 @@
+<!--
+	Coventry City Council
+
+	For rules causing false/broken MCB, see coventry.gov.uk-falsemixed.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *coventry.gov.uk:
+
+		- cyclemaps ʳ
+		- democraticservices ᵃ
+		- epetitions *
+		- moderngov ᵃ
+		- planning ᵈ
+		- recyclingclub ᵈ
+
+	* Redirects to www.secure-usb.co.uk
+	ᵃ Shows secure.democraticservices.coventry.gov.uk
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *coventry.gov.uk:
+
+		- ^ ᵐ
+		- clg ᵐ
+		- resourcelink ᶜ
+		- taxbenefits ˣ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+	ˣ Mixed css
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- secure.democraticservices.coventry.gov.uk
+		- payments.coventry.gov.uk
+		- taxbenefits.coventry.gov.uk
+		- www.coventry.gov.uk
+		- .www.coventry.gov.uk
+
+
+	Mixed content:
+
+		- css on taxbenefits from www.coventry.gov.uk ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Coventry.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="secure.democraticservices.coventry.gov.uk" />
+	<target host="myaccount.coventry.gov.uk" />
+	<target host="payments.coventry.gov.uk" />
+	<!--target host="resourcelink.coventry.gov.uk" /-->
+	<!--target host="taxbenefits.coventry.gov.uk" /-->
+	<target host="www.coventry.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="coventry.gov.uk" />
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://taxbenefits.coventry.gov.uk/publicaccesslive/selfservice/citizenportal/login.htm;jsessionid=" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^secure\.democraticservices\.coventry\.gov\.uk$" name="^(?:_mglogon_|ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^payments\.coventry\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^taxbenefits\.coventry\.gov\.uk$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^www\.coventry\.gov\.uk$" name="^\w{16}$" /-->
+	<!--securecookie host="^\.www\.coventry\.gov\.uk$" name="^TestCookie$" /-->
+
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\.www\." name="." />
+
+
+	<rule from="^http://coventry\.gov\.uk/"
+		to="https://www.coventry.gov.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

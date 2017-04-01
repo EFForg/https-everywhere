@@ -1,4 +1,11 @@
 <!--
+	Other TheJournal rulesets:
+
+		- dailyedge.ie.xml
+		- jrnl.ie.xml
+		- the42.ie.xml
+
+
 	CDN buckets:
 
 		- cdn.thejournal.ie.s3.amazonaws.com
@@ -9,58 +16,127 @@
 			- s[0-3].thejournal.ie
 
 
-	Problematic domains:
+	Nonfunctional hosts in *thejournal.ie:
 
-		- s[0-3].jrnl.ie	(cloudfront)
-		- static.jrnl.ie	(works; mismatched, CN: *.thejournal.ie)
+		- advertising ᵈ
 
-		 thejournal.ie subdomains:
-
-			- ^		(times out)
-			- cdn		(amazonws)
-			- jobs		(works; mismatched, CN: *.adverts.ie)
-			- s[0-3]	(cloudfront)
+	ᵈ Dropped
 
 
-	Fully covered domains:
+	Problematic hosts in thejournal.ie:
 
-		- s[0-3].jrnl.ie	(→ d1icb8fuiosdrj.cloudfront.net)
-		- static.jrnl.ie	(→ static.thejournal.ie)
+		- ^ ᵐ
+		- businessetc ᵐ
+		- cdn		(amazonws)
+		- inside ᵐ
+		- jobs ᵐ
+		- r ᵐ
+		- s[0-3]	(cloudfront)
+		- static ᵐ
+		- thedailyedge ᵐ
+		- thescore ᵐ
 
-		- thejournal.ie subdomains:
+	ᵐ Mismatched
 
-			- (www.)	(^ → www)
-			- businessetc
-			- cdn		(→ s3-eu-west-1.amazonaws.com/cdn.thejournal.ie/)
-			- s[0-3]	(→ d1icb8fuiosdrj.cloudfront.net)
-			- static
-			- thedailyedge
-			- thescore
+
+	Insecure cookies are set for these domains:
+
+		- .thejournal.ie
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- businessetc, inside, www from static.jrnl.ie ˢ
+			- businessetc, inside, www from c[0123].thejournal.ie ˢ
+			- businessetc, inside, www from f[123].thejournal.ie ˢ
+			- businessetc, inside, www from img2.thejournal.ie ˢ
+			- inside from chart.apis.google.com
+			- inside from cdn.thejournal.ie ˢ
+
+		- Ads/bugs on businessetc, inside, www from b.scorecardresearch.com ˢ
+
+	ˢ Secured by us
 
 -->
 <ruleset name="TheJournal.ie">
 
-	<target host="*.jrnl.ie" />
+	<!--	Direct rewrites:
+				-->
+	<target host="b0.thejournal.ie" />
+	<target host="careers.thejournal.ie" />
+	<target host="c0.thejournal.ie" />
+	<target host="c1.thejournal.ie" />
+	<target host="c2.thejournal.ie" />
+	<target host="c3.thejournal.ie" />
+	<target host="f0.thejournal.ie" />
+	<target host="f1.thejournal.ie" />
+	<target host="f2.thejournal.ie" />
+	<target host="f3.thejournal.ie" />
+	<target host="img0.thejournal.ie" />
+	<target host="img2.thejournal.ie" />
+	<target host="www.thejournal.ie" />
+
+	<!--	Complications:
+				-->
 	<target host="thejournal.ie" />
-	<target host="*.thejournal.ie" />
+	<target host="cdn.thejournal.ie" />
+	<target host="s0.thejournal.ie" />
+	<target host="s1.thejournal.ie" />
+	<target host="s2.thejournal.ie" />
+	<target host="s3.thejournal.ie" />
+	<target host="static.thejournal.ie" />
+	<target host="thedailyedge.thejournal.ie" />
+	<target host="thescore.thejournal.ie" />
 
 
-	<securecookie host="^\.thejournal\.ie$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.thejournal\.ie$" name="^(?:__cfduid|cf_clearance|jSID|notice_cookies)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://s\d\.(?:jrn|thejourna)l\.ie/"
-		to="https://d1icb8fuiosdrj.cloudfront.net/" />
+	<!--rule from="^http://[cfs]\d\.(?:jrn|thejourna)l\.ie/"
+		to="https://d1icb8fuiosdrj.cloudfront.net/" /-->
 
-	<rule from="^http://static\.jrnl\.ie/"
-		to="https://static.thejournal.ie/" />
-
-	<rule from="^http://(?:www\.)?thejournal\.ie/"
+	<rule from="^http://thejournal\.ie/"
 		to="https://www.thejournal.ie/" />
-
-	<rule from="^http://(businessetc|thedailyedge|static|thescore)\.thejournal\.ie/"
-		to="https://$1.thejournal.ie/" />
 
 	<rule from="^http://cdn\.thejournal\.ie/"
 		to="https://s3-eu-west-1.amazonaws.com/cdn.thejournal.ie/" />
+
+	<rule from="^http://s\d\.thejournal\.ie/"
+		to="https://d1icb8fuiosdrj.cloudfront.net/" />
+
+	<rule from="^http://static\.thejournal\.ie/"
+		to="https://b0.thejournal.ie/" />
+
+	<rule from="^http://thedailyedge\.thejournal\.ie/"
+		to="https://www.dailyedge.ie/" />
+
+	<!--	Redirect keeps path and args, but not forward slash:
+									-->
+	<rule from="^http://thescore\.thejournal\.ie/+(?=$|\?|.+/(?:$|\?))"
+		to="https://www.the42.ie/" />
+
+		<test url="http://thescore.thejournal.ie/beyonce/news/" />
+		<test url="http://thescore.thejournal.ie/dope/news/" />
+		<test url="http://thescore.thejournal.ie/hawkeye/news/" />
+		<test url="http://thescore.thejournal.ie/naas/news/" />
+
+	<!--	Redirect keeps path, and args, but not forward
+		slash, and appends forward slash after path:
+								-->
+	<rule from="^http://thescore\.thejournal\.ie/+([^?]*)"
+		to="https://www.the42.ie/$1/" />
+
+		<test url="http://thescore.thejournal.ie/my-feed" />
+		<test url="http://thescore.thejournal.ie/rugby" />
+		<test url="http://thescore.thejournal.ie/topic/australia" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

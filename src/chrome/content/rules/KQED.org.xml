@@ -7,37 +7,37 @@
 	Problematic domains:
 
 		- u.s.kqed.org		(shows www.kqed.org; mismatched, CN: *.kqed.org)
+		- www.kqed.org ²
 
-
-	Partially covered domains:
-
-		- (www.)kqed.org	(some pages redirect to http)
-
-
-	Fully covered domains:
-
-		- a.s.kqed.net
-		- u.s.kqed.net
-		- u.s.kqed.org	(→ u.s.kqed.net)
+	² Redirects to http
 
 -->
 <ruleset name="KQED.org (partial)">
 
-	<target host="*.s.kqed.net" />
+	<!--	Direct rewrites:
+				-->
+	<target host="a.s.kqed.net" />
+	<target host="u.s.kqed.net" />
 	<target host="kqed.org" />
-	<target host="*.kqed.org" />
+
+	<!--	Complications:
+				-->
+	<target host="u.s.kqed.org" />
+	<target host="www.kqed.org" />
+
+		<test url="http://www.kqed.org/assets/flash/kqedplayer.swf" />
 
 
 	<securecookie host="^\.kqed\.org$" name="^_(?:chartbeat2|_qca|_utm\w)$" />
 
 
-	<rule from="^http://(a|u)\.s\.kqed\.(?:net|org)/"
-		to="https://$1.s.kqed.net/" />
+	<rule from="^http://u\.s\.kqed\.org/"
+		to="https://u.s.kqed.net/" />
 
-	<!--	^ redirects to www over http,
-		so copy that behavior:
-					-->
-	<rule from="^http://(?:www\.)?kqed\.org/(assets/|(?:controller|donate)(?:$|[?/])|favicon\.ico|lib/)"
-		to="https://www.kqed.org/$1" />
+	<rule from="^http://www\.kqed\.org/"
+		to="https://kqed.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,65 @@
+<!--
+	For rules causing false/broken MCB, see nlx.org-falsemixed.xml.
+
+
+	CDN buckets:
+
+		- de.nlx.org.s3.amazonaws.com
+		- d2e48ltfsb5exy.cloudfront.net	← css, png
+		- dn9tckvz2rpxv.cloudfront.net	← seo
+
+
+	Problematic hosts in *nlx.org:
+
+		- (www.)? * ᵐ
+		- css ᵐ
+		- de ᵐ
+		- png ᵐ
+		- seo ᵐ
+
+	* Mixed css at redirect destination
+	ᵐ Mismatched
+
+-->
+<ruleset name="nlx.org (partial)">
+
+	<!--	Complications:
+				-->
+	<!--target host="nlx.org" /-->
+	<target host="css.nlx.org" />
+	<target host="de.nlx.org" />
+	<target host="png.nlx.org" />
+	<target host="seo.nlx.org" />
+	<!--target host="www.nlx.org" /-->
+
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<!--rule from="^http://(?:www\.)?nlx\.org/+(?:\?.*)?$"
+		to="https://us.jobs/" /-->
+
+		<!--test url="http://nlx.org/default.aspx" /-->
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<!--rule from="^http://(?:www\.)?nlx\.org/+"
+		to="https://us.jobs/?404;https://nlx.org:443/" /-->
+
+	<rule from="^http://(?:css|png)\.nlx\.org/"
+		to="https://d2e48ltfsb5exy.cloudfront.net/" />
+
+		<test url="http://css.nlx.org/usjobs_static/css/mobileStyles.css" />
+		<test url="http://png.nlx.org/content_ms/files/facebook.png" />
+
+	<rule from="^http://de\.nlx\.org/"
+		to="https://s3.amazonaws.com/de.nlx.org/" />
+
+		<test url="http://de.nlx.org/logos/nlx-de-tag.gif" />
+
+	<rule from="^http://seo\.nlx\.org/"
+		to="https://dn9tckvz2rpxv.cloudfront.net/" />
+
+		<test url="http://seo.nlx.org/acxiom.jobs/aboutads.png" />
+
+</ruleset>

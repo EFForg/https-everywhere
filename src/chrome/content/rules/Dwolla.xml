@@ -1,13 +1,77 @@
+<!--
+	For rules causing false/broken MCB, see Dwolla.com-falsemixed.xml.
+
+
+	Nonfunctional hosts in *dwolla.com:
+
+		- help *
+
+	* Redirects to http
+
+
+	Problematic hosts in *dwolla.com:
+
+		- blog ¹
+		- press ¹
+		- status ²
+
+	¹ Mixed css
+	² StatusPage.io/mismatched
+
+
+	Insecure cookies are set for these domains:
+
+		- .dwolla.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- blog, press from $self *
+			- press from fonts.googleapis.com *
+
+		- Images on blog, press from $self *
+
+	* Secured by us
+
+-->
 <ruleset name="Dwolla (partial)">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="dwolla.com" />
+	<target host="api.dwolla.com" />
+	<target host="api-devint.dwolla.com" />
+	<target host="api-uat.dwolla.com" />
+	<!--target host="blog.dwolla.com" /-->
+	<target host="cdn.dwolla.com" />
+	<target host="developers.dwolla.com" />
+	<target host="discuss.dwolla.com" />
+	<target host="docsv2.dwolla.com" />
+	<target host="jobs.dwolla.com" />
 	<target host="fisync.dwolla.com" />
+	<target host="legal.dwolla.com" />
+	<!--target host="press.dwolla.com" /-->
+	<target host="uat.dwolla.com" />
 	<target host="www.dwolla.com" />
 
-	<securecookie host="^(fisync|www)\.dwolla\.com$"
-			name=".+" />
+	<!--	Complications:
+				-->
+	<target host="status.dwolla.com" />
 
-	<rule from="^(http://(www\.)?|https://)dwolla\.com/"
-		to="https://www.dwolla.com/" />
-	<rule from="^http://fisync\.dwolla\.com/"
-		to="https://fisync.dwolla.com/" />
+
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.dwolla\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://status\.dwolla\.com/"
+		to="https://dwolla.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

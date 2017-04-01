@@ -1,0 +1,52 @@
+<!--
+	For other JanRain coverage, see JanRain.xml.
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/static.rpxnow.com/
+
+			- Equivalent to docj27ko03fnu.cloudfront.net
+
+		- d29usylhdk1xyu.cloudfront.net
+
+			- widget-cdn.rpxnow.com
+
+
+	Clients have unique subdomains:
+
+-->
+<ruleset name="RPXNow.com (partial)">
+
+	<target host="rpxnow.com" />
+	<target host="*.rpxnow.com" />
+
+		<exclusion pattern="^http://(?:[^.]+\.){2,}rpxnow\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.rpxnow.com/" />
+			<test url="http://exists.not.rpxnow.com/" />
+
+		<test url="http://cdn.rpxnow.com/" />
+		<test url="http://widget-cdn.rpxnow.com/" />
+		<test url="http://www.rpxnow.com/" />
+
+		<!--	clients:
+				-->
+		<test url="http://chinaaid.rpxnow.com/" />
+		<test url="http://spopconfig.rpxnow.com/" />
+
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://static\.rpxnow\.com/"
+		to="https://s3.amazonaws.com/static.rpxnow.com/" />
+
+		<test url="http://static.rpxnow.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,36 +1,52 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *centos.org:
 
-		- bugs			(shows blank tree; expired 2012-05-23, CN: localhost.localdomain)
 		- lists			(refused)
 		- mirror-status		(403; md5 signed, expired 2007-04-05)
-		- wiki			(db connection failure, valid cert)
+		- seven	³
+		- vault ¹
+
+	¹ Refused
+	³ Redirects to git.centos.org
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains and hosts:
 
-		- (www.)
-		- projects
+		- .fr.centos.org
+		- git.centos.org
 
 
-	Observed cookie domains:
+	Mixed content:
 
-		- ^
-		- bugs
-		- www
+		- Images on wiki from $self *
+		- Bugs on wiki from creativecommons.org *
+
+	* Secured by us
 
 -->
 <ruleset name="CentOS.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="centos.org" />
-	<target host="*.centos.org" />
-		<exclusion pattern="^http://(?:bugs|wiki)\." />
+	<target host="bugs.centos.org" />
+	<target host="cbs.centos.org" />
+	<target host="fr.centos.org" />
+	<target host="git.centos.org" />
+	<target host="projects.centos.org" />
+	<target host="wiki.centos.org" />
+	<target host="www.centos.org" />
 
 
-	<securecookie host="^(?:www\.)?centos\.org$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.fr\.centos\.org$" name="^phpbb3_\w+_(k|sid|u)$" /-->
+	<!--securecookie host="^git\.centos\.org$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(projects\.|www\.)?centos\.org/"
-		to="https://$1centos.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

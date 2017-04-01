@@ -1,40 +1,63 @@
 <!--
-	For other US government coverage,
-	see US-government.xml.
+	U.S. Securities and Exchange Commission
+
+	For other US government coverage, see US-government.xml.
 
 
-	Nonfunctional:
+	Nonfunctional hosts in *sec.gov:
 
-		- xbrl.sec.gov
+		- search ¹
+		- xbrl ²
+
+	¹ Dropped
+	² Refused
+
+
+	Problematic hosts in *sec.gov:
+
+		- datapreview *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	These altnames don't exist:
+
+		- tcr.sec.gov
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.sec.gov
+
+
+	Mixed content:
+
+		- css on www, www-test from fonts.googleapis.com *
+
+	* Secured by us
 
 -->
-<ruleset name="U.S. Securities and Exchange Commission (partial)" platform="mixedcontent">
+<ruleset name="SEC.gov">
 
-	<target host="investor.gov" />
-	<target host="www.investor.gov" />
+	<!--	Direct rewrites:
+				-->
 	<target host="sec.gov" />
+	<!--target host="datapreview.sec.gov" /-->
+	<target host="www.onlineforms.edgarfiling.sec.gov" />
+	<target host="www.edgarfiling.sec.gov" />
+	<target host="searchwww.sec.gov" />
 	<target host="www.sec.gov" />
+	<target host="www-test.sec.gov" />
 
 
-	<!--	At least the homepage redirects to http.	-->
-	<rule from="^http://(www\.)?investor\.gov/sites/"
-		to="https://$1investor.gov/sites/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.sec\.gov$" name="^datacenter$" /-->
 
-	<!--	Cert only matches www.sec.gov.	-->
-	<rule from="^https?://sec\.gov/"
-		to="https://www.sec.gov/" />
+	<securecookie host="." name="." />
 
-	<rule from="^http://www\.sec\.gov/"
-		to="https://www.sec.gov/" />
 
-        <!-- Search results from the HTTPS EDGAR search form are always invalid,
-             regardless of how we get there (even with HTTPS Everywhere disabled,
-             even if the SEC's own HTTPS homepage sends us here!) -->
-        <rule from="^https://www\.sec\.gov/edgar/searchedgar/companysearch\.html"
-              to="http://www.sec.gov/edgar/searchedgar/companysearch.html"
-              downgrade="1" />
-        <!-- Similarly, actual EDGAR results are invalid in HTTPS. -->
-        <rule from="^https://www\.sec\.gov/cgi-bin/browse-edgar"
-              to="http://www.sec.gov/cgi-bin/browse-edgar"
-              downgrade="1" />
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

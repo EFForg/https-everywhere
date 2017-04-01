@@ -1,0 +1,39 @@
+<!--
+	Other Parameter Security rulesets:
+
+		- ShowMeCon.com.xml
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- showmecon ²
+
+	¹ CloudFlare error (Invalid SSL certificate)
+	² Mismatched, CN: www.showmecon.com
+
+-->
+<ruleset name="Parameter Security.com">
+
+	<target host="parametersecurity.com" />
+	<target host="showmecon.parametersecurity.com" />
+	<target host="www.parametersecurity.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.parametersecurity\.com$" name="PHPSESSID" /-->
+
+	<securecookie host="^(?:www)?\.parametersecurity\.com$" name=".+" />
+
+
+	<rule from="^http://parametersecurity\.com/"
+		to="https://www.parametersecurity.com/" />
+
+	<rule from="^http://showmecon\.parametersecurity\.com/"
+		to="https://showmecon.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

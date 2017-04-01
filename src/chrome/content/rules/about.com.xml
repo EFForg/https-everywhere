@@ -1,0 +1,58 @@
+<!--
+	For rules causing false/broken MCB, see about.com-falsemixed.xml.
+
+
+	(www.)?about.com: refused
+
+
+	Problematic hosts in *about.com:
+
+		- index ᵐ
+		
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .about.com
+		- www.index.about.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images on mediakit from $self ˢ
+		- Bug on mediakit from bcp.crwdcntrl.net ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="About.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.index.about.com" />
+	<target host="mediakit.about.com" />
+
+	<!--	Complications:
+				-->
+	<target host="index.about.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.about\.com$" name="^(?:ucs?|user)$" /-->
+	<!--securecookie host="^www\.index\.about\.com$" name="^[\da-f]{32}$" /-->
+
+	<securecookie host="^\." name="^_ga" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://index\.about\.com/"
+		to="https://www.index.about.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

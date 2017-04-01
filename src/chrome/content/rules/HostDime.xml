@@ -1,21 +1,81 @@
-<!--	!functional:
+<!--
 		- (www.)dizinc.com	(ssl_error_rx_record_too_long)
-		- status.hostdime.com	(ssl_error_rx_record_too_long)
+
+
+	Nonfunctional hosts in *hostdime.com:
+
+		- dns *
+
+	* Plaintext reply
+
+
+	Problematic hosts in *hostdime.com:
+
+		- jobs *
+		- status *
+
+	* Shows www.hostdime.com
+
+
+	These altnames don't exist:
+
+		- www.core.hostdime.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.hostdime.com
+
+
+	Mixed content:
+
+		- iframe on www from $self ¹ ²
+
+	¹ Secured by us
+	² 404 page only
+
 -->
-<ruleset name="HostDime (partial)">
+<ruleset name="HostDime.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="hostdime.com"/>
-	<target host="*.hostdime.com"/>
-	<target host="hostdimedomains.com"/>
-	<target host="www.hostdimedomains.com"/>
+	<target host="core.hostdime.com" />
+	<target host="forum.hostdime.com" />
+	<target host="www.hostdime.com" />
 
-	<securecookie host="^(.*\.)?hostdime\.com$" name=".*"/>
+	<!--	Complications:
+				-->
+	<target host="jobs.hostdime.com"/>
+	<target host="status.hostdime.com"/>
 
-	<rule from="^http://(core\.|forum\.|www\.)?hostdime\.com/"
-		to="https://$1hostdime.com/"/>
 
-	<!--	cert !match !www	-->
-	<rule from="^http://(?:www\.)?hostdimedomains\.com/"
-		to="https://www.hostdimedomains.com/"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.hostdime\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^(?:.*\.)?hostdime\.com$" name=".*"/>
+
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://jobs\.hostdime\.com/[^?]*"
+		to="https://www.hostdime.com/jobs/" />
+
+		<test url="http://jobs.hostdime.com//" />
+		<test url="http://jobs.hostdime.com/?foo" />
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://status\.hostdime\.com/[^?]*"
+		to="https://www.hostdime.com/facilities/server-status/" />
+
+		<test url="http://status.hostdime.com//" />
+		<test url="http://status.hostdime.com/?foo" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,16 +1,40 @@
-<!-- This rule was automatically generated based on an HSTS
-     preload rule in the Chromium browser.  See
-     https://src.chromium.org/viewvc/chrome/trunk/src/net/http/transport_security_state_static.h
-     for the list of preloads.  Sites are added to the Chromium HSTS
-     preload list on request from their administrators, so HTTPS should
-     work properly everywhere on this site.
+<!--
+	Insecure cookies are set for these domains and hosts:
 
-     Because Chromium and derived browsers automatically force HTTPS for
-     every access to this site, this rule applies only to Firefox. -->
-<ruleset name="Shodan.io" platform="firefox">
-<target host="shodan.io" />
+		- .shodan.io
+		- account.shodan.io
 
-<securecookie host="^shodan\.io$" name=".+" />
+-->
+<ruleset name="Shodan.io">
 
-<rule from="^http://shodan\.io/" to="https://shodan.io/" />
+	<!--	Direct rewrites:
+				-->
+	<target host="shodan.io" />
+	<target host="*.shodan.io" />
+
+		<test url="http://account.shodan.io/" />
+		<test url="http://cli.shodan.io/" />
+		<test url="http://developer.shodan.io/" />
+		<test url="http://exploits.shodan.io/" />
+		<test url="http://honeyscore.shodan.io/" />
+		<test url="http://ics-radar.shodan.io/" />
+		<test url="http://icsmap.shodan.io/" />
+		<test url="http://maltego.shodan.io/" />
+		<test url="http://maps.shodan.io/" />
+		<test url="http://scanhub.shodan.io/" />
+		<test url="http://static.shodan.io/" />
+		<test url="http://www.shodan.io/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.shodan\.io" name="^(?:__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^account\.shodan\.io$" name="^session$" /-->
+
+	<securecookie host="^(?:account)?\.shodan\.io$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

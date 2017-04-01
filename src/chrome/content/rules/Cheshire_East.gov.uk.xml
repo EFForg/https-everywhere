@@ -1,0 +1,95 @@
+<!--
+	Cheshire East Council
+
+	For rules causing MCB, see Cheshire_East.gov.uk-mixedcontent.xml.
+
+
+	Nonfunctional hosts in *cheshireeast.gov.uk:
+
+		- (www.)? ᵈ
+		- businessdirectory ³
+		- ceias ᵈ
+		- doc ʳ
+		- planning ᵃ
+		- whatson ³
+
+	³ 403
+	ᵃ Shows another domain
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *cheshireeast.gov.uk:
+
+		- apps ˣ
+		- forms ᵐ
+		- moderngov ᶜ ˣ
+		- online ˣ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+	ˣ Mixed css
+
+
+	Insecure cookies are set for these hosts:
+
+		- fisolive.cheshireeast.gov.uk
+		- leisure.cheshireeast.gov.uk
+		- moderngov.cheshireeast.gov.uk
+		- myaccount.cheshireeast.gov.uk
+		- online.cheshireeast.gov.uk
+
+
+	Mixed content:
+
+		- css, on:
+		
+			- apps from $self ˢ
+			- moderngov, online from www.cheshireeast.gov.uk ᵈ
+
+		- Images, on:
+		
+			- apps from $self ˢ
+			- moderngov from www.cheshireeast.gov.uk ᵈ
+
+	ᵈ Unsecurable <= dropped
+	ˢ Secured by us
+
+-->
+<ruleset name="Cheshire East.gov.uk (partial)">
+
+	<!--target host="apps.cheshireeast.gov.uk" /-->
+	<target host="cecpp.cheshireeast.gov.uk" />
+	<target host="erevenues.cheshireeast.gov.uk" />
+	<target host="fisolive.cheshireeast.gov.uk" />
+	<target host="ice.cheshireeast.gov.uk" />
+	<target host="leisure.cheshireeast.gov.uk" />
+	<!--target host="moderngov.cheshireeast.gov.uk" /-->
+	<target host="myaccount.cheshireeast.gov.uk" />
+	<!--target host="online.cheshireeast.gov.uk" /-->
+	<target host="opendata.cheshireeast.gov.uk" />
+	<target host="schooladmissions.cheshireeast.gov.uk" />
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://apps.cheshireeast.gov.uk/CE_SilverCloudBusinessDirectory2.htm" /-->
+		<!--test url="http://online.cheshireeast.gov.uk/MyCollectionDay/" /-->
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://fisolive.cheshireeast.gov.uk/PublicEnquiry/Search.aspx?searchID=312" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^fisolive\.cheshireeast\.gov\.uk$" name="^(?:ASP\.NET_SessionId|PETestCookie)$" /-->
+	<!--securecookie host="^(?:leisure|moderngov|online)\.cheshireeast\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^myaccount\.cheshireeast\.gov\.uk$" name="^cookietest$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

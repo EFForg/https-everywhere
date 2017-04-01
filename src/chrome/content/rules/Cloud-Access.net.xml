@@ -2,26 +2,36 @@
 	clientarea-cloudaccess.netdna-ssl.com
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *cloudaccess.net:
 
-		- learning	(cert: demo6.cloudaccess.net, self-signed;
-				shows that domain's data)
+		- learning *
+
+	* Shows another domain
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.cloudaccess.net
 
 -->
-<ruleset name="Cloud Access.net (partial)">
+<ruleset name="CloudAccess.net (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="cloudaccess.net" />
-	<target host="*.cloudaccess.net" />
+	<target host="billing.cloudaccess.net" />
+	<target host="ccp.cloudaccess.net" />
+	<target host="www.cloudaccess.net" />
 
 
-	<securecookie host="^.*\.cloudaccess\.net$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.cloudaccess\.net$" name="^[\da-f]{32}$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<!--	Cert only matches www.	-->
-	<rule from="^https?://(?:www\.)?cloudaccess\.net/"
-		to="https://www.cloudaccess.net/" />
-
-	<rule from="^http://billing\.cloudaccess\.net/"
-		to="https://billing.cloudaccess.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

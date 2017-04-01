@@ -1,0 +1,116 @@
+<!--
+	CDN buckets:
+
+		- 801-morris-prod.advance.net
+
+			- rpt-transit
+
+		- hssn-prod.advance.net.edgesuite.net
+
+			- highschoolsports
+
+		- imgick-prod.advance.net.edgesuite.net
+
+			- imgick
+
+		- mdw-prod.advance.net.edgesuite.net
+
+			- autos
+			- realestate
+
+		- mt4-prod.advance.net.edgesuite.net
+
+			- a68.b.akamai.net
+			- connect
+			- media
+			- topics
+
+		- www-prod.advance.net.edgesuite.net
+
+			- www
+
+		- oregonlive.findnsave.com
+
+			- findnsave
+
+		- oregonlive.advance.ypbot.net
+
+			- businessfinder
+
+
+	Nonfunctional subdomains:
+
+		- ^ ¹
+		- autos ¹
+		- businessfinder ²
+		- connect ³
+		- highschoolsports ³
+		- imgick ³
+		- realestate ³
+		- rpt-transit ¹
+		- topics ³
+		- www ³
+
+	¹ Refused
+	² Redirects to http, valid cert
+	³ 503, akamai
+
+
+	Problematic subdomains:
+
+		- findnsave ¹
+		- media ²
+
+	¹ Mismatched, CN: *.findnsave.com
+	² Akamai
+
+
+	Partially covered subdomains:
+
+		- findnsave ¹
+		- media ²
+
+	¹ Some paths redirect to http
+	² css references resources relative to root
+
+
+	Mixed content:
+
+		- css on member from fonts.googleapis.com ¹
+
+		- Images on findnsave from imagecdn-\d.findnsave.com ²
+
+	¹ Secured by us
+	² Unsecurable <= 403
+
+-->
+<ruleset name="Oregon Live.com (partial)">
+
+	<target host="member.oregonlive.com" />
+	<target host="findnsave.oregonlive.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://findnsave\.oregonlive\.com/+($|\?|forgot_password($|[?/])|favicon\.ico)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://findnsave\.oregonlive\.com/+((join|login)($|[?/]))" /-->
+		<!--
+			Reference resources relative to root:
+								-->
+		<!--exclusion pattern="^http://media\.oregonlive\.com/+(design/alpha/css/adv-ziplist|static/(css/adv_footer|css/adv_toprail|olive/static/css/affiliate))\.css" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^member\.oregonlive\.com$" name=".+" />
+
+
+	<rule from="^http://member\.oregonlive\.com/"
+		to="https://member.oregonlive.com/" />
+
+	<rule from="^http://findnsave\.oregonlive\.com/(?=(?:join|login)(?:$|[?/])|static/)"
+		to="https://oregonlive.findnsave.com/" />
+
+</ruleset>

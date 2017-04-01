@@ -1,9 +1,65 @@
-<ruleset name="Flightaware">
-    <target host="flightaware.com" />
-    <target host="*.flightaware.com" />
+<!--
+	Nonfunctional hosts in *flightaware.com:
 
-    <rule from="^https?://flightaware\.com/"
-        to="https://flightaware.com/" />
-    <rule from="^http://([A-Za-z][A-Za-z])?\.flightaware\.com/"
-        to="https://$1.flightaware.com/" />
+		- embed ⁴
+
+	⁴ 404
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .flightaware.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="FlightAware.com (partial)">
+
+	<target host="flightaware.com" />
+	<target host="*.flightaware.com" />
+
+		<exclusion pattern="^(?!http://((?:[a-z][a-z]|discussions|origin|photos|www)\.)?flightaware\.com/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://embed.flightaware.com/" />
+			<test url="http://embed.flightaware.com/live/airport/EGSS" />
+			<test url="http://embed.flightaware.com/live/airport/KLAX" />
+			<test url="http://embed.flightaware.com/live/airport/KLGA/" />
+			<test url="http://embed.flightaware.com/live/airport/KSLC" />
+			<test url="http://embed.flightaware.com/live/airport/VIDP" />
+			<test url="http://embed.flightaware.com/squawks/link/1/24_hours/new/54407/Aircraft_Incident_Isles_de_Madeleine_Quebec" />
+
+		<test url="http://ar.flightaware.com/" />
+		<test url="http://de.flightaware.com/" />
+		<test url="http://discussions.flightaware.com/" />
+		<test url="http://es.flightaware.com/" />
+		<test url="http://fr.flightaware.com/" />
+		<test url="http://he.flightaware.com/" />
+		<test url="http://it.flightaware.com/" />
+		<test url="http://ja.flightaware.com/" />
+		<test url="http://ko.flightaware.com/" />
+		<test url="http://nl.flightaware.com/" />
+		<test url="http://origin.flightaware.com/" />
+		<test url="http://photos.flightaware.com/photos/retriever/6f1d0e0d2a15978b8ce249c457f1a4f371d42e81" />
+		<test url="http://pt.flightaware.com/" />
+		<test url="http://ru.flightaware.com/" />
+		<test url="http://sv.flightaware.com/" />
+		<test url="http://tr.flightaware.com/" />
+		<test url="http://uk.flightaware.com/" />
+		<test url="http://www.flightaware.com/" />
+		<test url="http://zh.flightaware.com/" />
+
+
+	<!--	Not seured by server:
+					-->
+	<!--securecookie host="^\.flightaware\.com$" name="^phpbb3_\w+_(?:k|sid|u)$" /-->
+
+	<securecookie host="^\." name="^(?:__qca$|phpbb3_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

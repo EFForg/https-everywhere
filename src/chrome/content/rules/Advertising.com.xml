@@ -30,28 +30,60 @@
 
 		- ace-tag		(→ secure.ace-tag)
 		- secure.ace-tag
+		- sync.adaptv
 		- leadback		(→ secure.leadback)
 		- secure.leadback
 		- servedby
 		- uac		(→ secure.uac)
 		- secure.uac
 
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .advertising.com
+		- .adaptv.advertising.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
 -->
 <ruleset name="Advertising.com (partial)">
 
-	<target host="*.advertising.com" />
+	<!--	Direct rewrites:
+					-->
+	<target host="secure.ace.advertising.com" />
+	<target host="secure.ace-tag.advertising.com" />
+	<target host="sync.adaptv.advertising.com" />
+	<target host="secure.leadback.advertising.com" />
+	<target host="secure.uac.advertising.com" />
+	<target host="servedby.advertising.com" />
+
+	<!--	Special cases:
+				-->
+	<target host="ace.advertising.com" />
+	<target host="*.ace.advertising.com" />
+	<target host="ace-tag.advertising.com" />
+	<target host="leadback.advertising.com" />
+	<target host="uac.advertising.com" />
+
+		<test url="http://r1.ace.advertising.com/" />
+		<test url="http://r1-ads.ace.advertising.com/" />
 
 
-	<securecookie host="^\.advertising\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.advertising\.com$" name="^^(ACID|ASCID|C2|GUID|LB)$" /-->
+	<!--securecookie host="^\.adaptv\.advertising\.com$" name="^rtbData0$" /-->
+
+	<securecookie host="^\.(?:adaptv\.)?advertising\.com$" name=".+" />
 
 
-	<rule from="^https?://(?:[\w-]+\.)?ace\.advertising\.com/"
+	<rule from="^http://(?:[\w-]+\.)?ace\.advertising\.com/"
 		to="https://secure.ace.advertising.com/" />
 
-	<rule from="^https?://(?:secure\.)?(ace-tag|leadback|uac)\.advertising\.com/"
+	<rule from="^http://(ace-tag|leadback|uac)\.advertising\.com/"
 		to="https://secure.$1.advertising.com/" />
 
-	<rule from="^http://servedby\.advertising\.com/"
-		to="https://servedby.advertising.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,75 @@
+<!--
+	Ames Laboratory
+
+	For other U.S. government coverage, see US-government.xml.
+
+
+	Problematic hosts in *ameslab.gov:
+
+		- alvideo ᶜ
+		- www.external ᵃ
+		- www.icq9 ᶜ ᵐ
+		- www2.metcer ᵐ
+		- www.msg ᶜ ᵐ
+		- www.quasi ᶜ ᵐ
+		- www.reflec ᶜ ᵐ
+
+	ᵃ Shows another domain; preemptable redirect
+	ᵐ Mismatched
+
+
+	These altnames do not exist:
+
+		- ameslab.gov
+
+-->
+<ruleset name="Ames Lab.gov (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="alvideo.ameslab.gov" /-->
+	<target host="cmi.ameslab.gov" />
+	<target host="webmail.ameslab.gov" />
+	<target host="www.ameslab.gov" />
+
+	<!--	Complications:
+				-->
+	<target host="www.external.ameslab.gov" />
+	<!--target host="www.icq9.ameslab.gov" /-->
+	<!--target host="www.msg.ameslab.gov" /-->
+	<!--target host="www.quasi.ameslab.gov" /-->
+	<!--target host="www.reflec.ameslab.gov" /-->
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps all:
+					-->
+	<rule from="^http://www\.external\.ameslab\.gov/"
+		to="https://www.ameslab.gov/" />
+
+	<!--	Redirect drops single \?:
+						-->
+	<!--rule from="^http://www\.(icq9|quasi)\.ameslab\.gov/\??$"
+		to="https://alvideo.ameslab.gov/archive/$1" /-->
+
+		<!--test url="http://www.icq9.ameslab.gov/?" /-->
+		<!--test url="http://www.quasi.ameslab.gov/?" /-->
+
+	<!--	Redirect prepends forward slash:
+						-->
+	<!--rule from="^http://www\.(icq9|quasi|reflec)\.ameslab\.gov/"
+		to="https://alvideo.ameslab.gov/archive/$1/" /-->
+
+		<!--test url="http://www.icq9.ameslab.gov/Award%20Winners.html" /-->
+		<!--test url="http://www.quasi.ameslab.gov/Bib.html" /-->
+		<!--test url="http://www.reflec.ameslab.gov/?" /-->
+
+	<!--rule from="^http://www\.msg\.ameslab\.gov/"
+		to="https://www.msg.chem.iastate.edu/" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

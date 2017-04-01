@@ -2,77 +2,79 @@
 	CDN buckets:
 
 		- img.zemanta.com.s3.amazonaws.com
+		- s3.amazonaws.com/z1-static/
 		- s3.amazonaws.com/zstyle/
 
 		- d1r7mnnsvydqxs.cloudfront.net
 
 			- i.zemanta.com
 
-		- d25rszouhfu52v.cloudfront.net
-
-			- content.zemanta.com
-
 		- wac.bab2.edgecastcdn.net
 
 			- rp.zamenta.com
 
 
-	Nonfunctional domains:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
-		- zemanta.com subdomains:
-
-			- developer ¹
-			- rp		(404; mismatched, CN: gp1.wac.edgecastcdn.net)
-			- techcircle ¹
-
-	¹ 400; self-signed, mismatched, CN: api-opp.zemanta.com
-
-
-	Problematic domains:
-
-		- zemanta.com *
-		- (www.)zemantamedia.com	(works; mismatched, CN: *.zemanta.com)
-
-	 * Handshake fails; self-signed, mismatched, CN: api-opp.zemanta.com
-
-
-	Observed cookie domains:
-
+		- .zemanta.com
+		- one.zemanta.com
 		- prefs.zemanta.com
+		- www.zemanta.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
 
-		- js, on www from:
+		- css on prefs from fonts.googleapis.com *
+		- Images on www from static1.squarespace.com *
 
-			- $self
-			- s0.wp.com *
-
-		- css, on:
-
-			- prefs from fonts.googleapis.com *
-			- www from $self
-
-		- Images on www from $self
-
-		- Web bug on www from stats.wordpress.com *
-
-	* Secured by us
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Zemanta (partial)">
+<ruleset name="Zemanta.com">
 
-	<target host="*.zemanta.com" />
+	<target host="zemanta.com" />
+	<target host="content.zemanta.com" />
+	<target host="i.zemanta.com" />
+	<target host="img.zemanta.com" />
+	<target host="one.zemanta.com" />
+	<target host="p1.zemanta.com" />
+	<target host="paid.zemanta.com" />
+	<target host="prefs.zemanta.com" />
+	<target host="r1.zemanta.com" />
+	<target host="rp.zemanta.com" />
+	<target host="wprp.zemanta.com" />
+	<target host="www.zemanta.com" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://p1.zemanta.com/p/261/onelanding/" /-->
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://content.zemanta.com/static/js/pageview.js" />
+		<test url="http://i.zemanta.com/339807482_80_80.jpg" />
+		<test url="http://img.zemanta.com/pixy.gif?x-id=" />
+		<test url="http://wprp.zemanta.com/static/js/loader.js" />
+
+		<!--	$ 404s, so:
+					-->
+		<test url="http://r1.zemanta.com/r/u1bo2zclvhmo/yahoo/1035/95659/" />
 
 
-	<!--	Tracking beacon.	-->
-	<rule from="^http://img\.zemanta\.com/"
-		to="https://s3.amazonaws.com/img.zemanta.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.zemanta\.com$" name="^(?:SS_MID|zcl|zuid)$" /-->
+	<!--securecookie host="^one\.zemanta\.com$" name="^csrftoken$" /-->
+	<!--securecookie host="^prefs\.zemanta\.com$" name="^(?:csrftoken|sessionid)$" /-->
+	<!--securecookie host="^www\.zemanta\.com$" name="^crumb$" /-->
 
-	<rule from="^http://content\.zemanta\.com/"
-		to="https://d25rszouhfu52v.cloudfront.net/" />
+	<securecookie host="^\." name="^(?:__cfduid$|_gat?$|_gat_|SS_MID|cf_clearance|zcl)$" />
+	<securecookie host="^\w" name="." />
 
-	<rule from="^http://i\.zemanta\.com/"
-		to="https://d1r7mnnsvydqxs.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

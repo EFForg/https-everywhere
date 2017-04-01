@@ -1,5 +1,5 @@
 <!--
-	about & event.gigaom.com are handled in WordPress-blogs.xml.
+	For other Knowingly Inc. coverage, see knowingly.com.xml.
 
 
 	CDN buckets:
@@ -7,75 +7,91 @@
 		- gigaom-pro-files.s3.amazonaws.com
 
 
-	Problematic subdomains:
+	Nonfunctional hosts in *gigaom.com:
 
-		- about ¹
-		- events ¹
-		- jobs ²
-		- support ³
-		- techjobs ⁴
-		- www ¹
+		- event ʳ
+		- events ᵖ
 
-	¹ wordpress
-	² 200 "error"; mismatched, CN: www.jobthread.com
-	³ zendesk
-	⁴ Works; mismatched, CN: www.jobthread.com
+	ᵖ Plaintext reply
+	ʳ Refused
 
 
-	Observed cookie domains:
+	Problematic hosts in *gigaom.com:
 
-		- .
-		- go
-		- pro
-		- research
-		- support
+		- jobs ᵐ
+		- support ʰ
+		- techjobs ³
+
+	³ 403
+	ʰ Zendesk / redirects to http
+	ᵐ Mismatched, CN: www.jobthread.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- gigaom.com
+		- .gigaom.com
+		- about.gigaom.com
+		- accounts.gigaom.com
+		- research.gigaom.com
+		- www.gigaom.com
 
 
 	Mixed content:
 
-		- css on techjobs from s0.wp.com *
+		- css on jobs from www.gigaom.com ˢ
+		- Web bugs on ^, jobs from b.scorecardresearch.com ˢ
 
-		- Images, on:
-
-			- ^ from gigaom2.files.wordpress.com *
-			- events from 1.gravatar.com *
-			- go from $self *
-
-		- Web bugs on ^ from b.scorecardresearch.com *
-
-	* Secured by us
+	ˢ Secured by us
 
 -->
-<ruleset name="GigaOM (partial)">
+<ruleset name="GigaOM.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="gigaom.com" />
-	<target host="*.gigaom.com" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://research\.gigaom\.com/+($|\?|(topic/buyers-lens|webinars)($|[?/]))" /-->
-		<!--
-			Exceptions:
+	<target host="about.gigaom.com" />
+	<target host="accounts.gigaom.com" />
+	<target host="research.gigaom.com" />
+	<target host="www.gigaom.com" />
+
+	<!--	Complications:
+				-->
+	<target host="jobs.gigaom.com" />
+
+		<!--	Formerly redirected to http:
+							-->
+		<test url="http://research.gigaom.com/analysts" />
+		<test url="http://research.gigaom.com/topic/buyers-lens" />
+		<test url="http://research.gigaom.com/webinars" />
+
+
+	<!--	Not secured by server:
 					-->
-		<exclusion pattern="^http://research\.gigaom\.com/+(?!favicon\.ico|(?:analysts|subscription|wp-admin)(?:$|[?/])|wp-content/|wp-includes/)" />
+	<!--securecookie host="^(?:(?:about|accounts|research|www)\.)?gigaom\.com$" name="^X-Mapping-" /-->
+
+	<securecookie host="^\." name="^_(?:_qca|gat?)$" />
+	<securecookie host="^(?!jobs\.)\w" name="." />
 
 
-	<securecookie host="^\.gigaom\.com$" name="^wordpress_test_cookie$" />
-	<securecookie host="^(?:go|pro)\.gigaom\.com$" name=".+" />
-
-
-	<rule from="^http://(?:www\.)?gigaom\.com/"
-		to="https://gigaom.com/" />
-
-	<!--	Redirects to http before appending slash:
-								-->
-	<rule from="^http://research\.gigaom\.com/analysts(?=$|\?)"
-		to="https://research.gigaom.com/analysts/" />
-
-	<rule from="^http://(go|pro|research)\.gigaom\.com/"
-		to="https://$1.gigaom.com/" />
-
-	<rule from="^http://jobs\.gigaom\.com/(?=images/|files/|partners/)"
+	<rule from="^http://jobs\.gigaom\.com/"
 		to="https://www.jobthread.com/" />
+
+		<exclusion pattern="^http://jobs\.gigaom\.com/+(?!files/|images/|partners/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://jobs.gigaom.com/jt/syndication/feeds.php" />
+			<test url="http://jobs.gigaom.com/post" />
+			<test url="http://jobs.gigaom.com/search" />
+			<test url="http://jobs.gigaom.com/search?" />
+
+			<!--	-ve:
+					-->
+			<test url="http://jobs.gigaom.com/files/post_job_images/4117872/4117872.png" />
+			<test url="http://jobs.gigaom.com/partners/jobthread/css/shared.css" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
