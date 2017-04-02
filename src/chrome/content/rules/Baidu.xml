@@ -1,10 +1,8 @@
 <!--
-	
 	For rules causing MCB, see baidu.com-mixedcontent.xml.
 
 	Other Baidu rulesets:
 		- Baidu_CN.xml	( Only avaiable in China. )
-		- Baidustatic.com.xml
 		- Baifubao.com.xml
 		- bcebos.com.xml
 		- Bdimg.com.xml
@@ -12,9 +10,7 @@
 		- duapp.com.xml
 		- hao123img.com.xml
 
-
 	Nonfunctional hosts in *baidu.com:
-
 		- adm *
 		- antivirus ᵃ
 		- forum.antivirus ᵃ
@@ -44,7 +40,6 @@
 		- hiphotos *
 		- [a-h].hiphotos *
 		- home *
-		- img *
 		- index *
 		- is *
 		- italk *
@@ -103,18 +98,13 @@
 		- static.youhua **
 		- yunjiasu *
 		- yuqing *
-		- zhidao ʰ
-
 	ᵃ Shows another domain
 	ᵇ Shows default page
 	* Times out
 	ᶠ Handshake fails
 	** Internal error
-	ʰ Redirects to http
-
 
 	Problematic hosts:
-
 		- baike ˣ
 		- bdl ²
 		- bs ᵉ
@@ -130,8 +120,6 @@
 		- www.video ²
 		- wenku ˣ
 		- zoo ²
-		- yun	(	Incomplete certificate chain https://github.com/EFForg/https-everywhere/pull/4584	)
-
 	* Dropped
 	ᵉ Expired
 	¹ Insecure renegotiation
@@ -140,21 +128,16 @@
 	ᵘ Untrusted root
 	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
-
 	Partially covered hosts:
-
 		- baiku ˣ
 		- baishi *
 		- v *
 		- (www.)?video *
 		- list.video *
-
 	* Some pages redirect to http
 	ˣ Avoiding MCB
 
-
 	Insecure cookies are set for these domains and hosts: ᶜ
-
 		- baidu.com
 		- .baidu.com
 		- 8.baidu.com
@@ -173,35 +156,30 @@
 		- zhanzhang.baidu.com
 		- zhitongche.baidu.com
 		- zoo.baidu.com
-
 	ᶜ See https://owasp.org/index.php/SecureFlag
 
-
 	Mixed content:
-
 		- css, on:
-
+			- adscdn
 			- baike from baike.bdimg.com
+			- baishi.baidu.com	( break the username and so on in the right-top of page. )
 			- wenku from static.wenku.bdimg.com
-
 		- Images, on:
-
-			- baike from $self ¹
 			- bdl from thumb-bdl.bj.bcebos.com ¹
-			- baike from baike.bdimg.com
-			- baike from himg.bdimg.com
 			- openapi from gimg ²
 			- openapi from apps.bdimg.com ¹
 			- m, m1, wap from m.baidu.com
-			- v, video from [a-h].hiphotos.baidu.com ²
-			- v, video from t1.baidu.com ²
 			- wenku from static.wenku.bdimg.com
 			- zhanzhang from op.baidu.com ²
-
 	¹ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 	* Not secured by us <= missing certificate chain
 	² Unsecurable <= dropped
 
+	Redirect to http:
+		baike.baidu.com	( some pages. )
+		pay.baidu.com
+		v,video	( part of them, like v.baidu.com/$ )
+		zns.baidu.com	https://znsv.baidu.com/customer_search/api/js?sid=8725453834531596266
 -->
 
 <ruleset name="Baidu (partial)">
@@ -222,6 +200,8 @@
 	<target host="datax.baidu.com" />
 		<test url="http://datax.baidu.com/x.js?si=6ab7a391c8d69b4f62b7c54b2d70919c&amp;dm=2345.com" />
 	<target host="developer.baidu.com" />
+	<target host="downapp.baidu.com" />
+		<test url="http://downapp.baidu.com/baiduzhidao/AndroidPhone/7.3.4/1/pcbutton/20161017221135/baiduzhidao_AndroidPhone_7-3-4_pcbutton.apk" />
 	<target host="flight.baidu.com" />
 	<target host="gaokao.baidu.com" />
 	<target host="gsp0.baidu.com" />
@@ -238,6 +218,8 @@
 	<target host="hm.baidu.com" />
 		<test url="http://hm.baidu.com/h.js" />
 	<target host="image.baidu.com" />
+	<target host="img.baidu.com" />
+		<test url="http://img.baidu.com/hunter/alog/alog.min.js" />
 	<target host="m.baidu.com" />
 	<target host="m1.baidu.com" />
 	<target host="m2.baidu.com" />
@@ -252,6 +234,7 @@
 	<target host="m11.baidu.com" />
 	<target host="m12.baidu.com" />
 	<target host="m13.baidu.com" />
+	<target host="api.map.baidu.com" />
 	<target host="muzhi.baidu.com" />
 	<target host="open2.baidu.com" />
 	<target host="openapi.baidu.com" />
@@ -266,21 +249,14 @@
 	<target host="sp0.baidu.com" />
 	<target host="ss0.baidu.com" />
 	<target host="su.baidu.com" />
-	<target host="tieba.baidu.com" />
-		<!--	MCB:	-->
-		<exclusion pattern="^http://tieba\.baidu\.com/(?!mo/|mo_wowap_pb/)" />
-		<test url="http://tieba.baidu.com/kb/" />
-		<test url="http://tieba.baidu.com/zjstv/" />
-		<test url="http://tieba.baidu.com/mo/" />	
-		<test url="http://tieba.baidu.com/mo_wowap_pb/" />
 	<!--target host="v.baidu.com" /-->
 	<!--target host="video.baidu.com" /-->
 	<target host="wallet.baidu.com" />
 	<target host="wap.baidu.com" />
+	<target host="wapbaike.baidu.com" />
 	<!--target host="wenku.baidu.com" /-->
 	<target host="www.baidu.com" />
-	<target host="static.youhua.baidu.com" />
-	<!--target host="yun.baidu.com"/-->
+	<target host="yun.baidu.com"/>
 	<target host="zhanzhang.baidu.com" />
 	<target host="zhitongche.baidu.com" />
 
@@ -298,18 +274,39 @@
 	<rule from="^http://financestatic\.baidu\.com/"
 		to="https://8.baidu.com/" />
 
-<!--	MCB : (baishi|v|video).baidu.com break the username and so on in the right-top of page.	
+	<target host="tieba.baidu.com" />
+		<!--	MCB:	-->
+		<exclusion pattern="^http://tieba\.baidu\.com/(?!mo/|mo_wowap_pb/)" />
+		<test url="http://tieba.baidu.com/kb/" />
+		<test url="http://tieba.baidu.com/zjstv/" />
+		<test url="http://tieba.baidu.com/mo/" />	
+		<test url="http://tieba.baidu.com/mo_wowap_pb/" />
 
-	<target host="list.video.baidu.com" />
-	<rule from="^http://list\.video\.baidu\.com/"
-		to="https://v.baidu.com/" />
+	<target host="zhidao.baidu.com" />
+		<!--	MCB:	-->
+		<exclusion pattern="^http://zhidao\.baidu\.com/s/" />
+		<exclusion pattern="^http://zhidao\.baidu\.com/zhima/" />
+		<exclusion pattern="^http://zhidao\.baidu\.com/zt/" />
+		<test url="http://zhidao.baidu.com/s/8year/#home" />
+		<test url="http://zhidao.baidu.com/s/activity/index.html" />
+		<test url="http://zhidao.baidu.com/s/gglft/" />
+		<test url="http://zhidao.baidu.com/s/quality/" />
+		<test url="http://zhidao.baidu.com/zhima/" />
+		<test url="http://zhidao.baidu.com/s/zhidaodata1.html" />
+		<test url="http://zhidao.baidu.com/zt/ikapp/index.html" />
+		<test url="http://zhidao.baidu.com/zt/liulanqi/index.html" />
 
-	<target host="www.video.baidu.com" />
-	<rule from="^http://www\.video\.baidu\.com/"
-		to="https://video.baidu.com/" />
-
--->
+	<target host="cpro.baidustatic.com"/>
+		<test url="http://cpro.baidustatic.com/cpro/ui/c.js" />
+		<test url="http://cpro.baidustatic.com/cpro/ui/f.js" />
+	<target host="cpro2.baidustatic.com"/>
+		<test url="http://cpro2.baidustatic.com/cpro/ui/c.js" />
+		<test url="http://cpro2.baidustatic.com/cpro/ui/f.js" />
+	<target host="dup.baidustatic.com"/>
+		<test url="http://dup.baidustatic.com/js/ds.js" />
+	<target host="ubmcmm.baidustatic.com"/>
+		<test url="http://ubmcmm.baidustatic.com/media/v1/0f000a-JueNIFPmTOLDxY6.jpg" />
+		<test url="http://ubmcmm.baidustatic.com/media/v1/0f0005lK65iQdUtS56W--f.swf" />
 
 	<rule from="^http:" to="https:" />
-
 </ruleset>

@@ -1,5 +1,6 @@
 <!--
-	For problematic rules, see MailChimp-mismatches.xml.
+	For rules covering resources which do not secure
+	mixed content, see mailchimp.com-resources.xml.
 
 	Other MailChimp rulesets:
 
@@ -8,106 +9,160 @@
 
 	CDN buckets:
 
-		- s3.amazonaws.com:
-
-			- cdn-images.mailchimp.com
-			- experts-production		(used on experts)
-			- int-dir			(used on connect.; doesn't have "blog" in filenames)
-
+		- cdn-images.mailchimp.com.s3.amazonaws.com
+		- int-dir.s3.amazonaws.com
+		- experts-production.s3.amazonaws.com
+		- mc-delivery-status.s3.amazonaws.com
 		- s3.amazonaws.com/downloads.mailchimp.com/ | d1zgderxoe1a.cloudfront.net
+		- dbfv8p2wljo34.cloudfront.net	← static
 
-		- dbfv8p2wljo34.cloudfront.net
-
-			- static.mailchimp.com
-
-		- dbhkt46el5ri0.cloudfront.net
+		- dbhkt46el5ri0.cloudfront.net	← cdn-images
 
 			- equivalent to cdn-images.mailchimp.com.s3.amazonaws.com
-			- cdn-images.mailchimp.com
 
-		- fukui-9447.herokussl.com
-
-			- connect.mailchimp.com
-
-		- mc-experts.herokuapp.com
-
-			- experts.mailchimp.com
-
-		- mc-status.herokuapp.com		(404, "No such app")
-
-			- status.mailchimp.com
+		- fukui-9447.herokussl.com	← connect
+		- mc-experts.herokuapp.com	← experts
+		- mc-status.herokuapp.com	← status
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *mailchimp.com;
 
-		- 50.23.108.136		(shows sfbloghost)
+		- fastfives ʳ
 
-		- mailchimp.com subdomains:
-
-			- apidocs	(shows sfbloghost, cert valid)
-			- cf		(shows sfbloghost over https, 403 over http)
-			- creative	(hosted on Tumblr)
-			- kb ⁵
-
-	⁵ Dropped
+	ʳ Refused
 
 
-	Problematic subdomains:
+	Problematic hosts in *mailchimp.com;
 
-		- status		(mismatched, CN: *.herokuapp.com)
+		- delivery ᵐ
+		- downloads ᵐ
+		- styleguide ᵐ
+
+	ᵐ Mismatched
 
 
-	Partially covered subdomains:
+	Partially covered hosts in *mailchimp.com;
 
-		- (www.)	(some pages redirect to http)
+		- kb ʰ
+
+	ʰ Some paths redirect to http
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these hosts: ᶜ
 
-		- admin
-		- downloads	(→ d1zgderxoe1a.cloudfront.net)
+		- us\d+.admin.mailchimp.com
+		- kb.mailchimp.com
+		- login.mailchimp.com
+		- lurvin.mailchimp.com
+		- status.mailchimp.com
+		- ux.mailchimp.com
 
-		- \w+.admin:
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
-			- us2
 
-		- blog
-		- cdn-images
-		- connect
-		- experts	(→ mc-experts.herokuapp.com)
-		- gallery
-		- login
-		- sfbloghost
-		- static	(→ dbfv8p2wljo34.cloudfront.net)
+	Mixed content:
 
+		- Image on downloads from gallery.mailchimp.com ˢ
+		- favicon on styleguide, templates from static.mailchimp.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="MailChimp (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="mailchimp.com" />
-	<target host="*.mailchimp.com" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://mailchimp\.com/+($|\?|(about|about/jobs|contact/abuse|favicon\.ico|features|more|pricing|resources/mailchimp-at-work|search)($|[?/]))" /-->
-		<exclusion pattern="^http://mailchimp\.com/+(?!(?:blog|login|signup)(?:$|[?/])|assets/)" />
+	<target host="admin.mailchimp.com" />
+	<target host="*.admin.mailchimp.com" />
+	<target host="us1.api.mailchimp.com" />
+	<target host="apidocs.mailchimp.com" />
+	<target host="blog.mailchimp.com" />
+	<target host="casl.mailchimp.com" />
+	<target host="cdn-images.mailchimp.com" />
+	<target host="cf.mailchimp.com" />
+	<target host="connect.mailchimp.com" />
+	<target host="creative.mailchimp.com" />
+	<target host="developer.mailchimp.com" />
+	<target host="devs.mailchimp.com" />
+	<target host="docmakers.mailchimp.com" />
+	<target host="eventbrite.mailchimp.com" />
+	<target host="experts.mailchimp.com" />
+	<target host="gallery.mailchimp.com" />
+	<target host="inspiration.mailchimp.com" />
+	<!--target host="kb.mailchimp.com" /-->
+	<target host="login.mailchimp.com" />
+	<target host="lurvin.mailchimp.com" />
+	<target host="static.mailchimp.com" />
+	<target host="status.mailchimp.com" />
+	<target host="templates.mailchimp.com" />
+	<target host="ux.mailchimp.com" />
+	<target host="www.mailchimp.com" />
 
+		<exclusion pattern="^http://(?:[^./]+\.){2,}admin\.mailchimp\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.admin.mailchimp.com/" />
+			<test url="http://exists.not.admin.mailchimp.com/" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://kb\.mailchimp\.com/(?:$|(?:accounts|facebook|growth|lists|login)$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://kb\.mailchimp\.com/(?!/*(?:binarie|cs|image)s/)" /-->
+
+			<!--	+ve:
+					-->
+			<!--
+			<test url="http://kb.mailchimp.com/accounts" />
+			<test url="http://kb.mailchimp.com/facebook" />
+			<test url="http://kb.mailchimp.com/growth" />
+			<test url="http://kb.mailchimp.com/lists" />
+			<test url="http://kb.mailchimp.com/login" />
+			-->
+
+			<!--	-ve:
+					-->
+			<!--
+			<test url="http://kb.mailchimp.com/binaries/content/assets/mailchimpkb/kbicon_start.png" />
+			<test url="http://kb.mailchimp.com/css/kb.css" />
+			<test url="http://kb.mailchimp.com/images/winking-freddie.svg" />
+			-->
+
+		<test url="http://us14.admin.mailchimp.com/" />
+		<test url="http://us2.admin.mailchimp.com/" />
+		<test url="http://static.mailchimp.com/web/design/white.png" />
+
+	<!--	Complications:
+				-->
+	<target host="downloads.mailchimp.com" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://downloads.mailchimp.com/querytemplate.html" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:us\d+\.admin|ux)\.mailchimp\.com$" name="^_AVESTA_ENVIRONMENT$" /-->
+	<!--securecookie host="^kb\.mailchimp\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^login\.mailchimp\.com$" name="^_(?:AVESTA_ENVIRONMENT|TEST_COOKIE)$" /-->
+	<!--securecookie host="^lurvin\.mailchimp\.com$" name="_sessions$" /-->
+	<!--securecookie host="^status\.mailchimp\.com$" name="_session$" /-->
 
 	<!--	is wildcard login cookie used on unsecureable pages?
 									-->
-	<securecookie host="^.+\.mailchimp\.com$" name=".+" />
+	<securecookie host="^\." name="^_ga" />
+	<securecookie host=".\.mailchimp\.com$" name="." />
 
-
-	<rule from="^http://((?:(?:\w+\.)?admin|blog|cdn-images|connect|gallery|login|sfbloghost|www)\.)?mailchimp\.com/"
-		to="https://$1mailchimp.com/" />
 
 	<rule from="^http://downloads\.mailchimp\.com/"
 		to="https://d1zgderxoe1a.cloudfront.net/" />
 
-	<rule from="^http://experts\.mailchimp\.com/"
-		to="https://mc-experts.herokuapp.com/" />
-
-	<rule from="^http://static\.mailchimp\.com/"
-		to="https://dbfv8p2wljo34.cloudfront.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

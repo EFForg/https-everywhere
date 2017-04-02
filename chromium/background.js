@@ -206,7 +206,14 @@ function onBeforeRequest(details) {
   uri.href = details.url;
 
   // Should the request be canceled?
-  var shouldCancel = (httpNowhereOn && uri.protocol === 'http:');
+  var shouldCancel = (
+    httpNowhereOn &&
+    uri.protocol === 'http:' &&
+    !/\.onion$/.test(uri.hostname) &&
+    !/^localhost$/.test(uri.hostname) &&
+    !/^127(\.[0-9]{1,3}){3}$/.test(uri.hostname) &&
+    !/^0\.0\.0\.0$/.test(uri.hostname)
+  );
 
   // Normalise hosts such as "www.example.com."
   var canonical_host = uri.hostname;
@@ -241,8 +248,6 @@ function onBeforeRequest(details) {
   }
 
   var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
-  // If no rulesets could apply, let's get out of here!
-  if (potentiallyApplicable.size === 0) { return {cancel: shouldCancel}; }
 
   if (redirectCounter[details.requestId] >= 8) {
     log(NOTE, "Redirect counter hit for " + canonical_url);
@@ -282,6 +287,15 @@ function onBeforeRequest(details) {
   }
 
   if (httpNowhereOn) {
+    // If loading a main frame, try the HTTPS version as an alternative to
+    // failing.
+    if (shouldCancel) {
+      if (!newuristr) {
+        return {redirectUrl: canonical_url.replace(/^http:/, "https:")};
+      } else {
+        return {redirectUrl: newuristr.replace(/^http:/, "https:")};
+      }
+    }
     if (newuristr && newuristr.substring(0, 5) === "http:") {
       // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
       return {cancel: true};

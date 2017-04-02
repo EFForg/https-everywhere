@@ -29,16 +29,16 @@ if [ $# -gt 0 ] ; then
 fi
 if ! python2.7 test/rules/src/https_everywhere_checker/check_rules.py \
       test/rules/coverage.checker.config; then
-  cat <<EOF
+  echo '
 Ruleset test coverage was insufficient.
 
 Under the new ruleset testing rules (February 2015), any modified ruleset
 must have sufficient test coverage. You can often improve test coverage by
-adding <test url='...' /> tags, or by restructuring the rule to avoid
+adding <test url="..." /> tags, or by restructuring the rule to avoid
 wildcard <target> tags. See these documents:
 https://github.com/EFForg/https-everywhere/blob/master/ruleset-testing.md
-https://github.com/EFForg/https-everywhere/blob/master/ruleset-style.md
-EOF
+https://github.com/EFForg/https-everywhere/blob/master/CONTRIBUTING.md#ruleset-style-guide
+'
   exit 1
 else
   exit 0

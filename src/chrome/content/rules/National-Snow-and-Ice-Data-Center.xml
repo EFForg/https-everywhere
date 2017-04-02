@@ -1,37 +1,45 @@
 <!--
-	Covered nsidc.org subdomains:
+	503, HTTPS only:
+		- noaa_waf.apps.nsidc.org
+		- soac.apps.nsidc.org
 
-		- ^
-		- extranet
-		- staging.extranet
-		- igloo
-		- integration.igloo
-		- qa.igloo
-		- staging.igloo
-		- integration
-		- qa
-		- staging
+	Expired certificate:
+		- support.nsidc.org
 
+	Incomplete certificate chain:
+		- n5eil01u.ecs.nsidc.org
 
-	Certificate also matches these subdomains:
+	Invalid certificate:
+		- www.nsidc.org
+		- integration.igloo.nsidc.org
+		- qa.igloo.nsidc.org
+		- staging.igloo.nsidc.org
 
-		- ops
-		- scm
-		- wordpress
-		- staging.wordpress
+	No working URL known:
+		- inside.nsidc.org
+		- staging.inside.nsidc.org
 
+	Mixed content errors:
+		- http://nsidc.org/arcticseaicenews/charctic-interactive-sea-ice-graph/
 -->
+
 <ruleset name="National Snow and Ice Data Center">
-
 	<target host="nsidc.org" />
-	<target host="*.nsidc.org" />
+	<target host="www.nsidc.org" />
+	<target host="daacdata.apps.nsidc.org" />
+	<target host="smap_op.apps.nsidc.org" />
+	<target host="extranet.nsidc.org" />
 	<target host="staging.extranet.nsidc.org" />
-	<target host="*.igloo.nsidc.org" />
+	<target host="igloo.nsidc.org" />
+	<target host="integration.nsidc.org" />
+	<target host="qa.nsidc.org" />
+	<target host="staging.nsidc.org" />
 
+	<securecookie host="((daacdata|smap_op)\.apps|(staging\.)?extranet|igloo|integration|qa|staging|support)\.nsidc.org" name=".+" />
 
-	<!--	Cert doesn't match www.
-					-->
-	<rule from="^http://(?:((?:staging\.)?extranet\.|(?:integration\.|qa\.|staging\.)?igloo\.|integration\.|monitor\.|qa\.|staging\.)|www\.)?nsidc\.org/"
-		to="https://$1nsidc.org/" />
+	<exclusion pattern="^http://nsidc\.org/arcticseaicenews/charctic-interactive-sea-ice-graph/" />
+		<test url="http://nsidc.org/arcticseaicenews/charctic-interactive-sea-ice-graph/" />
 
+	<rule from="^http://www\.nsidc\.org/" to="https://nsidc.org/" />
+	<rule from="^http:" to="https:" />
 </ruleset>

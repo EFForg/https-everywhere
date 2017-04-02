@@ -34,6 +34,15 @@ fi
 
 lower=$(echo "$1" | tr A-Z a-z)
 escaped=$(echo "$lower" | sed 's/\./\\./g' )
+
+duplicate=$(grep -EHin '<target\s+host="(w+\.)?'$escaped'"\s*/>' *.xml)
+if [ -n "$duplicate" ]
+then
+  echo "error: $lower already exists:" >&2
+  echo "$duplicate" >&2
+  exit 1
+fi
+
 if [ "$#" -gt 1 ] ; then
     to="$2"
 else
@@ -41,6 +50,15 @@ else
 fi
 
 cat > "$dest" <<END
+<!--
+	Nonfunctional hosts in *.$lower:
+
+	h: http redirect
+	m: certificate mismatch
+	r: connection refused
+	s: self-signed certificate
+	t: timeout on https
+-->
 <ruleset name="$capitalized">
 	<target host="$lower" />
 	<target host="www.$lower" />

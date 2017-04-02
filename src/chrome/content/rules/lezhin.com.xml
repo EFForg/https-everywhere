@@ -1,21 +1,30 @@
 <ruleset name="lezhin.com">
 	<!--
 	Certificate error:
-	social.lezhin.com
 	help.lezhin.com
-	ncdn.lezhin.com
-	cdn.lezhin.com
+	\d+cdn.lezhin.com
 
-	Refused by HTTP 404:
-	desk.lezhin.com
+	Refused by HTTP 403:
 	link.lezhin.com
 	-->
 	
 	<target host="lezhin.com" />
 	<target host="www.lezhin.com" />
 	<target host="m.lezhin.com" />
+	<target host="desk.lezhin.com" />
+	<target host="social.lezhin.com" />
+	<target host="ggtoon.lezhin.com" />
+	<target host="cdn.lezhin.com" />
+	<target host="acdn.lezhin.com" />
+	<target host="ncdn.lezhin.com" />
 
 	<!-- https://lezhin.com gets refused -->
 	<rule from="^http://lezhin\.com/" to="https://www.lezhin.com/" />
+	
+	<!-- multiple www.lezhin.com -->
+	<rule from="^http://(\d+)www\.lezhin\.com/" to="https://$1www.lezhin.com/" />
+	<test url="http://0www.lezhin.com/" />
+	<test url="http://2www.lezhin.com/" />
+	
 	<rule from="^http:" to="https:" />
 </ruleset>

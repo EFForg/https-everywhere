@@ -1,33 +1,48 @@
 <!--
 	CDN buckets:
 
-		- 415662973.r.cdn77.net
-
-			- forumscdn
-
 		- 334199234.r.cdn77.net 
 
 			- imagescdn
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *tweaktown.com:
 
-		- (www.) *
-		- downloads *
-		- forums *
+		- (www.)? ʰ
+		- downloads ʰ
 
-	* http reply
+	ʰ Redirects to http
 
 
-	CN: *.r.worldssl.net
+	Problematic hosts in *tweaktown.com:
+
+		- imagescdn ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .tweaktown.com
+		- forums.tweaktown.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="TweakTown.com (partial)" default_off="mismatched">
+<ruleset name="TweakTown.com (partial)">
 
-	<target host="*.tweaktown.com" />
+	<target host="forums.tweaktown.com" />
+	<target host="images.tweaktown.com" />
 
 
-	<rule from="^http://(forum|image)scdn\.tweaktown\.com/"
-		to="https://$1scdn.tweaktown.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.tweaktown\.com$" name="^bb_sessionhash$" /-->
+	<!--securecookie host="^forums\.tweaktown\.com$" name="^PHPSESSID$" /-->
 
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

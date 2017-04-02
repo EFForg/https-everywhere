@@ -1,21 +1,34 @@
 <!--
-	Nonfunctional subdomains:
+	Insecure cookies are set for these hosts: ᶜ
 
-		- www	(refused)
+		- app.subscriptiongenius.com
+		- checkout.subscriptiongenius.com
+		- developer.subscriptiongenius.com
+		- www.subscriptiongenius.com
 
-
-	^subscriptiongenius.com does not exist
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="SubscriptionGenius.com (partial)">
+<ruleset name="SubscriptionGenius.com">
 
+	<target host="subscriptiongenius.com" />
+	<target host="app.subscriptiongenius.com" />
 	<target host="checkout.subscriptiongenius.com" />
+	<target host="developer.subscriptiongenius.com" />
+	<target host="support.subscriptiongenius.com" />
+	<target host="www.subscriptiongenius.com" />
 
 
-	<securecookie host="^checkout\.subscriptiongenius\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:app|checkout|developer)\.subscriptiongenius\.com$" name="^(?:PHPSESSID$|X-Mapping-)" /-->
+	<!--securecookie host="^www\.subscriptiongenius\.com$" name="^X-Mapping-" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://checkout\.subscriptiongenius\.com/"
-		to="https://checkout.subscriptiongenius.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

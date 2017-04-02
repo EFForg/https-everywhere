@@ -1,0 +1,104 @@
+<!--
+	Nonfunctional hosts in *topshop.com:
+
+		- www.careers ᶠ
+		- japan ᵃ
+
+	ᵃ Shows another domain
+	ᶠ Handshake fails
+
+
+	Problematic hosts in *topshop.com:
+
+		- insideout ʳ
+		- m ᵀ
+		- m.us ᵀ
+
+	ᵀ Blocks Tor users
+	ʳ Refused, preemptable redirect
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- .topshop.com
+		- de.topshop.com
+		- eu.topshop.com
+		- fr.topshop.com
+		- .fr.topshop.com
+		- il.topshop.com
+		- .il.topshop.com
+		- cdn.il.topshop.com
+		- incdn.il.topshop.com
+		- m.topshop.com
+		- my.topshop.com
+		- .my.topshop.com
+		- sg.topshop.com
+		- .sg.topshop.com
+		- th.topshop.com
+		- .th.topshop.com
+		- .us.topshop.com
+		- m.us.topshop.com
+		- www.topshop.com
+		- .www.topshop.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Topshop.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="topshop.com" />
+	<target host="au.topshop.com" />
+	<target host="cdn-au.topshop.com" />
+	<target host="de.topshop.com" />
+	<target host="eu.topshop.com" />
+	<target host="fr.topshop.com" />
+	<target host="il.topshop.com" />
+	<target host="cdn.il.topshop.com" />
+	<target host="incdn.il.topshop.com" />
+	<target host="media.topshop.com" />
+	<target host="mediaus.topshop.com" />
+	<target host="my.topshop.com" />
+	<target host="sg.topshop.com" />
+	<target host="sstats.topshop.com" />
+	<target host="us.topshop.com" />
+	<target host="www.topshop.com" />
+
+	<!--	Complications:
+				-->
+	<target host="insideout.topshop.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.topshop\.com$" name="^(?:incap_ses_\d+_\d+|s_vi|visid_incap_\d+)$" /-->
+	<!--securecookie host="^de\.topshop\.com$" name="^(?:akavpau_VP_TS|usergeo)$" /-->
+	<!--securecookie host="^eu\.topshop\.com$" name="^(?:WC_ACTIVEPOINTER|WC_AUTHENTICATION_-\d+|WC_GENERIC_ACTIVITYDATA|WC_PERSISTENT|WC_SESSION_ESTABLISHED|WC_USERACTIVITY_-\d+|akavpau_VP_TS)$" /-->
+	<!--securecookie host="^fr\.topshop\.com$" name="^(?:Apache|JSESSIONID|WC_PERSISTENT|akavpau_VP_TS|usergeo)$" /-->
+	<!--securecookie host="^\.fr\.topshop\.com$" name="^geoIpCtry$" /-->
+	<!--securecookie host="^\.(?:fr|us|www)\.topshop\.com$" name="^usergeo$" /-->
+	<!--securecookie host="^(?:cdn\.|incdn\.)?il\.topshop\.com$" name="^___utm" /-->
+	<!--securecookie host="^\.il\.topshop\.com$" name="^(?:frontend|incap_ses_\d+_\d+)$" /-->
+	<!--securecookie host="^(?:m|th|m\.us|www)\.topshop\.com$" name="^akavpau_VP_TS$" /-->
+	<!--securecookie host="^my\.topshop\.com$" name="^(?:Apache|akavpau_VP_TS)$" /-->
+	<!--securecookie host="^sg\.topshop\.com$" name="^(?:Apache|akavpau_VP_TS)$" /-->
+	<!--securecookie host="^\.sg\.topshop\.com$" name="^(?:prefShipCtry|userCountry\userLanguage|usergeo)$" /-->
+	<!--securecookie host="^\.(?:fr|us|www)\.topshop\.com$" name="^usergeo$" /-->
+	<!--securecookie host="^www\.topshop\.com$" name="^akavpau_VP_TS$" /-->
+
+	<securecookie host="^\." name="^(?:__qca|_ga|s_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps all but forward slash:
+							-->
+	<rule from="^http://insideout\.topshop\.com/+"
+		to="https://www.topshop.com/blog/" />
+
+		<test url="http://insideout.topshop.com/2012/05/get-ready-for-richard-nicoll-bridal" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -18,21 +18,18 @@ Fetch error: http://www.apertureinsight.com/ => https://www.apertureinsight.com/
 
 	Problematic hosts in *pulsepoint.com:
 
-		- ^
 		- bh ²
-		- www ²
+		- insights ᵐ
 
 	² Mismatched
+	ᵐ Mismatched
 
 
-	Fully covered hosts in *pulsepoint.com:
-
-		- exchange
-
-
-	Insecure cookies are set for these hosts:
+	Insecure cookies are set for these hosts: ᶜ
 
 		- exchange.pulsepoint.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="PulsePoint (partial)" default_off='failed ruleset test'>
@@ -43,15 +40,19 @@ Fetch error: http://www.apertureinsight.com/ => https://www.apertureinsight.com/
 	<target host="www.apertureinsight.com" />
 	<target host="login.stormpost.datranmedia.com" />
 
+	<target host="pulsepoint.com" />
 	<target host="exchange.pulsepoint.com" />
+	<target host="www.pulsepoint.com" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^exchange\.pulsepoint\.com$" name="^(ASP\.NET_SessionId|AspxAutoDetectCookieSupport)$" /-->
+	<!--securecookie host="^exchange\.pulsepoint\.com$" name="^(?:ASP\.NET_SessionId|AspxAutoDetectCookieSupport|[a-z]{10})$" /-->
 
 	<securecookie host="^www\.apertureinsight\.com$" name=".*" />
 	<securecookie host="^login\.stormpost\.datranmedia\.com$" name=".*" />
+
+	<securecookie host="^\." name="^_ga" />
 	<securecookie host="^exchange\.pulsepoint\.com$" name=".+" />
 
 

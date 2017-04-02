@@ -1,0 +1,40 @@
+<!--
+	Insecure cookies are set for these hosts: ᶜ
+
+		- publish2.me
+		- help.publish2.me
+		- www.publish2.me
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Publish2.me">
+
+	<target host="publish2.me" />
+	<target host="help.publish2.me" />
+	<target host="static4.publish2.me" />
+	<target host="static5.publish2.me" />
+	<target host="www.publish2.me" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://publish2.me/auth/checkout.html?buy=4" /-->
+
+		<test url="http://static4.publish2.me/ext/unify/assets/plugins/revolution_slider/rs-plugin/assets/timer.png" />
+		<test url="http://static5.publish2.me/ext/unify/assets/plugins/revolution_slider/rs-plugin/assets/timer.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?publish2\.me$" name="^sessid$" /-->
+	<!--securecookie host="^help\.publish2\.me$" name="^_rf$" /-->
+	<!--securecookie host="^www\.publish2\.me$" name="^YII_CSRF_TOKEN$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

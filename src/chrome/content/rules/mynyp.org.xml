@@ -1,0 +1,37 @@
+<!--
+	Insecure cookies are set for these hosts: ᶜ
+
+		- mynyp.org
+		- login.mynyp.org
+		- qlogin.mynyp.org
+		- queens.mynyp.org
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="myNYP.org">
+
+	<target host="mynyp.org" />
+	<target host="login.mynyp.org" />
+	<target host="qlogin.mynyp.org" />
+	<target host="queens.mynyp.org" />
+	<target host="www.mynyp.org" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://qlogin.mynyp.org/Signin.aspx?targetqs=%3fappid%3d6bf65eb0-f4f3-426b-aad3-7c18ae50979c%26lcid%3d1033%26redirect%3dhttps%253a%252f%252fqueens.mynyp.org%252fRedirect.aspx%26aib%3dtrue%26trm%3dpost&amp;iphrlang=en-US" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^mynyp\.org$" name="^(?:ASP\.NET_SessionId$|BIGipServer)" /-->
+	<!--securecookie host="^login\.mynyp\.org$" name="^BIGipServer" /-->
+	<!--securecookie host="^(?:qlogin|queens)\.mynyp\.org$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

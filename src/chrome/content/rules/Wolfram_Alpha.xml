@@ -1,102 +1,52 @@
 <!--
-	Disabled per https://trac.torproject.org/projects/tor/ticket/15583
-	For other Wolfram Research coverage, see Wolfram.com.xml.
+Invalid certificate:
+	api-cn.wolframalpha.com
+	api-maps.wolframalpha.com
+	api-tw.wolframalpha.com
+	dev1.cvs.wolframalpha.com
+	dev2.cvs.wolframalpha.com
+	reg.cvs.wolframalpha.com
+	sit.cvs.wolframalpha.com
+	cvsrx.wolframalpha.com
+	cvsrx.devel.wolframalpha.com
+	www-cn.wolframalpha.com
+	www-tw.wolframalpha.com
+	volunteer.wolframalpha.com
 
+Refused:
+	community.wolframalpha.com
 
-	CDN buckets:
-
-		- wac.36f4.edgecastcdn.net/0036F4/
-
-
-	Nonfunctional subdomains:
-
-		- blog *
-		- community	(refused)
-		- products *
-
-	* Dropped
-
-
-	Problematic subdomains:
-
-		- ^	(dropped)
-
-
-	Partially covered subdomains:
-
-		- www\d *
-		- www\d\w *
-
-	* Securing some scripts breaks search
-
-
-	Fully covered subdomains:
-
-		- (www.)	(^ → www)
-		- volunteer
-
-
-	Insecure cookies are set for these domains:
-
-		- .wolphramalpha.com
-		- www.wolphramalpha.com
-		- www\w\d.wolphramalpha.com
-
-
-	Mixed content:
-
-		- Scripts, on www from:
-
-			- www\d *
-			- www\d\w *
-
-		- Images, on www from:
-
-			- www\d **
-			- www\d\w **
-
-		- Ads/web bugs, on www from:
-
-			- w.sharethis.com **
-			- www.wolframcdn.com **
-
-	* Securing these breaks search
-	** Secured by us
-
+Timeout:
+	blog.wolframalpha.com
+	nba.devel.wolframalpha.com
+	homeworkday.wolframalpha.com
+	www2.wolframalpha.com
 -->
-
-<!-- this ruleset creates mixed content, but it doesn't seem to break anything anymore -->
-<ruleset name="Wolfram Alpha.com (experimental)" default_off="Breaks login">
-
-	<target host="wolframalpha.com" />
+<ruleset name="Wolfram Alpha">
 	<target host="*.wolframalpha.com" />
-		<!--
-			These break search:
-								-->
-		<exclusion pattern="^http://www\d\w?\.wolframalpha\.com/input/(?:pod|recalculate)\.jsp" />
+	<test url="http://www10.wolframalpha.com/" />
+	<test url="http://www20.wolframalpha.com/" />
+	<target host="api.wolframalpha.com" />
+	<target host="api-cn.wolframalpha.com" />
+	<target host="api-maps.wolframalpha.com" />
+	<target host="api-tw.wolframalpha.com" />
+	<target host="developer.wolframalpha.com" />
+	<target host="m.wolframalpha.com" />
+	<target host="preview.wolframalpha.com" />
+	<target host="products.wolframalpha.com" />
+	<target host="volunteer.wolframalpha.com" />
+	<target host="wc.wolframalpha.com" />
+	<target host="www1.wolframalpha.com" />
+	<target host="www3.wolframalpha.com" />
+	<target host="www4b.wolframalpha.com" />
+	<target host="www4c.wolframalpha.com" />
+	<target host="www4d.wolframalpha.com" />
+	<target host="www4f.wolframalpha.com" />
+	<target host="www5a.wolframalpha.com" />
+	<target host="www5b.wolframalpha.com" />
 
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^(www|www\d\w)\.wolframalpha\.com$" name="^JSESSIONID$" /-->
-	<!--securecookie host="\.wolframalpha.com$" name="^(WR_SID|WolframAlphaNoProCallouts|WolframHomepageVisits|WolframResultsPageVisits|wa_pro_first|wa_pro_firstprovisit)$" /-->
-	<!--securecookie host="^www.wolframalpha.com$" name="^(CookieWarning|session_protocol|WolframAlphaChromeExtension)$" /-->
-	<!--securecookie host="^(.*\.)?wolframalpha\.com$" name=".+"/-->
-	<!--
-		Could we secure any of these safely?
-							-->
-	<!--securecookie host="^\.wolframalpha\.com$" name="^(wa_pro_first|wa_pro_firstprovisit|WolframAlphaSessionVisits|WolframResultsPageVisits|WR_SID)$" /-->
-	<!--
-		Tracking cookies:
-					-->
-	<securecookie host="^\.wolframalpha\.com$" name="^__utm\w$" />
-	<securecookie host="^(?:volunteer|www)\.wolframalpha\.com$" name=".+" />
-
-
-	<rule from="^http://(?:www\.)?wolframalpha\.com/"
-		to="https://www.wolframalpha.com/" />
-
-	<rule from="^http://(volunteer|www\d\w?)\.wolframalpha\.com/"
-		to="https://$1.wolframalpha.com/" />
-
+	<rule from="^http://api-(cn|maps|tw)\.wolframalpha\.com/" to="https://www.wolframalpha.com/" />
+	<rule from="^http://volunteer\.wolframalpha\.com/" to="https://www.wolframalpha.com/" />
+	<rule from="^http://(www[0-9][0-9]\.)wolframalpha\.com/" to="https://www.wolframalpha.com/" />
+	<rule from="^http:" to="https:" />
 </ruleset>

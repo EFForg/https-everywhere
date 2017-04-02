@@ -127,7 +127,7 @@ const IOUtil = {
   },
   
   findWindow: function(channel) {
-    for each(var cb in [channel.notificationCallbacks,
+    for (var cb of [channel.notificationCallbacks,
                        channel.loadGroup && channel.loadGroup.notificationCallbacks]) {
       if (cb instanceof Ci.nsIInterfaceRequestor) {
         if (Ci.nsILoadContext) try {

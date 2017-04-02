@@ -160,7 +160,7 @@ RuleSet.prototype = {
       return null;
     var newuri = Components.classes["@mozilla.org/network/standard-url;1"].
                  createInstance(CI.nsIStandardURL);
-    newuri.init(CI.nsIStandardURL.URLTYPE_STANDARD, 80,
+    newuri.init(CI.nsIStandardURL.URLTYPE_STANDARD, 443,
              newurl, uri.originCharset, null);
     newuri = newuri.QueryInterface(CI.nsIURI);
     return newuri;

@@ -23,7 +23,14 @@ fi
 # Fetch the current GitHub version of HTTPS-E to compare to its master
 git remote add upstream-for-travis https://github.com/EFForg/https-everywhere.git
 trap 'git remote remove upstream-for-travis' EXIT
-git fetch upstream-for-travis master 
+
+# Only do a shallow fetch if we're in Travis.  No need otherwise.
+if [ $TRAVIS ]; then
+  git fetch --depth=50 upstream-for-travis master
+else
+  git fetch upstream-for-travis master
+fi
+
 COMMON_BASE_COMMIT=$(git merge-base upstream-for-travis/master HEAD)
 RULESETS_CHANGED=$(git diff --name-only $COMMON_BASE_COMMIT | grep $RULESETFOLDER | grep '.xml')
 if [ "$(git diff --name-only $COMMON_BASE_COMMIT)" != "$RULESETS_CHANGED" ]; then
@@ -65,6 +72,12 @@ if [ "$RULESETS_CHANGED" ]; then
     docker_build
     # --privileged is required here for miredo to create a network tunnel
     docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" --privileged httpse bash -c "service miredo start && test/fetch.sh"
+  fi
+
+  if [ "$TEST" == "preloaded" ]; then
+    echo >&2 "Ensuring rulesets do not introduce targets which are already HSTS preloaded."
+    docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" node bash -c "cd /opt/utils/hsts-prune && npm install && node index.js"
+    [ `git diff --name-only | wc -l` -eq 0 ]
   fi
 fi
 
