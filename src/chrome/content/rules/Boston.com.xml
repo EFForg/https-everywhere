@@ -1,97 +1,49 @@
 <!--
-	For rules causing false/broken MCB, see Boston.com-falsemixed.xml.
-
-	For other New York Times coverage, see NYTimes.xml.
-
+	Related:
+		BostonGlobe.com.xml
+		BostonGlobeMedia.com.xml
+		o0bc.com.xml
+		o0bg.com.xml
 
 	CDN buckets:
-
 		- nytbglobe.112.2o7.net
 		- s3.amazonaws.com/static.rondavu.com/C/Boston_PROD/
-
 		- wac.493C.edgecastcdn.net
-
-			- cinesport
-
+			- cinesport.boston.com
 		- cache.boston.com.global.prod.fastly.net
 		- bostoncom.http.internapcdn.net
-
 		- boston.nimblebuy.com
+			- deals.boston.com
 
-			- deals
-			- finds
+	Mismatched:
+		cinesport.boston.com ( CN: gp1.wac.edgecastcdn.net )
 
+	Incomplete cer chain:
+		weather.boston.com
 
-	Nonfunctional hosts in *boston.com:
+	MCB:
+		archive.boston.com
+		prototype.boston.com
 
-		- cinesport ¹
-		- realestate ²
-
-	¹ 404; mismatched, CN: gp1.wac.edgecastcdn.net
-	² Refused
-
-
-	Problematic hosts in *boston.com:
-
-		- deals ¹
-		- loveletters ²
-		- weather ³
-
-	¹ Works; mismatched, CN: finds.boston.com
-	² Mixed css
-	³ Refused
-
-
-	Mixed content:
-
-		- css, on:
-
-			- loveletters from $self *
-			- loveletters from fonts.googleapis.com *
-
-		- Images, on:
-
-			- loveletters, www from $self *
-			- loveletters, www from cache.boston.com *
-
-		- favicon on www from p.o0bc.com
-		- Bug on loveletters, www from nytbglobe.112.2o7.net *
-
-	* Secured by us
-
+	Refused:
+		deals.boston.com
 -->
 <ruleset name="Boston.com (partial)">
-
-	<!--	Direct rewrites:
-				-->
+	<!--	Direct rewrites:	-->
 	<target host="boston.com" />
+	<target host="www.boston.com" />
 	<target host="cache.boston.com" />
 	<target host="graphics.boston.com" />
-	<!--target host="loveletters.boston.com" /-->
-	<target host="www.boston.com" />
+	<target host="loveletters.boston.com" />
+	<target host="realestate.boston.com" />
 
-	<!--	Complications:
-				-->
-	<target host="deals.boston.com" />
-	<target host="weather.boston.com" />
+	<!--	Complications:	-->
+	<target host="prototype.boston.com" />
+	<rule from="^http://prototype\.boston\.com/"
+		to="https://p.o0bc.com/" />
+		<test url="http://prototype.boston.com/img/social_icons/tumblr-256.png" />
 
+	<securecookie host=".+" name=".+" />
 
-	<securecookie host="." name="." />
-
-
-	<!--	Redirect keeps path and args:
-						-->
-	<rule from="^http://deals\.boston\.com/+"
-		to="https://finds.boston.com/" />
-
-		<test url="http://deals.boston.com/index.php" />
-
-	<!--	Redirects as so, aside from https:
-							-->
-	<rule from="^http://weather\.boston\.com/"
-		to="https://www.boston.com/weather/" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
