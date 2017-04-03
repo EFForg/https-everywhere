@@ -59,7 +59,7 @@ Exclusions are always evaluated before rules in a given ruleset. Matching any ex
 
 #### [Style Guide](#style-guide)
 
-There are many different ways you can write a ruleset, or regular expression within the ruleset. It's easier for everyone to understand the rulesets if they follow similar practices. You should read and follow the [Ruleset style guide](https://github.com/EFForg/https-everywhere/blob/master/ruleset-style.md). Some of the guidelines in that document are intended to make [Ruleset testing](https://github.com/EFForg/https-everywhere/blob/master/ruleset-testing.md) less cumbersome.
+There are many different ways you can write a ruleset, or regular expression within the ruleset. It's easier for everyone to understand the rulesets if they follow similar practices. You should read and follow the [Ruleset style guide](https://github.com/EFForg/https-everywhere/blob/master/CONTRIBUTING.md#ruleset-style-guide). Some of the guidelines in that document are intended to make [Ruleset testing](https://github.com/EFForg/https-everywhere/blob/master/ruleset-testing.md) less cumbersome.
 
 #### [Secure Cookies](#secure-cookies)
 
