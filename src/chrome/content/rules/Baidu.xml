@@ -30,7 +30,6 @@
 		- fanyi *
 		- finance *
 		- gate		405
-		- gimg *
 		- global *
 		- help *
 		- hi *
@@ -111,7 +110,6 @@
 		- msh ²
 		- musicdata ²
 		- pcfaster ᵉ ¹ ᵘ
-		- tieba ˣ
 		- trends ᵉ
 		- list.video ²
 		- www.video ²
@@ -122,16 +120,12 @@
 	² Mismatched
 	³ Server sends no certificate chain, see https://whatsmychaincert.com
 	ᵘ Untrusted root
-	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
-	Partially covered hosts:
-		- baiku ˣ
-		- baishi ˣ
+	Some pages redirect to http
+		- baike *
 		- v *
 		- (www.)?video *
 		- list.video *
-	* Some pages redirect to http
-	ˣ Avoiding MCB
 
 	Insecure cookies are set for these domains and hosts: ᶜ
 		- baidu.com
@@ -154,19 +148,9 @@
 		- zoo.baidu.com
 	ᶜ See https://owasp.org/index.php/SecureFlag
 
-	Mixed content:
-		- css, on:
-			- adscdn
-			- baishi.baidu.com	( break username and so on on the right-top of page. )
-		- Images, on:
-			- bdl from thumb-bdl.bj.bcebos.com ¹
-			- openapi from gimg ²
-			- openapi from apps.bdimg.com ¹
-			- m, m1, wap from m.baidu.com
-			- zhanzhang from op.baidu.com ²
-	¹ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
-	* Not secured by us <= missing certificate chain
-	² Unsecurable <= dropped
+	MCB:
+		adscdn.baidu.com
+		baishi.baidu.com	( break username and so on on the right-top of page. )
 
 	Redirect to http:
 		baike.baidu.com	( some pages. )
@@ -279,13 +263,14 @@
 	<rule from="^http://financestatic\.baidu\.com/"
 		to="https://8.baidu.com/" />
 
+	<target host="gimg.baidu.com" />
 	<target host="img.baidu.com" />
 	<!--	404:	-->
-	<exclusion pattern="^http://img\.baidu\.com/$" />
+	<exclusion pattern="^http://g?img\.baidu\.com/$" />
+		<test url="http://gimg.baidu.com/img/gs.gif" />
 		<test url="http://img.baidu.com/hunter/alog/alog.min.js" />
 
 	<target host="tieba.baidu.com" />
-		<!--	MCB:	-->
 		<exclusion pattern="^http://tieba\.baidu\.com/(?!mo/|mo_wowap_pb/)" />
 		<test url="http://tieba.baidu.com/kb/" />
 		<test url="http://tieba.baidu.com/zjstv/" />
