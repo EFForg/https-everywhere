@@ -1,34 +1,31 @@
 <!--
 	For other New York Times coverage, see NYTimes.xml.
 
-
-	(www.)?inyt.com: Mismatched
-
+	Mismatched:
+		(www.)?inyt.com
+		eedition.inyt.com
 
 	Insecure cookies are set for these hosts:
-
 		- customercare.inyt.com
 		- subscribe.inyt.com
-
 -->
 <ruleset name="INYT.com (partial)">
-
-	<!--	Direct rewrites:
-				-->
+	<!--	Direct rewrites:	-->
 	<target host="customercare.inyt.com" />
+		<test url="http://customercare.inyt.com/ManageMyAccount/Login.html" />
+	<target host="goldengate.inyt.com" />
+		<test url="http://goldengate.inyt.com/dana-na/auth/remediate.cgi" />
+	<target host="partner.inyt.com" />
+		<test url="http://partner.inyt.com/ExtranetPnD/login" />
 	<target host="subscribe.inyt.com" />
+		<test url="http://subscribe.inyt.com/student" />
 
-	<!--	Complications:
-				-->
+	<!--	Complications:	-->
 	<target host="inyt.com" />
 	<target host="www.inyt.com" />
-
-		<!--	/*(?!$|\?) 404s:
-					-->
+		<!--	/*(?!$|\?) 404s:	-->
 		<exclusion pattern="^http://(?:www\.)?inyt\.com/+(?!$|\?)" />
-
-			<!--	+ve:
-					-->
+			<!--	+ve:	-->
 			<test url="http://www.inyt.com/digileftnav" />
 			<test url="http://www.inyt.com/edu-leftnav" />
 			<test url="http://www.inyt.com/share/" />
@@ -36,22 +33,13 @@
 			<test url="http://www.inyt.com/subscriptions/inyt/lp3KYXX.html/" />
 			<test url="http://www.inyt.com/subscriptions/inyt/lp3L3W7.html" />
 
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^(?:customercare|subscribe)\.inyt\.com$" name="^JSESSIONID$" /-->
-
 	<securecookie host="^\." name="^(?:__utm|_ga$)" />
 	<securecookie host="^\w" name="." />
 
-
 	<!--	Redirect keeps args but
-		not forward slash:
-					-->
+		not forward slash:	-->
 	<rule from="^http://(?:www\.)?inyt\.com/+"
 		to="https://global.nytimes.com/" />
 
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
