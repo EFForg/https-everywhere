@@ -1,0 +1,120 @@
+<!--
+	For other New York Times coverage, see NYTimes.xml.
+-->
+<ruleset name="NYTimes-Problematic">
+	<!-- As of 4/2017, 5th level blogs.nytimes.com domains do not support SSL. -->
+	<target host="*.blogs.nytimes.com" />
+	<rule from="^http://([\w-]+)\.blogs\.nytimes\.com/" to="https://blogs.nytimes.com/" />
+
+		<test url="http://this.host.blogs.nytimes.com/" />
+		<test url="http://exists.not.blogs.nytimes.com/" />
+
+		<test url="http://firstlook.blogs.nytimes.com/" />
+		<test url="http://lens.blogs.nytimes.com/" />
+		<test url="http://newoldage.blogs.nytimes.com/" />
+
+	<!--	Redirect keeps path, but not args nor forward slash:	-->
+	<target host="documents.nytimes.com" />
+	<rule from="^http://documents\.nytimes\.com/+([^?]*)"
+		to="https://www.nytimes.com/interactive/projects/documents/$1" />
+
+		<test url="http://documents.nytimes.com/index.htm" />
+		<test url="http://documents.nytimes.com/index.html" />
+
+	<!--	Redirect drops path and forward slash, but not args:	-->
+	<target host="jobmarket.nytimes.com" />
+	<target host="pimage.timespeople.nytimes.com" />
+
+	<rule from="^http://jobmarket\.nytimes\.com/[^?]*"
+		to="https://www.nytimes.com/section/jobs" />
+		<test url="http://jobmarket.nytimes.com/index.html" />
+
+	<rule from="^http://pimage\.timespeople\.nytimes\.com/"
+		to="https://s3.amazonaws.com/pimage.timespeople.nytimes.com/" />
+
+	<!--	Redirect drops args and forward slash:	-->
+	<target host="travel.nytimes.com" />
+	<rule from="^http://travel\.nytimes\.com/(?:$|\?.*)"
+		to="https://www.nytimes.com/section/travel" />
+		<test url="http://travel.nytimes.com/?" />
+		<test url="http://travel.nytimes.com//?" />
+
+	<rule from="^http://travel\.nytimes\.com/"
+		to="https://www.nytimes.com/" />
+		<test url="http://travel.nytimes.com/section/realestate" />
+
+	<target host="www.nytimes.com" />
+	<!--	Redirects to http first:	-->
+	<rule from="^http://www\.nytimes\.com/twitter"
+		to="https://twitter.com/nytimes" />
+		<test url="http://www.nytimes.com/twitter" />
+		<test url="http://www.nytimes.com/twitter?" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.nytimes\.com/(?:$|alweekend$|citiesfortomorrow$|educationleftnav$|elections(?:$|/)|leadership$|marketing/nytvr/$|mem/email\.html|mostpopular$|newsletters(?:$|/)|newwork$|pages/(?:books|todayspaper)/|ref/|roomfordebate$|rss$|search/|services/mobile/|tpnav$|twitter$|vrlpsublink$)" /-->
+
+		<!--	Some preemptable subset thereof:
+							-->
+		<!--exclusion pattern="^http://www\.nytimes\.com/(?!/*(?:$|(?:interactive/)?\d{4}/\d\d/\d\d/|adx/|by/|content/help/|column/|favicon\.ico|(?:books|membercenter|events|podcasts|store|trending|times-journeys|video|watching)(?:$|[?/])|section/))" /-->
+		<!--
+			Combined:
+					-->
+	<rule from="^http://www\.nytimes\.com/"
+		to="https://www.nytimes.com/" />
+		<exclusion pattern="^http://www\.nytimes\.com/(?!/*(?:$|(?:interactive/)?\d{4}/\d\d/\d\d/|adx/|by/|content/help/|column/|favicon\.ico|(?:books|membercenter|events|podcasts|store|trending|times-journeys|video|watching)(?:$|[?/])|section/|twitter(?:$|\?)))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.nytimes.com/elections" />
+			<test url="http://www.nytimes.com/elections/results/president" />
+			<test url="http://www.nytimes.com/elections/results/tennessee" />
+
+			<test url="http://www.nytimes.com/leadership" />
+			<test url="http://www.nytimes.com/marketing/nytvr/" />
+			<test url="http://www.nytimes.com/mem/email.html" />
+			<test url="http://www.nytimes.com/mostpopular" />
+			<test url="http://www.nytimes.com/newsletters" />
+			<test url="http://www.nytimes.com/newsletters/dealbook" />
+			<test url="http://www.nytimes.com/newsletters/newyorktoday" />
+			<test url="http://www.nytimes.com/newwork" />
+			<test url="http://www.nytimes.com/pages/books/index.html" />
+			<test url="http://www.nytimes.com/pages/todayspaper/index.html" />
+			<test url="http://www.nytimes.com/ref/membercenter/help/infoservdirectory.html" />
+			<test url="http://www.nytimes.com/ref/membercenter/help/infoservdirectory.html" />
+			<test url="http://www.nytimes.com/roomfordebate" />
+			<test url="http://www.nytimes.com/rss" />
+			<test url="http://www.nytimes.com/search/" />
+			<test url="http://www.nytimes.com/services/mobile/" />
+			<test url="http://www.nytimes.com/tpnav" />
+			<test url="http://www.nytimes.com/vrlpsublink" />
+
+			<!--	-ve:
+					-->
+		<test url="http://www.nytimes.com/subscriptions/switch/lp8964W.html" />
+			<test url="http://www.nytimes.com/2017/03/07/opinion/peanut-butter-on-the-trump-teams-chins.html" />
+			<test url="http://www.nytimes.com/books/first/n/novick-holocaust.html" />
+			<test url="http://www.nytimes.com/by/eduardo-porter" />
+			<test url="http://www.nytimes.com/column/fixes" />
+			<test url="http://www.nytimes.com/column/trilobites" />
+			<test url="http://www.nytimes.com/content/help/contact/directory.html" />
+			<test url="http://www.nytimes.com/content/help/front.html" />
+			<test url="http://www.nytimes.com/events" />
+			<test url="http://www.nytimes.com/favicon.ico" />
+			<test url="http://www.nytimes.com/interactive/2017/03/08/upshot/who-wins-and-who-loses-under-republicans-health-care-plan.html" />
+			<test url="http://www.nytimes.com/membercenter" />
+			<test url="http://www.nytimes.com/membercenter/help.html" />
+			<test url="http://www.nytimes.com/podcasts/" />
+			<test url="http://www.nytimes.com/section/arts" />
+			<test url="http://www.nytimes.com/section/fashion" />
+			<test url="http://www.nytimes.com/section/jobs" />
+			<test url="http://www.nytimes.com/store" />
+			<test url="http://www.nytimes.com/times-journeys" />
+			<test url="http://www.nytimes.com/times-journeys/travel/a-transatlantic-crossing-with-the-times-crossword/" />
+			<test url="http://www.nytimes.com/trending" />
+			<test url="http://www.nytimes.com/video" />
+			<test url="http://www.nytimes.com/video/sports" />
+			<test url="http://www.nytimes.com/watching" />
+			<test url="http://www.nytimes.com/watching/recommendations/train-to-busan" />
+
+</ruleset>
