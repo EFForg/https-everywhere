@@ -1,123 +1,34 @@
 <!--
-	Other WordPress rulesets:
+	Wildcard DNS recodes and SSL Certificates
 
-		- W.org.xml
-		- WP.me.xml
-
-
-	Nonfunctional domains:
-
-		- s-plugins.wordpress.org *
-
-	* How so?
-
-
-	Problematic domains:
-
-		- *.blog.files.wordpress.com *
-		- *.forums.wordpress.com **
-		- *.support.wordpress.com **
-
-	* Works; mismatched, CN: *.files.wordpress.com
-	** Works; mismatched, CN: *.wordpress.com
-
-
-	Partially covered domains:
-
-		- wordpress.com subdomains:
-
-			- ^
-			- *.blog	(per-locale blogs)
-			- botd
-			- botd2
-			- *.files	(per-blog subdomains)
-			- *.blog.files	(→ *-blog.files)
-			- r-login
-			- s		(→ www)
-			- s\d		(→ secure)
-			- signup
-			- ssl-stats
-			- s-ssl
-			- stats
-			- s.stats	(→ stats)
-			- *		(per-blog subdomains)
-
-		- wordpress.org subdomains:
-
-			- ^
-			- s	(→ www)
-			- s\d	(→ secure)
-			- *.svn
-			- *.trac
-
-
-	Fully covered domains:
-
-		- wp.com subdomains:
-
-			- i[012]
-			- s
-			- s\d
-
-
-	Mixed content:
-
-		- css on ^wordpress.org from s.wordpress.org **
-		- Images on *.blog.wordpress.com from *.blog.files.wordpress.com *
-
-	** Secured by us, absence alters table style slightly
-	* Secured by us, doesn't trip MCB anyway
-
+	strict-transport-security:max-age=15552000
 -->
-<ruleset name="WordPress (partial)">
-
+<ruleset name="WordPress">
 	<target host="wordpress.com" />
 	<target host="*.wordpress.com" />
-		<exclusion pattern="^http://(?:[^/:@\.]+\.)?wordpress\.com/latex\.php(?:\?.*)?$" />
-		<!--
-			These aren't targeted anyway...
+		<test url="http://www.wordpress.com/" />
+		<test url="http://en.wordpress.com/" />
+		<test url="http://zh-cn.wordpress.com/" />
 
-		<exclusion pattern="^http://(?:[^/:@\.]+)\.(?:forums|support)\.wordpress\.com/" /-->
-        	<exclusion pattern="^http://s-plugins\.wordpress\.org/" />
 	<target host="wordpress.org" />
 	<target host="*.wordpress.org" />
+		<test url="http://apps.wordpress.org/" />
+		<test url="http://learn.wordpress.org/" />
+		<test url="http://make.wordpress.org/" />
+
+	<target host="w.org" />
+	<target host="*.w.org" />
+		<test url="http://make.w.org/" />
+		<test url="http://ps.w.org/" />
+		<test url="http://translate.w.org/" />
+
+	<target host="wp.com" />
 	<target host="*.wp.com" />
+		<test url="http://www.wp.com/" />
+		<test url="http://www.wp.com/music" />
+		<test url="http://get.wp.com/" />
 
+	<securecookie host=".+" name=".+" />
 
-	<securecookie host="^wordpress\.com$" name="^wordpress_homepage$" />
-	<securecookie host="^\.wordpress\.com$" name="^(?:km_\w\w|kvcd|optimizely\w+)$" />
-	<securecookie host="^wordpress\.org$" name=".+" />
-	<securecookie host=".*\.wordpress\.(?:com|org)$" name="^__utm\w$" />
-
-
-	<rule from="^http://wordpress\.(com|org)/"
-		to="https://wordpress.$1/"/>
-
-	<rule from="^http://([^/:@\.]+)\.(blog|files)\.wordpress\.com/"
-		to="https://$1.$2.wordpress.com/"/>
-
-	<rule from="^http://(\w+)\.blog\.files\.wordpress\.com/"
-		to="https://$1-blog.files.wordpress.com/" />
-
-	<rule from="^http://s\.wordpress\.(com|org)/"
-		to="https://www.wordpress.$1/"/>
-
-	<rule from="^http://s\d\.wordpress\.(com|org)/"
-		to="https://secure.wordpress.$1/"/>
-
-	<rule from="^http://([^/:@\.]+)\.wordpress\.(com|org)/"
-		to="https://$1.wordpress.$2/"/>
-
-	<!--	- Cert: gp1.wac.edgecastcdn.net
-		- 404s over https
-					-->
-	<rule from="^http://s\.stats\.wordpress\.com/"
-		to="https://stats.wordpress.com/" />
-
-	<rule from="^http://([^/:@\.]+)\.(trac|svn)\.wordpress\.org/"
-		to="https://$1.$2.wordpress.org/"/>
-
-	<rule from="^http://(i[012]|s\d*)\.wp\.com/"
-		to="https://$1.wp.com/" />
-
+	<rule from="^http:" to="https:"/>
 </ruleset>
