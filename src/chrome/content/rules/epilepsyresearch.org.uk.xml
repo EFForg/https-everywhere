@@ -1,0 +1,45 @@
+<!--
+	NB: ^ redirects to 404 over http
+	?=> fetch check failure
+
+
+	These altnames do not exist:
+
+		- www.donate.epilepsyresearch.org.uk
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- donate.epilepsyresearch.org.uk
+		- www.epilepsyresearch.org.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Epilepsy Research.org.uk">
+
+	<target host="epilepsyresearch.org.uk" />
+	<target host="donate.epilepsyresearch.org.uk" />
+	<target host="www.epilepsyresearch.org.uk" />
+
+		<!--	$ 500s, so:
+							-->
+		<test url="http://donate.epilepsyresearch.org.uk/regulargift/" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://www.epilepsyresearch.org.uk/news/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^donate\.epilepsyresearch\.org\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^www\.epilepsyresearch\.org\.uk$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

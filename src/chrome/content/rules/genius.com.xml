@@ -1,0 +1,46 @@
+<!--
+	Insecure cookies are set for these hosts: ᶜ
+
+		- eventspace.genius.com
+		- shop.genius.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bugs, on:
+
+			- ^ from pixel.quantserve.com ˢ
+			- ^ from b.scorecardresearch.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Genius.com">
+
+	<target host="genius.com" />
+	<target host="assets.genius.com" />
+	<target host="eventspace.genius.com" />
+	<target host="images.genius.com" />
+	<target host="news.genius.com" />
+	<target host="shop.genius.com" />
+	<target host="www.genius.com" />
+
+		<test url="http://assets.genius.com/stylesheets/compiled/bagon_desktop-b0f27167f389b460f5dabd3cc5a46384.css" />
+		<test url="http://images.genius.com/avatars/thumb/a8aab0a386b53f215e52ca151fe1c9b0" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^eventspace\.genius\.com$" name="^crumb$" /-->
+	<!--securecookie host="^shop\.genius\.com$" name="^(?:_landing_page|_origi_referrer|cart_sig)$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|__qca|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

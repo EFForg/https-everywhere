@@ -1,0 +1,58 @@
+<!--
+	Problematic hosts in *betanews.com:
+
+		- feeds ᶠ
+		- store ᵉ ᵐ ˢ
+
+	ᵉ Expired
+	ᶠ Feedburner / handshake fails
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- .betanews.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images on store from img.creativemark.co.uk ⁴
+		- Ads on store from adverts.creativemark.co.uk ⁴
+
+	⁴ Unsecurable <= 404
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="betanews.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="betanews.com" />
+	<target host="fileforum.betanews.com" />
+	<target host="images.betanews.com" />
+	<target host="www.betanews.com" />
+
+		<test url="http://images.betanews.com/fileforum2/white_downbullet.gif" />
+
+	<!--	Complications:
+				-->
+	<target host="feeds.betanews.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.betanews\.com$" name="^sixsession$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://feeds\.betanews\.com/"
+		to="https://feeds.feedburner.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
