@@ -5,4 +5,6 @@ for host in `cat utils/duplicate-whitelist.txt`; do
     if [ $REPEATS -gt 1 ]; then
         echo $host
     fi
-done >| utils/duplicate-whitelist.txt
+done >| temp.txt
+
+mv --force temp.txt utils/duplicate-whitelist.txt
