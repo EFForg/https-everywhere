@@ -52,6 +52,31 @@ function loadExtensionFile(url, returnType) {
   return xhr.responseText;
 }
 
+/**
+ * Convert a string to ArrayBuffer
+ *
+ * @param string: a string to convert
+ */
+function stringToUint8Array(string) {
+  let len = string.length;
+  let bytes = new Uint8Array(len);
+
+  for (let i = 0; i < len; i++) {
+    bytes[i] = string.charCodeAt(i);
+  }
+
+  return bytes;
+}
+
+/**
+ * Convert a base64 string to ArrayBuffer
+ *
+ * @param base64: a base64 string to convert
+ */
+function base64ToUint8Array(base64) {
+  return stringToUint8Array(window.atob(base64));
+}
+
 Object.assign(exports, {
   VERB,
   DBUG,
@@ -59,7 +84,9 @@ Object.assign(exports, {
   NOTE,
   WARN,
   log,
-  loadExtensionFile
+  loadExtensionFile,
+  stringToUint8Array,
+  base64ToUint8Array
 });
 
 })(typeof exports == 'undefined' ? require.scopes.util = {} : exports);
