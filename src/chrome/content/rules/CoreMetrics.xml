@@ -4,47 +4,73 @@
 
 	Problematic domains:
 
-		- www.coremetrics.com	(mismatched, CN: redirect.www.ibm.com)
+		- www.coremetrics.com ᵐ
 
-
-	Fully covered domains:
-
-		- data.cmcore.com
-
-		- coremetrics.com subdomains:
-
-			- data
-			- libs
-			- testdata
-			- www		(→ www.ibm.com)
-
-		- stats.surfaid.ihost.com
+	ᵐ Mismatched
 
 
 	^coremetrics.com times out over both http & https.
 
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- data.coremetrics.com
+		- data.de.coremetrics.com
+		- testdata.de.coremetrics.com
+		- testdata.coremetrics.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
 -->
 <ruleset name="CoreMetrics (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="data.coremetrics.com" />
+
+	<target host="data.de.coremetrics.com" />
+	<target host="libs.de.coremetrics.com" />
+	<target host="testdata.de.coremetrics.com" />
+
+	<target host="libs.coremetrics.com" />
+	<target host="testdata.coremetrics.com" />
+
+		<!--	$ 404s, so:
+					-->
+		<test url="http://libs.de.coremetrics.com/eluminate.js" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<test url="http://data.coremetrics.com/cm" />
+		<test url="http://data.de.coremetrics.com/cm" />
+		<test url="http://testdata.de.coremetrics.com/cm" />
+		<test url="http://testdata.coremetrics.com/cm" />
+
 	<target host="data.cmcore.com" />
-	<target host="*.coremetrics.com" />
-	<target host="*.surfaid.ihost.com" />
+
+	<target host="stats.surfaid.ihost.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www.coremetrics.com" />
 
 
-	<securecookie host="^testdata\.coremetrics\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:test)?data\.(?:de\.)?coremetrics\.com$" name="(?:CoreID6|TestSess3)$" /-->
+
+	<securecookie host="^\w" name="." />
 	<securecookie host="^\.surfaid\.ihost\.com$" name=".+" />
 
 
-	<rule from="^http://data\.cmcore\.com/"
-		to="https://data.cmcore.com/" />
-
+	<!--	Redirect keeps all:
+					-->
 	<rule from="^http://www\.coremetrics\.com/"
 		to="https://www.ibm.com/software/marketing-solutions/coremetrics/www.redirects/" />
 
-	<rule from="^http://(data|libs|testdata)\.coremetrics\.com/"
-		to="https://$1.coremetrics.com/" />
+		<test url="http://www.coremetrics.com/index.htm" />
 
-	<rule from="^http://stats\.surfaid\.ihost\.com/"
-		to="https://stats.surfaid.ihost.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

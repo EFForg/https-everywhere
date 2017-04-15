@@ -25,7 +25,6 @@
 	Problematic hosts in *acs.org:
 
 		- bulkdocsapp ¹
-		- chemistryjobs ²
 		- cvapp ¹
 		- renew ²
 		- webanalytics ²
@@ -61,10 +60,13 @@
 		- www.yellowbooktest.acs.org
 
 
-	Insecure cookies are set for these hosts:
+	Insecure cookies are set for these hosts: ᶜ
 
 		- .acs.org
+		- chemistryjobs.acs.org
 		- cvapp.acs.org
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
@@ -80,7 +82,7 @@
 			- communities from achsportal.122.2o7.net *
 			- (www.)?join from webanalytics.acs.org *
 
-	* Secured by us
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="ACS.org (partial)">
@@ -96,6 +98,7 @@
 	<!--target host="bulkdocsapp.acs.org" /-->
 	<target host="www.ccedlookup.acs.org" />
 	<target host="cen.acs.org" />
+	<target host="chemistryjobs.acs.org" />
 	<target host="communities.acs.org" />
 	<target host="communitiestest.acs.org" />
 	<!--target host="cvapp.acs.org" /-->
@@ -130,7 +133,7 @@
 	<target host="www.studentchaptersreview.acs.org" />
 	<target host="studentgrantreview.acs.org" />
 	<target host="www.studentgrantreview.acs.org" />
-	<!--target host="www.acs.org" />	<- needs ruleset tests	-->
+	<target host="www.acs.org" />
 	<target host="www.yellowbook.acs.org" />
 
 	<!--	Complications:
@@ -161,29 +164,13 @@
 			<!--test url="http://pubs.acs.org/userimages/ContentEditor/1324074653607/subscription-institutional.png" /-->
 
 
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://www\.acs\.org/(?:content/acs/en\.html)" /-->
-		<!--
-			Exceptions:
-					-->
-		<!--exclusion pattern="^http://www\.acs\.org/+(?!content/dam/|etc/)" /-->
-
-			<!--	+ve:
-					-->
-			<!--test url="http://www.acs.org/content/acs/en.html" /-->
-			<!--test url="http://www.acs.org/content/acs/en/features/main-content/_jcr_content/articleContent/acscontainer/containerPar/columnsbootstrap/column1/acscontainer/containerPar/textimage/image.img.png/1439219922682.png" /-->
-			<!--test url="http://www.acs.org/content/acs/en/system/portal-help/_jcr_content/articleContent/acscontainer/containerPar/image.img.jpg/1373550719721.jpg" /-->
-
-			<!--	-ve:
-					-->
-			<!--test url="http://www.acs.org/content/dam/acsorg/home/contexrual/contextualpromo-insurancelogo.png" /-->
-			<!--test url="http://www.acs.org/etc/designs/acs.css" /-->
+		<test url="http://www.acs.org/content/acs/en.html" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.acs\.org$" name="^s_vi$" /-->
+	<!--securecookie host="^chemistryjobs\.acs\.org$" name="(?:^AWSELB|^AnonId|_JobSeekerSiteSession)$" /-->
 	<!--securecookie host="^assetstest\.acs\.org$" name="^TS[\da-f]{8}$" /-->
 	<!--securecookie host="^communities\.acs\.org$" name="^(?:BIGipServer.*|jive\.login\.ts|jive\.security\.context)$" /-->
 	<!--securecookie host="^cvapp\.acs\.org$" name="^GEAR$" /-->

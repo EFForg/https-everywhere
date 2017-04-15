@@ -40,14 +40,11 @@ const HTTPS = {
    */
   replaceChannel: function(applicable_list, channel, httpNowhereEnabled) {
     var blob = HTTPSRules.rewrittenURI(applicable_list, channel.URI.clone());
-    var isSTS = securityService.isSecureURI(
-        CI.nsISiteSecurityService.HEADER_HSTS, channel.URI, 0);
     var uri;
     if (blob === null) {
       // Abort insecure non-onion, non-localhost requests if HTTP Nowhere is on
       if (httpNowhereEnabled &&
           channel.URI.schemeIs("http") &&
-          !isSTS &&
           !/\.onion$/.test(channel.URI.host) &&
           !/^localhost$/.test(channel.URI.host) &&
           !/^127(\.[0-9]{1,3}){3}$/.test(channel.URI.host) &&
