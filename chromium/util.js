@@ -28,6 +28,55 @@ function log(level, str) {
   }
 }
 
+/**
+ * Load a file packaged with the extension
+ *
+ * @param url: a relative URL to local file
+ */
+function loadExtensionFile(url, returnType) {
+  var xhr = new XMLHttpRequest();
+  // Use blocking XHR to ensure everything is loaded by the time
+  // we return.
+  xhr.open("GET", chrome.extension.getURL(url), false);
+  xhr.send(null);
+  // Get file contents
+  if (xhr.readyState != 4) {
+    return;
+  }
+  if (returnType === 'xml') {
+    return xhr.responseXML;
+  }
+  if (returnType === 'json') {
+    return JSON.parse(xhr.responseText);
+  }
+  return xhr.responseText;
+}
+
+/**
+ * Convert a string to ArrayBuffer
+ *
+ * @param string: a string to convert
+ */
+function stringToUint8Array(string) {
+  let len = string.length;
+  let bytes = new Uint8Array(len);
+
+  for (let i = 0; i < len; i++) {
+    bytes[i] = string.charCodeAt(i);
+  }
+
+  return bytes;
+}
+
+/**
+ * Convert a base64 string to ArrayBuffer
+ *
+ * @param base64: a base64 string to convert
+ */
+function base64ToUint8Array(base64) {
+  return stringToUint8Array(window.atob(base64));
+}
+
 Object.assign(exports, {
   VERB,
   DBUG,
@@ -35,6 +84,9 @@ Object.assign(exports, {
   NOTE,
   WARN,
   log,
+  loadExtensionFile,
+  stringToUint8Array,
+  base64ToUint8Array
 });
 
 })(typeof exports == 'undefined' ? window.util = {} : exports);

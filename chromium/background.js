@@ -2,31 +2,6 @@
 
 (function(exports) {
 
-/**
- * Load a file packaged with the extension
- *
- * @param url: a relative URL to local file
- */
-function loadExtensionFile(url, returnType) {
-  var xhr = new XMLHttpRequest();
-  // Use blocking XHR to ensure everything is loaded by the time
-  // we return.
-  xhr.open("GET", chrome.extension.getURL(url), false);
-  xhr.send(null);
-  // Get file contents
-  if (xhr.readyState != 4) {
-    return;
-  }
-  if (returnType === 'xml') {
-    return xhr.responseXML;
-  }
-  if (returnType === 'json') {
-    return JSON.parse(xhr.responseText);
-  }
-  return xhr.responseText;
-}
-
-
 // Rules are loaded here
 var all_rules, ls;
 try{
@@ -39,7 +14,7 @@ all_rules = new rules.RuleSets(ls);
 // Allow users to enable `platform="mixedcontent"` rulesets
 store.get({enableMixedRulesets: false}, function(item) {
   rules.settings.enableMixedRulesets = item.enableMixedRulesets;
-  all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
+  all_rules.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
 });
 
 // Load in the legacy custom rulesets, if any
@@ -134,7 +109,7 @@ var wr = chrome.webRequest;
 /**
  * Load all stored user rules
  */
-var loadStoredUserRules = function() {
+function loadStoredUserRules() {
   var rules = getStoredUserRules();
   var i;
   for (let rule of rules) {
@@ -689,7 +664,7 @@ async function import_settings(settings) {
     }
 
     all_rules = new rules.RuleSets(ls);
-    all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
+    all_rules.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
 
     // Load custom rulesets
     load_legacy_custom_rulesets(settings.custom_rulesets);
@@ -710,6 +685,8 @@ Object.assign(exports, {
   all_rules,
   initializeStoredGlobals,
   urlBlacklist,
+  ls,
+  loadStoredUserRules
 });
 
 })(typeof exports == 'undefined' ? window.background = {} : exports);
