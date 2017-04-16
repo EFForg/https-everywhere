@@ -2,16 +2,19 @@
 	For other Sina coverage, see Sina.com.cn.xml.
 
 	CDN buckets:
-		- sinajs.csglb.txcdn.cn
+		sinajs.csglb.txcdn.cn
+
+	Incomplete cert chain:
+		jss.t.sinajs.cn	( equal to js.t.sinajs.cn )
 
 	Invalid certificate:
-		- hits.sinajs.cn
-		- rs.sinajs.cn
-		- simg.sinajs.cn
-		- sjs([0-3])?.sinajs.cn	( https://sjs0.sinajs.cn/video/lib/js/core.js )
-		- timg.sjs.sinajs.cn
+		hits.sinajs.cn
+		js[1-3].t.sinajs.cn	( equal to js.t.sinajs.cn )
+		rs.sinajs.cn
+		simg.sinajs.cn
+		sjs([0-3])?.sinajs.cn	( https://sjs0.sinajs.cn/video/lib/js/core.js )
+		timg.sjs.sinajs.cn
 -->
-
 <ruleset name="SinaJS.cn">
 	<target host="hq.sinajs.cn" />
 		<test url="http://hq.sinajs.cn/list=s_sh000001" />
@@ -25,7 +28,15 @@
 	<target host="js.t.sinajs.cn" />
 		<test url="http://js.t.sinajs.cn/open/api/js/wb.js" />
 
+	<target host="js1.t.sinajs.cn" />
+	<target host="js2.t.sinajs.cn" />
+	<target host="js3.t.sinajs.cn" />
+	<target host="jss.t.sinajs.cn" />
+		<test url="http://js1.t.sinajs.cn/t5/register/js/v6/pl/register/loginBox/index.js" />
+
 	<securecookie host="^\w" name="." />
+
+	<rule from="^http://js(1|2|3|s)\.t\.sinajs\.cn/" to="https://js.t.sinajs.cn/" />
 
 	<rule from="^http:" to="https:" />
 </ruleset>
