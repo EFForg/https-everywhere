@@ -59,6 +59,13 @@
 		- (www.)library.utm		(Forbidden; mismatched, CN: *.library.utoronto.ca)
 		- www.viceprovoststudents	(times out)
 		- (www.)wireless		(500; mismatched, CN: connect.utoronto.ca)
+		- alert					(expired 2012-12-27)
+		- 2learn				(redirects to http)
+		- www.cs				(mismatched)
+		- (www.)careers			(expired 2014-06-23)
+		- www.cns				(mismatched)
+		- (www.)lamp2			(expired 2015-01-24)
+		- www.employers.careers	(redirects to https://www.studentlife.utoronto.ca/for-employers/)
 
 
 	Problematic subdomains:
@@ -89,28 +96,27 @@
 		- guides.library	(redirects to http/404; mismatched, CN: *.libguides.com)
 		- (www.)news *
 		- campusroomfinder.studentlife *
+		- www.acorn
 
 	* Some pages redirect to http
 
 
 	Fully covered subdomains:
 
-		- 2learn
-		- alert
+
 		- inbox.alumni		(→ mail.google.com)
 		- (www.)bluebook
 		- (www.)careers
-		- www.employers.careers
-		- (www.)cns
+		
+		- cns
 		- connect
-		- www.cs
 		- (www.)donate		(www → ^)
 		- www.erin		(→ www.utm)
 		- (www.)events
 		- support.icicle
 		- main.its
 		- (www.)lamp
-		- (www.)lamp2
+		- www.utoronto
 
 		- library subdomains:
 
@@ -165,9 +171,66 @@
 <ruleset name="UToronto.ca (partial)">
 
 	<target host="utoronto.ca" />
-	<target host="*.utoronto.ca" />
-		<exclusion pattern="^http://(?:www\.)?utoronto\.ca/(?!favicon\.ico|__shared/)" />
-		<exclusion pattern="^http://(?:www\.)?news\.utoronto\.ca/(?!sites/)" />
+	<target host="www.utoronto.ca" />
+	<target host="blogs.studentlife.utoronto.ca" />
+	<target host="bluebook.utoronto.ca" />
+	<target host="cita.utoronto.ca" />
+	<target host="cns.utoronto.ca" />
+	<target host="connect.utoronto.ca" />
+	<target host="cus.oise.utoronto.ca" />
+	<target host="daniels.utoronto.ca" />
+	<target host="events.utoronto.ca" />
+	<target host="m.lms.utoronto.ca" />
+	<target host="main.its.utoronto.ca" />
+	<target host="news.utoronto.ca" />
+	<target host="oise.utoronto.ca" />
+	<target host="portal.utoronto.ca" />
+	<target host="rosi.utoronto.ca" />
+	<target host="studentlife.utoronto.ca" />
+	<target host="support.icicle.utoronto.ca" />
+	<target host="tspace.library.utoronto.ca" />
+	<target host="ulife.utoronto.ca" />
+	<target host="utorid.utoronto.ca" />
+	<target host="voting.utoronto.ca" />
+	<target host="weblogin.utoronto.ca" />
+	<target host="webmail.utoronto.ca" />
+	<target host="www.acorn.utoronto.ca" />
+	<target host="www.bluebook.utoronto.ca" />
+	<target host="www.cita.utoronto.ca" />
+	<target host="www.cns.utoronto.ca" />
+	<target host="www.daniels.utoronto.ca" />
+	<target host="www.events.utoronto.ca" />
+	<target host="www.news.utoronto.ca" />
+	<target host="www.oise.utoronto.ca" />
+	<target host="www.rosi.utoronto.ca" />
+	<target host="www.studentlife.utoronto.ca" />
+	<target host="www.ulife.utoronto.ca" />
+	<!-- LIBRARY -->
+	<target host="content.library.utoronto.ca" />
+	<target host="focus.library.utoronto.ca" />
+	<target host="hongkong.library.utoronto.ca" />
+	<target host="link.library.utoronto.ca" />
+	<target host="login.library.utoronto.ca" />
+	<target host="myaccount.library.utoronto.ca" />
+	<target host="payfines.library.utoronto.ca" />
+	<target host="utarms.library.utoronto.ca" />
+	<!-- UTM -->
+	<target host="www.utm.utoronto.ca" />
+	<target host="utm.utoronto.ca" />
+	<target host="library.utm.utoronto.ca" />
+	<target host="library2.utm.utoronto.ca" />
+	<target host="geog.utm.utoronto.ca" />
+	<target host="m.utm.utoronto.ca" />
+	<target host="sites.utm.utoronto.ca" />
+	<!-- UTSC -->
+	<target host="www.utsc.utoronto.ca" />
+	<target host="utsc.utoronto.ca" />
+	<target host="ctl.utsc.utoronto.ca" />
+	<target host="intranet.utsc.utoronto.ca" />
+	<target host="joomla.utsc.utoronto.ca" />
+	<target host="webapps.utsc.utoronto.ca" />
+	<target host="webmail.utsc.utoronto.ca" />
+	<target host="mathlab.utsc.utoronto.ca" />
 		<exclusion pattern="^http://campusroomfinder\.studentlife\.utoronto\.ca/(?![cC]ontent/|Login|[sS]cripts/)" />
 
 
@@ -177,9 +240,10 @@
 					-->
 	<securecookie host="^\.library\.utoronto\.ca$" name="^__utm\w$" />
 
+	<test url="http://www.cs.utoronto.ca" />
 
-	<rule from="^http://((?:2learn|alert|(?:www\.)?(?:bluebook|careers|cns|events|lamp2?|news|oise|portal|studentlife|ulife|utorid|utsc)|connect|www\.employers\.careers|www\.cs|support\.icicle|main\.its|(?:focus|link|login|myaccount|payfines|tspace)\.library|m\.lms|cus\.oise|(?:sws|www)\.rosi|(?:blogs|campusroomfinder)\.studentlife|www\.utm|(?:ctl|intranet|joomla|webapps|webmail)\.utsc|voting|weblogin|webmail|www)\.)?utoronto\.ca/"
-		to="https://$1utoronto.ca/" />
+	<rule from="^http:"
+		to="https:" />
 
 	<rule from="^http://inbox\.alumni\.utoronto\.ca/(?:.*)"
 		to="https://mail.google.com/a/alumni.utoronto.ca" />
@@ -201,5 +265,8 @@
 
 	<rule from="^http://squirrelmail\.utsc\.utoronto\.ca/"
 		to="https://webmail.utsc.utoronto.ca/" />
+
+	<rule from="^(http|https)://www\.cs\.utoronto\.ca/"
+		to="https://cs\.toronto\.edu/" />
 
 </ruleset>
