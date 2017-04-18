@@ -1,21 +1,23 @@
 <!--
-	For other Forbes coverage, see Forbes.com.xml.
-
-	Fully covered subdomains:
-
-		- (www.)?	(mismatch, self-signed)
-		- subs		(timeout)
+	Problematic subdomains:
+		- www	(redirects to apps.fedoraproject.org)
+	Mixed content:
+		- css on ^ from ^ *
+		- Images, on ^ from:
+			- ^ *
+			- \d.gravatar.com *
+	* Secured by us
 -->
-<ruleset name="Forbes Magazine.com" platform="mixedcontent" default_off="mismatch, self-signed">
+<ruleset name="Fedora Magazine.org (false MCB)" platform="mixedcontent">
 
-	<target host="forbesmagazine.com" />
-	<target host="www.forbesmagazine.com" />
-
-
-	<securecookie host=".+\.forbesmagazine\.com$" name=".+" />
+	<target host="fedoramagazine.org" />
+	<target host="www.fedoramagazine.org" />
 
 
-	<rule from="^http:"
-		to="https:" />
+	<securecookie host="^fedoramagazine\.org$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?fedoramagazine\.org/"
+		to="https://fedoramagazine.org/" />
 
 </ruleset>
