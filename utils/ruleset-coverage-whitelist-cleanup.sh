@@ -15,7 +15,8 @@ fi
 # Run from ruleset folder to simplify sha256sum output
 cd src/chrome/content/rules
 WLIST=../../../../utils/ruleset-coverage-whitelist.txt
-DELIM="  "
+TCHAR=" "
+DELIM="$TCHAR$TCHAR"
 
 while IFS=$DELIM read listed_hash file; do
   display_hash=$(echo $listed_hash | cut -c-7)
@@ -32,3 +33,6 @@ while IFS=$DELIM read listed_hash file; do
     fi
   fi
 done < "$WLIST"
+
+# Sorting by the second column (ruleset name)
+sort -t"$TCHAR" -b -k2 -o "$WLIST" "$WLIST"
