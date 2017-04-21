@@ -1,6 +1,7 @@
 #!/bin/sh
 
 TMPFILE=`mktemp /tmp/buffer.XXXXXXXX`
+trap 'rm "$TMPFILE"' EXIT
 
 for host in `cat utils/duplicate-whitelist.txt`; do
     REPEATS=`grep -F "target host=\"$host\"" src/chrome/content/rules/*.xml | wc -l`
