@@ -1,75 +1,68 @@
 <!--
-	Note: platform is so as not to increase non-Tor
-	distinguishability, given that no pages are covered
-	and no mixed content secured.
-
-
 	Nonfunctional hosts in *xvideos.com:
 
-		- (www.)? ʰ
-		- info ʳ
-		- jp ʰ
 		- support ᵃ
-		- upload ʰ
 
 	ᵃ Shows control.xvideos.com
-	ʰ Redirects to http
-	ʳ Refused
 
 
 	Problematic hosts in *xvideos.com:
 
-		- control ˢ
-		- img-hw ᶜ
-		- static-hw ᶜ
+		- img-l3 ʳ
+		- img100 ⁴
+		- img100-108 ⁴
+		- img100-875 ⁴
 
-	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
-	ˢ Self-signed
+	⁴ 400, equivalent to another domain
+	ʳ Refused, equivalent to another domain
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .xvideos.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images on info from img100.xvideos.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="XVideos.com (partial)" default_off="missing certificate chain" platform="mixedcontent">
+<ruleset name="XVideos.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="xvideos.com" />
+	<target host="control.xvideos.com" />
+	<target host="img-egc.xvideos.com" />
 	<target host="img-hw.xvideos.com" />
+	<target host="info.xvideos.com" />
+	<target host="jp.xvideos.com" />
 	<target host="static-hw.xvideos.com" />
-
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://(?:www\.)?xvideos\.com/(?:$|channels$|channels/new-videos$|profileslist$|rss/rss\.xml)" /-->
-
-			<!--	+ve:
-					-->
-			<!--test url="http://www.xvideos.com/channels" /-->
-			<!--test url="http://www.xvideos.com/channels/new-videos" /-->
-			<!--test url="http://www.xvideos.com/profileslist" /-->
-			<!--test url="http://www.xvideos.com/rss/rss.xml" /-->
-
-		<!--	Avoid potential XHR problems:
-							-->
-		<exclusion pattern="^http://static-hw\.xvideos\.com/.+\.js(?:$|\?)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://static-hw.xvideos.com/v3/js/libs/jquery.min.js" />
-			<test url="http://static-hw.xvideos.com/v3/js/skins/min/default.header.static.js" />
-			<test url="http://static-hw.xvideos.com/v3/js/skins/min/require.static.js" />
-			<test url="http://static-hw.xvideos.com/v3/js/skins/min/xnxx.header.static.js" />
-			<test url="http://static-hw.xvideos.com/v3/js/static/test/include.js" />
-			<test url="http://static-hw.xvideos.com/v3/js/skins/min/default.footer.static.js" />
-
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://upload\.xvideos\.com/(?:$|account(?:$|/create$|/lostpassword$|/verify_account$))" /-->
-
-			<!--	+ve:
-					-->
-			<!--test url="http://upload.xvideos.com/account" /-->
-			<!--test url="http://upload.xvideos.com/account/create" /-->
-			<!--test url="http://upload.xvideos.com/account/lostpassword" /-->
-			<!--test url="http://upload.xvideos.com/account/verify_account" /-->
+	<target host="upload.xvideos.com" />
+	<target host="www.xvideos.com" />
 
 		<test url="http://img-hw.xvideos.com/videos/thumbs/xvideos.gif" />
 		<test url="http://static-hw.xvideos.com/v3/img/skins/xnxx/icons-sprite2.png" />
 
+	<!--	Complications:
+				-->
+	<target host="img-l3.xvideos.com" />
+	<target host="img100.xvideos.com" />
+	<target host="img100-108.xvideos.com" />
+	<target host="img100-875.xvideos.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.xvideos\.com" name="^HEXAVID_LOGIN$" /-->
+
+
+	<rule from="^http://img(?:-l3|100|100-\d+)\.xvideos\.com/"
+		to="https://img-hw.xvideos.com/" />
 
 	<rule from="^http:"
 		to="https:" />

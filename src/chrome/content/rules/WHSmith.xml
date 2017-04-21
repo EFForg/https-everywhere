@@ -2,38 +2,40 @@
 	wbiprod.storedvalue.com
 
 
-	Problematic subdomains:
+	Problematic hosts in *whsmith.co.uk:
 
-		- (www.)	(mismatched, CN: secure.whsmith.co.uk)
+		- (www.)?magazines ᵐ
+
+	ᵐ Mismatched
 
 -->
 <ruleset name="WHSmith (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="whsmith.co.uk" />
-	<target host="*.whsmith.co.uk" />
-		<!--
-			Nonfunctional paths:
+	<target host="blog.whsmith.co.uk" />
+	<target host="images.blog.whsmith.co.uk" />
+	<target host="btmedia.whsmith.co.uk" />
+	<target host="local.whsmith.co.uk" />
+	<target host="www.local.whsmith.co.uk" />
+	<target host="www.whsmith.co.uk" />
 
-				- $				(redirects back)
-				- ComputingAndElectronics/ *
-				- eb_eBooks/ *
-				- GiftsGamesAndToys$ *
-				- GiftsGamesAndToys/$ *
-				- StationeryAndCards *
-				- StationeryAndCards/$		(403)
-
-			* 404
-							-->
-		<exclusion pattern="^http://(?:www\.)?whsmith\.co\.uk/(?!App_Themes/|(?:Books|CatalogAndSearch|E?Products|GiftCardProducts|Voting)(?:$|\?|/)|favicon\.ico|GiftsGamesAndToys/\w|[iI]mages/|Script/|StationeryAndCards/\w|[sS]upport/|WebResource\.axd)" />
+	<!--	Complications:
+				-->
+	<target host="magazines.whsmith.co.uk" />
+	<target host="www.magazines.whsmith.co.uk" />
 
 
-	<securecookie host="^(?:www\.)?magazines\.whsmith\.co\.uk$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:secure\.|www\.)?whsmith\.co\.uk/"
-		to="https://secure.whsmith.co.uk/" />
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://(?:www\.)?magazines\.whsmith\.co\.uk/.*"
+		to="https://www.whsmith.co.uk/magazines" />
 
-	<rule from="^http://(www\.)?magazines\.whsmith\.co\.uk/"
-		to="https://$1magazines.whsmith.co.uk/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -37,7 +37,7 @@ must have sufficient test coverage. You can often improve test coverage by
 adding <test url="..." /> tags, or by restructuring the rule to avoid
 wildcard <target> tags. See these documents:
 https://github.com/EFForg/https-everywhere/blob/master/ruleset-testing.md
-https://github.com/EFForg/https-everywhere/blob/master/ruleset-style.md
+https://github.com/EFForg/https-everywhere/blob/master/CONTRIBUTING.md#ruleset-style-guide
 '
   exit 1
 else

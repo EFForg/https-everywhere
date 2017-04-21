@@ -1,25 +1,23 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://leviathansecurity.com/ => https://leviathansecurity.com/: (51, "SSL: no alternative certificate subject name matches target host name 'www.leviathansecurity.com'")
-Fetch error: http://www.leviathansecurity.com/ => https://www.leviathansecurity.com/: (51, "SSL: no alternative certificate subject name matches target host name 'www.leviathansecurity.com'")
-	For rules causing false/broken MCB, see Leviathan_Security.com-falsemixed.xml.
+	Insecure cookies are set for these hosts: ᶜ
 
+		- www.leviathansecurity.com
 
-	Mixed content:
-
-		- css from $self *
-
-	* Secured by us
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Leviathan Security.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Leviathan Security.com">
 
 	<target host="leviathansecurity.com" />
 	<target host="www.leviathansecurity.com" />
-		<!--
-			Avoid broken MCB:
-						-->
-		<exclusion pattern="^http://(?:www\.)?leviathansecurity\.com/+blog(?:$|[?/])" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.leviathansecurity\.com$" name="^crumb$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf-clearance)$" />
+	<securecookie host="^\w" name="." />
 
 
 	<rule from="^http:" to="https:" />

@@ -1,35 +1,50 @@
 <!--
-	CDN buckets:
+	Refused:
+		imdb.com
 
-		- ia.imdb.com.edgesuite.net
+	Secure connection failed:
+		www.imdb.com
+		akas.imdb.com
+		app.imdb.com
+		brazilian.imdb.com
+		finnish.imdb.com
+		former.imdb.com
+		italian.imdb.com
+		italy.imdb.com
+		portuguese.imdb.com
+		random.imdb.com
+		romanian.imdb.com
+		rss.imdb.com
+		showtime.imdb.com
+		swedish.imdb.com
+		vacobranding.imdb.com
+		widgets.imdb.com
 
+		www.media-imdb.com
+		s.media-imdb.com
 
-	!functional:
-		(www.)imdb.com
-		- s.media-imdb.com	(refused)
+	Invalid certificate:
+		graph.imdb.com
+		i.imdb.com
+		posters.imdb.com
 
-	Problematic domains:
+	Different content http/https:
+		pro.imdb.com (test url: http://pro.imdb.com/signup/v4/help)
 
-		- ia.media-imdb.com	(Akamai, "Service Unavailable", !at www nor origin-ia nor secure.imdb.com)
-
-
-	Fully covered domains:
-
-		- ia.media-imdb.com	(→ images-na.ssl-images-amazon.com)
-
-
-	Rewriting www.imdb.com/(name|title)/ pages to secure redirects to pro.imdb.com.
 -->
 <ruleset name="IMDB (partial)">
 
-	<target host="imdb.com"/>
-	<target host="*.imdb.com"/>
-	<exclusion pattern="^http://(?:[^/:@]+\.)?imdb\.com/images/(?:jwplayer|a/ifb/doubleclick/expand\.html)" />
+	<target host="contribute.imdb.com" />
+	<target host="m.imdb.com" />
+	<target host="pro-labs.imdb.com" />
+		<test url="http://pro-labs.imdb.com/subagreement" />
+	<target host="secure.imdb.com" />
+		<test url="http://secure.imdb.com/contact" />
 
-	<rule from="^http://(?:www\.)?imdb\.com/(images|rg)/"
-		to="https://secure.imdb.com/$1/"/>
+	<target host="ia.media-imdb.com" />
+		<test url="http://ia.media-imdb.com/images/G/01/imdb/images/navbar/imdbpro_logo_nb-3000473826._CB530713470_.png" />
+	<target host="i.media-imdb.com" />
 
-	<rule from="^http://(?:secure\.|(?:i|www)\.media-)imdb\.com/"
-		to="https://secure.imdb.com/"/>
+	<rule from="^http:" to="https:" />
 
 </ruleset>
