@@ -1,0 +1,41 @@
+<!--
+	Invalid certificate:
+		^kafan.cn
+		bbs.kafan.cn
+
+		uc.ikafan.com	https://uc.ikafan.com/admin.php
+
+	Redirect to http:
+		www.kafan.cn
+		bds.kafan.cn
+-->
+
+<ruleset name="KaFan">
+
+	<!-- Directly: -->
+	<target host="a.ikafan.com" />
+		<test url="http://a.ikafan.com/image/smiley/default/1.gif" />
+	<target host="b.ikafan.com" />
+		<test url="http://b.ikafan.com/000/75/38/21_avatar_small.jpg" />
+	<target host="fj.ikafan.com" />
+		<test url="http://fj.ikafan.com/template/comeing_city/comeing/ptem.png" />
+
+	<!-- Complications: -->
+	<target host="kafan.cn" />
+	<target host="www.kafan.cn" />
+	<target host="bbs.kafan.cn" />
+		<exclusion pattern="^http://(www\.|bbs\.)?kafan\.cn/(?!template/)" />
+		<rule from="^http://(www\.|bbs\.)?kafan\.cn/template/" to="https://fj.ikafan.com/template/" />
+		<test url="http://kafan.cn/template/comeing_city/style/t2/style.css" />
+		<test url="http://www.kafan.cn/template/comeing_city/style/t2/style.css" />
+		<test url="http://bbs.kafan.cn/template/comeing_city/style/t2/style.css" />
+
+		<test url="http://bbs.kafan.cn/forum-215-1.html" />
+		<test url="http://bbs.kafan.cn/thread-2070740-1-1.html" />
+
+	<target host="fj.kafan.cn" />
+		<rule from="^http://fj\.kafan\.cn/" to="https://fj.ikafan.com/" />
+		<test url="http://fj.kafan.cn/1/smilies.js" />
+
+	<rule from="^http:" to="https:" />
+</ruleset>
