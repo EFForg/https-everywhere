@@ -1,49 +1,39 @@
 <!--
-	Problematic domains:
+	Non-functional hosts
+		SSL peer certificate was not OK:
+			 - catblock.getadblock.com
+			 - code.getadblock.com
+			 - old-support.getadblock.com
+			 - search.getadblock.com
+			 - support.getadblock.com
+			 - translate.getadblock.com
 
-		- support.getadblock.com *
+		Peer certificate cannot be authenticated with given CA certificates:
+			 - campaign.getadblock.com
 
-	* Tender
+		Timeout was reached:
+			 - www.chromeadblock.com
 
-
-	For getadblock.com
-		Works:
-
-			- www
-			- $
-
-	For chromeadblock.com
-		Works:
-
-			- $
-		Doesn't work:
-
-			- www
-
-
-	Insecure cookies are set for these domains:
-
-		- support.getadblock.com
-
+		4xx client error:
+			 - log.getadblock.com
 -->
 <ruleset name="AdBlock">
-  <target host="getadblock.com" />
-  <target host="*.getadblock.com" />
-  <target host="chromeadblock.com" />
-  <target host="*.chromeadblock.com" />
+	<!-- getadblock.com -->
+	<target host="getadblock.com" />
+	<target host="www.getadblock.com" />
+	<target host="blog.getadblock.com" />
+	<target host="data.getadblock.com" />
+		<test url="http://data.getadblock.com/filters/adblock_custom.txt" />
+	<target host="help.getadblock.com" />
+	<target host="ping.getadblock.com" />
 
+	<!-- chromeadblock.com -->
+	<target host="chromeadblock.com" />
+	<target host="www.chromeadblock.com" />
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^support\.getadblock\.com$" name="^(_tender_session|anon_token)$" /-->
+	<rule from="^http://(www\.)?chromeadblock\.com/"
+			to="https://chromeadblock.com/" />
 
-
-  <rule from="^http://(www\.)?getadblock\.com/"
-          to="https://$1getadblock.com/" />
-
-	<rule from="^http://support\.getadblock\.com/(?=favicon\.ico|help/theme\.css|pkg/|stylesheets/)"
-		to="https://help.tenderapp.com/" />
-
-  <rule from="^http://(?:www\.)?chromeadblock\.com/"
-          to="https://chromeadblock.com/" />
+	<rule from="^http:" 
+			to="https:" />
 </ruleset>
