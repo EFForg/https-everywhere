@@ -8,11 +8,11 @@ A `ruleset` is an [XML](http://www.xml.com/pub/a/98/10/guide0.html?page=2) file 
 
 ```xml
 <ruleset name="RabbitMQ">
-        <target host="rabbitmq.com" />
-        <target host="www.rabbitmq.com" />
+    <target host="rabbitmq.com" />
+    <target host="www.rabbitmq.com" />
 
-        <rule from="^http:"
-                to="https:" />
+    <rule from="^http:"
+            to="https:" />
 </ruleset>
 ```
 
@@ -32,10 +32,10 @@ The `rule` tags do the actual rewriting work. The `from` attribute of each rule 
 
 ```xml
 <ruleset name="Wikipedia">
-  <target host="*.wikipedia.org" />
+    <target host="*.wikipedia.org" />
 
-  <rule from="^http://(\w{2})\.wikipedia\.org/wiki/"
-          to="https://secure.wikimedia.org/wikipedia/$1/wiki/"/>
+    <rule from="^http://(\w{2})\.wikipedia\.org/wiki/"
+            to="https://secure.wikimedia.org/wikipedia/$1/wiki/" />
 </ruleset>
 ```
 
@@ -89,8 +89,8 @@ Sometimes rulesets are useful or interesting, but cause problems that make them 
 
 ```xml
 <ruleset name="Amazon (buggy)" default_off="breaks site">
-   <target host="www.amazon.*" />
-   <target host="amazon.*" />
+    <target host="www.amazon.*" />
+    <target host="amazon.*" />
 </ruleset> 
 ```
 
