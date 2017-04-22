@@ -1,41 +1,26 @@
 <!--
 	For other Oracle coverage, see Oracle.xml.
 
-
 	CDN buckets:
-
 		- wildcard.addthis.com.edgekey.net
 
-
 	Nonfunctional domains:
-
 		- s4.addthis.com	(shows empty tree, mismatched, CN: xiaomufwq.com)
 
-
 	Problematic domains:
-
 		- go.addthis.com 	(invalid cert; mismatched)
 
-
 	Insecure cookies are set for these domains and hosts: ᶜ
-
 		- .addthis.com
 		- www.addthis.com
-
 	ᶜ See https://owasp.org/index.php/SecureFlag
 
-
 	Mixed content:
-
 		- Image on www from blog.addthiscdn.com ˢ
 		- Bug on www from cf.addthis.com ˢ
-
 	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
-
 -->
 <ruleset name="AddThis.com (partial)">
-
-	<target host="addthis.com" />
 	<target host="api.addthis.com" />
 	<target host="api-public.addthis.com" />
 	<target host="cache.addthis.com" />
@@ -55,12 +40,11 @@
 	<target host="status.addthis.com" />
 	<target host="su.addthis.com" />
 	<target host="support.addthis.com" />
-	<target host="www.addthis.com" />
 
 		<!--	Redirects to http:
 						-->
-
-		<!--exclusion pattern="^http://(?:www\.)?addthis\.com/(?:browser-extensions$|careers$|contact$|forgot-password$|plugins$|privacy/privacy-policy$|security/hall-of-fame$|social-buttons$|support$)" /-->
+	<target host="addthis.com" />
+	<target host="www.addthis.com" />
 
 		<exclusion pattern="^http://(?:www\.)?addthis\.com/(?!/*(?:$|\?|bookmark\.php|(?:academy|blog|dashboard|get|landing|login|plans|press|register|services|sitebar-editor|website-tools|wordpress)(?:$|[?/])|download/|images/|\w+/sharing-buttons(?:$|\?)|style/))" />
 
@@ -125,24 +109,8 @@
 		<test url="http://ct1.addthis.com/static/r07/widget/css/widget007.old.css" />
 		<test url="http://dashcache.addthis.com/images/logo-reversed-lg.png" />
 
-		<!--	Mixed image:
-					-->
-		<!--test url="http://www.addthis.com/blog/" /-->
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.addthis.com$" name="^km_ai$" /-->
-	<!--securecookie host="^www\.addthis\.com$" name="^(?:ana_svc|bb2_screener|siteaud)$" /-->
-
 	<securecookie host="^\." name="^(?:__atuvc|__cfduid|di|uid|xtc)$" />
 	<securecookie host="^[^.w]" name="." />
 
-
-	<rule from="^http://(ct\d)\.addthis\.com/"
-		to="https://$1.addthis.com/" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
