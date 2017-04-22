@@ -12,21 +12,31 @@
 		assets[012].academia\.edu
 
 
-	Fully covered subdomains:
+	Nearly all subdomains (with two exceptions) are covered using a wildcard:
+	The Academia.edu website has SSL enabled for subdomains www and of the form
+ 	<university name>.academia.edu.
 
-		- (www.)?
-		- independent
+
+	Exceptions:
+
+		- mail
+		- support
 
 -->
 <ruleset name="Academia.edu (partial)">
 
 	<target host="academia.edu" />
 	<target host="*.academia.edu"/>
+	
+	<test url="http://princeton.academia.edu/" />
+	<test url="http://columbia.academia.edu/" />
+	<test url="http://oxford.academia.edu/" />
+	<test url="http://mail.academia.edu/" />
+	<test url="http://support.academia.edu/" />
+	
+	<exclusion pattern="^http://support\.academia\.edu/"/>
+	<exclusion pattern="^http://mail\.academia\.edu/"/>
 
-	<rule from="^http://(assets|images|photos)\.academia\.edu/"
-		to="https://s3.amazonaws.com/academia.edu.$1/"/>
-
-	<rule from="^http://(independent\.|www\.)?academia\.edu/"
-		to="https://$1academia.edu/" />
+	<rule from="^http:" to="https:" />
 
 </ruleset>
