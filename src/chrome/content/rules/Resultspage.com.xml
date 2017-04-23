@@ -1,30 +1,27 @@
 <!--
-	For other SLI Systems coverage, see SLI-Systems.xml.
+	For other SLI Systems coverage, see SLI-Systems.com.xml.
 
+	MCB:
+		poolandspawarehouse.resultspage.com
 
-	Nonfunctional domains:
+	Mismatched:
+		^resultspage.com
 
-		- (www.)resultsdemo.com		(redirects to http, valid cert)
-		- (www.)resultspage.com		(mismatched, CN: *.resultsdemo.com)
-		- sli-systems.resultspage.com	(redirects to site-search.sli-systems.com, with or without https)
+	Not exist:
+		www.resultspage.com
 
-
-	Fully covered resultspage.com subdomains:
-
-		- assets
-		- \w+		(per-client subdomains)
-
+	Redirects to http:
+		lenovo-outlet.resultspage.com
 -->
-<ruleset name="resultspage.com (partial)">
-
+<ruleset name="Resultspage.com">
 	<target host="*.resultspage.com" />
-		<exclusion pattern="^http://www\." />
+		<test url="http://sli-systems.resultspage.com/" />
 
+	<exclusion pattern="^http://(lenovo-outlet|poolandspawarehouse)\.resultspage\.com/" />
+		<test url="http://lenovo-outlet.resultspage.com/autocomplete/sli-rac.stub.js" />
+		<test url="http://poolandspawarehouse.resultspage.com/poolandspawarehouse/Sp400" />
 
-	<securecookie host="^.+\.resultspage\.com$" name=".+" />
+	<securecookie host=".+" name=".+" />
 
-
-	<rule from="^http://([\w-]+)\.resultspage\.com/"
-		to="https://$1.resultspage.com/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
