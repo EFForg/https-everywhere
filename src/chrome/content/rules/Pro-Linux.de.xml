@@ -1,26 +1,18 @@
-<ruleset name="Pro-Linux.de (partial)" platform="cacert">
+<!--
+	Non-functional hosts
+		Incomplete certificate chain error:
+			 - mail.pro-linux.de
+			 - samael.pro-linux.de
 
+		Mixed content blocking (MCB) tiggered:
+			 - pro-linux.de
+			 - www.pro-linux.de
+-->
+<ruleset name="Pro-Linux.de" platform="mixedcontent">
 	<target host="pro-linux.de" />
-	<target host="*.pro-linux.de" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://www\.pro-linux\.de/+($|\?)" /-->
-		<!--
-			Exceptions:
-					-->
-		<!--exclusion pattern="^http://www\.pro-linux\.de/+(?!css/|favicon\.ico|forum(?:$|[?/])|images/)" /-->
+	<target host="www.pro-linux.de" />
 
+	<securecookie host="^(www\.)?pro-linux\.de$" name=".+" />
 
-	<!--	Not secured by server:
-					-->
-	<securecookie host="\.www\.pro-linux\.de$" name="^phpbb2bkHas_(?:data|sid)$" />
-
-
-	<!--	^ redirects to www over http,
-		so copy that behavior:
-					-->
-	<rule from="^http://(?:www\.)?pro-linux\.de/(?=css/|favicon\.ico|forum(?:$|[?/])|images/)"
-		to="https://www.pro-linux.de/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

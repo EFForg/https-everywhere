@@ -1,17 +1,27 @@
 <!--
-	For problematic rules, see Habets.se-mismatches.xml.
+	Non-functional hosts
+		Couldn't connect to server:
+			 - lmqpov.habets.se
 
+		Peer certificate cannot be authenticated with given CA certificates:
+			 - www.habets.se
+			 - proxy-us.habets.se
+
+		4xx client error:
+			 - cw.habets.se (require authentication)
 -->
-<ruleset name="habets.se (partial)" platform="cacert">
+<ruleset name="Habets.se">
+	<target host="habets.se" />
+	<target host="www.habets.se" />
+	<target host="blog.habets.se" />
+	<target host="blog-dev.habets.se" />
+	<target host="cdn.habets.se" />
 
-	<target host="*.habets.se" />
-	<target host="*.habets.pp.se" />
+	<securecookie host=".+" name=".+" />
 
+	<rule from="^http://www\.habets\.se/"
+			to="https://habets.se/" />
 
-	<securecookie host="^blog\.habets(?:\.pp)?\.se$" name=".*" />
-
-
-	<rule from="^http://(blog|cdn)\.habets(\.pp)?\.se/"
-		to="https://$1.habets$2.se/" />
-
+	<rule from="^http:" 
+			to="https:" />
 </ruleset>
