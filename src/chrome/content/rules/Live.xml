@@ -20,12 +20,15 @@
 
 	Problematic hosts in *live.com:
 
-		- ^ *
-		- sc[34].maps
-		- home.services.spaces ²
+		- ^ (r)
+		- onecare (t)
+		- sc2.maps (m)
+		- sc[34].maps (?)
+		- home.services.spaces (m)
 
-	* Refused
-	² Mismatched
+	m: certificate mismatch
+	t: time out
+	r: refused
 
 
 	Fully covered hosts in *live.com:
@@ -37,11 +40,9 @@
 		- calendar
 		- choice
 
-		- consent
 		- contacts
 		- contacts-df
 		- devices
-		- directory
 
 		- *.directory:
 
@@ -54,11 +55,8 @@
 		- groups
 		- h
 		- client.hip
-		- dc[12].client.hip
-		- hipservice
 		- home
 		- hotmail
-		- sc.imp
 		- odc.officeapps
 		- login
 		- *.login
@@ -68,13 +66,12 @@
 
 			- m
 			- snt\d+
-			- sn133w.snt133
 			- www
 
 		- in *.maps:
 
 			- mc1
-			- sc[12]
+			- sc1
 			- sc[34]		(→ sc1.maps)
 
 		- messenger
@@ -83,11 +80,9 @@
 
 			- baymsg\d+
 
-		- mid
 		- oauth
 		- office
 		- c2rsetup.officeapps
-		- onecare
 		- onedrive
 		- people
 		- people-df
@@ -106,10 +101,7 @@
 		- secure.shared
 
 		- directory.services
-		- livecontacts.services
-		- geo.messenger.services
 
-		- signout
 		- signup
 		- skydrive
 		- skygfx
@@ -124,9 +116,6 @@
 			- byfiles
 			- dm1files
 			- cid-\w+.users
-
-
-		- max.sup
 
 
 	Insecure cookies are set for these domains and hosts:
@@ -157,11 +146,9 @@
 	<target host="c.live.com" />
 	<target host="c-mid.live.com" />
 	<target host="choice.live.com" />
-	<target host="consent.live.com" />
 	<target host="contacts.live.com" />
 	<target host="contacts-df.live.com" />
 	<target host="devices.live.com" />
-	<target host="directory.live.com" />
 	<target host="*.directory.live.com" />
 
 	<target host="domains.live.com" />
@@ -172,34 +159,23 @@
 	<target host="h.live.com" />
 
 	<target host="client.hip.live.com" />
-	<target host="dc1.client.hip.live.com" />
-	<target host="dc2.client.hip.live.com" />
 
-	<target host="hipservice.live.com" />
 	<target host="home.live.com" />
 	<target host="hotmail.live.com" />
-	<target host="sc.imp.live.com" />
 	<target host="login.live.com" />
 	<target host="*.login.live.com" />
 	<target host="mail.live.com" />
-
-	<!--	Target host is * because Live URLs can contain multiple unpredictable
-		components, like http://snXXXw.sntXXX.mail.live.com/default.aspx
-				-->
 	<target host="*.mail.live.com" />
 
 	<target host="mc1.maps.live.com" />
 	<target host="sc1.maps.live.com" />
-	<target host="sc2.maps.live.com" />
 
 	<target host="messenger.live.com" />
 	<target host="*.gateway.messenger.live.com" />
-	<target host="mid.live.com" />
 	<target host="oauth.live.com" />
 	<target host="office.live.com" />
 	<target host="c2rsetup.officeapps.live.com" />
 	<target host="odc.officeapps.live.com" />
-	<target host="onecare.live.com" />
 	<target host="onedrive.live.com" />
 	<target host="people.live.com" />
 	<target host="people-df.live.com" />
@@ -212,10 +188,7 @@
 	<target host="rad.live.com" />
 
 	<target host="directory.services.live.com" />
-	<target host="livecontacts.services.live.com" />
-	<target host="geo.messenger.services.live.com" />
 
-	<target host="signout.live.com" />
 	<target host="signup.live.com" />
 	<target host="skydrive.live.com" />
 	<target host="skygfx.live.com" />
@@ -224,7 +197,6 @@
 	<target host="status.live.com" />
 
 	<target host="*.storage.live.com" />
-	<target host="max.sup.live.com" />
 	<target host="www.live.com" />
 
 	<!--	Complications:
@@ -233,9 +205,6 @@
 	<target host="sc3.maps.live.com" />
 	<target host="sc4.maps.live.com" />
 
-		<test url="http://sn133w.snt133.mail.live.com/default.aspx" />
-		<test url="http://sn133w.snt133.mail.live.com/default.aspx?wa=" />
-		<test url="http://sn133w.snt133.mail.live.com/default.aspx?wa=wsignin1.0" />
 		<test url="http://secure.shared.live.com/" />
 
 
@@ -253,18 +222,13 @@
 	<!--	NB: Are cross-domain cookies needed on unsecurable pages?
 
 	<securecookie host="^\.live\.com$" name=".+" /-->
-	<securecookie host="^\.?(?:account|consent|people\.directory|(?:login\.)?domains|login|mail|messenger|postmaster|profile|signup)\.live\.com$" name=".+" />
+
+	<!-- Don't include ^login.live.com in the securecookie. See https://github.com/EFForg/https-everywhere/issues/9691. -->
+	<securecookie host="^\.?(?:account|people\.directory|(?:login\.)?domains|mail|messenger|postmaster|profile|signup)\.live\.com$" name=".+" />
 
 
 	<rule from="^http://live\.com/"
 		to="https://www.live.com/" />
-
-	<!--	Example:
-			http://sn133w.snt133.mail.live.com/default.aspx?wa=wsignin1.0 >>>
-			https://snt133.mail.live.com/default.aspx?wa=wsignin1.0
-							-->
-	<rule from="^http://[^@:/.]+\.([^@:/.]+)\.mail\.live\.com/"
-		to="https://$1.mail.live.com/" />
 
 	<rule from="^http://sc[34]\.maps\.live\.com/"
 		to="https://sc1.maps.live.com/" />
