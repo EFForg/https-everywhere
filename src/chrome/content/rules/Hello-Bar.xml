@@ -10,14 +10,6 @@
 
 	* WP Engine
 
-
-	Problematic hosts in *hellobar.com:
-
-		- ping *
-
-	* Expired
-
-
 	Insecure cookies are set for these hosts:
 
 		- www.hellobar.com
@@ -26,9 +18,13 @@
 <ruleset name="Hello Bar.com (partial)">
 
 	<target host="hellobar.com" />
-	<!--target host="ping.hellobar.com" /-->
+	<target host="my.hellobar.com" />
+	<target host="old.hellobar.com" />
+	<target host="ping.hellobar.com" />
+	<target host="sumome-140a.kxcdn.com" />
 	<target host="www.hellobar.com" />
 
+	<test url="http://my.hellobar.com/81d6958ddcddeaa7f3e1487d6e283fe1fc8f5307.js" />
 
 	<!--	Not secured by server:
 					-->
@@ -36,6 +32,11 @@
 
 	<securecookie host="^www\.hellobar\.com$" name="" />
 
+	<exclusion pattern="^http://old\.hellobar\.com/$" />
+
+	<rule from="^http://old\.hellobar\.com/assets/"
+		to="https://old.hellobar.com/assets/" />
+		<test url="http://old.hellobar.com/assets/style.css" />
 
 	<rule from="^http:"
 		to="https:" />
