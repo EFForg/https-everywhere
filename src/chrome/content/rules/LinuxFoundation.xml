@@ -21,16 +21,10 @@
 
 	Partially covered hosts in *linuxfoundation.org:
 
-		- events ʰ
-
-	ʰ Some pages redirect to http
+		- events (root domain and /events/* redirect to http)
 
 -->
 <ruleset name="Linux Foundation.org (partial)">
-
-	<!--	Direct rewrites:
-				-->
-	<target host="lists.linux-foundation.org" />
 
 	<target host="linuxfoundation.org" />
 	<target host="www.linuxfoundation.org" />
@@ -39,28 +33,21 @@
 	<target host="collabprojects.linuxfoundation.org" />
 	<target host="developerbugs.linuxfoundation.org" />
 	<target host="events.linuxfoundation.org" />
+		<exclusion pattern="^http://events\.linuxfoundation\.org/((events/|\?).*)?$" />
+		<!-- Secured -->
+		<test url="http://events.linuxfoundation.org/sponsor" />
+		<test url="http://events.linuxfoundation.org/sites/events/files/styles/events_listing_192x192/public/ccc_eu_color.png" />
+		<!-- Excluded -->
+		<test url="http://events.linuxfoundation.org/events/embedded-linux-conference-europe/attend/register" />
+		<test url="http://events.linuxfoundation.org/events/linuxcon-europe/program/cfp" />
+		<test url="http://events.linuxfoundation.org/events/mesoscon/attend/register?utm_source=lf" />
+		<test url="http://events.linuxfoundation.org/" />
+		<test url="http://events.linuxfoundation.org/?utm_source=lf" />
 	<target host="identity.linuxfoundation.org" />
 	<target host="ldn.linuxfoundation.org" />
 	<target host="lists.linuxfoundation.org" />
 	<target host="lsbbugs.linuxfoundation.org" />
 	<target host="training.linuxfoundation.org" />
-
-		<!--	Exceptions:
-					-->
-		<exclusion pattern="^http://events\.linuxfoundation\.org/((events/|\?).*)?$" />
-
-			<!--	+ve:
-					-->
-			<test url="http://events.linuxfoundation.org/events/embedded-linux-conference-europe/attend/register" />
-			<test url="http://events.linuxfoundation.org/events/linuxcon-europe/program/cfp" />
-			<test url="http://events.linuxfoundation.org/events/mesoscon/attend/register?utm_source=lf" />
-			<test url="http://events.linuxfoundation.org/?" />
-			<test url="http://events.linuxfoundation.org/?utm_source=lf" />
-
-			<!--	-ve:
-					-->
-			<test url="http://events.linuxfoundation.org/sponsor" />
-			<test url="http://events.linuxfoundation.org/sites/events/files/styles/events_listing_192x192/public/ccc_eu_color.png" />
 
 	<rule from="^http:"
 		to="https:" />
