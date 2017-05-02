@@ -1,48 +1,79 @@
 <!--
-	Nonfunctional subdomains:
+	Remark: [0-9].*pool.ntp.org are completely omitted here. 
+		*.pool.ntp.org are omitted if they do not give SSL error.
 
-		- (www.)	(ssl_error_rx_record_too_long)
+	Non-functional hosts
+		Couldn't connect to server:
+			 - archive.ntp.org
+			 - bk1.ntp.org
+			 - doc.ntp.org
+			 - packages.ntp.org
+			 - psp3.ntp.org
 
+		Timeout was reached:
+			 - mail1.ntp.org
+			 - ns1.ntp.org
+			 - ns2.ntp.org
 
-	Problematic hosts in *ntp.org:
+		SSL connect error:
+			 - ntp.org
+			 - www.ntp.org
+			 - bk.ntp.org
+			 - ar.pool.ntp.org
+			 - ec.pool.ntp.org
+			 - id.pool.ntp.org
+			 - in.pool.ntp.org
+			 - uk.pool.ntp.org
+			 - uy.pool.ntp.org
 
-		- support *
+		SSL peer certificate was not OK:
+			 - mailman.ntp.org
+			 - pool.ntp.org
+			 - www.pool.ntp.org
+			 - cn.pool.ntp.org
+			 - cz.pool.ntp.org
+			 - de.pool.ntp.org
+			 - ee.pool.ntp.org
+			 - es.pool.ntp.org
+			 - europe.pool.ntp.org
+			 - fi.pool.ntp.org
+			 - fr.pool.ntp.org
+			 - hu.pool.ntp.org
+			 - il.pool.ntp.org
+			 - lu.pool.ntp.org
+			 - no.pool.ntp.org
+			 - north-america.pool.ntp.org
+			 - pl.pool.ntp.org
+			 - rs.pool.ntp.org
+			 - sg.pool.ntp.org
+			 - ua.pool.ntp.org
+			 - us.pool.ntp.org
+			 - vn.pool.ntp.org
 
-	* Server sends no certificate chain, see https://whatsmychaincert.com
+		Peer certificate cannot be authenticated with given CA certificates:
+			 - ae.pool.ntp.org
+			 - au.pool.ntp.org
+			 - bg.pool.ntp.org
+			 - dk.pool.ntp.org
+			 - jp.pool.ntp.org
+			 - mk.pool.ntp.org
+			 - ro.pool.ntp.org
+			 - ru.pool.ntp.org
 
-
-	Insecure cookies are set for these hosts:
-
-		- bugs.ntp.org
-		- support.ntp.org
-
-
-	Mixed content:
-
-		- Bugs, on:
-
-			- support from c.gigcount.com
-			- support from www.ipligence.com
-
+		Incomplete certificate chain error:
+			 - bugs.ntp.org
+			 - bugzilla.ntp.org
+			 - people.ntp.org
+			 - africa.pool.ntp.org
+			 - asia.pool.ntp.org
+			 - psp2.ntp.org
+			 - support.ntp.org
+			 - twiki.ntp.org
 -->
-<ruleset name="NTP.org (partial)" platform="cacert">
-
-	<!--	Direct rewrites:
-				-->
-	<target host="bugs.ntp.org" />
+<ruleset name="NTP.org (partial)">
 	<target host="lists.ntp.org" />
-	<!--target host="support.ntp.org" /-->
 
+	<securecookie host="^lists\.ntp\.org$" name=".+" />
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^bugs\.ntp\.org$" name="^DEFAULTFORMAT$" /-->
-	<!--securecookie host="^support\.ntp\.org$" name="^TWIKISID$" /-->
-
-	<securecookie host="^(?:support|lists)\.ntp\.org$" name=".+" />
-
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
