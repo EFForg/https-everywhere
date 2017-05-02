@@ -3,6 +3,7 @@
 
 		- blog ¹
 		- global ¹
+		- www ¹
 
 	¹ Refused
 
@@ -26,19 +27,24 @@
 <ruleset name="Freifunk.net">
 
 	<target host="freifunk.net"/>
-	<target host="www.freifunk.net"/>
 	<target host="bug.freifunk.net"/>
 	<target host="facebook.freifunk.net"/>
 	<target host="forum.freifunk.net"/>
-	<target host="blog.guetersloh.freifunk.net"/>
-	<target host="hamburg.freifunk.net"/>
 	<target host="pad.freifunk.net"/>
 	<target host="twitter.freifunk.net"/>
 	<target host="vimeo.freifunk.net"/>
 	<target host="wiki.freifunk.net"/>
 	<target host="youtube.freifunk.net"/>
-	
-        <securecookie host="^(bug|forum|blog\.guetersloh|pad)\.freifunk\.net$" name=".+" />
+
+	<target host="gera.freifunk.net"/>
+	<target host="greiz.freifunk.net"/>
+	<target host="gera-greiz.freifunk.net"/>
+	<target host="goettingen.freifunk.net"/>
+	<target host="guetersloh.freifunk.net"/>
+	<target host="blog.guetersloh.freifunk.net"/>
+	<target host="hamburg.freifunk.net"/>
+
+	<securecookie host="^(bug|forum|pad)\.freifunk\.net$" name=".+" />
 
 	<test url="http://facebook.freifunk.net/foo" />
 	<test url="http://facebook.freifunk.net/bar" />
@@ -49,8 +55,7 @@
 	<test url="http://youtube.freifunk.net/foo" />
 	<test url="http://youtube.freifunk.net/bar" />
 
-	<!--	Redirect drops path but not args:
-							-->
+	<!-- Redirect drops path but not args: -->
 	<rule from="^http://facebook\.freifunk\.net/[^?]*"
 		to="https://www.facebook.com/pages/Freifunk/54553170762" />
 	<test url="http://facebook.freifunk.net/?fref=nf" />
@@ -66,6 +71,12 @@
 	<rule from="^http://youtube\.freifunk\.net/[^?]*"
 		to="https://www.youtube.com/user/FREIFUNK2013" />
 	<test url="http://youtube.freifunk.net/?v=RoKQQ5a6E1Q" />
+
+	<!-- Redirect communities to their own domains (because of mismatch): -->
+	<rule from="^http://(gera|greiz|gera-greiz)\.freifunk\.net/"
+		to="https://freifunk-gera-greiz.de/" />
+	<test url="http://gera.freifunk.net/favicon.ico" />
+
 
 	<rule from="^http:"
 		to="https:" />
