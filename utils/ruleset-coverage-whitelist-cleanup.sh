@@ -35,4 +35,4 @@ while IFS=$DELIM read listed_hash file; do
 done < "$WLIST"
 
 # Sorting by the second column (ruleset name)
-sort -t"$TCHAR" -b -k2 -o "$WLIST" "$WLIST"
+sort -t"$TCHAR" -b -u -k2 -o "$WLIST" "$WLIST"
