@@ -1,7 +1,5 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://om.dowjoneson.com/ => https://djglobal.122.2o7.net/: None
-Fetch error: http://services.wsje.com/ => https://services.wsje.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+
 	For problematic rules, see News-Corporation-mismatches.xml.
 
 
@@ -32,67 +30,59 @@ Fetch error: http://services.wsje.com/ => https://services.wsje.com/: (60, 'SSL 
 		- sj.smartmoney.net.edgesuite.net/...
 			- a1683.g.akamai.net/...
 
-
 	Nonfunctional domains:
 
-		- www.news.com.au	(Akamai; "Service Unavailable")
+		- (?:www\.)?wsjeuropesubs.com	(times out)
+		- (?:www\.)?wsjsafehouse.com	(refused)
+
+	Problematic domains:
+
+		- om.dowjoneson.com	*
+		- www.news.com.au	*
+		- (?:www\.)?smartmoney.com	*
+
+	* invalid cert; mismatch
 
 -->
-<ruleset name="News Corporation (partial)" default_off='failed ruleset test'>
+<ruleset name="News Corporation (partial)">
 
-	<target host="om.dowjoneson.com" />
 	<target host="djrc.portal.dowjones.com" />
-	<target host="efinancialnews.com" />
-	<target host="*.efinancialnews.com" />
+	<target host="www.efinancialnews.com" />
 	<target host="factiva.com" />
 	<target host="*.factiva.com" />
-	<target host="fins.com" />
-	<target host="*.fins.com" />
-	<target host="*.wsj.com" />
 	<target host="services.wsje.com" />
-	<target host="smartmoney.com" />
-	<target host="*.smartmoney.com" />
-	<target host="*.smartmoney.net" />
-	<target host="wsjeuropesubs.com" />
-	<target host="*.wsjeuropesubs.com" />
-	<target host="wsjsafehouse.com" />
-	<target host="*.wsjsafehouse.com" />
-
 
 	<securecookie host="^.*\.factiva\.com$" name=".*" />
-	<securecookie host="^secure\.smartmoney\.com$" name=".*" />
 	<securecookie host="^services\.wsje\.com$" name=".*" />
-	<securecookie host="^(?:.*\.)?wsj(?:eurosubs|safehouse)\.com$" name=".*" />
-
-	<rule from="^http://om\.dowjoneson\.com/"
-		to="https://djglobal.122.2o7.net/" />
 
 	<rule from="^http://djrc\.portal\.dowjones\.com/"
 		to="https://djrc.portal.dowjones.com/" />
 
-	<rule from="^http://(www\.)?efinancialnews\.com/(about-us/tour/|css/|img/|js/|login/|forgot-password|register)"
-		to="https://$1efinancialnews.com/$2" />
+	<exclusion pattern="^http://www\.efinancialnews\.com/$" />
+
+		<test url="http://www.efinancialnews.com/" />
+
+	<rule from="^http://www\.efinancialnews\.com/(css/|img/|js/|login/|forgot-password|register)"
+		to="https://www.efinancialnews.com/$1" />
+
+		<test url="http://www.efinancialnews.com/css/jquery.bxslider.css" />
+		<test url="http://www.efinancialnews.com/img/logo_financial-news.png" />
+		<test url="http://www.efinancialnews.com/js/s_code.js" />
+		<test url="http://www.efinancialnews.com/login/" />
+		<test url="http://www.efinancialnews.com/forgot-password/" />
+		<test url="http://www.efinancialnews.com/register/" />
 
 	<!--	Cert doesn't match !www.	-->
 	<rule from="^http://factiva\.com/"
 		to="https://www.factiva.com/" />
 
-	<rule from="^http://(customer|global|www)\.factiva\.com/"
+	<rule from="^http://(customer|www)\.factiva\.com/"
 		to="https://$1.factiva.com/" />
 
-	<rule from="^http://(?:www\.)?fins\.com/Finance/(cs|Image)s/"
-		to="https://www.fins.com/Finance/$1s/" />
-
-	<rule from="^http://j(?:tools|secure)?\.smartmoney\.com/"
-		to="https://jsecure.smartmoney.com/" />
+		<test url="http://customer.factiva.com/" />
+		<test url="http://www.factiva.com/" />
 
 	<rule from="^http://services\.wsje\.com/"
 		to="https://services.wsje.com/" />
-
-	<rule from="^http://(www\.)?wsjeuropesubs\.com/"
-		to="https://$1wsjeuropesubs.com/" />
-
-	<rule from="^http://(?:www\.)?wsjsafehouse\.com/"
-		to="https://www.wsjsafehouse.com/" />
 
 </ruleset>
