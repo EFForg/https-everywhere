@@ -1,14 +1,11 @@
 <!--
-	404:
+	Different HTTP/HTTPS content:
 		- docs.showapi.com
 			(http://docs.showapi.com/jdk7/index.html)
 
 	Refused:
 		- wap.showapi.com
 
-	Invalid Certificate:
-		- *.showapi.com
-		- u5335.showapi.com (=> https://www.showapi.com/?rc=5335)
 -->
 <ruleset name="showapi.com">
 	<target host="showapi.com" />
@@ -37,13 +34,7 @@
 		<!-- This exception disables the implicit test created by the target. -->
 		<exclusion pattern="^http://bbs\.showapi\.com/$" />
 
-	<rule from="^http://showapi\.com/"
-		to="https://showapi.com/" />
+	<rule from="^http://(www\.|admin\.|api\.|appimg\.|image\.|img\.|manager\.|mng\.|page\.|route\.|static\.|test\.|upload\.)?showapi\.com/"
+		to="https://$1showapi.com/" />
 
-	<rule from="^http://(www|admin|api|appimg|image|img|manager|mng|page|route|static|test|upload)\.showapi\.com/"
-		to="https://$1.showapi.com/" />
-
-	<rule from="^http://u(\d+)\.showapi\.com/" to="https://www.showapi.com/?rc=$1" />
-		<test url="http://u2.showapi.com/" />
-		<test url="http://u648465.showapi.com/" />
 </ruleset>
