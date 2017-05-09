@@ -37,34 +37,34 @@ const staticRegExp = VerEx()
 const tagsRegExps = new Map();
 
 function createTagsRegexp(tag) {
-        let re = tagsRegExps.get(tag);
-        if (!re) {
-                const tagRe = `<${tag}(?:\\s+\\w+=".*?")*\\s*\\/>`;
-                re = new RegExp(`(?:${tagRe}\\s*)*${tagRe}`, 'g');
-                tagsRegExps.set(tag, re);
-        }
-        return re;
+  let re = tagsRegExps.get(tag);
+  if (!re) {
+    const tagRe = `<${tag}(?:\\s+\\w+=".*?")*\\s*\\/>`;
+    re = new RegExp(`(?:${tagRe}\\s*)*${tagRe}`, 'g');
+    tagsRegExps.set(tag, re);
+  }
+  return re;
 }
 
 function replaceXML(source, tag, newXML) {
-        let pos;
-        let re = createTagsRegexp(tag);
-        source = source.replace(re, (match, index) => {
-                if (pos === undefined) {
-                        pos = index;
-                }
-                return '';
-        });
-        if (pos === undefined) {
-                throw new Error(`${re}: <${tag} /> was not found in ${source}`);
-        }
-        return source.slice(0, pos) + newXML + source.slice(pos);
+  let pos;
+  let re = createTagsRegexp(tag);
+  source = source.replace(re, (match, index) => {
+    if (pos === undefined) {
+      pos = index;
+    }
+    return '';
+  });
+  if (pos === undefined) {
+    throw new Error(`${re}: <${tag} /> was not found in ${source}`);
+  }
+  return source.slice(0, pos) + newXML + source.slice(pos);
 }
 
 const files =
         readDir(rulesDir)
         .tap(rules => {
-                bar = new ProgressBar(':bar', { total: rules.length, stream: process.stdout });
+          bar = new ProgressBar(':bar', { total: rules.length, stream: process.stdout });
         })
         .sequence()
         .filter(name => name.endsWith('.xml'));
@@ -78,92 +78,92 @@ const rules =
         sources.fork()
         .flatMap(parseXML)
         .errors((err, push) => {
-                push(null, { err });
+          push(null, { err });
         })
         .zip(files.fork())
         .map(([ { ruleset, err }, name ]) => {
-                if (err) {
-                        err.message += ` (${name})`;
-                        this.emit('error', err);
-                } else {
-                        return ruleset;
-                }
+          if (err) {
+            err.message += ` (${name})`;
+            this.emit('error', err);
+          } else {
+            return ruleset;
+          }
         });
 
 function isTrivial(rule) {
-        return rule.from === '^http:' && rule.to === 'https:';
+  return rule.from === '^http:' && rule.to === 'https:';
 }
 
 files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => {
-        bar.tick();
+  bar.tick();
 
-        let target = ruleset.target.map(target => target.$.host);
-        let rule = ruleset.rule.map(rule => rule.$);
+  let target = ruleset.target.map(target => target.$.host);
+  let rule = ruleset.rule.map(rule => rule.$);
 
-        if (rule.length === 1 && isTrivial(rule[0])) {
-                return;
-        }
+  if (rule.length === 1 && isTrivial(rule[0])) {
+    return;
+  }
 
-        let targetRe = new RegExp(`^${target.map(target => `(${target.replace(/\./g, '\\.').replace(/\*/g, '.*')})`).join('|')}$`);
-        let domains = [];
+  let targetRe = new RegExp(`^${target.map(target => `(${target.replace(/\./g, '\\.').replace(/\*/g, '.*')})`).join('|')}$`);
+  let domains = [];
 
-        function isStatic(rule) {
-                if (isTrivial(rule)) {
-                        domains = domains.concat(target);
-                        return true;
-                }
+  function isStatic(rule) {
+    if (isTrivial(rule)) {
+      domains = domains.concat(target);
+      return true;
+    }
 
-                const { from, to } = rule;
-                
-                const match = from.match(staticRegExp);
+    const { from, to } = rule;
 
-                if (!match) {
+    const match = from.match(staticRegExp);
+
+    if (!match) {
                         // console.error(from);
-                        return false;
-                }
+      return false;
+    }
 
-                const subDomains = match[1].split('|').map(item => item.slice(0, -2));
-                const baseDomain = match[3].replace(/\\(.)/g, '$1');
-                const localDomains = subDomains.map(sub => `${sub}.${baseDomain}`);
-                
-                if (to !== `https://$1${baseDomain}/`) {
-                        console.error(from, to);
-                        return false;
-                }
-                
-                let mismatch = false;
-                
-                for (const domain of localDomains) {
-                        if (!targetRe.test(domain)) {
-                                console.error(target, domain, from);
-                                mismatch = true;
-                        }
-                }
+    const subDomains = match[1].split('|').map(item => item.slice(0, -2));
+    const baseDomain = match[3].replace(/\\(.)/g, '$1');
+    const localDomains = subDomains.map(sub => `${sub}.${baseDomain}`);
 
-                if (mismatch) {
-                        return false;
-                }
+    if (to !== `https://$1${baseDomain}/`) {
+      console.error(from, to);
+      return false;
+    }
 
-                if (match[2] || targetRe.test(baseDomain)) {
-                        localDomains.unshift(baseDomain);
-                }
-                
-                domains = domains.concat(localDomains);
-                
-                return true;
-        }
+    let mismatch = false;
 
-        if (!rule.every(isStatic)) return;
-        
-        domains = Array.from(new Set(domains));
+    for (const domain of localDomains) {
+      if (!targetRe.test(domain)) {
+        console.error(target, domain, from);
+        mismatch = true;
+      }
+    }
 
-        if (domains.slice().sort().join('\n') !== target.sort().join('\n')) {
-                source = replaceXML(source, 'target', domains.map(domain => `<target host="${domain}" />`).join('\n\t'));
-        }
+    if (mismatch) {
+      return false;
+    }
 
-        source = replaceXML(source, 'rule', '<rule from="^http:" to="https:" />');
+    if (match[2] || targetRe.test(baseDomain)) {
+      localDomains.unshift(baseDomain);
+    }
 
-        return writeFile(`${rulesDir}/${name}`, source);
+    domains = domains.concat(localDomains);
+
+    return true;
+  }
+
+  if (!rule.every(isStatic)) return;
+
+  domains = Array.from(new Set(domains));
+
+  if (domains.slice().sort().join('\n') !== target.sort().join('\n')) {
+    source = replaceXML(source, 'target', domains.map(domain => `<target host="${domain}" />`).join('\n\t'));
+  }
+
+  source = replaceXML(source, 'rule', '<rule from="^http:" to="https:" />');
+
+  return writeFile(`${rulesDir}/${name}`, source);
 
 })
 .filter(Boolean)

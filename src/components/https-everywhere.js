@@ -45,10 +45,11 @@ const _INCLUDED = {};
 // separate files; things in chrome/ can be
 
 const INCLUDE = function(name) {
-  if (arguments.length > 1)
-    for (var j = 0, len = arguments.length; j < len; j++)
+  if (arguments.length > 1) {
+    for (var j = 0, len = arguments.length; j < len; j++) {
       INCLUDE(arguments[j]);
-  else if (!_INCLUDED[name]) {
+    }
+  }  else if (!_INCLUDED[name]) {
     // we used to try/catch here, but that was less useful because it didn't
     // produce line numbers for syntax errors
     LOADER.loadSubScript("chrome://https-everywhere/content/code/"
@@ -92,7 +93,7 @@ const WHERE_UNTRUSTED = 1;
 const WHERE_TRUSTED = 2;
 const ANYWHERE = 3;
 
-const N_COHORTS = 1000; 
+const N_COHORTS = 1000;
 
 const DUMMY_OBJ = {};
 DUMMY_OBJ.wrappedJSObject = DUMMY_OBJ;
@@ -146,7 +147,7 @@ function HTTPSEverywhere() {
   // we rewrite.
   this.obsService = CC["@mozilla.org/observer-service;1"]
                     .getService(Components.interfaces.nsIObserverService);
-                    
+
   if (this.prefs.getBoolPref("globalEnabled")) {
     this.obsService.addObserver(this, "profile-before-change", false);
     this.obsService.addObserver(this, "profile-after-change", false);
@@ -180,10 +181,10 @@ In recent versions of Firefox and HTTPS Everywhere, the call stack for performin
 1. HTTPSEverywhere.shouldIgnoreURI() checks for very quick reasons to ignore a
 request, such as redirection loops, non-HTTP[S] URIs, and OCSP
 
-    2. HTTPS.replaceChannel() 
+    2. HTTPS.replaceChannel()
 
-       3. HTTPSRules.rewrittenURI() 
-            
+       3. HTTPSRules.rewrittenURI()
+
            4. HTTPSRules.potentiallyApplicableRulesets uses <target host=""> elements to identify relevant rulesets
 
            foreach RuleSet:
@@ -222,10 +223,12 @@ HTTPSEverywhere.prototype = {
 
   _xpcom_factory: {
     createInstance: function (outer, iid) {
-      if (outer != null)
+      if (outer != null) {
         throw Components.results.NS_ERROR_NO_AGGREGATION;
-      if (!HTTPSEverywhere.instance)
+      }
+      if (!HTTPSEverywhere.instance) {
         HTTPSEverywhere.instance = new HTTPSEverywhere();
+      }
       return HTTPSEverywhere.instance.QueryInterface(iid);
     },
 
@@ -426,7 +429,9 @@ HTTPSEverywhere.prototype = {
   shouldIgnoreURI: function(channel, alist) {
     var uri = channel.URI;
     // Ignore all non-http(s) requests?
-    if (!(uri.schemeIs("http") || uri.schemeIs("https"))) { return true; }
+    if (!(uri.schemeIs("http") || uri.schemeIs("https"))) {
+      return true;
+    }
 
     // If HTTP Nowhere is enabled, skip the rest of the shouldIgnoreURI checks
     if (this.httpNowhereEnabled) {
@@ -435,13 +440,13 @@ HTTPSEverywhere.prototype = {
 
     // These are URIs we've seen redirecting back in loops after we redirect them
     if (uri.spec in https_everywhere_blacklist) {
-        this.log(DBUG, "Avoiding blacklisted " + uri.spec);
-        if (alist) {
-          alist.breaking_rule(https_everywhere_blacklist[uri.spec]);
-        } else {
-          this.log(NOTE,"Failed to indicate breakage in content menu");
-        }
-        return true;
+      this.log(DBUG, "Avoiding blacklisted " + uri.spec);
+      if (alist) {
+        alist.breaking_rule(https_everywhere_blacklist[uri.spec]);
+      } else {
+        this.log(NOTE,"Failed to indicate breakage in content menu");
+      }
+      return true;
     }
 
     // OCSP (currently) needs to be HTTP to avoid cert validation loops
@@ -455,7 +460,9 @@ HTTPSEverywhere.prototype = {
     } else {
       // Firefox <32 requires a more hacky estimate
       // load the list opportunistically to speed startup & FF 32+
-      if (this.ocspList == undefined) { this.loadOCSPList(); }
+      if (this.ocspList == undefined) {
+        this.loadOCSPList();
+      }
       if (this.ocspList.indexOf(uri.spec.replace(/\/$/,'')) !== -1) {
         this.log(INFO, "Known ocsp request "+uri.spec);
         return true;
@@ -490,11 +497,11 @@ HTTPSEverywhere.prototype = {
       if (this.shouldIgnoreURI(channel, lst)) return;
       HTTPS.replaceChannel(lst, channel, this.httpNowhereEnabled);
     } else if (topic == "http-on-examine-response") {
-         this.log(DBUG, "Got http-on-examine-response @ "+ (channel.URI ? channel.URI.spec : '') );
-         HTTPS.handleSecureCookies(channel);
+      this.log(DBUG, "Got http-on-examine-response @ "+ (channel.URI ? channel.URI.spec : '') );
+      HTTPS.handleSecureCookies(channel);
     } else if (topic == "http-on-examine-merged-response") {
-         this.log(DBUG, "Got http-on-examine-merged-response ");
-         HTTPS.handleSecureCookies(channel);
+      this.log(DBUG, "Got http-on-examine-merged-response ");
+      HTTPS.handleSecureCookies(channel);
     } else if (topic == "cookie-changed") {
       // Javascript can add cookies via document.cookie that are insecure.
       if (data == "added" || data == "changed") {
@@ -554,17 +561,18 @@ HTTPSEverywhere.prototype = {
 
         // this pref gets set to false and then true during FF 26 startup!
         // so do nothing if we're being notified during startup
-        if (!this.browser_initialised)
-            return;
-        switch (data) {
-            case "security.mixed_content.block_active_content":
-            case "extensions.https_everywhere.enable_mixed_rulesets":
-                var p = CC["@mozilla.org/preferences-service;1"].getService(CI.nsIPrefBranch);
-                var val = p.getBoolPref("security.mixed_content.block_active_content");
-                this.log(INFO,"nsPref:changed for "+data + " to " + val);
-                HTTPSRules.init();
-                break;
-        }
+      if (!this.browser_initialised) {
+        return;
+      }
+      switch (data) {
+        case "security.mixed_content.block_active_content":
+        case "extensions.https_everywhere.enable_mixed_rulesets":
+          var p = CC["@mozilla.org/preferences-service;1"].getService(CI.nsIPrefBranch);
+          var val = p.getBoolPref("security.mixed_content.block_active_content");
+          this.log(INFO,"nsPref:changed for "+data + " to " + val);
+          HTTPSRules.init();
+          break;
+      }
     } else if (topic == "browser:purge-session-history") {
       // The list of rulesets that have been loaded from the JSON DB
       // constitutes a parallel history store, so we have to clear it.
@@ -590,11 +598,13 @@ HTTPSEverywhere.prototype = {
       // We are now ready to show the popup in its most informative state
       that.chrome_opener("chrome://https-everywhere/content/observatory-popup.xul");
     };
-    if (!shown && !enabled)
+    if (!shown && !enabled) {
       ssl_observatory.registerProxyTestNotification(obs_popup_callback);
+    }
 
-    if (shown && enabled)
+    if (shown && enabled) {
       this.maybeCleanupObservatoryPrefs(ssl_observatory);
+    }
   },
 
   maybeCleanupObservatoryPrefs: function(ssl_observatory) {
@@ -605,7 +615,9 @@ HTTPSEverywhere.prototype = {
     if (clean) return;
 
     // unchanged: returns true if a pref has not been modified
-    var unchanged = function(p){return !ssl_observatory.prefs.prefHasUserValue("extensions.https_everywhere._observatory."+p)};
+    var unchanged = function(p){
+      return !ssl_observatory.prefs.prefHasUserValue("extensions.https_everywhere._observatory."+p);
+    };
     var cleanup_obsprefs_callback = function(tor_avail) {
       // we only run this once
       ssl_observatory.prefs.setBoolPref("extensions.https_everywhere._observatory.clean_config", true);
@@ -613,12 +625,12 @@ HTTPSEverywhere.prototype = {
         // use_custom_proxy is the variable that is often false when it should be true;
         if (!ssl_observatory.myGetBoolPref("use_custom_proxy")) {
            // however don't do anything if any of the prefs have been set by the user
-           if (unchanged("alt_roots") && unchanged("self_signed") && unchanged ("send_asn") && unchanged("priv_dns")) {
-             ssl_observatory.prefs.setBoolPref("extensions.https_everywhere._observatory.use_custom_proxy", true);
-           }
+          if (unchanged("alt_roots") && unchanged("self_signed") && unchanged ("send_asn") && unchanged("priv_dns")) {
+            ssl_observatory.prefs.setBoolPref("extensions.https_everywhere._observatory.use_custom_proxy", true);
+          }
         }
       }
-    }
+    };
     ssl_observatory.registerProxyTestNotification(cleanup_obsprefs_callback);
   },
 
@@ -627,7 +639,7 @@ HTTPSEverywhere.prototype = {
     // This variable is used for gradually turning on features for testing and
     // scalability purposes.  It is a random integer [0,N_COHORTS) generated
     // once and stored thereafter.
-    // 
+    //
     // This is not currently used/called in the development branch
     var cohort;
     try {
@@ -645,12 +657,13 @@ HTTPSEverywhere.prototype = {
     // get our preferences branch object
     // FIXME: Ugly hack stolen from https
     var branch_name;
-    if(prefBranch === PREFBRANCH_RULE_TOGGLE)
+    if(prefBranch === PREFBRANCH_RULE_TOGGLE) {
       branch_name = "extensions.https_everywhere.rule_toggle.";
-    else if (prefBranch === PREFBRANCH_NONE)
+    }    else if (prefBranch === PREFBRANCH_NONE) {
       branch_name = "";
-    else
+    }    else {
       branch_name = "extensions.https_everywhere.";
+    }
     var o_prefs = false;
     var o_branch = false;
     // this function needs to be called from inside https_everywhereLog, so
@@ -661,15 +674,13 @@ HTTPSEverywhere.prototype = {
     o_prefs = Components.classes["@mozilla.org/preferences-service;1"]
                         .getService(Components.interfaces.nsIPrefService);
 
-    if (!o_prefs)
-    {
+    if (!o_prefs) {
       econsole.logStringMessage("HTTPS Everywhere: Failed to get preferences-service!");
       return false;
     }
 
     o_branch = o_prefs.getBranch(branch_name);
-    if (!o_branch)
-    {
+    if (!o_branch) {
       econsole.logStringMessage("HTTPS Everywhere: Failed to get prefs branch!");
       return false;
     }
@@ -695,18 +706,18 @@ HTTPSEverywhere.prototype = {
   },
 
   chrome_opener: function(uri, args) {
-    // we don't use window.open, because we need to work around TorButton's 
+    // we don't use window.open, because we need to work around TorButton's
     // state control
     args = args || 'chrome,centerscreen';
     return CC['@mozilla.org/appshell/window-mediator;1']
-      .getService(CI.nsIWindowMediator) 
+      .getService(CI.nsIWindowMediator)
       .getMostRecentWindow('navigator:browser')
       .open(uri,'', args );
   },
 
   tab_opener: function(uri) {
     var gb = CC['@mozilla.org/appshell/window-mediator;1']
-      .getService(CI.nsIWindowMediator) 
+      .getService(CI.nsIWindowMediator)
       .getMostRecentWindow('navigator:browser')
       .gBrowser;
     var tab = gb.addTab(uri);
@@ -800,7 +811,7 @@ function https_everywhereLog(level, str) {
     prefs = HTTPSEverywhere.instance.get_prefs();
     econsole = Components.classes["@mozilla.org/consoleservice;1"]
                .getService(Components.interfaces.nsIConsoleService);
-  } 
+  }
   try {
     var threshold = prefs.getIntPref(LLVAR);
   } catch (e) {
@@ -824,9 +835,10 @@ function https_everywhereLog(level, str) {
 * XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).
 * XPCOMUtils.generateNSGetModule is for Mozilla 1.9.2 (Firefox 3.6).
 */
-if (XPCOMUtils.generateNSGetFactory)
-    var NSGetFactory = XPCOMUtils.generateNSGetFactory([HTTPSEverywhere]);
-else
-    var NSGetModule = XPCOMUtils.generateNSGetModule([HTTPSEverywhere]);
+if (XPCOMUtils.generateNSGetFactory) {
+  var NSGetFactory = XPCOMUtils.generateNSGetFactory([HTTPSEverywhere]);
+}else {
+  var NSGetModule = XPCOMUtils.generateNSGetModule([HTTPSEverywhere]);
+}
 
 /* vim: set tabstop=4 expandtab: */

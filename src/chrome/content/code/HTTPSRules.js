@@ -571,12 +571,12 @@ const HTTPSRules = {
           }
         } catch(e) {
           this.log(WARN, "Failed to normalise domain: ");
-          try       {this.log(WARN, input_uri.host);}
+          try {this.log(WARN, input_uri.host);}
           catch(e2) {this.log(WARN, "bang" + e + " & " + e2 + " & "+ input_uri);}
         }
     } catch(e3) {
       this.log(INFO, "uri.host is explosive!");
-      try       { this.log(INFO, "(" + uri.spec + ")"); }  // happens for about: uris and so forth
+      try { this.log(INFO, "(" + uri.spec + ")"); }  // happens for about: uris and so forth
       catch(e4) { this.log(WARN, "(and unprintable!!!!!!)"); }
     }
     return uri;

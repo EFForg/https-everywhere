@@ -16,8 +16,8 @@ var config = require('./config');
 // Fetch the Alexa top 1M sites and push it to an array `alexa` via streams
 function get_alexa(alexa_cb){
 
-  var alexa = []
-  var csv_regex = /^[0-9]+,(.+)/
+  var alexa = [];
+  var csv_regex = /^[0-9]+,(.+)/;
 
   request.get('https://s3.amazonaws.com/alexa-static/top-1m.csv.zip')
     .on('error', function(err) {
@@ -36,7 +36,7 @@ function get_alexa(alexa_cb){
 
       var x = 0;
       lineReader.on('line', function (line) {
-        var domain = line.match(csv_regex)[1]
+        var domain = line.match(csv_regex)[1];
         alexa.push(domain);
 
         if(x % 10000 == 0) bar.tick();
@@ -48,7 +48,7 @@ function get_alexa(alexa_cb){
       });
 
     });
-};
+}
 
 function get_most_recent_pr(alexa, recent_cb){
   fs.readFile(config.state_file, function(err, data){
@@ -65,20 +65,20 @@ function get_most_recent_pr(alexa, recent_cb){
 
 function github_process_prs(res, pr_cb){
   var alexa = res[0],
-      most_recent_pr_checked = res[1];
+    most_recent_pr_checked = res[1];
 
   var github = new GitHubApi();
-  var wildcard_www_regex = /^(www|\*)\.(.+)/
+  var wildcard_www_regex = /^(www|\*)\.(.+)/;
 
   var httpse = {
     user: config.github_user,
     repo: config.github_repo
-  }
+  };
 
   github.authenticate({
     type: "oauth",
     token: config.github_token || process.env.GITHUB_TOKEN
-  })
+  });
 
   // Label all PRs which meet the criteria for labelling
   function github_process_pr_page(first_page){
@@ -198,7 +198,7 @@ function github_process_prs(res, pr_cb){
       if(github.hasNextPage(pull_requests)){
         github.getNextPage(pull_requests, github_process_pr_page(false));
       }
-    }
+    };
   }
 
   github.pullRequests.getAll(_.extend(httpse, {

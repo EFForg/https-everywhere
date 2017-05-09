@@ -19,15 +19,15 @@ function observatory_prefs_init(doc) {
   document.getElementById("use-observatory").checked = enabled;
   set_observatory_configurability(enabled);
   // Other settings
-  document.getElementById("alt-roots").checked = 
+  document.getElementById("alt-roots").checked =
     obsprefs.getBoolPref("extensions.https_everywhere._observatory.alt_roots");
-  document.getElementById("priv-dns").checked = 
+  document.getElementById("priv-dns").checked =
     obsprefs.getBoolPref("extensions.https_everywhere._observatory.priv_dns");
-  document.getElementById("self-signed").checked = 
+  document.getElementById("self-signed").checked =
     obsprefs.getBoolPref("extensions.https_everywhere._observatory.self_signed");
-  document.getElementById("send-asn").checked = 
+  document.getElementById("send-asn").checked =
     obsprefs.getBoolPref("extensions.https_everywhere._observatory.send_asn");
-  document.getElementById("show-cert-warning").checked = 
+  document.getElementById("show-cert-warning").checked =
     obsprefs.getBoolPref("extensions.https_everywhere._observatory.show_cert_warning");
 
   // More complicated: is it anonymised by Tor?
@@ -40,7 +40,7 @@ function observatory_prefs_init(doc) {
   // first set the radios to match the current settings variables
   obs_how.selectedItem = (anon) ? anon_radio : nonanon_radio;
 
-  // But if the user hasn't turned the observatory on, 
+  // But if the user hasn't turned the observatory on,
   // the default should be the maximally sensible one
   var torbutton_avail = ssl_observatory.proxy_test_successful;
   if (!enabled) {
@@ -60,28 +60,31 @@ function popup_done() {
 
 
 function scale_title_logo() {
-  // The image is naturally 500x207, but if it's shrunk we don't want it 
+  // The image is naturally 500x207, but if it's shrunk we don't want it
   // distorted
   var img = document.getElementById("obs-title-logo");
   alert("ch is " + img.height);
-  if (img.height != "207")
+  if (img.height != "207") {
     img.width = (500.0/207.0) * img.height;
+  }
 }
 
 // grey/ungrey UI elements that control observatory operation
 function set_observatory_configurability(enabled) {
   // the relevant widgets are tagged with class="ssl-obs-conf"
   var ui_elements = document.querySelectorAll(".ssl-obs-conf");
-  for (var i =0; i < ui_elements.length; i++) 
+  for (var i =0; i < ui_elements.length; i++) {
     ui_elements[i].disabled = !enabled;
+  }
   // the "use tor" option can't be ungreyed unless tor is available
   if (ssl_observatory.proxy_test_successful == false) {
-    var tor_opt = document.getElementById("ssl-obs-anon")
+    var tor_opt = document.getElementById("ssl-obs-anon");
     tor_opt.disabled = true;
     tor_opt.label = tor_opt.getAttribute("alt_label");
   }
-  if (!enabled) 
+  if (!enabled) {
     hide_advanced();
+  }
 }
 
 // show/hide advanced options in the preferences dialog
@@ -104,8 +107,9 @@ function hide_advanced() {
 
 function recursive_set(node, attrib, value) {
   node.setAttribute(attrib, value);
-  for (var i=0; i < node.childNodes.length; i++) 
-    recursive_set(node.childNodes[i], attrib, value)
+  for (var i=0; i < node.childNodes.length; i++) {
+    recursive_set(node.childNodes[i], attrib, value);
+  }
 }
 
 
@@ -135,13 +139,13 @@ function toggle_enabled() {
 function toggle_send_asn() {
   var send_asn = document.getElementById("send-asn").checked;
   obsprefs.setBoolPref("extensions.https_everywhere._observatory.send_asn", send_asn);
-  if (send_asn) ssl_observatory.setupASNWatcher()
+  if (send_asn) ssl_observatory.setupASNWatcher();
   else          ssl_observatory.stopASNWatcher();
 }
 
 function toggle_show_cert_warning() {
   var show_cert_warning = document.getElementById("show-cert-warning").checked;
-  obsprefs.setBoolPref("extensions.https_everywhere._observatory.show_cert_warning", show_cert_warning);  
+  obsprefs.setBoolPref("extensions.https_everywhere._observatory.show_cert_warning", show_cert_warning);
 }
 
 function toggle_alt_roots() {
@@ -167,9 +171,9 @@ function observatory_prefs_accept() {
                    .QueryInterface(Components.interfaces.nsIDocShellTreeItem)
                    .rootTreeItem
                    .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-                   .getInterface(Components.interfaces.nsIDOMWindow); 
+                   .getInterface(Components.interfaces.nsIDOMWindow);
 
-  if (outer) outer.close()
+  if (outer) outer.close();
   else alert("no outer space");
 
   return true;  // https://developer.mozilla.org/en/XUL/dialog#a-ondialogaccept
@@ -193,8 +197,9 @@ function warning_populate(warningObj) {
 function show_certs() {
   var parent_win = window.arguments[1];
   var cert = window.arguments[2];
-  if (!parent_win)
+  if (!parent_win) {
     alert("no parent window trying to show certs");
+  }
   CC["@mozilla.org/nsCertificateDialogs;1"]
      .getService(CI.nsICertificateDialogs)
      .viewCert(parent_win, cert);
