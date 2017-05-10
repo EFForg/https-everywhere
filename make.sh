@@ -38,6 +38,8 @@ echo "Building chrome version" $VERSION
 
 [ -d pkg ] || mkdir -p pkg
 [ -e pkg/crx ] && rm -rf pkg/crx
+[ -e pkg/xpi-amo ] && rm -rf pkg/xpi-amo
+[ -e pkg/xpi-eff ] && rm -rf pkg/xpi-eff
 
 # Clean up obsolete ruleset databases, just in case they still exist.
 rm -f src/chrome/content/rules/default.rulesets src/defaults/rulesets.sqlite
@@ -75,19 +77,32 @@ sed -i -e "s/VERSION/$VERSION/g" pkg/crx/manifest.json
 #sed -i -e "s/VERSION/$VERSION/g" pkg/crx/updates.xml
 #sed -e "s/VERSION/$VERSION/g" pkg/updates-master.xml > pkg/crx/updates.xml
 
+cp -a pkg/crx pkg/xpi-amo
+cp -a pkg/crx pkg/xpi-eff
+cp -a src/META-INF pkg/xpi-amo
+cp -a src/META-INF pkg/xpi-eff
+
+# Remove the 'applications' manifest key from the crx version of the extension
+python2.7 -c "import json; m=json.loads(open('pkg/crx/manifest.json').read()); del m['applications']; open('pkg/crx/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+# Remove the 'update_url' manifest key from the xpi version of the extension delivered to AMO
+python2.7 -c "import json; m=json.loads(open('pkg/xpi-amo/manifest.json').read()); del m['applications']['gecko']['update_url']; open('pkg/xpi-amo/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+
 if [ -n "$BRANCH" ] ; then
   crx="pkg/https-everywhere-$VERSION.crx"
-  xpi="pkg/https-everywhere-$VERSION.xpi"
+  xpi_amo="pkg/https-everywhere-$VERSION-amo.xpi"
+  xpi_eff="pkg/https-everywhere-$VERSION-eff.xpi"
   key=../dummy-chromium.pem
 else
   crx="pkg/https-everywhere-$VERSION~pre.crx"
-  xpi="pkg/https-everywhere-$VERSION~pre.xpi"
+  xpi_amo="pkg/https-everywhere-$VERSION~pre-amo.xpi"
+  xpi_eff="pkg/https-everywhere-$VERSION~pre-eff.xpi"
   key=dummy-chromium.pem
 fi
 if ! [ -f "$key" ] ; then
   echo "Making a dummy signing key for local build purposes"
   openssl genrsa 2048 > "$key"
 fi
+
 
 ## Based on https://code.google.com/chrome/extensions/crx.html
 
@@ -131,9 +146,35 @@ fi
   cat "$pub" "$sig" "$zip"
 ) > "$crx"
 
-cp $zip $xpi
 
-bash utils/android-push.sh "$xpi"
+
+# now zip up the xpi AMO dir
+name=pkg/xpi-amo
+dir=pkg/xpi-amo
+zip="$name.zip"
+
+cwd=$(pwd -P)
+(cd "$dir" && ../../utils/create_xpi.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
+echo >&2 "AMO xpi package has sha1sum: `sha1sum "$cwd/$zip"`"
+
+cp $zip $xpi_amo
+
+
+
+# now zip up the xpi EFF dir
+name=pkg/xpi-eff
+dir=pkg/xpi-eff
+zip="$name.zip"
+
+cwd=$(pwd -P)
+(cd "$dir" && ../../utils/create_xpi.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
+echo >&2 "EFF xpi package has sha1sum: `sha1sum "$cwd/$zip"`"
+
+cp $zip $xpi_eff
+
+
+
+bash utils/android-push.sh "$xpi_eff"
 
 #rm -rf pkg/crx
 
@@ -147,9 +188,13 @@ bash utils/android-push.sh "$xpi"
 
 echo >&2 "Total included rules: `find src/chrome/content/rules -name "*.xml" | wc -l`"
 echo >&2 "Rules disabled by default: `find src/chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
+echo >&2 "Created $xpi_amo"
+echo >&2 "Created $xpi_eff"
 echo >&2 "Created $crx"
 if [ -n "$BRANCH" ]; then
   cd ..
   cp $SUBDIR/$crx pkg
+  cp $SUBDIR/$xpi_amo pkg
+  cp $SUBDIR/$xpi_eff pkg
   rm -rf $SUBDIR
 fi
