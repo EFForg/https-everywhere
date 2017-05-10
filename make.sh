@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 
-# Build an HTTPS Everywhere .crx Chromium extension (for Chromium 17+)
+# Build an HTTPS Everywhere .crx & .xpi extension
 #
 # To build the current state of the tree:
 #
-#     ./makecrx.sh
+#     ./make.sh
 #
 # To build a particular tagged release:
 #
-#     ./makecrx.sh <version number>
+#     ./make.sh <version number>
 #
 # eg:
 #
-#     ./makecrx.sh chrome-2012.1.26
+#     ./make.sh chrome-2012.1.26
 #
 # Note that .crx files must be signed; this script makes you a
 # "dummy-chromium.pem" private key for you to sign your own local releases,
@@ -34,7 +34,7 @@ fi
 
 VERSION=`python2.7 -c "import json ; print(json.loads(open('chromium/manifest.json').read())['version'])"`
 
-echo "Building chrome version" $VERSION
+echo "Building version" $VERSION
 
 [ -d pkg ] || mkdir -p pkg
 [ -e pkg/crx ] && rm -rf pkg/crx
