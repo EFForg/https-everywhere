@@ -19,7 +19,7 @@ exports["test httpse potentiallyApplicableRulesets"] = function(assert) {
   assert.deepEqual(HTTPSRules.potentiallyApplicableRulesets("www.wikia.com").length,
               1,
               "Test that HTTPSE finds one applicable rule for www.wikia.com");
-}
+};
 
 exports["test sample ruleset"] = function(assert, done) {
   tabs.open({
@@ -33,6 +33,6 @@ exports["test sample ruleset"] = function(assert, done) {
       });
     }
   });
-}
+};
 
 require("sdk/test").run(exports);

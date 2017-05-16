@@ -15,12 +15,12 @@ console.log("Hey developer! Want to see more verbose logging?");
 console.log("Type this into the console: DEFAULT_LOG_LEVEL=1");
 
 function log(level, str) {
-    if (level >= DEFAULT_LOG_LEVEL) {
-        if (level === WARN) {
+  if (level >= DEFAULT_LOG_LEVEL) {
+    if (level === WARN) {
             // Show warning with a little yellow icon in Chrome.
-            console.warn(str);
-        } else {
-            console.log(str);
-        }
+      console.warn(str);
+    } else {
+      console.log(str);
     }
+  }
 }

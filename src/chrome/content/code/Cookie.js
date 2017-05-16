@@ -17,7 +17,7 @@ Cookie.find = function(f) {
 
 Cookie.attributes = { host: 'domain', path: 'path', expires: 'expires', isHttpOnly: 'HttpOnly', isSecure: 'Secure' };
 Cookie.prototype = {
-  
+
   name: '',
   value: '',
   source: '',
@@ -29,12 +29,12 @@ Cookie.prototype = {
   httponly: false,
   session: true,
   expires: 0,
-  
+
   id: '',
-  
-  
+
+
   toString: function() {
-    var c = [this['name'] + "=" + this.value];
+    var c = [this.name + "=" + this.value];
     var v;
     const aa = Cookie.attributes;
     for (var k in aa) {
@@ -64,20 +64,20 @@ Cookie.prototype = {
     }
     this.source = s;
     this.host = host;
-    
+
     var parts = s.split(/;\s*/);
     var nv = parts.shift().split("=");
-    
+
     this.name = nv.shift() || '';
     this.value = nv.join('=') || '';
-    
+
     var n, v;
     for (p of parts) {
       nv = p.split("=");
       switch (n = nv[0].toLowerCase()) {
         case 'expires':
           v = Math.round(Date.parse((nv[1] || '').replace(/\-/g, ' ')) / 1000);
-        break;
+          break;
         case 'domain':
         case 'path':
           v = nv[1] || '';
@@ -93,23 +93,23 @@ Cookie.prototype = {
     }
     if (!this.expires) {
       this.session = true;
-      this.expires = Math.round(new Date() / 1000) + 31536000;  
+      this.expires = Math.round(new Date() / 1000) + 31536000;
     }
     if (this.domain) {
       if (!this.isDomain) this.domain = "." + this.domain;
       this.host = this.domain;
     }
     this.rawHost = this.host.replace(/^\./, '');
-    
+
     this.id = Cookie.computeId(this);
   },
-  
-  
+
+
   get cookieManager() {
     delete Cookie.prototype.cookieManager;
     var cman =  Cc["@mozilla.org/cookiemanager;1"]
       .getService(Ci.nsICookieManager2).QueryInterface(Ci.nsICookieManager);
-    return Cookie.prototype.cookieManager = cman; 
+    return Cookie.prototype.cookieManager = cman;
   },
   belongsTo: function(host, path) {
     if (path && this.path && path.indexOf(this.path) != 0) return false;
@@ -119,8 +119,12 @@ Cookie.prototype = {
   },
   save: function() {
     this.save = ("cookieExists" in this.cookieManager)
-      ? function() { this.cookieManager.add(this.host, this.path, this.name, this.value, this.secure, this.httponly, this.session, this.expires); }
-      : function() { this.cookieManager.add(this.host, this.path, this.name, this.value, this.secure,                this.session, this.expires);}
+      ? function() {
+        this.cookieManager.add(this.host, this.path, this.name, this.value, this.secure, this.httponly, this.session, this.expires);
+      }
+      : function() {
+        this.cookieManager.add(this.host, this.path, this.name, this.value, this.secure,                this.session, this.expires);
+      }
     ;
     return this.save();
   },
@@ -131,20 +135,30 @@ Cookie.prototype = {
     }
     return false;
   },
-  
+
   sameAs: function(c) {
     (c instanceof Ci.nsICookie) && (c instanceof Ci.nsICookie2);
     return Cookie.computeId(c) == this.id;
   },
-  
+
   // nsICookie2 interface extras
-  get isSecure() { return this.secure; },
-  get expiry() { return this.expires; },
-  get isSession() { return this.session; },
-  get isHttpOnly() { return this.httponly; },
-  get isDomain() { return this.domain && this.domain[0] == '.'; },
+  get isSecure() {
+    return this.secure;
+  },
+  get expiry() {
+    return this.expires;
+  },
+  get isSession() {
+    return this.session;
+  },
+  get isHttpOnly() {
+    return this.httponly;
+  },
+  get isDomain() {
+    return this.domain && this.domain[0] == '.';
+  },
   policy: 0,
   status: 0,
   QueryInterface: XPCOMUtils.generateQI([Ci.nsICookie, Ci.nsICookie2])
-  
+
 };

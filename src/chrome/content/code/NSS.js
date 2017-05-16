@@ -55,7 +55,7 @@ NSS.initialize = function() {
 
   NSS.types.CERTRDN = tcypes.StructType("CERTRDN",
   				  [{'avas' : NSS.types.CERTAVA.ptr.ptr}]);
-  
+
   NSS.types.SECAlgorithmID = tcypes.StructType("SECAlgorithmID",
   				       [{'algorithm' : NSS.types.SECItem},
                                         {'parameters' : NSS.types.SECItem}]);
@@ -123,9 +123,9 @@ NSS.initialize = function() {
                                           {'offset' : tcypes.unsigned_long},
                                           {'sub' : tcypes.voidptr_t},
                                           {'size' : tcypes.unsigned_int}]);
-					 
+
   NSS.types.PK11RSAGenParams = tcypes.StructType("PK11RSAGenParams",
-    					 [{'keySizeInBits' : tcypes.int}, 
+    					 [{'keySizeInBits' : tcypes.int},
                                           {'pe' : tcypes.unsigned_long}]);
 
   NSS.types.CERTCertTrust = tcypes.StructType("CERTCertTrust",
@@ -157,7 +157,7 @@ NSS.initialize = function() {
                                          {'issuerID' : NSS.types.SECItem},
                                          {'subjectID' : NSS.types.SECItem},
                                          {'extensions' : NSS.types.CERTCertExtension.ptr.ptr},
-                                         {'emailAddr' : tcypes.char.ptr},					 
+                                         {'emailAddr' : tcypes.char.ptr},
                                          {'dbhandle' : NSS.types.CERTCertDBHandle.ptr},
                                          {'subjectKeyID' : NSS.types.SECItem},
                                          {'keyIDGenerated' : tcypes.int},
@@ -187,7 +187,7 @@ NSS.initialize = function() {
   NSS.types.CERTBasicConstraints = tcypes.StructType("CERTBasicConstraints",
     					     [{'isCA': tcypes.int},
                                               {'pathLenConstraint' : tcypes.int}]);
-	
+
 
   NSS.lib = {
     SEC_OID_MD5 : 3,
@@ -229,7 +229,7 @@ NSS.initialize = function() {
     						NSS.types.CERTCertificate.ptr,
     						NSS.types.CERTCertDBHandle.ptr,
     						tcypes.char.ptr),
-    
+
     CERT_FindCertByDERCert : sharedLib.declare("CERT_FindCertByDERCert",
 					       tcypes.default_abi,
 					       NSS.types.CERTCertificate.ptr,
@@ -280,10 +280,10 @@ NSS.initialize = function() {
 					     tcypes.int,
 					     NSS.types.PK11RSAGenParams.ptr,
 					     NSS.types.SECKEYPublicKey.ptr.ptr,
-					     tcypes.int, 
+					     tcypes.int,
 					     tcypes.int,
 					     tcypes.voidptr_t),
-					     
+
     PK11_SetPrivateKeyNickname : sharedLib.declare("PK11_SetPrivateKeyNickname",
 						   tcypes.default_abi,
 						   tcypes.int,
@@ -313,7 +313,7 @@ NSS.initialize = function() {
 							tcypes.int,
 							tcypes.int,
 							tcypes.int),
-					  
+
     SECOID_SetAlgorithmID : sharedLib.declare("SECOID_SetAlgorithmID",
 					      tcypes.default_abi,
 					      tcypes.int,
@@ -425,7 +425,7 @@ NSS.initialize = function() {
     					      tcypes.default_abi,
     					      tcypes.int,
     					      tcypes.voidptr_t),
-							
+
     CERT_ImportCerts : sharedLib.declare("CERT_ImportCerts",
     					 tcypes.default_abi,
     					 tcypes.int,
