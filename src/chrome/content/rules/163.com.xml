@@ -50,6 +50,7 @@
 		- ^
 		- 3g ˣ
 		- cc ˣ
+		- support.dun ᵐ
 		- email ( Failed in China while OK by Tor. )
 		- fa ˣ
 		- 18.mail ᵐ
@@ -57,6 +58,7 @@
 		- pstat.mail ᵐ
 		- res.nie ᵐ
 		- piao ˣ
+		- pimg ᵐ	https://pimg.163.com/urs/img/mistakertu.gif
 		- qiye ᵐ
 		- sitemap ᵐ
 		- api.t ᵉ
@@ -74,13 +76,14 @@
 			- i.money from developer.163.com
 	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 -->
-
 <ruleset name="163.com">
 	<!-- Directly: -->
 	<target host="1.163.com" />
+	<target host="888.163.com" />
 	<target host="analytics.163.com" />
 	<target host="baoxian.163.com" />
 	<target host="mshare.cc.163.com" />
+	<target host="dun.163.com" />
 	<target host="cdn.easyread.163.com" />
 	<target host="fm.163.com" />
 	<target host="iad.g.163.com" />
@@ -115,9 +118,13 @@
 	<target host="m.163.com" />
 	<target host="c.m.163.com" />
 		<test url="http://c.m.163.com/news/a/C2ADQI8H0524ADMM.html" />
+	<target host="iplocator.mail.163.com" />
+		<test url="http://iplocator.mail.163.com/iplocator?callback=fGetLocator" />
+	<target host="msg.mail.163.com" />
 	<target host="mima.163.com" />
 	<target host="music.163.com" />
 	<target host="www.qiye.163.com" />
+	<target host="dl.reg.163.com" />
 	<target host="webzj.reg.163.com" />
 	<target host="yun.reg.163.com" />
 		<test url="http://yun.reg.163.com/cloud/versions/1.0.0/cloudstyle.css" />
@@ -128,22 +135,14 @@
 
 	<!-- Complications: -->
 	<target host="reg.163.com" />
-		<!-- MCB after login -->
-		<exclusion pattern="http://reg\.163\.com/Main\.jsp" />
+		<exclusion pattern="http://reg\.163\.com/Main\.(do|jsp|update\.html)$" />
+		<!--	MCB after login
+			Break '免费邮箱' '网易易盾' '花田' and so on.
+				-->
+		<test url="http://reg.163.com/Main.do" />
 		<test url="http://reg.163.com/Main.jsp" />
-
-	<target host="dl.reg.163.com" />
-		<!-- MCB -->
-		<exclusion pattern="^http://dl\.reg\.163\.com/webzj/m163_1\.0\.1/pub/index_dl\.html" />
-			<test url="http://dl.reg.163.com/webzj/m163_1.0.1/pub/index_dl.html?wdaId=" />
-		<!-- Avoid CORS problem when logging in at http://mail.163.com -->
-		<exclusion pattern="^http://dl\.reg\.163\.com/(ini|gt|l|vfcp)" />
-			<test url="http://dl.reg.163.com/ini?pd=mail163&#x26;pkid=CvViHzl&#x26;pkht=mail.163.com" />
-			<!-- these tests happen after clicking the blue login button with a valid username/password -->
-			<test url="http://dl.reg.163.com/gt?un=username" />
-			<test url="http://dl.reg.163.com/l" />
-			<!-- the below test happen after clicking the blue login button with a invalid username/password, https will return errors whatever CAPTCHA input -->
-			<test url="http://dl.reg.163.com/vfcp" />
+		<!--	Redirect to http:	-->
+		<test url="http://reg.163.com/update.html" />
 
 	<rule from="^http:" to="https:" />
 </ruleset>
