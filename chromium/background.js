@@ -632,3 +632,38 @@ chrome.runtime.onConnect.addListener(function (port) {
     });
   }
 });
+
+// This is necessary for communication with the popup in Firefox Private
+// Browsing Mode, see https://bugzilla.mozilla.org/show_bug.cgi?id=1329304
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+  if (message.type == "get_option") {
+    storage.get(message.object, function(item){
+      sendResponse(item);
+    });
+    return true;
+  } else if (message.type == "set_option") {
+    storage.set(message.object);
+  } else if (message.type == "get_is_extension_enabled") {
+    sendResponse(isExtensionEnabled);
+  } else if (message.type == "set_is_extension_enabled") {
+    isExtensionEnabled = message.object;
+    sendResponse(isExtensionEnabled);
+  } else if (message.type == "delete_from_ruleset_cache") {
+    all_rules.ruleCache.delete(message.object);
+  } else if (message.type == "get_active_rulesets") {
+    sendResponse(activeRulesets.getRulesets(message.object));
+  } else if (message.type == "set_ruleset_active_status") {
+    var ruleset = activeRulesets.getRulesets(message.object.tab_id)[message.object.name];
+    ruleset.active = message.object.active;
+    sendResponse(true);
+  } else if (message.type == "add_new_rule") {
+    addNewRule(message.object, function() {
+      sendResponse(true);
+    });
+    return true;
+  } else if (message.type == "update_state") {
+    updateState();
+  } else if (message.type == "remove_rule") {
+    removeRule(message.object);
+  }
+});
