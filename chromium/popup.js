@@ -72,11 +72,14 @@ function appendRuleLineToListDiv(ruleset, list_div) {
       break;
     }
   }
-  var xhr = new XMLHttpRequest();
-  try {
-    xhr.open("GET", favicon.src, true);
-    label.appendChild(favicon);
-  } catch (e) {}
+
+  if (navigator.userAgent.match("Chrome")) {
+    var xhr = new XMLHttpRequest();
+    try {
+      xhr.open("GET", favicon.src, true);
+      label.appendChild(favicon);
+    } catch (e) {}
+  }
 
   // label text
   var text = document.createElement("span");
