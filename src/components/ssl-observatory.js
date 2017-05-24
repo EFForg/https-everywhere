@@ -128,10 +128,6 @@ function SSLObservatory() {
     this.log(WARN, "Failed to initialize NSS component:" + e);
   }
 
-  // It is necessary to testProxySettings after the window is loaded, since the
-  // Tor Browser will not be finished establishing a circuit otherwise
-  OS.addObserver(this, "browser-delayed-startup-finished", false);
-
   this.log(DBUG, "Loaded observatory component!");
 }
 
@@ -399,10 +395,6 @@ SSLObservatory.prototype = {
           this.submitChain(chainArray, fps, subject.URI.host+":"+subject.URI.port, subject, host_ip, false);
         }
       }
-    }
-
-    if (topic == "browser-delayed-startup-finished") {
-      this.testProxySettings();
     }
   },
 
@@ -770,7 +762,7 @@ SSLObservatory.prototype = {
     }
   },
 
-  testProxySettings: function() {
+  testProxySettings: function(cb) {
     /* Plan:
      * 1. Launch an async XMLHttpRequest to check.tp.o with magic nonce
      * 3. Filter the nonce in protocolProxyFilter to use proxy settings
@@ -808,6 +800,9 @@ SSLObservatory.prototype = {
           if(req.status == 200) {
             if(!req.responseXML) {
               that.log(INFO, "Tor check failed: No XML returned by check service.");
+              if (cb) {
+                cb(that.proxy_test_successful);
+              }
               return;
             }
 
@@ -832,6 +827,9 @@ SSLObservatory.prototype = {
             that.proxy_test_callback(that.proxy_test_successful);
             that.proxy_test_callback = null;
           }
+          if (cb) {
+            cb(that.proxy_test_successful);
+          }
         }
       };
       req.send(null);
@@ -844,6 +842,9 @@ SSLObservatory.prototype = {
       if (this.proxy_test_callback) {
         this.proxy_test_callback(this.proxy_test_successful);
         this.proxy_test_callback = null;
+      }
+      if (cb) {
+        cb(this.proxy_test_successful);
       }
     }
   },
