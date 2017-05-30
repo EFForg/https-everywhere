@@ -1,87 +1,63 @@
 <!--
-	For problematic rules, see Chicago_Tribune-problematic.xml.
+	For other Tribune coverage, see Tribune.xml
 
-	For other Tribune coverage, see Tribune.xml.
+	Non-functional hosts in *.chicagotribune.com
+		Couldn't connect to server:
+			 - chicagotribune.com
 
+		Timeout was reached:
+			 - ad.chicagotribune.com
+			 - apps.chicagotribune.com
+			 - galleries.apps.chicagotribune.com
+			 - dealerspecials.chicagotribune.com
+			 - graphics.chicagotribune.com
 
-	CDN buckets:
+		SSL peer certificate was not OK:
+			 - autos.chicagotribune.com
+			 - digitaledition.chicagotribune.com
+			 - local.chicagotribune.com
+			 - www.chicagotribune.com
 
-		- dev-chitribgreenguide.s3.amazonaws.com
-		- s3.amazonaws.com/prod-chitribgreenguide/
+		Peer certificate cannot be authenticated with given CA certificates:
+			 - advertise.chicagotribune.com
+			 - crime.chicagotribune.com
+			 - schools.chicagotribune.com
+			 - touch.chicagotribune.com
 
+		Secure connection redirects to plaintext:
+			 - localdeals.chicagotribune.com
 
-	Nonfunctional hosts in *chicagotribune.com:
+		Mixed content blocking (MCB) tiggered:
+			 - membership.chicagotribune.com
 
-		- ^ ᵈ
-		- ad ᵈ
-		- cars ʳ
-		- my ⁴
-		- www ʰ
+	Non-functional hosts in *.trbas.com
+		Timeout was reached:
+			 - www.preprod.trbas.com
+			 - s.preprod.trbas.com
 
-	⁴ 504, Akamai
-	ᵈ Dropped
-	ʰ Redirects to http
-	ʳ Refused
-
-
-	Problematic hosts in *chicagotribune.com:
-
-		- advertise ᵐ ˢ
-		- members ᵐ ˢ
-		- membership ᶜ ᵉ ᵐ
-		- touch ᵐ ˢ
-
-	ᵉ Expired
-	ᵐ Mismatched
-	ˢ Self-signed
-
-
-	These altnames do not exist:
-
-		- www.myaccount2.chicagotribune.com
-		- www.placeanad.chicagotribune.com
-
-
-	STS header includes includeSubdomains
-	for myaccount2
+	Non-functional hosts in *.trbimg.com
+		Peer certificate cannot be authenticated with given CA certificates:
+			 - trbimg.com
 
 -->
 <ruleset name="Chicago Tribune.com (partial)">
-
-	<!--	Direct rewrites:
-				-->
+	<!-- chicagotribune.com -->
+	<target host="community.chicagotribune.com" />
+	<target host="members.chicagotribune.com" />
 	<target host="myaccount2.chicagotribune.com" />
-	<target host="*.myaccount2.chicagotribune.com" />
 	<target host="placeanad.chicagotribune.com" />
 
-		<!--	includeSubdomains applies to one level only, so:
-									-->
-		<exclusion pattern="^http://(?:[^./]+\.){2,}myaccount2\.chicagotribune\.com/" />
+	<!-- trbas.com -->
+	<target host="www.trbas.com" />
+		<test url="http://www.trbas.com/jive/prod/common/javascripts/lib.1q2w3_f2a845ae2ece8576ba7c4771b603432d.min.js" />
 
-			<!--	+ve:
-					-->
-			<test url="http://this.host.myaccount2.chicagotribune.com/" />
-			<test url="http://exists.not.myaccount2.chicagotribune.com/" />
+	<!-- trbimg.com -->
+	<target host="www.trbimg.com" />
+		<test url="http://www.trbimg.com/img-584836fe/turbine/ct-magnifying-glass-20161207/" />
+		<test url="http://www.trbimg.com/img-592877d0/turbine/ct-lisle-home-on-private-road-12m-20170526/100/100x56" />
+		<test url="http://www.trbimg.com/img-592b2249/turbine/ct-elite-street-jay-cutler-kristin-cavallari-lake-forest-biz-20170528/400/400x225" />
+		<test url="http://www.trbimg.com/img-592b4f20/turbine/ct-bike-the-drive-2017-photos20170528/100/100x56" />
+		<test url="http://www.trbimg.com/img-592b9421/turbine/ct-trump-pic-20170528-002/650/650x366" />
 
-		<test url="http://www.myaccount2.chicagotribune.com/" />
-
-	<!--	Complications:
-				-->
-	<target host="advertise.chicagotribune.com" />
-
-
-	<securecookie host="^\w" name="." />
-
-
-	<!--	Redirect drops path and forward
-		slash, but not args:
-					-->
-	<rule from="^http://advertise\.chicagotribune\.com/[^?]*"
-		to="https://advertise.chicagotribune.com/" />
-
-		<test url="http://advertise.chicagotribune.com/index.htm" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
