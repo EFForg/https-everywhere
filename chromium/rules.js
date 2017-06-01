@@ -106,6 +106,64 @@ RuleSet.prototype = {
       }
     }
     return null;
+  },
+
+  /**
+   * Deep equivalence comparison
+   * @param ruleset The ruleset to compare with
+   * @returns true or false, depending on whether it's deeply equivalent
+   */
+  isEquivalentTo: function(ruleset) {
+    if(this.name != ruleset.name ||
+       this.note != ruleset.note ||
+       this.state != ruleset.state ||
+       this.default_state != ruleset.default_state) {
+      return false;
+    }
+
+    try {
+      var this_exclusions_length = this.exclusions.length;
+    } catch(e) {
+      var this_exclusions_length = 0;
+    }
+
+    try {
+      var ruleset_exclusions_length = ruleset.exclusions.length;
+    } catch(e) {
+      var ruleset_exclusions_length = 0;
+    }
+
+    try {
+      var this_rules_length = this.rules.length;
+    } catch(e) {
+      var this_rules_length = 0;
+    }
+
+    try {
+      var ruleset_rules_length = ruleset.rules.length;
+    } catch(e) {
+      var ruleset_rules_length = 0;
+    }
+
+    if(this_exclusions_length != ruleset_exclusions_length ||
+       this_rules_length != ruleset_rules_length) {
+      return false;
+    }
+    if(this_exclusions_length > 0) {
+      for(let x = 0; x < this.exclusions.length; x++){
+        if(this.exclusions[x].pattern_c != ruleset.exclusions[x].pattern_c) {
+          return false;
+        }
+      }
+    }
+    if(this_rules_length > 0) {
+      for(let x = 0; x < this.rules.length; x++){
+        if(this.rules[x].to != ruleset.rules[x].to) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
 };
@@ -168,6 +226,26 @@ RuleSets.prototype = {
       new_rule_set.active = (this.ruleActiveStates[new_rule_set.name] == "true");
     }
     log(INFO, 'done adding rule');
+    return true;
+  },
+
+  /**
+   * Remove a user rule
+   * @param params
+   * @returns {boolean}
+   */
+  removeUserRule: function(ruleset) {
+    log(INFO, 'removing user rule for ' + JSON.stringify(ruleset));
+    this.ruleCache.delete(ruleset.name);
+    for(let x = 0; x < this.targets[ruleset.name].length; x++) {
+      if(this.targets[ruleset.name][x].isEquivalentTo(ruleset)) {
+        this.targets[ruleset.name].splice(x, 1);
+      }
+    }
+    if (this.targets[ruleset.name].length == 0) {
+      delete this.targets[ruleset.name];
+    }
+    log(INFO, 'done removing rule');
     return true;
   },
 
