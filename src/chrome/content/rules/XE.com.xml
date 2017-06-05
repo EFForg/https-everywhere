@@ -5,6 +5,7 @@
 			 - www.xe.com
 -->
 <ruleset name="XE.com (partial)">
+	<!-- direct rewrite -->
 	<target host="xe.com" />
 	<target host="auth.xe.com" />
 	<target host="fx2.xe.com" />
@@ -17,5 +18,25 @@
 	<target host="transfer.xe.com" />
 	<target host="xera.xe.com" />
 
-	<rule from="^http:" to="https:" />
+	<rule from="^http://(auth\.|fx2\.|s\.|transfer\.|xera\.)?xe\.com/" 
+			to="https://$1xe.com/" />
+
+	<!-- complications -->
+	<target host="www.xe.com" />
+		<exclusion pattern="^http://www\.xe\.com/$" />
+		<test url="http://www.xe.com/themes/xe/images/xemt/flags/large/uk.png" />
+		<test url="http://www.xe.com/gen/css/default.7.css" />
+	<target host="community.xe.com" />
+		<exclusion pattern="^http://community\.xe\.com/$" />
+		<test url="http://community.xe.com/community/sites/all/modules/contrib/jquery_update/replace/ui/external/jquery.cookie.js" />
+		<test url="http://community.xe.com/misc/jquery.once.js?v=1.2" />
+		<test url="http://community.xe.com/modules/system/system.menus.css?oqvkiv" />
+		<test url="http://community.xe.com/sites/all/modules/contrib/views/css/views.css?oqvkiv" />
+		<test url="http://community.xe.com/themes/xe/images/xe_logo_print.png" />
+
+	<rule from="^http://www\.xe\.com/(themes/|gen/css/)"
+			to="https://www.xe.com/$1" />
+
+	<rule from="^http://community\.xe\.com/(community/|misc/|(?:sites/all/)?modules/|themes/)"
+			to="https://community.xe.com/$1" />
 </ruleset>
