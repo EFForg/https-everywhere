@@ -1,6 +1,7 @@
 from urlparse import urlparse
 
 import regex
+from urlparse import urlparse
 
 class Rule(object):
 	"""Represents one from->to rule element."""
@@ -143,6 +144,12 @@ class Ruleset(object):
 		
 		@param url: string URL
 		"""
+
+		# format url in accordance with with how uri object is serialized in js
+		parsed_url = urlparse(url)
+		if parsed_url.path == '':
+			url = parsed_url._replace(path="/").geturl()
+
 		if self.excludes(url):
 			return url
 		
