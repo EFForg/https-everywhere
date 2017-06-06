@@ -23,8 +23,13 @@ function loadExtensionFile(url, returnType) {
 
 // Rules are loaded here
 var all_rules = new RuleSets(localStorage);
-all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
 
+// Allow users to enable `platform="mixedcontent"` rulesets
+var enableMixedRulesets = false;
+storage.get({enableMixedRulesets: false}, function(item) {
+  enableMixedRulesets = item.enableMixedRulesets;
+  all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
+});
 
 var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see

@@ -185,9 +185,6 @@ function RuleSets(ruleActiveStates) {
 
   // A hash of rule name -> active status (true/false).
   this.ruleActiveStates = ruleActiveStates;
-
-  // A regex to match platform-specific features
-  this.localPlatformRegexp = new RegExp("chromium");
 }
 
 
@@ -266,8 +263,9 @@ RuleSets.prototype = {
     // off-by-default. In practice, this excludes "mixedcontent" & "cacert" rules.
     var platform = ruletag.getAttribute("platform");
     if (platform) {
-      if (platform.search(this.localPlatformRegexp) == -1) {
-        default_state = false;
+      default_state = false;
+      if (platform == "mixedcontent" && enableMixedRulesets) {
+        default_state = true;
       }
       note += "Platform(s): " + platform + "\n";
     }
