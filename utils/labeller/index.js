@@ -133,6 +133,7 @@ function github_process_prs(res, pr_cb){
             }
 
             var file_fetches = [];
+            var newRuleset;
 
             // Out of the list of files for this PR, figure out the minimum Alexa ranking for each
             _.each(files, function(file){
@@ -154,8 +155,23 @@ function github_process_prs(res, pr_cb){
                     }
                   });
                 });
+                
+                if (!fs.existsSync('../../' + file.filename)) {
+                  newRuleset = true;
+                }
               }
             });
+
+            if (newRuleset) {
+              console.log("Applying label `new-ruleset` to PR: " + pull_request.number);
+              
+              github.issues.addLabels(_.extend(httpse, {
+                number: pull_request.number,
+                body: ['new-ruleset']
+              }), function(err, res) {
+                if (err) console.log(err);
+              });
+            }
 
             async.parallel(file_fetches, function(err, res){
               if(err) pr_cb(err);
