@@ -67,4 +67,25 @@ cat > "$dest" <<END
 </ruleset>
 END
 
-echo "$0: created $dest; please examine it." >&2
+# check $lower
+wget "https://$lower/" -O /dev/null -o /dev/null
+if [ "$?" -eq 5 ]; then
+  sed -i "/<target host=\"$lower\" \/>/d" "$dest"
+  echo "error: $lower: SSL verification failure" >&2
+fi
+
+# check www.$lower
+wget "https://www.$lower/" -O /dev/null -o /dev/null
+if [ "$?" -eq 5 ]; then
+  sed -i "/<target host=\"www.$lower\" \/>/d" "$dest"
+  echo "error: www.$lower: SSL verification failure" >&2
+fi
+
+target_count=$(grep -F '<target host=' "$dest" | wc -l)
+if [ "$target_count" -gt 0 ]; then 
+  echo "$0: created $dest; please examine it." >&2
+else
+  rm "$dest"
+  echo "error: neither $lower nor www.$lower support https" >&2
+  exit 1
+fi
