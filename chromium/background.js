@@ -552,13 +552,8 @@ function onBeforeRedirect(details) {
 }
 
 // Registers the handler for requests
-// We listen to all HTTP hosts, because RequestFilter can't handle tons of url restrictions.
-wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["http://*/*"]}, ["blocking"]);
-
-// TODO: Listen only to the tiny subset of HTTPS hosts that we rewrite/downgrade.
-var httpsUrlsWeListenTo = ["https://*/*"];
-// See: https://developer.chrome.com/extensions/match_patterns
-wr.onBeforeRequest.addListener(onBeforeRequest, {urls: httpsUrlsWeListenTo}, ["blocking"]);
+// See: https://github.com/EFForg/https-everywhere/issues/10039
+wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["<all_urls>"]}, ["blocking"]);
 
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
