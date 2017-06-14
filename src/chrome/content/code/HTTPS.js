@@ -264,8 +264,6 @@ const HTTPS = {
   
   
   cookiesCleanup: function(refCookie) {
-    var downgraded = [];
-
     var ignored = this.secureCookiesExceptions;
     var disabled = !this.secureCookies;
     var bi = DOM.createBrowserIterator();
