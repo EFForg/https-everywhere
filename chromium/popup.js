@@ -85,7 +85,7 @@ function appendRuleLineToListDiv(ruleset, list_div) {
     line.appendChild(remove);
 
     remove.addEventListener("click", function(){
-      backgroundPage.all_rules.removeUserRule(ruleset);
+      backgroundPage.removeRule(ruleset);
       list_div.removeChild(line);
     });
   }
