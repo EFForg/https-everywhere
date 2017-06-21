@@ -1,61 +1,23 @@
 <!--
-	Problematic hosts in *zamzar.com:
+	Redirect to http:
+		zamzar.com
+		www.zamzar.com
+		www\d.zamzar.com
+		secure.zamzar.com
 
-		- blog ᵐ
+	See also https://github.com/EFForg/https-everywhere/issues/4147
 
-	ᵐ Mismatched / Wordpress, handled in WordPress-blogs.xml
+	No working URL known:
+		api.zamzar.com
 
-
-	(www.)?zamzar.com: $ redirects to http
-
-
-	Insecure cookies are set for these domains and hosts:
-
-		- .zamzar.com
-		- secure.zamzar.com
-		- www.zamzar.com
+	Invalid certificate:
+		files.zamzar.com
 
 -->
 <ruleset name="Zamzar.com (partial)">
 
-	<target host="zamzar.com" />
-	<target host="secure.zamzar.com" />
-	<target host="www.zamzar.com" />
-
-		<exclusion pattern="^http://(?:www\.)?zamzar\.com/+(?:$|\?)" />
-		<!--exclusion pattern="^http://(www\.)?zamzar\.com/+(?!blank\.htm|common/|[\w-]+\.css|favicon\.ico|images/|(signup|tools)($|[?/])|uploader/css/)" /-->
-
-			<!--	+ve:
-					-->
-			<test url="http://zamzar.com/?" />
-			<test url="http://www.zamzar.com/?" />
-			<test url="http://www.zamzar.com//" />
-
-		<!--	Attempt at fixing "part". The report gives
-			no details, so this is just a guess....
-
-			https://github.com/EFForg/https-everywhere/issues/4147
-										-->
-		<exclusion pattern="^http://(?:www\.)?zamzar\.com/blank\.htm" />
-
-			<!--	+ve:
-					-->
-			<test url="http://zamzar.com/blank.htm" />
-			<test url="http://www.zamzar.com/blank.htm" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.zamzar\.com$" name="cooktest$" /-->
-	<!--securecookie host="^(?:secure|www)\.zamzar\.com$" name="^PHPSESSID$" /-->
-
-	<!--	Disabled as an attempt at fixing "part". The report
-		gives no details, so this is just a guess....
-
-		https://github.com/EFForg/https-everywhere/issues/4147
-									-->
-	<!--securecookie host="^secure\.zamzar\.com$" name=".+" /-->
-
+	<target host="blog.zamzar.com" />
+	<target host="developers.zamzar.com" />
 
 	<rule from="^http:"
 		to="https:" />
