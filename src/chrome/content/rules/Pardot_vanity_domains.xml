@@ -1,0 +1,24 @@
+<!--
+
+For other Pardot coverage, see Pardot.xml.
+
+-->
+<ruleset name="Pardot vanity domains (partial)">
+
+	<!-- Many Pardot tracker URLs that work on a vanity CNAME do *NOT* work on
+	     the SSL-enabled domain "go.pardot.com". Embedded forms (/l/*) and
+	     non-vanity tracker URLs (/e/*) ARE confirmed to work. -->
+	<!-- http://help.pardot.com/customer/portal/articles/2126757-using-vanity-urls -->
+	<!-- http://help.pardot.com/customer/portal/articles/2126640-how-to-ssl-enable-http-secure-pardot-urls -->
+	<rule from="^http://([\w.-]+)/([el])/"
+		to="https://go.pardot.com/$2/" />
+
+	<!-- Exclude top domain to disable implicit test -->
+	<exclusion pattern="^http://([\w.-]+)/$" />
+
+	<target host="go.linuxfoundation.org" />
+		<test url="http://go.linuxfoundation.org/" />
+		<test url="http://go.linuxfoundation.org/e/6342/TheLinuxFoundation/ymc8q/578968329" />
+		<test url="http://go.linuxfoundation.org/l/6342/2016-03-23/33c3kc" />
+
+</ruleset>
