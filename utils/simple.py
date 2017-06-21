@@ -27,8 +27,6 @@ def simple(f):
     not tree.xpath("/ruleset/exclusion"),
     # targets must not contain any wildcards
     not any("*" in target for target in targets),
-    # ruleset must not contain any downgrade rules
-    not any("downgrade" in rule.attrib for rule in tree.xpath("/ruleset/rule")),
     # and every rule must itself be simple according to the criteria below
     all(simple_rule(rule, targets) for rule in tree.xpath("/ruleset/rule"))
     ])
