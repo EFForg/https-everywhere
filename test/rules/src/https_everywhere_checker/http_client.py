@@ -376,7 +376,7 @@ class HTTPFetcher(object):
 			#shitty HTTP header parsing
 			if httpCode == 0:
 				raise HTTPFetcherError("Pycurl fetch failed for '%s'" % newUrl)
-			elif httpCode in (301, 302, 303, 307):
+			elif httpCode in (301, 302, 303, 307, 308):
 				location = None
 				for piece in headerStr.split('\n'):
 					if piece.lower().startswith('location:'):
