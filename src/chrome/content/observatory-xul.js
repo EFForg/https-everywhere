@@ -75,13 +75,20 @@ function set_observatory_configurability(enabled) {
   for (var i =0; i < ui_elements.length; i++) 
     ui_elements[i].disabled = !enabled;
   // the "use tor" option can't be ungreyed unless tor is available
-  if (ssl_observatory.proxy_test_successful == false) {
-    var tor_opt = document.getElementById("ssl-obs-anon")
-    tor_opt.disabled = true;
-    tor_opt.label = tor_opt.getAttribute("alt_label");
-  }
-  if (!enabled) 
+  if (enabled) {
+    ssl_observatory.testProxySettings(function(proxy_test_successful){
+      var tor_opt = document.getElementById("ssl-obs-anon")
+      if (proxy_test_successful == false) {
+        tor_opt.disabled = true;
+        tor_opt.label = tor_opt.getAttribute("alt_label");
+      } else {
+        tor_opt.disabled = false;
+        tor_opt.label = tor_opt.getAttribute("default_label");
+      }
+    });
+  } else {
     hide_advanced();
+  }
 }
 
 // show/hide advanced options in the preferences dialog

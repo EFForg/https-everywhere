@@ -35,7 +35,7 @@ fi
 lower=$(echo "$1" | tr A-Z a-z)
 escaped=$(echo "$lower" | sed 's/\./\\./g' )
 
-duplicate=$(grep -EHin '<target\s+host="(w+\.)?'$escaped'"\s*/>' *.xml)
+duplicate=$(find . -name '*.xml' -exec grep -EHin '<target\s+host="(w+\.)?'$escaped'"\s*/>' -- {} +)
 if [ -n "$duplicate" ]
 then
   echo "error: $lower already exists:" >&2

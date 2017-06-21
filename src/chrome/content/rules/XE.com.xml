@@ -1,0 +1,38 @@
+<!--
+	Non-functional hosts
+		Multiple problems:
+			 - www.xe.com
+			 - community.xe.com
+-->
+<ruleset name="XE.com (partial)">
+	<!-- direct rewrite -->
+	<target host="xe.com" />
+	<target host="auth.xe.com" />
+	<target host="fx2.xe.com" />
+	<target host="s.xe.com" />
+		<test url="http://s.xe.com/themes/xe/images/appbadges/badge-android-blue.png" />
+	<target host="transfer.xe.com" />
+	<target host="xera.xe.com" />
+
+	<!-- complications -->
+	<target host="www.xe.com" />
+		<exclusion pattern="^http://www\.xe\.com/$" />
+		<test url="http://www.xe.com/themes/xe/images/xemt/flags/large/uk.png" />
+		<test url="http://www.xe.com/gen/css/default.7.css" />
+	<target host="community.xe.com" />
+		<exclusion pattern="^http://community\.xe\.com/(blog|forum|rss-feed|s3|$)" />
+		<!-- match exclusion -->
+		<test url="http://community.xe.com/blog/xe-market-analysis" />
+		<test url="http://community.xe.com/forum/xe-currency-data/api-usage" />
+		<test url="http://community.xe.com/rss-feed" />
+		<test url="http://community.xe.com/s3/files/styles/large/s3/image_1022.jpg?itok=GI0FUOMO" />
+
+		<!-- do not match exclusion -->
+		<test url="http://community.xe.com/themes/xe/images/xe_logo_print.png" />
+
+	<rule from="^http://(auth\.|community\.|fx2\.|s\.|transfer\.|xera\.)?xe\.com/"
+			to="https://$1xe.com/" />
+
+	<rule from="^http://www\.xe\.com/(themes/|gen/css/)"
+			to="https://www.xe.com/$1" />
+</ruleset>
