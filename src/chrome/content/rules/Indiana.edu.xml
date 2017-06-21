@@ -1,74 +1,32 @@
 <!--
-	For problematic rules, see Indiana-University-self-signed.xml.
-
 	For other Indiana University coverage, see Indiana-University.xml.
 
+	Non-functional hosts
+		Couldn't connect to server:
+			 - iubio.bio.indiana.edu
+			 - gisday.indiana.edu
+			 - lkml.indiana.edu
 
-	Nonfunctional hosts in *indiana.edu:
+		SSL peer certificate was not OK:
+			 - stcweb.stc.indiana.edu
 
-		- iubio.bio ¹
-		- bursar ⁴
-		- d2i		Shows another domain
-		- gisday ⁴
-		- lkml *
-		- news ⁴
-		- wphomes.soic ⁴
-		- studentcentral	403
-
-	¹ Dropped
-	* http reply
-	⁴ Refused
-
-
-	Problematic hosts in *indiana.edu:
-
-		- www.informatics ¹
-		- soic *
-
-	¹ Works; expired 2010-09-05, self-signed, CN: INFO-SHANNON-II
-	* Cert only matches www.foo
-
-
-	Mixed content:
-
-		- favicons on alumni, (www.)?soic from www.indiana.edu
-
-		- Bugs, on (www.)?soic from:
-
-			- www.facebook.com *
-			- static01.linkedin.com
-			- passets-ec.pinterest.com *
-
-	* Secured by us
-	² Unsecurable <= refused
-
+		Secure connection redirects to plaintext:
+			 - news.indiana.edu
 -->
-<ruleset name="Indianna.edu (partial)">
-
-	<!--	Direct rewrites:
-				-->
+<ruleset name="Indiana.edu (partial)">
+	<target host="indiana.edu" />
+	<target host="www.indiana.edu" />
 	<target host="alumni.indiana.edu" />
+	<target host="bursar.indiana.edu" />
+	<target host="d2i.indiana.edu" />
+	<target host="www.informatics.indiana.edu" />
+	<target host="soic.indiana.edu" />
 	<target host="www.dsc.soic.indiana.edu" />
+	<target host="wphomes.soic.indiana.edu" />
 	<target host="www.soic.indiana.edu" />
-	<target host="stcweb.stc.indiana.edu" />
+	<target host="studentcentral.indiana.edu" />
+	<target host="gentoo.ussg.indiana.edu" />
 	<target host="spout.ussg.indiana.edu" />
 
-	<!--	Complications:
-				-->
-	<target host="soic.indiana.edu" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^stcweb\.stc\.indiana\.edu$" name="^(CFCLIENT_SECURITY|CFGLOBALS|CFID|CFTOKEN|CFGLOBALS)$" /-->
-
-	<securecookie host="^\w" name="." />
-
-
-	<rule from="^http://soic\.indiana\.edu/"
-		to="https://www.soic.indiana.edu/" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

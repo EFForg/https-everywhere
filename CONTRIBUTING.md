@@ -260,6 +260,7 @@ Avoid snapping redirects. For instance, if https://foo.fm serves HTTPS correctly
 ```xml
 <ruleset name="WHATWG.org">
 	<target host="whatwg.org" />
+	<target host="www.whatwg.org" />
 	<target host="developers.whatwg.org" />
 	<target host="html-differences.whatwg.org" />
 	<target host="images.whatwg.org" />
@@ -270,7 +271,6 @@ Avoid snapping redirects. For instance, if https://foo.fm serves HTTPS correctly
 		<test url="http://xhr.spec.whatwg.org/" />
 		<test url="http://dom.spec.whatwg.org/" />
 	<target host="wiki.whatwg.org" />
-	<target host="www.whatwg.org" />
 
 	<rule from="^http:"
 		to="https:" />
