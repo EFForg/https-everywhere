@@ -338,7 +338,8 @@ class HTTPFetcher(object):
 	
 	def fetchHtml(self, url):
 		"""Fetch HTML from given http/https URL. Return codes 301, 302,
-		303, 307 are followed, URLs rewritten using HTTPS Everywhere rules.
+		303, 307, and 308 are followed, URLs rewritten using HTTPS
+                Everywhere rules.
 		
 		@param url: string URL of http(s) resource
 		@returns: tuple (httpResponseCode, htmlData)
@@ -376,7 +377,7 @@ class HTTPFetcher(object):
 			#shitty HTTP header parsing
 			if httpCode == 0:
 				raise HTTPFetcherError("Pycurl fetch failed for '%s'" % newUrl)
-			elif httpCode in (301, 302, 303, 307):
+			elif httpCode in (301, 302, 303, 307, 308):
 				location = None
 				for piece in headerStr.split('\n'):
 					if piece.lower().startswith('location:'):
