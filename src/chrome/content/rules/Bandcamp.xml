@@ -1,50 +1,35 @@
 <!--
-	For artists, see Bandcamp-artists.xml.
+	Wildcard DNS and certificate.
 
-	blog.bandcamp.com is handled in WordPress-blogs.xml.
-
-
-	Problematic domains:
-
-		- blog.bandcamp.com	(wordpress)
-		- (www.)bandcamp.mu	(mismatched, CN: *.bandcamp.com)
-
-
-	Fully covered domains:
-
-		- bandcamp.com subdomains:
-
-			- (www.)
-			- f
-			- s
-			- *	(per-artist subdomains)
-
-		- (www.)bandcamp.mu	(→ (www.)bandcamp.com)
-
-		- f0.bcbits.com
-		- s0.bcbits.com
+	Invalid certificate:
+		bandcamp.mu
+		*.bandcamp.mu
 
 -->
 <ruleset name="Bandcamp">
 
 	<target host="bandcamp.com" />
 	<target host="*.bandcamp.com" />
-		<exclusion pattern="^http://blog\." />
+		<test url="http://testurl1.bandcamp.com/" />
+		<test url="http://testurl2.bandcamp.com/" />
+		<test url="http://testurl3.bandcamp.com/" />
+		<test url="http://testurl4.bandcamp.com/" />
+
 	<target host="bandcamp.mu" />
 	<target host="www.bandcamp.mu" />
-	<target host="*.bcbits.com" />
 
+	<target host="*.bcbits.com" />
+		<test url="http://s1.bcbits.com/img/bc_favicon.ico" />
+		<test url="http://s4.bcbits.com/img/bc_favicon.ico" />
+		<test url="http://f1.bcbits.com/img/0010600821_0" />
+		<test url="http://f4.bcbits.com/img/0010600821_0" />
 
 	<securecookie host="^\.bandcamp\.com$" name=".+" />
 
-
-	<rule from="^http://([\w-]+\.)?bandcamp\.com/"
-		to="https://$1bandcamp.com/" />
-
 	<rule from="^http://(www\.)?bandcamp\.mu/"
-		to="https://$1bandcamp.com/" />
+		to="https://bandcamp.com/" />
 
-	<rule from="^http://(f|s)0\.bcbits\.com/"
-		to="https://$10.bcbits.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset> 
