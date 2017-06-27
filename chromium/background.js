@@ -98,6 +98,25 @@ var loadStoredUserRules = function() {
 
 loadStoredUserRules();
 
+function getActiveRulesetCount() {
+  const applied = activeRulesets.getRulesets(tabs[0].id);
+
+  if (!applied)
+  {
+    return 0;
+  }
+
+  let activeCount = 0;
+
+  for (const key in applied) {
+    if (applied[key].active) {
+      activeCount++;
+    }
+  }
+
+  return activeCount;
+}
+
 /**
  * Set the icon color correctly
  * inactive: extension is enabled, but no rules were triggered on this page.
@@ -110,13 +129,15 @@ var updateState = function() {
     if (!tabs || tabs.length === 0) {
       return;
     }
-    var applied = activeRulesets.getRulesets(tabs[0].id)
+    
+    const activeCount = getActiveRulesetCount();
+
     var iconState = "inactive";
     if (!isExtensionEnabled) {
       iconState = "disabled";
     } else if (httpNowhereOn) {
       iconState = "blocking";
-    } else if (applied) {
+    } else if (activeCount > 0) {
       iconState = "active";
     }
     chrome.browserAction.setIcon({
@@ -128,13 +149,11 @@ var updateState = function() {
       title: "HTTPS Everywhere (" + iconState + ")"
     });
 
-    const appliedCount = applied ? Object.keys(applied).length : 0;
-
     chrome.browserAction.setBadgeBackgroundColor({color: "#00cc00"});
 
-    const showBadge = appliedCount > 0 && isExtensionEnabled;
+    const showBadge = activeCount > 0 && isExtensionEnabled;
     
-    chrome.browserAction.setBadgeText({text: showBadge ? "" + appliedCount : ""});
+    chrome.browserAction.setBadgeText({text: showBadge ? "" + activeCount : ""});
   });
 }
 
