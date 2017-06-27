@@ -127,6 +127,14 @@ var updateState = function() {
     chrome.browserAction.setTitle({
       title: "HTTPS Everywhere (" + iconState + ")"
     });
+
+    const appliedCount = applied ? Object.keys(applied).length : 0;
+
+    chrome.browserAction.setBadgeBackgroundColor({color: "#00cc00"});
+
+    const showBadge = appliedCount > 0 && isExtensionEnabled;
+    
+    chrome.browserAction.setBadgeText({text: showBadge ? "" + appliedCount : ""});
   });
 }
 
@@ -192,6 +200,8 @@ AppliedRulesets.prototype = {
       this.active_tab_rules[tabId] = {};
       this.active_tab_rules[tabId][ruleset.name] = ruleset;
     }
+
+    updateState();
   },
 
   getRulesets: function(tabId) {
