@@ -98,8 +98,8 @@ var loadStoredUserRules = function() {
 
 loadStoredUserRules();
 
-function getActiveRulesetCount() {
-  const applied = activeRulesets.getRulesets(tabs[0].id);
+function getActiveRulesetCount(id) {
+  const applied = activeRulesets.getRulesets(id);
 
   if (!applied)
   {
@@ -130,7 +130,7 @@ var updateState = function() {
       return;
     }
     
-    const activeCount = getActiveRulesetCount();
+    const activeCount = getActiveRulesetCount(tabs[0].id);
 
     var iconState = "inactive";
     if (!isExtensionEnabled) {
