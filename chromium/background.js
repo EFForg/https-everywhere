@@ -90,8 +90,8 @@ var wr = chrome.webRequest;
 var loadStoredUserRules = function() {
   var rules = getStoredUserRules();
   var i;
-  for (i = 0; i < rules.length; ++i) {
-    all_rules.addUserRule(rules[i]);
+  for (let rule of rules) {
+    all_rules.addUserRule(rule);
   }
   log('INFO', 'loaded ' + i + ' stored user rules');
 };
@@ -159,16 +159,13 @@ var addNewRule = function(params, cb) {
 var removeRule = function(ruleset) {
   if (all_rules.removeUserRule(ruleset)) {
     // If we successfully removed the user rule, remove it in local storage too
-    var oldUserRules = getStoredUserRules();
-    for (let x = 0; x < oldUserRules.length; x++) {
-      if (oldUserRules[x].host == ruleset.name &&
-          oldUserRules[x].redirectTo == ruleset.rules[0].to &&
-          String(RegExp(oldUserRules[x].urlMatcher)) == String(ruleset.rules[0].from_c)) {
-        oldUserRules.splice(x, 1);
-        break;
-      }
-    }
-    localStorage.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules));
+    var userRules = getStoredUserRules();
+    userRules = userRules.filter(r =>
+      !(r.host == ruleset.name &&
+        r.redirectTo == ruleset.rules[0].to &&
+        String(RegExp(r.urlMatcher)) == String(ruleset.rules[0].from_c))
+    );
+    localStorage.setItem(USER_RULE_KEY, JSON.stringify(userRules));
   }
 }
 
