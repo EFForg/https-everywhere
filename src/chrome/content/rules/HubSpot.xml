@@ -30,7 +30,6 @@
 		- hubspot.com subdomains:
 
 			- cta-redirect ²
-			- forums ⁴
 			- go *
 			- help			(cert: slotmatching8.salesforce.com; redirects to http)
 			- hugs			(504, akamai; redirects to www.inboundconference.com over http)
@@ -41,7 +40,6 @@
 
 	² Refused
 	* 503, akamai
-	⁴ 404
 
 
 	Problematic domains:
@@ -51,7 +49,7 @@
 			- br ²
 			- cdn1			(akamai 503, valid cert)
 			- dev			(works, akamai)
-			 ²
+			- forums ²
 			- ideas ¹
 
 		- www.inbound.com	(works, akamai)
@@ -103,6 +101,7 @@
 	<target host="designers.hubspot.com" />
 	<target host="developers.hubspot.com" />
 	<target host="forms.hubspot.com" />
+	<target host="forums.hubspot.com" />
 	<target host="info.hubspot.com" />
 	<target host="js.hubspot.com" />
 	<target host="knowledge.hubspot.com" />
@@ -130,20 +129,21 @@
 	<target host="cdn1.hubspot.com" />
 	<target host="jobs.hubspot.com" />
 
-
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^designers\.hubspot\.com$" name="^PagesViewedThisSession$" /-->
 	<!--securecookie host="^offers\.hubspot\.com$" name="^(?:hs_ab_test_\d+|hsPagesViewedThisSession)$" /-->
 
-	<securecookie host="." name="." />
-
+	<securecookie host=".+" name=".+" />
 
 	<rule from="^http://cdn\.blog\.hubspot\.com/"
 		to="https://s3.amazonaws.com/cdn.hubspot.com/" />
 
 	<rule from="^http://cdn1\.hubspot\.com/"
 		to="https://s3.amazonaws.com/cdn1.hubspot.com/" />
+
+	<rule from="^http://forums\.hubspot\.com/"
+		to="https://community.hubspot.com/" />
 
 	<!--	- Doesn't work over https
 		- Redirects like so over http
