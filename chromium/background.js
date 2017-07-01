@@ -217,7 +217,7 @@ var domainBlacklist = new Set();
 var redirectCounter = {};
 
 /**
- * Called before a HTTP(s) request. Does the heavy lifting
+ * Called before a HTTP request. Does the heavy lifting
  * Cancels the request/redirects it to HTTPS. URL modification happens in here.
  * @param details of the handler, see Chrome doc
  * */
@@ -230,10 +230,14 @@ function onBeforeRequest(details) {
   var uri = document.createElement('a');
   uri.href = details.url;
 
+  // We only modify insecure HTTP requests.
+  if (uri.protocol !== "http:") {
+    return;
+  }
+  
   // Should the request be canceled?
   var shouldCancel = (
     httpNowhereOn &&
-    uri.protocol === 'http:' &&
     !/\.onion$/.test(uri.hostname) &&
     !/^localhost$/.test(uri.hostname) &&
     !/^127(\.[0-9]{1,3}){3}$/.test(uri.hostname) &&
@@ -303,7 +307,7 @@ function onBeforeRequest(details) {
 
   // In Switch Planner Mode, record any non-rewriteable
   // HTTP URIs by parent hostname, along with the resource type.
-  if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== "https:") {
+  if (switchPlannerEnabledFor[details.tabId]) {
     writeToSwitchPlanner(details.type,
                          details.tabId,
                          canonical_host,
@@ -320,10 +324,6 @@ function onBeforeRequest(details) {
       } else {
         return {redirectUrl: newuristr.replace(/^http:/, "https:")};
       }
-    }
-    if (newuristr && newuristr.substring(0, 5) === "http:") {
-      // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
-      return {cancel: true};
     }
   }
 
