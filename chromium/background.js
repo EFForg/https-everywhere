@@ -228,11 +228,6 @@ function onBeforeRequest(details) {
 
   const uri = document.createElement('a');
   uri.href = details.url;
-
-  // We only modify HTTP requests.
-  if (uri.protocol !== "http:") {
-    return;
-  }
   
   // Should the request be canceled?
   const shouldCancel = (
