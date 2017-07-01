@@ -5,7 +5,7 @@
  * @param url: a relative URL to local XML
  */
 function loadExtensionFile(url, returnType) {
-  var xhr = new XMLHttpRequest();
+  const xhr = new XMLHttpRequest();
   // Use blocking XHR to ensure everything is loaded by the time
   // we return.
   xhr.open("GET", chrome.extension.getURL(url), false);
@@ -53,7 +53,7 @@ storage.get({httpNowhere: false}, function(item) {
 });
 chrome.storage.onChanged.addListener(function(changes, areaName) {
   if (areaName === 'sync' || areaName === 'local') {
-    for (var key in changes) {
+    for (const key in changes) {
       if (key === 'httpNowhere') {
         httpNowhereOn = changes[key].newValue;
         updateState();
@@ -75,22 +75,21 @@ chrome.webNavigation.onCompleted.addListener(function() {
 * Load stored user rules
  **/
 var getStoredUserRules = function() {
-  var oldUserRuleString = localStorage.getItem(USER_RULE_KEY);
-  var oldUserRules = [];
+  const oldUserRuleString = localStorage.getItem(USER_RULE_KEY);
+  let oldUserRules = [];
   if (oldUserRuleString) {
     oldUserRules = JSON.parse(oldUserRuleString);
   }
   return oldUserRules;
 };
-var wr = chrome.webRequest;
+const wr = chrome.webRequest;
 
 /**
  * Load all stored user rules
  */
-var loadStoredUserRules = function() {
-  var rules = getStoredUserRules();
-  var i;
-  for (i = 0; i < rules.length; ++i) {
+const loadStoredUserRules = function() {
+  const rules = getStoredUserRules();
+  for (const i = 0; i < rules.length; ++i) {
     all_rules.addUserRule(rules[i]);
   }
   log('INFO', 'loaded ' + i + ' stored user rules');
@@ -105,13 +104,13 @@ loadStoredUserRules();
  * active: extension is enabled and rewrote URLs on this page.
  * disabled: extension is disabled from the popup menu.
  */
-var updateState = function() {
+const updateState = function() {
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     if (!tabs || tabs.length === 0) {
       return;
     }
-    var applied = activeRulesets.getRulesets(tabs[0].id)
-    var iconState = "inactive";
+    const applied = activeRulesets.getRulesets(tabs[0].id)
+    let iconState = "inactive";
     if (!isExtensionEnabled) {
       iconState = "disabled";
     } else if (httpNowhereOn) {
@@ -135,12 +134,12 @@ var updateState = function() {
  * @param params: params defining the rule
  * @param cb: Callback to call after success/fail
  * */
-var addNewRule = function(params, cb) {
+const addNewRule = function(params, cb) {
   if (all_rules.addUserRule(params)) {
     // If we successfully added the user rule, save it in local 
     // storage so it's automatically applied when the extension is 
     // reloaded.
-    var oldUserRules = getStoredUserRules();
+    const oldUserRules = getStoredUserRules();
     // TODO: there's a race condition here, if this code is ever executed from multiple 
     // client windows in different event loops.
     oldUserRules.push(params);
@@ -156,15 +155,15 @@ var addNewRule = function(params, cb) {
  * Removes a user rule
  * @param ruleset: the ruleset to remove
  * */
-var removeRule = function(ruleset) {
+const removeRule = function(ruleset) {
   if (all_rules.removeUserRule(ruleset)) {
     // If we successfully removed the user rule, remove it in local storage too
-    var oldUserRules = getStoredUserRules();
-    for (let x = 0; x < oldUserRules.length; x++) {
-      if (oldUserRules[x].host == ruleset.name &&
-          oldUserRules[x].redirectTo == ruleset.rules[0].to &&
-          String(RegExp(oldUserRules[x].urlMatcher)) == String(ruleset.rules[0].from_c)) {
-        oldUserRules.splice(x, 1);
+    const oldUserRules = getStoredUserRules();
+    for (const i = 0; i < oldUserRules.length; i++) {
+      if (oldUserRules[i].host == ruleset.name &&
+          oldUserRules[i].redirectTo == ruleset.rules[0].to &&
+          String(RegExp(oldUserRules[i].urlMatcher)) == String(ruleset.rules[0].from_c)) {
+        oldUserRules.splice(i, 1);
         break;
       }
     }
@@ -178,7 +177,7 @@ var removeRule = function(ruleset) {
 function AppliedRulesets() {
   this.active_tab_rules = {};
 
-  var that = this;
+  const that = this;
   chrome.tabs.onRemoved.addListener(function(tabId, info) {
     that.removeTab(tabId);
   });
@@ -207,14 +206,14 @@ AppliedRulesets.prototype = {
 };
 
 // FIXME: change this name
-var activeRulesets = new AppliedRulesets();
+const activeRulesets = new AppliedRulesets();
 
-var urlBlacklist = new Set();
-var domainBlacklist = new Set();
+const urlBlacklist = new Set();
+const domainBlacklist = new Set();
 
 // redirect counter workaround
 // TODO: Remove this code if they ever give us a real counter
-var redirectCounter = {};
+const redirectCounter = {};
 
 /**
  * Called before a HTTP request. Does the heavy lifting
@@ -227,16 +226,16 @@ function onBeforeRequest(details) {
     return;
   }
 
-  var uri = document.createElement('a');
+  const uri = document.createElement('a');
   uri.href = details.url;
 
-  // We only modify insecure HTTP requests.
+  // We only modify HTTP requests.
   if (uri.protocol !== "http:") {
     return;
   }
   
   // Should the request be canceled?
-  var shouldCancel = (
+  const shouldCancel = (
     httpNowhereOn &&
     !/\.onion$/.test(uri.hostname) &&
     !/^localhost$/.test(uri.hostname) &&
@@ -245,7 +244,7 @@ function onBeforeRequest(details) {
   );
 
   // Normalise hosts such as "www.example.com."
-  var canonical_host = uri.hostname;
+  let canonical_host = uri.hostname;
   if (canonical_host.charAt(canonical_host.length - 1) == ".") {
     while (canonical_host.charAt(canonical_host.length - 1) == ".")
       canonical_host = canonical_host.slice(0,-1);
@@ -254,16 +253,19 @@ function onBeforeRequest(details) {
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
-  var using_credentials_in_url = false;
+  
+  let using_credentials_in_url = false;
+  let tmp_user, tmp_pass;
+  
   if (uri.password || uri.username) {
       using_credentials_in_url = true;
-      var tmp_user = uri.username;
-      var tmp_pass = uri.password;
+      tmp_user = uri.username;
+      tmp_pass = uri.password;
       uri.username = null;
       uri.password = null;
   }
 
-  var canonical_url = uri.href;
+  const canonical_url = uri.href;
   if (details.url != canonical_url && !using_credentials_in_url) {
     log(INFO, "Original url " + details.url + 
         " changed before processing to " + canonical_url);
@@ -276,20 +278,20 @@ function onBeforeRequest(details) {
     activeRulesets.removeTab(details.tabId);
   }
 
-  var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
+  const potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
 
   if (redirectCounter[details.requestId] >= 8) {
     log(NOTE, "Redirect counter hit for " + canonical_url);
     urlBlacklist.add(canonical_url);
-    var hostname = uri.hostname;
+    const hostname = uri.hostname;
     domainBlacklist.add(hostname);
     log(WARN, "Domain blacklisted " + hostname);
     return {cancel: shouldCancel};
   }
 
-  var newuristr = null;
+  let newuristr = null;
 
-  for (let ruleset of potentiallyApplicable) {
+  for (const ruleset of potentiallyApplicable) {
     activeRulesets.addRulesetToTab(details.tabId, ruleset);
     if (ruleset.active && !newuristr) {
       newuristr = ruleset.apply(canonical_url);
@@ -298,7 +300,7 @@ function onBeforeRequest(details) {
 
   if (newuristr && using_credentials_in_url) {
     // re-insert userpass info which was stripped temporarily
-    var uri_with_credentials = document.createElement('a');
+    const uri_with_credentials = document.createElement('a');
     uri_with_credentials.href = newuristr;
     uri_with_credentials.username = tmp_user;
     uri_with_credentials.password = tmp_pass;
@@ -337,7 +339,7 @@ function onBeforeRequest(details) {
 
 // Map of which values for the `type' enum denote active vs passive content.
 // https://developer.chrome.com/extensions/webRequest.html#event-onBeforeRequest
-var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1};
+const activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1};
 
 // We consider sub_frame to be passive even though it can contain JS or flash.
 // This is because code running in the sub_frame cannot access the main frame's
@@ -345,7 +347,7 @@ var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1};
 // same domain but different protocol - i.e. HTTP while the parent is HTTPS -
 // because same-origin policy includes the protocol. This also mimics Chrome's
 // UI treatment of insecure subframes.
-var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
+const passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
 
 /**
  * Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
@@ -359,11 +361,11 @@ var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
  * @param rewritten_url: The url rewritten to
  * */
 function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritten_url) {
-  var rw = "rw";
+  let rw = "rw";
   if (rewritten_url == null)
     rw = "nrw";
 
-  var active_content = 0;
+  let active_content = 0;
   if (activeTypes[type]) {
     active_content = 1;
   } else if (passiveTypes[type]) {
@@ -393,8 +395,8 @@ function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritt
  * */
 function objSize(obj) {
   if (typeof obj == 'undefined') return 0;
-  var size = 0, key;
-  for (key in obj) {
+  let size = 0;
+  for (const key in obj) {
     if (obj.hasOwnProperty(key)) size++;
   }
   return size;
@@ -405,17 +407,17 @@ function objSize(obj) {
  * presenting the most important ones first.
  * */
 function sortSwitchPlanner(tab_id, rewritten) {
-  var asset_host_list = [];
+  const asset_host_list = [];
   if (typeof switchPlannerInfo[tab_id] === 'undefined' ||
       typeof switchPlannerInfo[tab_id][rewritten] === 'undefined') {
     return [];
   }
-  var tabInfo = switchPlannerInfo[tab_id][rewritten];
-  for (var asset_host in tabInfo) {
-    var ah = tabInfo[asset_host];
-    var activeCount = objSize(ah[1]);
-    var passiveCount = objSize(ah[0]);
-    var score = activeCount * 100 + passiveCount;
+  const tabInfo = switchPlannerInfo[tab_id][rewritten];
+  for (const asset_host in tabInfo) {
+    const ah = tabInfo[asset_host];
+    const activeCount = objSize(ah[1]);
+    const passiveCount = objSize(ah[0]);
+    const score = activeCount * 100 + passiveCount;
     asset_host_list.push([score, activeCount, passiveCount, asset_host]);
   }
   asset_host_list.sort(function(a,b){return a[0]-b[0];});
@@ -426,16 +428,16 @@ function sortSwitchPlanner(tab_id, rewritten) {
 * Format the switch planner output for presentation to a user.
 * */
 function switchPlannerSmallHtmlSection(tab_id, rewritten) {
-  var asset_host_list = sortSwitchPlanner(tab_id, rewritten);
+  const asset_host_list = sortSwitchPlanner(tab_id, rewritten);
   if (asset_host_list.length == 0) {
     return "<b>none</b>";
   }
 
-  var output = "";
+  let output = "";
   for (var i = asset_host_list.length - 1; i >= 0; i--) {
-    var host = asset_host_list[i][3];
-    var activeCount = asset_host_list[i][1];
-    var passiveCount = asset_host_list[i][2];
+    const host = asset_host_list[i][3];
+    const activeCount = asset_host_list[i][1];
+    const passiveCount = asset_host_list[i][2];
 
     output += "<b>" + host + "</b>: ";
     if (activeCount > 0) {
@@ -476,8 +478,8 @@ function switchPlannerSmallHtml(tab_id) {
  * */
 function linksFromKeys(map) {
   if (typeof map == 'undefined') return "";
-  var output = "";
-  for (var key in map) {
+  let output = "";
+  for (const key in map) {
     if (map.hasOwnProperty(key)) {
       output += "<a href='" + key + "'>" + key + "</a><br/>";
     }
@@ -496,13 +498,13 @@ function switchPlannerDetailsHtml(tab_id) {
  * Generate the detailed html fot the switch planner, by section
  * */
 function switchPlannerDetailsHtmlSection(tab_id, rewritten) {
-  var asset_host_list = sortSwitchPlanner(tab_id, rewritten);
-  var output = "";
+  const asset_host_list = sortSwitchPlanner(tab_id, rewritten);
+  let output = "";
 
-  for (var i = asset_host_list.length - 1; i >= 0; i--) {
-    var host = asset_host_list[i][3];
-    var activeCount = asset_host_list[i][1];
-    var passiveCount = asset_host_list[i][2];
+  for (const i = asset_host_list.length - 1; i >= 0; i--) {
+    const host = asset_host_list[i][3];
+    const activeCount = asset_host_list[i][1];
+    const passiveCount = asset_host_list[i][2];
 
     output += "<b>" + host + "</b>: ";
     if (activeCount > 0) {
@@ -525,13 +527,13 @@ function switchPlannerDetailsHtmlSection(tab_id, rewritten) {
 function onCookieChanged(changeInfo) {
   if (!changeInfo.removed && !changeInfo.cookie.secure && isExtensionEnabled) {
     if (all_rules.shouldSecureCookie(changeInfo.cookie)) {
-      var cookie = {name:changeInfo.cookie.name,
-                    value:changeInfo.cookie.value,
-                    path:changeInfo.cookie.path,
-                    httpOnly:changeInfo.cookie.httpOnly,
-                    expirationDate:changeInfo.cookie.expirationDate,
-                    storeId:changeInfo.cookie.storeId,
-                    secure: true};
+      const cookie = {name:changeInfo.cookie.name,
+                      value:changeInfo.cookie.value,
+                      path:changeInfo.cookie.path,
+                      httpOnly:changeInfo.cookie.httpOnly,
+                      expirationDate:changeInfo.cookie.expirationDate,
+                      storeId:changeInfo.cookie.storeId,
+                      secure: true};
 
       // Host-only cookies don't set the domain field.
       if (!changeInfo.cookie.hostOnly) {
@@ -559,7 +561,7 @@ function onCookieChanged(changeInfo) {
  * */
 function onBeforeRedirect(details) {
     // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
-    var prefix = details.redirectUrl.substring(0, 5);
+    const prefix = details.redirectUrl.substring(0, 5);
     if (prefix === "http:" || prefix === "https") {
         if (details.requestId in redirectCounter) {
             redirectCounter[details.requestId] += 1;
@@ -573,7 +575,7 @@ function onBeforeRedirect(details) {
 
 // Registers the handler for requests
 // See: https://github.com/EFForg/https-everywhere/issues/10039
-wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["<all_urls>"]}, ["blocking"]);
+wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["http://*/*"]}, ["blocking"]);
 
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
@@ -605,9 +607,9 @@ function enableSwitchPlannerFor(tabId) {
 chrome.runtime.onConnect.addListener(function (port) {
   if (port.name == "devtools-page") {
     chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
-      var tabId = message.tabId;
+      const tabId = message.tabId;
 
-      var disableOnCloseCallback = function(port) {
+      const disableOnCloseCallback = function(port) {
         log(DBUG, "Devtools window for tab " + tabId + " closed, clearing data.");
         disableSwitchPlannerFor(tabId);
       };
