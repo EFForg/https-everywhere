@@ -1,7 +1,5 @@
 <!--
 	This ruleset aims to cover all sites in the Stackexchange family
-	
-	For rules causing false/broken MCB, see Stack-Exchange-mixedcontent.xml
 
 	Problematic domains:
 
@@ -9,7 +7,6 @@
 		- mathoverflow.com ==> No response (only a redirect to mathoverflow.net anyway)
 		- meta.*.stackexchange.com ==> Mismatched (now *.meta.stackexchange.com)
 		- blog.*  ==> Mixed Active Content
-		- www.stackoverflow.blog ==> Mismatched
 
 -->
 <ruleset name="Stack Exchange (partial)">
@@ -50,20 +47,10 @@
 		<exclusion pattern="^http://meta\.([\w-]+)\.stackexchange\.com"/>
 		<test url="http://meta.unix.stackexchange.com/" />
 		<test url="http://meta.opendata.stackexchange.com/" />
-		<test url="https://meta.unix.stackexchange.com/" />
-		<test url="https://meta.opendata.stackexchange.com/" />
 
 		<!-- gaming blog causes certificate mismatch errors -->
 		<exclusion pattern="^http://blog\.gaming\.stackexchange\.com"/>
 		<test url="http://blog.gaming.stackexchange.com/" />
-
-		<!-- but this one should not -->
-		<exclusion pattern="^https://qa\.sockets\.stackexchange\.com/" />
-		<test url="https://qa.sockets.stackexchange.com/" />
-
-		<!-- subdomains with no https support -->
-		<exclusion pattern="^http://elections\.stackexchange\.com" />
-			<test url="http://elections.stackexchange.com/" />
 
 	<!-- Stackoverflow -->
 	<target host="chat.stackoverflow.com" />
@@ -139,14 +126,6 @@
 	<securecookie host="^stackapps\.com$" name=".+" />
 	<securecookie host="^teststackoverflow\.com$" name=".+" />
 
-<!-- Rules -->
-
-	<!-- meta.* sites moved to *.meta - we can safely redirect to their new equivalents, which support https -->
-	<!-- details: https://meta.stackexchange.com/questions/292058/network-wide-https-its-time -->
-	<rule from="^https://meta\.([\w-]+)\.stackexchange\.com/" to="https://$1.meta.stackexchange.com/" />
-
-	<rule from="^http://www\.stackoverflow\.blog/" to="https://stackoverflow.blog/" />
-	
 	<rule from="^http:" to="https:" />
 
 </ruleset>
