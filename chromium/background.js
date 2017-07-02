@@ -160,11 +160,11 @@ var removeRule = function(ruleset) {
   if (all_rules.removeUserRule(ruleset)) {
     // If we successfully removed the user rule, remove it in local storage too
     var oldUserRules = getStoredUserRules();
-    for (let x = 0; i < oldUserRules.length; i++) {
-      if (oldUserRules[i].host == ruleset.name &&
-          oldUserRules[i].redirectTo == ruleset.rules[0].to &&
-          String(RegExp(oldUserRules[i].urlMatcher)) == String(ruleset.rules[0].from_c)) {
-        oldUserRules.splice(i, 1);
+    for (let x = 0; x < oldUserRules.length; x++) {
+      if (oldUserRules[x].host == ruleset.name &&
+          oldUserRules[x].redirectTo == ruleset.rules[0].to &&
+          String(RegExp(oldUserRules[x].urlMatcher)) == String(ruleset.rules[0].from_c)) {
+        oldUserRules.splice(x, 1);
         break;
       }
     }
