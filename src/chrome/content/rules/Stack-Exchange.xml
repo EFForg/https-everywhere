@@ -43,11 +43,6 @@
 		<test url="http://unix.stackexchange.com/" />
 		<test url="http://writers.stackexchange.com/" />
 
-		<!-- old child meta domains cause certificate mismatch errors -->
-		<exclusion pattern="^http://meta\.([\w-]+)\.stackexchange\.com"/>
-		<test url="http://meta.unix.stackexchange.com/" />
-		<test url="http://meta.opendata.stackexchange.com/" />
-
 		<!-- gaming blog causes certificate mismatch errors -->
 		<exclusion pattern="^http://blog\.gaming\.stackexchange\.com"/>
 		<test url="http://blog.gaming.stackexchange.com/" />
@@ -125,6 +120,12 @@
 	<securecookie host="^cdn-chat\.sstatic\.net$" name=".+" />
 	<securecookie host="^stackapps\.com$" name=".+" />
 	<securecookie host="^teststackoverflow\.com$" name=".+" />
+
+<!-- Rules -->
+
+	<!-- meta.* sites moved to *.meta - we can safely redirect to their new equivalents, which support https -->
+	<!-- details: https://meta.stackexchange.com/questions/292058/network-wide-https-its-time -->
+	<rule from="^http://meta\.([\w-]+)\.stackexchange\.com/" to="https://$1.meta.stackexchange.com/" />
 
 	<rule from="^http:" to="https:" />
 
