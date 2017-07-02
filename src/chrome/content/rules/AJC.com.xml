@@ -1,27 +1,35 @@
 <!--
-	^ajc.com: Handshake fails
-	www.ajc.com: 504, Akamai
+	Other Atlanta Journal Constitution rulesets:
+		* MyAJC.com.xml
 
-
-	Problematic hosts in *ajc.com:
-
-		- *.blog *
-
-	* Mismatched
-
+	Numerous unsupported subdomains (>300 found by Sublist3r)
+	Mixed content on some www.ajc.com pages
 -->
-<ruleset name="AJC.com (partial)" default_off="mismatched">
+<ruleset name="AJC.com (partial)">
+	<target host="ajc.com" />
+	<target host="www.ajc.com" />
+	<target host="myaccount.ajc.com" />
+	<target host="store.ajc.com" />
+	<target host="subscribe.ajc.com" />
 
-	<!--	Direct rewrites:
-				-->
-	<target host="*.blog.ajc.com" />
+	<!-- 
+	Rewrite rule must touch https to fix errors caused by the site adding
+	https to links that do not support it. When a user requests a page
+	on https://www.ajc.com, it often seems to add https to other ajc.com
+	links on that page regardless of whether or not the subdomain supports
+	https. This can be a problem because clicking on a https://ajc.com link
+	results in an invalid cert error. The rule fixes this by rewriting
+	https://ajc.com links (which don't support https) to https://www.ajc.com
+	links (which do support https).
 
-		<test url="http://music.blog.ajc.com/" />
-		<test url="http://newstome.blog.ajc.com/" />
-
-
-	<rule from="^http:"
-		to="https:" />
-
+	Example:
+		https://www.ajc.com/news/local/woman-emory-doctors-left-camera-body-after-surgery/Ajt6yMsjByDAWJTLfkDCyM/
+		The Most Read sidebar on the above page (or most any other page) is
+		an example of behavior that necessitates the rule. https://ajc.com
+		links are created despite it not supporting https. Visiting that page
+		and clicking on one of the https://ajc.com links on the sidebar
+		(while the below rule is disabled) should reproduce the issue.
+	-->
+	<rule from="^https?://ajc\.com/" to="https://www.ajc.com/"/>
+	<rule from="^http:" to="https:" />
 </ruleset>
-
