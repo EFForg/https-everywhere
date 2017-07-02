@@ -87,7 +87,7 @@ var wr = chrome.webRequest;
 /**
  * Load all stored user rules
  */
-const loadStoredUserRules = function() {
+var loadStoredUserRules = function() {
   var rules = getStoredUserRules();
   var i;
   for (i = 0; i < rules.length; ++i) {
@@ -160,7 +160,7 @@ var removeRule = function(ruleset) {
   if (all_rules.removeUserRule(ruleset)) {
     // If we successfully removed the user rule, remove it in local storage too
     var oldUserRules = getStoredUserRules();
-    for (var i = 0; i < oldUserRules.length; i++) {
+    for (var x = 0; i < oldUserRules.length; i++) {
       if (oldUserRules[i].host == ruleset.name &&
           oldUserRules[i].redirectTo == ruleset.rules[0].to &&
           String(RegExp(oldUserRules[i].urlMatcher)) == String(ruleset.rules[0].from_c)) {
@@ -287,7 +287,7 @@ function onBeforeRequest(details) {
 
   var newuristr = null;
 
-  for (const ruleset of potentiallyApplicable) {
+  for (let ruleset of potentiallyApplicable) {
     activeRulesets.addRulesetToTab(details.tabId, ruleset);
     if (ruleset.active && !newuristr) {
       newuristr = ruleset.apply(canonical_url);
@@ -391,8 +391,8 @@ function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritt
  * */
 function objSize(obj) {
   if (typeof obj == 'undefined') return 0;
-  var size = 0;
-  for (var key in obj) {
+  var size = 0, key;
+  for (key in obj) {
     if (obj.hasOwnProperty(key)) size++;
   }
   return size;
@@ -403,7 +403,7 @@ function objSize(obj) {
  * presenting the most important ones first.
  * */
 function sortSwitchPlanner(tab_id, rewritten) {
-  const asset_host_list = [];
+  var asset_host_list = [];
   if (typeof switchPlannerInfo[tab_id] === 'undefined' ||
       typeof switchPlannerInfo[tab_id][rewritten] === 'undefined') {
     return [];
