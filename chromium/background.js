@@ -217,7 +217,7 @@ var domainBlacklist = new Set();
 var redirectCounter = {};
 
 /**
- * Called before a HTTP(s) request. Does the heavy lifting
+ * Called before a HTTP request. Does the heavy lifting
  * Cancels the request/redirects it to HTTPS. URL modification happens in here.
  * @param details of the handler, see Chrome doc
  * */
@@ -229,11 +229,10 @@ function onBeforeRequest(details) {
 
   var uri = document.createElement('a');
   uri.href = details.url;
-
+  
   // Should the request be canceled?
   var shouldCancel = (
     httpNowhereOn &&
-    uri.protocol === 'http:' &&
     !/\.onion$/.test(uri.hostname) &&
     !/^localhost$/.test(uri.hostname) &&
     !/^127(\.[0-9]{1,3}){3}$/.test(uri.hostname) &&
@@ -250,11 +249,14 @@ function onBeforeRequest(details) {
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
+  
   var using_credentials_in_url = false;
+  var tmp_user, tmp_pass;
+  
   if (uri.password || uri.username) {
       using_credentials_in_url = true;
-      var tmp_user = uri.username;
-      var tmp_pass = uri.password;
+      tmp_user = uri.username;
+      tmp_pass = uri.password;
       uri.username = null;
       uri.password = null;
   }
@@ -303,7 +305,7 @@ function onBeforeRequest(details) {
 
   // In Switch Planner Mode, record any non-rewriteable
   // HTTP URIs by parent hostname, along with the resource type.
-  if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== "https:") {
+  if (switchPlannerEnabledFor[details.tabId]) {
     writeToSwitchPlanner(details.type,
                          details.tabId,
                          canonical_host,
@@ -320,10 +322,6 @@ function onBeforeRequest(details) {
       } else {
         return {redirectUrl: newuristr.replace(/^http:/, "https:")};
       }
-    }
-    if (newuristr && newuristr.substring(0, 5) === "http:") {
-      // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
-      return {cancel: true};
     }
   }
 
@@ -573,7 +571,7 @@ function onBeforeRedirect(details) {
 
 // Registers the handler for requests
 // See: https://github.com/EFForg/https-everywhere/issues/10039
-wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["<all_urls>"]}, ["blocking"]);
+wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["http://*/*"]}, ["blocking"]);
 
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
