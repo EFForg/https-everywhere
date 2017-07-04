@@ -19,10 +19,6 @@
 	¹ Refused
 	² Shows ^llvm.org
 
-
-	www.llvm.org: cert only matches ^llvm.org
-
-
 	STS header includes includeSubdomains
 	for reviews
 
@@ -32,36 +28,10 @@
 	<!--	Direct rewrites:
 				-->
 	<target host="llvm.org" />
+	<target host="www.llvm.org" />
 	<target host="reviews.llvm.org" />
 
-	<!--	Complications:
-				-->
-	<target host="www.llvm.org" />
-
-		<!--	Different from http:
-						-->
-		<!--exclusion pattern="^http://(www\.)?llvm\.org/($|docs/)" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://(?:www\.)?llvm\.org/(?!/*(?:bugs|svn)/)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://llvm.org/ProjectsWithLLVM/" />
-			<test url="http://llvm.org/docs/" />
-			<test url="http://llvm.org/docs/GettingStarted.html" />
-			<test url="http://llvm.org/pubs/" />
-
-			<!--	-ve:
-					-->
-			<test url="http://llvm.org/bugs/show_bug.cgi?id=19847" />
-			<test url="http://llvm.org/bugs/show_bug.cgi?id=21689" />
-			<test url="http://www.llvm.org/svn/" />
-
-
-	<rule from="^http://www\.llvm\.org/"
-		to="https://llvm.org/" />
+	<securecookie host=".+" name=".+" />
 
 	<rule from="^http:"
 		to="https:" />
