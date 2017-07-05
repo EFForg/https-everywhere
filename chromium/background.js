@@ -611,10 +611,10 @@ chrome.runtime.onConnect.addListener(port => {
 
       if (message.type === "enable") {
         enableSwitchPlannerFor(tabId);
-          port.onDisconnect.addListener(port => {
-            log(DBUG, "Devtools window for tab " + tabId + " closed, clearing data.");
-            disableSwitchPlannerFor(tabId);
-          });
+        port.onDisconnect.addListener(port => {
+          log(DBUG, "Devtools window for tab " + tabId + " closed, clearing data.");
+          disableSwitchPlannerFor(tabId);
+        });
       } else if (message.type === "disable") {
         disableSwitchPlannerFor(tabId);
       } else if (message.type === "getSmallHtml") {
