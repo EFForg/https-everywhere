@@ -226,8 +226,7 @@ function onBeforeRequest(details) {
     return;
   }
 
-  const uri = document.createElement('a');
-  uri.href = details.url;
+  const uri = new URL(details.url);
 
   // Should the request be canceled?
   const shouldCancel = (
@@ -296,8 +295,7 @@ function onBeforeRequest(details) {
 
   if (newuristr && using_credentials_in_url) {
     // re-insert userpass info which was stripped temporarily
-    const uri_with_credentials = document.createElement('a');
-    uri_with_credentials.href = newuristr;
+    const uri_with_credentials = new URL(newuristr);
     uri_with_credentials.username = tmp_user;
     uri_with_credentials.password = tmp_pass;
     newuristr = uri_with_credentials.href;
