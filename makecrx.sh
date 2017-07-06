@@ -33,24 +33,10 @@ fi
 
 VERSION=`python2.7 -c "import json ; print(json.loads(open('chromium/manifest.json').read())['version'])"`
 
-echo "Building chrome version" $VERSION
+echo "Building crx version" $VERSION
 
 [ -d pkg ] || mkdir -p pkg
 [ -e pkg/crx ] && rm -rf pkg/crx
-
-# Clean up obsolete ruleset databases, just in case they still exist.
-rm -f src/chrome/content/rules/default.rulesets src/defaults/rulesets.sqlite
-
-# Only generate the ruleset database if any rulesets have changed. Tried
-# implementing this with make, but make is very slow with 15k+ input files.
-needs_update() {
-  find src/chrome/content/rules/ -newer $RULESETS_JSON |\
-    grep -q .
-}
-if [ ! -f "$RULESETS_JSON" ] || needs_update ; then
-  echo "Generating ruleset DB"
-  python2.7 ./utils/make-json.py && bash utils/validate.sh && cp pkg/rulesets.json src/chrome/content/rulesets.json
-fi
 
 sed -e "s/VERSION/$VERSION/g" chromium/updates-master.xml > chromium/updates.xml
 
