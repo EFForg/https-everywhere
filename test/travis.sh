@@ -46,7 +46,6 @@ if ! $ONLY_RULESETS_CHANGED; then
   if [ "$TEST" == "eslint" ]; then
     echo >&2 "Running ESLint."
     docker run --rm -ti -v $(pwd):/opt node bash -c "cd /opt/chromium && npm install && npm test"
-    [ `git diff --name-only | wc -l` -eq 0 ]
   fi
 
   if [ "$TEST" == "firefox" ]; then
