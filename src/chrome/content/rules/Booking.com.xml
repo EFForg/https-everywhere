@@ -5,16 +5,18 @@
 		- workingatbooking.com.xml
 
 
-	Nonfunctional domains:
+	Nonfunctional subdomains:
 
-		- blog.booking.com ¹
-		- r-ec.bstatic.com ʰ
-		- suite.booking.com ʳ
-		- s-ec.bstatic.com ʰ
+		- booking.com
+ 			- blog		¹
+ 			- cs		²
+ 			- m.admin	(cert mismatched, CN: admin.booking.com)
+ 			- office	²
+ 			- suite		ʳ
 
-	¹: Timeout
-	ʳ Refused
-	ʰ Redirect to HTTP
+	¹ Timeout
+	² Connection reset
+  	ʳ Refused
 
 
 	Problematic hosts in *booking.com:
@@ -37,7 +39,7 @@
 	<target host="*.booking.com" />
 	<target host="*.bstatic.com" />
 
-		<exclusion pattern="^http://(?:(?!m\.admin\.booking\.com/)(?:[^./]+\.){2,}|(?:[^./]+\.){3,})b(?:ooking|static)\.com/" />
+		<exclusion pattern="^http://((?:[^./]+\.){2,}|(?:[^./]+\.){3,})b(?:ooking|static)\.com/" />
 
 			<!--	+ve:
 					-->
@@ -49,7 +51,7 @@
 			<test url="http://this.host.bstatic.com/" />
 			<test url="http://exists.not.bstatic.com/" />
 
-		<exclusion pattern="^http://(blog|suite)\.booking\.com/" />
+		<exclusion pattern="^http://(?:blog|m\.admin|sg|suite)\.booking\.com/" />
 		<exclusion pattern="^http://(r|s)-ec\.booking\.com/" />
 
 			<!--	+ve:
@@ -70,15 +72,21 @@
 	<rule from="^http:"
 		to="https:" />
 
+
+		<test url="http://www.booking.com/" />
 		<test url="http://admin.booking.com/" />
+		<test url="http://m.admin.booking.com/" />
+		<test url="http://developers.booking.com/" />
 		<test url="http://join.booking.com/" />
 		<test url="http://news.booking.com/" />
+		<test url="http://outlook.booking.com/" />
 		<test url="http://partnerhelp.booking.com/" />
 		<test url="http://secure.booking.com/" />
+		<test url="http://sg.booking.com/" />
 		<test url="http://static.booking.com/static/img/flags/24/us.png" />
 		<test url="http://suitehelp.booking.com/" />
 		<test url="http://suiteoffice.booking.com/" />
-		<test url="http://www.booking.com/" />
+		<test url="http://workforce.booking.com/" />
 
 		<test url="http://q.bstatic.com/images/hotel/square60/276/27628205.jpg" />
 		<test url="http://q-ec.bstatic.com/static/img/nobg_all_blue/85a874c5ee518d80b2ec6025d2a8379511a72172.png" />
