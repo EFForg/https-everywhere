@@ -152,7 +152,7 @@ var updateState = function() {
     chrome.browserAction.setBadgeBackgroundColor({color: "#00cc00"});
 
     const showBadge = activeCount > 0 && isExtensionEnabled;
-    
+
     chrome.browserAction.setBadgeText({text: showBadge ? "" + activeCount : ""});
   });
 }
@@ -219,8 +219,6 @@ AppliedRulesets.prototype = {
       this.active_tab_rules[tabId] = {};
       this.active_tab_rules[tabId][ruleset.name] = ruleset;
     }
-
-    updateState();
   },
 
   getRulesets: function(tabId) {
@@ -320,6 +318,8 @@ function onBeforeRequest(details) {
       newuristr = ruleset.apply(canonical_url);
     }
   }
+
+  updateState();
 
   if (newuristr && using_credentials_in_url) {
     // re-insert userpass info which was stripped temporarily
