@@ -1,37 +1,12 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://thing.douban.com/ => https://thing.douban.com/: (6, 'Could not resolve host: thing.douban.com')
-Fetch error: http://img6.douban.com/ => https://img6.doubanio.com/: (60, 'SSL certificate problem: certificate has expired')
+	Non-functional hosts
+		SSL peer certificate was not OK:
+			 - fm.douban.com
 
-	Nonfunctional hosts in *douban.com:
-
-		- brand ʰ
-
-	ʰ Redirects to http
-
-
-	Problematic hosts in *douban.com:
-
-		- fm ᵐ
-		- img3 ²
-		- img6 ᵐ
-
-	² 502, equivalent to another domain
-	ᵐ Mismatched
-
-
-	Insecure cookies are set for these domains: ᶜ
-
-		- .douban.com
-
-	ᶜ See https://owasp.org/index.php/SecureFlag
-
+		Secure connection redirects to plaintext:
+			 - brand.douban.com
 -->
-<ruleset name="Douban (partial)" default_off='failed ruleset test'>
-
-	<!--	Direct rewrites:
-				-->
+<ruleset name="Douban.com (partial)">
 	<target host="douban.com" />
 	<target host="accounts.douban.com" />
 	<target host="artist.douban.com" />
@@ -41,6 +16,7 @@ Fetch error: http://img6.douban.com/ => https://img6.doubanio.com/: (60, 'SSL ce
 	<target host="book.douban.com" />
 	<target host="developers.douban.com" />
 	<target host="dongxi.douban.com" />
+	<target host="fm.douban.com" />
 	<target host="guangzhou.douban.com" />
 	<target host="help.douban.com" />
 	<target host="jobs.douban.com" />
@@ -54,37 +30,15 @@ Fetch error: http://img6.douban.com/ => https://img6.doubanio.com/: (60, 'SSL ce
 	<target host="read.douban.com" />
 	<target host="shanghai.douban.com" />
 	<target host="site.douban.com" />
-	<target host="thing.douban.com" />
 	<target host="wap.douban.com" />
 	<target host="www.douban.com" />
 	<target host="ypy.douban.com" />
 
-	<!--	Complications:
-				-->
-	<target host="fm.douban.com" />
-	<target host="img3.douban.com" />
-	<target host="img6.douban.com" />
+	<securecookie host=".+" name="^__utm" />
 
+	<rule from="^http://fm\.douban\.com/"
+			to="https://douban.fm/" />
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.douban\.com$" name="^(?:bid|ll)$" /-->
-
-	<securecookie host="." name="^__utm" />
-
-
-	<!--	Redirect keeps path and args,
-		but not forward slash:
-					-->
-	<rule from="^http://fm\.douban\.com/+"
-		to="https://douban.fm/" />
-
-		<test url="http://fm.douban.com/index.htm" />
-
-	<rule from="^http://img([36])\.douban\.com/"
-		to="https://img$1.doubanio.com/" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" 
+			to="https:" />
 </ruleset>
