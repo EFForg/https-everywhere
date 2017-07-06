@@ -44,7 +44,7 @@ rm -f src/chrome/content/rules/default.rulesets src/defaults/rulesets.sqlite
 # Only generate the ruleset database if any rulesets have changed. Tried
 # implementing this with make, but make is very slow with 15k+ input files.
 needs_update() {
-  find src/chrome/content/rules/ -newer $RULESETS_JSON |\
+  find src/chrome/content/rules/* -newer $RULESETS_JSON |\
     grep -q .
 }
 if [ ! -f "$RULESETS_JSON" ] || needs_update ; then
