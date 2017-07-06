@@ -1,11 +1,11 @@
 "use strict";
 // Stubs so this runs under nodejs. They get overwritten later by util.js
-const VERB = 1;
-const DBUG = 2;
-const INFO = 3;
-const NOTE = 4;
-const WARN = 5;
-function log() {}
+var VERB=1;
+var DBUG=2;
+var INFO=3;
+var NOTE=4;
+var WARN=5;
+function log(){}
 
 // To reduce memory usage for the numerous rules/cookies with trivial rules
 const trivial_rule_to = "https:";
@@ -85,12 +85,12 @@ RuleSet.prototype = {
    * @param urispec The uri to rewrite
    * @returns {*} null or the rewritten uri
    */
-  apply: urispec => {
-    let returl = null;
+  apply: function(urispec) {
+    var returl = null;
     // If we're covered by an exclusion, go home
     if (this.exclusions !== null) {
-      for (const exclusion of this.exclusions) {
-        if (exclusion.pattern_c.test(urispec)) {
+      for (var i = 0; i < this.exclusions.length; ++i) {
+        if (this.exclusions[i].pattern_c.test(urispec)) {
           log(DBUG, "excluded uri " + urispec);
           return null;
         }
@@ -98,9 +98,9 @@ RuleSet.prototype = {
     }
 
     // Okay, now find the first rule that triggers
-    for (const rule of this.rules) {
-      returl = urispec.replace(rule.from_c,
-                               rule.to);
+    for(var i = 0; i < this.rules.length; ++i) {
+      returl = urispec.replace(this.rules[i].from_c,
+                               this.rules[i].to);
       if (returl != urispec) {
         return returl;
       }
@@ -113,56 +113,52 @@ RuleSet.prototype = {
    * @param ruleset The ruleset to compare with
    * @returns true or false, depending on whether it's deeply equivalent
    */
-  isEquivalentTo: ruleset => {
-    if(this.name !== ruleset.name ||
-       this.note !== ruleset.note ||
-       this.state !== ruleset.state ||
-       this.default_state !== ruleset.default_state) {
+  isEquivalentTo: function(ruleset) {
+    if(this.name != ruleset.name ||
+       this.note != ruleset.note ||
+       this.state != ruleset.state ||
+       this.default_state != ruleset.default_state) {
       return false;
     }
 
-    let this_exclusions_length;
     try {
-      this_exclusions_length = this.exclusions.length;
+      var this_exclusions_length = this.exclusions.length;
     } catch(e) {
-      this_exclusions_length = 0;
+      var this_exclusions_length = 0;
     }
 
-    let ruleset_exclusions_length;
     try {
-      ruleset_exclusions_length = ruleset.exclusions.length;
+      var ruleset_exclusions_length = ruleset.exclusions.length;
     } catch(e) {
-      ruleset_exclusions_length = 0;
+      var ruleset_exclusions_length = 0;
     }
 
-    let this_rules_length;
     try {
-      this_rules_length = this.rules.length;
+      var this_rules_length = this.rules.length;
     } catch(e) {
-      this_rules_length = 0;
+      var this_rules_length = 0;
     }
 
-    let ruleset_rules_length;
     try {
-      ruleset_rules_length = ruleset.rules.length;
+      var ruleset_rules_length = ruleset.rules.length;
     } catch(e) {
-      ruleset_rules_length = 0;
+      var ruleset_rules_length = 0;
     }
 
-    if(this_exclusions_length !== ruleset_exclusions_length ||
-       this_rules_length !== ruleset_rules_length) {
+    if(this_exclusions_length != ruleset_exclusions_length ||
+       this_rules_length != ruleset_rules_length) {
       return false;
     }
     if(this_exclusions_length > 0) {
-      for(const i = 0; i < this.exclusions.length; i++){
-        if(this.exclusions[i].pattern_c !== ruleset.exclusions[i].pattern_c) {
+      for(let x = 0; x < this.exclusions.length; x++){
+        if(this.exclusions[x].pattern_c != ruleset.exclusions[x].pattern_c) {
           return false;
         }
       }
     }
     if(this_rules_length > 0) {
-      for(const i = 0; i < this.rules.length; i++){
-        if(this.rules[i].to !== ruleset.rules[i].to) {
+      for(let x = 0; x < this.rules.length; x++){
+        if(this.rules[x].to != ruleset.rules[x].to) {
           return false;
         }
       }
@@ -196,11 +192,11 @@ RuleSets.prototype = {
   /**
    * Iterate through data XML and load rulesets
    */
-  addFromXml: ruleXml => {
-    const sets = ruleXml.getElementsByTagName("ruleset");
-    for (const set of sets) {
+  addFromXml: function(ruleXml) {
+    var sets = ruleXml.getElementsByTagName("ruleset");
+    for (var i = 0; i < sets.length; ++i) {
       try {
-        this.parseOneRuleset(set);
+        this.parseOneRuleset(sets[i]);
       } catch (e) {
         log(WARN, 'Error processing ruleset:' + e);
       }
@@ -212,10 +208,10 @@ RuleSets.prototype = {
    * @param params
    * @returns {boolean}
    */
-  addUserRule: params => {
+  addUserRule : function(params) {
     log(INFO, 'adding new user rule for ' + JSON.stringify(params));
-    const new_rule_set = new RuleSet(params.host, true, "user rule");
-    const new_rule = new Rule(params.urlMatcher, params.redirectTo);
+    var new_rule_set = new RuleSet(params.host, true, "user rule");
+    var new_rule = new Rule(params.urlMatcher, params.redirectTo);
     new_rule_set.rules.push(new_rule);
     if (!(params.host in this.targets)) {
       this.targets[params.host] = [];
@@ -235,15 +231,15 @@ RuleSets.prototype = {
    * @param params
    * @returns {boolean}
    */
-  removeUserRule: ruleset => {
+  removeUserRule: function(ruleset) {
     log(INFO, 'removing user rule for ' + JSON.stringify(ruleset));
     this.ruleCache.delete(ruleset.name);
-    for(const i = 0; i < this.targets[ruleset.name].length; i++) {
+    for(let x = 0; x < this.targets[ruleset.name].length; x++) {
       if(this.targets[ruleset.name][x].isEquivalentTo(ruleset)) {
         this.targets[ruleset.name].splice(x, 1);
       }
     }
-    if (this.targets[ruleset.name].length === 0) {
+    if (this.targets[ruleset.name].length == 0) {
       delete this.targets[ruleset.name];
     }
     log(INFO, 'done removing rule');
@@ -254,10 +250,10 @@ RuleSets.prototype = {
    * Does the loading of a ruleset.
    * @param ruletag The whole <ruleset> tag to parse
    */
-  parseOneRuleset: ruletag => {
-    let default_state = true;
-    let note = "";
-    const default_off = ruletag.getAttribute("default_off");
+  parseOneRuleset: function(ruletag) {
+    var default_state = true;
+    var note = "";
+    var default_off = ruletag.getAttribute("default_off");
     if (default_off) {
       default_state = false;
       note += default_off + "\n";
@@ -265,52 +261,52 @@ RuleSets.prototype = {
 
     // If a ruleset declares a platform, and we don't match it, treat it as
     // off-by-default. In practice, this excludes "mixedcontent" & "cacert" rules.
-    const platform = ruletag.getAttribute("platform");
+    var platform = ruletag.getAttribute("platform");
     if (platform) {
       default_state = false;
-      if (platform === "mixedcontent" && enableMixedRulesets) {
+      if (platform == "mixedcontent" && enableMixedRulesets) {
         default_state = true;
       }
       note += "Platform(s): " + platform + "\n";
     }
 
-    const rule_set = new RuleSet(ruletag.getAttribute("name"),
+    var rule_set = new RuleSet(ruletag.getAttribute("name"),
                                default_state,
                                note.trim());
 
     // Read user prefs
     if (rule_set.name in this.ruleActiveStates) {
-      rule_set.active = (this.ruleActiveStates[rule_set.name] === "true");
+      rule_set.active = (this.ruleActiveStates[rule_set.name] == "true");
     }
 
-    const rules = ruletag.getElementsByTagName("rule");
-    for(const rule of rules) {
-      rule_set.rules.push(new Rule(rule.getAttribute("from"),
-                                    rule.getAttribute("to")));
+    var rules = ruletag.getElementsByTagName("rule");
+    for(var j = 0; j < rules.length; j++) {
+      rule_set.rules.push(new Rule(rules[j].getAttribute("from"),
+                                    rules[j].getAttribute("to")));
     }
 
-    const exclusions = ruletag.getElementsByTagName("exclusion");
+    var exclusions = ruletag.getElementsByTagName("exclusion");
     if (exclusions.length > 0) {
       rule_set.exclusions = [];
-      for (const exclusion of exclusions) {
+      for (var j = 0; j < exclusions.length; j++) {
         rule_set.exclusions.push(
-            new Exclusion(exclusion.getAttribute("pattern")));
+            new Exclusion(exclusions[j].getAttribute("pattern")));
       }
     }
 
-    const cookierules = ruletag.getElementsByTagName("securecookie");
+    var cookierules = ruletag.getElementsByTagName("securecookie");
     if (cookierules.length > 0) {
       rule_set.cookierules = [];
-      for(const cookierule of cookierules) {
+      for(var j = 0; j < cookierules.length; j++) {
         rule_set.cookierules.push(
-            new CookieRule(cookierule.getAttribute("host"),
-                cookierule.getAttribute("name")));
+            new CookieRule(cookierules[j].getAttribute("host"),
+                cookierules[j].getAttribute("name")));
       }
     }
 
-    const targets = ruletag.getElementsByTagName("target");
-    for(const target of targets) {
-       const host = target.getAttribute("host");
+    var targets = ruletag.getElementsByTagName("target");
+    for(var j = 0; j < targets.length; j++) {
+       var host = targets[j].getAttribute("host");
        if (!(host in this.targets)) {
          this.targets[host] = [];
        }
@@ -323,31 +319,31 @@ RuleSets.prototype = {
    * @param host The host to check
    * @returns {*} (empty) list
    */
-  potentiallyApplicableRulesets: host => {
+  potentiallyApplicableRulesets: function(host) {
     // Have we cached this result? If so, return it!
-    const cached_item = this.ruleCache.get(host);
+    var cached_item = this.ruleCache.get(host);
     if (cached_item !== undefined) {
         log(DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.length);
         return cached_item;
     }
     log(DBUG, "Ruleset cache miss for " + host);
 
-    let tmp;
-    let results = [];
+    var tmp;
+    var results = [];
     if (this.targets[host]) {
       // Copy the host targets so we don't modify them.
       results = results.concat(this.targets[host]);
     }
 
     // Ensure host is well-formed (RFC 1035)
-    if (host.indexOf("..") !== -1 || host.length > 255) {
+    if (host.indexOf("..") != -1 || host.length > 255) {
       log(WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
       return null;
     }
 
     // Replace each portion of the domain with a * in turn
-    const segmented = host.split(".");
-    for (const i = 0; i < segmented.length; i++) {
+    var segmented = host.split(".");
+    for (var i = 0; i < segmented.length; ++i) {
       tmp = segmented[i];
       segmented[i] = "*";
       results = results.concat(this.targets[segmented.join(".")]);
@@ -355,20 +351,20 @@ RuleSets.prototype = {
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
-    for (const i = 2; i <= segmented.length - 2; i++) {
-      const t = "*." + segmented.slice(i,segmented.length).join(".");
+    for (var i = 2; i <= segmented.length - 2; ++i) {
+      var t = "*." + segmented.slice(i,segmented.length).join(".");
       results = results.concat(this.targets[t]);
     }
 
     // Clean the results list, which may contain duplicates or undefined entries
-    const resultSet = new Set(results);
+    var resultSet = new Set(results);
     resultSet.delete(undefined);
 
     log(DBUG,"Applicable rules for " + host + ":");
-    if (resultSet.size === 0) {
+    if (resultSet.size == 0) {
       log(DBUG, "  None");
     } else {
-      for (const target of resultSet.values()) {
+      for (let target of resultSet.values()) {
         log(DBUG, "  " + target.name);
       }
     }
@@ -390,10 +386,10 @@ RuleSets.prototype = {
    * @param cookie The cookie to test
    * @returns {*} ruleset or null
    */
-  shouldSecureCookie: cookie => {
-    const hostname = cookie.domain;
+  shouldSecureCookie: function(cookie) {
+    var hostname = cookie.domain;
     // cookie domain scopes can start with .
-    while (hostname.charAt(0) === ".") {
+    while (hostname.charAt(0) == ".") {
       hostname = hostname.slice(1);
     }
 
@@ -401,10 +397,11 @@ RuleSets.prototype = {
         return null;
     }
 
-    const potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
-    for (const ruleset of potentiallyApplicable) {
+    var potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
+    for (let ruleset of potentiallyApplicable) {
       if (ruleset.cookierules !== null && ruleset.active) {
-        for (const cr of ruleset.cookierules) {
+        for (var j = 0; j < ruleset.cookierules.length; j++) {
+          var cr = ruleset.cookierules[j];
           if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
             return ruleset;
           }
@@ -419,7 +416,7 @@ RuleSets.prototype = {
    * @param domain The domain of the cookie
    * @returns {*} true or false
    */
-  safeToSecureCookie: domain => {
+  safeToSecureCookie: function(domain) {
     // Check if the domain might be being served over HTTP.  If so, it isn't
     // safe to secure a cookie!  We can't always know this for sure because
     // observing cookie-changed doesn't give us enough context to know the
@@ -436,7 +433,7 @@ RuleSets.prototype = {
       log(INFO, "cookies for " + domain + "blacklisted");
       return false;
     }
-    const cached_item = this.cookieHostCache.get(domain);
+    var cached_item = this.cookieHostCache.get(domain);
     if (cached_item !== undefined) {
         log(DBUG, "Cookie host cache hit for " + domain);
         return cached_item;
@@ -446,8 +443,8 @@ RuleSets.prototype = {
     // If we passed that test, make up a random URL on the domain, and see if
     // we would HTTPSify that.
 
-    const nonce_path = "/" + Math.random().toString();
-    const test_uri = "http://" + domain + nonce_path + nonce_path;
+    var nonce_path = "/" + Math.random().toString();
+    var test_uri = "http://" + domain + nonce_path + nonce_path;
 
     // Cap the size of the cookie cache (limit chosen somewhat arbitrarily)
     if (this.cookieHostCache.size > 250) {
@@ -456,8 +453,8 @@ RuleSets.prototype = {
     }
 
     log(INFO, "Testing securecookie applicability with " + test_uri);
-    const potentiallyApplicable = this.potentiallyApplicableRulesets(domain);
-    for (const ruleset of potentiallyApplicable) {
+    var potentiallyApplicable = this.potentiallyApplicableRulesets(domain);
+    for (let ruleset of potentiallyApplicable) {
       if (!ruleset.active) {
         continue;
       }
@@ -478,10 +475,10 @@ RuleSets.prototype = {
    * @param host The host of this uri
    * @returns {*} the new uri or null
    */
-  rewriteURI: (urispec, host) => {
-    let newuri = null;
-    const potentiallyApplicable = this.potentiallyApplicableRulesets(host);
-    for (const ruleset of potentiallyApplicable) {
+  rewriteURI: function(urispec, host) {
+    var newuri = null;
+    var potentiallyApplicable = this.potentiallyApplicableRulesets(host);
+    for (let ruleset of potentiallyApplicable) {
       if (ruleset.active && (newuri = ruleset.apply(urispec))) {
         return newuri;
       }
@@ -491,6 +488,6 @@ RuleSets.prototype = {
 };
 
 // Export for HTTPS Rewriter if applicable.
-if (typeof exports !== 'undefined') {
+if (typeof exports != 'undefined') {
   exports.RuleSets = RuleSets;
 }
