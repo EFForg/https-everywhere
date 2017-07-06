@@ -79,6 +79,12 @@ if [ "$RULESETS_CHANGED" ]; then
     docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" node bash -c "cd /opt/utils/hsts-prune && npm install && node index.js"
     [ `git diff --name-only | wc -l` -eq 0 ]
   fi
+
+  if [ "$TEST" == "eslint" ]; then
+    echo >&2 "Running ESLint."
+    docker run --rm -ti -v $(pwd):/opt node bash -c "cd /opt/chromium && npm install && npm test"
+    [ `git diff --name-only | wc -l` -eq 0 ]
+  fi
 fi
 
 exit 0
