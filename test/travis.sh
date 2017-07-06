@@ -42,11 +42,19 @@ set -e
 
 if ! $ONLY_RULESETS_CHANGED; then
   echo >&2 "Core code changes have been made."
+
+  if [ "$TEST" == "eslint" ]; then
+    echo >&2 "Running ESLint."
+    docker run --rm -ti -v $(pwd):/opt node bash -c "cd /opt/chromium && npm install && npm test"
+    [ `git diff --name-only | wc -l` -eq 0 ]
+  fi
+
   if [ "$TEST" == "firefox" ]; then
     echo >&2 "Running firefox test suite."
     docker_build
     docker run --rm -ti -v $(pwd):/opt -e FIREFOX=/$FIREFOX/firefox/firefox httpse bash -c "test/firefox.sh"
   fi
+
   if [ "$TEST" == "chromium" ]; then
     echo >&2 "Running chromium test suite."
     docker_build
@@ -66,7 +74,6 @@ if [ "$RULESETS_CHANGED" ]; then
     docker run --rm -ti -v $(pwd):/opt httpse bash -c "test/rules.sh"
   fi
 
-
   if [ "$TEST" == "fetch" ]; then
     echo >&2 "Testing test URLs in all changed rulesets."
     docker_build
@@ -77,12 +84,6 @@ if [ "$RULESETS_CHANGED" ]; then
   if [ "$TEST" == "preloaded" ]; then
     echo >&2 "Ensuring rulesets do not introduce targets which are already HSTS preloaded."
     docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" node bash -c "cd /opt/utils/hsts-prune && npm install && node index.js"
-    [ `git diff --name-only | wc -l` -eq 0 ]
-  fi
-
-  if [ "$TEST" == "eslint" ]; then
-    echo >&2 "Running ESLint."
-    docker run --rm -ti -v $(pwd):/opt node bash -c "cd /opt/chromium && npm install && npm test"
     [ `git diff --name-only | wc -l` -eq 0 ]
   fi
 fi
