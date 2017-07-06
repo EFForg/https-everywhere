@@ -1,7 +1,5 @@
 <!--
 	This ruleset aims to cover all sites in the Stackexchange family
-	
-	For rules causing false/broken MCB, see Stack-Exchange-mixedcontent.xml
 
 	Problematic domains:
 
@@ -9,15 +7,14 @@
 		- mathoverflow.com ==> No response (only a redirect to mathoverflow.net anyway)
 		- meta.*.stackexchange.com ==> Mismatched (now *.meta.stackexchange.com)
 		- blog.*  ==> Mixed Active Content
-		- www.stackoverflow.blog ==> Mismatched
 
 -->
-<ruleset name="Stack Exchange (partial)">
+<ruleset name="Stack Exchange">
 
 	<!-- Askubuntu -->
 	<target host="askubuntu.com" />
-	<target host="meta.askubuntu.com" />
 	<target host="www.askubuntu.com" />
+	<target host="meta.askubuntu.com" />
 
 	<!-- Blogoverflow -->
 	<target host="blogoverflow.com" />
@@ -25,8 +22,8 @@
 
 	<!-- Mathoverflow -->
 	<target host="mathoverflow.net" />
-	<target host="meta.mathoverflow.net" />
 	<target host="www.mathoverflow.net" />
+	<target host="meta.mathoverflow.net" />
 	
 	<!-- Serverfault -->
 	<target host="meta.serverfault.com" />
@@ -46,44 +43,29 @@
 		<test url="http://unix.stackexchange.com/" />
 		<test url="http://writers.stackexchange.com/" />
 
-		<!-- old child meta domains cause certificate mismatch errors -->
-		<exclusion pattern="^http://meta\.([\w-]+)\.stackexchange\.com"/>
-		<test url="http://meta.unix.stackexchange.com/" />
-		<test url="http://meta.opendata.stackexchange.com/" />
-		<test url="https://meta.unix.stackexchange.com/" />
-		<test url="https://meta.opendata.stackexchange.com/" />
-
 		<!-- gaming blog causes certificate mismatch errors -->
 		<exclusion pattern="^http://blog\.gaming\.stackexchange\.com"/>
 		<test url="http://blog.gaming.stackexchange.com/" />
 
-		<!-- but this one should not -->
-		<exclusion pattern="^https://qa\.sockets\.stackexchange\.com/" />
-		<test url="https://qa.sockets.stackexchange.com/" />
-
-		<!-- subdomains with no https support -->
-		<exclusion pattern="^http://elections\.stackexchange\.com" />
-			<test url="http://elections.stackexchange.com/" />
-
 	<!-- Stackoverflow -->
+	<target host="stackoverflow.com" />
+	<target host="www.stackoverflow.com" />
 	<target host="chat.stackoverflow.com" />
 	<target host="careers.stackoverflow.com" />
 	<target host="email.stackoverflow.com" />
-	<target host="stackoverflow.email" />
 	<target host="ja.stackoverflow.com" />
 	<target host="meta.stackoverflow.com" />
 	<target host="pt.stackoverflow.com" />
 	<target host="ru.stackoverflow.com" />
-	<target host="stackoverflow.com" />
 	<target host="blog.stackoverflow.com" />
-	<target host="www.stackoverflow.com" />
 	<target host="stackoverflow.blog" />
 	<target host="www.stackoverflow.blog" />
+	<target host="stackoverflow.email" />
 
 	<!-- Superuser -->
 	<target host="superuser.com" />
-	<target host="meta.superuser.com" />
 	<target host="www.superuser.com" />
+	<target host="meta.superuser.com" />
 	
 	<!-- Misc -->
 	<target host="sstatic.net" />
@@ -143,10 +125,11 @@
 
 	<!-- meta.* sites moved to *.meta - we can safely redirect to their new equivalents, which support https -->
 	<!-- details: https://meta.stackexchange.com/questions/292058/network-wide-https-its-time -->
-	<rule from="^https://meta\.([\w-]+)\.stackexchange\.com/" to="https://$1.meta.stackexchange.com/" />
+	<rule from="^http://meta\.([\w-]+)\.stackexchange\.com/" to="https://$1.meta.stackexchange.com/" />
 
-	<rule from="^http://www\.stackoverflow\.blog/" to="https://stackoverflow.blog/" />
-	
+		<test url="http://meta.unix.stackexchange.com/" />
+		<test url="http://meta.opendata.stackexchange.com/" />
+
 	<rule from="^http:" to="https:" />
 
 </ruleset>
