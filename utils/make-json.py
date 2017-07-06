@@ -1,7 +1,7 @@
 #!/usr/bin/env python2.7
 #
 # Builds a JSON DB containing all the rulesets, indexed by target.
-# The JSON DB is used by the Firefox addon.
+# The JSON DB is used by the Chrome extension & Firefox (WebExtensions) addon.
 #
 
 import locale
