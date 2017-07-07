@@ -171,33 +171,33 @@
   /**
    * Adds a listener for removed tabs
    * */
-  function AppliedRulesets () {
-    this.activeTabRules = {}
+  class AppliedRulesets {
+    constructor () {
+      this.activeTabRules = {}
 
-    const that = this
-    chrome.tabs.onRemoved.addListener(function (tabId, info) {
-      that.removeTab(tabId)
-    })
-  }
+      const that = this
+      chrome.tabs.onRemoved.addListener(function (tabId, info) {
+        that.removeTab(tabId)
+      })
+    }
 
-  AppliedRulesets.prototype = {
-    addRulesetToTab: function (tabId, ruleset) {
+    addRulesetToTab (tabId, ruleset) {
       if (tabId in this.activeTabRules) {
         this.activeTabRules[tabId][ruleset.name] = ruleset
       } else {
         this.activeTabRules[tabId] = {}
         this.activeTabRules[tabId][ruleset.name] = ruleset
       }
-    },
+    }
 
-    getRulesets: function (tabId) {
+    getRulesets (tabId) {
       if (tabId in this.activeTabRules) {
         return this.activeTabRules[tabId]
       }
       return null
-    },
+    }
 
-    removeTab: function (tabId) {
+    removeTab (tabId) {
       delete this.activeTabRules[tabId]
     }
   }
@@ -264,7 +264,7 @@
       window.log(window.INFO, 'Original url ' + details.url +
           ' changed before processing to ' + canonicalUrl)
     }
-    if (urlBlacklist.has(canonicalUrl)) {
+    if (window.urlBlacklist.has(canonicalUrl)) {
       return {cancel: shouldCancel}
     }
 
@@ -276,9 +276,9 @@
 
     if (redirectCounter[details.requestId] >= 8) {
       window.log(window.NOTE, 'Redirect counter hit for ' + canonicalUrl)
-      urlBlacklist.add(canonicalUrl)
+      window.urlBlacklist.add(canonicalUrl)
       const hostname = uri.hostname
-      domainBlacklist.add(hostname)
+      window.domainBlacklist.add(hostname)
       window.log(window.WARN, 'Domain blacklisted ' + hostname)
       return {cancel: shouldCancel}
     }

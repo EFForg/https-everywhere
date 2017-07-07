@@ -5,7 +5,7 @@
   if (typeof window !== 'undefined') {
     window.storage = storage
   }
-  
+
   if (typeof exports !== 'undefined') {
     exports = storage
   }

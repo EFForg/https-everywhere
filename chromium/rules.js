@@ -12,15 +12,17 @@
    * @param to
    * @constructor
    */
-  function Rule (from, to) {
-    if (from === '^http:' && to === 'https:') {
-      // This is a trivial rule, rewriting http->https with no complex RegExp.
-      this.to = trivialRuleTo
-      this.fromC = trivialRuleFromC
-    } else {
-      // This is a non-trivial rule.
-      this.to = to
-      this.fromC = new RegExp(from)
+  class Rule {
+    constructor (from, to) {
+      if (from === '^http:' && to === 'https:') {
+        // This is a trivial rule, rewriting http->https with no complex RegExp.
+        this.to = trivialRuleTo
+        this.fromC = trivialRuleFromC
+      } else {
+        // This is a non-trivial rule.
+        this.to = to
+        this.fromC = new RegExp(from)
+      }
     }
   }
 
@@ -29,8 +31,10 @@
    * @param pattern The pattern to compile
    * @constructor
    */
-  function Exclusion (pattern) {
-    this.patternC = new RegExp(pattern)
+  class Exclusion {
+    constructor (pattern) {
+      this.patternC = new RegExp(pattern)
+    }
   }
 
   /**
@@ -39,19 +43,21 @@
    * @param cookieName The cookie name Regex to compile
    * @constructor
    */
-  function CookieRule (host, cookieName) {
-    if (host === '.*' || host === '.+' || host === '.') {
-      // Some cookie rules trivially match any host.
-      this.hostC = trivialCookieHostC
-    } else {
-      this.hostC = new RegExp(host)
-    }
+  class CookieRule {
+    constructor (host, cookieName) {
+      if (host === '.*' || host === '.+' || host === '.') {
+        // Some cookie rules trivially match any host.
+        this.hostC = trivialCookieHostC
+      } else {
+        this.hostC = new RegExp(host)
+      }
 
-    if (cookieName === '.*' || cookieName === '.+' || cookieName === '.') {
-      // About 50% of cookie rules trivially match any name.
-      this.nameC = trivialCookieNameC
-    } else {
-      this.nameC = new RegExp(cookieName)
+      if (cookieName === '.*' || cookieName === '.+' || cookieName === '.') {
+        // About 50% of cookie rules trivially match any name.
+        this.nameC = trivialCookieNameC
+      } else {
+        this.nameC = new RegExp(cookieName)
+      }
     }
   }
 
@@ -62,23 +68,23 @@
    * @param note Note will be displayed in popup
    * @constructor
    */
-  function RuleSet (setName, defaultState, note) {
-    this.name = setName
-    this.rules = []
-    this.exclusions = null
-    this.cookierules = null
-    this.active = defaultState
-    this.defaultState = defaultState
-    this.note = note
-  }
+  class RuleSet {
+    constructor (setName, defaultState, note) {
+      this.name = setName
+      this.rules = []
+      this.exclusions = null
+      this.cookierules = null
+      this.active = defaultState
+      this.defaultState = defaultState
+      this.note = note
+    }
 
-  RuleSet.prototype = {
     /**
      * Check if a URI can be rewritten and rewrite it
      * @param urispec The uri to rewrite
      * @returns {*} null or the rewritten uri
      */
-    apply: function (urispec) {
+    apply (urispec) {
       let returl = null
       // If we're covered by an exclusion, go home
       if (this.exclusions !== null) {
@@ -99,14 +105,14 @@
         }
       }
       return null
-    },
+    }
 
     /**
      * Deep equivalence comparison
      * @param ruleset The ruleset to compare with
      * @returns true or false, depending on whether it's deeply equivalent
      */
-    isEquivalentTo: function (ruleset) {
+    isEquivalentTo (ruleset) {
       if (this.name !== ruleset.name ||
          this.note !== ruleset.note ||
          this.state !== ruleset.state ||
@@ -162,7 +168,6 @@
       }
       return true
     }
-
   }
 
   /**
@@ -170,25 +175,25 @@
    * @param ruleActiveStates default state for rules
    * @constructor
    */
-  function RuleSets (ruleActiveStates) {
-    // Load rules into structure
-    this.targets = {}
+  class RuleSets {
+    constructor (ruleActiveStates) {
+      // Load rules into structure
+      this.targets = {}
 
-    // A cache for potentiallyApplicableRulesets
-    this.ruleCache = new Map()
+      // A cache for potentiallyApplicableRulesets
+      this.ruleCache = new Map()
 
-    // A cache for cookie hostnames.
-    this.cookieHostCache = new Map()
+      // A cache for cookie hostnames.
+      this.cookieHostCache = new Map()
 
-    // A hash of rule name -> active status (true/false).
-    this.ruleActiveStates = ruleActiveStates
-  }
+      // A hash of rule name -> active status (true/false).
+      this.ruleActiveStates = ruleActiveStates
+    }
 
-  RuleSets.prototype = {
     /**
      * Iterate through data XML and load rulesets
      */
-    addFromXml: function (ruleXml) {
+    addFromXml (ruleXml) {
       const sets = ruleXml.getElementsByTagName('ruleset')
       for (let i = 0; i < sets.length; i++) {
         try {
@@ -197,14 +202,14 @@
           window.log(window.WARN, 'Error processing ruleset:' + e)
         }
       }
-    },
+    }
 
     /**
      * Load a user rule
      * @param params
      * @returns {boolean}
      */
-    addUserRule: function (params) {
+    addUserRule (params) {
       window.log(window.INFO, 'adding new user rule for ' + JSON.stringify(params))
       const newRuleSet = new RuleSet(params.host, true, 'user rule')
       const newRule = new Rule(params.urlMatcher, params.redirectTo)
@@ -219,14 +224,14 @@
         newRuleSet.active = (this.ruleActiveStates[newRuleSet.name] === true)
       }
       window.log(window.INFO, 'done adding rule')
-    },
+    }
 
     /**
      * Remove a user rule
      * @param params
      * @returns {boolean}
      */
-    removeUserRule: function (ruleset) {
+    removeUserRule (ruleset) {
       window.log(window.INFO, 'removing user rule for ' + JSON.stringify(ruleset))
       this.ruleCache.delete(ruleset.name)
       for (let i = 0; i < this.targets[ruleset.name].length; i++) {
@@ -238,13 +243,13 @@
         delete this.targets[ruleset.name]
       }
       window.log(window.INFO, 'done removing rule')
-    },
+    }
 
     /**
      * Does the loading of a ruleset.
      * @param ruletag The whole <ruleset> tag to parse
      */
-    parseOneRuleset: function (ruletag) {
+    parseOneRuleset (ruletag) {
       let defaultState = true
       let note = ''
       const defaultOff = ruletag.getAttribute('default_off')
@@ -306,14 +311,14 @@
         }
         this.targets[host].push(ruleSet)
       }
-    },
+    }
 
     /**
      * Return a list of rulesets that apply to this host
      * @param host The host to check
      * @returns {*} (empty) list
      */
-    potentiallyApplicableRulesets: function (host) {
+    potentiallyApplicableRulesets (host) {
       // Have we cached this result? If so, return it!
       const cachedItem = this.ruleCache.get(host)
       if (cachedItem !== undefined) {
@@ -373,14 +378,14 @@
       }
 
       return resultSet
-    },
+    }
 
     /**
      * Check to see if the Cookie object c meets any of our cookierule criteria for being marked as secure.
      * @param cookie The cookie to test
      * @returns {*} ruleset or null
      */
-    shouldSecureCookie: function (cookie) {
+    shouldSecureCookie (cookie) {
       let hostname = cookie.domain
       // cookie domain scopes can start with .
       while (hostname.charAt(0) === '.') {
@@ -403,14 +408,14 @@
         }
       }
       return null
-    },
+    }
 
     /**
      * Check if it is secure to secure the cookie (=patch the secure flag in).
      * @param domain The domain of the cookie
      * @returns {*} true or false
      */
-    safeToSecureCookie: function (domain) {
+    safeToSecureCookie (domain) {
       // Check if the domain might be being served over HTTP.  If so, it isn't
       // safe to secure a cookie!  We can't always know this for sure because
       // observing cookie-changed doesn't give us enough context to know the
@@ -461,7 +466,7 @@
       window.log(window.INFO, 'Cookie domain could NOT be secured.')
       this.cookieHostCache.set(domain, false)
       return false
-    },
+    }
 
     /**
      * Rewrite an URI
@@ -469,7 +474,7 @@
      * @param host The host of this uri
      * @returns {*} the new uri or null
      */
-    rewriteURI: function (urispec, host) {
+    rewriteURI (urispec, host) {
       let newuri = null
       const potentiallyApplicable = this.potentiallyApplicableRulesets(host)
       for (const ruleset of potentiallyApplicable) {
