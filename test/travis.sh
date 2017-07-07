@@ -42,11 +42,18 @@ set -e
 
 if ! $ONLY_RULESETS_CHANGED; then
   echo >&2 "Core code changes have been made."
+
+  if [ "$TEST" == "eslint" ]; then
+    echo >&2 "Running ESLint."
+    docker run --rm -ti -v $(pwd):/opt node bash -c "cd /opt/utils/eslint && npm install && ./node_modules/.bin/eslint ../../chromium"
+  fi
+
   if [ "$TEST" == "firefox" ]; then
     echo >&2 "Running firefox test suite."
     docker_build
     docker run --rm -ti -v $(pwd):/opt -e FIREFOX=/$FIREFOX/firefox/firefox httpse bash -c "test/firefox.sh"
   fi
+
   if [ "$TEST" == "chromium" ]; then
     echo >&2 "Running chromium test suite."
     docker_build
@@ -65,7 +72,6 @@ if [ "$RULESETS_CHANGED" ]; then
     docker run --rm -ti -v $(pwd):/opt httpse bash -c "utils/validate.sh"
     docker run --rm -ti -v $(pwd):/opt httpse bash -c "test/rules.sh"
   fi
-
 
   if [ "$TEST" == "fetch" ]; then
     echo >&2 "Testing test URLs in all changed rulesets."
