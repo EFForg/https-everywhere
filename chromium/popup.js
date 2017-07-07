@@ -17,12 +17,12 @@ function e (id) {
 function toggleRuleLine (checkbox, ruleset) {
   ruleset.active = checkbox.checked
 
-  if (ruleset.active != ruleset.default_state) {
+  if (ruleset.active !== ruleset.defaultState) {
     localStorage[ruleset.name] = ruleset.active
   } else {
     delete localStorage[ruleset.name]
     // purge the name from the cache so that this unchecking is persistent.
-    backgroundPage.all_rules.ruleCache.delete(ruleset.name)
+    backgroundPage.allRules.ruleCache.delete(ruleset.name)
   }
   // Now reload the selected tab of the current window.
   chrome.tabs.reload()
@@ -76,7 +76,7 @@ function appendRuleLineToListDiv (ruleset, listDiv) {
     text.title = ruleset.note
   }
 
-  if (ruleset.note == 'user rule') {
+  if (ruleset.note === 'user rule') {
     var remove = document.createElement('img')
     remove.src = chrome.extension.getURL('remove.png')
     remove.className = 'remove'
