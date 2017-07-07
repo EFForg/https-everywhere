@@ -387,8 +387,8 @@ function writeToSwitchPlanner (type, tabId, resourceHost, resourceUrl, rewritten
  * */
 function objSize (obj) {
   if (typeof obj === 'undefined') return 0
-  var size = 0, key
-  for (key in obj) {
+  let size = 0
+  for (const key in obj) {
     if (obj.hasOwnProperty(key)) size++
   }
   return size
