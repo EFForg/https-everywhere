@@ -101,7 +101,7 @@ RuleSet.prototype = {
     for (let i = 0; i < this.rules.length; i++) {
       returl = urispec.replace(this.rules[i].fromC,
         this.rules[i].to)
-      if (returl != urispec) {
+      if (returl !== urispec) {
         return returl
       }
     }
@@ -114,51 +114,55 @@ RuleSet.prototype = {
    * @returns true or false, depending on whether it's deeply equivalent
    */
   isEquivalentTo: function (ruleset) {
-    if (this.name != ruleset.name ||
-       this.note != ruleset.note ||
-       this.state != ruleset.state ||
-       this.defaultState != ruleset.defaultState) {
+    if (this.name !== ruleset.name ||
+       this.note !== ruleset.note ||
+       this.state !== ruleset.state ||
+       this.defaultState !== ruleset.defaultState) {
       return false
     }
 
+    let thisExclusionsLength
     try {
-      var thisExclusionsLength = this.exclusions.length
+      thisExclusionsLength = this.exclusions.length
     } catch (e) {
-      var thisExclusionsLength = 0
+      thisExclusionsLength = 0
     }
 
+    let rulesetExclusionsLength
     try {
-      var rulesetExclusionsLength = ruleset.exclusions.length
+      rulesetExclusionsLength = ruleset.exclusions.length
     } catch (e) {
-      var rulesetExclusionsLength = 0
+      rulesetExclusionsLength = 0
     }
 
+    let thisRulesLength
     try {
-      var thisRulesLength = this.rules.length
+      thisRulesLength = this.rules.length
     } catch (e) {
-      var thisRulesLength = 0
+      thisRulesLength = 0
     }
 
+    let rulesetRulesLength
     try {
-      var rulesetRulesLength = ruleset.rules.length
+      rulesetRulesLength = ruleset.rules.length
     } catch (e) {
-      var rulesetRulesLength = 0
+      rulesetRulesLength = 0
     }
 
-    if (thisExclusionsLength != rulesetExclusionsLength ||
-       thisRulesLength != rulesetRulesLength) {
+    if (thisExclusionsLength !== rulesetExclusionsLength ||
+       thisRulesLength !== rulesetRulesLength) {
       return false
     }
     if (thisExclusionsLength > 0) {
       for (let i = 0; i < this.exclusions.length; i++) {
-        if (this.exclusions[i].patternC != ruleset.exclusions[i].patternC) {
+        if (this.exclusions[i].patternC !== ruleset.exclusions[i].patternC) {
           return false
         }
       }
     }
     if (thisRulesLength > 0) {
       for (let i = 0; i < this.rules.length; i++) {
-        if (this.rules[i].to != ruleset.rules[i].to) {
+        if (this.rules[i].to !== ruleset.rules[i].to) {
           return false
         }
       }
@@ -219,7 +223,7 @@ RuleSets.prototype = {
     // TODO: maybe promote this rule?
     this.targets[params.host].push(newRuleSet)
     if (newRuleSet.name in this.ruleActiveStates) {
-      newRuleSet.active = (this.ruleActiveStates[newRuleSet.name] == 'true')
+      newRuleSet.active = (this.ruleActiveStates[newRuleSet.name] === true)
     }
     log(INFO, 'done adding rule')
   },
@@ -237,7 +241,7 @@ RuleSets.prototype = {
         this.targets[ruleset.name].splice(i, 1)
       }
     }
-    if (this.targets[ruleset.name].length == 0) {
+    if (this.targets[ruleset.name].length === 0) {
       delete this.targets[ruleset.name]
     }
     log(INFO, 'done removing rule')
@@ -261,7 +265,7 @@ RuleSets.prototype = {
     var platform = ruletag.getAttribute('platform')
     if (platform) {
       defaultState = false
-      if (platform == 'mixedcontent' && enableMixedRulesets) {
+      if (platform === 'mixedcontent' && enableMixedRulesets) {
         defaultState = true
       }
       note += 'Platform(s): ' + platform + '\n'
@@ -273,7 +277,7 @@ RuleSets.prototype = {
 
     // Read user prefs
     if (ruleSet.name in this.ruleActiveStates) {
-      ruleSet.active = (this.ruleActiveStates[ruleSet.name] == 'true')
+      ruleSet.active = (this.ruleActiveStates[ruleSet.name] === true)
     }
 
     var rules = ruletag.getElementsByTagName('rule')
@@ -333,7 +337,7 @@ RuleSets.prototype = {
     }
 
     // Ensure host is well-formed (RFC 1035)
-    if (host.indexOf('..') != -1 || host.length > 255) {
+    if (host.indexOf('..') !== -1 || host.length > 255) {
       log(WARN, 'Malformed host passed to potentiallyApplicableRulesets: ' + host)
       return null
     }
@@ -358,7 +362,7 @@ RuleSets.prototype = {
     resultSet.delete(undefined)
 
     log(DBUG, 'Applicable rules for ' + host + ':')
-    if (resultSet.size == 0) {
+    if (resultSet.size === 0) {
       log(DBUG, '  None')
     } else {
       for (let target of resultSet.values()) {
@@ -386,7 +390,7 @@ RuleSets.prototype = {
   shouldSecureCookie: function (cookie) {
     var hostname = cookie.domain
     // cookie domain scopes can start with .
-    while (hostname.charAt(0) == '.') {
+    while (hostname.charAt(0) === '.') {
       hostname = hostname.slice(1)
     }
 
