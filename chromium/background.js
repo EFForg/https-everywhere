@@ -21,32 +21,34 @@ function loadExtensionFile (url, returnType) {
 }
 
 // Rules are loaded here
-var allRules = new RuleSets(localStorage)
+const RuleSets = window.RuleSets
+
+window.allRules = new RuleSets(localStorage)
 
 // Allow users to enable `platform="mixedcontent"` rulesets
-var enableMixedRulesets = false
-storage.get({enableMixedRulesets: false}, function (item) {
-  enableMixedRulesets = item.enableMixedRulesets
-  allRules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'))
+window.enableMixedRulesets = false
+window.storage.get({enableMixedRulesets: false}, function (item) {
+  window.enableMixedRulesets = item.enableMixedRulesets
+  window.allRules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'))
 })
 
-var USER_RULE_KEY = 'userRules'
+window.USER_RULE_KEY = 'userRules'
 // Records which tabId's are active in the HTTPS Switch Planner (see
 // devtools-panel.js).
-var switchPlannerEnabledFor = {}
+window.switchPlannerEnabledFor = {}
 // Detailed information recorded when the HTTPS Switch Planner is active.
 // Structure is:
 //   switchPlannerInfo[tabId]["rw"/"nrw"][resourceHost][activeContent][url];
 // rw / nrw stand for "rewritten" versus "not rewritten"
-var switchPlannerInfo = {}
+window.switchPlannerInfo = {}
 
 // Is HTTPSe enabled, or has it been manually disabled by the user?
-var isExtensionEnabled = true
+window.isExtensionEnabled = true
 
 // Load prefs about whether http nowhere is on. Structure is:
 //  { httpNowhere: true/false }
 var httpNowhereOn = false
-storage.get({httpNowhere: false}, function (item) {
+window.storage.get({httpNowhere: false}, function (item) {
   httpNowhereOn = item.httpNowhere
   updateState()
 })
@@ -74,7 +76,7 @@ chrome.webNavigation.onCompleted.addListener(function () {
 * Load stored user rules
  **/
 var getStoredUserRules = function () {
-  var oldUserRuleString = localStorage.getItem(USER_RULE_KEY)
+  var oldUserRuleString = localStorage.getItem(window.USER_RULE_KEY)
   var oldUserRules = []
   if (oldUserRuleString) {
     oldUserRules = JSON.parse(oldUserRuleString)
@@ -89,9 +91,9 @@ var wr = chrome.webRequest
 var loadStoredUserRules = function () {
   var rules = getStoredUserRules()
   for (let i = 0; i < rules.length; i++) {
-    allRules.addUserRule(rules[i])
+    window.allRules.addUserRule(rules[i])
   }
-  log('INFO', 'loaded ' + i + ' stored user rules')
+  window.log('INFO', 'loaded ' + rules.length + ' stored user rules')
 }
 
 loadStoredUserRules()
@@ -110,7 +112,7 @@ var updateState = function () {
     }
     var applied = activeRulesets.getRulesets(tabs[0].id)
     var iconState = 'inactive'
-    if (!isExtensionEnabled) {
+    if (!window.isExtensionEnabled) {
       iconState = 'disabled'
     } else if (httpNowhereOn) {
       iconState = 'blocking'
@@ -133,8 +135,8 @@ var updateState = function () {
  * @param params: params defining the rule
  * @param cb: Callback to call after success/fail
  * */
-var addNewRule = function (params) {
-  allRules.addUserRule(params)
+window.addNewRule = function (params) {
+  window.allRules.addUserRule(params)
   // If we successfully added the user rule, save it in local 
   // storage so it's automatically applied when the extension is 
   // reloaded.
@@ -143,15 +145,15 @@ var addNewRule = function (params) {
   // client windows in different event loops.
   oldUserRules.push(params)
   // TODO: can we exceed the max size for storage?
-  localStorage.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules))
+  localStorage.setItem(window.USER_RULE_KEY, JSON.stringify(oldUserRules))
 }
 
 /**
  * Removes a user rule
  * @param ruleset: the ruleset to remove
  * */
-var removeRule = function (ruleset) {
-  allRules.removeUserRule(ruleset)
+window.removeRule = function (ruleset) {
+  window.allRules.removeUserRule(ruleset)
   // If we successfully removed the user rule, remove it in local storage too
   var oldUserRules = getStoredUserRules()
   for (let i = 0; i < oldUserRules.length; i++) {
@@ -162,7 +164,7 @@ var removeRule = function (ruleset) {
       break
     }
   }
-  localStorage.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules))
+  localStorage.setItem(window.USER_RULE_KEY, JSON.stringify(oldUserRules))
 }
 
 /**
@@ -216,7 +218,7 @@ var redirectCounter = {}
  * */
 function onBeforeRequest (details) {
   // If HTTPSe has been disabled by the user, return immediately.
-  if (!isExtensionEnabled) {
+  if (!window.isExtensionEnabled) {
     return
   }
 
@@ -256,7 +258,7 @@ function onBeforeRequest (details) {
 
   var canonicalUrl = uri.href
   if (details.url !== canonicalUrl && !usingCredentialsInUrl) {
-    log(INFO, 'Original url ' + details.url +
+    window.log(window.INFO, 'Original url ' + details.url +
         ' changed before processing to ' + canonicalUrl)
   }
   if (urlBlacklist.has(canonicalUrl)) {
@@ -267,14 +269,14 @@ function onBeforeRequest (details) {
     activeRulesets.removeTab(details.tabId)
   }
 
-  var potentiallyApplicable = allRules.potentiallyApplicableRulesets(uri.hostname)
+  var potentiallyApplicable = window.allRules.potentiallyApplicableRulesets(uri.hostname)
 
   if (redirectCounter[details.requestId] >= 8) {
-    log(NOTE, 'Redirect counter hit for ' + canonicalUrl)
+    window.log(window.NOTE, 'Redirect counter hit for ' + canonicalUrl)
     urlBlacklist.add(canonicalUrl)
     var hostname = uri.hostname
     domainBlacklist.add(hostname)
-    log(WARN, 'Domain blacklisted ' + hostname)
+    window.log(window.WARN, 'Domain blacklisted ' + hostname)
     return {cancel: shouldCancel}
   }
 
@@ -298,7 +300,7 @@ function onBeforeRequest (details) {
 
   // In Switch Planner Mode, record any non-rewriteable
   // HTTP URIs by parent hostname, along with the resource type.
-  if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== 'https:') {
+  if (window.switchPlannerEnabledFor[details.tabId] && uri.protocol !== 'https:') {
     writeToSwitchPlanner(details.type,
       details.tabId,
       canonicalHost,
@@ -362,19 +364,19 @@ function writeToSwitchPlanner (type, tabId, resourceHost, resourceUrl, rewritten
   } else if (passiveTypes[type]) {
     activeContent = 0
   } else {
-    log(WARN, 'Unknown type from onBeforeRequest details: `' + type + "', assuming active")
+    window.log(window.WARN, 'Unknown type from onBeforeRequest details: `' + type + "', assuming active")
     activeContent = 1
   }
 
-  if (!switchPlannerInfo[tabId]) {
-    switchPlannerInfo[tabId] = {}
-    switchPlannerInfo[tabId]['rw'] = {}
-    switchPlannerInfo[tabId]['nrw'] = {}
+  if (!window.switchPlannerInfo[tabId]) {
+    window.switchPlannerInfo[tabId] = {}
+    window.switchPlannerInfo[tabId]['rw'] = {}
+    window.switchPlannerInfo[tabId]['nrw'] = {}
   }
-  if (!switchPlannerInfo[tabId][rw][resourceHost]) { switchPlannerInfo[tabId][rw][resourceHost] = {} }
-  if (!switchPlannerInfo[tabId][rw][resourceHost][activeContent]) { switchPlannerInfo[tabId][rw][resourceHost][activeContent] = {} }
+  if (!window.switchPlannerInfo[tabId][rw][resourceHost]) { window.switchPlannerInfo[tabId][rw][resourceHost] = {} }
+  if (!window.switchPlannerInfo[tabId][rw][resourceHost][activeContent]) { window.switchPlannerInfo[tabId][rw][resourceHost][activeContent] = {} }
 
-  switchPlannerInfo[tabId][rw][resourceHost][activeContent][resourceUrl] = 1
+  window.switchPlannerInfo[tabId][rw][resourceHost][activeContent][resourceUrl] = 1
 }
 
 /**
@@ -397,11 +399,11 @@ function objSize (obj) {
  * */
 function sortSwitchPlanner (tabId, rewritten) {
   var assetHostList = []
-  if (typeof switchPlannerInfo[tabId] === 'undefined' ||
-      typeof switchPlannerInfo[tabId][rewritten] === 'undefined') {
+  if (typeof window.switchPlannerInfo[tabId] === 'undefined' ||
+      typeof window.switchPlannerInfo[tabId][rewritten] === 'undefined') {
     return []
   }
-  var tabInfo = switchPlannerInfo[tabId][rewritten]
+  var tabInfo = window.switchPlannerInfo[tabId][rewritten]
   for (var assetHost in tabInfo) {
     var ah = tabInfo[assetHost]
     var activeCount = objSize(ah[1])
@@ -478,7 +480,7 @@ function linksFromKeys (map) {
 /**
  * Generate the detailed html fot the switch planner
  * */
-function switchPlannerDetailsHtml (tabId) {
+window.switchPlannerDetailsHtml = function (tabId) {
   return switchPlannerRenderSections(tabId, switchPlannerDetailsHtmlSection)
 }
 
@@ -497,11 +499,11 @@ function switchPlannerDetailsHtmlSection (tabId, rewritten) {
     output += '<b>' + host + '</b>: '
     if (activeCount > 0) {
       output += activeCount + ' active<br/>'
-      output += linksFromKeys(switchPlannerInfo[tabId][rewritten][host][1])
+      output += linksFromKeys(window.switchPlannerInfo[tabId][rewritten][host][1])
     }
     if (passiveCount > 0) {
       output += '<br/>' + passiveCount + ' passive<br/>'
-      output += linksFromKeys(switchPlannerInfo[tabId][rewritten][host][0])
+      output += linksFromKeys(window.switchPlannerInfo[tabId][rewritten][host][0])
     }
     output += '<br/>'
   }
@@ -513,8 +515,8 @@ function switchPlannerDetailsHtmlSection (tabId, rewritten) {
  * @param changeInfo Cookie changed info, see Chrome doc
  * */
 function onCookieChanged (changeInfo) {
-  if (!changeInfo.removed && !changeInfo.cookie.secure && isExtensionEnabled) {
-    if (allRules.shouldSecureCookie(changeInfo.cookie)) {
+  if (!changeInfo.removed && !changeInfo.cookie.secure && window.isExtensionEnabled) {
+    if (window.allRules.shouldSecureCookie(changeInfo.cookie)) {
       var cookie = {name: changeInfo.cookie.name,
         value: changeInfo.cookie.value,
         path: changeInfo.cookie.path,
@@ -536,7 +538,7 @@ function onCookieChanged (changeInfo) {
       }
       // We get repeated events for some cookies because sites change their
       // value repeatedly and remove the "secure" flag.
-      log(DBUG,
+      window.log(window.DBUG,
         'Securing cookie ' + cookie.name + ' for ' + changeInfo.cookie.domain + ', was secure=' + changeInfo.cookie.secure)
       chrome.cookies.set(cookie)
     }
@@ -553,7 +555,7 @@ function onBeforeRedirect (details) {
   if (prefix === 'http:' || prefix === 'https') {
     if (details.requestId in redirectCounter) {
       redirectCounter[details.requestId] += 1
-      log(DBUG, 'Got redirect id ' + details.requestId +
+      window.log(window.DBUG, 'Got redirect id ' + details.requestId +
                 ': ' + redirectCounter[details.requestId])
     } else {
       redirectCounter[details.requestId] = 1
@@ -576,9 +578,9 @@ chrome.cookies.onChanged.addListener(onCookieChanged)
  * @param tabId the Tab to disable for
  */
 function disableSwitchPlannerFor (tabId) {
-  delete switchPlannerEnabledFor[tabId]
+  delete window.switchPlannerEnabledFor[tabId]
   // Clear stored URL info.
-  delete switchPlannerInfo[tabId]
+  delete window.switchPlannerInfo[tabId]
 }
 
 /**
@@ -586,7 +588,7 @@ function disableSwitchPlannerFor (tabId) {
  * @param tabId the tab to enable it for
  */
 function enableSwitchPlannerFor (tabId) {
-  switchPlannerEnabledFor[tabId] = true
+  window.switchPlannerEnabledFor[tabId] = true
 }
 
 // Listen for connection from the DevTools panel so we can set up communication.
@@ -596,7 +598,7 @@ chrome.runtime.onConnect.addListener(function (port) {
       var tabId = message.tabId
 
       var disableOnCloseCallback = function (port) {
-        log(DBUG, 'Devtools window for tab ' + tabId + ' closed, clearing data.')
+        window.log(window.DBUG, 'Devtools window for tab ' + tabId + ' closed, clearing data.')
         disableSwitchPlannerFor(tabId)
       }
 

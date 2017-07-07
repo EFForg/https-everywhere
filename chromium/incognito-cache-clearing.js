@@ -20,9 +20,9 @@ function detectIncognitoCreation (window) {
  * Called if an incognito session is destroyed.
  */
 function destroyCaches () {
-  log(DBUG, 'Destroying caches.')
-  allRules.cookieHostCache.clear()
-  allRules.ruleCache.clear()
+  window.log(window.DBUG, 'Destroying caches.')
+  window.allRules.cookieHostCache.clear()
+  window.allRules.ruleCache.clear()
 }
 
 /**

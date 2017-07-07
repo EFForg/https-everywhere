@@ -1,12 +1,4 @@
 
-// Stubs so this runs under nodejs. They get overwritten later by util.js
-var VERB = 1
-var DBUG = 2
-var INFO = 3
-var NOTE = 4
-var WARN = 5
-function log () {}
-
 // To reduce memory usage for the numerous rules/cookies with trivial rules
 const trivialRuleTo = 'https:'
 const trivialRuleFromC = new RegExp('^http:')
@@ -91,7 +83,7 @@ RuleSet.prototype = {
     if (this.exclusions !== null) {
       for (let i = 0; i < this.exclusions.length; i++) {
         if (this.exclusions[i].patternC.test(urispec)) {
-          log(DBUG, 'excluded uri ' + urispec)
+          window.log(window.DBUG, 'excluded uri ' + urispec)
           return null
         }
       }
@@ -201,7 +193,7 @@ RuleSets.prototype = {
       try {
         this.parseOneRuleset(sets[i])
       } catch (e) {
-        log(WARN, 'Error processing ruleset:' + e)
+        window.log(window.WARN, 'Error processing ruleset:' + e)
       }
     }
   },
@@ -212,7 +204,7 @@ RuleSets.prototype = {
    * @returns {boolean}
    */
   addUserRule: function (params) {
-    log(INFO, 'adding new user rule for ' + JSON.stringify(params))
+    window.log(window.INFO, 'adding new user rule for ' + JSON.stringify(params))
     var newRuleSet = new RuleSet(params.host, true, 'user rule')
     var newRule = new Rule(params.urlMatcher, params.redirectTo)
     newRuleSet.rules.push(newRule)
@@ -225,7 +217,7 @@ RuleSets.prototype = {
     if (newRuleSet.name in this.ruleActiveStates) {
       newRuleSet.active = (this.ruleActiveStates[newRuleSet.name] === true)
     }
-    log(INFO, 'done adding rule')
+    window.log(window.INFO, 'done adding rule')
   },
 
   /**
@@ -234,7 +226,7 @@ RuleSets.prototype = {
    * @returns {boolean}
    */
   removeUserRule: function (ruleset) {
-    log(INFO, 'removing user rule for ' + JSON.stringify(ruleset))
+    window.log(window.INFO, 'removing user rule for ' + JSON.stringify(ruleset))
     this.ruleCache.delete(ruleset.name)
     for (let i = 0; i < this.targets[ruleset.name].length; i++) {
       if (this.targets[ruleset.name][i].isEquivalentTo(ruleset)) {
@@ -244,7 +236,7 @@ RuleSets.prototype = {
     if (this.targets[ruleset.name].length === 0) {
       delete this.targets[ruleset.name]
     }
-    log(INFO, 'done removing rule')
+    window.log(window.INFO, 'done removing rule')
   },
 
   /**
@@ -265,7 +257,7 @@ RuleSets.prototype = {
     var platform = ruletag.getAttribute('platform')
     if (platform) {
       defaultState = false
-      if (platform === 'mixedcontent' && enableMixedRulesets) {
+      if (platform === 'mixedcontent' && window.enableMixedRulesets) {
         defaultState = true
       }
       note += 'Platform(s): ' + platform + '\n'
@@ -324,10 +316,10 @@ RuleSets.prototype = {
     // Have we cached this result? If so, return it!
     var cachedItem = this.ruleCache.get(host)
     if (cachedItem !== undefined) {
-      log(DBUG, 'Ruleset cache hit for ' + host + ' items:' + cachedItem.length)
+      window.log(window.DBUG, 'Ruleset cache hit for ' + host + ' items:' + cachedItem.length)
       return cachedItem
     }
-    log(DBUG, 'Ruleset cache miss for ' + host)
+    window.log(window.DBUG, 'Ruleset cache miss for ' + host)
 
     var tmp
     var results = []
@@ -338,7 +330,7 @@ RuleSets.prototype = {
 
     // Ensure host is well-formed (RFC 1035)
     if (host.indexOf('..') !== -1 || host.length > 255) {
-      log(WARN, 'Malformed host passed to potentiallyApplicableRulesets: ' + host)
+      window.log(window.WARN, 'Malformed host passed to potentiallyApplicableRulesets: ' + host)
       return null
     }
 
@@ -361,12 +353,12 @@ RuleSets.prototype = {
     var resultSet = new Set(results)
     resultSet.delete(undefined)
 
-    log(DBUG, 'Applicable rules for ' + host + ':')
+    window.log(window.DBUG, 'Applicable rules for ' + host + ':')
     if (resultSet.size === 0) {
-      log(DBUG, '  None')
+      window.log(window.DBUG, '  None')
     } else {
       for (let target of resultSet.values()) {
-        log(DBUG, '  ' + target.name)
+        window.log(window.DBUG, '  ' + target.name)
       }
     }
 
@@ -430,16 +422,16 @@ RuleSets.prototype = {
     // observed and the domain blacklisted, a cookie might already have been
     // flagged as secure.
 
-    if (domainBlacklist.has(domain)) {
-      log(INFO, 'cookies for ' + domain + 'blacklisted')
+    if (window.domainBlacklist.has(domain)) {
+      window.log(window.INFO, 'cookies for ' + domain + 'blacklisted')
       return false
     }
     var cachedItem = this.cookieHostCache.get(domain)
     if (cachedItem !== undefined) {
-      log(DBUG, 'Cookie host cache hit for ' + domain)
+      window.log(window.DBUG, 'Cookie host cache hit for ' + domain)
       return cachedItem
     }
-    log(DBUG, 'Cookie host cache miss for ' + domain)
+    window.log(window.DBUG, 'Cookie host cache miss for ' + domain)
 
     // If we passed that test, make up a random URL on the domain, and see if
     // we would HTTPSify that.
@@ -453,19 +445,19 @@ RuleSets.prototype = {
       this.cookieHostCache.delete(this.cookieHostCache.keys().next().value)
     }
 
-    log(INFO, 'Testing securecookie applicability with ' + testUri)
+    window.log(window.INFO, 'Testing securecookie applicability with ' + testUri)
     var potentiallyApplicable = this.potentiallyApplicableRulesets(domain)
     for (let ruleset of potentiallyApplicable) {
       if (!ruleset.active) {
         continue
       }
       if (ruleset.apply(testUri)) {
-        log(INFO, 'Cookie domain could be secured.')
+        window.log(window.INFO, 'Cookie domain could be secured.')
         this.cookieHostCache.set(domain, true)
         return true
       }
     }
-    log(INFO, 'Cookie domain could NOT be secured.')
+    window.log(window.INFO, 'Cookie domain could NOT be secured.')
     this.cookieHostCache.set(domain, false)
     return false
   },
@@ -486,6 +478,10 @@ RuleSets.prototype = {
     }
     return null
   }
+}
+
+if (typeof window !== 'undefined') {
+  window.RuleSets = RuleSets
 }
 
 // Export for HTTPS Rewriter if applicable.
