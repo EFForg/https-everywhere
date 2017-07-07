@@ -31,8 +31,8 @@
    * @param arrayOfWindows: A array of all open Window objects.
    */
   function checkForIncognitoSession (arrayOfWindows) {
-    for (let window of arrayOfWindows) {
-      if (window.incognito === true) {
+    for (const wnd of arrayOfWindows) {
+      if (wnd.incognito === true) {
         // An incognito window still exists, so don't destroy caches yet.
         return
       }

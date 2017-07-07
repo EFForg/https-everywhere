@@ -59,7 +59,7 @@
     // require an existing connection.
     chrome.runtime.connect({ name: 'devtools-page' })
 
-    let checkbox = e('SwitchPlannerCheckbox')
+    const checkbox = e('SwitchPlannerCheckbox')
     checkbox.addEventListener('change', function () {
       if (checkbox.checked) {
         enableSwitchPlanner()

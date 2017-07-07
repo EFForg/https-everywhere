@@ -1,10 +1,10 @@
 'use strict'
 ;(function () {
-  let backgroundPage = chrome.extension.getBackgroundPage()
+  const backgroundPage = chrome.extension.getBackgroundPage()
   let stableRules = null
   let unstableRules = null
-  let hostReg = /.*\/\/[^$/]*\//
-  let storage = backgroundPage.storage
+  const hostReg = /.*\/\/[^$/]*\//
+  const storage = backgroundPage.storage
 
   function e (id) {
     return document.getElementById(id)
@@ -36,14 +36,14 @@
    */
   function appendRuleLineToListDiv (ruleset, listDiv) {
     // parent block for line
-    let line = document.createElement('div')
+    const line = document.createElement('div')
     line.className = 'rule checkbox'
 
     // label "container"
-    let label = document.createElement('label')
+    const label = document.createElement('label')
 
     // checkbox
-    let checkbox = document.createElement('input')
+    const checkbox = document.createElement('input')
     checkbox.type = 'checkbox'
     if (ruleset.active) {
       checkbox.setAttribute('checked', '')
@@ -54,31 +54,31 @@
     label.appendChild(checkbox)
 
     // favicon (from chrome's cache)
-    let favicon = document.createElement('img')
+    const favicon = document.createElement('img')
     favicon.className = 'favicon'
     favicon.src = 'chrome://favicon/'
     for (let i = 0; i < ruleset.rules.length; i++) {
-      let host = hostReg.exec(ruleset.rules[i].to)
+      const host = hostReg.exec(ruleset.rules[i].to)
       if (host) {
         favicon.src += host[0]
         break
       }
     }
-    let xhr = new XMLHttpRequest()
+    const xhr = new XMLHttpRequest()
     try {
       xhr.open('GET', favicon.src, true)
       label.appendChild(favicon)
     } catch (e) {}
 
     // label text
-    let text = document.createElement('span')
+    const text = document.createElement('span')
     text.innerText = ruleset.name
     if (ruleset.note.length) {
       text.title = ruleset.note
     }
 
     if (ruleset.note === 'user rule') {
-      let remove = document.createElement('img')
+      const remove = document.createElement('img')
       remove.src = chrome.extension.getURL('remove.png')
       remove.className = 'remove'
       line.appendChild(remove)
@@ -128,10 +128,10 @@
    * @param tabArray
    */
   function gotTab (tabArray) {
-    let activeTab = tabArray[0]
-    let rulesets = backgroundPage.activeRulesets.getRulesets(activeTab.id)
+    const activeTab = tabArray[0]
+    const rulesets = backgroundPage.activeRulesets.getRulesets(activeTab.id)
 
-    for (let r in rulesets) {
+    for (const r in rulesets) {
       let listDiv = stableRules
       if (!rulesets[r].defaultState) {
         listDiv = unstableRules
@@ -159,22 +159,22 @@
     document.getElementById('onoffswitch').addEventListener('click', toggleEnabledDisabled)
 
     // Print the extension's current version.
-    let manifest = chrome.runtime.getManifest()
-    let versionInfo = document.getElementById('current-version')
+    const manifest = chrome.runtime.getManifest()
+    const versionInfo = document.getElementById('current-version')
     versionInfo.innerText = manifest.version
 
     // Set up toggle checkbox for HTTP nowhere mode
     getOption('httpNowhere', false, function (item) {
-      let httpNowhereCheckbox = document.getElementById('http-nowhere-checkbox')
+      const httpNowhereCheckbox = document.getElementById('http-nowhere-checkbox')
       httpNowhereCheckbox.addEventListener('click', toggleHttpNowhere, false)
-      let httpNowhereEnabled = item.httpNowhere
+      const httpNowhereEnabled = item.httpNowhere
       if (httpNowhereEnabled) {
         httpNowhereCheckbox.setAttribute('checked', '')
       }
     })
 
     // auto-translate all elements with i18n attributes
-    let elem = document.querySelectorAll('[i18n]')
+    const elem = document.querySelectorAll('[i18n]')
     for (let i = 0; i < elem.length; i++) {
       elem[i].innerHTML = chrome.i18n.getMessage(elem[i].getAttribute('i18n'))
     }
@@ -184,7 +184,7 @@
     e('add-rule-link').addEventListener('click', addManualRule)
   })
 
-  let escapeForRegex = function (value) {
+  const escapeForRegex = function (value) {
     return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
   }
 
@@ -203,20 +203,20 @@
     chrome.tabs.query({ active: true, currentWindow: true }, function (tab) {
       hide(e('add-rule-link'))
       show(e('add-new-rule-div'))
-      let newUrl = document.createElement('a')
+      const newUrl = document.createElement('a')
       newUrl.href = tab[0].url
       newUrl.protocol = 'https:'
       e('new-rule-host').value = newUrl.host
-      let oldUrl = document.createElement('a')
+      const oldUrl = document.createElement('a')
       oldUrl.href = tab[0].url
       oldUrl.protocol = 'http:'
-      let oldMatcher = '^' + escapeForRegex(oldUrl.protocol + '//' + oldUrl.host + '/')
+      const oldMatcher = '^' + escapeForRegex(oldUrl.protocol + '//' + oldUrl.host + '/')
       e('new-rule-regex').value = oldMatcher
-      let redirectPath = newUrl.protocol + '//' + newUrl.host + '/'
+      const redirectPath = newUrl.protocol + '//' + newUrl.host + '/'
       e('new-rule-redirect').value = redirectPath
       e('new-rule-name').value = 'Manual rule for ' + oldUrl.host
       e('add-new-rule-button').addEventListener('click', function () {
-        let params = {
+        const params = {
           host: e('new-rule-host').value,
           redirectTo: e('new-rule-redirect').value,
           urlMatcher: e('new-rule-regex').value
@@ -247,13 +247,13 @@
   }
 
   function getOption (opt, defaultOpt, callback) {
-    let details = {}
+    const details = {}
     details[opt] = defaultOpt
     return storage.get(details, callback)
   }
 
   function setOption (opt, value) {
-    let details = {}
+    const details = {}
     details[opt] = value
     return storage.set(details)
   }

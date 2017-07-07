@@ -6,7 +6,7 @@
    * @param url: a relative URL to local XML
    */
   function loadExtensionFile (url, returnType) {
-    let xhr = new XMLHttpRequest()
+    const xhr = new XMLHttpRequest()
     // Use blocking XHR to ensure everything is loaded by the time
     // we return.
     xhr.open('GET', chrome.extension.getURL(url), false)
@@ -55,7 +55,7 @@
   })
   chrome.storage.onChanged.addListener(function (changes, areaName) {
     if (areaName === 'sync' || areaName === 'local') {
-      for (let key in changes) {
+      for (const key in changes) {
         if (key === 'httpNowhere') {
           httpNowhereOn = changes[key].newValue
           window.updateState()
@@ -76,21 +76,21 @@
   /**
   * Load stored user rules
    **/
-  let getStoredUserRules = function () {
-    let oldUserRuleString = localStorage.getItem(window.USER_RULE_KEY)
+  const getStoredUserRules = function () {
+    const oldUserRuleString = localStorage.getItem(window.USER_RULE_KEY)
     let oldUserRules = []
     if (oldUserRuleString) {
       oldUserRules = JSON.parse(oldUserRuleString)
     }
     return oldUserRules
   }
-  let wr = chrome.webRequest
+  const wr = chrome.webRequest
 
   /**
    * Load all stored user rules
    */
-  let loadStoredUserRules = function () {
-    let rules = getStoredUserRules()
+  const loadStoredUserRules = function () {
+    const rules = getStoredUserRules()
     for (let i = 0; i < rules.length; i++) {
       window.allRules.addUserRule(rules[i])
     }
@@ -111,7 +111,7 @@
       if (!tabs || tabs.length === 0) {
         return
       }
-      let applied = window.activeRulesets.getRulesets(tabs[0].id)
+      const applied = window.activeRulesets.getRulesets(tabs[0].id)
       let iconState = 'inactive'
       if (!window.isExtensionEnabled) {
         iconState = 'disabled'
@@ -141,7 +141,7 @@
     // If we successfully added the user rule, save it in local 
     // storage so it's automatically applied when the extension is 
     // reloaded.
-    let oldUserRules = getStoredUserRules()
+    const oldUserRules = getStoredUserRules()
     // TODO: there's a race condition here, if this code is ever executed from multiple 
     // client windows in different event loops.
     oldUserRules.push(params)
@@ -156,7 +156,7 @@
   window.removeRule = function (ruleset) {
     window.allRules.removeUserRule(ruleset)
     // If we successfully removed the user rule, remove it in local storage too
-    let oldUserRules = getStoredUserRules()
+    const oldUserRules = getStoredUserRules()
     for (let i = 0; i < oldUserRules.length; i++) {
       if (oldUserRules[i].host === ruleset.name &&
           oldUserRules[i].redirectTo === ruleset.rules[0].to &&
@@ -174,7 +174,7 @@
   function AppliedRulesets () {
     this.activeTabRules = {}
 
-    let that = this
+    const that = this
     chrome.tabs.onRemoved.addListener(function (tabId, info) {
       that.removeTab(tabId)
     })
@@ -205,12 +205,12 @@
   // FIXME: change this name
   window.activeRulesets = new AppliedRulesets()
 
-  let urlBlacklist = new Set()
-  let domainBlacklist = new Set()
+  const urlBlacklist = new Set()
+  const domainBlacklist = new Set()
 
   // redirect counter workaround
   // TODO: Remove this code if they ever give us a real counter
-  let redirectCounter = {}
+  const redirectCounter = {}
 
   /**
    * Called before a HTTP(s) request. Does the heavy lifting
@@ -223,11 +223,11 @@
       return
     }
 
-    let uri = document.createElement('a')
+    const uri = document.createElement('a')
     uri.href = details.url
 
     // Should the request be canceled?
-    let shouldCancel = (
+    const shouldCancel = (
       httpNowhereOn &&
       uri.protocol === 'http:' &&
       !/\.onion$/.test(uri.hostname) &&
@@ -259,7 +259,7 @@
       uri.password = null
     }
 
-    let canonicalUrl = uri.href
+    const canonicalUrl = uri.href
     if (details.url !== canonicalUrl && !usingCredentialsInUrl) {
       window.log(window.INFO, 'Original url ' + details.url +
           ' changed before processing to ' + canonicalUrl)
@@ -272,12 +272,12 @@
       window.activeRulesets.removeTab(details.tabId)
     }
 
-    let potentiallyApplicable = window.allRules.potentiallyApplicableRulesets(uri.hostname)
+    const potentiallyApplicable = window.allRules.potentiallyApplicableRulesets(uri.hostname)
 
     if (redirectCounter[details.requestId] >= 8) {
       window.log(window.NOTE, 'Redirect counter hit for ' + canonicalUrl)
       urlBlacklist.add(canonicalUrl)
-      let hostname = uri.hostname
+      const hostname = uri.hostname
       domainBlacklist.add(hostname)
       window.log(window.WARN, 'Domain blacklisted ' + hostname)
       return {cancel: shouldCancel}
@@ -285,7 +285,7 @@
 
     let newuristr = null
 
-    for (let ruleset of potentiallyApplicable) {
+    for (const ruleset of potentiallyApplicable) {
       window.activeRulesets.addRulesetToTab(details.tabId, ruleset)
       if (ruleset.active && !newuristr) {
         newuristr = ruleset.apply(canonicalUrl)
@@ -294,7 +294,7 @@
 
     if (newuristr && usingCredentialsInUrl) {
       // re-insert userpass info which was stripped temporarily
-      let uriWithCredentials = document.createElement('a')
+      const uriWithCredentials = document.createElement('a')
       uriWithCredentials.href = newuristr
       uriWithCredentials.username = tmpUser
       uriWithCredentials.password = tmpPass
@@ -336,7 +336,7 @@
 
   // Map of which values for the `type' enum denote active vs passive content.
   // https://developer.chrome.com/extensions/webRequest.html#event-onBeforeRequest
-  let activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1 }
+  const activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1 }
 
   // We consider sub_frame to be passive even though it can contain JS or flash.
   // This is because code running in the sub_frame cannot access the main frame's
@@ -344,7 +344,7 @@
   // same domain but different protocol - i.e. HTTP while the parent is HTTPS -
   // because same-origin policy includes the protocol. This also mimics Chrome's
   // UI treatment of insecure subframes.
-  let passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1 }
+  const passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1 }
 
   /**
    * Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
@@ -401,17 +401,17 @@
    * presenting the most important ones first.
    * */
   function sortSwitchPlanner (tabId, rewritten) {
-    let assetHostList = []
+    const assetHostList = []
     if (typeof window.switchPlannerInfo[tabId] === 'undefined' ||
         typeof window.switchPlannerInfo[tabId][rewritten] === 'undefined') {
       return []
     }
-    let tabInfo = window.switchPlannerInfo[tabId][rewritten]
-    for (let assetHost in tabInfo) {
-      let ah = tabInfo[assetHost]
-      let activeCount = objSize(ah[1])
-      let passiveCount = objSize(ah[0])
-      let score = activeCount * 100 + passiveCount
+    const tabInfo = window.switchPlannerInfo[tabId][rewritten]
+    for (const assetHost in tabInfo) {
+      const ah = tabInfo[assetHost]
+      const activeCount = objSize(ah[1])
+      const passiveCount = objSize(ah[0])
+      const score = activeCount * 100 + passiveCount
       assetHostList.push([score, activeCount, passiveCount, assetHost])
     }
     assetHostList.sort(function (a, b) { return a[0] - b[0] })
@@ -422,16 +422,16 @@
   * Format the switch planner output for presentation to a user.
   * */
   function switchPlannerSmallHtmlSection (tabId, rewritten) {
-    let assetHostList = sortSwitchPlanner(tabId, rewritten)
+    const assetHostList = sortSwitchPlanner(tabId, rewritten)
     if (assetHostList.length === 0) {
       return '<b>none</b>'
     }
 
     let output = ''
     for (let i = assetHostList.length - 1; i >= 0; i--) {
-      let host = assetHostList[i][3]
-      let activeCount = assetHostList[i][1]
-      let passiveCount = assetHostList[i][2]
+      const host = assetHostList[i][3]
+      const activeCount = assetHostList[i][1]
+      const passiveCount = assetHostList[i][2]
 
       output += '<b>' + host + '</b>: '
       if (activeCount > 0) {
@@ -472,7 +472,7 @@
   function linksFromKeys (map) {
     if (typeof map === 'undefined') return ''
     let output = ''
-    for (let key in map) {
+    for (const key in map) {
       if (map.hasOwnProperty(key)) {
         output += "<a href='" + key + "'>" + key + '</a><br/>'
       }
@@ -491,13 +491,13 @@
    * Generate the detailed html fot the switch planner, by section
    * */
   function switchPlannerDetailsHtmlSection (tabId, rewritten) {
-    let assetHostList = sortSwitchPlanner(tabId, rewritten)
+    const assetHostList = sortSwitchPlanner(tabId, rewritten)
     let output = ''
 
     for (let i = assetHostList.length - 1; i >= 0; i--) {
-      let host = assetHostList[i][3]
-      let activeCount = assetHostList[i][1]
-      let passiveCount = assetHostList[i][2]
+      const host = assetHostList[i][3]
+      const activeCount = assetHostList[i][1]
+      const passiveCount = assetHostList[i][2]
 
       output += '<b>' + host + '</b>: '
       if (activeCount > 0) {
@@ -520,7 +520,7 @@
   function onCookieChanged (changeInfo) {
     if (!changeInfo.removed && !changeInfo.cookie.secure && window.isExtensionEnabled) {
       if (window.allRules.shouldSecureCookie(changeInfo.cookie)) {
-        let cookie = {name: changeInfo.cookie.name,
+        const cookie = {name: changeInfo.cookie.name,
           value: changeInfo.cookie.value,
           path: changeInfo.cookie.path,
           httpOnly: changeInfo.cookie.httpOnly,
@@ -554,7 +554,7 @@
    * */
   function onBeforeRedirect (details) {
     // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
-    let prefix = details.redirectUrl.substring(0, 5)
+    const prefix = details.redirectUrl.substring(0, 5)
     if (prefix === 'http:' || prefix === 'https') {
       if (details.requestId in redirectCounter) {
         redirectCounter[details.requestId] += 1
@@ -598,9 +598,9 @@
   chrome.runtime.onConnect.addListener(function (port) {
     if (port.name === 'devtools-page') {
       chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-        let tabId = message.tabId
+        const tabId = message.tabId
 
-        let disableOnCloseCallback = function (port) {
+        const disableOnCloseCallback = function (port) {
           window.log(window.DBUG, 'Devtools window for tab ' + tabId + ' closed, clearing data.')
           disableSwitchPlannerFor(tabId)
         }

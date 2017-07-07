@@ -189,7 +189,7 @@
      * Iterate through data XML and load rulesets
      */
     addFromXml: function (ruleXml) {
-      let sets = ruleXml.getElementsByTagName('ruleset')
+      const sets = ruleXml.getElementsByTagName('ruleset')
       for (let i = 0; i < sets.length; i++) {
         try {
           this.parseOneRuleset(sets[i])
@@ -206,8 +206,8 @@
      */
     addUserRule: function (params) {
       window.log(window.INFO, 'adding new user rule for ' + JSON.stringify(params))
-      let newRuleSet = new RuleSet(params.host, true, 'user rule')
-      let newRule = new Rule(params.urlMatcher, params.redirectTo)
+      const newRuleSet = new RuleSet(params.host, true, 'user rule')
+      const newRule = new Rule(params.urlMatcher, params.redirectTo)
       newRuleSet.rules.push(newRule)
       if (!(params.host in this.targets)) {
         this.targets[params.host] = []
@@ -247,7 +247,7 @@
     parseOneRuleset: function (ruletag) {
       let defaultState = true
       let note = ''
-      let defaultOff = ruletag.getAttribute('default_off')
+      const defaultOff = ruletag.getAttribute('default_off')
       if (defaultOff) {
         defaultState = false
         note += defaultOff + '\n'
@@ -255,7 +255,7 @@
 
       // If a ruleset declares a platform, and we don't match it, treat it as
       // off-by-default. In practice, this excludes "mixedcontent" & "cacert" rules.
-      let platform = ruletag.getAttribute('platform')
+      const platform = ruletag.getAttribute('platform')
       if (platform) {
         defaultState = false
         if (platform === 'mixedcontent' && window.enableMixedRulesets) {
@@ -264,7 +264,7 @@
         note += 'Platform(s): ' + platform + '\n'
       }
 
-      let ruleSet = new RuleSet(ruletag.getAttribute('name'),
+      const ruleSet = new RuleSet(ruletag.getAttribute('name'),
         defaultState,
         note.trim())
 
@@ -273,13 +273,13 @@
         ruleSet.active = (this.ruleActiveStates[ruleSet.name] === true)
       }
 
-      let rules = ruletag.getElementsByTagName('rule')
+      const rules = ruletag.getElementsByTagName('rule')
       for (let i = 0; i < rules.length; i++) {
         ruleSet.rules.push(new Rule(rules[i].getAttribute('from'),
           rules[i].getAttribute('to')))
       }
 
-      let exclusions = ruletag.getElementsByTagName('exclusion')
+      const exclusions = ruletag.getElementsByTagName('exclusion')
       if (exclusions.length > 0) {
         ruleSet.exclusions = []
         for (let i = 0; i < exclusions.length; i++) {
@@ -288,7 +288,7 @@
         }
       }
 
-      let cookierules = ruletag.getElementsByTagName('securecookie')
+      const cookierules = ruletag.getElementsByTagName('securecookie')
       if (cookierules.length > 0) {
         ruleSet.cookierules = []
         for (let i = 0; i < cookierules.length; i++) {
@@ -298,9 +298,9 @@
         }
       }
 
-      let targets = ruletag.getElementsByTagName('target')
+      const targets = ruletag.getElementsByTagName('target')
       for (let i = 0; i < targets.length; i++) {
-        let host = targets[i].getAttribute('host')
+        const host = targets[i].getAttribute('host')
         if (!(host in this.targets)) {
           this.targets[host] = []
         }
@@ -315,7 +315,7 @@
      */
     potentiallyApplicableRulesets: function (host) {
       // Have we cached this result? If so, return it!
-      let cachedItem = this.ruleCache.get(host)
+      const cachedItem = this.ruleCache.get(host)
       if (cachedItem !== undefined) {
         window.log(window.DBUG, 'Ruleset cache hit for ' + host + ' items:' + cachedItem.length)
         return cachedItem
@@ -336,7 +336,7 @@
       }
 
       // Replace each portion of the domain with a * in turn
-      let segmented = host.split('.')
+      const segmented = host.split('.')
       for (let i = 0; i < segmented.length; i++) {
         tmp = segmented[i]
         segmented[i] = '*'
@@ -346,19 +346,19 @@
       // now eat away from the left, with *, so that for x.y.z.google.com we
       // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
       for (let i = 2; i <= segmented.length - 2; i++) {
-        let t = '*.' + segmented.slice(i, segmented.length).join('.')
+        const t = '*.' + segmented.slice(i, segmented.length).join('.')
         results = results.concat(this.targets[t])
       }
 
       // Clean the results list, which may contain duplicates or undefined entries
-      let resultSet = new Set(results)
+      const resultSet = new Set(results)
       resultSet.delete(undefined)
 
       window.log(window.DBUG, 'Applicable rules for ' + host + ':')
       if (resultSet.size === 0) {
         window.log(window.DBUG, '  None')
       } else {
-        for (let target of resultSet.values()) {
+        for (const target of resultSet.values()) {
           window.log(window.DBUG, '  ' + target.name)
         }
       }
@@ -391,11 +391,11 @@
         return null
       }
 
-      let potentiallyApplicable = this.potentiallyApplicableRulesets(hostname)
-      for (let ruleset of potentiallyApplicable) {
+      const potentiallyApplicable = this.potentiallyApplicableRulesets(hostname)
+      for (const ruleset of potentiallyApplicable) {
         if (ruleset.cookierules !== null && ruleset.active) {
           for (let i = 0; i < ruleset.cookierules.length; i++) {
-            let cr = ruleset.cookierules[i]
+            const cr = ruleset.cookierules[i]
             if (cr.hostC.test(cookie.domain) && cr.nameC.test(cookie.name)) {
               return ruleset
             }
@@ -427,7 +427,7 @@
         window.log(window.INFO, 'cookies for ' + domain + 'blacklisted')
         return false
       }
-      let cachedItem = this.cookieHostCache.get(domain)
+      const cachedItem = this.cookieHostCache.get(domain)
       if (cachedItem !== undefined) {
         window.log(window.DBUG, 'Cookie host cache hit for ' + domain)
         return cachedItem
@@ -437,8 +437,8 @@
       // If we passed that test, make up a random URL on the domain, and see if
       // we would HTTPSify that.
 
-      let noncePath = '/' + Math.random().toString()
-      let testUri = 'http://' + domain + noncePath + noncePath
+      const noncePath = '/' + Math.random().toString()
+      const testUri = 'http://' + domain + noncePath + noncePath
 
       // Cap the size of the cookie cache (limit chosen somewhat arbitrarily)
       if (this.cookieHostCache.size > 250) {
@@ -447,8 +447,8 @@
       }
 
       window.log(window.INFO, 'Testing securecookie applicability with ' + testUri)
-      let potentiallyApplicable = this.potentiallyApplicableRulesets(domain)
-      for (let ruleset of potentiallyApplicable) {
+      const potentiallyApplicable = this.potentiallyApplicableRulesets(domain)
+      for (const ruleset of potentiallyApplicable) {
         if (!ruleset.active) {
           continue
         }
@@ -471,8 +471,8 @@
      */
     rewriteURI: function (urispec, host) {
       let newuri = null
-      let potentiallyApplicable = this.potentiallyApplicableRulesets(host)
-      for (let ruleset of potentiallyApplicable) {
+      const potentiallyApplicable = this.potentiallyApplicableRulesets(host)
+      for (const ruleset of potentiallyApplicable) {
         if (ruleset.active && (newuri = ruleset.apply(urispec))) {
           return newuri
         }
