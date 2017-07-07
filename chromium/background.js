@@ -292,11 +292,11 @@ function onBeforeRequest (details) {
 
   if (newuristr && usingCredentialsInUrl) {
     // re-insert userpass info which was stripped temporarily
-    var uri_with_credentials = document.createElement('a')
-    uri_with_credentials.href = newuristr
-    uri_with_credentials.username = tmpUser
-    uri_with_credentials.password = tmpPass
-    newuristr = uri_with_credentials.href
+    var uriWithCredentials = document.createElement('a')
+    uriWithCredentials.href = newuristr
+    uriWithCredentials.username = tmpUser
+    uriWithCredentials.password = tmpPass
+    newuristr = uriWithCredentials.href
   }
 
   // In Switch Planner Mode, record any non-rewriteable
