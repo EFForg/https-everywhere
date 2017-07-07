@@ -21,8 +21,8 @@ function detectIncognitoCreation (window) {
  */
 function destroyCaches () {
   log(DBUG, 'Destroying caches.')
-  all_rules.cookieHostCache.clear()
-  all_rules.ruleCache.clear()
+  allRules.cookieHostCache.clear()
+  allRules.ruleCache.clear()
 }
 
 /**
