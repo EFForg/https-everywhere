@@ -222,7 +222,6 @@ RuleSets.prototype = {
       newRuleSet.active = (this.ruleActiveStates[newRuleSet.name] == 'true')
     }
     log(INFO, 'done adding rule')
-    return true
   },
 
   /**
@@ -242,7 +241,6 @@ RuleSets.prototype = {
       delete this.targets[ruleset.name]
     }
     log(INFO, 'done removing rule')
-    return true
   },
 
   /**

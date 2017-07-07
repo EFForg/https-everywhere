@@ -134,21 +134,17 @@ var updateState = function () {
  * @param params: params defining the rule
  * @param cb: Callback to call after success/fail
  * */
-var addNewRule = function (params, cb) {
-  if (allRules.addUserRule(params)) {
-    // If we successfully added the user rule, save it in local 
-    // storage so it's automatically applied when the extension is 
-    // reloaded.
-    var oldUserRules = getStoredUserRules()
-    // TODO: there's a race condition here, if this code is ever executed from multiple 
-    // client windows in different event loops.
-    oldUserRules.push(params)
-    // TODO: can we exceed the max size for storage?
-    localStorage.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules))
-    cb(true)
-  } else {
-    cb(false)
-  }
+var addNewRule = function (params) {
+  allRules.addUserRule(params)
+  // If we successfully added the user rule, save it in local 
+  // storage so it's automatically applied when the extension is 
+  // reloaded.
+  var oldUserRules = getStoredUserRules()
+  // TODO: there's a race condition here, if this code is ever executed from multiple 
+  // client windows in different event loops.
+  oldUserRules.push(params)
+  // TODO: can we exceed the max size for storage?
+  localStorage.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules))
 }
 
 /**
@@ -156,19 +152,18 @@ var addNewRule = function (params, cb) {
  * @param ruleset: the ruleset to remove
  * */
 var removeRule = function (ruleset) {
-  if (allRules.removeUserRule(ruleset)) {
-    // If we successfully removed the user rule, remove it in local storage too
-    var oldUserRules = getStoredUserRules()
-    for (let x = 0; x < oldUserRules.length; x++) {
-      if (oldUserRules[x].host == ruleset.name &&
-          oldUserRules[x].redirectTo == ruleset.rules[0].to &&
-          String(RegExp(oldUserRules[x].urlMatcher)) == String(ruleset.rules[0].from_c)) {
-        oldUserRules.splice(x, 1)
-        break
-      }
+  allRules.removeUserRule(ruleset)
+  // If we successfully removed the user rule, remove it in local storage too
+  var oldUserRules = getStoredUserRules()
+  for (let x = 0; x < oldUserRules.length; x++) {
+    if (oldUserRules[x].host == ruleset.name &&
+        oldUserRules[x].redirectTo == ruleset.rules[0].to &&
+        String(RegExp(oldUserRules[x].urlMatcher)) == String(ruleset.rules[0].from_c)) {
+      oldUserRules.splice(x, 1)
+      break
     }
-    localStorage.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules))
   }
+  localStorage.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules))
 }
 
 /**

@@ -220,9 +220,8 @@ function addManualRule () {
         redirectTo: e('new-rule-redirect').value,
         urlMatcher: e('new-rule-regex').value
       }
-      backgroundPage.addNewRule(params, function () {
-        location.reload()
-      })
+      backgroundPage.addNewRule(params)
+      location.reload()
     })
 
     e('cancel-new-rule').addEventListener('click', function () {
