@@ -21,13 +21,13 @@ function loadExtensionFile (url, returnType) {
 }
 
 // Rules are loaded here
-var all_rules = new RuleSets(localStorage)
+var allRules = new RuleSets(localStorage)
 
 // Allow users to enable `platform="mixedcontent"` rulesets
 var enableMixedRulesets = false
 storage.get({enableMixedRulesets: false}, function (item) {
   enableMixedRulesets = item.enableMixedRulesets
-  all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'))
+  allRules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'))
 })
 
 var USER_RULE_KEY = 'userRules'
@@ -90,7 +90,7 @@ var loadStoredUserRules = function () {
   var rules = getStoredUserRules()
   var i
   for (i = 0; i < rules.length; ++i) {
-    all_rules.addUserRule(rules[i])
+    allRules.addUserRule(rules[i])
   }
   log('INFO', 'loaded ' + i + ' stored user rules')
 }
@@ -135,7 +135,7 @@ var updateState = function () {
  * @param cb: Callback to call after success/fail
  * */
 var addNewRule = function (params, cb) {
-  if (all_rules.addUserRule(params)) {
+  if (allRules.addUserRule(params)) {
     // If we successfully added the user rule, save it in local 
     // storage so it's automatically applied when the extension is 
     // reloaded.
@@ -156,7 +156,7 @@ var addNewRule = function (params, cb) {
  * @param ruleset: the ruleset to remove
  * */
 var removeRule = function (ruleset) {
-  if (all_rules.removeUserRule(ruleset)) {
+  if (allRules.removeUserRule(ruleset)) {
     // If we successfully removed the user rule, remove it in local storage too
     var oldUserRules = getStoredUserRules()
     for (let x = 0; x < oldUserRules.length; x++) {
@@ -270,7 +270,7 @@ function onBeforeRequest (details) {
     activeRulesets.removeTab(details.tabId)
   }
 
-  var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname)
+  var potentiallyApplicable = allRules.potentiallyApplicableRulesets(uri.hostname)
 
   if (redirectCounter[details.requestId] >= 8) {
     log(NOTE, 'Redirect counter hit for ' + canonical_url)
@@ -517,7 +517,7 @@ function switchPlannerDetailsHtmlSection (tab_id, rewritten) {
  * */
 function onCookieChanged (changeInfo) {
   if (!changeInfo.removed && !changeInfo.cookie.secure && isExtensionEnabled) {
-    if (all_rules.shouldSecureCookie(changeInfo.cookie)) {
+    if (allRules.shouldSecureCookie(changeInfo.cookie)) {
       var cookie = {name: changeInfo.cookie.name,
         value: changeInfo.cookie.value,
         path: changeInfo.cookie.path,
