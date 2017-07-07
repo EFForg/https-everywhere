@@ -205,8 +205,8 @@
   // FIXME: change this name
   window.activeRulesets = new AppliedRulesets()
 
-  const urlBlacklist = new Set()
-  const domainBlacklist = new Set()
+  window.urlBlacklist = new Set()
+  window.domainBlacklist = new Set()
 
   // redirect counter workaround
   // TODO: Remove this code if they ever give us a real counter
