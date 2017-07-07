@@ -33,7 +33,7 @@ function toggleRuleLine (checkbox, ruleset) {
  * @param ruleset the ruleset to build the line for
  * @returns {*}
  */
-function appendRuleLineToListDiv (ruleset, list_div) {
+function appendRuleLineToListDiv (ruleset, listDiv) {
   // parent block for line
   var line = document.createElement('div')
   line.className = 'rule checkbox'
@@ -84,7 +84,7 @@ function appendRuleLineToListDiv (ruleset, list_div) {
 
     remove.addEventListener('click', function () {
       backgroundPage.removeRule(ruleset)
-      list_div.removeChild(line)
+      listDiv.removeChild(line)
     })
   }
 
@@ -92,7 +92,7 @@ function appendRuleLineToListDiv (ruleset, list_div) {
 
   line.appendChild(label)
 
-  list_div.appendChild(line)
+  listDiv.appendChild(line)
 }
 
 // Change the UI to reflect extension enabled/disabled
@@ -158,9 +158,9 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('onoffswitch').addEventListener('click', toggleEnabledDisabled)
 
   // Print the extension's current version.
-  var the_manifest = chrome.runtime.getManifest()
-  var version_info = document.getElementById('current-version')
-  version_info.innerText = the_manifest.version
+  var manifest = chrome.runtime.getManifest()
+  var versionInfo = document.getElementById('current-version')
+  versionInfo.innerText = manifest.version
 
   // Set up toggle checkbox for HTTP nowhere mode
   getOption_('httpNowhere', false, function (item) {
