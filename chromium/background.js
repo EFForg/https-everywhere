@@ -240,10 +240,10 @@ function onBeforeRequest (details) {
   )
 
   // Normalise hosts such as "www.example.com."
-  var canonical_host = uri.hostname
-  if (canonical_host.charAt(canonical_host.length - 1) == '.') {
-    while (canonical_host.charAt(canonical_host.length - 1) == '.') { canonical_host = canonical_host.slice(0, -1) }
-    uri.hostname = canonical_host
+  var canonicalHost = uri.hostname
+  if (canonicalHost.charAt(canonicalHost.length - 1) == '.') {
+    while (canonicalHost.charAt(canonicalHost.length - 1) == '.') { canonicalHost = canonicalHost.slice(0, -1) }
+    uri.hostname = canonicalHost
   }
 
   // If there is a username / password, put them aside during the ruleset
@@ -304,7 +304,7 @@ function onBeforeRequest (details) {
   if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== 'https:') {
     writeToSwitchPlanner(details.type,
       details.tabId,
-      canonical_host,
+      canonicalHost,
       details.url,
       newuristr)
   }
