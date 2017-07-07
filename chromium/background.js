@@ -11,7 +11,7 @@ function loadExtensionFile (url, returnType) {
   xhr.open('GET', chrome.extension.getURL(url), false)
   xhr.send(null)
   // Get file contents
-  if (xhr.readyState != 4) {
+  if (xhr.readyState !== 4) {
     return
   }
   if (returnType === 'xml') {
@@ -155,9 +155,9 @@ var removeRule = function (ruleset) {
   // If we successfully removed the user rule, remove it in local storage too
   var oldUserRules = getStoredUserRules()
   for (let i = 0; i < oldUserRules.length; i++) {
-    if (oldUserRules[i].host == ruleset.name &&
-        oldUserRules[i].redirectTo == ruleset.rules[0].to &&
-        String(RegExp(oldUserRules[i].urlMatcher)) == String(ruleset.rules[0].fromC)) {
+    if (oldUserRules[i].host === ruleset.name &&
+        oldUserRules[i].redirectTo === ruleset.rules[0].to &&
+        String(RegExp(oldUserRules[i].urlMatcher)) === String(ruleset.rules[0].fromC)) {
       oldUserRules.splice(i, 1)
       break
     }
@@ -234,11 +234,14 @@ function onBeforeRequest (details) {
   )
 
   // Normalise hosts such as "www.example.com."
-  var canonicalHost = uri.hostname
-  if (canonicalHost.charAt(canonicalHost.length - 1) == '.') {
-    while (canonicalHost.charAt(canonicalHost.length - 1) == '.') { canonicalHost = canonicalHost.slice(0, -1) }
-    uri.hostname = canonicalHost
+
+  let canonicalHost = uri.hostname
+
+  while (canonicalHost.charAt(canonicalHost.length - 1) === '.') {
+    canonicalHost = canonicalHost.slice(0, -1)
   }
+
+  uri.hostname = canonicalHost
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
@@ -252,7 +255,7 @@ function onBeforeRequest (details) {
   }
 
   var canonicalUrl = uri.href
-  if (details.url != canonicalUrl && !usingCredentialsInUrl) {
+  if (details.url !== canonicalUrl && !usingCredentialsInUrl) {
     log(INFO, 'Original url ' + details.url +
         ' changed before processing to ' + canonicalUrl)
   }
@@ -260,7 +263,7 @@ function onBeforeRequest (details) {
     return {cancel: shouldCancel}
   }
 
-  if (details.type == 'main_frame') {
+  if (details.type === 'main_frame') {
     activeRulesets.removeTab(details.tabId)
   }
 
@@ -415,7 +418,7 @@ function sortSwitchPlanner (tabId, rewritten) {
 * */
 function switchPlannerSmallHtmlSection (tabId, rewritten) {
   var assetHostList = sortSwitchPlanner(tabId, rewritten)
-  if (assetHostList.length == 0) {
+  if (assetHostList.length === 0) {
     return '<b>none</b>'
   }
 
@@ -526,7 +529,7 @@ function onCookieChanged (changeInfo) {
       }
 
       // The cookie API is magical -- we must recreate the URL from the domain and path.
-      if (changeInfo.cookie.domain[0] == '.') {
+      if (changeInfo.cookie.domain[0] === '.') {
         cookie.url = 'https://www' + changeInfo.cookie.domain + cookie.path
       } else {
         cookie.url = 'https://' + changeInfo.cookie.domain + cookie.path
@@ -588,7 +591,7 @@ function enableSwitchPlannerFor (tabId) {
 
 // Listen for connection from the DevTools panel so we can set up communication.
 chrome.runtime.onConnect.addListener(function (port) {
-  if (port.name == 'devtools-page') {
+  if (port.name === 'devtools-page') {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       var tabId = message.tabId
 
