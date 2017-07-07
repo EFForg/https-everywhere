@@ -45,7 +45,7 @@ if ! $ONLY_RULESETS_CHANGED; then
 
   if [ "$TEST" == "eslint" ]; then
     echo >&2 "Running ESLint."
-    docker run --rm -ti -v $(pwd):/opt node bash -c "cd /opt/utils/eslint && npm install && ./node_modules/.bin/eslint /opt/chromium"
+    docker run --rm -ti -v $(pwd):/opt node bash -c "cd /opt/utils/eslint && npm install && ./node_modules/.bin/eslint ../../chromium"
   fi
 
   if [ "$TEST" == "firefox" ]; then
