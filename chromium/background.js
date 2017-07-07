@@ -30,7 +30,7 @@ storage.get({enableMixedRulesets: false}, function(item) {
   enableMixedRulesets = item.enableMixedRulesets;
   all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
 });
-)
+
 var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
 // devtools-panel.js).
