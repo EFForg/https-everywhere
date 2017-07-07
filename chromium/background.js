@@ -36,7 +36,7 @@ var USER_RULE_KEY = 'userRules'
 var switchPlannerEnabledFor = {}
 // Detailed information recorded when the HTTPS Switch Planner is active.
 // Structure is:
-//   switchPlannerInfo[tabId]["rw"/"nrw"][resource_host][active_content][url];
+//   switchPlannerInfo[tabId]["rw"/"nrw"][resourceHost][activeContent][url];
 // rw / nrw stand for "rewritten" versus "not rewritten"
 var switchPlannerInfo = {}
 
@@ -248,21 +248,21 @@ function onBeforeRequest (details) {
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
-  var using_credentials_in_url = false
+  var usingCredentialsInUrl = false
   if (uri.password || uri.username) {
-    using_credentials_in_url = true
-    var tmp_user = uri.username
-    var tmp_pass = uri.password
+    usingCredentialsInUrl = true
+    var tmpUser = uri.username
+    var tmpPass = uri.password
     uri.username = null
     uri.password = null
   }
 
-  var canonical_url = uri.href
-  if (details.url != canonical_url && !using_credentials_in_url) {
+  var canonicalUrl = uri.href
+  if (details.url != canonicalUrl && !usingCredentialsInUrl) {
     log(INFO, 'Original url ' + details.url +
-        ' changed before processing to ' + canonical_url)
+        ' changed before processing to ' + canonicalUrl)
   }
-  if (urlBlacklist.has(canonical_url)) {
+  if (urlBlacklist.has(canonicalUrl)) {
     return {cancel: shouldCancel}
   }
 
@@ -273,8 +273,8 @@ function onBeforeRequest (details) {
   var potentiallyApplicable = allRules.potentiallyApplicableRulesets(uri.hostname)
 
   if (redirectCounter[details.requestId] >= 8) {
-    log(NOTE, 'Redirect counter hit for ' + canonical_url)
-    urlBlacklist.add(canonical_url)
+    log(NOTE, 'Redirect counter hit for ' + canonicalUrl)
+    urlBlacklist.add(canonicalUrl)
     var hostname = uri.hostname
     domainBlacklist.add(hostname)
     log(WARN, 'Domain blacklisted ' + hostname)
@@ -286,16 +286,16 @@ function onBeforeRequest (details) {
   for (let ruleset of potentiallyApplicable) {
     activeRulesets.addRulesetToTab(details.tabId, ruleset)
     if (ruleset.active && !newuristr) {
-      newuristr = ruleset.apply(canonical_url)
+      newuristr = ruleset.apply(canonicalUrl)
     }
   }
 
-  if (newuristr && using_credentials_in_url) {
+  if (newuristr && usingCredentialsInUrl) {
     // re-insert userpass info which was stripped temporarily
     var uri_with_credentials = document.createElement('a')
     uri_with_credentials.href = newuristr
-    uri_with_credentials.username = tmp_user
-    uri_with_credentials.password = tmp_pass
+    uri_with_credentials.username = tmpUser
+    uri_with_credentials.password = tmpPass
     newuristr = uri_with_credentials.href
   }
 
@@ -314,7 +314,7 @@ function onBeforeRequest (details) {
     // failing.
     if (shouldCancel) {
       if (!newuristr) {
-        return {redirectUrl: canonical_url.replace(/^http:/, 'https:')}
+        return {redirectUrl: canonicalUrl.replace(/^http:/, 'https:')}
       } else {
         return {redirectUrl: newuristr.replace(/^http:/, 'https:')}
       }
@@ -350,34 +350,34 @@ var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1}
  * (Reminder: Switch planner is the pro-tool enabled by switching into debug-mode)
  *
  * @param type: type of the resource (see activeTypes and passiveTypes arrays)
- * @param tab_id: The id of the tab
- * @param resource_host: The host of the original url
- * @param resource_url: the original url
- * @param rewritten_url: The url rewritten to
+ * @param tabId: The id of the tab
+ * @param resourceHost: The host of the original url
+ * @param resourceUrl: the original url
+ * @param rewrittenUrl: The url rewritten to
  * */
-function writeToSwitchPlanner (type, tab_id, resource_host, resource_url, rewritten_url) {
+function writeToSwitchPlanner (type, tabId, resourceHost, resourceUrl, rewrittenUrl) {
   var rw = 'rw'
-  if (rewritten_url == null) { rw = 'nrw' }
+  if (rewrittenUrl == null) { rw = 'nrw' }
 
-  var active_content = 0
+  var activeContent = 0
   if (activeTypes[type]) {
-    active_content = 1
+    activeContent = 1
   } else if (passiveTypes[type]) {
-    active_content = 0
+    activeContent = 0
   } else {
     log(WARN, 'Unknown type from onBeforeRequest details: `' + type + "', assuming active")
-    active_content = 1
+    activeContent = 1
   }
 
-  if (!switchPlannerInfo[tab_id]) {
-    switchPlannerInfo[tab_id] = {}
-    switchPlannerInfo[tab_id]['rw'] = {}
-    switchPlannerInfo[tab_id]['nrw'] = {}
+  if (!switchPlannerInfo[tabId]) {
+    switchPlannerInfo[tabId] = {}
+    switchPlannerInfo[tabId]['rw'] = {}
+    switchPlannerInfo[tabId]['nrw'] = {}
   }
-  if (!switchPlannerInfo[tab_id][rw][resource_host]) { switchPlannerInfo[tab_id][rw][resource_host] = {} }
-  if (!switchPlannerInfo[tab_id][rw][resource_host][active_content]) { switchPlannerInfo[tab_id][rw][resource_host][active_content] = {} }
+  if (!switchPlannerInfo[tabId][rw][resourceHost]) { switchPlannerInfo[tabId][rw][resourceHost] = {} }
+  if (!switchPlannerInfo[tabId][rw][resourceHost][activeContent]) { switchPlannerInfo[tabId][rw][resourceHost][activeContent] = {} }
 
-  switchPlannerInfo[tab_id][rw][resource_host][active_content][resource_url] = 1
+  switchPlannerInfo[tabId][rw][resourceHost][activeContent][resourceUrl] = 1
 }
 
 /**
@@ -398,38 +398,38 @@ function objSize (obj) {
  * Make an array of asset hosts by score so we can sort them,
  * presenting the most important ones first.
  * */
-function sortSwitchPlanner (tab_id, rewritten) {
-  var asset_host_list = []
-  if (typeof switchPlannerInfo[tab_id] === 'undefined' ||
-      typeof switchPlannerInfo[tab_id][rewritten] === 'undefined') {
+function sortSwitchPlanner (tabId, rewritten) {
+  var assetHostList = []
+  if (typeof switchPlannerInfo[tabId] === 'undefined' ||
+      typeof switchPlannerInfo[tabId][rewritten] === 'undefined') {
     return []
   }
-  var tabInfo = switchPlannerInfo[tab_id][rewritten]
-  for (var asset_host in tabInfo) {
-    var ah = tabInfo[asset_host]
+  var tabInfo = switchPlannerInfo[tabId][rewritten]
+  for (var assetHost in tabInfo) {
+    var ah = tabInfo[assetHost]
     var activeCount = objSize(ah[1])
     var passiveCount = objSize(ah[0])
     var score = activeCount * 100 + passiveCount
-    asset_host_list.push([score, activeCount, passiveCount, asset_host])
+    assetHostList.push([score, activeCount, passiveCount, assetHost])
   }
-  asset_host_list.sort(function (a, b) { return a[0] - b[0] })
-  return asset_host_list
+  assetHostList.sort(function (a, b) { return a[0] - b[0] })
+  return assetHostList
 }
 
 /**
 * Format the switch planner output for presentation to a user.
 * */
-function switchPlannerSmallHtmlSection (tab_id, rewritten) {
-  var asset_host_list = sortSwitchPlanner(tab_id, rewritten)
-  if (asset_host_list.length == 0) {
+function switchPlannerSmallHtmlSection (tabId, rewritten) {
+  var assetHostList = sortSwitchPlanner(tabId, rewritten)
+  if (assetHostList.length == 0) {
     return '<b>none</b>'
   }
 
   var output = ''
-  for (var i = asset_host_list.length - 1; i >= 0; i--) {
-    var host = asset_host_list[i][3]
-    var activeCount = asset_host_list[i][1]
-    var passiveCount = asset_host_list[i][2]
+  for (var i = assetHostList.length - 1; i >= 0; i--) {
+    var host = assetHostList[i][3]
+    var activeCount = assetHostList[i][1]
+    var passiveCount = assetHostList[i][2]
 
     output += '<b>' + host + '</b>: '
     if (activeCount > 0) {
@@ -447,20 +447,20 @@ function switchPlannerSmallHtmlSection (tab_id, rewritten) {
 /**
  * Create switch planner sections
  * */
-function switchPlannerRenderSections (tab_id, f) {
+function switchPlannerRenderSections (tabId, f) {
   return 'Unrewritten HTTP resources loaded from this tab (enable HTTPS on ' +
          'these domains and add them to HTTPS Everywhere):<br/>' +
-         f(tab_id, 'nrw') +
+         f(tabId, 'nrw') +
          '<br/>Resources rewritten successfully from this tab (update these ' +
          'in your source code):<br/>' +
-         f(tab_id, 'rw')
+         f(tabId, 'rw')
 }
 
 /**
  * Generate the small switch planner html content
  * */
-function switchPlannerSmallHtml (tab_id) {
-  return switchPlannerRenderSections(tab_id, switchPlannerSmallHtmlSection)
+function switchPlannerSmallHtml (tabId) {
+  return switchPlannerRenderSections(tabId, switchPlannerSmallHtmlSection)
 }
 
 /**
@@ -481,30 +481,30 @@ function linksFromKeys (map) {
 /**
  * Generate the detailed html fot the switch planner
  * */
-function switchPlannerDetailsHtml (tab_id) {
-  return switchPlannerRenderSections(tab_id, switchPlannerDetailsHtmlSection)
+function switchPlannerDetailsHtml (tabId) {
+  return switchPlannerRenderSections(tabId, switchPlannerDetailsHtmlSection)
 }
 
 /**
  * Generate the detailed html fot the switch planner, by section
  * */
-function switchPlannerDetailsHtmlSection (tab_id, rewritten) {
-  var asset_host_list = sortSwitchPlanner(tab_id, rewritten)
+function switchPlannerDetailsHtmlSection (tabId, rewritten) {
+  var assetHostList = sortSwitchPlanner(tabId, rewritten)
   var output = ''
 
-  for (var i = asset_host_list.length - 1; i >= 0; i--) {
-    var host = asset_host_list[i][3]
-    var activeCount = asset_host_list[i][1]
-    var passiveCount = asset_host_list[i][2]
+  for (var i = assetHostList.length - 1; i >= 0; i--) {
+    var host = assetHostList[i][3]
+    var activeCount = assetHostList[i][1]
+    var passiveCount = assetHostList[i][2]
 
     output += '<b>' + host + '</b>: '
     if (activeCount > 0) {
       output += activeCount + ' active<br/>'
-      output += linksFromKeys(switchPlannerInfo[tab_id][rewritten][host][1])
+      output += linksFromKeys(switchPlannerInfo[tabId][rewritten][host][1])
     }
     if (passiveCount > 0) {
       output += '<br/>' + passiveCount + ' passive<br/>'
-      output += linksFromKeys(switchPlannerInfo[tab_id][rewritten][host][0])
+      output += linksFromKeys(switchPlannerInfo[tabId][rewritten][host][0])
     }
     output += '<br/>'
   }
