@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function () {
 })
 
 var escapeForRegex = function (value) {
-  return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
+  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
 
 function hide (elem) {
