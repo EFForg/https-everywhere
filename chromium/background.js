@@ -334,7 +334,7 @@ function onBeforeRequest (details) {
 
 // Map of which values for the `type' enum denote active vs passive content.
 // https://developer.chrome.com/extensions/webRequest.html#event-onBeforeRequest
-var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1}
+var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1 }
 
 // We consider sub_frame to be passive even though it can contain JS or flash.
 // This is because code running in the sub_frame cannot access the main frame's
@@ -342,7 +342,7 @@ var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1}
 // same domain but different protocol - i.e. HTTP while the parent is HTTPS -
 // because same-origin policy includes the protocol. This also mimics Chrome's
 // UI treatment of insecure subframes.
-var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1}
+var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1 }
 
 /**
  * Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
