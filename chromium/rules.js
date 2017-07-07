@@ -49,16 +49,16 @@ function Exclusion (pattern) {
 function CookieRule (host, cookieName) {
   if (host === '.*' || host === '.+' || host === '.') {
     // Some cookie rules trivially match any host.
-    this.host_c = trivialCookieHostC
+    this.hostC = trivialCookieHostC
   } else {
-    this.host_c = new RegExp(host)
+    this.hostC = new RegExp(host)
   }
 
   if (cookieName === '.*' || cookieName === '.+' || cookieName === '.') {
     // About 50% of cookie rules trivially match any name.
-    this.name_c = trivialCookieNameC
+    this.nameC = trivialCookieNameC
   } else {
-    this.name_c = new RegExp(cookieName)
+    this.nameC = new RegExp(cookieName)
   }
 }
 
@@ -403,7 +403,7 @@ RuleSets.prototype = {
       if (ruleset.cookierules !== null && ruleset.active) {
         for (let i = 0; i < ruleset.cookierules.length; i++) {
           var cr = ruleset.cookierules[i]
-          if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
+          if (cr.hostC.test(cookie.domain) && cr.nameC.test(cookie.name)) {
             return ruleset
           }
         }

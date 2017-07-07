@@ -169,7 +169,7 @@ var removeRule = function (ruleset) {
  * Adds a listener for removed tabs
  * */
 function AppliedRulesets () {
-  this.active_tab_rules = {}
+  this.activeTabRules = {}
 
   var that = this
   chrome.tabs.onRemoved.addListener(function (tabId, info) {
@@ -179,23 +179,23 @@ function AppliedRulesets () {
 
 AppliedRulesets.prototype = {
   addRulesetToTab: function (tabId, ruleset) {
-    if (tabId in this.active_tab_rules) {
-      this.active_tab_rules[tabId][ruleset.name] = ruleset
+    if (tabId in this.activeTabRules) {
+      this.activeTabRules[tabId][ruleset.name] = ruleset
     } else {
-      this.active_tab_rules[tabId] = {}
-      this.active_tab_rules[tabId][ruleset.name] = ruleset
+      this.activeTabRules[tabId] = {}
+      this.activeTabRules[tabId][ruleset.name] = ruleset
     }
   },
 
   getRulesets: function (tabId) {
-    if (tabId in this.active_tab_rules) {
-      return this.active_tab_rules[tabId]
+    if (tabId in this.activeTabRules) {
+      return this.activeTabRules[tabId]
     }
     return null
   },
 
   removeTab: function (tabId) {
-    delete this.active_tab_rules[tabId]
+    delete this.activeTabRules[tabId]
   }
 }
 

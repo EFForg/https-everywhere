@@ -132,7 +132,7 @@ function gotTab (tabArray) {
 
   for (var r in rulesets) {
     var listDiv = stableRules
-    if (!rulesets[r].default_state) {
+    if (!rulesets[r].defaultState) {
       listDiv = unstableRules
     }
     appendRuleLineToListDiv(rulesets[r], listDiv)
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function () {
   versionInfo.innerText = manifest.version
 
   // Set up toggle checkbox for HTTP nowhere mode
-  getOption_('httpNowhere', false, function (item) {
+  getOption('httpNowhere', false, function (item) {
     var httpNowhereCheckbox = document.getElementById('http-nowhere-checkbox')
     httpNowhereCheckbox.addEventListener('click', toggleHttpNowhere, false)
     var httpNowhereEnabled = item.httpNowhere
@@ -240,18 +240,18 @@ function addManualRule () {
 }
 
 function toggleHttpNowhere () {
-  getOption_('httpNowhere', false, function (item) {
-    setOption_('httpNowhere', !item.httpNowhere)
+  getOption('httpNowhere', false, function (item) {
+    setOption('httpNowhere', !item.httpNowhere)
   })
 }
 
-function getOption_ (opt, defaultOpt, callback) {
+function getOption (opt, defaultOpt, callback) {
   var details = {}
   details[opt] = defaultOpt
   return storage.get(details, callback)
 }
 
-function setOption_ (opt, value) {
+function setOption (opt, value) {
   var details = {}
   details[opt] = value
   return storage.set(details)
