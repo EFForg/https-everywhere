@@ -88,8 +88,7 @@ var wr = chrome.webRequest
  */
 var loadStoredUserRules = function () {
   var rules = getStoredUserRules()
-  var i
-  for (i = 0; i < rules.length; ++i) {
+  for (let i = 0; i < rules.length; i++) {
     allRules.addUserRule(rules[i])
   }
   log('INFO', 'loaded ' + i + ' stored user rules')
