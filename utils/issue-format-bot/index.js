@@ -4,16 +4,16 @@ const _ = require('lodash'),
       parse = require('./lib/parse');
 
 module.exports = robot => {
-	console.log('HTTPS Everywhere ruleset parser started.');
+	robot.log('HTTPS Everywhere ruleset parser started.');
 
 	// TODO parse issue edits too
 	robot.on('issues.opened', context => {
-		console.log('Issue #' + context.payload.issue.number + ' created; responding.');
+		robot.log('Issue #' + context.payload.issue.number + ' created; responding.');
 
 		// Check if the "issue" is really a PR
 		// I can't really tell if GitHub will ever send us something like this, honestly... but bettter safe than sorry.
 		if (_.has(context.payload.issue, 'pull_request')) {
-			console.log('Issue is a Pull Request; aborting.');
+			robot.log('Issue is a Pull Request; aborting.');
 			return;
 		}
 
