@@ -121,7 +121,6 @@ function toggleEnabledDisabled() {
   updateEnabledDisabledUI();
   // The extension state changed, so reload this tab.
   chrome.tabs.reload();
-  window.close();
 }
 
 /**
