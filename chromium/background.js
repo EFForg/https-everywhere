@@ -1,5 +1,5 @@
-'use strict'
-;(function() {
+'use strict';
+(function() {
   /**
    * Fetch and parse XML to be loaded as RuleSets.
    *

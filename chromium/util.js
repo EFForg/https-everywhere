@@ -1,5 +1,5 @@
-'use strict'
-;(function() {
+'use strict';
+(function() {
   window.VERB = 1;
   window.DBUG = 2;
   window.INFO = 3;

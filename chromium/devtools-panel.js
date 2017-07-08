@@ -1,5 +1,5 @@
-'use strict'
-;(function() {
+'use strict';
+(function() {
   function e(id) {
     return document.getElementById(id);
   }
