@@ -131,7 +131,7 @@
     const activeTab = tabArray[0];
     const rulesets = backgroundPage.activeRulesets.getRulesets(activeTab.id);
 
-    for (const r of rulesets.keys) {
+    for (const r in rulesets) {
       let listDiv = stableRules;
       if (!rulesets[r].defaultState) {
         listDiv = unstableRules;

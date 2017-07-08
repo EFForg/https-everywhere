@@ -55,7 +55,7 @@
   });
   chrome.storage.onChanged.addListener(function(changes, areaName) {
     if (areaName === 'sync' || areaName === 'local') {
-      for (const key of changes.keys) {
+      for (const key in changes) {
         if (key === 'httpNowhere') {
           httpNowhereOn = changes[key].newValue;
           window.updateState();
@@ -396,7 +396,7 @@
   function objSize(obj) {
     if (typeof obj === 'undefined') return 0;
     let size = 0;
-    for (const key of obj.keys) {
+    for (const key in obj) {
       if (obj.hasOwnProperty(key)) size++;
     }
     return size;
@@ -413,7 +413,7 @@
       return [];
     }
     const tabInfo = window.switchPlannerInfo[tabId][rewritten];
-    for (const assetHost of tabInfo.keys) {
+    for (const assetHost in tabInfo) {
       const ah = tabInfo[assetHost];
       const activeCount = objSize(ah[1]);
       const passiveCount = objSize(ah[0]);
@@ -482,7 +482,7 @@
   function linksFromKeys(map) {
     if (typeof map === 'undefined') return '';
     let output = '';
-    for (const key of map.keys) {
+    for (const key in map) {
       if (map.hasOwnProperty(key)) {
         output += '<a href=\'' + key + '\'>' + key + '</a><br/>';
       }
