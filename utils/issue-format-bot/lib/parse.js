@@ -7,6 +7,8 @@ const strip = require('strip-markdown'),
       processor = remark().use(strip),
       _ = require('lodash');
 
+const validTypes = ['ruleset issue', 'new ruleset', 'code issue', 'feature request'];
+
 module.exports = function(body) {
 	const plaintext = String(processor.processSync(body));
 
@@ -17,7 +19,7 @@ module.exports = function(body) {
 	// Filter result looks like [ [ 'Type', 'ruleset issue' ] ]
 	const type = lines.filter(line => line[0] === 'type')[0][1];
 
-	if (type !== 'ruleset issue') return false;
+	if (!validTypes.includes(type)) return false;
 
 	let normalized = _.fromPairs(lines);
 

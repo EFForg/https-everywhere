@@ -94,7 +94,7 @@ vows.describe('issue parser module').addBatch({
 				assert.equal(_.size(obj), 2);
 			}
 		},
-		'and we pass it a body that isn\'t a ruleset issue': {
+		'and we pass it a body that isn\'t a valid issue type': {
 			topic: function(parse) {
 				return parse('Type: something else\nDomain: example.com');
 			},
