@@ -77,6 +77,23 @@ vows.describe('issue parser module').addBatch({
 				assert.equal(_.size(obj), 2);
 			}
 		},
+		'and we pass it a body with some Markdown comments': {
+			topic: function(parse) {
+				// TODO this should test for comments on the same line too, but see wooorm/strip-markdown#14
+				return parse('<!-- comment -->\nType: ruleset issue\n<!-- comment after newline -->\nDomain: example.com');
+			},
+			'it returns an object': function(err, obj) {
+				assert.ifError(err);
+				assert.isObject(obj);
+			},
+			'the object has the right data': function(err, obj) {
+				assert.includes(obj, 'domain');
+				assert.equal(obj.domain, 'example.com');
+			},
+			'the object doesn\'t have a bunch of extra keys': function(err, obj) {
+				assert.equal(_.size(obj), 2);
+			}
+		},
 		'and we pass it a body that isn\'t a ruleset issue': {
 			topic: function(parse) {
 				return parse('Type: something else\nDomain: example.com');
