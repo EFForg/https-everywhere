@@ -56,12 +56,12 @@
   });
   chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === 'sync' || areaName === 'local') {
-      for (const key of changes.keys) {
+      changes.keys.forEach((key) => {
         if (key === 'httpNowhere') {
           httpNowhereOn = changes[key].newValue;
           window.updateState();
         }
-      }
+      });
     }
   });
   chrome.tabs.onActivated.addListener(() => {
@@ -286,12 +286,12 @@
 
     let newuristr = null;
 
-    for (const ruleset of potentiallyApplicable) {
+    potentiallyApplicable.forEach((ruleset) => {
       window.activeRulesets.addRulesetToTab(details.tabId, ruleset);
       if (ruleset.active && !newuristr) {
         newuristr = ruleset.apply(canonicalUrl);
       }
-    }
+    });
 
     if (newuristr && usingCredentialsInUrl) {
       // re-insert userpass info which was stripped temporarily
@@ -389,9 +389,9 @@
   function objSize(obj) {
     if (typeof obj === 'undefined') return 0;
     let size = 0;
-    for (const key of obj.keys) {
+    obj.keys.forEach((key) => {
       if (obj.hasOwnProperty(key)) size += 1;
-    }
+    });
     return size;
   }
 
@@ -406,13 +406,13 @@
       return [];
     }
     const tabInfo = window.switchPlannerInfo[tabId][rewritten];
-    for (const assetHost of tabInfo.keys) {
+    tabInfo.keys.forEach((assetHost) => {
       const ah = tabInfo[assetHost];
       const activeCount = objSize(ah[1]);
       const passiveCount = objSize(ah[0]);
       const score = activeCount * 100 + passiveCount;
       assetHostList.push([score, activeCount, passiveCount, assetHost]);
-    }
+    });
     assetHostList.sort((a, b) => a[0] - b[0]);
     return assetHostList;
   }
@@ -471,11 +471,11 @@
   function linksFromKeys(map) {
     if (typeof map === 'undefined') return '';
     let output = '';
-    for (const key of map.keys) {
+    map.keys.forEach((key) => {
       if (map.hasOwnProperty(key)) {
         output += `<a href='${key}'>${key}</a><br/>`;
       }
-    }
+    });
     return output;
   }
 

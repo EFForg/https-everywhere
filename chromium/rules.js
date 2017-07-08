@@ -364,9 +364,9 @@
       if (resultSet.size === 0) {
         window.log(window.DBUG, '  None');
       } else {
-        for (const target of resultSet.values()) {
+        resultSet.values().forEach((target) => {
           window.log(window.DBUG, `  ${target.name}`);
-        }
+        });
       }
 
       // Insert results into the ruleset cache
@@ -398,7 +398,7 @@
       }
 
       const potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
-      for (const ruleset of potentiallyApplicable) {
+      potentiallyApplicable.forEach((ruleset) => {
         if (ruleset.cookierules !== null && ruleset.active) {
           for (let i = 0; i < ruleset.cookierules.length; i += 1) {
             const cr = ruleset.cookierules[i];
@@ -407,7 +407,7 @@
             }
           }
         }
-      }
+      });
       return null;
     }
 
@@ -454,19 +454,12 @@
 
       window.log(window.INFO, `Testing securecookie applicability with ${testUri}`);
       const potentiallyApplicable = this.potentiallyApplicableRulesets(domain);
-      for (const ruleset of potentiallyApplicable) {
-        if (!ruleset.active) {
-          continue;
-        }
-        if (ruleset.apply(testUri)) {
-          window.log(window.INFO, 'Cookie domain could be secured.');
-          this.cookieHostCache.set(domain, true);
-          return true;
-        }
-      }
-      window.log(window.INFO, 'Cookie domain could NOT be secured.');
-      this.cookieHostCache.set(domain, false);
-      return false;
+      const secure = potentiallyApplicable.some(ruleset => ruleset.active && ruleset.apply(testUri));
+
+      window.log(window.INFO, secure ? 'Cookie domain could be secured.' : 'Cookie domain could NOT be secured.');
+
+      this.cookieHostCache.set(domain, secure);
+      return secure;
     }
 
     /**
@@ -477,12 +470,9 @@
      */
     rewriteURI(urispec, host) {
       const potentiallyApplicable = this.potentiallyApplicableRulesets(host);
-      for (const ruleset of potentiallyApplicable) {
-        if (ruleset.active) {
-          return ruleset.apply(urispec);
-        }
-      }
-      return null;
+      const ruleset = potentiallyApplicable.find(ruleset => ruleset.active);
+
+      return ruleset ? ruleset.apply(urispec) : null;
     }
   }
 
