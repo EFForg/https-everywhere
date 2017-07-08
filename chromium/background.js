@@ -428,7 +428,7 @@
     }
 
     let output = ''
-    for (let i = assetHostList.length - 1; i >= 0; i--) {
+    for (let i = 0; i < assetHostList.length; i++) {
       const host = assetHostList[i][3]
       const activeCount = assetHostList[i][1]
       const passiveCount = assetHostList[i][2]
@@ -494,7 +494,7 @@
     const assetHostList = sortSwitchPlanner(tabId, rewritten)
     let output = ''
 
-    for (let i = assetHostList.length - 1; i >= 0; i--) {
+    for (let i = 0; i < assetHostList.length; i++) {
       const host = assetHostList[i][3]
       const activeCount = assetHostList[i][1]
       const passiveCount = assetHostList[i][2]
