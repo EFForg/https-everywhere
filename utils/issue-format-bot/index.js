@@ -8,16 +8,16 @@ module.exports = robot => {
 
 	// TODO parse issue edits too
 	robot.on('issues.opened', context => {
-		console.log('Issue #' + context.payload.number + ' created; responding.');
+		console.log('Issue #' + context.payload.issue.number + ' created; responding.');
 
 		// Check if the "issue" is really a PR
 		// I can't really tell if GitHub will ever send us something like this, honestly... but bettter safe than sorry.
-		if (_.has(context.payload, 'pull_request')) {
+		if (_.has(context.payload.issue, 'pull_request')) {
 			console.log('Issue is a Pull Request; aborting.');
 			return;
 		}
 
-		const data = parse(context.payload.body);
+		const data = parse(context.payload.issue.body);
 
 		// Check if the data isn't the right type
 		if (data === false) {
