@@ -102,6 +102,15 @@ vows.describe('issue parser module').addBatch({
 				assert.ifError(err);
 				assert.isFalse(obj);
 			}
+		},
+		'and we pass it a null body': {
+			topic: function(parse) {
+				return parse('');
+			},
+			'it returns false': function(err, obj) {
+				assert.ifError(err);
+				assert.isFalse(obj);
+			}
 		}
 	}
 }).export(module);
