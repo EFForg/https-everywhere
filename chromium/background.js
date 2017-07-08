@@ -14,7 +14,7 @@
     xhr.send(null);
     // Get file contents
     if (xhr.readyState !== 4) {
-      return;
+      return null;
     }
     if (returnType === 'xml') {
       return xhr.responseXML;
@@ -221,7 +221,7 @@
   function onBeforeRequest(details) {
     // If HTTPSe has been disabled by the user, return immediately.
     if (!window.isExtensionEnabled) {
-      return;
+      return {};
     }
 
     const uri = document.createElement('a');
