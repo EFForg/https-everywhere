@@ -55,7 +55,7 @@
   })
   chrome.storage.onChanged.addListener(function (changes, areaName) {
     if (areaName === 'sync' || areaName === 'local') {
-      for (const key in changes) {
+      for (const key of changes.keys) {
         if (key === 'httpNowhere') {
           httpNowhereOn = changes[key].newValue
           window.updateState()
@@ -390,7 +390,7 @@
   function objSize (obj) {
     if (typeof obj === 'undefined') return 0
     let size = 0
-    for (const key in obj) {
+    for (const key of obj.keys) {
       if (obj.hasOwnProperty(key)) size++
     }
     return size
@@ -407,7 +407,7 @@
       return []
     }
     const tabInfo = window.switchPlannerInfo[tabId][rewritten]
-    for (const assetHost in tabInfo) {
+    for (const assetHost of tabInfo.keys) {
       const ah = tabInfo[assetHost]
       const activeCount = objSize(ah[1])
       const passiveCount = objSize(ah[0])
@@ -472,7 +472,7 @@
   function linksFromKeys (map) {
     if (typeof map === 'undefined') return ''
     let output = ''
-    for (const key in map) {
+    for (const key of map.keys) {
       if (map.hasOwnProperty(key)) {
         output += "<a href='" + key + "'>" + key + '</a><br/>'
       }
