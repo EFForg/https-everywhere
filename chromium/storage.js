@@ -1,12 +1,12 @@
 'use strict'
-;(function () {
-  const storage = chrome.storage.sync ? chrome.storage.sync : chrome.storage.local
+;(function() {
+  const storage = chrome.storage.sync ? chrome.storage.sync : chrome.storage.local;
 
   if (typeof window !== 'undefined') {
-    window.storage = storage
+    window.storage = storage;
   }
 
   if (typeof exports !== 'undefined') {
-    exports = storage
+    exports = storage;
   }
-})()
+})();
