@@ -31,15 +31,11 @@
    * @param arrayOfWindows: A array of all open Window objects.
    */
   function checkForIncognitoSession (arrayOfWindows) {
-    for (const wnd of arrayOfWindows) {
-      if (wnd.incognito === true) {
-        // An incognito window still exists, so don't destroy caches yet.
-        return
-      }
+    incognitoSessionExists = arrayOfWindows.some(wnd => wnd.incognito)
+    if (!incognitoSessionExists) {
+      // All incognito windows have been closed.
+      destroyCaches()
     }
-    // All incognito windows have been closed.
-    incognitoSessionExists = false
-    destroyCaches()
   }
 
   /**
