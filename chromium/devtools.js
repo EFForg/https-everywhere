@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-;(function () {
+(function () {
   chrome.devtools.panels.create('HTTPS Everywhere',
     'icons/icon-active-38.png',
     'devtools-panel.html',

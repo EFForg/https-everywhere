@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-;(function () {
+(function () {
   const backgroundPage = chrome.extension.getBackgroundPage();
   let stableRules = null;
   let unstableRules = null;

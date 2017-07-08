@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-;(function () {
+(function () {
   // To reduce memory usage for the numerous rules/cookies with trivial rules
   const trivialRuleTo = 'https:';
   const trivialRuleFromC = new RegExp('^http:');

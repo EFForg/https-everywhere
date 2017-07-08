@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-;(function () {
+(function () {
   window.VERB = 1;
   window.DBUG = 2;
   window.INFO = 3;

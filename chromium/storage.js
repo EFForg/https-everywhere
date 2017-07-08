@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-;(function () {
+(function () {
   const storage = chrome.storage.sync ? chrome.storage.sync : chrome.storage.local;
 
   if (typeof window !== 'undefined') {
