@@ -58,7 +58,7 @@
     const favicon = document.createElement('img');
     favicon.className = 'favicon';
     favicon.src = 'chrome://favicon/';
-    for (let i = 0; i < ruleset.rules.length; i++) {
+    for (let i = 0; i < ruleset.rules.length; i += 1) {
       const host = hostReg.exec(ruleset.rules[i].to);
       if (host) {
         favicon.src += host[0];
@@ -176,7 +176,7 @@
 
     // auto-translate all elements with i18n attributes
     const elem = document.querySelectorAll('[i18n]');
-    for (let i = 0; i < elem.length; i++) {
+    for (let i = 0; i < elem.length; i += 1) {
       elem[i].innerHTML = chrome.i18n.getMessage(elem[i].getAttribute('i18n'));
     }
 

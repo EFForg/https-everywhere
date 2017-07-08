@@ -92,7 +92,7 @@
    */
   const loadStoredUserRules = function () {
     const rules = getStoredUserRules();
-    for (let i = 0; i < rules.length; i++) {
+    for (let i = 0; i < rules.length; i += 1) {
       window.allRules.addUserRule(rules[i]);
     }
     window.log('INFO', `loaded ${rules.length} stored user rules`);
@@ -158,7 +158,7 @@
     window.allRules.removeUserRule(ruleset);
     // If we successfully removed the user rule, remove it in local storage too
     const oldUserRules = getStoredUserRules();
-    for (let i = 0; i < oldUserRules.length; i++) {
+    for (let i = 0; i < oldUserRules.length; i += 1) {
       if (oldUserRules[i].host === ruleset.name &&
           oldUserRules[i].redirectTo === ruleset.rules[0].to &&
           String(RegExp(oldUserRules[i].urlMatcher)) === String(ruleset.rules[0].fromC)) {
@@ -390,7 +390,7 @@
     if (typeof obj === 'undefined') return 0;
     let size = 0;
     for (const key of obj.keys) {
-      if (obj.hasOwnProperty(key)) size++;
+      if (obj.hasOwnProperty(key)) size += 1;
     }
     return size;
   }
@@ -427,7 +427,7 @@
     }
 
     let output = '';
-    for (let i = 0; i < assetHostList.length; i++) {
+    for (let i = 0; i < assetHostList.length; i += 1) {
       const host = assetHostList[i][3];
       const activeCount = assetHostList[i][1];
       const passiveCount = assetHostList[i][2];
@@ -493,7 +493,7 @@
     const assetHostList = sortSwitchPlanner(tabId, rewritten);
     let output = '';
 
-    for (let i = 0; i < assetHostList.length; i++) {
+    for (let i = 0; i < assetHostList.length; i += 1) {
       const host = assetHostList[i][3];
       const activeCount = assetHostList[i][1];
       const passiveCount = assetHostList[i][2];
