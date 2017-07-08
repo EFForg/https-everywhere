@@ -44,8 +44,9 @@ if ! $ONLY_RULESETS_CHANGED; then
   echo >&2 "Core code changes have been made."
 
   if [ "$TEST" == "eslint" ]; then
-    echo >&2 "Running ESLint."
-    docker run --rm -ti -v $(pwd):/opt node bash -c "cd /opt/utils/eslint && npm install && ./node_modules/.bin/eslint ../../chromium"
+    echo >&2 "Running ESLint on the Chromium extension."
+    docker run --rm -ti -v $(pwd):/opt node bash -c "cd /opt/utils/eslint && npm install && ./node_modules/.bin/eslint ../../chromium --fix"
+    [ `git diff --name-only | wc -l` -eq 0 ]
   fi
 
   if [ "$TEST" == "firefox" ]; then
