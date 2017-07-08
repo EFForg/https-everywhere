@@ -460,19 +460,16 @@
 
       window.log(window.INFO, `Testing securecookie applicability with ${testUri}`);
       const potentiallyApplicable = this.potentiallyApplicableRulesets(domain).values();
-      const secure = potentiallyApplicable.some(
-        ruleset => ruleset.active && ruleset.apply(testUri),
-      );
-
-      if (secure) {
-        window.log(window.INFO, 'Cookie domain could be secured.');
-      } else {
-        window.log(window.INFO, 'Cookie domain could NOT be secured.');
+      for (const ruleset of potentiallyApplicable) {
+        if (ruleset.active && ruleset.apply(testUri)) {
+          window.log(window.INFO, 'Cookie domain could be secured.');
+          this.cookieHostCache.set(domain, true);
+          return true;
+        }
       }
-
-
-      this.cookieHostCache.set(domain, secure);
-      return secure;
+      window.log(window.INFO, 'Cookie domain could NOT be secured.');
+      this.cookieHostCache.set(domain, false);
+      return false;
     }
 
     /**
@@ -483,9 +480,12 @@
      */
     rewriteURI(urispec, host) {
       const potentiallyApplicable = this.potentiallyApplicableRulesets(host);
-      const foundRuleset = potentiallyApplicable.find(ruleset => ruleset.active);
-
-      return foundRuleset ? foundRuleset.apply(urispec) : null;
+      for (const ruleset of potentiallyApplicable) {
+        if (ruleset.active) {
+          return ruleset.apply(urispec);
+        }
+      }
+      return null;
     }
   }
 
