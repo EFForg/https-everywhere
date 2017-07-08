@@ -297,12 +297,16 @@ def cli():
 	if config.has_option("rulesets", "check_test_formatting"):
 		checkTestFormatting = config.getboolean("rulesets", "check_test_formatting")
 	certdir = config.get("certificates", "basedir")
-	if config.has_option("rulesets", "skiplist"):
+	if config.has_option("rulesets", "skiplist") and config.has_option("rulesets", "skipfield"):
 		skiplist = config.get("rulesets", "skiplist")
+		skipfield = config.get("rulesets", "skipfield")
 		with open(skiplist) as f:
+			f.readline()
 			for line in f:
-				fileHash = line.split(" ")[0]
-				skipdict[binascii.unhexlify(fileHash)] = 1
+				splitLine = line.split(",")
+				fileHash = splitLine[0]
+				if splitLine[int(skipfield)] == "1":
+					skipdict[binascii.unhexlify(fileHash)] = 1
 
 	threadCount = config.getint("http", "threads")
 	httpEnabled = True
