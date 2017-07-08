@@ -475,11 +475,10 @@
      * @returns {*} the new uri or null
      */
     rewriteURI (urispec, host) {
-      let newuri = null
       const potentiallyApplicable = this.potentiallyApplicableRulesets(host)
       for (const ruleset of potentiallyApplicable) {
-        if (ruleset.active && (newuri = ruleset.apply(urispec))) {
-          return newuri
+        if (ruleset.active) {
+          return ruleset.apply(urispec)
         }
       }
       return null
