@@ -142,7 +142,7 @@
     const activeTab = tabArray[0];
     const rulesets = backgroundPage.activeRulesets.getRulesets(activeTab.id);
 
-    rulesets.keys.forEach((r) => {
+    for (const r in rulesets) {
       let listDiv = stableRules;
       if (!rulesets[r].defaultState) {
         listDiv = unstableRules;
@@ -150,7 +150,7 @@
       appendRuleLineToListDiv(rulesets[r], listDiv);
       listDiv.style.position = 'static';
       listDiv.style.visibility = 'visible';
-    });
+    }
     // Only show the "Add a rule" link if we're on an HTTPS page
     if (/^https:/.test(activeTab.url)) {
       show(e('add-rule-link'));

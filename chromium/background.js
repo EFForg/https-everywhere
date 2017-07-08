@@ -56,12 +56,12 @@
   });
   chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === 'sync' || areaName === 'local') {
-      changes.keys.forEach((key) => {
+      for (const key in changes) {
         if (key === 'httpNowhere') {
           httpNowhereOn = changes[key].newValue;
           window.updateState();
         }
-      });
+      }
     }
   });
   chrome.tabs.onActivated.addListener(() => {
@@ -393,9 +393,9 @@
   function objSize(obj) {
     if (typeof obj === 'undefined') return 0;
     let size = 0;
-    obj.keys.forEach((key) => {
+    for (const key in obj) {
       if (Object.prototype.hasOwnProperty.call(obj, key)) size += 1;
-    });
+    }
     return size;
   }
 
@@ -410,13 +410,13 @@
       return [];
     }
     const tabInfo = window.switchPlannerInfo[tabId][rewritten];
-    tabInfo.keys.forEach((assetHost) => {
+    for (const assetHost in tabInfo) {
       const ah = tabInfo[assetHost];
       const activeCount = objSize(ah[1]);
       const passiveCount = objSize(ah[0]);
       const score = (activeCount * 100) + passiveCount;
       assetHostList.push([score, activeCount, passiveCount, assetHost]);
-    });
+    }
     assetHostList.sort((a, b) => a[0] - b[0]);
     return assetHostList;
   }
@@ -475,11 +475,11 @@
   function linksFromKeys(map) {
     if (typeof map === 'undefined') return '';
     let output = '';
-    map.keys.forEach((key) => {
+    for (const key in map) {
       if (Object.prototype.hasOwnProperty.call(map, key)) {
         output += `<a href='${key}'>${key}</a><br/>`;
       }
-    });
+    }
     return output;
   }
 
