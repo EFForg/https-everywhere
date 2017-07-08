@@ -5,21 +5,21 @@
 const strip = require('strip-markdown'),
       remark = require('remark'),
       processor = remark().use(strip),
-      fromPairs = require('lodash.frompairs');
+      _ = require('lodash');
 
 module.exports = function(body) {
 	const plaintext = String(processor.processSync(body));
 
 	const lines = plaintext.split('\n')
-	                       .map(line => line.split(':').map(key => key.trim()));
-
+	                       .filter(line => _.compact(line).length !== 0)
+	                       .map(line => line.split(':').map(key => key.trim()))
+	                       .map(line => [line[0].toLowerCase(), line[1]]);
 	// Filter result looks like [ [ 'Type', 'ruleset issue' ] ]
-	const type = lines.filter(line => line[0] === 'Type')[0][1];
+	const type = lines.filter(line => line[0] === 'type')[0][1];
 
 	if (type !== 'ruleset issue') return false;
 
-	let normalized = lines.map(line => [line[0].toLowerCase(), line[1]]);
-	normalized = fromPairs(normalized);
+	let normalized = _.fromPairs(lines);
 
 	return normalized;
 };
