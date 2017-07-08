@@ -1,28 +1,30 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://m.admin.booking.com/ => https://m.admin.booking.com/: (51, "SSL: no alternative certificate subject name matches target host name 'm.admin.booking.com'")
-Fetch error: http://r-ec.bstatic.com/ => https://r-ec.bstatic.com/: Too many redirects while fetching 'https://r-ec.bstatic.com/'
-Fetch error: http://s-ec.bstatic.com/ => https://s-ec.bstatic.com/: Too many redirects while fetching 'https://s-ec.bstatic.com/'
-
 	Other Booking.com rulesets:
 
 		- Villas.com.xml
 		- workingatbooking.com.xml
 
 
-	Nonfunctional domains:
+	Nonfunctional subdomains:
 
-		- blog.booking.com ¹
-		- suite.booking.com ʳ
+		- booking.com
+ 			- cs		²
+ 			- m.admin	(cert mismatched, CN: admin.booking.com)
+ 			- office	²
+			- r-ec		ʰ
+			- s-ec		ʰ
+ 			- suite		ʳ
 
-	¹: Timeout
-	ʳ Refused
+	¹ Timeout
+	² Connection reset
+  	ʳ Refused
+	ʰ Redirect to HTTP
 
 
 	Problematic hosts in *booking.com:
 
 		- info.suite ᵐ
+		- m.admin ᵐ
 
 	ᵐ Hubspot / mismatched
 
@@ -32,15 +34,14 @@ Fetch error: http://s-ec.bstatic.com/ => https://s-ec.bstatic.com/: Too many red
 		- news.booking.com
 
 	ᶜ See https://owasp.org/index.php/SecureFlag
-
 -->
-<ruleset name="Booking.com" default_off='failed ruleset test'>
+<ruleset name="Booking.com">
 
 	<target host="booking.com" />
 	<target host="*.booking.com" />
 	<target host="*.bstatic.com" />
 
-		<exclusion pattern="^http://(?:(?!m\.admin\.booking\.com/)(?:[^./]+\.){2,}|(?:[^./]+\.){3,})b(?:ooking|static)\.com/" />
+		<exclusion pattern="^http://((?:[^./]+\.){2,}|(?:[^./]+\.){3,})b(?:ooking|static)\.com/" />
 
 			<!--	+ve:
 					-->
@@ -52,39 +53,45 @@ Fetch error: http://s-ec.bstatic.com/ => https://s-ec.bstatic.com/: Too many red
 			<test url="http://this.host.bstatic.com/" />
 			<test url="http://exists.not.bstatic.com/" />
 
-		<exclusion pattern="^http://(?:blog|suite)\.booking\.com/" />
+		<exclusion pattern="^http://(?:m\.admin|sg|suite)\.booking\.com/" />
+		<exclusion pattern="^http://(r|s)-ec\.booking\.com/" />
 
 			<!--	+ve:
 					-->
-			<test url="http://blog.booking.com/" />
 			<test url="http://suite.booking.com/" />
+			<test url="http://r-ec.booking.com/" />
+			<test url="http://s-ec.booking.com/" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^news\.booking\.com$" name="^PPSESSION$" /-->
 
-	<securecookie host="." name="." />
+	<securecookie host=".+" name=".+" />
 
 
 	<rule from="^http:"
 		to="https:" />
 
+
+		<test url="http://www.booking.com/" />
 		<test url="http://admin.booking.com/" />
 		<test url="http://m.admin.booking.com/" />
+		<test url="http://blog.booking.com/" />
+		<test url="http://developers.booking.com/" />
 		<test url="http://join.booking.com/" />
 		<test url="http://news.booking.com/" />
+		<test url="http://outlook.booking.com/" />
 		<test url="http://partnerhelp.booking.com/" />
 		<test url="http://secure.booking.com/" />
+		<test url="http://sg.booking.com/" />
 		<test url="http://static.booking.com/static/img/flags/24/us.png" />
 		<test url="http://suitehelp.booking.com/" />
 		<test url="http://suiteoffice.booking.com/" />
-		<test url="http://www.booking.com/" />
+		<test url="http://workforce.booking.com/" />
 
 		<test url="http://q.bstatic.com/images/hotel/square60/276/27628205.jpg" />
 		<test url="http://q-ec.bstatic.com/static/img/nobg_all_blue/85a874c5ee518d80b2ec6025d2a8379511a72172.png" />
 		<test url="http://r.bstatic.com/images/hotel/square60/454/4546574.jpg" />
-		<test url="http://r-ec.bstatic.com/" />
-		<test url="http://s-ec.bstatic.com/" />
 
 </ruleset>
