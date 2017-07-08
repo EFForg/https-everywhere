@@ -452,7 +452,7 @@
       }
 
       window.log(window.INFO, 'Testing securecookie applicability with ' + testUri);
-      const potentiallyApplicable = this.potentiallyApplicableRulesets(domain);
+      const potentiallyApplicable = this.potentiallyApplicableRulesets(domain).values();
       const secure = potentiallyApplicable.some((ruleset) => ruleset.active && ruleset.apply(testUri));
 
       if (secure) {
