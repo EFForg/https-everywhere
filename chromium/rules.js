@@ -459,7 +459,7 @@
         window.log(window.INFO, 'Cookie domain could be secured.')
       } else {
         window.log(window.INFO, 'Cookie domain could NOT be secured.')
-       }
+      }
 
       this.cookieHostCache.set(domain, secure)
       return secure
