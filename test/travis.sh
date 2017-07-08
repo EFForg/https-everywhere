@@ -83,7 +83,6 @@ if [ "$RULESETS_CHANGED" ]; then
   if [ "$TEST" == "preloaded" ]; then
     echo >&2 "Ensuring rulesets do not introduce targets which are already HSTS preloaded."
     docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" node bash -c "cd /opt/utils/hsts-prune && npm install && node index.js"
-    [ `git diff --name-only | wc -l` -eq 0 ]
   fi
 fi
 
