@@ -17,7 +17,7 @@
    * @param ruleset the ruleset tied tot he checkbox
    */
   function toggleRuleLine(checkbox, ruleset) {
-    ruleset.active = checkbox.checked;
+    ruleset.active = checkbox.checked; // eslint-disable-line no-param-reassign
 
     if (ruleset.active !== ruleset.defaultState) {
       localStorage[ruleset.name] = ruleset.active;
@@ -49,7 +49,7 @@
     if (ruleset.active) {
       checkbox.setAttribute('checked', '');
     }
-    checkbox.onchange = function (ev) {
+    checkbox.onchange = () => {
       toggleRuleLine(checkbox, ruleset);
     };
     label.appendChild(checkbox);
@@ -69,7 +69,9 @@
     try {
       xhr.open('GET', favicon.src, true);
       label.appendChild(favicon);
-    } catch (e) {}
+    } catch (err) {
+      console.log('Favicon not found.');
+    }
 
     // label text
     const text = document.createElement('span');
@@ -124,6 +126,14 @@
     window.close();
   }
 
+  function hide(elem) {
+    elem.style.display = 'none'; // eslint-disable-line no-param-reassign
+  }
+
+  function show(elem) {
+    elem.style.display = 'block'; // eslint-disable-line no-param-reassign
+  }
+
   /**
    * Create the list of rules for a specific tab
    * @param tabArray
@@ -147,54 +157,20 @@
     }
   }
 
-  /**
-   * Fill in content into the popup on load
-   */
-  document.addEventListener('DOMContentLoaded', () => {
-    stableRules = document.getElementById('StableRules');
-    unstableRules = document.getElementById('UnstableRules');
-    chrome.tabs.query({ active: true, currentWindow: true }, gotTab);
-
-    // Set up the enabled/disabled switch & hide/show rules
-    updateEnabledDisabledUI();
-    document.getElementById('onoffswitch').addEventListener('click', toggleEnabledDisabled);
-
-    // Print the extension's current version.
-    const manifest = chrome.runtime.getManifest();
-    const versionInfo = document.getElementById('current-version');
-    versionInfo.innerText = manifest.version;
-
-    // Set up toggle checkbox for HTTP nowhere mode
-    getOption('httpNowhere', false, (item) => {
-      const httpNowhereCheckbox = document.getElementById('http-nowhere-checkbox');
-      httpNowhereCheckbox.addEventListener('click', toggleHttpNowhere, false);
-      const httpNowhereEnabled = item.httpNowhere;
-      if (httpNowhereEnabled) {
-        httpNowhereCheckbox.setAttribute('checked', '');
-      }
-    });
-
-    // auto-translate all elements with i18n attributes
-    const elem = document.querySelectorAll('[i18n]');
-    for (let i = 0; i < elem.length; i += 1) {
-      elem[i].innerHTML = chrome.i18n.getMessage(elem[i].getAttribute('i18n'));
-    }
-
-    // other translations
-    e('aboutTitle').setAttribute('title', chrome.i18n.getMessage('about_title'));
-    e('add-rule-link').addEventListener('click', addManualRule);
-  });
-
   const escapeForRegex = function (value) {
     return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
   };
 
-  function hide(elem) {
-    elem.style.display = 'none';
+  function getOption(opt, defaultOpt, callback) {
+    const details = {};
+    details[opt] = defaultOpt;
+    return storage.get(details, callback);
   }
 
-  function show(elem) {
-    elem.style.display = 'block';
+  function setOption(opt, value) {
+    const details = {};
+    details[opt] = value;
+    return storage.set(details);
   }
 
   /**
@@ -247,15 +223,41 @@
     });
   }
 
-  function getOption(opt, defaultOpt, callback) {
-    const details = {};
-    details[opt] = defaultOpt;
-    return storage.get(details, callback);
-  }
+  /**
+   * Fill in content into the popup on load
+   */
+  document.addEventListener('DOMContentLoaded', () => {
+    stableRules = document.getElementById('StableRules');
+    unstableRules = document.getElementById('UnstableRules');
+    chrome.tabs.query({ active: true, currentWindow: true }, gotTab);
 
-  function setOption(opt, value) {
-    const details = {};
-    details[opt] = value;
-    return storage.set(details);
-  }
+    // Set up the enabled/disabled switch & hide/show rules
+    updateEnabledDisabledUI();
+    document.getElementById('onoffswitch').addEventListener('click', toggleEnabledDisabled);
+
+    // Print the extension's current version.
+    const manifest = chrome.runtime.getManifest();
+    const versionInfo = document.getElementById('current-version');
+    versionInfo.innerText = manifest.version;
+
+    // Set up toggle checkbox for HTTP nowhere mode
+    getOption('httpNowhere', false, (item) => {
+      const httpNowhereCheckbox = document.getElementById('http-nowhere-checkbox');
+      httpNowhereCheckbox.addEventListener('click', toggleHttpNowhere, false);
+      const httpNowhereEnabled = item.httpNowhere;
+      if (httpNowhereEnabled) {
+        httpNowhereCheckbox.setAttribute('checked', '');
+      }
+    });
+
+    // auto-translate all elements with i18n attributes
+    const elem = document.querySelectorAll('[i18n]');
+    for (let i = 0; i < elem.length; i += 1) {
+      elem[i].innerHTML = chrome.i18n.getMessage(elem[i].getAttribute('i18n'));
+    }
+
+    // other translations
+    e('aboutTitle').setAttribute('title', chrome.i18n.getMessage('about_title'));
+    e('add-rule-link').addEventListener('click', addManualRule);
+  });
 }());

@@ -17,6 +17,20 @@
   }
 
   /**
+   * Fetch summary HTML of the planner results from the background page for
+   * display in the devtools panel.
+   */
+  function display() {
+    chrome.runtime.sendMessage({
+      type: 'getSmallHtml',
+      tabId: chrome.devtools.inspectedWindow.tabId,
+    }, (response) => {
+      e('SwitchPlannerDetails').innerHTML = response.html;
+      e('SwitchPlannerResults').style.display = 'block';
+    });
+  }
+
+  /**
    * Turn on the Switch Planner recording mode, and hide the long description.
    */
   function enableSwitchPlanner() {
@@ -36,20 +50,6 @@
   function disableSwitchPlanner() {
     sendMessage('disable');
     document.location.reload();
-  }
-
-  /**
-   * Fetch summary HTML of the planner results from the background page for
-   * display in the devtools panel.
-   */
-  function display() {
-    chrome.runtime.sendMessage({
-      type: 'getSmallHtml',
-      tabId: chrome.devtools.inspectedWindow.tabId,
-    }, (response) => {
-      e('SwitchPlannerDetails').innerHTML = response.html;
-      e('SwitchPlannerResults').style.display = 'block';
-    });
   }
 
   window.onload = function () {
@@ -74,8 +74,8 @@
     });
     // Since this is rendered in a devtools console, we have to make clicks on the
     // link open a new window.
-    e('MixedContentLink').addEventListener('click', (e) => {
-      window.open(e.target.href);
+    e('MixedContentLink').addEventListener('click', (evt) => {
+      window.open(evt.target.href);
     });
   };
 }());

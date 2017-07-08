@@ -177,7 +177,7 @@
       this.activeTabRules = {};
 
       const that = this;
-      chrome.tabs.onRemoved.addListener((tabId, info) => {
+      chrome.tabs.onRemoved.addListener((tabId) => {
         that.removeTab(tabId);
       });
     }
@@ -212,6 +212,58 @@
   // redirect counter workaround
   // TODO: Remove this code if they ever give us a real counter
   const redirectCounter = {};
+
+  // Map of which values for the `type' enum denote active vs passive content.
+  // https://developer.chrome.com/extensions/webRequest.html#event-onBeforeRequest
+  const activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1 };
+
+  // We consider sub_frame to be passive even though it can contain JS or flash.
+  // This is because code running in the sub_frame cannot access the main frame's
+  // content, by same-origin policy. This is true even if the sub_frame is on the
+  // same domain but different protocol - i.e. HTTP while the parent is HTTPS -
+  // because same-origin policy includes the protocol. This also mimics Chrome's
+  // UI treatment of insecure subframes.
+  const passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1 };
+
+  /**
+   * Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
+   * use in determining which resources need to be ported to HTTPS.
+   * (Reminder: Switch planner is the pro-tool enabled by switching into debug-mode)
+   *
+   * @param type: type of the resource (see activeTypes and passiveTypes arrays)
+   * @param tabId: The id of the tab
+   * @param resourceHost: The host of the original url
+   * @param resourceUrl: the original url
+   * @param rewrittenUrl: The url rewritten to
+   * */
+  function writeToSwitchPlanner(type, tabId, resourceHost, resourceUrl, rewrittenUrl) {
+    let rw = 'rw';
+    if (rewrittenUrl == null) { rw = 'nrw'; }
+
+    let activeContent = 0;
+    if (activeTypes[type]) {
+      activeContent = 1;
+    } else if (passiveTypes[type]) {
+      activeContent = 0;
+    } else {
+      window.log(window.WARN, `Unknown type from onBeforeRequest details: \`${type}', assuming active`);
+      activeContent = 1;
+    }
+
+    if (!window.switchPlannerInfo[tabId]) {
+      window.switchPlannerInfo[tabId] = {};
+      window.switchPlannerInfo[tabId].rw = {};
+      window.switchPlannerInfo[tabId].nrw = {};
+    }
+    if (!window.switchPlannerInfo[tabId][rw][resourceHost]) {
+      window.switchPlannerInfo[tabId][rw][resourceHost] = {};
+    }
+    if (!window.switchPlannerInfo[tabId][rw][resourceHost][activeContent]) {
+      window.switchPlannerInfo[tabId][rw][resourceHost][activeContent] = {};
+    }
+
+    window.switchPlannerInfo[tabId][rw][resourceHost][activeContent][resourceUrl] = 1;
+  }
 
   /**
    * Called before a HTTP(s) request. Does the heavy lifting
@@ -333,54 +385,6 @@
     return { cancel: shouldCancel };
   }
 
-  // Map of which values for the `type' enum denote active vs passive content.
-  // https://developer.chrome.com/extensions/webRequest.html#event-onBeforeRequest
-  const activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1 };
-
-  // We consider sub_frame to be passive even though it can contain JS or flash.
-  // This is because code running in the sub_frame cannot access the main frame's
-  // content, by same-origin policy. This is true even if the sub_frame is on the
-  // same domain but different protocol - i.e. HTTP while the parent is HTTPS -
-  // because same-origin policy includes the protocol. This also mimics Chrome's
-  // UI treatment of insecure subframes.
-  const passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1 };
-
-  /**
-   * Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
-   * use in determining which resources need to be ported to HTTPS.
-   * (Reminder: Switch planner is the pro-tool enabled by switching into debug-mode)
-   *
-   * @param type: type of the resource (see activeTypes and passiveTypes arrays)
-   * @param tabId: The id of the tab
-   * @param resourceHost: The host of the original url
-   * @param resourceUrl: the original url
-   * @param rewrittenUrl: The url rewritten to
-   * */
-  function writeToSwitchPlanner(type, tabId, resourceHost, resourceUrl, rewrittenUrl) {
-    let rw = 'rw';
-    if (rewrittenUrl == null) { rw = 'nrw'; }
-
-    let activeContent = 0;
-    if (activeTypes[type]) {
-      activeContent = 1;
-    } else if (passiveTypes[type]) {
-      activeContent = 0;
-    } else {
-      window.log(window.WARN, `Unknown type from onBeforeRequest details: \`${type}', assuming active`);
-      activeContent = 1;
-    }
-
-    if (!window.switchPlannerInfo[tabId]) {
-      window.switchPlannerInfo[tabId] = {};
-      window.switchPlannerInfo[tabId].rw = {};
-      window.switchPlannerInfo[tabId].nrw = {};
-    }
-    if (!window.switchPlannerInfo[tabId][rw][resourceHost]) { window.switchPlannerInfo[tabId][rw][resourceHost] = {}; }
-    if (!window.switchPlannerInfo[tabId][rw][resourceHost][activeContent]) { window.switchPlannerInfo[tabId][rw][resourceHost][activeContent] = {}; }
-
-    window.switchPlannerInfo[tabId][rw][resourceHost][activeContent][resourceUrl] = 1;
-  }
-
   /**
    * Return the number of properties in an object. For associative maps, this is
    * their size.
@@ -390,7 +394,7 @@
     if (typeof obj === 'undefined') return 0;
     let size = 0;
     obj.keys.forEach((key) => {
-      if (obj.hasOwnProperty(key)) size += 1;
+      if (Object.prototype.hasOwnProperty.call(obj, key)) size += 1;
     });
     return size;
   }
@@ -410,7 +414,7 @@
       const ah = tabInfo[assetHost];
       const activeCount = objSize(ah[1]);
       const passiveCount = objSize(ah[0]);
-      const score = activeCount * 100 + passiveCount;
+      const score = (activeCount * 100) + passiveCount;
       assetHostList.push([score, activeCount, passiveCount, assetHost]);
     });
     assetHostList.sort((a, b) => a[0] - b[0]);
@@ -472,19 +476,12 @@
     if (typeof map === 'undefined') return '';
     let output = '';
     map.keys.forEach((key) => {
-      if (map.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(map, key)) {
         output += `<a href='${key}'>${key}</a><br/>`;
       }
     });
     return output;
   }
-
-  /**
-   * Generate the detailed html fot the switch planner
-   * */
-  window.switchPlannerDetailsHtml = function (tabId) {
-    return switchPlannerRenderSections(tabId, switchPlannerDetailsHtmlSection);
-  };
 
   /**
    * Generate the detailed html fot the switch planner, by section
@@ -511,6 +508,13 @@
     }
     return output;
   }
+
+  /**
+   * Generate the detailed html fot the switch planner
+   * */
+  window.switchPlannerDetailsHtml = function (tabId) {
+    return switchPlannerRenderSections(tabId, switchPlannerDetailsHtmlSection);
+  };
 
   /**
    * monitor cookie changes. Automatically convert them to secure cookies
@@ -572,7 +576,8 @@
   // Try to catch redirect loops on URLs we've redirected to HTTPS.
   wr.onBeforeRedirect.addListener(onBeforeRedirect, { urls: ['https://*/*'] });
 
-  // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking.
+  // Listen for cookies set/updated and secure them if applicable. This function is
+  // async/nonblocking.
   chrome.cookies.onChanged.addListener(onCookieChanged);
 
   /**
@@ -599,7 +604,7 @@
       chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         const tabId = message.tabId;
 
-        const disableOnCloseCallback = function (port) {
+        const disableOnCloseCallback = () => {
           window.log(window.DBUG, `Devtools window for tab ${tabId} closed, clearing data.`);
           disableSwitchPlannerFor(tabId);
         };

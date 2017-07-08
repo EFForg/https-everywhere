@@ -382,7 +382,8 @@
     }
 
     /**
-     * Check to see if the Cookie object c meets any of our cookierule criteria for being marked as secure.
+     * Check to see if the Cookie object c meets any of our cookierule criteria for being marked as
+     * secure.
      * @param cookie The cookie to test
      * @returns {*} ruleset or null
      */
@@ -398,16 +399,21 @@
       }
 
       const potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
-      potentiallyApplicable.forEach((ruleset) => {
+      const foundRuleset = potentiallyApplicable.find((ruleset) => {
         if (ruleset.cookierules !== null && ruleset.active) {
           for (let i = 0; i < ruleset.cookierules.length; i += 1) {
             const cr = ruleset.cookierules[i];
             if (cr.hostC.test(cookie.domain) && cr.nameC.test(cookie.name)) {
-              return ruleset;
+              return true;
             }
           }
         }
+        return false;
       });
+
+      if (foundRuleset) {
+        return foundRuleset;
+      }
       return null;
     }
 
@@ -454,9 +460,16 @@
 
       window.log(window.INFO, `Testing securecookie applicability with ${testUri}`);
       const potentiallyApplicable = this.potentiallyApplicableRulesets(domain);
-      const secure = potentiallyApplicable.some(ruleset => ruleset.active && ruleset.apply(testUri));
+      const secure = potentiallyApplicable.some(
+        ruleset => ruleset.active && ruleset.apply(testUri),
+      );
 
-      window.log(window.INFO, secure ? 'Cookie domain could be secured.' : 'Cookie domain could NOT be secured.');
+      if (secure) {
+        window.log(window.INFO, 'Cookie domain could be secured.');
+      } else {
+        window.log(window.INFO, 'Cookie domain could NOT be secured.');
+      }
+
 
       this.cookieHostCache.set(domain, secure);
       return secure;
@@ -470,9 +483,9 @@
      */
     rewriteURI(urispec, host) {
       const potentiallyApplicable = this.potentiallyApplicableRulesets(host);
-      const ruleset = potentiallyApplicable.find(ruleset => ruleset.active);
+      const foundRuleset = potentiallyApplicable.find(ruleset => ruleset.active);
 
-      return ruleset ? ruleset.apply(urispec) : null;
+      return foundRuleset ? foundRuleset.apply(urispec) : null;
     }
   }
 

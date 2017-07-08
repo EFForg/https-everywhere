@@ -42,10 +42,8 @@
 
   /**
    * If a window is destroyed, and an incognito session existed, see if it still does.
-   *
-   * @param windowId: Ignored.
    */
-  function detectIncognitoDestruction(windowId) {
+  function detectIncognitoDestruction() {
     if (incognitoSessionExists) {
       // Are any current windows incognito?
       chrome.windows.getAll(checkForIncognitoSession);
