@@ -1,39 +1,24 @@
 <!--
-	Nonfunctional subdomains:
+	Website is misconfigured and many subdomains fail to load even
+	over http because of broken redirects (eg. blogs.alternet.org)
 
-		- dev	(times out)
-
-
-	Fully covered subdomains:
-
-		- donate
-		- files
-		- images
+	Different content http/https:
+		files.alternet.org
+			<test url="http://files.alternet.org/css/slimbox2.css" />
+			<test url="https://files.alternet.org/css/slimbox2.css" />
+			(but website sometimes links to https even though it is 
+			 broken.)
 
 -->
-<ruleset name="AlterNet.org (partial)">
+<ruleset name="AlterNet.org">
 
 	<target host="alternet.org" />
-	<target host="*.alternet.org" />
-		<!--
-			Redirects to http:
-						-->
-		<!--exclusion pattern="^http://(aaa\.|www\.|electric\.www\.)?alternet\.org/($|donate/$|favicon\.ico|files/|misc/|sites/)" /-->
-		<!--exclusion pattern="^http://beta\.alternet\.org/($|favicon\.ico)" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://(?:www\.)?alternet\.org/(?!images/)" />
-		<exclusion pattern="^http://beta\.alternet\.org/+(?!sandbox/)" />
+	<target host="www.alternet.org" />
+	<target host="act.alternet.org" />
+	<target host="donate.alternet.org" />
+	<target host="img.alternet.org" />
 
-
-	<!--	- 404s over https
-		- 301s like so over http
-					-->
-	<rule from="^http://blogs\.alternet\.org/speakeasy/wp-content/avatars/"
-		to="https://images.alternet.org/images/avatars/" />
-
-	<rule from="^http://((?:beta|donate|files|images|www)\.)?alternet\.org/"
-		to="https://$1alternet.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

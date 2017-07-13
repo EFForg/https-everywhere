@@ -3,44 +3,29 @@
 		yxplus.yeah.net
 
 	Complications:
-		^(mail.)?yeah.net
+		^mail.yeah.net
 			- Redirect to http:
 				/$
 			- MCB:
-				- ^yeah.net/logout.htm
 				- mail.yeah.net/index.htm
 			- HTTPS:
 				/favicon.ico
 
 	Invalid certificate: Too much to list them all.
+		^
 		www.yeah.net
 		ming.yeah.net
 		wap.yeah.net
 -->
-
 <ruleset name="Yeah.net (partial)">
 
-	<!--	Complications:	-->
-	<target host="yeah.net" />
-	<target host="mail.yeah.net" />
-		<exclusion pattern="^http://(mail\.)?yeah\.net/(?!favicon\.ico)" />
-			<test url="http://yeah.net/favicon.ico" />
-			<test url="http://mail.yeah.net/favicon.ico" />
-			<test url="http://yeah.net/logout.htm" />
-			<test url="http://mail.yeah.net/index.htm" />
-
 	<target host="passport.yeah.net" />
-		<!-- MCB -->
-		<exclusion pattern="^http://passport\.yeah\.net/webzj/myeah1\.0\.1/pub/index_dl\.html" />
-			<test url="http://passport.yeah.net/webzj/myeah1.0.1/pub/index_dl.html" />
-		<!-- Avoid CORS problem when logging in at http://(mail.)?yeah.com -->
-		<exclusion pattern="^http://passport\.yeah\.net/dl/(ini|gt|l|vfcp)" />
-			<test url="http://passport.yeah.net/dl/ini?pd=mailyeah&#x26;pkid=ruHHKUR&#x26;pkht=mail.yeah.net" />
-			<!-- these tests happen after clicking the red login button with a valid username/password -->
-			<test url="http://passport.yeah.net/dl/gt?un=username" />
-			<test url="http://passport.yeah.net/dl/l" />
-			<!-- the below test happen after clicking the red login button with a invalid username/password, https will return errors whatever CAPTCHA input -->
-			<test url="http://passport.yeah.net/dl/vfcp" />
+
+	<!--	Complications:	-->
+	<target host="mail.yeah.net" />
+		<exclusion pattern="^http://mail\.yeah\.net/(?!favicon\.ico)" />
+			<test url="http://mail.yeah.net/favicon.ico" />
+			<test url="http://mail.yeah.net/index.htm" />
 
 	<rule from="^http:" to="https:" />
 </ruleset>

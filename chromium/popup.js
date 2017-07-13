@@ -34,7 +34,7 @@ function toggleRuleLine(checkbox, ruleset) {
  * @param ruleset the ruleset to build the line for
  * @returns {*}
  */
-function createRuleLine(ruleset) {
+function appendRuleLineToListDiv(ruleset, list_div) {
 
   // parent block for line
   var line = document.createElement("div");
@@ -56,6 +56,7 @@ function createRuleLine(ruleset) {
 
   // favicon (from chrome's cache)
   var favicon = document.createElement("img");
+  favicon.className = "favicon";
   favicon.src = "chrome://favicon/";
   for (var i=0; i < ruleset.rules.length; i++) {
     var host = hostReg.exec(ruleset.rules[i].to);
@@ -76,11 +77,24 @@ function createRuleLine(ruleset) {
   if (ruleset.note.length) {
     text.title = ruleset.note;
   }
+
+  if(ruleset.note == "user rule") {
+    var remove = document.createElement("img");
+    remove.src = chrome.extension.getURL("remove.png");
+    remove.className = "remove";
+    line.appendChild(remove);
+
+    remove.addEventListener("click", function(){
+      backgroundPage.removeRule(ruleset);
+      list_div.removeChild(line);
+    });
+  }
+
   label.appendChild(text);
 
   line.appendChild(label);
 
-  return line;
+  list_div.appendChild(line);
 }
 
 // Change the UI to reflect extension enabled/disabled
@@ -123,7 +137,7 @@ function gotTab(tabArray) {
     if (!rulesets[r].default_state) {
       listDiv = unstableRules;
     }
-    listDiv.appendChild(createRuleLine(rulesets[r]));
+    appendRuleLineToListDiv(rulesets[r], listDiv);
     listDiv.style.position = "static";
     listDiv.style.visibility = "visible";
   }

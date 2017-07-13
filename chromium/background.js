@@ -23,8 +23,13 @@ function loadExtensionFile(url, returnType) {
 
 // Rules are loaded here
 var all_rules = new RuleSets(localStorage);
-all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
 
+// Allow users to enable `platform="mixedcontent"` rulesets
+var enableMixedRulesets = false;
+storage.get({enableMixedRulesets: false}, function(item) {
+  enableMixedRulesets = item.enableMixedRulesets;
+  all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
+});
 
 var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
@@ -146,6 +151,26 @@ var addNewRule = function(params, cb) {
     cb(false);
   }
 };
+
+/**
+ * Removes a user rule
+ * @param ruleset: the ruleset to remove
+ * */
+var removeRule = function(ruleset) {
+  if (all_rules.removeUserRule(ruleset)) {
+    // If we successfully removed the user rule, remove it in local storage too
+    var oldUserRules = getStoredUserRules();
+    for (let x = 0; x < oldUserRules.length; x++) {
+      if (oldUserRules[x].host == ruleset.name &&
+          oldUserRules[x].redirectTo == ruleset.rules[0].to &&
+          String(RegExp(oldUserRules[x].urlMatcher)) == String(ruleset.rules[0].from_c)) {
+        oldUserRules.splice(x, 1);
+        break;
+      }
+    }
+    localStorage.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules));
+  }
+}
 
 /**
  * Adds a listener for removed tabs
@@ -547,13 +572,8 @@ function onBeforeRedirect(details) {
 }
 
 // Registers the handler for requests
-// We listen to all HTTP hosts, because RequestFilter can't handle tons of url restrictions.
-wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["http://*/*"]}, ["blocking"]);
-
-// TODO: Listen only to the tiny subset of HTTPS hosts that we rewrite/downgrade.
-var httpsUrlsWeListenTo = ["https://*/*"];
-// See: https://developer.chrome.com/extensions/match_patterns
-wr.onBeforeRequest.addListener(onBeforeRequest, {urls: httpsUrlsWeListenTo}, ["blocking"]);
+// See: https://github.com/EFForg/https-everywhere/issues/10039
+wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["<all_urls>"]}, ["blocking"]);
 
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.

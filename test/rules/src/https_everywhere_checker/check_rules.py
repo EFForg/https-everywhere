@@ -83,12 +83,14 @@ class UrlComparisonThread(threading.Thread):
 		threading.Thread.__init__(self)
 
 	def run(self):
-		while not self.taskQueue.empty():
+		while True:
 			try:
 				self.processTask(self.taskQueue.get())
 				self.taskQueue.task_done()
 			except Exception, e:
 				logging.exception(e)
+                        if self.taskQueue.empty():
+                            break
 
 	def processTask(self, task):
 		problems = []
@@ -295,12 +297,16 @@ def cli():
 	if config.has_option("rulesets", "check_test_formatting"):
 		checkTestFormatting = config.getboolean("rulesets", "check_test_formatting")
 	certdir = config.get("certificates", "basedir")
-	if config.has_option("rulesets", "skiplist"):
+	if config.has_option("rulesets", "skiplist") and config.has_option("rulesets", "skipfield"):
 		skiplist = config.get("rulesets", "skiplist")
+		skipfield = config.get("rulesets", "skipfield")
 		with open(skiplist) as f:
+			f.readline()
 			for line in f:
-				fileHash = line.split(" ")[0]
-				skipdict[binascii.unhexlify(fileHash)] = 1
+				splitLine = line.split(",")
+				fileHash = splitLine[0]
+				if splitLine[int(skipfield)] == "1":
+					skipdict[binascii.unhexlify(fileHash)] = 1
 
 	threadCount = config.getint("http", "threads")
 	httpEnabled = True
@@ -408,6 +414,11 @@ def cli():
 		testedUrlPairCount = 0
 		config.getboolean("debug", "exit_after_dump")
 
+		for i in range(threadCount):
+			t = UrlComparisonThread(taskQueue, metric, thresholdDistance, autoDisable, resQueue)
+			t.setDaemon(True)
+			t.start()
+
 		# set of main pages to test
 		mainPages = set(urlList)
 		# If list of URLs to test/scan was not defined, use the test URL extraction
@@ -425,11 +436,6 @@ def cli():
 						logging.debug("Skipping excluded URL %s", test.url)
 				task = ComparisonTask(testUrls, fetcherPlain, fetcher, ruleset)
 				taskQueue.put(task)
-
-		for i in range(threadCount):
-			t = UrlComparisonThread(taskQueue, metric, thresholdDistance, autoDisable, resQueue)
-			t.setDaemon(True)
-			t.start()
 
 		taskQueue.join()
 		logging.info("Finished in %.2f seconds. Loaded rulesets: %d, URL pairs: %d.",

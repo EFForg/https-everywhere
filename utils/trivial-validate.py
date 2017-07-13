@@ -32,10 +32,8 @@ xpath_exclusion_pattern = etree.XPath("/ruleset/exclusion/@pattern")
 xpath_cookie_host_pattern = etree.XPath("/ruleset/securecookie/@host")
 xpath_cookie_name_pattern = etree.XPath("/ruleset/securecookie/@name")
 
-# Load lists of ruleset names whitelisted for downgrade & duplicate rules
+# Load lists of ruleset names whitelisted for duplicate rules
 thispath = os.path.dirname(os.path.realpath(__file__))
-with open(thispath + '/downgrade-whitelist.txt') as downgrade_fh:
-    downgrade_allowed_list = [x.rstrip('\n') for x in downgrade_fh.readlines()]
 with open(thispath + '/duplicate-whitelist.txt') as duplicate_fh:
     duplicate_allowed_list = [x.rstrip('\n') for x in duplicate_fh.readlines()]
 
@@ -96,21 +94,10 @@ def test_unencrypted_to(tree, rulename, from_attrib, to):
     # Rules that redirect to something other than https or http.
     # This used to test for http: but testing for lack of https: will
     # catch more kinds of mistakes.
-    # Now warn if the rule author indicates they intended it, with the
-    # downgrade attribute.  Error if this attribute is not present.
     """Rule redirects to something other than https."""
     for rule in xpath_rule(tree):
-        to, downgrade = rule.get("to"), rule.get("downgrade")
-        if to[:6] != "https:" and to[:5] != "http:":
-            return False
-        elif to[:5] == "http:" and downgrade:
-            if rulename in downgrade_allowed_list:
-                warn("whitelisted downgrade rule in %s redirects to http." % rulename)
-            else:
-                fail("non-whitelisted downgrade rule in %s redirects to http." % rulename)
-                return False
-        elif to[:5] == "http:":
-            fail("non-downgrade rule in %s redirects to http." % rulename)
+        to = rule.get("to")
+        if to[:6] != "https:":
             return False
     return True
 

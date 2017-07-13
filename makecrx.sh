@@ -98,7 +98,7 @@ trap 'rm -f "$pub" "$sig" "$zip"' EXIT
 # zip up the crx dir
 cwd=$(pwd -P)
 (cd "$dir" && ../../utils/create_xpi.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
-echo >&2 "Unsigned package has sha1sum: `sha1sum "$cwd/$zip"`"
+echo >&2 "Unsigned package has sha1sum: $(openssl dgst -sha1 "$cwd/$zip" | awk '{print $2}')"
 
 # signature
 openssl sha1 -sha1 -binary -sign "$key" < "$zip" > "$sig"
@@ -115,8 +115,16 @@ crmagic_hex="4372 3234" # Cr24
 version_hex="0200 0000" # 2
 pub_len_hex=$(byte_swap $(printf '%08x\n' $(ls -l "$pub" | awk '{print $5}')))
 sig_len_hex=$(byte_swap $(printf '%08x\n' $(ls -l "$sig" | awk '{print $5}')))
+
+# Case-insensitive matching is a GNU extension unavailable when using BSD sed.
+if [[ "$(sed --version 2>&1)" =~ "GNU" ]]; then
+  sed="sed"
+elif [[ "$(gsed --version 2>&1)" =~ "GNU" ]]; then
+  sed="gsed"
+fi
+
 (
-  echo "$crmagic_hex $version_hex $pub_len_hex $sig_len_hex" | sed -e 's/\s//g' -e 's/\([0-9A-F]\{2\}\)/\\\\\\x\1/gI' | xargs printf
+  echo "$crmagic_hex $version_hex $pub_len_hex $sig_len_hex" | $sed -e 's/\s//g' -e 's/\([0-9A-F]\{2\}\)/\\\\\\x\1/gI' | xargs printf
   cat "$pub" "$sig" "$zip"
 ) > "$crx"
 #rm -rf pkg/crx

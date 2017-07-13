@@ -37,6 +37,7 @@
 		- userprofile.itunes *
 		- rss.lists	(shows lists; mismatched, CN: lists.apple.com)
 		- mynews *
+		- uptodate  (timeout)
 	* Refused
 
 	Problematic hosts in *apple.com:
@@ -56,6 +57,7 @@
 		- ping.itunes *
 		- prod.lists ³
 		- www.lists		(mismatched, CN: lists.apple.com)
+		- mypage        (incomplete cert chain)
 		- a1.phobos *
 		- a1721.phobos *
 		- a1980.phobos *
@@ -93,9 +95,10 @@
 			- trailers from trailers *
 	* Secured by us
 -->
-<ruleset name="Apple.com">
+<ruleset name="Apple.com" default_off='failed ruleset test'>
 	<!--	Direct rewrites:	-->
 	<target host="apple.com" />
+	<target host="www.apple.com" />
 	<target host="albert.apple.com" />
 	<target host="appleid.apple.com" />
 	<target host="appleseed.apple.com" />
@@ -130,6 +133,7 @@
 	<target host="id.apple.com" />
 	<target host="idmsa.apple.com" />
 	<target host="iforgot.apple.com" />
+	<target host="images.apple.com" />
 	<target host="itunes.apple.com" />
 	<target host="affiliate.itunes.apple.com" />
 	<target host="api.itunes.apple.com" />
@@ -194,7 +198,6 @@
 	<target host="lists.apple.com" />
 	<target host="locate.apple.com" />
 	<target host="mfi.apple.com" />
-	<target host="mypage.apple.com" />
 	<target host="nc-buyiphone.apple.com" />
 	<target host="nc-unbrick1.apple.com" />
 	<target host="nwk-buyiphone.apple.com" />
@@ -221,47 +224,16 @@
 	<target host="supportprofile.apple.com" />
 	<target host="swdlp.apple.com" />
 	<target host="trailers.apple.com" />
-	<target host="uptodate.apple.com" />
 	<target host="wdg2.apple.com" />
 		<test url="http://trailers.apple.com/app/" />
 		<test url="http://trailers.apple.com/ca/" />
 		<test url="http://trailers.apple.com/trailers/wb/thehobbit/" />
 
-	<!--	Redirects to http:	-->
-	<target host="www.apple.com" />
-		<exclusion pattern="^http://www\.apple\.com/(\w{2}/)?shop/\S+" />
-			<test url="http://www.apple.com/shop/buy-ipad/ipad-air-2" />
-			<test url="http://www.apple.com/shop/delivery-message" />
-			<test url="http://www.apple.com/shop/help" />
-			<test url="http://www.apple.com/shop/payment_plan" />
-			<test url="http://www.apple.com/uk/shop/buy-mac/macbook/space-grey-512gb" />
-
-		<!--	Performs a JS redirect to HTTP	-->
-		<exclusion pattern="^http://www\.apple\.com/apple-events/(\S+)" />
-			<test url="http://www.apple.com/apple-events/" />
-			<test url="http://www.apple.com/apple-events/march-2016/" />
-			<test url="http://www.apple.com/apple-events/october-2016/" />
-
-		<!--	MCB	and CORS	-->
-		<exclusion pattern="^http://www\.apple\.com/(\w{2}/)?stevejobs/" />
-			<test url="http://www.apple.com/stevejobs/" />
-			<test url="http://www.apple.com/cn/stevejobs/" />
-			<test url="http://www.apple.com/cn/stevejobs/messages/main.json" />
-			<test url="http://www.apple.com/us/stevejobs/" />
-
-		<exclusion pattern="^http://www\.apple\.com/media/us/stevejobs/messages/\d+\.json" />
-			<test url="http://www.apple.com/media/us/stevejobs/messages/52.json" />
-			<test url="http://www.apple.com/media/us/stevejobs/messages/88.json" />
 
 	<!--	Complications:	-->
 	<target host="devimages.apple.com" />
 	<rule from="^http://devimages\.apple\.com/"
 			to="https://devimages.apple.com.edgekey.net/" />
-
-	<target host="images.apple.com" />
-	<rule from="^http://images\.apple\.com/"
-			to="https://ssl.apple.com/" />
-		<test url="http://images.apple.com/ac/globalheader/1.0/scripts/globalheader.js" />
 
 	<target host="prod.lists.apple.com" />
 	<target host="www.lists.apple.com" />

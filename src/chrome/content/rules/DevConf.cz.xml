@@ -1,36 +1,14 @@
 <!--
-	Problematic subdomains:
-
-		- (www.) ¹
-		- openshift ²
-
-	¹ Works; self-signed, CN: web
-	² Works; mismatched, CN: *.rhcloud.com
-
-
-	Mixed content:
-
-		- css on (www.) from $self *
-
-		- Images, on:
-
-			- (www.) from $self *
-			- openshift from ^ *
-			- openshift from i.imgur.com *
-
-	* Secured by us
-
+	Non-functional hosts
+		Status code mismatch:
+			 - 2016.devconf.cz
+			 - openshift.devconf.cz
 -->
-<ruleset name="DevConf.cz" default_off="mismatched, self-signed">
-
+<ruleset name="DevConf.cz">
 	<target host="devconf.cz" />
-	<target host="*.devconf.cz" />
+	<target host="www.devconf.cz" />
 
+	<securecookie host="^(www\.)?devconf\.cz$" name=".+" />
 
-	<securecookie host="^openshift\.devconf\.cz$" name=".+" />
-
-
-	<rule from="^http://(?:(openshift\.)|www\.)?devconf\.cz/"
-		to="https://$1devconf.cz/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
