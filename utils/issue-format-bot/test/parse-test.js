@@ -1,3 +1,5 @@
+'use strict';
+
 const vows = require('perjury'),
       assert = vows.assert,
       _ = require('lodash');
