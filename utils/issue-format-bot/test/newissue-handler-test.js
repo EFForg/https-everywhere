@@ -2,7 +2,8 @@
 
 const vows = require('perjury'),
       assert = vows.assert,
-      robot = require('./mocks/robot');
+      robot = require('./mocks/robot'),
+      makeContext = require('./mocks/context');
 
 vows.describe('new issue handler').addBatch({
 	'When we require the module': {
@@ -24,6 +25,16 @@ vows.describe('new issue handler').addBatch({
 			},
 			'it returns a function': function(err, handler) {
 				assert.isFunction(handler);
+			},
+			'and we pass it the context of a new issue': {
+				topic: function(handler) {
+					const context = makeContext.issue();
+
+					handler(context);
+				},
+				'it works': function(err) {
+					assert.ifError();
+				}
 			}
 		}
 	}
