@@ -1,7 +1,6 @@
 'use strict';
 
-const _ = require('lodash'),
-      newissue = require('./lib/newissue');
+const newissue = require('./lib/newissue');
 
 module.exports = robot => {
 	robot.log('HTTPS Everywhere ruleset parser started.');

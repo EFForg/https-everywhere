@@ -1,6 +1,7 @@
 'use strict';
 
-const parse = require('./parse');
+const parse = require('./parse'),
+      _ = require('lodash');
 
 module.exports = function(robot) {
 	return context => {
