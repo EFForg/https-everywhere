@@ -96,11 +96,11 @@ class UrlComparisonThread(threading.Thread):
 		problems = []
 		for url in task.urls:
 			result = self.processUrl(url, task)
-			if result:
+			if result[0]:
 				problems.append(result)
 		if problems:
 			for problem in problems:
-				logging.error("%s: %s" % (task.ruleFname, problem))
+				logging.error("%s: %s" % (task.ruleFname, problem[0]))
 			if self.autoDisable:
 				disableRuleset(task.ruleset, problems)
 
@@ -193,16 +193,19 @@ class UrlComparisonThread(threading.Thread):
 			logging.info("Finished comparing %s -> %s. Rulefile: %s.",
 				plainUrl, transformedUrl, ruleFname)
 
-		return message
+		return [message, plainUrl]
 
-def disableRuleset(ruleset, problems):
+def disableRuleset(ruleset, problemsRules):
+	problems = [problem[0] for problem in problemsRules]
+	rules = [problem[1] for problem in problemsRules]
 	logging.info("Disabling ruleset %s", ruleset.filename)
 	contents = open(ruleset.filename).read()
 	# Don't bother to disable rulesets that are already disabled
 	if re.search("\bdefault_off=", contents):
 		return
-	contents = re.sub("(<ruleset [^>]*)>",
-		"\\1 default_off='failed ruleset test'>", contents)
+	for rule in rules:
+		contents = re.sub('<[ \n]*target[ \n]+host[ \n]*=[ \n]*"%s"[ \n]*\/?[ \n]*>' % (rule.split('/')[2]),
+			"", contents)
 
 	# Since the problems are going to be inserted into an XML comment, they cannot
 	# contain "--", or they will generate a parse error. Split up all "--" with a
