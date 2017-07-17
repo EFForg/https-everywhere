@@ -1,4 +1,6 @@
+from tldextract import tldextract
 from urlparse import urlparse
+
 
 import regex
 
@@ -178,6 +180,28 @@ class Ruleset(object):
 						self.filename, test.url))
 				self.determine_test_application_run = True
 		return self.test_application_problems
+
+	def getTargetValidityProblems(self):
+		"""Verify that each target has a valid TLD in order to prevent problematic rewrite
+			 as stated in EFForg/https-everywhere/issues/10877. In particular, 
+			 right-wildcard target are ignored from this test.
+
+			 Returns an array of strings reporting any coverage problems if they exist,
+			 or empty list if coverage is sufficient.
+			 """
+		problems = self._determineTestApplication()
+		# Next, make sure each target has a valid TLD
+		for target in self.targets:
+			# Ignore right-wildcard targets
+			if target.endswith(".*"):
+				continue
+				
+			# Extract TLD from target if possible
+			res = tldextract.extract(target)
+			if res.suffix == "":
+				problems.append("%s: Target '%s' missing gTLD/ ccTLD" % (self.filename, target))
+				
+		return problems
 
 	def getCoverageProblems(self):
 		"""Verify that each rule and each exclusion has the right number of tests
