@@ -290,6 +290,9 @@ def cli():
 	checkCoverage = False
 	if config.has_option("rulesets", "check_coverage"):
 		checkCoverage = config.getboolean("rulesets", "check_coverage")
+	checkTargetValidity = False
+	if config.has_option("rulesets", "check_target_validity"):
+		checkTargetValidity = config.getboolean("rulesets", "check_target_validity")
 	checkNonmatchGroups = False
 	if config.has_option("rulesets", "check_nonmatch_groups"):
 		checkNonmatchGroups = config.getboolean("rulesets", "check_nonmatch_groups")
@@ -341,6 +344,7 @@ def cli():
 	
 	rulesets = []
 	coverageProblemsExist = False
+	targetValidityProblemExist = False
 	nonmatchGroupProblemsExist = False
 	testFormattingProblemsExist = False
 	for xmlFname in xmlFnames:
@@ -362,6 +366,12 @@ def cli():
 			problems = ruleset.getCoverageProblems()
 			for problem in problems:
 				coverageProblemsExist = True
+				logging.error(problem)
+		if checkTargetValidity:
+			logging.debug("Checking target validity for '%s'." % ruleset.name)
+			problems = ruleset.getTargetValidityProblems()
+			for problem in problems:
+				targetValidityProblemExist = True
 				logging.error(problem)
 		if checkNonmatchGroups:
 			logging.debug("Checking non-match groups for '%s'." % ruleset.name)
@@ -444,6 +454,9 @@ def cli():
 			json_output(resQueue, args.json_file, problems)
 	if checkCoverage:
 		if coverageProblemsExist:
+			return 1 # exit with error code
+	if checkTargetValidity:
+		if targetValidityProblemExist:
 			return 1 # exit with error code
 	if checkNonmatchGroups:
 		if nonmatchGroupProblemsExist:
