@@ -22,7 +22,7 @@
 cd $(dirname $0)
 RULESETS_JSON=pkg/rulesets.json
 
-if [ -n "$1" ]; then
+if [ -n "$1" -a "$1" != "--remove-update-channel" ]; then
   BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
   SUBDIR=checkout
   [ -d $SUBDIR ] || mkdir $SUBDIR
@@ -86,6 +86,13 @@ cp -a src/META-INF pkg/xpi-eff
 python2.7 -c "import json; m=json.loads(open('pkg/crx/manifest.json').read()); del m['applications']; open('pkg/crx/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
 # Remove the 'update_url' manifest key from the xpi version of the extension delivered to AMO
 python2.7 -c "import json; m=json.loads(open('pkg/xpi-amo/manifest.json').read()); del m['applications']['gecko']['update_url']; open('pkg/xpi-amo/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+
+# If the --remove-update-channel flag is set, ensure the extension is unable to update
+if [ "$1" == "--remove-update-channel" -o "$2" == "--remove-update-channel" ]; then
+  echo "Flag --remove-update-channel specified.  Removing the XPI extensions' ability to update."
+  python2.7 -c "import json; m=json.loads(open('pkg/xpi-amo/manifest.json').read()); m['applications']['gecko']['update_url'] = 'data:text/plain,'; open('pkg/xpi-amo/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+  python2.7 -c "import json; m=json.loads(open('pkg/xpi-eff/manifest.json').read()); m['applications']['gecko']['update_url'] = 'data:text/plain,'; open('pkg/xpi-eff/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+fi
 
 if [ -n "$BRANCH" ] ; then
   crx="pkg/https-everywhere-$VERSION.crx"
