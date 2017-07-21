@@ -1,61 +1,42 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://my.evidon.com/ => https://my.evidon.com/: (60, 'SSL certificate problem: certificate has expired')
-Fetch error: http://my.betteradvertising.com/ => https://my.betteradvertising.com/: (60, 'SSL certificate problem: certificate has expired')
-
-	Other Evidon rulesets:
-
-		- Ghostery_Enterprise.com.xml
+	Other Evidon related rulesets:
+		+ Ghostery.com.xml
+		+ Ghostery_Enterprie.com.xml
 
 
-	CDN buckets:
+	Non-functional hosts in *betteradvertising.com
+		SSL peer certificate was not OK:
+			 - cdn.betteradvertising.com
 
-		- www.betteradvertising.com.edgesuite.net
-			- cdn.betteradvertising.com
+		Peer certificate cannot be authenticated with given CA certificates:
+			 - my.betteradvertising.com
 
 
-	Problematic domains:
+	Non-functional hosts in *betrad.com
+		Peer certificate cannot be authenticated with given CA certificates:
+			 - betrad.com
+			 - www.betrad.com
 
-		- cdn.betteradvertising.com ¹
-		- blog.evidon.com ²
 
-	¹ Akamai
-	² Dropped
+	Non-functional hosts in *evidon.com
+		SSL peer certificate was not OK:
+			 - cdn.evidon.com
+
+		Peer certificate cannot be authenticated with given CA certificates:
+			 - blog.evidon.com
+			 - my.evidon.com
 
 -->
-<ruleset name="Evidon Inc (partial)" default_off='failed ruleset test'>
-
-	<!--	Direct rewrites:
-				-->
+<ruleset name="Evidon Inc (partial)">
+	<!-- *betrad.com -->
 	<target host="c.betrad.com" />
 	<target host="cdn.betrad.com" />
 	<target host="l.betrad.com" />
 
+	<!-- *evidon.com -->
+	<target host="evidon.com" />
+	<target host="www.evidon.com" />
 	<target host="info.evidon.com" />
-	<target host="my.evidon.com" />
 
-	<target host="my.betteradvertising.com" />
-
-	<!--	Complications:
-				-->
-	<target host="cdn.betteradvertising.com" />
-	<target host="blog.evidon.com" />
-	<target host="cdn.evidon.com" />
-
-
-	<rule from="^http://cdn\.(?:betteradvertising|evidon)\.com/"
-		to="https://cdn.betrad.com/" />
-
-	<rule from="^http://blog\.evidon\.com/(?![^?])"
-		to="https://www.ghostery.com/intelligence/business-blog/" />
-
-		<test url="http://blog.evidon.com/home.php" />
-
-	<rule from="^http://blog\.evidon\.com/"
-		to="https://www.ghostery.com/intelligence/business-blog" />
-
-	<rule from="^http:"
-		to="https:"/>
-
+	<rule from="^http:" to="https:" />
 </ruleset>
