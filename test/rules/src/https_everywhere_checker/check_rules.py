@@ -135,6 +135,13 @@ class UrlComparisonThread(threading.Thread):
 		try:
 			plainRcode, plainPage = fetcherPlain.fetchHtml(plainUrl)
 		except Exception, e:
+			errno, message = e
+			if errno == 6:
+				message = "Fetch error: %s => %s: %s" % (
+					plainUrl, transformedUrl, e)
+				self.queue_result("error", "fetch-error %s"% e, ruleFname, plainUrl, https_url=transformedUrl)
+				return message
+
 			logging.debug("Non-fatal fetch error for plain page %s: %s" % (plainUrl, e))
 
 		# Compare HTTP return codes - if original page returned 2xx,
