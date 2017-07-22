@@ -1,10 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://ngvpn04.nvidia.com/ => https://ngvpn04.nvidia.com/: (28, 'Connection timed out after 20001 milliseconds')
-Fetch error: http://ngvpn12.nvidia.com/ => https://ngvpn12.nvidia.com/: (28, 'Connection timed out after 20000 milliseconds')
-Fetch error: http://ngvpn17.nvidia.com/ => https://ngvpn17.nvidia.com/: (60, 'SSL certificate problem: certificate has expired')
-Non-2xx HTTP code: http://research.nvidia.com/ (200) => https://research.nvidia.com/ (502)
 
 	For problematic rules, see NVidia-mismatches.xml.
 
@@ -35,13 +29,17 @@ Non-2xx HTTP code: http://research.nvidia.com/ (200) => https://research.nvidia.
 
 		- blogs ¹
 		- news.developer ²
+		- ngvpn04.nvidia.com ²
+		- ngvpn12.nvidia.com ²
 		- download.gfe ²
 		- download-dce-2.gfe ²
 		- investor ²
 		- origin-forums ²
+		- research.nvidia.com ³
 
 	¹ 503
 	² Dropped
+	³ Redirects to HTTP
 
 
 	Problematic subdomains:
@@ -57,6 +55,7 @@ Non-2xx HTTP code: http://research.nvidia.com/ (200) => https://research.nvidia.
 		- forums ³
 		- ftpservices-uk	Missing certificate chain
 		- ngvpn ²
+		- ngvpn17 ⁴
 		- nvidianews **
 		- omniture ⁴
 		- registration	Missing certificate chain
@@ -67,7 +66,7 @@ Non-2xx HTTP code: http://research.nvidia.com/ (200) => https://research.nvidia.
 	² Works, akamai
 	³ Mismatched, CN: forums.geforce.com
 	** Mismatched
-	⁴ Expired 2014-07-04
+	⁴ Expired
 
 
 	These altnames don't exist:
@@ -116,7 +115,7 @@ Non-2xx HTTP code: http://research.nvidia.com/ (200) => https://research.nvidia.
 	* Secured by us
 
 -->
-<ruleset name="nVidia.com (partial)" default_off='failed ruleset test'>
+<ruleset name="nVidia.com (partial)">
 
 	<!--	Direct rewrites:
 				-->
@@ -132,14 +131,11 @@ Non-2xx HTTP code: http://research.nvidia.com/ (200) => https://research.nvidia.
 	<target host="nbound.nvidia.com" />
 	<target host="ngvpn01.nvidia.com" />
 	<target host="ngvpn03.nvidia.com" />
-	<target host="ngvpn04.nvidia.com" />
 	<target host="ngvpn05.nvidia.com" />
 	<target host="ngvpn10.nvidia.com" />
-	<target host="ngvpn12.nvidia.com" />
 	<target host="ngvpn13.nvidia.com" />
 	<target host="ngvpn15.nvidia.com" />
 	<target host="ngvpn16.nvidia.com" />
-	<target host="ngvpn17.nvidia.com" />
 	<target host="ngvpn19.nvidia.com" />
 	<target host="ngvpn20.nvidia.com" />
 	<target host="ngvpn21.nvidia.com" />
@@ -158,7 +154,6 @@ Non-2xx HTTP code: http://research.nvidia.com/ (200) => https://research.nvidia.
 	<target host="es.pforce.nvidia.com" />
 	<target host="redeem.nvidia.com" />
 	<!--target host="registration.nvidia.com" /-->
-	<target host="research.nvidia.com" />
 	<target host="shield.nvidia.com" />
 	<target host="store.nvidia.com" />
 	<target host="www.nvidia.com" />
@@ -202,21 +197,7 @@ Non-2xx HTTP code: http://research.nvidia.com/ (200) => https://research.nvidia.
 		<test url="http://www.nvidia.com/download/driverResults.aspx/97765/en-us" />
 		<test url="http://www.nvidia.com/content/DriverDownload-March2009/confirmation.php?url=/Windows/361.75/361.75-desktop-win10-64bit-international-whql.exe&amp;lang=us&amp;type=GeForce" />
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.nvidia\.com$" name="^(?:incap_ses_\d+_\d+|idm-\d+|s_\w+|visid_incap_\d+)$" /-->
-	<!--securecookie host="^developer\.nvidia\.com$" name="^NSC_\w{32}$" /-->
-	<!--securecookie host="^(devtalk|gridforums|nbound)\.nvidia\.com$" name="^___utm\w+$" /-->
-	<!--securecookie host="^(?:enterprisesupport|registration)\.nvidia\.com$" name="^(?:ASP\.NET_SessionId$|NSC_)" /-->
-	<!--securecookie host="^nvdeveloper\.nvidia\.com$" name="^(ASP\.NET_SessionId|AspxAutoDetectCookieSupport)$" /-->
-	<!--securecookie host="^nvidianews\.nvidia\.com$" name="^ASP\.NET_SessionId$" /-->
-
-	<securecookie host="^\." name="^(?:incap_ses_\d+_\d+|s_\w+|visid_incap_\d+)$" />
-	<securecookie host="^(?!shop\.)\w" name="." />
-
-
-	<rule from="^http://nvidia\.com/"
-		to="https://www.nvidia.com/" />
+	<securecookie host=".+" name=".+" />
 
 	<!--	Redirect drops path, args,
 		and forward slash:
@@ -233,7 +214,6 @@ Non-2xx HTTP code: http://research.nvidia.com/ (200) => https://research.nvidia.
 	<rule from="^http://(?:ns)?omniture\.nvidia\.com/"
 		to="https://nvidia.122.2o7.net/" />
 
-	<rule from="^http:"
-		to="https:" />
+	<rule from="^http:"	to="https:" />
 
 </ruleset>
