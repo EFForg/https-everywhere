@@ -66,7 +66,7 @@ Important directories you might want to know about
 
     test/                     The tests live here
 
-    util/                     Various utilities
+    utils/                    Various utilities
 
 Hacking on the Source Code
 --------------------------
