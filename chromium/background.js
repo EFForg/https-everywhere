@@ -227,8 +227,7 @@ function onBeforeRequest(details) {
     return;
   }
 
-  var uri = document.createElement('a');
-  uri.href = details.url;
+  const uri = new URL(details.url);
 
   // Should the request be canceled?
   var shouldCancel = (
@@ -294,8 +293,7 @@ function onBeforeRequest(details) {
 
   if (newuristr && using_credentials_in_url) {
     // re-insert userpass info which was stripped temporarily
-    var uri_with_credentials = document.createElement('a');
-    uri_with_credentials.href = newuristr;
+    const uri_with_credentials = new URL(newuristr);
     uri_with_credentials.username = tmp_user;
     uri_with_credentials.password = tmp_pass;
     newuristr = uri_with_credentials.href;
@@ -573,7 +571,7 @@ function onBeforeRedirect(details) {
 
 // Registers the handler for requests
 // See: https://github.com/EFForg/https-everywhere/issues/10039
-wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["<all_urls>"]}, ["blocking"]);
+wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"]);
 
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.

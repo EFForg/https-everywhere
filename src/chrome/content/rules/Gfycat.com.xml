@@ -1,11 +1,5 @@
 <!--
-	Fully covered domains:
-
-		- gfycat.com
-
-		- *.gfycat.com:
-
-			- zippy
+	Wildcard DNS and certificate.
 
 -->
 <ruleset name="Gfycat.com">
@@ -13,11 +7,23 @@
 	<target host="gfycat.com" />
 	<target host="*.gfycat.com" />
 
+		<!-- First level subdomains -->
+		<test url="http://www.gfycat.com/" />
+		<test url="http://assets.gfycat.com/gfycat.js" />
+		<test url="http://thumbs.gfycat.com/AgileExaltedGreyhounddog-size_restricted.gif" />
+	
+		<!-- Second level subdomains -->
+		<test url="http://1.sockets.gfycat.com/" />
 
-	<securecookie host="^\.gfycat\.com$" name=".+" />
+		<!-- Tests for wildcard DNS -->
+		<test url="http://testurl1.gfycat.com/" />
+		<test url="http://testurl2.gfycat.com/" />
+		<test url="http://testurl3.gfycat.com/" />
+		<test url="http://testurl4.gfycat.com/" />
 
+	<securecookie host=".+" name=".+" />
 
-	<rule from="^http://([^/:@\.]+\.)?gfycat\.com/"
-		to="https://$1gfycat.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
