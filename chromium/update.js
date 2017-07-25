@@ -194,6 +194,7 @@ async function performCheck() {
   let current_timestamp = Date.now() / 1000;
   setStoredLocalObject('last-checked', current_timestamp);
 
+  let num_updates = 0;
   for(let update_channel of update_channels){
     let new_rulesets_timestamp = await checkForNewRulesets(update_channel);
     if(new_rulesets_timestamp){
@@ -201,12 +202,15 @@ async function performCheck() {
       let new_rulesets = await getNewRulesets(new_rulesets_timestamp, update_channel);
       try{
         await verifyAndStoreNewRulesets(new_rulesets, update_channel);
+        num_updates++;
       } catch(err) {
         util.log(util.WARN, update_channel.name + ': ' + err);
       }
     }
   }
-  applyStoredRulesets();
+  if(num_updates > 0){
+    applyStoredRulesets();
+  }
 };
 
 
