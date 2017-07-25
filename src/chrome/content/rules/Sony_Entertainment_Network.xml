@@ -1,71 +1,28 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://account.sonyentertainmentnetwork.com/ (200) => https://account.sonyentertainmentnetwork.com/ (403)
-
 	For other Sony coverage, see Sony.xml.
 
+	Non-functional hosts
+		Couldn't connect to server:
+			 - sonyentertainmentnetwork.com
 
-	CDN buckets:
+		SSL peer certificate was not OK:
+			 - music.sonyentertainmentnetwork.com
 
-		- sonyentnet.vo.llnwd.net ← cdn.sonyentertainmentnetwork.com
-
-			- .hs. does not exist
-
-
-	Problematic hosts in *sonyentertainmentnetwork.com:
-
-		- (www.)? ᵐ
-		- cdn		(400; mismatched, CN: *.hs.llnwd.net)
-		- music ᵐ
-
-	ᵐ Mismatched
-
-
-	These altnames don't exist:
-
-		- www.account.sonyentertainmentnetwork.com
-		- www.auth.api.sonyentertainmentnetwork.com
-
+		Status code mismatch:
+			 - auth.api.sonyentertainmentnetwork.com
 -->
-<ruleset name="Sony Entertainment Network.com (partial)" default_off='failed ruleset test'>
-
-	<!--	Direct rewrites:
-				-->
+<ruleset name="Sony Entertainment Network (partial)">
+	<target host="sonyentertainmentnetwork.com" />
+	<target host="www.sonyentertainmentnetwork.com" />
 	<target host="account.sonyentertainmentnetwork.com" />
-	<target host="auth.api.sonyentertainmentnetwork.com" />
+		<test url="http://account.sonyentertainmentnetwork.com/login.action" />
+	<target host="cdn.sonyentertainmentnetwork.com" />
 	<target host="friendme.sonyentertainmentnetwork.com" />
 	<target host="store.sonyentertainmentnetwork.com" />
 
-	<!--	Complications:
-				-->
-	<target host="sonyentertainmentnetwork.com" />
-	<target host="cdn.sonyentertainmentnetwork.com" />
-	<!--target host="music.sonyentertainmentnetwork.com" /-->
-	<target host="www.sonyentertainmentnetwork.com" />
-
-
-	<securecookie host="." name=".+" />
-
-
-	<!--	Redirect drops forward slash and args:
-							-->
-	<rule from="^http://(?:www\.)?sonyentertainmentnetwork\.com/+(?:\?.*)?$"
-		to="https://www.playstationnetwork.com/home" />
-
-	<!--	Redirect keeps path, but not args nor forward slash:
-									-->
-	<rule from="^http://(?:www\.)?sonyentertainmentnetwork\.com/+([^?]*).*"
-		to="https://www.playstationnetwork.com/" />
-
-		<test url="http://www.sonyentertainmentnetwork.com/about" />
-		<test url="http://www.sonyentertainmentnetwork.com/ie/" />
-		<test url="http://www.sonyentertainmentnetwork.com/music/" />
-
-	<rule from="^http://cdn\.sonyentertainmentnetwork\.com/"
-		to="https://www.sonyentertainmentnetwork.com/" />
+	<rule from="^http://sonyentertainmentnetwork\.com/"
+			to="https://www.sonyentertainmentnetwork.com/" />
 
 	<rule from="^http:"
-		to="https:" />
-
+			to="https:" />
 </ruleset>
