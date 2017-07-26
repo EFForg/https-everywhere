@@ -6,27 +6,30 @@
 		- Archive.org_Way_Back_Machine.xml
 		- Archive-It.org.xml
 		- Open_Library.org.xml
+		- Political-TV-Ad-Archive.xml
 
 
-	Nonfunctional subdomains:
+	Problematic domains:
 
-		- pgdp01.us ²
-
-	² Refused
-
-
-	Problematic subdomains:
-
-		- blog.openlibrary *
-
-	* Works, cert only matches *.archive.org
+		- ait.blog.archive.org		(cert mismatch)
+		- crawler.archive.org		(refused)
+		- gmeta[0-7].us.archive.org	(refused)
+		- graphite.us.archive.org	(refused)
+		- lending.us.archive.org	(time out)
+		- *.s3dns.us.archive.org	(cert mismatch)
+		- www\d\d.us.archive.org	(cert mismatch)
 
 
 	Fully covered hosts in *archive.org:
 
 		- (www.)?
+		- analytics
 		- blog
-		- blog.openlibrary	(→ blog.openlibrary.org)
+		- bt1
+		- bt2
+		- builds
+		- developers
+		- store
 		- *.us
 
 -->
@@ -35,31 +38,33 @@
 	<!--	Direct rewrites:
 				-->
 	<target host="archive.org" />
-	<target host="blog.archive.org" />
-	<target host="*.us.archive.org" />
 	<target host="www.archive.org" />
-
-	<!--	Complications:
-				-->
-	<target host="blog.openlibrary.archive.org" />
-
-		<exclusion pattern="^http://(?:graphite|pgdp01|s3|lending)\.us\.archive\.org/" />
-
-			<test url="http://graphite.us.archive.org/" />
-			<test url="http://pgdp01.us.archive.org/" />
-			<test url="http://s3.us.archive.org/" />
-			<test url="http://lending.us.archive.org/" />
-
-		<!--	The rule does not handle web anyway:
-
-		<exclusion pattern="^http://web\.archive\.org/" /-->
+	<target host="analytics.archive.org" />
+	<target host="blog.archive.org" />
+	<target host="bt1.archive.org" />
+	<target host="bt2.archive.org" />
+	<target host="builds.archive.org" />
+	<target host="developers.archive.org" />
+	<target host="store.archive.org" />
+	<target host="*.us.archive.org" />
 
 
-	<securecookie host="^\.archive\.org$" name=".+" />
+	<securecookie host="^(www|analytics|bt[12]|builds|developers|store)\.archive\.org$"
+			name=".+" />
 
 
-	<rule from="^http://blog\.openlibrary\.archive\.org/"
-		to="https://blog.openlibrary.org/" />
+	<test url="http://ia301543.us.archive.org/" />
+	<exclusion pattern="^http://gmeta[0-7]\.us\.archive\.org/" />
+		<test url="http://gmeta4.us.archive.org/" />
+	<exclusion pattern="^http://(graphite|lending)\.us\.archive\.org/" />
+		<test url="http://graphite.us.archive.org/" />
+		<test url="http://lending.us.archive.org/" />
+	<exclusion pattern="^http://([\w-]+\.)+s3dns\.us\.archive\.org/" />
+		<test url="http://stats.ia902706.s3dns.us.archive.org/" />
+		<test url="http://hom.3d.ia802600.s3dns.us.archive.org/" />
+		<test url="http://djaj-zine.ia601509.s3dns.us.archive.org/" />
+	<exclusion pattern="^http://www\d\d\.us\.archive\.org/" />
+		<test url="http://www17.us.archive.org/" />
 
 	<rule from="^http:"
 		to="https:" />

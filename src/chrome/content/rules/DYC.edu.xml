@@ -1,27 +1,40 @@
 <!--
 	D'Youville College
 
+	For other DYC coverage, see DYC.edu-mixedcontent.xml
 
-	Problematic subdomains:
+	Nonfunctional hosts in *.dyc.edu:
+		- athletics.dyc.edu (m)
+		- calendar.dyc.edu (r)
+		- library.dyc.edu (403)
+		- depts.dyc.edu (403)
+		- spartancentral.dyc.edu (m)
 
-		- opensource	(self-signed)
-		- virtual	(expired 2011-11-16, CN: localhost)
+	Mixed content from calendar.dyc.edu on www.dyc.edu and careers.dyc.edu
 
-
-	Nonfunctional subdomains:
-
-		- tweedledee	(dropped)
-
+	h: http redirect
+	m: certificate mismatch
+	r: connection refused
+	s: self-signed certificate
+	t: timeout on https
 -->
-<ruleset name="DYC.edu (partial)" default_off="expired, self-signed">
+<ruleset name="DYC.edu (partial)">
 
-	<target host="*.dyc.edu" />
+	<target host="ads.dyc.edu" />
+		<test url="http://ads.dyc.edu/dyouville_g_freshmen/" />
+	<target host="casi.dyc.edu" />
+	<target host="faid.dyc.edu" />
+	<target host="gallery.dyc.edu" />
+	<target host="moodle.dyc.edu" />
+	<target host="portal.dyc.edu" />
+	<target host="publications.dyc.edu" />
+	<target host="services.dyc.edu" />
+		<test url="http://services.dyc.edu/Student/Home/Privacy" />
+	<target host="student.dyc.edu" />
+	<target host="voices.dyc.edu" />
 
 
-	<securecookie host="^\.opensource\.dyc\.edu$" name=".+" />
-
-
-	<rule from="^http://(opensource|virtual)\.dyc\.edu/"
-		to="https://$1.dyc.edu/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -31,11 +31,11 @@ PROFILE_DIRECTORY="$(mktemp -d)"
 trap 'rm -r "$PROFILE_DIRECTORY"' EXIT
 tar -Jxvf $1 -C $PROFILE_DIRECTORY > /dev/null
 TBB_LOCALIZED_DIRECTORY=`find $PROFILE_DIRECTORY -maxdepth 1 -mindepth 1 -type d`
-HTTPSE_INSTALL_DIRECTORY=$TBB_LOCALIZED_DIRECTORY/Browser/TorBrowser/Data/Browser/profile.default/extensions/https-everywhere-eff@eff.org
+HTTPSE_INSTALL_XPI=$TBB_LOCALIZED_DIRECTORY/Browser/TorBrowser/Data/Browser/profile.default/extensions/https-everywhere-eff@eff.org.xpi
 echo 'pref("extensions.https_everywhere.log_to_stdout", true);' >> $TBB_LOCALIZED_DIRECTORY/Browser/TorBrowser/Data/Browser/profile.default/preferences/extension-overrides.js
 echo 'pref("extensions.https_everywhere.LogLevel", 0);' >> $TBB_LOCALIZED_DIRECTORY/Browser/TorBrowser/Data/Browser/profile.default/preferences/extension-overrides.js
 # Remove the prebundled HTTPSE
-rm -rf $HTTPSE_INSTALL_DIRECTORY
+rm -rf $HTTPSE_INSTALL_XPI
 
 # Build the XPI to run all the validations in makexpi.sh, and to ensure that
 # we test what is actually getting built.
@@ -43,9 +43,9 @@ rm -rf $HTTPSE_INSTALL_DIRECTORY
 XPI_NAME="`ls -tr pkg/*-eff.xpi | tail -1`"
 
 # Install into our fresh Tor Browser
-unzip -qd $HTTPSE_INSTALL_DIRECTORY $XPI_NAME
+cp -a $XPI_NAME $HTTPSE_INSTALL_XPI
 
-if [ ! -d "$HTTPSE_INSTALL_DIRECTORY" ]; then
+if [ ! -f "$HTTPSE_INSTALL_XPI" ]; then
   die "Tor Browser does not have HTTPS Everywhere installed"
 fi
 

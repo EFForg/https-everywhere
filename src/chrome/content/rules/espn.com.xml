@@ -1,0 +1,53 @@
+<!--
+	For rules causing MCB, see espn.com-mixedcontent.xml.
+
+
+	Problematic hosts in *espn.com:
+
+		- espndeportes ˣ
+		- xgames ˣ
+
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- espndeportes.espn.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on espndeportes, xgames from a.espncdn.com ᵐ
+
+		- Images, on:
+		
+			- espndeportes, xgames from a[1-4]?.espncdn.com ᵐ
+			- xgames from pbs.twimg.com ˢ
+
+	ᵐ Not secured by us <= mismatched
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="ESPN.com (partial)">
+
+	<target host="secure.espn.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.espn\.com/$" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^espndeportes\.espn\.com$" name="^(?:country|device)" /-->
+
+	<securecookie host="^\." name="^optimizely" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

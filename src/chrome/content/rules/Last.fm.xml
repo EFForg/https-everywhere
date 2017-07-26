@@ -22,21 +22,31 @@
 	¹ Refused
 	² 503, akamai
 
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- secure.last.fm
+		- www.last.fm
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
 -->
-<ruleset name="Last.fm (buggy)" default_off="breaks streaming">
+<ruleset name="Last.fm (partial)" default_off="testing">
 
 	<target host="last.fm" />
-	<target host="*.last.fm" />
-	<target host="cdn.lst.fm" />
+	<target host="secure.last.fm" />
+	<target host="static-web.last.fm" />
+	<target host="www.last.fm" />
 
 
-	<rule from="^http://last\.fm/"
-		to="https://www.last.fm/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:secure|www)\.last\.fm$" name="^csrftoken$" /-->
 
-	<rule from="^http://www\.last\.fm/(?=join|login|settings/lost(?:password|username))"
-		to="https://www.last.fm/" />
+	<securecookie host="^\w" name="." />
 
-	<rule from="^http://cdn\.la?st\.fm/"
-		to="https://www.last.fm/static/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

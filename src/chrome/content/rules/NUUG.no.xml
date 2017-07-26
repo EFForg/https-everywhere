@@ -1,83 +1,62 @@
 <!--
-	For rules causing false/broken MCB, see NUUG.no-falsemixed.xml.
+	Non-functional hosts
+		Couldn't connect to server:
+			 - archiver.nuug.no
+			 - dugnadsnett.nuug.no
+			 - fiksgatami-prod.nuug.no
+			 - fiksgatami2-dev.nuug.no
+			 - frikanalen.nuug.no
+			 - mapit.nuug.no
+			 - master.nuug.no
+			 - master2.nuug.no
+			 - portal.nuug.no
+			 - scraper.nuug.no
+			 - vert.nuug.no
 
-	For problematic rules, see NUUG.no-problematic.xml.
+		Timeout was reached:
+			 - cserv.nuug.no
+			 - fiksgatami-dev.nuug.no
+			 - fiksgatami2-prod.nuug.no
+			 - sqldb.nuug.no
 
+		SSL peer certificate was not OK:
+			 - alaveteli-prod.nuug.no
+			 - bsd.nuug.no
+			 - foundation.nuug.no
+			 - freebsd.nuug.no
+			 - haugalandlug.nuug.no
+			 - login.nuug.no
+			 - munin.nuug.no
+			 - mx1.nuug.no
+			 - ns1.nuug.no
+			 - openbsd.nuug.no
 
-	Problematic subdomains:
+		Peer certificate cannot be authenticated with given CA certificates:
+			 - frikanalen-dev.nuug.no
+			 - tjener.nuug.no
 
-		- planet *
-		- wiki *
+		Status code mismatch:
+			 - video.nuug.no (require auth)
 
-	* Works; mismatched, CN: nerdhaven.nuug.no
+		4xx client error:
+			 - approve.nuug.no
 
-
-	Partially covered subdomains:
-
-		- memberdb	(avoiding false/broken MCB)
-
-
-	Fully covered subdomains:
-
-		- (www.)
-		- approve
-		- lists
-		- nerdhaven
-		- rt
-
-
-	Mixed content:
-
-		- Video on www from player.vimeo.com ¹
-
-		- Images, on:
-
-			- planet, from:
-
-				- planet ¹
-				- www ¹
-				- (www.)bekkelund.net ²
-				- \d.bp.blogspot.com ¹
-				- www.devolo.com ¹
-				- blogg.friprog.no ²
-				- www.hdwallpapersinn.com ²
-				- www.southafrica.net ²
-				- www.wired.com ²
-
-			- wiki from wiki ¹
-
-	¹ Secured by us
-	² Unsecurable
-
+		5xx server error:
+			 - varnish.nuug.no
 -->
-<ruleset name="NUUG.no (partial)" platform="cacert">
-
-	<!--	Direct rewrites:
-				-->
+<ruleset name="NUUG.no">
 	<target host="nuug.no" />
-	<target host="approve.nuug.no" />
+	<target host="www.nuug.no" />
+	<target host="alaveteli-dev.nuug.no" />
+	<target host="home.nuug.no" />
+	<target host="hotell.nuug.no" />
 	<target host="lists.nuug.no" />
 	<target host="memberdb.nuug.no" />
 	<target host="nerdhaven.nuug.no" />
+	<target host="piwik.nuug.no" />
+	<target host="planet.nuug.no" />
 	<target host="rt.nuug.no" />
-	<target host="www.nuug.no" />
+	<target host="wiki.nuug.no" />
 
-		<!--	Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://memberdb\.nuug\.no/+(?!favicon\.ico|global\.css)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://memberdb.nuug.no/?page=edit-member" />
-			<test url="http://memberdb.nuug.no/?page=index" />
-			<test url="http://memberdb.nuug.no/?page=signup" />
-
-			<!--	-ve:
-					-->
-			<test url="http://memberdb.nuug.no//global.css" />
-
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

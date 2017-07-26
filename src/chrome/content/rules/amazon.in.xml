@@ -29,7 +29,7 @@
 
 		<!--	Redirects to http:
 						-->
-		<exclusion pattern="^http://(?:www\.)?amazon\.in/+(?:.+/)?(?:dp|e)(?:$|[?/])" />
+		<exclusion pattern="^http://(www\.)?amazon\.in/+(.+/)?(b|dp|e|s)($|[?/])" />
 
 			<!--	+ve:
 					-->
@@ -41,6 +41,8 @@
 			<test url="http://www.amazon.in/PIGLOO-Colourful-Decorative-Adhesive-Glitter/dp/B01C3X2DGU/" />
 			<test url="http://www.amazon.in/Sandra-Brown/e/B000AQ0XWO" />
 			<test url="http://www.amazon.in/Zest-Toyz-Kitchen-Pretend-Lights/dp/B01GK1EWC4" />
+			<test url="http://www.amazon.in/b/?node=13713623031" />
+			<test url="http://www.amazon.in/s/?field-keywords=Raspberry+Pi" />
 
 		<test url="http://www.amazon.in/Gabriel-Rear-Dicky-Struts-2-Hyundai/forum/-/-/1/?asin=B01EOPLX7K" />
 		<test url="http://www.amazon.in/SG-Musical-SGM696-Dholak-Screw/gp/product/B00RCNO1OO" />
@@ -48,6 +50,30 @@
 		<test url="http://www.amazon.in/b?node=2762140031" />
 		<test url="http://www.amazon.in/review/top-reviewers" />
 
+		<!-- CORS issues with AJAX requests,
+		see also:
+			* https://github.com/EFForg/https-everywhere/issues/6157
+			* https://github.com/EFForg/https-everywhere/issues/10515
+		-->
+		<exclusion pattern="^http://(www\.)?amazon\.in/(cross-app-features|gp|xa)/" />
+			<!-- 405 on GET requests with curl, API only responses on specific POST requests -->
+			<test url="http://amazon.in/cross-app-features/ags-best-deal-widget/handler/get-best-deals.html" />
+			<test url="http://www.amazon.in/cross-app-features/ags-best-deal-widget/handler/get-best-deals.html" />
+			<test url="http://amazon.in/gp/delivery/ajax/address-change.html" />
+			<test url="http://www.amazon.in/gp/delivery/ajax/address-change.html" />
+			<test url="http://amazon.in/gp/goldbox" />
+			<test url="http://www.amazon.in/gp/goldbox" />
+			<test url="http://amazon.in/gp/search-inside/js" />
+			<test url="http://www.amazon.in/gp/search-inside/js" />
+			<!-- 404 on GET requests, API only responses on specific POST requests -->
+			<test url="http://amazon.in/xa/dealcontent/v2/GetDealStatus" />
+			<test url="http://www.amazon.in/xa/dealcontent/v2/GetDealStatus" />
+			<test url="http://amazon.in/xa/dealcontent/v2/GetDeals" />
+			<test url="http://www.amazon.in/xa/dealcontent/v2/GetDeals" />
+			<test url="http://amazon.in/xa/dealcontent/v2/SelectDeals" />
+			<test url="http://www.amazon.in/xa/dealcontent/v2/SelectDeals" />
+			<test url="http://amazon.in/xa/dealcontent/v2/GetDealMetadata" />
+			<test url="http://www.amazon.in/xa/dealcontent/v2/GetDealMetadata" />
 
 	<!--	Not secured by server:
 					-->

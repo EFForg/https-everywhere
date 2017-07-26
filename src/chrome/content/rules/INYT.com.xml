@@ -1,57 +1,28 @@
 <!--
 	For other New York Times coverage, see NYTimes.xml.
 
+	Incomplete cert chain:
+		customercare.inyt.com	http://customercare.inyt.com/ManageMyAccount/Login.html
+		partner.inyt.com	http://partner.inyt.com/ExtranetPnD/login
+		subscribe.inyt.com	http://subscribe.inyt.com/student
 
-	(www.)?inyt.com: Mismatched
-
-
-	Insecure cookies are set for these hosts:
-
-		- customercare.inyt.com
-		- subscribe.inyt.com
-
+	Mismatched:
+		eedition.inyt.com
+		(www.)?inyt.com	*
+	* : Some redirect to www.nytimes.com, some redirect to global.nytimes.com, some no redirect.
+	Tests:
+	http://www.inyt.com/digileftnav
+	http://www.inyt.com/edu-leftnav
+	http://www.inyt.com/share/
+	http://www.inyt.com/subscriptions/inyt/lp3KXL9.html
+	http://www.inyt.com/subscriptions/inyt/lp3KYXX.html/
+	http://www.inyt.com/subscriptions/inyt/lp3L3W7.html
 -->
 <ruleset name="INYT.com (partial)">
+	<target host="goldengate.inyt.com" />
+		<test url="http://goldengate.inyt.com/dana-na/auth/remediate.cgi" />
 
-	<!--	Direct rewrites:
-				-->
-	<target host="customercare.inyt.com" />
-	<target host="subscribe.inyt.com" />
+	<securecookie host=".+" name=".+" />
 
-	<!--	Complications:
-				-->
-	<target host="inyt.com" />
-	<target host="www.inyt.com" />
-
-		<!--	/*(?!$|\?) 404s:
-					-->
-		<exclusion pattern="^http://(?:www\.)?inyt\.com/+(?!$|\?)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://www.inyt.com/digileftnav" />
-			<test url="http://www.inyt.com/edu-leftnav" />
-			<test url="http://www.inyt.com/share/" />
-			<test url="http://www.inyt.com/subscriptions/inyt/lp3KXL9.html" />
-			<test url="http://www.inyt.com/subscriptions/inyt/lp3KYXX.html/" />
-			<test url="http://www.inyt.com/subscriptions/inyt/lp3L3W7.html" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^(?:customercare|subscribe)\.inyt\.com$" name="^JSESSIONID$" /-->
-
-	<securecookie host="^\." name="^(?:__utm|_ga$)" />
-	<securecookie host="^\w" name="." />
-
-
-	<!--	Redirect keeps args but
-		not forward slash:
-					-->
-	<rule from="^http://(?:www\.)?inyt\.com/+"
-		to="https://global.nytimes.com/" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

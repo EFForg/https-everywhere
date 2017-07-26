@@ -1,22 +1,38 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://iar.com/ => https://www.iar.com/: Cycle detected - URL already encountered: https://www.iar.com/
-Fetch error: http://www.iar.com/ => https://www.iar.com/: Cycle detected - URL already encountered: https://www.iar.com/
-	Problematic subdomains:
+	^iar.com: refused
 
-		- ^	(refused)
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- www.iar.com
+		- .www.iar.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="IAR.com" default_off='failed ruleset test'>
+<ruleset name="IAR.com">
 
-	<target host="iar.com" />
+	<!--	Direct rewrites:
+				-->
 	<target host="www.iar.com" />
 
+	<!--	Complications:
+				-->
+	<target host="iar.com" />
 
-	<securecookie host="^www\.iar\.com$" name=".+" />
+
+	<!--securecookie host="^www\.iar\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^\.www\.iar\.com$" name="^PreferredLanguage$" /-->
+
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\.www\." name="." />
 
 
-	<rule from="^http://(?:www\.)?iar\.com/"
+
+	<rule from="^http://iar\.com/"
 		to="https://www.iar.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

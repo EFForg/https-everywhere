@@ -1,89 +1,66 @@
 <!--
-	For problematic rules, see Aberystwyth-University-mismatches.xml.
+	Non-functional hosts
+		Couldn't connect to server:
+			 - www.catering.aber.ac.uk
+			 - cms.aber.ac.uk
+			 - jump.aber.ac.uk
+			 - meq.aber.ac.uk
+			 - nexus.aber.ac.uk
+			 - sams.aber.ac.uk
 
+		Timeout was reached:
+			 - arun.aber.ac.uk
+			 - qmpsum.aber.ac.uk
 
-	aber-ac-uk.campuspack.eu
+		SSL connect error:
+			 - www.bis.aber.ac.uk
+			 - users.aber.ac.uk
 
+		SSL peer certificate was not OK:
+			 - aber.ac.uk
+			 - aspire.aber.ac.uk
+			 - www.inf.aber.ac.uk
+			 - webmail.aber.ac.uk
 
-	Problematic subdomains:
+		Peer certificate cannot be authenticated with given CA certificates:
+			 - cadair.aber.ac.uk
 
-		- ^
-		- arun		(CN: primo; same as primo)
-		- beta
-		- connect	(self-signed)
+		Secure connection redirects to plaintext:
+			 - shop.aber.ac.uk
 
-
-	Nonfunctional subdomains:
-
-		- www.inf
-		- jump		(rx_record_too_long)
-		- nexus
-		- users
-
-
-	Partially covered subdomains:
-
-		- cadair
-
-			- Many paths redirect to http
-			- These don't:
-
-				- dspace/ldap-login
-
-		- primo
-
-			- These paths 404:
-
-				- primo_library/libweb/
-
-			- These don't:
-
-				- $
-				- goto/logon/
-				- pds
-
-
-	Fully covered subdomains:
-
-		- ^		(→ www)
-		- adfs
-		- beta		(→ www)
-		- blackboard
-		- careers
-		- exchange
-		- myaccount
-		- outlook
-		- blackboardtest.psv
-		- qmpsum
-		- share
-		- shibboleth
-		- shop
-		- staffrecord
-		- studentrecord
-		- voyager
-		- webmail
-		- wordpress
-		- www
-
+		Mixed content blocking (MCB) tiggered:
+			 - wordpress.aber.ac.uk
 -->
-<ruleset name="Aberystwyth University (partial)">
-
+<ruleset name="Aberystwyth University (partial)" default_off='failed ruleset test'>
 	<target host="aber.ac.uk" />
-	<target host="*.aber.ac.uk" />
-		<exclusion pattern="^http://cadair\.aber\.ac\.uk/(?!dspace/ldap-login)" />
-		<exclusion pattern="^http://(?:connect|www\.inf|jump|nexus|users)\." />
-		<exclusion pattern="^http://primo\.aber\.ac\.uk(?:80)?/primo_library/libweb/" />
+	<target host="www.aber.ac.uk" />
+	<target host="abw.aber.ac.uk" />
+	<target host="accommodation.aber.ac.uk" />
+	<target host="ap.aber.ac.uk" />
+	<target host="blackboard.aber.ac.uk" />
+	<target host="careers.aber.ac.uk" />
+	<target host="connect.aber.ac.uk" />
+	<target host="courses.aber.ac.uk" />
+	<target host="cyrsiau.aber.ac.uk" />
+	<target host="jobs.aber.ac.uk" />
+	<target host="myaccount.aber.ac.uk" />
+	<target host="outlook.aber.ac.uk" />
+	<target host="primo.aber.ac.uk" />
+	<target host="share.aber.ac.uk" />
+	<target host="sharepoint.aber.ac.uk" />
+	<target host="shibboleth.aber.ac.uk" />
+	<target host="staffrecord.aber.ac.uk" />
+	<target host="studentrecord.aber.ac.uk" />
+	<target host="voyager.aber.ac.uk" />
 
+	<securecookie host="^www\.aber\.ac\.uk$" name=".+" />
+	<securecookie host="^careers\.aber\.ac\.uk$" name=".+" />
+	<securecookie host="^jobs\.aber\.ac\.uk$" name=".+" />
+	<securecookie host="^myaccount\.aber\.ac\.uk$" name=".+" />
 
-	<!--	^c & ^p to avoid cadair & primo.
-							-->
-	<securecookie host="^[^cp][\w\.]+\.aber\.ac\.uk$" name=".+" />
+	<rule from="^http://aber\.ac\.uk/" 
+			to="https://www.aber.ac.uk/" />
 
-
-	<rule from="^http://(?:beta\.)?aber\.ac\.uk/"
-		to="https://www.aber.ac.uk/" />
-
-	<rule from="^http://([\w\.]+)\.aber\.ac\.uk/"
-		to="https://$1.aber.ac.uk/" />
-
+	<rule from="^http:" 
+			to="https:" />
 </ruleset>

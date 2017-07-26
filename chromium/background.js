@@ -23,8 +23,13 @@ function loadExtensionFile(url, returnType) {
 
 // Rules are loaded here
 var all_rules = new RuleSets(localStorage);
-all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
 
+// Allow users to enable `platform="mixedcontent"` rulesets
+var enableMixedRulesets = false;
+storage.get({enableMixedRulesets: false}, function(item) {
+  enableMixedRulesets = item.enableMixedRulesets;
+  all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
+});
 
 var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
@@ -85,8 +90,8 @@ var wr = chrome.webRequest;
 var loadStoredUserRules = function() {
   var rules = getStoredUserRules();
   var i;
-  for (i = 0; i < rules.length; ++i) {
-    all_rules.addUserRule(rules[i]);
+  for (let rule of rules) {
+    all_rules.addUserRule(rule);
   }
   log('INFO', 'loaded ' + i + ' stored user rules');
 };
@@ -148,6 +153,23 @@ var addNewRule = function(params, cb) {
 };
 
 /**
+ * Removes a user rule
+ * @param ruleset: the ruleset to remove
+ * */
+var removeRule = function(ruleset) {
+  if (all_rules.removeUserRule(ruleset)) {
+    // If we successfully removed the user rule, remove it in local storage too
+    var userRules = getStoredUserRules();
+    userRules = userRules.filter(r =>
+      !(r.host == ruleset.name &&
+        r.redirectTo == ruleset.rules[0].to &&
+        String(RegExp(r.urlMatcher)) == String(ruleset.rules[0].from_c))
+    );
+    localStorage.setItem(USER_RULE_KEY, JSON.stringify(userRules));
+  }
+}
+
+/**
  * Adds a listener for removed tabs
  * */
 function AppliedRulesets() {
@@ -202,11 +224,17 @@ function onBeforeRequest(details) {
     return;
   }
 
-  var uri = document.createElement('a');
-  uri.href = details.url;
+  const uri = new URL(details.url);
 
   // Should the request be canceled?
-  var shouldCancel = (httpNowhereOn && uri.protocol === 'http:');
+  var shouldCancel = (
+    httpNowhereOn &&
+    uri.protocol === 'http:' &&
+    !/\.onion$/.test(uri.hostname) &&
+    !/^localhost$/.test(uri.hostname) &&
+    !/^127(\.[0-9]{1,3}){3}$/.test(uri.hostname) &&
+    !/^0\.0\.0\.0$/.test(uri.hostname)
+  );
 
   // Normalise hosts such as "www.example.com."
   var canonical_host = uri.hostname;
@@ -262,8 +290,7 @@ function onBeforeRequest(details) {
 
   if (newuristr && using_credentials_in_url) {
     // re-insert userpass info which was stripped temporarily
-    var uri_with_credentials = document.createElement('a');
-    uri_with_credentials.href = newuristr;
+    const uri_with_credentials = new URL(newuristr);
     uri_with_credentials.username = tmp_user;
     uri_with_credentials.password = tmp_pass;
     newuristr = uri_with_credentials.href;
@@ -540,13 +567,8 @@ function onBeforeRedirect(details) {
 }
 
 // Registers the handler for requests
-// We listen to all HTTP hosts, because RequestFilter can't handle tons of url restrictions.
-wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["http://*/*"]}, ["blocking"]);
-
-// TODO: Listen only to the tiny subset of HTTPS hosts that we rewrite/downgrade.
-var httpsUrlsWeListenTo = ["https://*/*"];
-// See: https://developer.chrome.com/extensions/match_patterns
-wr.onBeforeRequest.addListener(onBeforeRequest, {urls: httpsUrlsWeListenTo}, ["blocking"]);
+// See: https://github.com/EFForg/https-everywhere/issues/10039
+wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"]);
 
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.

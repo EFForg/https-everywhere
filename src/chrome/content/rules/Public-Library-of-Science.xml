@@ -1,15 +1,8 @@
 <!--
 	Public Library of Science
 
-	For rules causing false/broken MCB, see PLoS.org-falsemixed.xml.
-
-	For problematic rules, see Public-Library-of-Science-mismatches.xml
-
-
 	Nonfunctional:
 
-		- dx.plos.org ¹
-		- hubs.plos.org
 		- (www.)plosbiology.org
 		- (www.)ploscollections.org
 		- (www.)ploscompbiol.org
@@ -21,56 +14,39 @@
 		- (www.)plospathogens.org
 		- (www.)plusone.org
 
-	¹ Refused
+  Refused:
+		alm.plos.org
+		almreports.plos.org
+		api.plos.org
+		asap.plos.org
+		blogs.plos.org
+		collections.plos.org
+		currents.plos.org
+		dx.plos.org (<test url="http://dx.plos.org/10.1371/journal.pbio.0020350" />)
+		journals.plos.org
+		researchnews.plos.org
 
+	Secure connection failed:
+		ecologyfieldreports.plos.org
+		feeds.plos.org
 
-	Partially covered subdomains:
-
-		- (www.)? *
-		- blogs *
-		- currents *
-
-	* Avoiding broken MCB
-
-
-	Insecure cookies  are set for these domains:
-
-		- plos.org
-		- blogs.plos.org
-		- currents.plos.org
-		- www.plos.org
-
-
-	Mixed content:
-
-		- css, on:
-
-			- blogs, currents, www from $self *
-			- www from fonts.googleapis.com *
-
-	* Secured by us
+	Private subdomain:
+		vpn.plos.org
 
 -->
 <ruleset name="PLoS.org (partial)">
 
 	<target host="plos.org" />
-	<target host="blogs.plos.org" />
-	<target host="currents.plos.org" />
-	<target host="register.plos.org" />
 	<target host="www.plos.org" />
-		<!--
-			Avoid broken MCB:
-						-->
-		<exclusion pattern="^http://(?:blogs\.|currents\.|www\.)?plos\.org/+(?!favicon\.ico|wp-content/|wp-includes/)" />
-
+	<target host="community.plos.org" />
+	<target host="register.plos.org" />
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^(www\.)?plos\.org$" name="Coyote-\d-\d+\w$" /-->
 	<!--securecookie host="^blogs\.plos\.org$" name="^kpg_stop_spammers_time$" /-->
 
-	<securecookie host="^(?:(?!(?:blogs|currents|www)\.).+\.)?plos\.org$" name=".*" />
-
+	<securecookie host="^\." name="^_ga" />
+	<securecookie host="^\w" name=".*" />
 
 	<rule from="^http:" to="https:" />
 

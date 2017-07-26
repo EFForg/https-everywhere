@@ -3,13 +3,6 @@
 
 	For problematic rules, see Harvard-University-expired.xml.
 
-
-	CDN buckets:
-
-		- dlv9ibhjf3gu3.cloudfront.net		<- media.campaign.harvard.edu
-		- d2i28rwvea3z9u.cloudfront.net		<- media.www.harvard.edu
-
-
 	Nonfunctional hosts in *harvard.edu:
 
 		- absabs ᵈ
@@ -24,10 +17,13 @@
 		- statuspage.rc.fas ⁴
 		- (www.)?hks ⁴
 		- icxc ᵇ
+		- hbdm.hbsp ᵈ
 		- belfercenter.ksg ⁴
 		- myads ᵈ
 		- news ᵈ
+		- secure.post ᵈ
 		- reference.pin		(reused_issuer_and_serial)
+		- post ᵈ
 		- mirrors.seas ⁴
 		- people.seas ᵈ
 		- thestorymap ⁴
@@ -44,7 +40,6 @@
 		- alumni *	(Expired)
 		- berkman *
 		- campaign	(Cloudfront)
-		- media.campaign	(Cloudfront)
 		- cbmi.catalyst	(Mixed css)
 		- downloads		(Missing certificate chain)
 		- employment		(Shows static.fas)
@@ -56,13 +51,14 @@
 		- eon.law	(shows adam.law, mismatched, CN: adam.law.harvard.edu)
 		- pin *
 		- www.pin	($ redirects to http)
+		- www.pin1	($ redirects www.pin)
 		- pngu.mgh	(expired)
 		- saas **
 		- read.seas	(Self-signed)
 		- trademark		(Mismatched, CN: hwp.harvard.edu)
 		- yuba			(works; expired 2008-04-16, CN: localhost.localdomain)
 		- www		cloudfront
-		- media.www	cloudfront
+		- media.www	*
 		- wyss ᶜ
 
 	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
@@ -130,6 +126,7 @@
 	<target host="accessibility.harvard.edu" />
 	<target host="ui.adsabs.harvard.edu" />
 	<target host="community.alumni.harvard.edu" />
+	<target host="blogs.harvard.edu" />
 	<target host="www.berkman.harvard.edu" />
 
 	<target host="catalyst.harvard.edu" />
@@ -138,18 +135,14 @@
 
 	<target host="www.cfa.harvard.edu" />
 	<target host="cqh.harvard.edu" />
-	<target host="dome.harvard.edu" />
-	<target host="dspace.harvard.edu" />
 	<target host="economics.harvard.edu" />
 	<target host="pearson.eps.harvard.edu" />
 
-	<target host="account.fas.harvard.edu" />
 	<target host="astronomy.fas.harvard.edu" />
-	<!--target host="downloads.fas.harvard.edu" /-->
+	<target host="downloads.fas.harvard.edu" />
 	<target host="rc.fas.harvard.edu" />
+	<target host="downloads.rc.fas.harvard.edu" />
 	<target host="static.fas.harvard.edu" />
-
-	<target host="hbdm.hbsp.harvard.edu" />
 
 	<target host="exed.hks.harvard.edu" />
 	<target host="knet.hks.harvard.edu" />
@@ -174,12 +167,6 @@
 	<target host="blogs.law.harvard.edu" />
 	<target host="cyber.law.harvard.edu" />
 
-	<target host="oncampus.harvard.edu" />
-	<target host="www.pin1.harvard.edu" />
-	<target host="post.harvard.edu" />
-	<target host="secure.post.harvard.edu" />
-	<target host="www.saas.harvard.edu" />
-
 	<target host="computefest.seas.harvard.edu" />
 	<target host="iacs.seas.harvard.edu" />
 	<target host="micro.seas.harvard.edu" />
@@ -190,12 +177,11 @@
 	<target host="wcfia.harvard.edu" />
 	<target host="programs.wcfia.harvard.edu" />
 	<target host="www.wcfia.harvard.edu" />
-	<!--target host="wyss.harvard.edu" /-->
+	<target host="wyss.harvard.edu" />
 
 	<!--	Complications:
 				-->
 	<target host="berkman.harvard.edu" />
-	<target host="media.campaign.harvard.edu" />
 	<target host="employment.harvard.edu" />
 	<target host="www.rc.fas.harvard.edu" />
 	<target host="hsph.harvard.edu" />
@@ -206,16 +192,8 @@
 	<target host="eon.law.harvard.edu" />
 	<target host="orgs.law.harvard.edu" />
 
-	<target host="pin.harvard.edu" />
-	<target host="www.pin.harvard.edu" />
-	<target host="saas.harvard.edu" />
 	<target host="www.trademark.harvard.edu" />
-	<target host="media.www.harvard.edu" />
 
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://(accessibility|cqh|economics|astronomy\.fas|huit|static\.hwpi|(projects|static\.projects|psr)\.iq|onecampus|(computefest|iacs|robobees)\.seas|shanghaicenter|trademark|((programs|www)\.)?wcfia)\.harvard\.edu/($|fellows$|user/password|user/pin\?)" /-->
-		<!--exclusion pattern="^http://hr\.harvard\.edu/($|jobs/?$)" /-->
 		<!--
 			Exceptions:
 					-->
@@ -252,7 +230,6 @@
 			<test url="http://cbmi.catalyst.harvard.edu/cores/" />
 			<test url="http://cbmi.catalyst.harvard.edu/cores/cat/core.html?core_id=&amp;uri_id=&amp;category_id=&amp;navMode=cat" />
 
-		<!--exclusion pattern="^http://www\.cfa\.harvard\.edu/(?!common/)" /-->
 		<exclusion pattern="^http://www\.cfa\.harvard\.edu/image_archive/" />
 
 			<!--	+ve:
@@ -261,7 +238,6 @@
 
 		<!--	Redirects to http:
 						-->
-		<!--exclusion pattern="^http://pearson\.eps\.harvard\.edu/$" /-->
 		<exclusion pattern="^http://pearson\.eps\.harvard\.edu/+(?!favicon\.ico|misc/)" />
 
 			<!--	+ve:
@@ -288,29 +264,11 @@
 					-->
 			<test url="http://isites.harvard.edu/favicon.ico" />
 
-		<!--exclusion pattern="^http://mirrors\.seas\.harvard\.edu/" /-->
+	<securecookie host="^(?:community\.alumni|connects\.catalyst|rc\.fas|\w.*\.rc\.fas|login\.icommons|.*\.law|www\|secure\.post|www\.seas)\.harvard\.edu$" name=".+" />
 
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^community\.alumni\.harvard\.edu$" name="^JSESSIONID$" /-->
-	<!--securecookie host="^connects\.catalyst\.harvard\.edu$" name="^ASP\.NET_SessionId$" /-->
-	<!--securecookie host="^rc\.fas\.harvard\.edu$" name="^(?:PHPSESSID|wfvt_\d+)$" /-->
-	<!--securecookie host="^account\.rc\.fas\.harvard\.edu$" name="^csrftoken$" /-->
-	<!--securecookie host="^downloads\.rc\.fas\.harvard\.edu$" name="^wordpress(?:_logged_in|_sec|user)?_[\da-f]{32}$" /-->
-	<!--securecookie host="^odybot\.rc\.fas\.harvard\.edu$" name="^PHPSESSID$" /-->
-	<!--securecookie host="^\.hul\.harvard\.edu$" name="^SESS[\da-f]{32}$" /-->
-	<!--securecookie host="^orgs\.law\.harvard\.edu$" name="^X-Mapping-" /-->
-	<!--securecookie host="^secure\.post\.harvard\.edu$" name="^TS[\da-f]+$" /-->
-
-	<securecookie host="^(?:community\.alumni|connects\.catalyst|rc\.fas|\w.*\.rc\.fas|login\.icommons|.*\.law|www\.pin1|secure\.post|www\.seas)\.harvard\.edu$" name=".+" />
-
-
-	<rule from="^http://(berkman|hsph|pin|saas)\.harvard\.edu/"
+	<rule from="^http://(berkman|hsph)\.harvard\.edu/"
 		to="https://www.$1.harvard.edu/" />
-
-	<rule from="^http://media\.campaign\.harvard\.edu/"
-		to="https://dlv9ibhjf3gu3.cloudfront.net/" />
 
 	<!--	Redirect drops path but not args:
 							-->
@@ -331,14 +289,6 @@
 
 	<rule from="^http://(?:www\.cyber|eon)\.law\.harvard\.edu/"
 		to="https://cyber.law.harvard.edu/" />
-
-	<rule from="^http://www\.pin\.harvard\.edu/(?:$|\?.*)"
-		to="https://www.pin.harvard.edu/home.shtml" />
-
-		<test url="http://www.pin.harvard.edu/?" />
-
-	<rule from="^http://media\.www\.harvard\.edu/"
-		to="https://d2i28rwvea3z9u.cloudfront.net/" />
 
 	<rule from="^http:"
 		to="https:" />

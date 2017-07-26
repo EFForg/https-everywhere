@@ -1,38 +1,41 @@
 <!--
 	CDN buckets:
 
-		- dotomi.squarespace.com
 		- a248.g.akamai.net/7/248/14564/20080403/dotomi.download.akamai.com/
-
 
 	Nonfunctional subdomains:
 
-		- marketers	(no https)
+		- marketers ʳ
+
+	ʳ Refused
 
 
-	Problematic subdomains:
+	Problematic hosts in *dotomi.com:
 
-		- (www.)	(redirects to http; mismatched, CN: *.squarespace.com)
+		- (www.)			cert mismatch . It is only valid for akamaihd.net.
+		- usweb.dotomi.com 	cert mismatch . It is only valid for akamaihd.net.
 
+	Insecure cookies are set for these domains: ᶜ
 
-	Fully covered subdomains:
+		- .dotomi.com
 
-		- ams-login
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="Dotomi.com (partial)">
 
-	<target host="dotomi.com" />
-	<target host="www.dotomi.com" />
-	<target host="login.dotomi.com" />
 	<target host="ams-login.dotomi.com" />
+	<target host="login.dotomi.com" />
+	<target host="media.msg.dotomi.com" />
+	<target host="secure-media.msg.dotomi.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.dotomi\.com$" name="^DotomiUser$" /-->
 
-	<rule from="^http://(?:www\.)?dotomi\.com/(display|storage|universal)/"
-		to="https://dotomi.squarespace.com/$1/" />
 
-	<rule from="^http://(ams-login|login)\.dotomi\.com/"
-		to="https://$1.dotomi.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

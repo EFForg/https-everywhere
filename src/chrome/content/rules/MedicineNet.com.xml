@@ -1,38 +1,39 @@
 <!--
 	For other WebMD coverage, see WebMD.xml.
 
+	Non-functional hosts
+		Couldn't connect to server:
+			 - medicinenet.com
+			 - search.iad1.medicinenet.com
+			 - search.sea1.medicinenet.com
 
-	CDN buckets:
+		Timeout was reached:
+			 - mta.messages.medicinenet.com
+			 - view.messages.medicinenet.com
+			 - proxy.medicinenet.com
+			 - www.qa00.medicinenet.com
 
-		- images.medicinenet.com.edgesuite.net
+		SSL peer certificate was not OK:
+			 - optout.cc.medicinenet.com
+			 - www.iad1.medicinenet.com
+			 - images.medicinenet.com
+			 - img.medicinenet.com
+			 - li.medicinenet.com
+			 - messages.medicinenet.com
+			 - related.medicinenet.com
+			 - www.sea1.medicinenet.com
+			 - topics.medicinenet.com
 
+		Peer certificate cannot be authenticated with given CA certificates:
+			 - newsletters.medicinenet.com
 
-	Problematic subdomains:
-
-		- images	(503, akamai)
-
-	Earlier, images could be fixed by instead redirecting to ^,
-	but this in turn creates a redirect to a different page.	
-
-
-	Partially covered subdomains:
-
-		- (www.) *
-
-	* Some paths redirect to http://.../$
-
+		Secure connection redirects to plaintext:
+			 - www.medicinenet.com
+			 - search.medicinenet.com
 -->
-<ruleset name="MedicineNet.com (broken)" default_off="Bad redirects">
+<ruleset name="MedicineNet.com (partial)">
+	<target host="click.messages.medicinenet.com" />
+	<target host="regimg.medicinenet.com" />
 
-	<target host="medicinenet.com" />
-	<target host="*.medicinenet.com" />
-		<exclusion pattern="^http://images\.medicinenet\.com/css/" />
-		<exclusion pattern="^http://(?:www\.)?medicinenet\.com/(?!images/)" />
-
-	<test url="http://images.medicinenet.com/images/image_collection/skin/addisons-disease.jpg" />
-	<test url="http://www.medicinenet.com" />
-
-	<rule from="^http://(?:images\.|(www\.))?medicinenet\.com/"
-		to="https://$1medicinenet.com/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

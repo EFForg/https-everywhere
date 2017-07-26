@@ -1,20 +1,31 @@
 <!--
 	For other Yahoo coverage, see Yahoo.xml.
 
+	Different content HTTP/HTTPS:
+		amt.flickr.com
+		auto-up.flickr.com
+		bup.flickr.com
+		up.flickr.com
 
-	Mismatch:
-		- parkorbird.flickr.com
+	Invalid certificate:
+		rw.api.flickr.com
+		hv-static.flickr.com
+		\d.hv-static.flickr.com
+		images.flickr.com (broken chain)
+		photos\d.flickr.com
+		search.flickr.com (broken chain)
 
-	Timeout:
-		- blog.flickr.com (blog.flickr.net)
+	No working URL known:
+		appletv.flickr.com
+		heartbeat.flickr.com
 
+	Time out:
+		blog.flickr.com
 
 	Insecure cookies are set for these domains and hosts: ᶜ
 
 		- .flickr.com
 		- www.flickr.com
-
-	ᶜ See https://owasp.org/index.php/SecureFlag
 
 	Note: current_identity (.flickr.com) is read
 	via script and so cannot be secured.
@@ -32,22 +43,28 @@
 	<target host="flickr.com" />
 	<target host="www.flickr.com" />
 	<target host="api.flickr.com" />
+		<test url="http://api.flickr.com/services/rest/" />
+		<exclusion pattern="^http://api\.flickr\.com/$" />
+			<test url="http://api.flickr.com/" /><!-- 404 -->
 	<target host="blog.flickr.com" />
 	<target host="code.flickr.com" />
+	<target host="embedr.flickr.com" />
 	<target host="m.flickr.com" />
 	<target host="secure.flickr.com" />
 	<target host="static.flickr.com" />
 	<target host="*.static.flickr.com" />
+		<test url="http://farm1.static.flickr.com/" />
+		<test url="http://farm2.static.flickr.com/" />
+		<test url="http://farm3.static.flickr.com/" />
+		<test url="http://farm4.static.flickr.com/" />
+		<test url="http://farm5.static.flickr.com/" />
+		<test url="http://farm6.static.flickr.com/" />
+		<test url="http://farm7.static.flickr.com/" />
+		<test url="http://farm8.static.flickr.com/" />
+		<test url="http://farm9.static.flickr.com/" />
+	<target host="widgets.flickr.com" />
 
-	<test url="http://farm1.static.flickr.com/" />
-	<test url="http://farm2.static.flickr.com/" />
-	<test url="http://farm3.static.flickr.com/" />
-	<test url="http://farm4.static.flickr.com/" />
-	<test url="http://farm5.static.flickr.com/" />
-	<test url="http://farm6.static.flickr.com/" />
-	<test url="http://farm7.static.flickr.com/" />
-	<test url="http://farm8.static.flickr.com/" />
-	<test url="http://farm9.static.flickr.com/" />
+
 
 
 	<!--	Not secured by server:

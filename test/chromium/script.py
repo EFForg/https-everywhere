@@ -27,6 +27,8 @@ class bcolors:
 
 chromeOps = webdriver.ChromeOptions()
 chromeOps.add_extension(sys.argv[1])
+if os.getuid() == 0:
+    chromeOps.add_argument("--no-sandbox")
 
 # Find the path to chromedriver
 chromedriver_path = "chromedriver"

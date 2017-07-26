@@ -3,22 +3,21 @@
 
 		- UDimg.com.xml
 
-
 	CDN buckets:
 
 		- s3.amazonaws.com/s3.urbandictionary.com/
 
+	Timeout:
+		urbandictionary.com
+		jobs.urbandictionary.com
+		tos.urbandictionary.com
 
-	Problematic hosts in *urbandictionary.com:
+	Invalid certificate:
+		about.urbandictionary.com
+		origin.urbandictionary.com
 
-		- ^ *
-		- origin ²
-		- store ³
-
-	* Refused
-	² Heroku
-	³ Shopify
-
+	Secure connection failed:
+		feeds.urbandictionary.com
 
 	Insecure cookies are set for these domains:
 
@@ -27,29 +26,21 @@
 -->
 <ruleset name="Urban Dictionary.com">
 
-	<!--	Direct rewrites:
-				-->
-	<target host="static0.urbandictionary.com"/>
-	<target host="static1.urbandictionary.com"/>
-	<target host="static2.urbandictionary.com"/>
-	<target host="static3.urbandictionary.com"/>
-	<!--target host="store.urbandictionary.com"/-->
-	<target host="www.urbandictionary.com"/>
-
-	<!--	Complications:
-				-->
 	<target host="urbandictionary.com"/>
+	<target host="www.urbandictionary.com"/>
+	<target host="api.urbandictionary.com" />
+		<test url="http://api.urbandictionary.com/v0/define?term=sun" />
+	<target host="help.urbandictionary.com" />
 	<target host="origin.urbandictionary.com"/>
-
+	<target host="store.urbandictionary.com"/>
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.urbandictionary\.com$" name="^__qca$" /-->
 
-	<securecookie host="." name="." />
+	<securecookie host=".+" name=".+" />
 
-
-	<rule from="^http://(?:origin\.)?urbandictionary\.com/"
+	<rule from="^http://(origin\.)?urbandictionary\.com/"
 		to="https://www.urbandictionary.com/"/>
 
 	<rule from="^http:"

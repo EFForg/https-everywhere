@@ -1,0 +1,65 @@
+<!--
+	For other StreamAMG coverage, see streamamg.com.xml.
+
+
+	Nonfunctional hosts in *streamuk.com:
+
+		- howtotrainyourdragonbooks ⁴
+		- muchamore ⁴
+		- stjohn2015 ⁴
+
+	⁴ 404
+
+
+	Problematic hosts in *streamuk.com:
+
+		- (www.)? ᵉ ᵘ
+
+	ᵉ Expired 
+	ᵘ Untrusted root
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- bbcnewsupload.streamuk.com
+		- cbeebies.streamuk.com
+		- scpro.streamuk.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="StreamUK.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="bbcnewsupload.streamuk.com" />
+	<target host="cbeebies.streamuk.com" />
+	<target host="pov.streamuk.com" />
+	<target host="scpro.streamuk.com" />
+	<target host="staticcontent.streamuk.com" />
+
+	<!--	Complications:
+				-->
+	<target host="streamuk.com" />
+	<target host="www.streamuk.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:bbcnewsupload|cbeebies)\.streamuk\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^scpro\.streamuk\.com$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps all but forward slash:
+							-->
+	<rule from="^http://(?:www\.)?streamuk\.com/+"
+		to="https://www.streamamg.com/" />
+
+		<test url="http://www.streamuk.com/contact/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

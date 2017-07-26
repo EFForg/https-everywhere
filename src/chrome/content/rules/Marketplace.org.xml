@@ -1,43 +1,27 @@
 <!--
-	For problematic rules, see Marketplace.org-problematic.xml.
+	Non-functional hosts
+		Couldn't connect to server:
+			 - autodiscover.marketplace.org
 
+		Timeout was reached:
+			 - mail.marketplace.org
 
-	CDN buckets:
-
-		- www.marketplace.akamai.org.edgesuite.net
-
-			- www.marketplace.org
-
-
-	Problematic subdomains: 
-
-		- ^		(redirects to http; mismatched, CN: *.publicinsightnetwork.org)
-		- thenumbers	(works; mismatched, CN: *.financialcontent.com)
-		- www		(works, akamai)
-
-
-	Fully covered subdomains:
-
-		- thenumbers	(→ markets.financialcontent.com)
-		- tracker
-
+		SSL peer certificate was not OK:
+			 - beta.marketplace.org
+			 - longform.marketplace.org
+			 - thenumbers.marketplace.org
 -->
 <ruleset name="Marketplace.org (partial)">
-
 	<target host="marketplace.org" />
-	<target host="*.marketplace.org" />
-		<!--
-			Avoid user-visible paths:
-							-->
-		<exclusion pattern="^http://(?:www\.)?marketplace\.org/(?!favicon\.ico|misc/|modules/|sites/)" />
+	<target host="www.marketplace.org" />
+	<target host="cms.marketplace.org" />
+		<test url="http://cms.marketplace.org/sites/default/files/morning.jpg" />
+	<target host="features.marketplace.org" />
+		<test url="http://features.marketplace.org/yourstateonwelfare/" />
+	<target host="origin-www.marketplace.org" />
+	<target host="ssl.marketplace.org" />
 
+	<securecookie host="^(www\.)?marketplace\.org$" name=".+" />
 
-	<securecookie host="^\.marketplace\.org$" name="^WT_FPC$" />
-
-	<rule from="^http://thenumbers\.marketplace\.org/"
-		to="https://markets.financialcontent.com/" />
-
-	<rule from="^http://tracker\.financialcontent\.com/"
-		to="https://tracker.financialcontent.com/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

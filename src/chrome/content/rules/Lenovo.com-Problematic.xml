@@ -1,0 +1,92 @@
+<!--
+	Related:
+		Lenovo.com.xml
+
+	Nonfunctional domains:
+		- blog.lenovo.com ¹
+		- click.lenovo.com	( Incomplete cert chain )
+		- consumersupport.lenovo.com	( Timeout )
+		- news.lenovo.com ³
+		- www.partnerinfo.lenovo.com ¹
+		- www2.partnerinfo.lenovo.com ¹
+		- partners.lenovo.com ¹
+		- search3.lenovo.com ( Mismatched	https://search3.lenovo.com/autocomplete/sli-rac.stub.js )
+		- shareit.lenovo.com ¹
+		- social.lenovo.com ⁵
+	¹ Refused
+	³ Show www.tvweeklynow.com
+	⁵ Dropped
+
+	Partially covered domains:
+		www.lenovo.com	( some paths 404 )*
+		www3.lenovo.com
+		outlet.lenovo.com
+		pcsupport.lenovo.com
+	* http://www.lenovo.com/training
+	redirects to http://training.lenovo.partner-management.com/
+	which has been down.
+
+	** ^ redirects to right page, no matter http or https.
+-->
+<ruleset name="Lenovo.com-Problematic">
+	<target host="www.lenovo.com" />
+	<target host="www3.lenovo.com" />
+	<target host="outlet.lenovo.com" />
+	<target host="pcsupport.lenovo.com" />
+
+	<rule from="^http://www\.lenovo\.com/"	to="https://www.lenovo.com/" />
+
+	<exclusion pattern="^http://www\.lenovo\.com/(depotstatus|friendsandfamily|lenovorecovery|support)" />
+	<!--	To pcsupport.lenovo.com	-->
+		<test url="http://www.lenovo.com/depotstatus" />
+		<test url="http://www.lenovo.com/lenovorecovery" />
+	<!--	To http://www3.lenovo.com/us/en/lenovofamily	-->
+		<test url="http://www.lenovo.com/friendsandfamily/" />
+	<!--	To support.lenovo.com	-->
+		<test url="http://www.lenovo.com/support" />
+
+	<!--	www3.	-->
+	<exclusion pattern="^http://www3\.lenovo\.com/$" />
+
+	<rule from="^http://www3\.lenovo\.com/(_ui|maintenance|medias)/"
+		to="https://www3.lenovo.com/$1/" />
+		<test url="http://www3.lenovo.com/_ui/addons/tsasmaddon/desktop/common/css/tsasmaddon.css" />
+		<test url="http://www3.lenovo.com/_ui/desktop/common/cssminc/header.css" />
+		<test url="http://www3.lenovo.com/_ui/desktop/common/ISS_Static/WW/site/scripts/handlebars/hybrisstatic/modal.html" />
+		<test url="http://www3.lenovo.com/maintenance/500page.html" />
+		<test url="http://www3.lenovo.com/maintenance/staticPageCss/themes/owv2/mq.css" />
+		<test url="http://www3.lenovo.com/medias/ls-override.css?context=bWFzdGVyfC9jc3MvZW1lYS9jb250ZW50L3wyNDh8dGV4dC9jc3N8aDI5L2gxMi85NDE3MjcwNjI0Mjg2LmNzc3w1ZDFkNWMxOGRiYmU1ZDkzNjAyY2VjZDI2MTE5MDc5ZDIyMDcyMDlhNzc2OWQxNzhhNzM3OGQyMWFkMTdkMWVk" />
+
+	<rule from="^http://www3\.lenovo\.com/(\S+)?dtagent_ICA23hjprx_6000500091501\.js"
+		to="https://www3.lenovo.com/$1dtagent_ICA23hjprx_6000500091501.js" />
+		<test url="http://www3.lenovo.com/dtagent_ICA23hjprx_6000500091501.js" />
+		<test url="http://www3.lenovo.com/en/dtagent_ICA23hjprx_6000500091501.js" />
+		<test url="http://www3.lenovo.com/it/it/dtagent_ICA23hjprx_6000500091501.js" />
+
+	<!--	outlet.	-->
+	<exclusion pattern="^http://outlet\.lenovo\.com/$" />
+
+	<rule from="^http://outlet\.lenovo\.com/(ISS_Static|SEUILibrary)/"
+		to="https://outlet.lenovo.com/$1/" />
+		<test url="http://outlet.lenovo.com/ISS_Static/images/lenovo_common/c.gif" />
+		<test url="http://outlet.lenovo.com/ISS_Static/WW/AG/outlet/images/products/M600Tiny.jpeg" />
+		<test url="http://outlet.lenovo.com/ISS_Static/WW/css/themes/owv2/images/banner-flag.png" />
+		<test url="http://outlet.lenovo.com/ISS_Static/WW/wci2/us/en/pixeltags/VendorGatekeeper.js" />
+
+		<test url="http://outlet.lenovo.com/SEUILibrary/hightech-portal/images/c.gif" />
+		<test url="http://outlet.lenovo.com/SEUILibrary/lenovo-portal/images/icons/cancel_rd.gif" />
+		<test url="http://outlet.lenovo.com/SEUILibrary/controller/e/outlet_us/LenovoPortal/en_US/catalog.workflow:GetCategoryFacetResultRow?category-id=71CA4FA889894DE833B851384B1F2D77&amp;facetType=null&amp;page=4&amp;itemid=:000001BD:000348DF:" />
+
+	<!--	pcsupport.	-->
+	<exclusion pattern="^http://pcsupport\.lenovo\.com/$" />
+
+	<rule from="^http://pcsupport\.lenovo\.com/(~|App|dist)/"
+		to="https://pcsupport.lenovo.com/$1/" />
+		<test url="http://pcsupport.lenovo.com/~/media/images/prodimagelaptops/lenovo_g480.ashx" />
+		<test url="http://pcsupport.lenovo.com/~/media/images/system/icon/rss.ashx" />
+		<test url="http://pcsupport.lenovo.com/App/Themes/Base/img/masthead_upper_texture_tile.png" />
+		<test url="http://pcsupport.lenovo.com/App/Themes/Base/output/Rebranding.css" />
+		<test url="http://pcsupport.lenovo.com/App/WCD/images/logo_h.png" />
+		<test url="http://pcsupport.lenovo.com/dist/plugins/lsb/framework/script/lsb_framework.bundle.js" />
+
+</ruleset>

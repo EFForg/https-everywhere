@@ -4,96 +4,58 @@
 
 	CDN buckets:
 
-		- netline.cachefly.net
-
-			- img
+		- netline.cachefly.net	← img
 
 
-	Cert only matches *.tradepub.com
-
-
-	Fully covered subdomains:
-
-		- img		(→ netline.cachefly.net)
-		- nl-marketing
-
-
-	Partially covered subdomains:
-
-		- (www.)	(^ → www, avoiding false/broken MCB)
-
-
-	Insecure cookies are set for these domains:
+	Insecure cookies are set for these domains: ᶜ
 
 		- .tradepub.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
 
-		- Scripts on www from www ¹
-
 		- css, on:
 
+			- betanews from $self ˢ
+			- betanews from betanews.com
 			- nl-marketing from www.netline.com ²
-			- www from www ¹
 
 		- Images, on:
 
-			- nl-marketing from img ¹
+			- betanews, nl-marketing from img.tradepub.com ˢ
 			- nl-marketing from www.netline.com ³
-			- www from img ¹
 
-		- Web bugs, on www from:
+		- Bugs, on:
 
-			- cts ¹
-			- w.sharethis.com ¹
+			- on www from netline-d.openx.net
+			- on www from u.openx.net ˢ
 
-	¹ Secured by us
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 	² Unsecurable, minimal effect
 	³ Unsecurable
 
 -->
-<ruleset name="tradepub.com (partial)">
+<ruleset name="TradePub.com (partial)">
 
 	<target host="tradepub.com" />
 	<target host="cts.tradepub.com" />
 	<target host="img.tradepub.com" />
 	<target host="nl-marketing.tradepub.com" />
 	<target host="www.tradepub.com" />
-		<!--
-			False/broken MCB:
-						-->
-		<exclusion pattern="^http://(?:www\.)?tradepub\.com/+(?!body_styles\.css|c/|data/|favicon\.ico)" />
 
-			<!--	+ve:
-					-->
-			<test url="http://tradepub.com/?do=login" />
-			<test url="http://tradepub.com/?p=faq" />
-			<test url="http://tradepub.com/?p=rss" />
-			<test url="http://tradepub.com/?pt=main&amp;page=home.about" />
-			<test url="http://tradepub.com/?pt=main&amp;page=home.topten" />
+		<test url="http://img.tradepub.com/images/search_icon.png" />
 
-			<!--	-ve:
-					-->
-			<test url="http://tradepub.com/body_styles.css" />
-			<test url="http://tradepub.com/data/font-awesome.min.css" />
-			<test url="http://tradepub.com/favicon.ico" />
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://www.tradepub.com/free-offer/hr-magazine/hrmg?sr=hm&amp;_t=hm:" /-->
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.tradepub\.com$" name="^Apache$" /-->
-
-	<!--	Could we secure any of these safely?
-							-->
 	<!--securecookie host="^\.tradepub\.com$" name="^(Apache|_t|tpid)$" /-->
 
-
-	<rule from="^http://tradepub\.com/"
-		to="https://www.tradepub.com/" />
-
-	<rule from="^http://img\.tradepub\.com/"
-		to="https://netline.cachefly.net/" />
 
 	<rule from="^http:"
 		to="https:" />

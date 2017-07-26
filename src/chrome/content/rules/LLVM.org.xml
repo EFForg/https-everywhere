@@ -1,78 +1,47 @@
 <!--
+
 	Nonfunctional hosts in *llvm.org:
 
 		- blog ¹
-		- clang ²
-		- clang-analyzer ²
-		- dragonegg ²
-		- klee ²
-		- libclc ²
-		- libcxx ²
-		- lists ¹
-		- lld ²
-		- lldb ²
-		- openmp ²
-		- polly ¹
-		- vmkit ²
 
 	¹ Refused
-	² Shows ^llvm.org
 
+	Problematic hosts in *llvm.org:
 
-	www.llvm.org: cert only matches ^llvm.org
+		- devmtg15 ¹
+		- ftp ¹
+		- lab ¹
+		- new-clang ¹
 
-
-	STS header includes includeSubdomains
-	for reviews
+	¹ Mismatched
 
 -->
 <ruleset name="LLVM.org (partial)">
 
-	<!--	Direct rewrites:
-				-->
 	<target host="llvm.org" />
-	<target host="reviews.llvm.org" />
-	<target host="*.reviews.llvm.org" />
-
-		<!--	includeSubdomains applies to one level only, so:
-									-->
-		<exclusion pattern="^http://(?:[^./]+\.){2,}reviews\.llvm\.org/" />
-
-			<!--	+ve:
-					-->
-			<test url="http://this.host.reviews.llvm.org/" />
-			<test url="http://exists.not.reviews.llvm.org/" />
-
-		<test url="http://www.reviews.llvm.org/" />
-
-	<!--	Complications:
-				-->
 	<target host="www.llvm.org" />
+	<target host="bugs.llvm.org" />
+	<target host="clang.llvm.org" />
+	<target host="clang-analyzer.llvm.org" />
+	<target host="compiler-rt.llvm.org" />
+	<target host="dragonegg.llvm.org" />
+	<target host="git.llvm.org" />
+	<target host="klee.llvm.org" />
+	<target host="libclc.llvm.org" />
+	<target host="libcxx.llvm.org" />
+	<target host="libcxxabi.llvm.org" />
+	<target host="lists.llvm.org" />
+	<target host="lld.llvm.org" />
+	<target host="lldb.llvm.org" />
+	<target host="lnt.llvm.org" />
+	<target host="new-www.llvm.org" />
+	<target host="openmp.llvm.org" />
+	<target host="polly.llvm.org" />
+	<target host="reviews.llvm.org" />
+	<target host="svn.llvm.org" />
+	<target host="vmkit.llvm.org" />
 
-		<!--	Different from http:
-						-->
-		<!--exclusion pattern="^http://(www\.)?llvm\.org/($|docs/)" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://(?:www\.)?llvm\.org/(?!/*(?:bugs|svn)/)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://llvm.org/ProjectsWithLLVM/" />
-			<test url="http://llvm.org/docs/" />
-			<test url="http://llvm.org/docs/GettingStarted.html" />
-			<test url="http://llvm.org/pubs/" />
-
-			<!--	-ve:
-					-->
-			<test url="http://llvm.org/bugs/show_bug.cgi?id=19847" />
-			<test url="http://llvm.org/bugs/show_bug.cgi?id=21689" />
-			<test url="http://www.llvm.org/svn/" />
-
-
-	<rule from="^http://www\.llvm\.org/"
-		to="https://llvm.org/" />
+	<securecookie host=".+" name=".+" />
 
 	<rule from="^http:"
 		to="https:" />

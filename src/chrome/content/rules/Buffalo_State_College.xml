@@ -1,42 +1,39 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://buffalostate.edu/ => https://buffalostate.edu/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-	For problematic rules, see Buffalo_State_College-problematic.xml.
+	Non-functional hosts
+		Timeout was reached:
+			 - owa.buffalostate.edu
+			 - rf.buffalostate.edu
 
+		SSL connect error:
+			 - email.buffalostate.edu
 
-	Nonfunctional subdomains:
+		SSL peer certificate was not OK:
+			 - library.buffalostate.edu
+			 - www.rf.buffalostate.edu
 
-		- email		(reset)
-		- library	(CN: bsclib02; 404)
-		- president	("This page cannot be found")
-		- (www.)rf	(CN: *.rochen.com; shows cPanel default page)
-		- search	(CN: foo.ent.google.com; 302 to http)
+		Peer certificate cannot be authenticated with given CA certificates:
+			 - search.buffalostate.edu
 
+		Status code mismatch:
+			 - sharepoint.buffalostate.edu
 
+		Mixed content blocking (MCB) tiggered:
+			 - newsandevents.buffalostate.edu
+			 - wwwprod.buffalostate.edu
 -->
-<ruleset name="Buffalo State College (partial)" default_off='failed ruleset test'>
-
+<ruleset name="Buffalo State College (partial)">
 	<target host="buffalostate.edu" />
-	<target host="*.buffalostate.edu" />
-	<!--
-		For cross-domain cookie.
-						-->
-	<target host="*.giving.buffalostate.edu" />
-	<!--
-		Ditto.
-			-->
-	<target host="*.newsandevents.buffalostate.edu" />
+	<target host="www.buffalostate.edu" />
+	<target host="alumni.buffalostate.edu" />
+	<target host="bscintra.buffalostate.edu" />
+	<target host="bsclib01.buffalostate.edu" />
+	<target host="catalog.buffalostate.edu" />
+	<target host="chngpwd.buffalostate.edu" />
+	<target host="giving.buffalostate.edu" />
+	<target host="president.buffalostate.edu" />
 
+	<securecookie host="^chngpwd\.buffalostate\.edu$" name=".+" />
+	<securecookie host="^giving\.buffalostate\.edu$" name=".+" />
 
-	<securecookie host="^.+\.buffalostate\.edu$" name=".+" />
-
-
-	<rule from="^http://((?:bscintra|bsclib01|catalog|chngpwd|giving|newsandevents|owa|president|sharepoint|www|wwwprod)\.)?buffalostate\.edu/"
-		to="https://$1buffalostate.edu/" />
-
-	<!--	Redirects like so.
-					-->
-	<rule from="^http://email\.buffalostate\.edu/(?:.*)"
-		to="https://owa.buffalostate.edu/owa/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

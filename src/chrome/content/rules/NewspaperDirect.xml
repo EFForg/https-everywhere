@@ -1,17 +1,37 @@
 <!--
+	NB: account.../$ redirects to 404
+	?=> fetch test failure
+
+
 	For problematic rules, see NewspaperDirect-mismatches.xml.
 
 
-	blog.newspaperdirect.com is handled in BlueHost-clients.xml.
+	Nonfunctional hosts in *newspaperdirect.com:
+
+		- nytimes ⁴
+
+	⁴ 404
+
+
+	Mixed content:
+
+		- css on (www.)? from fonts.googleapis.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="NewspaperDirect (partial)">
 
 	<target host="newspaperdirect.com" />
+	<target host="account.newspaperdirect.com" />
 	<target host="www.newspaperdirect.com" />
 
+		<!--	$ redirects to 404, so:
+						-->
+		<test url="http://account.newspaperdirect.com/epaper/accountingloginse2_nytimes.aspx" />
 
-	<securecookie host="^(?:www\.)?newspaperdirect\.com$" name=".*" />
+
+	<securecookie host="^\w" name=".*" />
 
 
 	<rule from="^http:" to="https:" />

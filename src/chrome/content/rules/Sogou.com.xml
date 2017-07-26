@@ -1,0 +1,86 @@
+<!--
+	Other Sogou rulesets:
+		- Sogou_CDN.com.xml
+
+	Nonfunctional hosts in *sogou.com:
+		- app ¹
+		- baike		Dropped
+		- corp ¹
+		- cp ¹
+		- go ¹
+		- gouwu ¹
+		- fuwu ¹
+		- haha ¹
+		- help ¹
+		- fankui.help ¹
+		- hr ¹
+		- job ¹
+		- kan ¹
+		- mail ²
+		- mai ¹
+		- map ¹
+		- mp3 ¹
+		- music ¹
+		- news ¹
+		- pinyin ¹
+		- v ¹
+		- wan ¹
+		- weixin ¹
+		- wenwen ¹
+		- open.wenwen
+		- xiaoshuo ¹
+		- zhishi ¹
+	¹ Shows default page
+	² Shows mail.sohu.com
+
+	Problematic hosts in *sogou.com:
+		- download.ie ³
+		- ping.ie ³
+		- passport ¹ ²
+		- img.store ³
+		- logo.www ³
+	¹ Expired
+	² Missing certificate chain
+	³ Mismatched
+
+	Insecure cookies are set for these domains and hosts:
+		- .sogou.com
+		- www.sogou.com
+-->
+
+<ruleset name="Sogou.com (partial)">
+	<!--	Direct rewrites:	-->
+	<target host="sogou.com"/>
+	<target host="www.sogou.com"/>
+	<target host="123.sogou.com"/>
+	<target host="account.sogou.com" />
+	<target host="english.sogou.com"/>
+	<target host="ie.sogou.com" />
+	<target host="m.sogou.com"/>
+	<target host="mingyi.sogou.com"/>
+	<target host="pb.sogou.com"/>
+	<target host="pic.sogou.com"/>
+	<target host="scholar.sogou.com"/>
+	<target host="top.sogou.com"/>
+	<target host="wap.sogou.com"/>
+	<target host="zhihu.sogou.com"/>
+
+	<!--	Complications:	-->
+	<target host="imgstore.cdn.sogou.com" />
+	<target host="img.store.sogou.com" />
+	<rule from="^http://(imgstore\.cdn|img\.store)\.sogou\.com/"
+		to="https://img.sogoucdn.com/" />
+		<!--	Get tests from webcache by sogou.com.
+			Example:https://m.sogou.com/transcoding/sweb/detail.jsp?g_ut=3&url=http://www.du00.cc/read/35/35301/24600914.html
+				-->
+		<test url="http://imgstore.cdn.sogou.com/net/a/link?appid=100520102&amp;url=http://img.mp.itc.cn/upload/20170518/dd088f07c691400f97de0ec4539281d8_th.jpg" />
+		<test url="http://img.store.sogou.com/net/a/link?appid=100520102&amp;url=http://img.mp.itc.cn/upload/20170518/dd088f07c691400f97de0ec4539281d8_th.jpg" />
+
+	<target host="logo.www.sogou.com" />
+	<rule from="^http://logo\.www\.sogou\.com/"
+		to="https://www.sogou.com/" />
+
+	<securecookie host="^\w" name="." />
+
+	<rule from="^http:" to="https:"/>
+</ruleset>

@@ -1,45 +1,31 @@
 <!--
-	CDN buckets:
+	Time out:
+		about.greatnonprofits.org
+		toprated.greatnonprofits.org
 
-		- ?.cloudfront.net
+	Redirect to http:
+		www.about.greatnonprofits.org
+		www.toprated.greatnonprofits.org
 
-			- cdn
-
-
-	Problematic subdomains:
-
-		- api	(dropped)
-		- cdn	(cloudfront)
-
-
-	Mixed content:
-
-		- Web bugs on ^ from www.facebook.com *
-
-	* Secured by us
+	Broken certificate chain:
+		blog.greatnonprofits.org
 
 -->
-<ruleset name="Greatnonprofits.org (partial)">
+<ruleset name="Greatnonprofits.org">
 
 	<target host="greatnonprofits.org" />
-	<target host="*.greatnonprofits.org" />
-		<!--
-			$ 403s.
-				-->
-		<!--exclusion pattern="^http://api\.greatnonprofits\.org/$" /-->
-		<!--
-			The following redirects to ^
-							-->
-		<exclusion pattern="^http://api\.greatnonprofits\.org/+(?!whitelabel/reviews/[\w-]+(?:$|\?))" />
-
+	<target host="www.greatnonprofits.org" />
+	<target host="api.greatnonprofits.org" />
+	<target host="cdn.greatnonprofits.org" />
+		<test url="http://cdn.greatnonprofits.org/img/gnp-facebook-share-lg.png" />
+	<target host="stage.greatnonprofits.org" />
+	<target host="stagecdn.greatnonprofits.org" />
+	<target host="static.greatnonprofits.org" />
+		<test url="http://static.greatnonprofits.org/favicon.ico" />
 
 	<securecookie host="^greatnonprofits\.org$" name=".+" />
 
-
-	<rule from="^http://(?:api\.|(www\.))?greatnonprofits\.org/"
-		to="https://$1greatnonprofits.org/" />
-
-	<rule from="^http://(?:cdn|static)\.greatnonprofits\.org/"
-		to="https://static.greatnonprofits.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

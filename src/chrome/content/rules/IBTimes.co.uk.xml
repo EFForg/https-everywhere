@@ -1,52 +1,21 @@
 <!--
 	For other IBTimes coverage, see International-Business-Times.xml.
 
+	Redirect to http:
+		^(www.)?
 
-	CDN buckets:
-
-		- wac.923F.edgecastcdn.net/??923F/
-
-			- d
-			- g
-
-
-	Nonfunctional hosts in *ibtimes.co.uk:
-
-		- d *
-		- g *
-
-	* 404; mismatched, CN: gp1.wac.edgecastcdn.net
-
+	CORS:
+		video.ibtimes.co.uk	( Test on http://www.ibtimes.co.uk/lord-heseltine-theresa-may-may-wrong-brexit-diminishes-uk-world-stage-1614438 )
 -->
-<ruleset name="IBTimes.co.uk" platform="mixedcontent">
-
-	<!--	Direct rewrites:
-				-->
-	<target host="ibtimes.co.uk" />
-	<target host="www.ibtimes.co.uk" />
-
-	<!--	Complications:
-				-->
+<ruleset name="IBTimes.co.uk">
 	<target host="d.ibtimes.co.uk" />
+	<target host="gc.ibtimes.co.uk" />
 	<target host="g.ibtimes.co.uk" />
+	<target host="sns.ibtimes.co.uk" />
+		<test url="http://d.ibtimes.co.uk/en/full/1379401/baby-orangutans.jpg" />
+		<test url="http://g.ibtimes.co.uk/www/img/home/ibtimes-logo-scroll.png" />
+		<test url="http://gc.ibtimes.co.uk/www/js/jan2016/counter.js" />
+		<test url="http://sns.ibtimes.co.uk/counter/new-event" />
 
-		<exclusion pattern="^http://[dg]\.ibtimes\.co\.uk/" />
-
-			<!--	+ve:
-					-->
-			<test url="http://d.ibtimes.co.uk/" />
-			<test url="http://g.ibtimes.co.uk/" />
-
-
-	<rule from="^http:"
-		to="https:" />
-
-	<!--	Protocol-relative embeds:
-						-->
-	<rule from="^https://(d|g)\.ibtimes\.co\.uk/"
-		to="http://$1.ibtimes.co.uk/" downgrade="1" />
-
-		<test url="https://d.ibtimes.co.uk/" />
-		<test url="https://g.ibtimes.co.uk/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
