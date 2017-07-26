@@ -1,8 +1,8 @@
 from tldextract import tldextract
 from urlparse import urlparse
 
-
 import regex
+import socket
 
 class Rule(object):
 	"""Represents one from->to rule element."""
@@ -195,11 +195,25 @@ class Ruleset(object):
 			# Ignore right-wildcard targets
 			if target.endswith(".*"):
 				continue
+
+			# Ignore if target is an ipv4 address
+			try:
+				socket.inet_aton(target)
+				continue
+			except:
+				pass
+
+			# Ignore if target is an ipv6 address
+			try:
+				socket.inet_pton(socket.AF_INET6, target)
+				continue
+			except:
+				pass
 				
 			# Extract TLD from target if possible
 			res = tldextract.extract(target)
-			if res.suffix == "":
-				problems.append("%s: Target '%s' missing gTLD/ ccTLD" % (self.filename, target))
+			if res.domain == "" or res.suffix == "":
+				problems.append("%s: Target '%s' missing eTLD" % (self.filename, target))
 				
 		return problems
 
