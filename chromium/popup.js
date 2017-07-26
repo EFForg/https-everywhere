@@ -58,8 +58,8 @@ function appendRuleLineToListDiv(ruleset, list_div) {
   var favicon = document.createElement("img");
   favicon.className = "favicon";
   favicon.src = "chrome://favicon/";
-  for (var i=0; i < ruleset.rules.length; i++) {
-    var host = hostReg.exec(ruleset.rules[i].to);
+  for (let rule of ruleset.rules) {
+    var host = hostReg.exec(rule.to);
     if (host) {
       favicon.src += host[0];
       break;
@@ -176,8 +176,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // auto-translate all elements with i18n attributes
   var elem = document.querySelectorAll("[i18n]");
-  for (var i=0; i < elem.length; i++) {
-    elem[i].innerHTML = chrome.i18n.getMessage(elem[i].getAttribute("i18n"));
+  for (let el of elem) {
+    el.innerHTML = chrome.i18n.getMessage(el.getAttribute("i18n"));
   }
 
   // other translations
