@@ -1,114 +1,47 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://archive.wix.com/ => https://archive.wix.com/: (35, 'Unknown SSL protocol error in connection to archive.wix.com:443 ')
-Fetch error: http://dns.lc.wix.com/ => https://dns.lc.wix.com/: (28, 'Connection timed out after 20001 milliseconds')
-Fetch error: http://www.dns.lc.wix.com/ => https://www.dns.lc.wix.com/: (6, 'Could not resolve host: www.dns.lc.wix.com')
-Fetch error: http://publicorigin.wix.com/ => https://publicorigin.wix.com/: (6, 'Could not resolve host: publicorigin.wix.com')
-
 	Other Wix rulesets:
-
 		- Parastorage.com.xml
 		- Wix_static.com.xml
 
 	CDN buckets:
-
 		- d2eyqiy4n03ve6.cloudfront.net
 		- www.wix.com.edgesuite.net
-
 		- wix.go2cloud.org
 			- tracking.wix.com
 
-
 	Nonfunctional hosts in *wix.com:
-
+		- archive (unknown SSL protocol error)
 		- arena ¹
-		- beat		(interrupted)
-		- investors ³
-		- jobs		(cert: dns.lc.wix.com; 403)
+		- beat (interrupted)
+		- dns.lc 
+		- investors ²
+		- jobs (cert: dns.lc.wix.com; 403)
 
 	¹ Refused
-	³ Dropped
-
+	² Dropped
 
 	Problematic hosts in *wix.com:
-
 		- tracking *
 
 	* Mismatched
-
-
-	These altnames don't exist:
-
-		- www.frog.wix.com
-
-
-	Insecure cookies are set for these domains:
-
-		- .wix.com
-
 -->
-<ruleset name="Wix.com (partial)" default_off='failed ruleset test'>
 
-	<!--	Direct rewrites:
-				-->
+<ruleset name="Wix.com (partial)">
 	<target host="wix.com" />
-	<target host="archive.wix.com" />
+	<target host="www.wix.com" />
 	<target host="dev.wix.com" />
 	<target host="fallback.wix.com" />
 	<target host="frog.wix.com" />
-	<target host="dns.lc.wix.com" />
-	<target host="www.dns.lc.wix.com" />
 	<target host="editor.wix.com" />
 	<target host="media.wix.com" />
-	<target host="publicorigin.wix.com" />
 	<target host="sslstatic.wix.com" />
 	<target host="static.wix.com" />
-	<target host="users.wix.com" />
-	<target host="www.wix.com" />
-
-	<!--	Complications:
-				-->
 	<target host="tracking.wix.com" />
+	<target host="users.wix.com" />
 
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://www\.wix\.com/$" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://www\.wix\.com/+(?!favicon\.ico|(?:my-account|signin|support)(?:$|[?/]))" />
+	<securecookie host=".+" name=".+" />
 
-			<!--	+ve:
-					-->
-			<test url="http://www.wix.com/about/affiliates" />
-			<test url="http://www.wix.com/about/contact-us" />
-			<test url="http://www.wix.com/blog/" />
-			<test url="http://www.wix.com/domain/names" />
-			<test url="http://www.wix.com/ecommerce/website" />
-			<test url="http://www.wix.com/sample/website" />
-			<test url="http://www.wix.com/website/templates" />
+	<rule from="^http://tracking\.wix\.com/" to="https://wix.go2cloud.org/" />
 
-			<!--	-ve:
-					-->
-			<test url="http://www.wix.com/favicon.ico" />
-			<test url="http://www.wix.com/my-account" />
-			<test url="http://www.wix.com/signin" />
-			<test url="http://www.wix.com/support/" />
-			<test url="http://www.wix.com/support/html5/" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.wix\.com$" name="(?:_wix_browser_sess|XSRF-TOKEN|incap_ses_\d+_\d+|userType|visid_incap_\d+)$" /-->
-
-	<securecookie host="^\." name="(?:incap_ses_\d+|visid_incap)_\d+$" />
-
-
-	<rule from="^http://tracking\.wix\.com/"
-		to="https://wix.go2cloud.org/" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:"	to="https:" />
 </ruleset>
