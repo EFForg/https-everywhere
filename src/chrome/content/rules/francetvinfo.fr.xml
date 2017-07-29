@@ -1,9 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://francetvinfo.fr/ => https://www.francetvinfo.fr/: Too many redirects while fetching 'https://www.francetvinfo.fr/'
-Fetch error: http://www.francetvinfo.fr/ => https://www.francetvinfo.fr/: Too many redirects while fetching 'https://www.francetvinfo.fr/'
-
 	Invalid certificate:
 		francetvinfo.fr
 		backoffice.francetvinfo.fr
@@ -35,16 +30,37 @@ Fetch error: http://www.francetvinfo.fr/ => https://www.francetvinfo.fr/: Too ma
 		operation.francetvinfo.fr
 
 -->
-<ruleset name="Franceinfo (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="Franceinfo (partial)">
 
 	<target host="francetvinfo.fr" />
 	<target host="www.francetvinfo.fr" />
+
+		<!-- Redirect to http -->
+		<test url="http://francetvinfo.fr/" />
+		<test url="http://www.francetvinfo.fr/" />
+		<test url="http://www.francetvinfo.fr/sciences/espace/nuit-des-etoiles/carte-decouvrez-les-meilleurs-et-les-pires-endroits-pour-observer-les-etoiles-en-france_2302143.html" />
+		<test url="http://www.francetvinfo.fr/sciences/espace/video-trois-nouveaux-arrivants-a-bord-de-la-station-spatiale-internationale_2305263.html" />
+
+		<!-- Secured in this ruleset -->
+		<test url="http://www.francetvinfo.fr/minify/1.2.309/fY9bDsIgEEU3JE-ttssZ6KDYAgpYYuLixcePCfVnJrnnJHNHUEm3fHhwZTQHZfZdD5r3-7HbbYUYpeykOuidARhULwfzYGmynpVSmE6JFVTJZiQp32ekNdn88lNw-B7_/GFFz0FPD0MG54JmQnDfobFVi5-sN451es70QWX_h1Fm_dgwX9LkFEUaM37XOHWbwsDQEB3HCbP2RmRAyRlJLkEXUNrJr6B_pu9b_VhGhxkfisaSX9gQ~.css" />
+		<test url="http://www.francetvinfo.fr/skin/www/img/favicon/favicon.ico" />
+		<test url="http://www.francetvinfo.fr/image/75eazaqiv-7682/1200/450/12395276.jpg" />
+		<test url="http://www.francetvinfo.fr/image/75eap7cr5-8b9c/460/172/6757175.jpg" />
+		<test url="http://www.francetvinfo.fr/script/conf.js" />
+		<test url="http://www.francetvinfo.fr/skin/1.2.309/www/img/icn/apple/57x57.png" />
+		<test url="http://www.francetvinfo.fr/skin/1.2.309/www/img/icn/apple/safari-pinned-tab.svg" />
+
 	<target host="mobile.francetvinfo.fr" />
+
+		<test url="http://mobile.francetvinfo.fr/" />
+		<test url="http://mobile.francetvinfo.fr/sciences/espace/video-trois-nouveaux-arrivants-a-bord-de-la-station-spatiale-internationale_2305263.amp" />
+	
 	<target host="stream.francetvinfo.fr" />
 
-	<rule from="^http://francetvinfo\.fr/"
-		to="https://www.francetvinfo.fr/" />
+	<rule from="^http://(www\.)?francetvinfo\.fr/(.*)\.(css|ico|jpg|js|png|svg)"
+		to="https://www.francetvinfo.fr/$2.$3" />
 
-	<rule from="^http:" to="https:" />
+	<rule from="^http://(mobile|stream)\.francetvinfo\.fr/" 
+		to="https://$1.francetvinfo.fr/" />
 
 </ruleset>
