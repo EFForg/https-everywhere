@@ -1,118 +1,70 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://inst.winzip.com/ => https://inst.avg.com/: (6, 'Could not resolve host: inst.avg.com')
-Non-2xx HTTP code: http://install.winzip.com/ (200) => https://98acdc60cb7e28f9e56a-c9c8355414dceb2e62093c8746e20714.ssl.cf2.rackcdn.com/ (404)
+	Remark: www redirects to plaintext with JavaScript, 
+		e.g. https://www.winzip.com/win/en/
 
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://download.winzip.com/ (200) => https://a248.e.akamai.net/f/4695/10/download.winzip.com/ (400)
-Fetch error: http://inst.winzip.com/ => https://inst.avg.com/: (51, "SSL: no alternative certificate subject name matches target host name 'inst.avg.com'")
-Non-2xx HTTP code: http://install.winzip.com/ (200) => https://98acdc60cb7e28f9e56a-c9c8355414dceb2e62093c8746e20714.ssl.cf2.rackcdn.com/ (404)
-	For rules causing false/broken MCB, see WinZip.com-falsemixed.xml.
+	Non-functional hosts
+		Couldn't connect to server:
+			 - activate.winzip.com
+			 - api.winzip.com
+			 - free.winzip.com
+			 - mac.winzip.com
+			 - msg.winzip.com
+			 - systemtools.winzip.com
+			 - tools.winzip.com
+			 - utilities.winzip.com
 
+		Timeout was reached:
+			 - dl.winzip.com
+			 - download-origin.winzip.com
+			 - ftp.winzip.com
+			 - internet01.winzip.com
+			 - kb.winzip.com
+			 - 1.outbound1.mail.winzip.com
+			 - 1.outbound2.mail.winzip.com
+			 - man-smtprelay.winzip.com
+			 - openvpn.winzip.com
+			 - secure.winzip.com
+			 - wzmail3.winzip.com
+			 - wzvoip.winzip.com
+			 - wzweb.winzip.com
 
-	CDN buckets:
+		SSL peer certificate was not OK:
+			 - download.winzip.com
+			 - download1.winzip.com
+			 - download2.winzip.com
+			 - download4.winzip.com
+			 - help.winzip.com
+			 - http2.winzip.com
+			 - image.winzip.com
+			 - imagewz.winzip.com
+			 - inst.winzip.com
+			 - install.winzip.com
+			 - mail.winzip.com
+			 - refresh-origin.winzip.com
+			 - subscribe.winzip.com
+			 - tray.winzip.com
+			 - update.winzip.com
+			 - updatedu.winzip.com
+			 - updatero.winzip.com
+			 - updatess.winzip.com
+			 - web-origin.winzip.com
+			 - www2.winzip.com
+			 - www3.winzip.com
+			 - www4.winzip.com
+			 - www6.winzip.com
 
-		- imagewz.winzip.com.edgesuite.net
+		Peer certificate cannot be authenticated with given CA certificates:
+			 - shopm.winzip.com
+			 - shopm226.winzip.com
 
-			- a1449.g.akamai.net
-
-		- www.winzip.com.edgesuite.net
-
-			- a486.g.akamai.net
-			- download
-			- image
-
-		- 98acdc60cb7e28f9e56a-c9c8355414dceb2e62093c8746e20714.r4.cf2.rackcdn.com
-
-			- install
-
-
-	Mixed content:
-
-		- css on (www.) from imagewz
-
-		- Images on (www.) from imagewz
-
-		- Ads/web bugs, on (www.) from:
-
-			- imagewz *
-			- www.googleadservices.com *
-
-
-	Nonfunctional subdomains:
-
-		- kb	(dropped)
-
-
-	Problematic subdomains:
-
-		- download ¹
-		- inst		(works; mismatched, CN: *.inst.avg.com)
-		- install ¹
-		- image ¹
-		- imagewz ¹
-
-	¹ Works, akamai
-
-
-	Partially covered subdomains:
-
-		- (www.)	(avoiding false/broken MCB)
-
-
-	Fully covered subdomains:
-
-		- image		(→ akamai & www)
-		- imagewz	(→ akamai & www)
-		- inst		(→ inst.avg.com)
-		- install	(→ 98acdc60cb7e28f9e56a-c9c8355414dceb2e62093c8746e20714.ssl.cf2.rackcdn.com)
-		- store
-
+		5xx server error:
+			 - updaterv.winzip.com
 -->
-<ruleset name="WinZip.com (partial)" default_off='failed ruleset test'>
-
-	<!--	Enumerate domains in order to avoid one
-		of two duplicate target warnings.
-						-->
+<ruleset name="WinZip.com (partial)" default_off="other">
 	<target host="winzip.com" />
-	<target host="download.winzip.com" />
-	<target host="image.winzip.com" />
-	<target host="imagewz.winzip.com" />
-		<!--
-			These reference at least some resources relative to root:
-										-->
-		<!--exclusion pattern="^http://image(wz)?\.winzip\.com/.+/css/(colorbox|dropdown|dropdowntheme|dropdowntheme_common|jquery-ui-custom|legacy_common)\.css" /-->
-		<!--
-			While these reference all resources relative to self:
-										-->
-		<!--exclusion pattern="^http://image(wz)?\.winzip\.com/.+/css/(?!(colorbox_common|dropdownbase|dropdown_common|footer|footer_common|jquery-ui-custom_common|layout|legacy|newsroom|print)\.css)" /-->
-	<target host="inst.winzip.com" />
-	<target host="install.winzip.com" />
-	<target host="store.winzip.com" />
-	<target host="*.store.winzip.com" />
 	<target host="www.winzip.com" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://(?:www\.)?winzip\.com/(?!cgi-bin/|.+/css/|favicon\.ico|lang\.json|static/|/win/\w\w/order\.cgi)" />
+	<target host="shop.winzip.com" />
+	<target host="store.winzip.com" />
 
-
-	<securecookie host="^\.store\.winzip\.com$" name=".+" />
-
-
-	<rule from="^http://(store\.|www\.)?winzip\.com/"
-		to="https://$1winzip.com/" />
-
-	<!--	And then everything else to ^:
-							-->
-	<rule from="^http://image(?:wz)?\.winzip\.com/"
-		to="https://winzip.com/" />
-
-	<rule from="^http://inst\.winzip\.com/"
-		to="https://inst.avg.com/" />
-
-	<rule from="^http://install\.winzip\.com/"
-		to="https://98acdc60cb7e28f9e56a-c9c8355414dceb2e62093c8746e20714.ssl.cf2.rackcdn.com/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
