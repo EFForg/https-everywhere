@@ -1,78 +1,43 @@
 <!--
-	CDN buckets:
-
-		- basekit-tdk.s3.amazonaws.com
-		- basekit-image.s3.amazonaws.com
-		- d282ykz6vx01th.cloudfront.net
-		- d2f0ora2gkri0g.cloudfront.net
-		- d35onr1h4eb0bw.cloudfront.net
-
-
-	Nonfunctional hosts in *basekit.com:
-
-		- apidocs ʳ
-		- knowledge ᵈ
-
-	ᵈ Dropped
-	ʳ Refused
-
-
-	Problematic hosts in *basekit.com:
-
-		- custom-css ᵐ
-		- docs ᵐ
-		- resources ᵐ
-		- resellers *
-		- try *
-
-	* Protocol-relative inclusion of custom-css.basekit.com
-	ᵐ Mismatched
-
-
-	Insecure cookies are set for these hosts: ᶜ
-
-		- odense.basekit.com
-
-	ᶜ See https://owasp.org/index.php/SecureFlag
-
+	Invalid certificate:
+		custom-css.basekit.com
+		docs.basekit.com
+		resources.basekit.com
 
 	Mixed content:
+		www.basekit.com
 
-		- css on odense from fonts.googleapis.com ˢ
+	Time out:
+		knowledge.basekit.com
 
-		- Images, on:
+	Protocol-relative inclusion of custom-css.basekit.com:
+		resellers.basekit.com
+		try.basekit.com
 
-			- odense from d2f0ora2gkri0g.cloudfront.net ˢ
-			- odense from d35onr1h4eb0bw.cloudfront.net ˢ
-
-		- Bug on www from chrs-mln-krs.com ˢ
-
-	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+	Each customer gets its own subdomain.
 
 -->
 <ruleset name="BaseKit.com (partial)">
 
-	<!--	Direct rewrites:
-				-->
 	<target host="basekit.com" />
-	<target host="developers.basekit.com" />
-	<target host="odense.basekit.com" />
-	<target host="resellers.basekit.com" />
-	<target host="scottishculture.basekit.com" />
-	<target host="www.basekit.com" />
+	<target host="*.basekit.com" />
 
-	<!--	Complications:
-				-->
-	<target host="custom-css.basekit.com" />
-	<target host="resources.basekit.com" />
+		<test url="http://apidocs.basekit.com/" />
+		<test url="http://developers.basekit.com/" />
+		<test url="http://partners.basekit.com/" />
+		<test url="http://resellers.basekit.com/" />
+		<test url="http://scottishculture.basekit.com/" />
+		<test url="http://support.basekit.com/" />
+		<test url="http://trivia.basekit.com/" />
+		<test url="http://try.basekit.com/" />
+	
+		<exclusion pattern="^http://(docs|resources|knowledge)\.basekit\.com/" />
 
+			<test url="http://docs.basekit.com/" />
+			<test url="http://resources.basekit.com/" />
+			<test url="http://knowledge.basekit.com/" />
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^odense\.basekit\.com$" name="^(?:PHPSESSID|ecommerce)$" /-->
-
-	<securecookie host="^\w" name="." />
-
+	<securecookie host=".+" name=".+" />
 
 	<!--	s? for protocol-relative inclusion
 		on 'resellers', 'try':
@@ -80,10 +45,8 @@
 	<rule from="^https?://custom-css\.basekit\.com/"
 		to="https://d282ykz6vx01th.cloudfront.net/" />
 
+		<test url="http://custom-css.basekit.com/" />
 		<test url="https://custom-css.basekit.com/live292640_site_41.css" />
-
-	<rule from="^http://resources\.basekit\.com/"
-		to="https://basekit.readme.io/" />
 
 	<rule from="^http:"
 		to="https:" />
