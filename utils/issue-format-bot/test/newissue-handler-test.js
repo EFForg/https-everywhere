@@ -33,7 +33,7 @@ vows.describe('new issue handler').addBatch({
 					handler(context);
 				},
 				'it works': function(err) {
-					assert.ifError();
+					assert.ifError(err);
 				}
 			}
 		}
