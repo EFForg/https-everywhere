@@ -10,7 +10,7 @@ vows.describe('new issue handler').addBatch({
 		topic: function() {
 			return require('../lib/newissue');
 		},
-		'it works': function(err, newissue) {
+		'it works': function(err) {
 			assert.ifError(err);
 		},
 		'it\'s a function': function(err, newissue) {
@@ -20,7 +20,7 @@ vows.describe('new issue handler').addBatch({
 			topic: function(newissue) {
 				return newissue(robot);
 			},
-			'it works': function(err, handler) {
+			'it works': function(err) {
 				assert.ifError(err);
 			},
 			'it returns a function': function(err, handler) {

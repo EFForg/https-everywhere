@@ -8,7 +8,7 @@ vows.describe('robot mock object').addBatch({
 		topic: function() {
 			return require('./mocks/robot');
 		},
-		'it works': function(err, robot) {
+		'it works': function(err) {
 			assert.ifError(err);
 		},
 		'it\'s an object': function(err, robot) {

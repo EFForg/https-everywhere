@@ -1,6 +1,6 @@
 'use strict';
 
-function noop() {};
+function noop() {}
 
 module.exports = {
 	log: noop

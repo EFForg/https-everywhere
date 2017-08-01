@@ -9,7 +9,7 @@ vows.describe('issue parser module').addBatch({
 		topic: function() {
 			return require('../lib/parse');
 		},
-		'it works': function(err, parse) {
+		'it works': function(err) {
 			assert.ifError(err);
 		},
 		'it\'s a function': function(err, parse) {

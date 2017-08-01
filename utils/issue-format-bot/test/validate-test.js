@@ -46,7 +46,7 @@ vows.describe('data validator module').addBatch({
 		topic: function() {
 			return require('../lib/validate');
 		},
-		'it works': function(err, validate) {
+		'it works': function(err) {
 			assert.ifError(err);
 		},
 		'it\'s a function': function(err, validate) {
