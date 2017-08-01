@@ -12,6 +12,11 @@ module.exports = {
 				number: issueNumber++
 			}
 		},
+		github: {
+			issues: {
+				createComment: sinon.spy()
+			}
+		},
 		issue: sinon.spy()
 	})
 };

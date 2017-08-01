@@ -9,6 +9,13 @@ function assertProp(prop, asserter) {
 	};
 }
 
+function assertSinonSpy(prop) {
+	return function(err, context) {
+		assert.isFunction(_.get(context, prop));
+		assert.isDefined(_.get(context, prop).called);
+	};
+}
+
 vows.describe('context mock object').addBatch({
 	'When we require the module': {
 		topic: function() {
@@ -36,10 +43,10 @@ vows.describe('context mock object').addBatch({
 			},
 			'context.payload.issue is an object': assertProp('payload.issue', assert.isObject),
 			'context.payload.issue.number is a number': assertProp('payload.issue.number', assert.isNumber),
-			'context.issue() is a Sinon spy': function(err, context) {
-				assert.isFunction(context.issue);
-				assert.isDefined(context.issue.called);
-			}
+			'context.github is an object': assertProp('github', assert.isObject),
+			'context.github.issues is an object': assertProp('github.issues', assert.isObject),
+			'context.github.issues.createComment is a Sinon spy': assertSinonSpy('github.issues.createComment'),
+			'context.issue is a Sinon spy': assertSinonSpy('issue')
 		}
 	}
 }).export(module);
