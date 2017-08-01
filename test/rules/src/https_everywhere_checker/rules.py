@@ -212,8 +212,10 @@ class Ruleset(object):
 				
 			# Extract TLD from target if possible
 			res = tldextract.extract(target)
-			if res.domain == "" or res.suffix == "":
+			if res.suffix == "":
 				problems.append("%s: Target '%s' missing eTLD" % (self.filename, target))
+			elif res.domain == "":
+				problems.append("%s: Target '%s' containing entire eTLD" % (self.filename, target))
 				
 		return problems
 
