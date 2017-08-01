@@ -100,18 +100,20 @@ vows.describe('issue parser module').addBatch({
 			topic: function(parse) {
 				return parse('Type: something else\nDomain: example.com');
 			},
-			'it returns false': function(err, obj) {
+			'it returns the right error': function(err, obj) {
 				assert.ifError(err);
-				assert.isFalse(obj);
+				assert.instanceOf(obj, Error);
+				assert.equal(obj.message, 'invalid type');
 			}
 		},
 		'and we pass it a null body': {
 			topic: function(parse) {
 				return parse('');
 			},
-			'it returns false': function(err, obj) {
+			'it returns the right error': function(err, obj) {
 				assert.ifError(err);
-				assert.isFalse(obj);
+				assert.instanceOf(obj, Error);
+				assert.equal(obj.message, 'null description');
 			}
 		}
 	}

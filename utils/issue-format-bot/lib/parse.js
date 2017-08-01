@@ -12,6 +12,9 @@ const validTypes = ['ruleset issue', 'new ruleset', 'code issue', 'feature reque
 module.exports = function(body) {
 	const plaintext = String(processor.processSync(body));
 
+	// Check if there's no description at all
+	if (plaintext.trim().length === 0) return new Error('null description');
+
 	const lines = plaintext.split('\n')
 	                       .filter(line => _.compact(line).length !== 0)
 	                       .map(line => line.split(':').map(key => key.trim()))
@@ -19,7 +22,7 @@ module.exports = function(body) {
 	// Filter result looks like [ [ 'Type', 'ruleset issue' ] ]
 	const type = lines.filter(line => line[0] === 'type')[0][1];
 
-	if (!validTypes.includes(type)) return false;
+	if (!validTypes.includes(type)) return new Error('invalid type');
 
 	let normalized = _.fromPairs(lines);
 

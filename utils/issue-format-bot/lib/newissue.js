@@ -16,11 +16,21 @@ module.exports = function(robot) {
 
 		const data = parse(context.payload.issue.body);
 
-		// Check if the data isn't the right type
-		if (data === false) {
-			const params = context.issue({body: 'Hey there, I didn\'t understand the type of issue you specified. Please edit it and try again.'});
-			return context.github.issues.createComment(params);
-		}
+                // Check if the data is problematic
+                if (data instanceof Error) {
+                        // Dumb `switch` statement cases aren't technically blocks so saying `const params` in both of them causes redeclaration errors
+                        let params;
+                        switch (data.message) {
+                        case 'invalid type':
+                                params = context.issue({body: 'Hey there, I didn\'t understand the type of issue you specified. Please edit it and try again.'});
+                                return context.github.issues.createComment(params);
+                        case 'null description':
+                                params = context.issue({body: 'Hi! I can\'t find any text in your description - please edit it to use the issue template.'});
+                                return context.github.issues.createComment(params);
+                        default:
+                                throw data;
+                        }
+                }
 
 		let problems = [];
 
