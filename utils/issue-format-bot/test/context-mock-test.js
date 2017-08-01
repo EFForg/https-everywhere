@@ -23,6 +23,7 @@ vows.describe('context mock object').addBatch({
 		'it has an issue() factory function': function(err, makeContext) {
 			assert.isFunction(makeContext.issue);
 		},
+		// TODO test that issue numbers aren't the same
 		'and we call makeContext.issue()': {
 			topic: function(makeContext) {
 				return makeContext.issue();
