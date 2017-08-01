@@ -23,6 +23,24 @@ function missingRequiredDomain(type) {
 	};
 }
 
+function hasRequiredDomain(type) {
+	return 	{
+		topic: function(validate) {
+			return validate({
+				type,
+				domain: 'example.com'
+			});
+		},
+		'it returns an array': function(err, problems) {
+			assert.ifError(err);
+			assert.isArray(problems);
+		},
+		'the array has no problems': function(err, problems) {
+			assert.equal(problems.length, 0);
+		}
+	};
+}
+
 vows.describe('data validator module').addBatch({
 	'When we require the module': {
 		topic: function() {
@@ -35,6 +53,8 @@ vows.describe('data validator module').addBatch({
 			assert.isFunction(validate);
 		},
 		'and we pass it a new ruleset without a domain': missingRequiredDomain('new ruleset'),
-		'and we pass it a ruleset issue without a domain': missingRequiredDomain('ruleset issue')
+		'and we pass it a ruleset issue without a domain': missingRequiredDomain('ruleset issue'),
+		'and we pass it a new ruleset with a domain': hasRequiredDomain('new ruleset'),
+		'and we pass it a ruleset issue with a domain': hasRequiredDomain('ruleset issue')
 	}
 }).export(module);
