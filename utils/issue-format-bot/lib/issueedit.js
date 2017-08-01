@@ -40,6 +40,8 @@ module.exports = function(robot) {
 
 		if (problems.length === 0) {
 			// User submission is OK
+			const params = context.issue({body: 'Thanks! Your edit helped me out. I\'ll take it from here now.'});
+			return context.github.issues.createComment(params);
 			// TODO label things
 		} else {
 			// Submit a comment telling them what the issues were

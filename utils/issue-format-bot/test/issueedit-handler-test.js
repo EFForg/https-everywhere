@@ -81,10 +81,16 @@ vows.describe('issue edit handler').addBatch({
 				'it works': function(err) {
 					assert.ifError(err);
 				},
-				'it doesn\'t comment': function(err, context) {
-					assert.isTrue(context.issue.notCalled);
+				'it only creates one comment': function(err, context) {
+					assert.isTrue(context.issue.calledOnce);
+				},
+				'it says the user fixed it': function(err, context) {
+					// args[0] is first call arguments, second [0] is first arg
+					assert.isObject(context.issue.args[0][0]);
+					// TODO try to find a more decoupled way than matching text
+					assert.isTrue(context.issue.args[0][0].body.includes('take it from here'));
 				}
-				// TODO useful tests here
+				// TODO test labels, etc. here
 			},
 			'and we pass it the context of a issue edit with a type of "new ruleset" and a problematic body': {
 				topic: function(handler) {

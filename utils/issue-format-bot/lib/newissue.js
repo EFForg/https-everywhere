@@ -38,7 +38,6 @@ module.exports = function(robot) {
 		if (problems.length === 0) {
 			// User submission is OK
 			// TODO label things
-			// TODO it'd be nice if, once users edit their issue, we affirmatively say "you fixed it"
 		} else {
 			// Submit a comment telling them what the issues were
 			let comment = 'Thanks for your contribution to HTTPS Everywhere! ';
