@@ -37,7 +37,7 @@ module.exports = function(robot) {
 
 		// Validate that the user submitted all necessary data based on submission type
 		switch (data.type) {
-		case 'new rulest':
+		case 'new ruleset':
 			if (!data.domain) problems.push('Submission is missing domain information');
 			break;
 		case 'ruleset issue':
