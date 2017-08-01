@@ -1,7 +1,7 @@
 'use strict';
 
-const newissue = require('./lib/newissue');
-const issueedit = require('./lib/issueedit');
+const newissue = require('./lib/newissue'),
+      issueedit = require('./lib/issueedit');
 
 module.exports = robot => {
 	robot.log('HTTPS Everywhere ruleset parser started.');
