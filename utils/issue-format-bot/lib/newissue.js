@@ -56,6 +56,9 @@ module.exports = function(robot) {
 			comment += 'Here are the problems I ran into:\n\n';
 			problems.forEach(problem => comment += ` * ${problem}\n`);
 			comment += '\nIf you edit your issue, I\'ll try again and report back if I have problems again.';
+			const params = context.issue({body: comment});
+			return context.github.issues.createComment(params);
+
 		}
 	};
 };
