@@ -33,7 +33,6 @@ module.exports = function(robot) {
                         }
                 }
 
-		// TODO push validation out to a separate module and test that separately
 		const problems = validate(data);
 
 		if (problems.length === 0) {
