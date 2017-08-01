@@ -9,12 +9,13 @@ const strip = require('strip-markdown'),
 
 const validTypes = ['ruleset issue', 'new ruleset', 'code issue', 'feature request'];
 
-module.exports = function(body) {
+module.exports = function parseDescription(body) {
 	const plaintext = String(processor.processSync(body));
 
 	// Check if there's no description at all
 	if (plaintext.trim().length === 0) return new Error('null description');
 
+	// Split by newlines, filter blanks, split into trimmed key-value and lowercase everything
 	const lines = plaintext.split('\n')
 	                       .filter(line => _.compact(line).length !== 0)
 	                       .map(line => line.split(':').map(key => key.trim()))
@@ -24,6 +25,7 @@ module.exports = function(body) {
 
 	if (!validTypes.includes(type)) return new Error('invalid type');
 
+	// Convert to object
 	let normalized = _.fromPairs(lines);
 
 	return normalized;
