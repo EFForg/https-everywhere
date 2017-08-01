@@ -34,7 +34,11 @@ vows.describe('context mock object').addBatch({
 				assert.isObject(context);
 			},
 			'context.payload.issue is an object': assertProp('payload.issue', assert.isObject),
-			'context.payload.issue.number is a number': assertProp('payload.issue.number', assert.isNumber)
+			'context.payload.issue.number is a number': assertProp('payload.issue.number', assert.isNumber),
+			'context.issue() is a Sinon spy': function(err, context) {
+				assert.isFunction(context.issue);
+				assert.isDefined(context.issue.called);
+			}
 		}
 	}
 }).export(module);
