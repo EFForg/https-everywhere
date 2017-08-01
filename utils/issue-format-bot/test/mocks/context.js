@@ -5,11 +5,12 @@ const sinon = require('sinon');
 let issueNumber = 1;
 
 module.exports = {
-	issue() {
+	issue(body) {
 		return {
 			payload: {
 				issue: {
-					number: issueNumber++
+					number: issueNumber++,
+					body
 				}
 			},
 			github: {

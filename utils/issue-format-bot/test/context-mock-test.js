@@ -33,7 +33,7 @@ vows.describe('context mock object').addBatch({
 		// TODO test that issue numbers aren't the same
 		'and we call makeContext.issue()': {
 			topic: function(makeContext) {
-				return makeContext.issue();
+				return makeContext.issue('Hello world');
 			},
 			'it works': function(err) {
 				assert.ifError(err);
@@ -43,6 +43,7 @@ vows.describe('context mock object').addBatch({
 			},
 			'context.payload.issue is an object': assertProp('payload.issue', assert.isObject),
 			'context.payload.issue.number is a number': assertProp('payload.issue.number', assert.isNumber),
+			'context.payload.issue.body is a string': assertProp('payload.issue.body', assert.isString),
 			'context.github is an object': assertProp('github', assert.isObject),
 			'context.github.issues is an object': assertProp('github.issues', assert.isObject),
 			'context.github.issues.createComment is a Sinon spy': assertSinonSpy('github.issues.createComment'),
