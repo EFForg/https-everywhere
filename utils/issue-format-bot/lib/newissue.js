@@ -1,6 +1,7 @@
 'use strict';
 
 const parse = require('./parse'),
+      validate = require('./validate'),
       _ = require('lodash');
 
 module.exports = function(robot) {
@@ -33,17 +34,7 @@ module.exports = function(robot) {
                 }
 
 		// TODO push validation out to a separate module and test that separately
-		let problems = [];
-
-		// Validate that the user submitted all necessary data based on submission type
-		switch (data.type) {
-		case 'new ruleset':
-			if (!data.domain) problems.push('Submission is missing domain information');
-			break;
-		case 'ruleset issue':
-			if (!data.domain) problems.push('Submission is missing domain information');
-			break;
-		}
+		const problems = validate(data);
 
 		if (problems.length === 0) {
 			// User submission is OK
