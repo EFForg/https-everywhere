@@ -68,8 +68,24 @@ vows.describe('new issue handler').addBatch({
 					assert.isTrue(context.issue.args[0][0].body.includes('type of issue'));
 				}
 			},
-			// Problematic bodies aren't tested here because that validation will eventually be refactored into another module and tested there
 			'and we pass it the context of a new issue with a type of "new ruleset" and a correct body': {
+				topic: function(handler) {
+					const context = makeContext.issue('Type: new ruleset\nDomain: example.com');
+
+					handler(context);
+
+					return context;
+				},
+				'it works': function(err) {
+					assert.ifError(err);
+				},
+				'it doesn\'t comment': function(err, context) {
+					assert.isTrue(context.issue.notCalled);
+				}
+				// TODO useful tests here
+			},
+			// Problematic bodies aren't tested extensively here because that validation will eventually be refactored into another module and tested there
+			'and we pass it the context of a new issue with a type of "new ruleset" and a problematic body': {
 				topic: function(handler) {
 					const context = makeContext.issue('Type: new ruleset');
 
@@ -82,8 +98,13 @@ vows.describe('new issue handler').addBatch({
 				},
 				'it only creates one comment': function(err, context) {
 					assert.isTrue(context.issue.calledOnce);
+				},
+				'it includes the problem': function(err, context) {
+					// args[0] is first call arguments, second [0] is first arg
+					assert.isObject(context.issue.args[0][0]);
+					// TODO try to find a more decoupled way than matching text
+					assert.isTrue(context.issue.args[0][0].body.includes('missing domain information'));
 				}
-				// TODO useful tests here
 			}
 		}
 	}
