@@ -31,6 +31,15 @@ storage.get({enableMixedRulesets: false}, function(item) {
   all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
 });
 
+// Load in the legacy custom rulesets, if any
+storage.get({legacy_custom_rulesets: false}, function(item) {
+  if(item.legacy_custom_rulesets){
+    for(let legacy_custom_ruleset of item.legacy_custom_rulesets){
+      all_rules.addFromXml((new DOMParser()).parseFromString(legacy_custom_ruleset, 'text/xml'));
+    }
+  }
+});
+
 var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
 // devtools-panel.js).
@@ -656,6 +665,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     sendResponse(isExtensionEnabled);
   } else if (message.type == "delete_from_ruleset_cache") {
     all_rules.ruleCache.delete(message.object);
+  } else if (message.type == "delete_all_ruleset_cache") {
+    all_rules.ruleCache = new Map();
+    sendResponse(true);
   } else if (message.type == "get_active_rulesets_and_hostnames") {
     sendResponse({
       rulesets: activeRulesets.getRulesets(message.object),
@@ -670,9 +682,28 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
       sendResponse(true);
     });
     return true;
+  } else if (message.type == "add_rulesets_from_string_array") {
+    for(ruleset of message.object){
+      all_rules.addFromXml((new DOMParser()).parseFromString(ruleset, 'text/xml'));
+    }
+    storage.set({"legacy_custom_rulesets": message.object}, function(item){
+      sendResponse(item);
+    });
+    sendResponse(true);
   } else if (message.type == "update_state") {
     updateState();
   } else if (message.type == "remove_rule") {
     removeRule(message.object);
+  } else if (message.type == "set_ruleset_active_status_by_name") {
+    for(let host in all_rules.targets){
+      for(ruleset of all_rules.targets[host]){
+        if(ruleset.name == message.object.name){
+          ruleset.active = message.object.active;
+          sendResponse(true);
+          return;
+        }
+      }
+    }
+    sendResponse(false);
   }
 });
