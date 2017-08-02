@@ -5,6 +5,7 @@ const request = require('request'),
 
 // (Heavily) modified from code by @Hainish in utils/labeller. Thanks, @Hainish!
 
+// TODO make this return Promises
 // TODO test this file
 
 module.exports = function getAlexa(cb) {
