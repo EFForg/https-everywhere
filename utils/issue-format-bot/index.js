@@ -10,7 +10,6 @@ module.exports = robot => {
 	alexa(domains => {
 		robot.log('Retrieved Alexa rankings.');
 
-		// TODO parse issue edits too
 		robot.on('issues.opened', newissue(robot, domains));
 		robot.on('issues.edited', issueedit(robot, domains));
 

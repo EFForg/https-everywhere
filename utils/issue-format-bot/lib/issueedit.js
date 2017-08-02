@@ -5,7 +5,6 @@ const parse = require('./parse'),
       _ = require('lodash');
 
 // TODO make this share more with newissue.js?
-// TODO test this module
 
 module.exports = function(robot, alexa) {
 	return context => {
