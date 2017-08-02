@@ -37,6 +37,39 @@ vows.describe('alexa mock array').addBatch({
 			'the property is there': function(err, alexa) {
 				assert.equal(alexa.someProp, 'Hello world!');
 			}
+		},
+		'and we call Array#indexOf with a domain in the array': {
+			topic: function(alexa) {
+				return alexa.indexOf('domain1.com');
+			},
+			'it works': function(err) {
+				assert.ifError(err);
+			},
+			'it returns the right position': function(err, index) {
+				assert.equal(index, 0);
+			}
+		},
+		'and we call Array#indexOf with a domain not in the array': {
+			topic: function(alexa) {
+				return alexa.indexOf('domain1000000000.com');
+			},
+			'it works': function(err) {
+				assert.ifError(err);
+			},
+			'it returns no match': function(err, index) {
+				assert.equal(index, -1);
+			}
+		},
+		'and we call Array#indexOf with something not a domain at all': {
+			topic: function(alexa) {
+				return alexa.indexOf('foobar!');
+			},
+			'it works': function(err) {
+				assert.ifError(err);
+			},
+			'it returns no match': function(err, index) {
+				assert.equal(index, -1);
+			}
 		}
 	}
 }).export(module);
