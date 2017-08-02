@@ -311,15 +311,18 @@ const RuleWriter = {
       this.log(WARN, "TARGETS IS NULL");
     var data = this.readFromFile(file);
     if (!data) return null;
-    return this.readFromString(data, rule_store, ruleset_id);
+    return this.readFromString(data, rule_store, ruleset_id, true);
   },
 
-  readFromString: function(data, rule_store, ruleset_id) {
+  readFromString: function(data, rule_store, ruleset_id, custom) {
     try {
       var xmlruleset = dom_parser.parseFromString(data, "text/xml");
     } catch(e) { // file has been corrupted; XXX: handle error differently
       this.log(WARN,"Error in XML data: " + e + "\n" + data);
       return null;
+    }
+    if(custom){
+      HTTPSRules.custom_rulesets.push(data);
     }
     this.parseOneRuleset(xmlruleset.documentElement, rule_store, ruleset_id);
   },
@@ -406,6 +409,7 @@ const RuleWriter = {
 const HTTPSRules = {
   init: function() {
     try {
+      this.custom_rulesets = [];
       this.rulesets = [];
       this.targets = {};  // dict mapping target host pattern -> list of
                           // applicable ruleset ids
@@ -593,7 +597,7 @@ const HTTPSRules = {
 
   // Load a ruleset by numeric id, e.g. 234
   loadRulesetById: function(ruleset_id) {
-    RuleWriter.readFromString(this.rulesetStrings[ruleset_id], this, ruleset_id);
+    RuleWriter.readFromString(this.rulesetStrings[ruleset_id], this, ruleset_id, false);
   },
 
   // Get all rulesets matching a given target, lazy-loading from DB as necessary.

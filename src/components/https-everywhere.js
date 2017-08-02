@@ -790,7 +790,47 @@ HTTPSEverywhere.prototype = {
       thisBranch.setBoolPref("enabled", true);
       this.httpNowhereEnabled = true;
     }
+  },
+
+  exportSettings: function(){
+    var changed = false;
+
+    var prefs = {
+      http_nowhere_enabled: this.prefs.getBoolPref("http_nowhere.enabled"),
+      global_enabled: this.prefs.getBoolPref("globalEnabled"),
+      show_counter: this.prefs.getBoolPref("show_counter")
+    };
+
+    if(prefs.http_nowhere_enabled == true ||
+       prefs.global_enabled == false ||
+       prefs.show_counter == true
+    ){
+      changed = true;
+    }
+
+    var rule_toggle = {}
+    for(rule_toggle_key of this.rule_toggle_prefs.getChildList("", {})){
+      let current_state = this.rule_toggle_prefs.getBoolPref(rule_toggle_key);
+      if(HTTPSRules.rulesetsByName[rule_toggle_key].on_by_default != current_state){
+        rule_toggle[rule_toggle_key] = current_state;
+        changed = true;
+      }
+    }
+
+    if(HTTPSRules.custom_rulesets.length !== 0){
+      changed = true;
+    }
+
+    var export_object = {
+      prefs: prefs,
+      rule_toggle: rule_toggle,
+      custom_rulesets: HTTPSRules.custom_rulesets,
+      changed: changed
+    };
+
+    return export_object;
   }
+
 };
 
 var prefs = 0;
