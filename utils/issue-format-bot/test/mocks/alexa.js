@@ -1,6 +1,6 @@
 'use strict';
 
-const SIZE = 100;
+const SIZE = 1000;
 
 const regex = /^domain(\d+).com$/;
 

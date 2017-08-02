@@ -14,14 +14,14 @@ vows.describe('alexa mock array').addBatch({
 		'it\'s an array': function(err, alexa) {
 			assert.isArray(alexa);
 		},
-		'its length is 100': function(err, alexa) {
-			assert.equal(alexa.length, 100);
+		'its length is 1000': function(err, alexa) {
+			assert.equal(alexa.length, 1000);
 		},
-		'its 99th element has the right text': function(err, alexa) {
-			assert.equal(alexa[99], 'domain100.com');
+		'its 999th element has the right text': function(err, alexa) {
+			assert.equal(alexa[999], 'domain1000.com');
 		},
-		'its 100th element is undefined': function(err, alexa) {
-			assert.isUndefined(alexa[100]);
+		'its 1000th element is undefined': function(err, alexa) {
+			assert.isUndefined(alexa[1000]);
 		},
 		'and we get a nonexistant property': function(err, alexa) {
 			assert.isUndefined(alexa['foobar']);
