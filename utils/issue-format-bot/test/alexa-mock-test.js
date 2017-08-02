@@ -35,7 +35,6 @@ vows.describe('alexa mock array').addBatch({
 				assert.ifError(err);
 			},
 			'the property is there': function(err, alexa) {
-				debugger;
 				assert.equal(alexa.someProp, 'Hello world!');
 			}
 		}
