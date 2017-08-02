@@ -24,14 +24,14 @@ vows.describe('alexa mock array').addBatch({
 			assert.isUndefined(alexa[1000]);
 		},
 		'and we get a nonexistant property': function(err, alexa) {
-			assert.isUndefined(alexa['foobar']);
+			assert.isUndefined(alexa.foobar);
 		},
 		'and we assign a property': {
 			topic: function(alexa) {
 				alexa.someProp = 'Hello world!';
 				return alexa;
 			},
-			'it works': function(err, alexa) {
+			'it works': function(err) {
 				assert.ifError(err);
 			},
 			'the property is there': function(err, alexa) {
