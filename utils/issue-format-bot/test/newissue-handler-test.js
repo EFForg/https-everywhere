@@ -3,6 +3,7 @@
 const vows = require('perjury'),
       assert = vows.assert,
       robot = require('./mocks/robot'),
+      alexa = require('./mocks/alexa'),
       makeContext = require('./mocks/context');
 
 vows.describe('new issue handler').addBatch({
@@ -18,7 +19,7 @@ vows.describe('new issue handler').addBatch({
 		},
 		'and we initialize it with a robot': {
 			topic: function(newissue) {
-				return newissue(robot);
+				return newissue(robot, alexa);
 			},
 			'it works': function(err) {
 				assert.ifError(err);
