@@ -7,7 +7,9 @@ const alexa = require('./lib/alexa'),
 module.exports = robot => {
 	robot.log('HTTPS Everywhere ruleset parser started.');
 
-	alexa(domains => {
+	alexa((err, domains) => {
+		if (err) throw err;
+
 		robot.log('Retrieved Alexa rankings.');
 
 		robot.on('issues.opened', newissue(robot, domains));
