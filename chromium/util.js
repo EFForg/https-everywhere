@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var VERB = 1;
 var DBUG = 2;
@@ -11,9 +11,9 @@ var WARN = 5;
 // TODO: Add an easy UI to change the log level.
 // (Developers can just type DEFAULT_LOG_LEVEL=VERB in the console)
 var DEFAULT_LOG_LEVEL = NOTE;
-console.log("Hey developer! Want to see more verbose logging?");
-console.log("Type this into the console: DEFAULT_LOG_LEVEL=VERB");
-console.log("Accepted levels are VERB, DBUG, INFO, NOTE and WARN, default is NOTE");
+console.log('Hey developer! Want to see more verbose logging?');
+console.log('Type this into the console: DEFAULT_LOG_LEVEL=VERB');
+console.log('Accepted levels are VERB, DBUG, INFO, NOTE and WARN, default is NOTE');
 
 function log(level, str) {
     if (level >= DEFAULT_LOG_LEVEL) {
