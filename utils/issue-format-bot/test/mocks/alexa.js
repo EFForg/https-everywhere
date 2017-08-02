@@ -7,7 +7,7 @@ const regex = /^domain(\d+).com$/;
 function indexOf(str) {
 	const match = regex.exec(str);
 
-	if (match && Number(match[1]) < 100) {
+	if (match && Number(match[1]) <= SIZE) {
 		return Number(match[1]) - 1;
 	} else {
 		return Array.prototype.indexOf.apply(this, arguments);

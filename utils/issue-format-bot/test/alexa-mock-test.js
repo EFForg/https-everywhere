@@ -40,13 +40,13 @@ vows.describe('alexa mock array').addBatch({
 		},
 		'and we call Array#indexOf with a domain in the array': {
 			topic: function(alexa) {
-				return alexa.indexOf('domain1.com');
+				return alexa.indexOf('domain1000.com');
 			},
 			'it works': function(err) {
 				assert.ifError(err);
 			},
 			'it returns the right position': function(err, index) {
-				assert.equal(index, 0);
+				assert.equal(index, 999);
 			}
 		},
 		'and we call Array#indexOf with a domain not in the array': {
