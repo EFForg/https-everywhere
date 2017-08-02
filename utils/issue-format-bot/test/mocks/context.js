@@ -15,7 +15,8 @@ module.exports = {
 			},
 			github: {
 				issues: {
-					createComment: sinon.spy()
+					createComment: sinon.spy(),
+					addLabels: sinon.spy()
 				}
 			},
 			issue: sinon.spy()

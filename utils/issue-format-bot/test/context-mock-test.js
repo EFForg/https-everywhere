@@ -47,6 +47,7 @@ vows.describe('context mock object').addBatch({
 			'context.github is an object': assertProp('github', assert.isObject),
 			'context.github.issues is an object': assertProp('github.issues', assert.isObject),
 			'context.github.issues.createComment is a Sinon spy': assertSinonSpy('github.issues.createComment'),
+			'context.github.issues.addLabels is a Sinon spy': assertSinonSpy('github.issues.addLabels'),
 			'context.issue is a Sinon spy': assertSinonSpy('issue')
 		}
 	}
