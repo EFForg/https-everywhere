@@ -4,7 +4,7 @@ const parse = require('./parse'),
       validate = require('./validate'),
       _ = require('lodash');
 
-module.exports = function(robot) {
+module.exports = function(robot, alexa) {
 	return context => {
 		robot.log('Issue #' + context.payload.issue.number + ' created; responding.');
 

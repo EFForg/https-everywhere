@@ -7,7 +7,7 @@ const parse = require('./parse'),
 // TODO make this share more with newissue.js?
 // TODO test this module
 
-module.exports = function(robot) {
+module.exports = function(robot, alexa) {
 	return context => {
 		robot.log('Issue #' + context.payload.issue.number + ' edited; responding.');
 
