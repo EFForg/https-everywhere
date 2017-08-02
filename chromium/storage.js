@@ -1,7 +1,1 @@
-var storage = chrome.storage.local;
-if (chrome.storage.sync) {
-  storage = chrome.storage.sync;
-}
-if (typeof exports != 'undefined') {
-  exports = storage;
-}
+var storage = chrome.storage.sync || chrome.storage.local
