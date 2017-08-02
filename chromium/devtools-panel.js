@@ -1,3 +1,5 @@
+'use strict'
+
 function e(id) {
   return document.getElementById(id);
 }
@@ -17,9 +19,9 @@ function sendMessage(type) {
  * Turn on the Switch Planner recording mode, and hide the long description.
  */
 function enableSwitchPlanner() {
-  sendMessage("enable");
-  e("SwitchPlannerDescription").style.display = "none";
-  e("SwitchPlannerDetails").style.display = "block";
+  sendMessage('enable');
+  e('SwitchPlannerDescription').style.display = 'none';
+  e('SwitchPlannerDetails').style.display = 'block';
   // Hack: Fetch and display summary information from background page
   // once per second.
   setInterval(display, 1000);
@@ -31,7 +33,7 @@ function enableSwitchPlanner() {
  * the long description is restored.
  */
 function disableSwitchPlanner() {
-  sendMessage("disable");
+  sendMessage('disable');
   document.location.reload();
 }
 
@@ -41,11 +43,11 @@ function disableSwitchPlanner() {
  */
 function display() {
   chrome.runtime.sendMessage({
-      type: "getSmallHtml",
+      type: 'getSmallHtml',
       tabId: chrome.devtools.inspectedWindow.tabId,
   }, function(response) {
-    e("SwitchPlannerDetails").innerHTML = response.html;
-    e("SwitchPlannerResults").style.display = "block";
+    e('SwitchPlannerDetails').innerHTML = response.html;
+    e('SwitchPlannerResults').style.display = 'block';
   });
 }
 
@@ -55,10 +57,10 @@ window.onload = function() {
   // We don't receive messages from the background page currently, though that
   // may be a future improvement. Sending messages to the background page doesn't 
   // require an existing connection.
-  chrome.runtime.connect({ name: "devtools-page" });
+  chrome.runtime.connect({ name: 'devtools-page' });
 
-  var checkbox = e("SwitchPlannerCheckbox");
-  checkbox.addEventListener("change", function() {
+  var checkbox = e('SwitchPlannerCheckbox');
+  checkbox.addEventListener('change', function() {
     if (checkbox.checked) {
       enableSwitchPlanner();
     } else {
@@ -66,12 +68,12 @@ window.onload = function() {
     }
   });
 
-  e("SwitchPlannerDetailsLink").addEventListener("click", function() {
-    window.open("switch-planner.html?tab=" + chrome.devtools.inspectedWindow.tabId);
+  e('SwitchPlannerDetailsLink').addEventListener('click', function() {
+    window.open('switch-planner.html?tab=' + chrome.devtools.inspectedWindow.tabId);
   });
   // Since this is rendered in a devtools console, we have to make clicks on the
   // link open a new window.
-  e("MixedContentLink").addEventListener("click", function(e) {
+  e('MixedContentLink').addEventListener('click', function(e) {
     window.open(e.target.href);
   });
 };
