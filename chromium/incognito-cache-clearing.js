@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 // This file keeps track of incognito sessions, and clears any caches after
 // an entire incognito session is closed (i.e. all incognito windows are closed).
 
@@ -20,7 +20,7 @@ function detect_incognito_creation(window) {
  * Called if an incognito session is destroyed.
  */
 function destroy_caches() {
-    log(DBUG, "Destroying caches.");
+    log(DBUG, 'Destroying caches.');
     all_rules.cookieHostCache.clear();
     all_rules.ruleCache.clear();
 }
