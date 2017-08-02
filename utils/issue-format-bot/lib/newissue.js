@@ -37,7 +37,26 @@ module.exports = function(robot, alexa) {
 
 		if (problems.length === 0) {
 			// User submission is OK
-			// TODO label things
+
+			const alexaPosition = alexa.indexOf(data.domain);
+			const labels = [];
+
+			if (alexaPosition === -1) {
+				return;
+			} else if (alexaPosition < 100) {
+				labels.push('top-100');
+			} else if (alexaPosition < 1000) {
+				labels.push('top-1k');
+			} else if (alexaPosition < 10000) {
+				labels.push('top-10k');
+			} else if (alexaPosition < 100000) {
+				labels.push('top-100k');
+			} else if (alexaPosition < 1000000) {
+				labels.push('top-1m');
+			}
+
+			const params = context.issue({labels});
+			return context.github.issues.addLabels(params);
 		} else {
 			// Submit a comment telling them what the issues were
 			let comment = 'Thanks for your contribution to HTTPS Everywhere! ';
