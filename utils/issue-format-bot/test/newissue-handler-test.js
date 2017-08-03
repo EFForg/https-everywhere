@@ -1,8 +1,6 @@
 'use strict';
 
 const vows = require('perjury'),
-      assert = vows.assert,
-      makeContext = require('./mocks/context'),
       handlerutil = require('./lib/handlerutil');
 
 vows.describe('new issue handler').addBatch(

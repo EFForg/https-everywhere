@@ -1,9 +1,6 @@
 'use strict';
 
 const vows = require('perjury'),
-      assert = vows.assert,
-      robot = require('./mocks/robot'),
-      makeContext = require('./mocks/context'),
       handlerutil = require('./lib/handlerutil');
 
 vows.describe('issue edit handler').addBatch(
