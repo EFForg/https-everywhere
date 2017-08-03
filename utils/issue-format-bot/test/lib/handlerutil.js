@@ -86,9 +86,11 @@ function badType(text) {
 }
 
 function correctNewRuleset(text) {
+	const expectingEdit = Boolean(text);
+
 	let obj = {
 		topic: function(handler) {
-			const context = makeContext.issue('Type: new ruleset\nDomain: example.com');
+			const context = makeContext.issue('Type: new ruleset\nDomain: domain10.com');
 
 			handler(context);
 
@@ -96,12 +98,24 @@ function correctNewRuleset(text) {
 		},
 		'it works': function(err) {
 			assert.ifError(err);
+		},
+		'it labels the issue appropriately': function(err, context) {
+			assert.isTrue(context.github.issues.addLabels.calledOnce);
+
+			// I'm not really sure why these magic numbers work? But they do, sooo...
+			// With apologies to whoever's come to edit this
+			const args = context.issue.args[expectingEdit ? 1 : 0];
+
+			assert.isObject(args[0]);
+			assert.isArray(args[0].labels);
+			assert.deepEqual(args[0].labels, ['top-100']);
+
 		}
 	};
 
 	if (text) {
 		obj['it only creates one comment'] = function(err, context) {
-			assert.isTrue(context.issue.calledOnce);
+			assert.isTrue(context.github.issues.createComment.calledOnce);
 		};
 
 		obj['it says the user fixed it'] = function(err, context) {
@@ -112,7 +126,8 @@ function correctNewRuleset(text) {
 		};
 	} else {
 		obj['it doesn\'t comment'] = function(err, context) {
-			assert.isTrue(context.issue.notCalled);
+			// Once for the labels, once for the comment
+			assert.isTrue(context.issue.calledOnce);
 		};
 	}
 
@@ -132,7 +147,7 @@ function problematicNewRuleset(text) {
 				assert.ifError(err);
 			},
 			'it only creates one comment': function(err, context) {
-				assert.isTrue(context.issue.calledOnce);
+				assert.isTrue(context.github.issues.createComment.calledOnce);
 			},
 			'it includes the problem': function(err, context) {
 				// args[0] is first call arguments, second [0] is first arg

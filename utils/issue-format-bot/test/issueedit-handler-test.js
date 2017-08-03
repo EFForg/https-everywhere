@@ -11,7 +11,6 @@ vows.describe('issue edit handler').addBatch(
 		'and we pass it the context of an issue edit with a null body': handlerutil.nullBody('don\'t see any text'),
 		'and we pass it the context of a issue edit with a bad type': handlerutil.badType('type of issue'),
 		'and we pass it the context of a issue edit with a type of "new ruleset" and a correct body': handlerutil.correctNewRuleset('take it from here'),
-		// TODO test labels, etc. here
 		'and we pass it the context of a issue edit with a type of "new ruleset" and a problematic body': handlerutil.problematicNewRuleset('missing domain information')
 	})
 ).export(module);
