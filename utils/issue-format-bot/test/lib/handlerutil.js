@@ -92,9 +92,17 @@ function correctNewRuleset(text) {
 		topic: function(handler) {
 			const context = makeContext.issue('Type: new ruleset\nDomain: domain10.com');
 
-			handler(context);
+			const result = handler(context);
 
-			return context;
+			// Edit handler is an AsyncFunction, new issue handler is a Function
+			if (result && result.then) {
+				// Perjury doesn't support promises, so we manually invoke the callback
+				result.then(() => {
+					this.callback(null, context);
+				});
+			} else {
+				return context;
+			}
 		},
 		'it works': function(err) {
 			assert.ifError(err);

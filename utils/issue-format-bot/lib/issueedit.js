@@ -8,7 +8,7 @@ const parse = require('./parse'),
 // TODO make this share more with newissue.js?
 
 module.exports = function(robot, alexa) {
-	return context => {
+	return async context => {
 		robot.log('Issue #' + context.payload.issue.number + ' edited; responding.');
 
 		// Check if the "issue" is really a PR
@@ -41,9 +41,7 @@ module.exports = function(robot, alexa) {
 		if (problems.length === 0) {
 			// User submission is OK
 			const params = context.issue({body: 'Thanks! Your edit helped me out. I\'ll take it from here now.'});
-			// This races with the labeler, but it's so hard to fix it's not worth it.
-			// See the commit that introduced this comment for a detailed explanation.
-			context.github.issues.createComment(params);
+			await context.github.issues.createComment(params);
 
 			return labeler(context, data, alexa);
 		} else {
