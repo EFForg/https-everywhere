@@ -2,6 +2,7 @@ pref("extensions.https_everywhere.LogLevel", 5);
 pref("extensions.https_everywhere.log_to_stdout", false);
 pref("extensions.https_everywhere.globalEnabled",true);
 pref("extensions.https_everywhere.show_counter",false);
+pref("extensions.https_everywhere.export_popup_shown",false);
 
 // this is the HTTPS Everywhere preferences version (for migrations)
 pref("extensions.https_everywhere.prefs_version", 0);

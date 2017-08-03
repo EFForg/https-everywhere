@@ -441,23 +441,5 @@ function migratePreferences(gBrowser) {
 }
 
 function exportSettingsToFile(){
-  var settings = JSON.stringify(HTTPSEverywhere.exportSettings());
-
-  var nsIFilePicker = CI.nsIFilePicker;
-  var fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
-  fp.init(window, "Save Settings to File", nsIFilePicker.modeSave);
-  fp.defaultString = "https_everywhere_settings.json";
-  fp.defaultExtension = "json";
-  fp.addToRecentDocs = true;
-  var res = fp.show();
-  if (res != nsIFilePicker.returnCancel){
-    var file_path = fp.file.path;
-    var file = CC["@mozilla.org/file/local;1"].createInstance(CI.nsILocalFile);
-    file.initWithPath(file_path);
-
-    output_stream = Components.classes["@mozilla.org/network/file-output-stream;1"].createInstance(CI.nsIFileOutputStream);
-    output_stream.init(file, 0x02 | 0x08 | 0x20, 0600, 0);
-    output_stream.write(settings, settings.length);
-    output_stream.close();
-  }
+  HTTPSEverywhere.exportSettingsToFile(window);
 }
