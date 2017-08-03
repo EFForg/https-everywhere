@@ -85,12 +85,12 @@ function badType(text) {
 	};
 }
 
-function correctNewRuleset(text) {
+function correctNewRuleset(issueText, text) {
 	const expectingEdit = Boolean(text);
 
 	let obj = {
 		topic: function(handler) {
-			const context = makeContext.issue('Type: new ruleset\nDomain: domain10.com');
+			const context = makeContext.issue(issueText);
 
 			const result = handler(context);
 
@@ -117,7 +117,6 @@ function correctNewRuleset(text) {
 			assert.isObject(args[0]);
 			assert.isArray(args[0].labels);
 			assert.deepEqual(args[0].labels, ['top-100']);
-
 		}
 	};
 
