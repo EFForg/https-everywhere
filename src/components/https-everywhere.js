@@ -542,7 +542,7 @@ HTTPSEverywhere.prototype = {
       this.log(DBUG,"Got sessionstore-windows-restored");
       if (!this.isMobile) {
         this.maybeShowObservatoryPopup();
-        this.maybeShowExportPopup();
+        this.maybeDoExports();
       } else {
         this.log(WARN, "Initializing Firefox for Android UI");
         Cu.import("chrome://https-everywhere/content/code/AndroidUI.jsm");
@@ -598,14 +598,37 @@ HTTPSEverywhere.prototype = {
       this.maybeCleanupObservatoryPrefs(ssl_observatory);
   },
 
+  maybeDoExports: function() {
+    if(this.exportSettings().changed){
+      this.silentlySaveSettings();
+      this.maybeShowExportPopup();
+    }
+  },
+
   maybeShowExportPopup: function() {
     // Show the popup at most once, and only if the user settings are not
     // default.
     var shown = this.prefs.getBoolPref("export_popup_shown");
-    if(!shown && this.exportSettings().changed == true){
+    if(!shown){
       this.tab_opener("chrome://https-everywhere/content/export-settings.xul");
       this.prefs.setBoolPref("export_popup_shown", true);
     }
+  },
+
+  silentlySaveSettings: function(){
+    var loc = "ProfD";  // profile directory
+    var file =
+      CC["@mozilla.org/file/directory_service;1"]
+      .getService(CI.nsIProperties)
+      .get(loc, CI.nsILocalFile)
+      .clone();
+    file.append("https_everywhere_settings_autosave.json");
+    // Check for existence, if not, create.
+    if (!file.exists()) {
+      this.log(WARN, file);
+      file.create(CI.nsIFile.NORMAL_FILE_TYPE, 0600);
+    }
+    this.saveSettingsFile(file.path, JSON.stringify(this.exportSettings()));
   },
 
   maybeCleanupObservatoryPrefs: function(ssl_observatory) {
@@ -853,15 +876,18 @@ HTTPSEverywhere.prototype = {
     fp.addToRecentDocs = true;
     var res = fp.show();
     if (res != nsIFilePicker.returnCancel){
-      var file_path = fp.file.path;
-      var file = CC["@mozilla.org/file/local;1"].createInstance(CI.nsILocalFile);
-      file.initWithPath(file_path);
-
-      output_stream = Components.classes["@mozilla.org/network/file-output-stream;1"].createInstance(CI.nsIFileOutputStream);
-      output_stream.init(file, 0x02 | 0x08 | 0x20, 0600, 0);
-      output_stream.write(settings, settings.length);
-      output_stream.close();
+      this.saveSettingsFile(fp.file.path, settings);
     }
+  },
+
+  saveSettingsFile: function(file_path, settings){
+    var file = CC["@mozilla.org/file/local;1"].createInstance(CI.nsILocalFile);
+    file.initWithPath(file_path);
+
+    output_stream = Components.classes["@mozilla.org/network/file-output-stream;1"].createInstance(CI.nsIFileOutputStream);
+    output_stream.init(file, 0x02 | 0x08 | 0x20, 0600, 0);
+    output_stream.write(settings, settings.length);
+    output_stream.close();
   }
 
 };
