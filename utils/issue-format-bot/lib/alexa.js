@@ -1,3 +1,6 @@
+// Copyright 2016 William Budington
+// Copyright 2017 AJ Jordan
+//
 // This file is part of the HTTPS Everywhere issue management bot.
 //
 // The HTTPS Everywhere issue management bot is free software: you can
