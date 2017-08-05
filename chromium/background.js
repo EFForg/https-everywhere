@@ -227,14 +227,11 @@ function onBeforeRequest(details) {
   const uri = new URL(details.url);
 
   // Should the request be canceled?
-  var shouldCancel = (
-    httpNowhereOn &&
-    uri.protocol === 'http:' &&
-    !/\.onion$/.test(uri.hostname) &&
-    !/^localhost$/.test(uri.hostname) &&
-    !/^127(\.[0-9]{1,3}){3}$/.test(uri.hostname) &&
-    !/^0\.0\.0\.0$/.test(uri.hostname)
-  );
+  const shouldCancel = httpNowhereOn &&
+    !uri.protocol === 'https:' &&
+    !uri.hostname.slice(-6) === '.onion' &&
+    !uri.hostname === 'localhost' &&
+    !/^127(\.\d{1,3}){3}$/.test(uri.hostname);
 
   // Normalise hosts such as "www.example.com."
   var canonical_host = uri.hostname;
@@ -298,7 +295,7 @@ function onBeforeRequest(details) {
 
   // In Switch Planner Mode, record any non-rewriteable
   // HTTP URIs by parent hostname, along with the resource type.
-  if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== "https:") {
+  if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== 'https:') {
     writeToSwitchPlanner(details.type,
                          details.tabId,
                          canonical_host,
@@ -310,13 +307,12 @@ function onBeforeRequest(details) {
     // If loading a main frame, try the HTTPS version as an alternative to
     // failing.
     if (shouldCancel) {
-      if (!newuristr) {
-        return {redirectUrl: canonical_url.replace(/^http:/, "https:")};
-      } else {
-        return {redirectUrl: newuristr.replace(/^http:/, "https:")};
-      }
+    	const currentUrl = newuristr || canonical_url;
+    	const redirectUrl = currentUrl.replace(/^http:/, 'https:');
+      
+      return { redirectUrl };
     }
-    if (newuristr && newuristr.substring(0, 5) === "http:") {
+    if (newuristr && newuristr.slice(0, 5) === 'http:') {
       // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
       return {cancel: true};
     }
@@ -329,10 +325,8 @@ function onBeforeRequest(details) {
   }
 }
 
-
 // Map of which values for the `type' enum denote active vs passive content.
 // https://developer.chrome.com/extensions/webRequest.html#event-onBeforeRequest
-var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1};
 
 // We consider sub_frame to be passive even though it can contain JS or flash.
 // This is because code running in the sub_frame cannot access the main frame's
@@ -340,7 +334,8 @@ var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1};
 // same domain but different protocol - i.e. HTTP while the parent is HTTPS -
 // because same-origin policy includes the protocol. This also mimics Chrome's
 // UI treatment of insecure subframes.
-var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
+
+const activeTypes = { object: true, other: true, script: true, stylesheet: true, image: false, main_frame: false, sub_frame: false, xmlhttprequest: false };
 
 /**
  * Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
@@ -354,31 +349,27 @@ var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
  * @param rewritten_url: The url rewritten to
  * */
 function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritten_url) {
-  var rw = "rw";
-  if (rewritten_url == null)
-    rw = "nrw";
+  let rw = 'rw';
+  if (rewritten_url === null)
+    rw = 'nrw';
 
-  var active_content = 0;
-  if (activeTypes[type]) {
-    active_content = 1;
-  } else if (passiveTypes[type]) {
-    active_content = 0;
-  } else {
-    log(WARN, "Unknown type from onBeforeRequest details: `" + type + "', assuming active");
-    active_content = 1;
+  let active_content = activeTypes[type];
+  if (active_content === undefined) {
+    log(WARN, `Unknown type from onBeforeRequest details: "${type}", assuming active.`);
+    active_content = true;
   }
 
   if (!switchPlannerInfo[tab_id]) {
     switchPlannerInfo[tab_id] = {};
-    switchPlannerInfo[tab_id]["rw"] = {};
-    switchPlannerInfo[tab_id]["nrw"] = {};
+    switchPlannerInfo[tab_id].rw = {};
+    switchPlannerInfo[tab_id].nrw = {};
   }
   if (!switchPlannerInfo[tab_id][rw][resource_host])
     switchPlannerInfo[tab_id][rw][resource_host] = {};
   if (!switchPlannerInfo[tab_id][rw][resource_host][active_content])
     switchPlannerInfo[tab_id][rw][resource_host][active_content] = {};
 
-  switchPlannerInfo[tab_id][rw][resource_host][active_content][resource_url] = 1;
+  switchPlannerInfo[tab_id][rw][resource_host][active_content][resource_url] = true;
 }
 
 /**
@@ -387,9 +378,9 @@ function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritt
  * @param obj: object to calc the size for
  * */
 function objSize(obj) {
-  if (typeof obj == 'undefined') return 0;
-  var size = 0, key;
-  for (key in obj) {
+  if (obj === undefined) return 0;
+  let size = 0;
+  for (const key in obj) {
     if (obj.hasOwnProperty(key)) size++;
   }
   return size;
@@ -400,20 +391,20 @@ function objSize(obj) {
  * presenting the most important ones first.
  * */
 function sortSwitchPlanner(tab_id, rewritten) {
-  var asset_host_list = [];
-  if (typeof switchPlannerInfo[tab_id] === 'undefined' ||
-      typeof switchPlannerInfo[tab_id][rewritten] === 'undefined') {
+  const asset_host_list = [];
+  if (switchPlannerInfo[tab_id] === undefined ||
+      switchPlannerInfo[tab_id][rewritten] === undefined) {
     return [];
   }
-  var tabInfo = switchPlannerInfo[tab_id][rewritten];
-  for (var asset_host in tabInfo) {
-    var ah = tabInfo[asset_host];
-    var activeCount = objSize(ah[1]);
-    var passiveCount = objSize(ah[0]);
-    var score = activeCount * 100 + passiveCount;
+  const tabInfo = switchPlannerInfo[tab_id][rewritten];
+  for (const asset_host in tabInfo) {
+    const ah = tabInfo[asset_host];
+    const activeCount = objSize(ah[1]);
+    const passiveCount = objSize(ah[0]);
+    const score = activeCount * 100 + passiveCount;
     asset_host_list.push([score, activeCount, passiveCount, asset_host]);
   }
-  asset_host_list.sort(function(a,b){return a[0]-b[0];});
+  asset_host_list.sort((a,b) => a[0] - b[0]);
   return asset_host_list;
 }
 
