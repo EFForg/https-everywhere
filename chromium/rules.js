@@ -1,4 +1,5 @@
 'use strict';
+
 // Stubs so this runs under nodejs. They get overwritten later by util.js
 var VERB=1;
 var DBUG=2;
