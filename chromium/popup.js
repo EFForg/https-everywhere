@@ -7,7 +7,6 @@ var hostReg = /.*\/\/[^$/]*\//;
 
 const storage = chrome.storage.sync || chrome.storage.local;
 
-
 /**
  * Handles rule (de)activation in the popup
  * @param checkbox checkbox being clicked
@@ -43,31 +42,30 @@ function appendRuleLineToListDiv(ruleset, list_div) {
 
   // checkbox
   var checkbox = document.createElement('input');
+
   checkbox.type = 'checkbox';
-  if (ruleset.active) {
-    checkbox.setAttribute('checked', '');
-  }
-  checkbox.onchange = function(ev) {
+  checkbox.checked = ruleset.active;
+
+  checkbox.addEventListener('change', ev => {
     toggleRuleLine(checkbox, ruleset);
-  };
+  });
+
   label.appendChild(checkbox);
 
   // favicon (from chrome's cache)
   var favicon = document.createElement('img');
+
   favicon.className = 'favicon';
-  favicon.src = 'chrome://favicon/';
+
   for (let rule of ruleset.rules) {
     var host = hostReg.exec(rule.to);
     if (host) {
-      favicon.src += host[0];
+      favicon.src = 'chrome://favicon/https://' + host[0];
       break;
     }
   }
-  var xhr = new XMLHttpRequest();
-  try {
-    xhr.open('GET', favicon.src, true);
-    label.appendChild(favicon);
-  } catch (e) {}
+
+  label.appendChild(favicon);
 
   // label text
   var text = document.createElement('span');
