@@ -163,50 +163,38 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('add-rule-link').addEventListener('click', addManualRule);
 });
 
-
-function escapeForRegex (value) {
-  return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&');
-};
-
 /**
  * Handles the manual addition of rules
  */
 function addManualRule() {
-  chrome.tabs.query({ active: true, currentWindow: true }, function(tab) {
+  chrome.tabs.query({ active: true, currentWindow: true }, tab => {
     document.getElementById('add-new-rule-div').style.display = 'block';
     document.getElementById('add-rule-link').style.display = 'none';
-    var newUrl = document.createElement('a');
-    newUrl.href = tab[0].url;
-    newUrl.protocol = 'https:';
-    document.getElementById('new-rule-host').value = newUrl.host;
-    var oldUrl = document.createElement('a');
-    oldUrl.href = tab[0].url;
-    oldUrl.protocol = 'http:';
-    var oldMatcher = '^' + escapeForRegex(oldUrl.protocol + '//' + oldUrl.host+ '/');
-    document.getElementById('new-rule-regex').value = oldMatcher;
-    var redirectPath = newUrl.protocol + '//' + newUrl.host + '/';
-    document.getElementById('new-rule-redirect').value = redirectPath;
-    document.getElementById('new-rule-name').value = 'Manual rule for ' + oldUrl.host;
-    document.getElementById('add-new-rule-button').addEventListener('click', function() {
+    const url = new URL(tab[0].url);
+    document.getElementById('new-rule-host').value = url.host;
+    document.getElementById('new-rule-regex').value = '^http:';
+    document.getElementById('new-rule-redirect').value = 'https:';
+    document.getElementById('new-rule-name').value = 'Manual rule for ' + url.host;
+    document.getElementById('add-new-rule-button').addEventListener('click', () => {
       var params = {
         host : document.getElementById('new-rule-host').value,
         redirectTo : document.getElementById('new-rule-redirect').value,
         urlMatcher : document.getElementById('new-rule-regex').value
       };
-      backgroundPage.addNewRule(params, function() {
+      backgroundPage.addNewRule(params, () => {
         location.reload();
       });
     });
 
-    document.getElementById('cancel-new-rule').addEventListener('click', function() {
+    document.getElementById('cancel-new-rule').addEventListener('click', () => {
       document.getElementById('add-rule-link').style.display = 'block';
       document.getElementById('add-new-rule-div').style.display = 'none';
     });
-    document.getElementById('new-rule-show-advanced-link').addEventListener('click', function() {
+    document.getElementById('new-rule-show-advanced-link').addEventListener('click', () => {
       document.getElementById('new-rule-advanced').style.display = 'block';
       document.getElementById('new-rule-regular-text').style.display = 'none';
     });
-    document.getElementById('new-rule-hide-advanced-link').addEventListener('click', function() {
+    document.getElementById('new-rule-hide-advanced-link').addEventListener('click', () => {
       document.getElementById('new-rule-regular-text').style.display = 'block';
       document.getElementById('new-rule-advanced').style.display = 'none';
     });
