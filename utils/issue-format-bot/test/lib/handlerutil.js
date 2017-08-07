@@ -26,7 +26,7 @@ const vows = require('perjury'),
       makeContext = require('../mocks/context'),
       _ = require('lodash');
 
-// TODO tests
+// TODO tests for this file
 
 function setup(path, obj) {
 	return {
