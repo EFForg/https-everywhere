@@ -1,12 +1,6 @@
 'use strict';
 
-// Stubs so this runs under nodejs. They get overwritten later by util.js
-var VERB=1;
-var DBUG=2;
-var INFO=3;
-var NOTE=4;
-var WARN=5;
-function log(){}
+let utils = window.utils;
 
 // To reduce memory usage for the numerous rules/cookies with trivial rules
 const trivial_rule_to = 'https:';
