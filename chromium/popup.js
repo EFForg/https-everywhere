@@ -6,10 +6,6 @@ var unstableRules = null;
 var hostReg = /.*\/\/[^$/]*\//;
 var storage = backgroundPage.storage;
 
-function e(id) {
-  return document.getElementById(id);
-}
-
 /**
  * Handles rule (de)activation in the popup
  * @param checkbox checkbox being clicked

@@ -1,1 +1,1 @@
-var storage = chrome.storage.sync || chrome.storage.local;
+window.storage = chrome.storage.sync || chrome.storage.local;
