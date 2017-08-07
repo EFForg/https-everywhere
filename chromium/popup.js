@@ -7,13 +7,8 @@ var hostReg = /.*\/\/[^$/]*\//;
 
 const storage = chrome.storage.sync || chrome.storage.local;
 
-/**
- * Handles rule (de)activation in the popup
- * @param checkbox checkbox being clicked
- * @param ruleset the ruleset tied tot he checkbox
- */
-function toggleRuleLine(checkbox, ruleset) {
-  ruleset.active = checkbox.checked;
+function setRulesetActive(ruleset, active) {
+  ruleset.active = active;
 
   if (ruleset.active != ruleset.default_state) {
     localStorage[ruleset.name] = ruleset.active;
@@ -32,7 +27,6 @@ function toggleRuleLine(checkbox, ruleset) {
  * @returns {*}
  */
 function appendRuleLineToListDiv(ruleset, list_div) {
-
   // parent block for line
   var line = document.createElement('div');
   line.className = 'rule checkbox';
@@ -42,19 +36,17 @@ function appendRuleLineToListDiv(ruleset, list_div) {
 
   // checkbox
   var checkbox = document.createElement('input');
-
   checkbox.type = 'checkbox';
   checkbox.checked = ruleset.active;
 
-  checkbox.addEventListener('change', ev => {
-    toggleRuleLine(checkbox, ruleset);
+  checkbox.addEventListener('change', () => {
+    setRulesetActive(ruleset, checkbox.checked);
   });
 
   label.appendChild(checkbox);
 
   // favicon (from chrome's cache)
   var favicon = document.createElement('img');
-
   favicon.className = 'favicon';
 
   for (let rule of ruleset.rules) {
@@ -70,6 +62,7 @@ function appendRuleLineToListDiv(ruleset, list_div) {
   // label text
   var text = document.createElement('span');
   text.innerText = ruleset.name;
+
   if (ruleset.note.length) {
     text.title = ruleset.note;
   }
@@ -87,33 +80,8 @@ function appendRuleLineToListDiv(ruleset, list_div) {
   }
 
   label.appendChild(text);
-
   line.appendChild(label);
-
   list_div.appendChild(line);
-}
-
-/**
- * Create the list of rules for a specific tab
- * @param tabArray
- */
-function gotTab(tabArray) {
-  var activeTab = tabArray[0];
-  var rulesets = backgroundPage.activeRulesets.getRulesets(activeTab.id);
-
-  for (var r in rulesets) {
-    var listDiv = stableRules;
-    if (!rulesets[r].default_state) {
-      listDiv = unstableRules;
-    }
-    appendRuleLineToListDiv(rulesets[r], listDiv);
-    listDiv.style.position = 'static';
-    listDiv.style.visibility = 'visible';
-  }
-  // Only show the 'Add a rule' link if we're on an HTTPS page
-  if (/^https:/.test(activeTab.url)) {
-    document.getElementById('add-rule-link').style.display = 'block';
-  }
 }
 
 /**
@@ -122,7 +90,24 @@ function gotTab(tabArray) {
 document.addEventListener('DOMContentLoaded', function () {
   stableRules = document.getElementById('StableRules');
   unstableRules = document.getElementById('UnstableRules');
-  chrome.tabs.query({ active: true, currentWindow: true }, gotTab);
+  chrome.tabs.query({ active: true, currentWindow: true }, tabArray => {
+    var activeTab = tabArray[0];
+    var rulesets = backgroundPage.activeRulesets.getRulesets(activeTab.id);
+
+    for (var r in rulesets) {
+      var listDiv = stableRules;
+      if (!rulesets[r].default_state) {
+        listDiv = unstableRules;
+      }
+      appendRuleLineToListDiv(rulesets[r], listDiv);
+      listDiv.style.position = 'static';
+      listDiv.style.visibility = 'visible';
+    }
+    // Only show the 'Add a rule' link if we're on an HTTPS page
+    if (/^https:/.test(activeTab.url)) {
+      document.getElementById('add-rule-link').style.display = 'block';
+    }
+  });
 
   // Set up the enabled/disabled switch & hide/show rules
   document.getElementById('onoffswitch').checked = backgroundPage.isExtensionEnabled;
@@ -168,20 +153,19 @@ document.addEventListener('DOMContentLoaded', function () {
  */
 function addManualRule() {
   chrome.tabs.query({ active: true, currentWindow: true }, tab => {
+    const url = new URL(tab[0].url);
     document.getElementById('add-new-rule-div').style.display = 'block';
     document.getElementById('add-rule-link').style.display = 'none';
-    const url = new URL(tab[0].url);
     document.getElementById('new-rule-host').value = url.host;
     document.getElementById('new-rule-regex').value = '^http:';
     document.getElementById('new-rule-redirect').value = 'https:';
     document.getElementById('new-rule-name').value = 'Manual rule for ' + url.host;
     document.getElementById('add-new-rule-button').addEventListener('click', () => {
-      var params = {
+      backgroundPage.addNewRule({
         host : document.getElementById('new-rule-host').value,
         redirectTo : document.getElementById('new-rule-redirect').value,
         urlMatcher : document.getElementById('new-rule-regex').value
-      };
-      backgroundPage.addNewRule(params, () => {
+      }, () => {
         location.reload();
       });
     });
@@ -198,12 +182,6 @@ function addManualRule() {
       document.getElementById('new-rule-regular-text').style.display = 'block';
       document.getElementById('new-rule-advanced').style.display = 'none';
     });
-  });
-}
-
-function toggleHttpNowhere() {
-  getOption_('httpNowhere', false, function(item) {
-    setOption_('httpNowhere', !item.httpNowhere);
   });
 }
 
