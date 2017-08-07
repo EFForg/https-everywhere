@@ -233,30 +233,23 @@ function onBeforeRequest(details) {
     !uri.hostname === 'localhost' &&
     !/^127(\.\d{1,3}){3}$/.test(uri.hostname);
 
-  // Normalise hosts such as "www.example.com."
-  var canonical_host = uri.hostname;
-  if (canonical_host.charAt(canonical_host.length - 1) == '.') {
-    while (canonical_host.charAt(canonical_host.length - 1) == '.')
-      canonical_host = canonical_host.slice(0,-1);
-    uri.hostname = canonical_host;
-  }
+  // Normalise hosts such as "www.example.com." or ".www.example.com"
+  uri.hostname = uri.hostname.replace(/^\.+|\.+$/g, '');
 
-  // If there is a username / password, put them aside during the ruleset
-  // analysis process
-  var using_credentials_in_url = false;
-  if (uri.password || uri.username) {
-      using_credentials_in_url = true;
-      var tmp_user = uri.username;
-      var tmp_pass = uri.password;
-      uri.username = null;
-      uri.password = null;
-  }
+  // If there is a username/password, put them aside during the ruleset analysis process
+  const tmp_user = uri.username,
+    tmp_pass = uri.password;
 
-  var canonical_url = uri.href;
-  if (details.url != canonical_url && !using_credentials_in_url) {
+  uri.username = '';
+  uri.password = '';
+
+  const canonical_url = uri.href;
+
+  if (details.url !== canonical_url) {
     log(INFO, 'Original url ' + details.url + 
         ' changed before processing to ' + canonical_url);
   }
+
   if (urlBlacklist.has(canonical_url)) {
     return {cancel: shouldCancel};
   }
@@ -265,7 +258,7 @@ function onBeforeRequest(details) {
     activeRulesets.removeTab(details.tabId);
   }
 
-  var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
+ const potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
 
   if (redirectCounter[details.requestId] >= 8) {
     log(NOTE, 'Redirect counter hit for ' + canonical_url);
@@ -276,16 +269,17 @@ function onBeforeRequest(details) {
     return {cancel: shouldCancel};
   }
 
-  var newuristr = null;
+  let newuristr = null;
 
-  for (let ruleset of potentiallyApplicable) {
+  for (const ruleset of potentiallyApplicable) {
     activeRulesets.addRulesetToTab(details.tabId, ruleset);
+
     if (ruleset.active && !newuristr) {
       newuristr = ruleset.apply(canonical_url);
     }
   }
 
-  if (newuristr && using_credentials_in_url) {
+  if (newuristr) {
     // re-insert userpass info which was stripped temporarily
     const uri_with_credentials = new URL(newuristr);
     uri_with_credentials.username = tmp_user;
@@ -293,35 +287,30 @@ function onBeforeRequest(details) {
     newuristr = uri_with_credentials.href;
   }
 
-  // In Switch Planner Mode, record any non-rewriteable
-  // HTTP URIs by parent hostname, along with the resource type.
+  // In Switch Planner Mode, record any non-rewriteable HTTP URIs by parent hostname, along with the resource type.
   if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== 'https:') {
-    writeToSwitchPlanner(details.type,
-                         details.tabId,
-                         canonical_host,
-                         details.url,
-                         newuristr);
+    writeToSwitchPlanner(details.type, details.tabId, canonical_host, details.url, newuristr);
   }
 
   if (httpNowhereOn) {
-    // If loading a main frame, try the HTTPS version as an alternative to
-    // failing.
-    if (shouldCancel) {
+    // If loading a main frame, try the HTTPS version as an alternative to failing.
+    if (shouldCancel && details.type == 'main_frame') {
     	const currentUrl = newuristr || canonical_url;
     	const redirectUrl = currentUrl.replace(/^http:/, 'https:');
       
       return { redirectUrl };
     }
+
+    // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
     if (newuristr && newuristr.slice(0, 5) === 'http:') {
-      // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
-      return {cancel: true};
+      return { cancel: true };
     }
   }
 
   if (newuristr) {
-    return {redirectUrl: newuristr};
+    return { redirectUrl: newuristr };
   } else {
-    return {cancel: shouldCancel};
+    return { cancel: shouldCancel };
   }
 }
 

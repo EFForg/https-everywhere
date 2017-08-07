@@ -1,27 +1,34 @@
 'use strict';
 
-var VERB = 1;
-var DBUG = 2;
-var INFO = 3;
-var NOTE = 4;
-var WARN = 5;
-// FYI: Logging everything is /very/ slow. Chrome will log & buffer
-// these console logs even when the debug tools are closed. :(
+// Logging everything is *very* slow since the browser will retain console logs even when the developer tools window is closed.
 
-// TODO: Add an easy UI to change the log level.
-// (Developers can just type DEFAULT_LOG_LEVEL=VERB in the console)
-var DEFAULT_LOG_LEVEL = NOTE;
 console.log('Hey developer! Want to see more verbose logging?');
-console.log('Type this into the console: DEFAULT_LOG_LEVEL=VERB');
-console.log('Accepted levels are VERB, DBUG, INFO, NOTE and WARN, default is NOTE');
+console.log('Type this into the console: utils.minLogLevel = 1');
+console.log('Accepted levels are 1-5, default is 4.');
 
-function log(level, str) {
-    if (level >= DEFAULT_LOG_LEVEL) {
-        if (level === WARN) {
-            // Show warning with a little yellow icon in Chrome.
-            console.warn(str);
-        } else {
-            console.log(str);
-        }
-    }
+const utils = {
+	minLogLevel: 4,
+	log (str, level) {
+		level = level || 1;
+
+	  if (level >= utils.minLogLevel) {
+	    if (level >= 5) {
+	      console.error(str);
+	    } else if (level >= 4) {
+	      console.warn(str);
+	    } else if (level >= 3) {
+	    	console.info(str);
+	    } else {
+	    	console.log(str);
+	    }
+	  }
+	}
+}
+
+if (window) {
+	window.utils = utils;
+}
+
+if (module) {
+	module.exports = utils;
 }
