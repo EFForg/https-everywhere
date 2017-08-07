@@ -93,33 +93,6 @@ function appendRuleLineToListDiv(ruleset, list_div) {
   list_div.appendChild(line);
 }
 
-// Change the UI to reflect extension enabled/disabled
-function updateEnabledDisabledUI() {
-  document.getElementById('onoffswitch').checked = backgroundPage.isExtensionEnabled;
-  // Hide or show the rules sections
-  if (backgroundPage.isExtensionEnabled) {
-    document.body.className = ''
-  } else {
-    document.body.className = 'disabled'
-  }
-  backgroundPage.updateState();
-}
-
-// Toggle extension enabled/disabled status
-function toggleEnabledDisabled() {
-  if (backgroundPage.isExtensionEnabled) {
-    // User wants to disable us
-    backgroundPage.isExtensionEnabled = false;
-  } else {
-    // User wants to enable us
-    backgroundPage.isExtensionEnabled = true;
-  }
-  updateEnabledDisabledUI();
-  // The extension state changed, so reload this tab.
-  chrome.tabs.reload();
-  window.close();
-}
-
 /**
  * Create the list of rules for a specific tab
  * @param tabArray
@@ -139,7 +112,7 @@ function gotTab(tabArray) {
   }
   // Only show the 'Add a rule' link if we're on an HTTPS page
   if (/^https:/.test(activeTab.url)) {
-    show(document.getElementById('add-rule-link'));
+    document.getElementById('add-rule-link').style.display = 'block';
   }
 }
 
@@ -152,28 +125,37 @@ document.addEventListener('DOMContentLoaded', function () {
   chrome.tabs.query({ active: true, currentWindow: true }, gotTab);
 
   // Set up the enabled/disabled switch & hide/show rules
-  updateEnabledDisabledUI();
-  document.getElementById('onoffswitch').addEventListener('click', toggleEnabledDisabled);
+  document.getElementById('onoffswitch').checked = backgroundPage.isExtensionEnabled;
 
-  // Print the extension's current version.
-  var the_manifest = chrome.runtime.getManifest();
-  var version_info = document.getElementById('current-version');
-  version_info.innerText = the_manifest.version;
+  // Hide or show the rules sections
+  if (backgroundPage.isExtensionEnabled) {
+    document.body.className = ''
+  } else {
+    document.body.className = 'disabled'
+  }
 
-  // Set up toggle checkbox for HTTP nowhere mode
-  getOption_('httpNowhere', false, function(item) {
-    var httpNowhereCheckbox = document.getElementById('http-nowhere-checkbox');
-    httpNowhereCheckbox.addEventListener('click', toggleHttpNowhere, false);
-    var httpNowhereEnabled = item.httpNowhere;
-    if (httpNowhereEnabled) {
-      httpNowhereCheckbox.setAttribute('checked', '');
-    }
+  document.getElementById('onoffswitch').addEventListener('change', evt => {
+    // The extension state changed, so reload this tab.
+    backgroundPage.updateState();
+
+    chrome.tabs.reload();
+    window.close();
   });
 
-  // auto-translate all elements with i18n attributes
-  var elem = document.querySelectorAll('[data-i18n]');
-  for (let el of elem) {
-    el.innerHTML = chrome.i18n.getMessage(el.getAttribute('data-i18n'));
+  // Print the extension's current version.
+  document.getElementById('current-version').innerText = chrome.runtime.getManifest().version;
+
+  // Set up toggle checkbox for HTTP nowhere mode
+  getOption_('httpNowhere', false, item => {
+    var httpNowhereCheckbox = document.getElementById('http-nowhere-checkbox');
+    httpNowhereCheckbox.checked = item.httpNowhere;
+    httpNowhereCheckbox.addEventListener('change', toggleHttpNowhere, false);
+  });
+
+  // auto-translate all elements with data-i18n attributes
+  var elements = document.querySelectorAll('[data-i18n]');
+  for (const element of elements) {
+    el.innerText = chrome.i18n.getMessage(el.getAttribute('data-i18n'));
   }
 
   // other translations
@@ -182,25 +164,17 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-var escapeForRegex = function( value ) {
+function escapeForRegex (value) {
   return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&');
 };
-
-function hide(elem) {
-  elem.style.display = 'none';
-}
-
-function show(elem) {
-  elem.style.display = 'block';
-}
 
 /**
  * Handles the manual addition of rules
  */
 function addManualRule() {
   chrome.tabs.query({ active: true, currentWindow: true }, function(tab) {
-    hide(document.getElementById('add-rule-link'));
-    show(document.getElementById('add-new-rule-div'));
+    document.getElementById('add-new-rule-div').style.display = 'block';
+    document.getElementById('add-rule-link').style.display = 'none';
     var newUrl = document.createElement('a');
     newUrl.href = tab[0].url;
     newUrl.protocol = 'https:';
@@ -225,16 +199,16 @@ function addManualRule() {
     });
 
     document.getElementById('cancel-new-rule').addEventListener('click', function() {
-      show(document.getElementById('add-rule-link'));
-      hide(document.getElementById('add-new-rule-div'));
+      document.getElementById('add-rule-link').style.display = 'block';
+      document.getElementById('add-new-rule-div').style.display = 'none';
     });
     document.getElementById('new-rule-show-advanced-link').addEventListener('click', function() {
-      show(document.getElementById('new-rule-advanced'));
-      hide(document.getElementById('new-rule-regular-text'));
+      document.getElementById('new-rule-advanced').style.display = 'block';
+      document.getElementById('new-rule-regular-text').style.display = 'none';
     });
     document.getElementById('new-rule-hide-advanced-link').addEventListener('click', function() {
-      hide(document.getElementById('new-rule-advanced'));
-      show(document.getElementById('new-rule-regular-text'));
+      document.getElementById('new-rule-regular-text').style.display = 'block';
+      document.getElementById('new-rule-advanced').style.display = 'none';
     });
   });
 }

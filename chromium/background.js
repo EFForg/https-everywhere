@@ -114,13 +114,13 @@ loadStoredUserRules();
  * active: extension is enabled and rewrote URLs on this page.
  * disabled: extension is disabled from the popup menu.
  */
-var updateState = function() {
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+function updateState() {
+  chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
     if (!tabs || tabs.length === 0) {
       return;
     }
-    var applied = activeRulesets.getRulesets(tabs[0].id)
-    var iconState = 'inactive';
+    const applied = activeRulesets.getRulesets(tabs[0].id)
+    let iconState = 'inactive';
     if (!isExtensionEnabled) {
       iconState = 'disabled';
     } else if (httpNowhereOn) {
