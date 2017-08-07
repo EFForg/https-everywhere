@@ -28,6 +28,8 @@ vows.describe('issue edit handler').addBatch(
 		'and we pass it the context of a issue edit with a bad type': handlerutil.badType('type of issue'),
 		'and we pass it the context of a issue edit with a type of "new ruleset" and a correct body': handlerutil.correctNewRuleset('Type: new ruleset\nDomain: domain10.com', 'take it from here', 'take it from here'),
 		'and we pass it the context of a issue edit with a type of "new ruleset" and a correct body with freeform comments': handlerutil.correctNewRuleset('Type: new ruleset\nDomain:domain10.com\nAnd let me say, what a great GitHub bot HTTPS Everywhere has!', 'take it from here'),
+		'and we pass it the context of a issue edit with a type of "new ruleset" and a correct body with a freeform comment with a colon': handlerutil.correctNewRuleset('Type: new ruleset\nDomain: domain10.com\nHere\'s a secret: I like colons.', 'take it from here'),
+		'and we pass it the context of a issue edit with a type of "new ruleset" and a correct body with a freeform comment with multiple colons': handlerutil.correctNewRuleset('Type: new ruleset\nDomain: domain10.com\nHere\'s a secret: I like colons. Another secret: I like them a lot.', 'take it from here'),
 		'and we pass it the context of a issue edit with a type of "new ruleset" and a problematic body': handlerutil.problematicNewRuleset('missing domain information')
 	})
 ).export(module);
