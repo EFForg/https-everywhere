@@ -78,4 +78,4 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('MixedContentLink').addEventListener('click', e => {
     window.open(e.target.href);
   });
-}
+});
