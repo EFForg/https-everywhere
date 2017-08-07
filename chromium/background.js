@@ -227,14 +227,11 @@ function onBeforeRequest(details) {
   const uri = new URL(details.url);
 
   // Should the request be canceled?
-  var shouldCancel = (
-    httpNowhereOn &&
-    uri.protocol === 'http:' &&
-    !/\.onion$/.test(uri.hostname) &&
-    !/^localhost$/.test(uri.hostname) &&
-    !/^127(\.[0-9]{1,3}){3}$/.test(uri.hostname) &&
-    !/^0\.0\.0\.0$/.test(uri.hostname)
-  );
+  const shouldCancel = httpNowhereOn &&
+    uri.protocol !== 'https:' &&
+    uri.hostname.slice(-6) !== '.onion' &&
+    uri.hostname !== 'localhost' &&
+    !/^127(\.\d{1,3}){3}$/.test(uri.hostname);
 
   // Normalise hosts such as "www.example.com."
   var canonical_host = uri.hostname;
@@ -568,7 +565,7 @@ function onBeforeRedirect(details) {
 
 // Registers the handler for requests
 // See: https://github.com/EFForg/https-everywhere/issues/10039
-wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"]);
+wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*", "ftp://*/*"]}, ["blocking"]);
 
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
