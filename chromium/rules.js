@@ -492,7 +492,6 @@ RuleSets.prototype = {
   }
 };
 
-// Export for HTTPS Rewriter if applicable.
-if (typeof exports != 'undefined') {
-  exports.RuleSets = RuleSets;
+if (typeof module !== 'undefined') {
+  module.exports = { Rule, Exclusion, CookieRule, RuleSet, RuleSets };
 }

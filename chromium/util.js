@@ -26,10 +26,10 @@ const utils = {
   }
 }
 
-if (window) {
+if (typeof window !== 'undefined') {
   window.utils = utils;
 }
 
-if (module) {
+if (typeof module !== 'undefined') {
   module.exports = utils;
 }
