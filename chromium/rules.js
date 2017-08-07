@@ -1,12 +1,24 @@
 'use strict';
 
-let utils = window.utils;
+let utils = {
+  log (msg) {
+    console.log(msg);
+  }
+};
+
+if (typeof window !== 'undefined') {
+  utils = window.utils || utils;
+}
+
+if (typeof require !== 'undefined') {
+  utils = require('./utils.js') || utils;
+}
 
 // To reduce memory usage for the numerous rules/cookies with trivial rules
 const trivial_rule_to = 'https:';
 const trivial_rule_from_c = new RegExp('^http:');
-const trivial_cookie_name_c = new RegExp('.*');
-const trivial_cookie_host_c = new RegExp('.*');
+const trivial_cookie_name_c = new RegExp('.+');
+const trivial_cookie_host_c = new RegExp('.+');
 
 /**
  * A single rule
