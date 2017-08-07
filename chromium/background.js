@@ -1,4 +1,13 @@
 'use strict';
+
+const storage = chrome.storage.sync || chrome.storage.local;
+
+const utils = window.utils || {
+  log (msg) {
+    console.log(msg);
+  }
+};
+
 /**
  * Fetch and parse XML to be loaded as RuleSets.
  *

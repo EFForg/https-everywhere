@@ -4,7 +4,9 @@ var backgroundPage = chrome.extension.getBackgroundPage();
 var stableRules = null;
 var unstableRules = null;
 var hostReg = /.*\/\/[^$/]*\//;
-var storage = backgroundPage.storage;
+
+const storage = chrome.storage.sync || chrome.storage.local;
+
 
 /**
  * Handles rule (de)activation in the popup
