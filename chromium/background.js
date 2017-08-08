@@ -690,6 +690,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   }
 });
 
+// Send a message to the embedded webextension bootstrap.js to get settings to import
+chrome.runtime.sendMessage("import-legacy-data", function(settings){
+  import_settings(settings);
+});
+
 /**
  * Enable switch planner for specific tab
  * @param settings the settings object
