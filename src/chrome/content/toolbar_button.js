@@ -439,3 +439,7 @@ function migratePreferences(gBrowser) {
     HTTPSEverywhere.prefs.setIntPref("prefs_version", prefs_version+1);
   }
 }
+
+function exportSettingsToFile(){
+  HTTPSEverywhere.exportSettingsToFile(window);
+}

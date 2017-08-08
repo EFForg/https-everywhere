@@ -542,6 +542,7 @@ HTTPSEverywhere.prototype = {
       this.log(DBUG,"Got sessionstore-windows-restored");
       if (!this.isMobile) {
         this.maybeShowObservatoryPopup();
+        this.maybeDoExports();
       } else {
         this.log(WARN, "Initializing Firefox for Android UI");
         Cu.import("chrome://https-everywhere/content/code/AndroidUI.jsm");
@@ -595,6 +596,39 @@ HTTPSEverywhere.prototype = {
 
     if (shown && enabled)
       this.maybeCleanupObservatoryPrefs(ssl_observatory);
+  },
+
+  maybeDoExports: function() {
+    if(this.exportSettings().changed){
+      this.silentlySaveSettings();
+      this.maybeShowExportPopup();
+    }
+  },
+
+  maybeShowExportPopup: function() {
+    // Show the popup at most once, and only if the user settings are not
+    // default.
+    var shown = this.prefs.getBoolPref("export_popup_shown");
+    if(!shown){
+      this.tab_opener("chrome://https-everywhere/content/export-settings.xul");
+      this.prefs.setBoolPref("export_popup_shown", true);
+    }
+  },
+
+  silentlySaveSettings: function(){
+    var loc = "ProfD";  // profile directory
+    var file =
+      CC["@mozilla.org/file/directory_service;1"]
+      .getService(CI.nsIProperties)
+      .get(loc, CI.nsILocalFile)
+      .clone();
+    file.append("https_everywhere_settings_autosave.json");
+    // Check for existence, if not, create.
+    if (!file.exists()) {
+      this.log(WARN, file);
+      file.create(CI.nsIFile.NORMAL_FILE_TYPE, 0600);
+    }
+    this.saveSettingsFile(file.path, JSON.stringify(this.exportSettings()));
   },
 
   maybeCleanupObservatoryPrefs: function(ssl_observatory) {
@@ -790,7 +824,72 @@ HTTPSEverywhere.prototype = {
       thisBranch.setBoolPref("enabled", true);
       this.httpNowhereEnabled = true;
     }
+  },
+
+  exportSettings: function(){
+    var changed = false;
+
+    var prefs = {
+      http_nowhere_enabled: this.prefs.getBoolPref("http_nowhere.enabled"),
+      global_enabled: this.prefs.getBoolPref("globalEnabled"),
+      show_counter: this.prefs.getBoolPref("show_counter")
+    };
+
+    if(prefs.http_nowhere_enabled == true ||
+       prefs.global_enabled == false ||
+       prefs.show_counter == true
+    ){
+      changed = true;
+    }
+
+    var rule_toggle = {}
+    for(rule_toggle_key of this.rule_toggle_prefs.getChildList("", {})){
+      let current_state = this.rule_toggle_prefs.getBoolPref(rule_toggle_key);
+      if(HTTPSRules.rulesetsByName[rule_toggle_key].on_by_default != current_state){
+        rule_toggle[rule_toggle_key] = current_state;
+        changed = true;
+      }
+    }
+
+    if(HTTPSRules.custom_rulesets.length !== 0){
+      changed = true;
+    }
+
+    var export_object = {
+      prefs: prefs,
+      rule_toggle: rule_toggle,
+      custom_rulesets: HTTPSRules.custom_rulesets,
+      changed: changed
+    };
+
+    return export_object;
+  },
+
+  exportSettingsToFile: function(window){
+    var settings = JSON.stringify(this.exportSettings());
+
+    var nsIFilePicker = CI.nsIFilePicker;
+    var fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
+    fp.init(window, "Save Settings to File", nsIFilePicker.modeSave);
+    fp.defaultString = "https_everywhere_settings.json";
+    fp.defaultExtension = "json";
+    fp.addToRecentDocs = true;
+    var res = fp.show();
+    if (res != nsIFilePicker.returnCancel){
+      this.saveSettingsFile(fp.file.path, settings);
+    }
+  },
+
+  saveSettingsFile: function(file_path, settings){
+    var file = CC["@mozilla.org/file/local;1"].createInstance(CI.nsILocalFile);
+    file.initWithPath(file_path);
+
+    output_stream = Components.classes["@mozilla.org/network/file-output-stream;1"].createInstance(CI.nsIFileOutputStream);
+    output_stream.init(file, 0x02 | 0x08 | 0x20, 0600, 0);
+    output_stream.write(settings, settings.length);
+    output_stream.close();
   }
+
 };
 
 var prefs = 0;
