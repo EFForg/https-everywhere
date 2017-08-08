@@ -52,7 +52,7 @@ function appendRuleLineToListDiv(ruleset, list_div) {
   for (let rule of ruleset.rules) {
     var host = hostReg.exec(rule.to);
     if (host) {
-      favicon.src = 'chrome://favicon/https://' + host[0];
+      favicon.src = 'chrome://favicon/' + host[0];
       break;
     }
   }
