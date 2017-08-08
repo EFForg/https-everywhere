@@ -690,6 +690,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   }
 });
 
+// Send a message to the embedded webextension bootstrap.js to get settings to import
+chrome.runtime.sendMessage("import-legacy-data", import_settings);
+
 /**
  * Import extension settings (custom rulesets, ruleset toggles, globals) from an object
  * @param settings the settings object
