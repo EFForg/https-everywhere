@@ -31,6 +31,14 @@ storage.get({enableMixedRulesets: false}, function(item) {
   all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
 });
 
+// Load in the legacy custom rulesets, if any
+function load_legacy_custom_rulesets(legacy_custom_rulesets){
+  for(let legacy_custom_ruleset of legacy_custom_rulesets){
+    all_rules.addFromXml((new DOMParser()).parseFromString(legacy_custom_ruleset, 'text/xml'));
+  }
+}
+storage.get({legacy_custom_rulesets: []}, item => load_legacy_custom_rulesets(item.legacy_custom_rulesets));
+
 var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
 // devtools-panel.js).
@@ -674,5 +682,42 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     updateState();
   } else if (message.type == "remove_rule") {
     removeRule(message.object);
+  } else if (message.type == "import_settings") {
+    // This is used when importing settings from the options ui
+    import_settings(message.object).then(() => {
+      sendResponse(true);
+    });
   }
 });
+
+/**
+ * Import extension settings (custom rulesets, ruleset toggles, globals) from an object
+ * @param settings the settings object
+ */
+async function import_settings(settings){
+  if(settings.changed){
+    // Load custom rulesets and add to storage
+    await new Promise(resolve => {
+      storage.set({"legacy_custom_rulesets": settings.custom_rulesets}, resolve);
+    });
+    load_legacy_custom_rulesets(settings.custom_rulesets);
+
+    // Load all the ruleset toggles into memory and store
+    let rule_toggle_promises = [];
+    for(let ruleset_name in settings.rule_toggle){
+      localStorage[ruleset_name] = settings.rule_toggle[ruleset_name];
+    }
+    all_rules = new RuleSets(localStorage);
+
+    // Set/store globals
+    await new Promise(resolve => {
+      storage.set({'httpNowhere': settings.prefs.http_nowhere_enabled}, resolve);
+    });
+    await new Promise(resolve => {
+      storage.set({'showCounter': settings.prefs.show_counter}, resolve);
+    });
+    await new Promise(resolve => {
+      storage.set({'globalEnabled': settings.prefs.global_enabled}, resolve);
+    });
+  }
+}
