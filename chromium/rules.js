@@ -185,6 +185,14 @@ function RuleSets(ruleActiveStates) {
 
   // A hash of rule name -> active status (true/false).
   this.ruleActiveStates = ruleActiveStates;
+
+  // Load legacy_custom_rulesets
+  const that = this;
+  storage.get({legacy_custom_rulesets: []}, item => {
+    for(let legacy_custom_ruleset of item.legacy_custom_rulesets){
+      that.addFromXml((new DOMParser()).parseFromString(legacy_custom_ruleset, 'text/xml'));
+    }
+  });
 }
 
 
