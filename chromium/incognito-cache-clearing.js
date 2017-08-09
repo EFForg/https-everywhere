@@ -55,7 +55,11 @@ function detect_incognito_destruction(windowId) {
 
 
 // Listen to window creation, so we can detect if an incognito window is created
-chrome.windows.onCreated.addListener(detect_incognito_creation);
+if (chrome.windows) {
+  chrome.windows.onCreated.addListener(detect_incognito_creation);
+}
 
 // Listen to window destruction, so we can clear caches if all incognito windows are destroyed
-chrome.windows.onRemoved.addListener(detect_incognito_destruction);
+if (chrome.windows) {
+  chrome.windows.onRemoved.addListener(detect_incognito_destruction);
+}
