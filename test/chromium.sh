@@ -26,11 +26,11 @@ if [ "$1" == "--justrun" ]; then
 	PROFILE_DIRECTORY="$(mktemp -d)"
 	trap 'rm -r "$PROFILE_DIRECTORY"' EXIT
 	
-	# Chromium package name is 'chromium' in Debian 7 (wheezy) and later
-	BROWSER="chromium-browser"
-	if [[ "$(lsb_release -is)" == "Debian" ]]; then
-	  BROWSER="chromium"
-	fi
+	# Chromium package name is 'chromium' in Debian (7=wheezy and later) and openSUSE
+	case "$(lsb_release -is)" in
+		"Debian" | "openSUSE project" )  BROWSER="chromium";;
+		*                             )  BROWSER="chromium-browser"
+	esac
 	$BROWSER \
 		--user-data-dir="$PROFILE_DIRECTORY" \
 		--load-extension=pkg/crx/ \
