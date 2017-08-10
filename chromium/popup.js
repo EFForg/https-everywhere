@@ -41,7 +41,7 @@ function toggleRuleLine(checkbox, ruleset, tab_id) {
  * @param ruleset the ruleset to build the line for
  * @returns {*}
  */
-function appendRuleLineToListDiv(ruleset, list_div) {
+function appendRuleLineToListDiv(ruleset, hostnames, tab_id, list_div) {
 
   // parent block for line
   var line = document.createElement("div");
@@ -71,6 +71,9 @@ function appendRuleLineToListDiv(ruleset, list_div) {
       favicon.src += host[0];
       break;
     }
+  }
+  if (favicon.src == "chrome://favicon/") {
+    favicon.src += "https://" + hostnames[ruleset.name];
   }
 
   if (navigator.userAgent.match("Chrome")) {
@@ -148,13 +151,16 @@ function toggleEnabledDisabled() {
 function gotTab(tabArray) {
   var activeTab = tabArray[0];
 
-  sendMessage("get_active_rulesets", activeTab.id, function(rulesets){
+  sendMessage("get_active_rulesets_and_hostnames", activeTab.id, function(rulesets_and_hostnames){
+    var rulesets = rulesets_and_hostnames.rulesets;
+    var hostnames = rulesets_and_hostnames.hostnames;
+
     for (var r in rulesets) {
       var listDiv = stableRules;
       if (!rulesets[r].default_state) {
         listDiv = unstableRules;
       }
-      appendRuleLineToListDiv(rulesets[r], listDiv);
+      appendRuleLineToListDiv(rulesets[r], hostnames, activeTab.id, listDiv);
       listDiv.style.position = "static";
       listDiv.style.visibility = "visible";
     }
@@ -191,16 +197,6 @@ document.addEventListener("DOMContentLoaded", function () {
       httpNowhereCheckbox.setAttribute('checked', '');
     }
   });
-
-  // auto-translate all elements with i18n attributes
-  var elem = document.querySelectorAll("[i18n]");
-  for (let el of elem) {
-    el.innerHTML = chrome.i18n.getMessage(el.getAttribute("i18n"));
-  }
-
-  // other translations
-  e("aboutTitle").setAttribute("title", chrome.i18n.getMessage("about_title"));
-  e("add-rule-link").addEventListener("click", addManualRule);
 });
 
 
@@ -277,13 +273,4 @@ function setOption_(opt, value) {
   var details = {};
   details[opt] = value;
   sendMessage("set_option", details);
-}
-
-function sendMessage(type, object, callback) {
-  var packet = {};
-  packet.type = type;
-  if(object){
-    packet.object = object;
-  }
-  chrome.runtime.sendMessage(packet, callback);
 }
