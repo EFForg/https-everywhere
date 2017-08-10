@@ -703,26 +703,16 @@ async function import_settings(settings){
     await new Promise(resolve => {
       storage.set({"legacy_custom_rulesets": settings.custom_rulesets}, resolve);
     });
-    load_legacy_custom_rulesets(settings.custom_rulesets);
 
     // Load all the ruleset toggles into memory and store
     let rule_toggle_promises = [];
     for(let ruleset_name in settings.rule_toggle){
       localStorage[ruleset_name] = settings.rule_toggle[ruleset_name];
     }
-    (ruleset_name, ruleset_active => {
-      for(let host in all_rules.targets){
-        for(let ruleset of all_rules.targets[host]){
-          if(ruleset.name == ruleset_name){
-            ruleset.active = ruleset_active;
-            return;
-          }
-        }
-      }
-    })(ruleset_name, settings.rule_toggle[ruleset_name]);
 
-    // This line is necessary to clear cached lookups of rulesets already loaded
-    all_rules.ruleCache = new Map();
+    all_rules = new RuleSets(localStorage);
+    all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
+    load_legacy_custom_rulesets(settings.custom_rulesets);
 
     // Set/store globals
     await new Promise(resolve => {
