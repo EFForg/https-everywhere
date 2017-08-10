@@ -1,4 +1,13 @@
-"use strict";
+'use strict';
+
+const storage = chrome.storage.sync || chrome.storage.local;
+
+const utils = window.utils || {
+  log (msg) {
+    console.log(msg);
+  }
+};
+
 /**
  * Fetch and parse XML to be loaded as RuleSets.
  *
@@ -8,7 +17,7 @@ function loadExtensionFile(url, returnType) {
   var xhr = new XMLHttpRequest();
   // Use blocking XHR to ensure everything is loaded by the time
   // we return.
-  xhr.open("GET", chrome.extension.getURL(url), false);
+  xhr.open('GET', chrome.extension.getURL(url), false);
   xhr.send(null);
   // Get file contents
   if (xhr.readyState != 4) {
@@ -37,7 +46,7 @@ var USER_RULE_KEY = 'userRules';
 var switchPlannerEnabledFor = {};
 // Detailed information recorded when the HTTPS Switch Planner is active.
 // Structure is:
-//   switchPlannerInfo[tabId]["rw"/"nrw"][resource_host][active_content][url];
+//   switchPlannerInfo[tabId]['rw'/'nrw'][resource_host][active_content][url];
 // rw / nrw stand for "rewritten" versus "not rewritten"
 var switchPlannerInfo = {};
 
@@ -105,27 +114,27 @@ loadStoredUserRules();
  * active: extension is enabled and rewrote URLs on this page.
  * disabled: extension is disabled from the popup menu.
  */
-var updateState = function() {
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+function updateState() {
+  chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
     if (!tabs || tabs.length === 0) {
       return;
     }
-    var applied = activeRulesets.getRulesets(tabs[0].id)
-    var iconState = "inactive";
+    const applied = activeRulesets.getRulesets(tabs[0].id)
+    let iconState = 'inactive';
     if (!isExtensionEnabled) {
-      iconState = "disabled";
+      iconState = 'disabled';
     } else if (httpNowhereOn) {
-      iconState = "blocking";
+      iconState = 'blocking';
     } else if (applied) {
-      iconState = "active";
+      iconState = 'active';
     }
     chrome.browserAction.setIcon({
       path: {
-        "38": "icons/icon-" + iconState + "-38.png"
+        '38': 'icons/icon-' + iconState + '-38.png'
       }
     });
     chrome.browserAction.setTitle({
-      title: "HTTPS Everywhere (" + iconState + ")"
+      title: 'HTTPS Everywhere (' + iconState + ')'
     });
   });
 }
@@ -227,68 +236,59 @@ function onBeforeRequest(details) {
   const uri = new URL(details.url);
 
   // Should the request be canceled?
-  var shouldCancel = (
-    httpNowhereOn &&
-    uri.protocol === 'http:' &&
-    !/\.onion$/.test(uri.hostname) &&
-    !/^localhost$/.test(uri.hostname) &&
-    !/^127(\.[0-9]{1,3}){3}$/.test(uri.hostname) &&
-    !/^0\.0\.0\.0$/.test(uri.hostname)
-  );
+  const shouldCancel = httpNowhereOn &&
+    !uri.protocol === 'https:' &&
+    !uri.hostname.slice(-6) === '.onion' &&
+    !uri.hostname === 'localhost' &&
+    !/^127(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9]{1,2})){3}$/.test(uri.hostname);
 
-  // Normalise hosts such as "www.example.com."
-  var canonical_host = uri.hostname;
-  if (canonical_host.charAt(canonical_host.length - 1) == ".") {
-    while (canonical_host.charAt(canonical_host.length - 1) == ".")
-      canonical_host = canonical_host.slice(0,-1);
-    uri.hostname = canonical_host;
+  // Normalise hosts such as "www.example.com." or ".www.example.com"
+  uri.hostname = uri.hostname.replace(/^\.+|\.+$/g, '');
+
+  // If there is a username/password, put them aside during the ruleset analysis process
+  const tmp_user = uri.username,
+    tmp_pass = uri.password;
+
+  uri.username = '';
+  uri.password = '';
+
+  const canonical_url = uri.href;
+
+  if (details.url !== canonical_url) {
+    log(INFO, 'Original url ' + details.url + 
+        ' changed before processing to ' + canonical_url);
   }
 
-  // If there is a username / password, put them aside during the ruleset
-  // analysis process
-  var using_credentials_in_url = false;
-  if (uri.password || uri.username) {
-      using_credentials_in_url = true;
-      var tmp_user = uri.username;
-      var tmp_pass = uri.password;
-      uri.username = null;
-      uri.password = null;
-  }
-
-  var canonical_url = uri.href;
-  if (details.url != canonical_url && !using_credentials_in_url) {
-    log(INFO, "Original url " + details.url + 
-        " changed before processing to " + canonical_url);
-  }
   if (urlBlacklist.has(canonical_url)) {
     return {cancel: shouldCancel};
   }
 
-  if (details.type == "main_frame") {
+  if (details.type == 'main_frame') {
     activeRulesets.removeTab(details.tabId);
   }
 
-  var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
+ const potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
 
   if (redirectCounter[details.requestId] >= 8) {
-    log(NOTE, "Redirect counter hit for " + canonical_url);
+    log(NOTE, 'Redirect counter hit for ' + canonical_url);
     urlBlacklist.add(canonical_url);
     var hostname = uri.hostname;
     domainBlacklist.add(hostname);
-    log(WARN, "Domain blacklisted " + hostname);
+    log(WARN, 'Domain blacklisted ' + hostname);
     return {cancel: shouldCancel};
   }
 
-  var newuristr = null;
+  let newuristr = null;
 
-  for (let ruleset of potentiallyApplicable) {
+  for (const ruleset of potentiallyApplicable) {
     activeRulesets.addRulesetToTab(details.tabId, ruleset);
+
     if (ruleset.active && !newuristr) {
       newuristr = ruleset.apply(canonical_url);
     }
   }
 
-  if (newuristr && using_credentials_in_url) {
+  if (newuristr) {
     // re-insert userpass info which was stripped temporarily
     const uri_with_credentials = new URL(newuristr);
     uri_with_credentials.username = tmp_user;
@@ -296,43 +296,35 @@ function onBeforeRequest(details) {
     newuristr = uri_with_credentials.href;
   }
 
-  // In Switch Planner Mode, record any non-rewriteable
-  // HTTP URIs by parent hostname, along with the resource type.
-  if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== "https:") {
-    writeToSwitchPlanner(details.type,
-                         details.tabId,
-                         canonical_host,
-                         details.url,
-                         newuristr);
+  // In Switch Planner Mode, record any non-rewriteable HTTP URIs by parent hostname, along with the resource type.
+  if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== 'https:') {
+    writeToSwitchPlanner(details.type, details.tabId, canonical_host, details.url, newuristr);
   }
 
   if (httpNowhereOn) {
-    // If loading a main frame, try the HTTPS version as an alternative to
-    // failing.
-    if (shouldCancel) {
-      if (!newuristr) {
-        return {redirectUrl: canonical_url.replace(/^http:/, "https:")};
-      } else {
-        return {redirectUrl: newuristr.replace(/^http:/, "https:")};
-      }
+    // If loading a main frame, try the HTTPS version as an alternative to failing.
+    if (shouldCancel && details.type == 'main_frame') {
+    	const currentUrl = newuristr || canonical_url;
+    	const redirectUrl = currentUrl.replace(/^http:/, 'https:');
+      
+      return { redirectUrl };
     }
-    if (newuristr && newuristr.substring(0, 5) === "http:") {
-      // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
-      return {cancel: true};
+
+    // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
+    if (newuristr && newuristr.slice(0, 5) === 'http:') {
+      return { cancel: true };
     }
   }
 
   if (newuristr) {
-    return {redirectUrl: newuristr};
+    return { redirectUrl: newuristr };
   } else {
-    return {cancel: shouldCancel};
+    return { cancel: shouldCancel };
   }
 }
 
-
 // Map of which values for the `type' enum denote active vs passive content.
 // https://developer.chrome.com/extensions/webRequest.html#event-onBeforeRequest
-var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1};
 
 // We consider sub_frame to be passive even though it can contain JS or flash.
 // This is because code running in the sub_frame cannot access the main frame's
@@ -340,7 +332,8 @@ var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1};
 // same domain but different protocol - i.e. HTTP while the parent is HTTPS -
 // because same-origin policy includes the protocol. This also mimics Chrome's
 // UI treatment of insecure subframes.
-var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
+
+const activeTypes = { object: true, other: true, script: true, stylesheet: true, image: false, main_frame: false, sub_frame: false, xmlhttprequest: false };
 
 /**
  * Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
@@ -354,31 +347,27 @@ var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
  * @param rewritten_url: The url rewritten to
  * */
 function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritten_url) {
-  var rw = "rw";
-  if (rewritten_url == null)
-    rw = "nrw";
+  let rw = 'rw';
+  if (rewritten_url === null)
+    rw = 'nrw';
 
-  var active_content = 0;
-  if (activeTypes[type]) {
-    active_content = 1;
-  } else if (passiveTypes[type]) {
-    active_content = 0;
-  } else {
-    log(WARN, "Unknown type from onBeforeRequest details: `" + type + "', assuming active");
-    active_content = 1;
+  let active_content = activeTypes[type];
+  if (active_content === undefined) {
+    log(WARN, `Unknown type from onBeforeRequest details: "${type}", assuming active.`);
+    active_content = true;
   }
 
   if (!switchPlannerInfo[tab_id]) {
     switchPlannerInfo[tab_id] = {};
-    switchPlannerInfo[tab_id]["rw"] = {};
-    switchPlannerInfo[tab_id]["nrw"] = {};
+    switchPlannerInfo[tab_id].rw = {};
+    switchPlannerInfo[tab_id].nrw = {};
   }
   if (!switchPlannerInfo[tab_id][rw][resource_host])
     switchPlannerInfo[tab_id][rw][resource_host] = {};
   if (!switchPlannerInfo[tab_id][rw][resource_host][active_content])
     switchPlannerInfo[tab_id][rw][resource_host][active_content] = {};
 
-  switchPlannerInfo[tab_id][rw][resource_host][active_content][resource_url] = 1;
+  switchPlannerInfo[tab_id][rw][resource_host][active_content][resource_url] = true;
 }
 
 /**
@@ -387,9 +376,9 @@ function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritt
  * @param obj: object to calc the size for
  * */
 function objSize(obj) {
-  if (typeof obj == 'undefined') return 0;
-  var size = 0, key;
-  for (key in obj) {
+  if (obj === undefined) return 0;
+  let size = 0;
+  for (const key in obj) {
     if (obj.hasOwnProperty(key)) size++;
   }
   return size;
@@ -400,20 +389,20 @@ function objSize(obj) {
  * presenting the most important ones first.
  * */
 function sortSwitchPlanner(tab_id, rewritten) {
-  var asset_host_list = [];
-  if (typeof switchPlannerInfo[tab_id] === 'undefined' ||
-      typeof switchPlannerInfo[tab_id][rewritten] === 'undefined') {
+  const asset_host_list = [];
+  if (switchPlannerInfo[tab_id] === undefined ||
+      switchPlannerInfo[tab_id][rewritten] === undefined) {
     return [];
   }
-  var tabInfo = switchPlannerInfo[tab_id][rewritten];
-  for (var asset_host in tabInfo) {
-    var ah = tabInfo[asset_host];
-    var activeCount = objSize(ah[1]);
-    var passiveCount = objSize(ah[0]);
-    var score = activeCount * 100 + passiveCount;
+  const tabInfo = switchPlannerInfo[tab_id][rewritten];
+  for (const asset_host in tabInfo) {
+    const ah = tabInfo[asset_host];
+    const activeCount = objSize(ah[1]);
+    const passiveCount = objSize(ah[0]);
+    const score = activeCount * 100 + passiveCount;
     asset_host_list.push([score, activeCount, passiveCount, asset_host]);
   }
-  asset_host_list.sort(function(a,b){return a[0]-b[0];});
+  asset_host_list.sort((a,b) => a[0] - b[0]);
   return asset_host_list;
 }
 
@@ -423,25 +412,25 @@ function sortSwitchPlanner(tab_id, rewritten) {
 function switchPlannerSmallHtmlSection(tab_id, rewritten) {
   var asset_host_list = sortSwitchPlanner(tab_id, rewritten);
   if (asset_host_list.length == 0) {
-    return "<b>none</b>";
+    return '<b>none</b>';
   }
 
-  var output = "";
+  var output = '';
   for (var i = asset_host_list.length - 1; i >= 0; i--) {
     var host = asset_host_list[i][3];
     var activeCount = asset_host_list[i][1];
     var passiveCount = asset_host_list[i][2];
 
-    output += "<b>" + host + "</b>: ";
+    output += '<b>' + host + '</b>: ';
     if (activeCount > 0) {
-      output += activeCount + " active";
+      output += activeCount + ' active';
       if (passiveCount > 0)
-        output += ", ";
+        output += ', ';
     }
     if (passiveCount > 0) {
-      output += passiveCount + " passive";
+      output += passiveCount + ' passive';
     }
-    output += "<br/>";
+    output += '<br/>';
   }
   return output;
 }
@@ -450,12 +439,12 @@ function switchPlannerSmallHtmlSection(tab_id, rewritten) {
  * Create switch planner sections
  * */
 function switchPlannerRenderSections(tab_id, f) {
-  return "Unrewritten HTTP resources loaded from this tab (enable HTTPS on " +
-         "these domains and add them to HTTPS Everywhere):<br/>" +
-         f(tab_id, "nrw") +
-         "<br/>Resources rewritten successfully from this tab (update these " +
-         "in your source code):<br/>" +
-         f(tab_id, "rw");
+  return 'Unrewritten HTTP resources loaded from this tab (enable HTTPS on ' +
+         'these domains and add them to HTTPS Everywhere):<br/>' +
+         f(tab_id, 'nrw') +
+         '<br/>Resources rewritten successfully from this tab (update these ' +
+         'in your source code):<br/>' +
+         f(tab_id, 'rw');
 }
 
 /**
@@ -470,11 +459,11 @@ function switchPlannerSmallHtml(tab_id) {
  * map: the map containing the urls
  * */
 function linksFromKeys(map) {
-  if (typeof map == 'undefined') return "";
-  var output = "";
+  if (typeof map == 'undefined') return '';
+  var output = '';
   for (var key in map) {
     if (map.hasOwnProperty(key)) {
-      output += "<a href='" + key + "'>" + key + "</a><br/>";
+      output += '<a href="' + key + '">' + key + '</a><br/>';
     }
   }
   return output;
@@ -492,23 +481,23 @@ function switchPlannerDetailsHtml(tab_id) {
  * */
 function switchPlannerDetailsHtmlSection(tab_id, rewritten) {
   var asset_host_list = sortSwitchPlanner(tab_id, rewritten);
-  var output = "";
+  var output = '';
 
   for (var i = asset_host_list.length - 1; i >= 0; i--) {
     var host = asset_host_list[i][3];
     var activeCount = asset_host_list[i][1];
     var passiveCount = asset_host_list[i][2];
 
-    output += "<b>" + host + "</b>: ";
+    output += '<b>' + host + '</b>: ';
     if (activeCount > 0) {
-      output += activeCount + " active<br/>";
+      output += activeCount + ' active<br/>';
       output += linksFromKeys(switchPlannerInfo[tab_id][rewritten][host][1]);
     }
     if (passiveCount > 0) {
-      output += "<br/>" + passiveCount + " passive<br/>";
+      output += '<br/>' + passiveCount + ' passive<br/>';
       output += linksFromKeys(switchPlannerInfo[tab_id][rewritten][host][0]);
     }
-    output += "<br/>";
+    output += '<br/>';
   }
   return output;
 }
@@ -534,15 +523,15 @@ function onCookieChanged(changeInfo) {
       }
 
       // The cookie API is magical -- we must recreate the URL from the domain and path.
-      if (changeInfo.cookie.domain[0] == ".") {
-          cookie.url = "https://www" + changeInfo.cookie.domain + cookie.path;
+      if (changeInfo.cookie.domain[0] == '.') {
+          cookie.url = 'https://www' + changeInfo.cookie.domain + cookie.path;
       } else {
-          cookie.url = "https://" + changeInfo.cookie.domain + cookie.path;
+          cookie.url = 'https://' + changeInfo.cookie.domain + cookie.path;
       }
       // We get repeated events for some cookies because sites change their
       // value repeatedly and remove the "secure" flag.
       log(DBUG,
-       "Securing cookie " + cookie.name + " for " + changeInfo.cookie.domain + ", was secure=" + changeInfo.cookie.secure);
+       'Securing cookie ' + cookie.name + ' for ' + changeInfo.cookie.domain + ', was secure=' + changeInfo.cookie.secure);
       chrome.cookies.set(cookie);
     }
   }
@@ -555,11 +544,11 @@ function onCookieChanged(changeInfo) {
 function onBeforeRedirect(details) {
     // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
     var prefix = details.redirectUrl.substring(0, 5);
-    if (prefix === "http:" || prefix === "https") {
+    if (prefix === 'http:' || prefix === 'https') {
         if (details.requestId in redirectCounter) {
             redirectCounter[details.requestId] += 1;
-            log(DBUG, "Got redirect id "+details.requestId+
-                ": "+redirectCounter[details.requestId]);
+            log(DBUG, 'Got redirect id '+details.requestId+
+                ': '+redirectCounter[details.requestId]);
         } else {
             redirectCounter[details.requestId] = 1;
         }
@@ -568,11 +557,11 @@ function onBeforeRedirect(details) {
 
 // Registers the handler for requests
 // See: https://github.com/EFForg/https-everywhere/issues/10039
-wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"]);
+wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ['*://*/*']}, ['blocking']);
 
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
-wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
+wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ['https://*/*']});
 
 
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking.
@@ -598,21 +587,21 @@ function enableSwitchPlannerFor(tabId) {
 
 // Listen for connection from the DevTools panel so we can set up communication.
 chrome.runtime.onConnect.addListener(function (port) {
-  if (port.name == "devtools-page") {
+  if (port.name == 'devtools-page') {
     chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
       var tabId = message.tabId;
 
       var disableOnCloseCallback = function(port) {
-        log(DBUG, "Devtools window for tab " + tabId + " closed, clearing data.");
+        log(DBUG, 'Devtools window for tab ' + tabId + ' closed, clearing data.');
         disableSwitchPlannerFor(tabId);
       };
 
-      if (message.type === "enable") {
+      if (message.type === 'enable') {
         enableSwitchPlannerFor(tabId);
         port.onDisconnect.addListener(disableOnCloseCallback);
-      } else if (message.type === "disable") {
+      } else if (message.type === 'disable') {
         disableSwitchPlannerFor(tabId);
-      } else if (message.type === "getSmallHtml") {
+      } else if (message.type === 'getSmallHtml') {
         sendResponse({html: switchPlannerSmallHtml(tabId)});
       }
     });

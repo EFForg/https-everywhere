@@ -1,17 +1,24 @@
-"use strict";
-// Stubs so this runs under nodejs. They get overwritten later by util.js
-var VERB=1;
-var DBUG=2;
-var INFO=3;
-var NOTE=4;
-var WARN=5;
-function log(){}
+'use strict';
+
+let utils = {
+  log (msg) {
+    console.log(msg);
+  }
+};
+
+if (typeof window !== 'undefined') {
+  utils = window.utils || utils;
+}
+
+if (typeof require !== 'undefined') {
+  utils = require('./utils.js') || utils;
+}
 
 // To reduce memory usage for the numerous rules/cookies with trivial rules
-const trivial_rule_to = "https:";
-const trivial_rule_from_c = new RegExp("^http:");
-const trivial_cookie_name_c = new RegExp(".*");
-const trivial_cookie_host_c = new RegExp(".*");
+const trivial_rule_to = 'https:';
+const trivial_rule_from_c = new RegExp('^http:');
+const trivial_cookie_name_c = new RegExp('.+');
+const trivial_cookie_host_c = new RegExp('.+');
 
 /**
  * A single rule
@@ -20,7 +27,7 @@ const trivial_cookie_host_c = new RegExp(".*");
  * @constructor
  */
 function Rule(from, to) {
-  if (from === "^http:" && to === "https:") {
+  if (from === '^http:' && to === 'https:') {
     // This is a trivial rule, rewriting http->https with no complex RegExp.
     this.to = trivial_rule_to;
     this.from_c = trivial_rule_from_c;
@@ -47,14 +54,14 @@ function Exclusion(pattern) {
  * @constructor
  */
 function CookieRule(host, cookiename) {
-  if (host === ".*" || host === ".+" || host === ".") {
+  if (host === '.*' || host === '.+' || host === '.') {
     // Some cookie rules trivially match any host.
     this.host_c = trivial_cookie_host_c;
   } else {
     this.host_c = new RegExp(host);
   }
 
-  if (cookiename === ".*" || cookiename === ".+" || cookiename === ".") {
+  if (cookiename === '.*' || cookiename === '.+' || cookiename === '.') {
     // About 50% of cookie rules trivially match any name.
     this.name_c = trivial_cookie_name_c;
   } else {
@@ -91,7 +98,7 @@ RuleSet.prototype = {
     if (this.exclusions !== null) {
       for (let exclusion of this.exclusions) {
         if (exclusion.pattern_c.test(urispec)) {
-          log(DBUG, "excluded uri " + urispec);
+          utils.log('excluded uri ' + urispec, 1);
           return null;
         }
       }
@@ -193,12 +200,12 @@ RuleSets.prototype = {
    * Iterate through data XML and load rulesets
    */
   addFromXml: function(ruleXml) {
-    var sets = ruleXml.getElementsByTagName("ruleset");
+    var sets = ruleXml.getElementsByTagName('ruleset');
     for (let s of sets) {
       try {
         this.parseOneRuleset(s);
       } catch (e) {
-        log(WARN, 'Error processing ruleset:' + e);
+        utils.log('Error processing ruleset:' + e, 5);
       }
     }
   },
@@ -209,8 +216,8 @@ RuleSets.prototype = {
    * @returns {boolean}
    */
   addUserRule : function(params) {
-    log(INFO, 'adding new user rule for ' + JSON.stringify(params));
-    var new_rule_set = new RuleSet(params.host, true, "user rule");
+    utils.log('adding new user rule for ' + JSON.stringify(params), 2);
+    var new_rule_set = new RuleSet(params.host, true, 'user rule');
     var new_rule = new Rule(params.urlMatcher, params.redirectTo);
     new_rule_set.rules.push(new_rule);
     if (!(params.host in this.targets)) {
@@ -220,9 +227,9 @@ RuleSets.prototype = {
     // TODO: maybe promote this rule?
     this.targets[params.host].push(new_rule_set);
     if (new_rule_set.name in this.ruleActiveStates) {
-      new_rule_set.active = (this.ruleActiveStates[new_rule_set.name] == "true");
+      new_rule_set.active = (this.ruleActiveStates[new_rule_set.name] == 'true');
     }
-    log(INFO, 'done adding rule');
+    utils.log('done adding rule', 2);
     return true;
   },
 
@@ -232,7 +239,7 @@ RuleSets.prototype = {
    * @returns {boolean}
    */
   removeUserRule: function(ruleset) {
-    log(INFO, 'removing user rule for ' + JSON.stringify(ruleset));
+    utils.log('removing user rule for ' + JSON.stringify(ruleset), 2);
     this.ruleCache.delete(ruleset.name);
     this.targets[ruleset.name] = this.targets[ruleset.name].filter(r =>
       !(r.isEquivalentTo(ruleset))
@@ -240,7 +247,7 @@ RuleSets.prototype = {
     if (this.targets[ruleset.name].length == 0) {
       delete this.targets[ruleset.name];
     }
-    log(INFO, 'done removing rule');
+    utils.log('done removing rule', 2);
     return true;
   },
 
@@ -250,61 +257,61 @@ RuleSets.prototype = {
    */
   parseOneRuleset: function(ruletag) {
     var default_state = true;
-    var note = "";
-    var default_off = ruletag.getAttribute("default_off");
+    var note = '';
+    var default_off = ruletag.getAttribute('default_off');
     if (default_off) {
       default_state = false;
-      note += default_off + "\n";
+      note += default_off + '\n';
     }
 
     // If a ruleset declares a platform, and we don't match it, treat it as
-    // off-by-default. In practice, this excludes "mixedcontent" & "cacert" rules.
-    var platform = ruletag.getAttribute("platform");
+    // off-by-default. In practice, this excludes 'mixedcontent' & 'cacert' rules.
+    var platform = ruletag.getAttribute('platform');
     if (platform) {
       default_state = false;
-      if (platform == "mixedcontent" && enableMixedRulesets) {
+      if (platform == 'mixedcontent' && enableMixedRulesets) {
         default_state = true;
       }
-      note += "Platform(s): " + platform + "\n";
+      note += 'Platform(s): ' + platform + '\n';
     }
 
-    var rule_set = new RuleSet(ruletag.getAttribute("name"),
+    var rule_set = new RuleSet(ruletag.getAttribute('name'),
                                default_state,
                                note.trim());
 
     // Read user prefs
     if (rule_set.name in this.ruleActiveStates) {
-      rule_set.active = (this.ruleActiveStates[rule_set.name] == "true");
+      rule_set.active = (this.ruleActiveStates[rule_set.name] == 'true');
     }
 
-    var rules = ruletag.getElementsByTagName("rule");
+    var rules = ruletag.getElementsByTagName('rule');
     for (let rule of rules) {
-      rule_set.rules.push(new Rule(rule.getAttribute("from"),
-                                    rule.getAttribute("to")));
+      rule_set.rules.push(new Rule(rule.getAttribute('from'),
+                                    rule.getAttribute('to')));
     }
 
-    var exclusions = ruletag.getElementsByTagName("exclusion");
+    var exclusions = ruletag.getElementsByTagName('exclusion');
     if (exclusions.length > 0) {
       rule_set.exclusions = [];
       for (let exclusion of exclusions) {
         rule_set.exclusions.push(
-          new Exclusion(exclusion.getAttribute("pattern")));
+          new Exclusion(exclusion.getAttribute('pattern')));
       }
     }
 
-    var cookierules = ruletag.getElementsByTagName("securecookie");
+    var cookierules = ruletag.getElementsByTagName('securecookie');
     if (cookierules.length > 0) {
       rule_set.cookierules = [];
       for (let cookierule of cookierules) {
         rule_set.cookierules.push(
-          new CookieRule(cookierule.getAttribute("host"),
-            cookierule.getAttribute("name")));
+          new CookieRule(cookierule.getAttribute('host'),
+            cookierule.getAttribute('name')));
       }
     }
 
-    var targets = ruletag.getElementsByTagName("target");
+    var targets = ruletag.getElementsByTagName('target');
     for (let target of targets) {
-       var host = target.getAttribute("host");
+       var host = target.getAttribute('host');
        if (!(host in this.targets)) {
          this.targets[host] = [];
        }
@@ -321,10 +328,10 @@ RuleSets.prototype = {
     // Have we cached this result? If so, return it!
     var cached_item = this.ruleCache.get(host);
     if (cached_item !== undefined) {
-        log(DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.length);
+        utils.log('Ruleset cache hit for ' + host + ' items:' + cached_item.length, 1);
         return cached_item;
     }
-    log(DBUG, "Ruleset cache miss for " + host);
+    utils.log('Ruleset cache miss for ' + host, 1);
 
     var tmp;
     var results = [];
@@ -334,23 +341,23 @@ RuleSets.prototype = {
     }
 
     // Ensure host is well-formed (RFC 1035)
-    if (host.indexOf("..") != -1 || host.length > 255) {
-      log(WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
+    if (host.indexOf('..') != -1 || host.length > 255) {
+      utils.log('Malformed host passed to potentiallyApplicableRulesets: ' + host, 4);
       return null;
     }
 
     // Replace each portion of the domain with a * in turn
-    var segmented = host.split(".");
+    var segmented = host.split('.');
     for (let s of segmented) {
       tmp = s;
-      s = "*";
-      results = results.concat(this.targets[segmented.join(".")]);
+      s = '*';
+      results = results.concat(this.targets[segmented.join('.')]);
       s = tmp;
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
     for (var i = 2; i <= segmented.length - 2; ++i) {
-      var t = "*." + segmented.slice(i,segmented.length).join(".");
+      var t = '*.' + segmented.slice(i,segmented.length).join('.');
       results = results.concat(this.targets[t]);
     }
 
@@ -358,12 +365,12 @@ RuleSets.prototype = {
     var resultSet = new Set(results);
     resultSet.delete(undefined);
 
-    log(DBUG,"Applicable rules for " + host + ":");
+    utils.log('Applicable rules for ' + host + ':', 1);
     if (resultSet.size == 0) {
-      log(DBUG, "  None");
+      utils.log('  None', 1);
     } else {
       for (let target of resultSet.values()) {
-        log(DBUG, "  " + target.name);
+        utils.log('  ' + target.name, 1);
       }
     }
 
@@ -387,7 +394,7 @@ RuleSets.prototype = {
   shouldSecureCookie: function(cookie) {
     var hostname = cookie.domain;
     // cookie domain scopes can start with .
-    while (hostname.charAt(0) == ".") {
+    while (hostname[0] === '.') {
       hostname = hostname.slice(1);
     }
 
@@ -428,21 +435,21 @@ RuleSets.prototype = {
     // flagged as secure.
 
     if (domainBlacklist.has(domain)) {
-      log(INFO, "cookies for " + domain + "blacklisted");
+      utils.log('cookies for ' + domain + 'blacklisted', 2);
       return false;
     }
     var cached_item = this.cookieHostCache.get(domain);
     if (cached_item !== undefined) {
-        log(DBUG, "Cookie host cache hit for " + domain);
+        utils.log('Cookie host cache hit for ' + domain, 1);
         return cached_item;
     }
-    log(DBUG, "Cookie host cache miss for " + domain);
+    utils.log('Cookie host cache miss for ' + domain, 1);
 
     // If we passed that test, make up a random URL on the domain, and see if
     // we would HTTPSify that.
 
-    var nonce_path = "/" + Math.random().toString();
-    var test_uri = "http://" + domain + nonce_path + nonce_path;
+    var nonce_path = '/' + Math.random().toString();
+    var test_uri = 'http://' + domain + nonce_path + nonce_path;
 
     // Cap the size of the cookie cache (limit chosen somewhat arbitrarily)
     if (this.cookieHostCache.size > 250) {
@@ -450,19 +457,19 @@ RuleSets.prototype = {
       this.cookieHostCache.delete(this.cookieHostCache.keys().next().value);
     }
 
-    log(INFO, "Testing securecookie applicability with " + test_uri);
+    utils.log('Testing securecookie applicability with ' + test_uri, 2);
     var potentiallyApplicable = this.potentiallyApplicableRulesets(domain);
     for (let ruleset of potentiallyApplicable) {
       if (!ruleset.active) {
         continue;
       }
       if (ruleset.apply(test_uri)) {
-        log(INFO, "Cookie domain could be secured.");
+        utils.log('Cookie domain could be secured.', 2);
         this.cookieHostCache.set(domain, true);
         return true;
       }
     }
-    log(INFO, "Cookie domain could NOT be secured.");
+    utils.log('Cookie domain could NOT be secured.', 2);
     this.cookieHostCache.set(domain, false);
     return false;
   },
@@ -485,7 +492,6 @@ RuleSets.prototype = {
   }
 };
 
-// Export for HTTPS Rewriter if applicable.
-if (typeof exports != 'undefined') {
-  exports.RuleSets = RuleSets;
+if (typeof module !== 'undefined') {
+  module.exports = { Rule, Exclusion, CookieRule, RuleSet, RuleSets };
 }

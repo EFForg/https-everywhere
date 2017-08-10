@@ -1,7 +1,5 @@
-window.onload = function() {
+document.addEventListener('DOMContentLoaded', () => {
   var backgroundPage = chrome.extension.getBackgroundPage(); 
   var tab = document.location.search.match(/tab=([^&]*)/)[1];
-  document.getElementById("content").innerHTML =
-    backgroundPage.switchPlannerDetailsHtml(tab);
-};
-
+  document.getElementById('content').innerHTML = backgroundPage.switchPlannerDetailsHtml(tab);
+});
