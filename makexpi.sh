@@ -109,8 +109,11 @@ mkdir pkg/xpi-eff/webextension/_locales/
 python2.7 utils/chromium-translations.py translations/ pkg/xpi-eff/webextension/_locales/
 python2.7 utils/chromium-translations.py src/chrome/locale/ pkg/xpi-eff/webextension/_locales/
 
+cd pkg/xpi-eff/webextension
 do_not_ship="*.py *.xml icon.jpg"
-rm -f pkg/xpi-eff/webextension/$do_not_ship
+rm -f $do_not_ship
+cd ../../..
+
 rm -rf pkg/xpi-eff/chrome/content/rulesets.json
 rm -rf pkg/xpi-eff/chrome/locale
 
