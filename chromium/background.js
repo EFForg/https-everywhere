@@ -710,7 +710,19 @@ async function import_settings(settings){
     for(let ruleset_name in settings.rule_toggle){
       localStorage[ruleset_name] = settings.rule_toggle[ruleset_name];
     }
-    all_rules = new RuleSets(localStorage);
+    (ruleset_name, ruleset_active => {
+      for(let host in all_rules.targets){
+        for(let ruleset of all_rules.targets[host]){
+          if(ruleset.name == ruleset_name){
+            ruleset.active = ruleset_active;
+            return;
+          }
+        }
+      }
+    })(ruleset_name, settings.rule_toggle[ruleset_name]);
+
+    // This line is necessary to clear cached lookups of rulesets already loaded
+    all_rules.ruleCache = new Map();
 
     // Set/store globals
     await new Promise(resolve => {
