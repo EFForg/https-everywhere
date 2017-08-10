@@ -31,6 +31,14 @@ storage.get({enableMixedRulesets: false}, function(item) {
   all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
 });
 
+// Load in the legacy custom rulesets, if any
+function load_legacy_custom_rulesets(legacy_custom_rulesets){
+  for(let legacy_custom_ruleset of legacy_custom_rulesets){
+    all_rules.addFromXml((new DOMParser()).parseFromString(legacy_custom_ruleset, 'text/xml'));
+  }
+}
+storage.get({legacy_custom_rulesets: []}, item => load_legacy_custom_rulesets(item.legacy_custom_rulesets));
+
 var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
 // devtools-panel.js).
@@ -695,6 +703,7 @@ async function import_settings(settings){
     await new Promise(resolve => {
       storage.set({"legacy_custom_rulesets": settings.custom_rulesets}, resolve);
     });
+    load_legacy_custom_rulesets(settings.custom_rulesets);
 
     // Load all the ruleset toggles into memory and store
     let rule_toggle_promises = [];
