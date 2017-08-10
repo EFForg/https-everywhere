@@ -61,12 +61,16 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
     }
   }
 });
-chrome.tabs.onActivated.addListener(function() {
-  updateState();
-});
-chrome.windows.onFocusChanged.addListener(function() {
-  updateState();
-});
+if (chrome.tabs) {
+  chrome.tabs.onActivated.addListener(function() {
+    updateState();
+  });
+}
+if (chrome.windows) {
+  chrome.windows.onFocusChanged.addListener(function() {
+    updateState();
+  });
+}
 chrome.webNavigation.onCompleted.addListener(function() {
   updateState();
 });
@@ -106,6 +110,9 @@ loadStoredUserRules();
  * disabled: extension is disabled from the popup menu.
  */
 var updateState = function() {
+  if (!chrome.tabs) {
+    return;
+  }
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     if (!tabs || tabs.length === 0) {
       return;
@@ -176,9 +183,11 @@ function AppliedRulesets() {
   this.active_tab_rules = {};
 
   var that = this;
-  chrome.tabs.onRemoved.addListener(function(tabId, info) {
-    that.removeTab(tabId);
-  });
+  if (chrome.tabs) {
+    chrome.tabs.onRemoved.addListener(function(tabId, info) {
+      that.removeTab(tabId);
+    });
+  }
 }
 
 AppliedRulesets.prototype = {
@@ -616,5 +625,40 @@ chrome.runtime.onConnect.addListener(function (port) {
         sendResponse({html: switchPlannerSmallHtml(tabId)});
       }
     });
+  }
+});
+
+// This is necessary for communication with the popup in Firefox Private
+// Browsing Mode, see https://bugzilla.mozilla.org/show_bug.cgi?id=1329304
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+  if (message.type == "get_option") {
+    storage.get(message.object, function(item){
+      sendResponse(item);
+    });
+    return true;
+  } else if (message.type == "set_option") {
+    storage.set(message.object);
+  } else if (message.type == "get_is_extension_enabled") {
+    sendResponse(isExtensionEnabled);
+  } else if (message.type == "set_is_extension_enabled") {
+    isExtensionEnabled = message.object;
+    sendResponse(isExtensionEnabled);
+  } else if (message.type == "delete_from_ruleset_cache") {
+    all_rules.ruleCache.delete(message.object);
+  } else if (message.type == "get_active_rulesets") {
+    sendResponse(activeRulesets.getRulesets(message.object));
+  } else if (message.type == "set_ruleset_active_status") {
+    var ruleset = activeRulesets.getRulesets(message.object.tab_id)[message.object.name];
+    ruleset.active = message.object.active;
+    sendResponse(true);
+  } else if (message.type == "add_new_rule") {
+    addNewRule(message.object, function() {
+      sendResponse(true);
+    });
+    return true;
+  } else if (message.type == "update_state") {
+    updateState();
+  } else if (message.type == "remove_rule") {
+    removeRule(message.object);
   }
 });
