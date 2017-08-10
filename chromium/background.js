@@ -240,7 +240,7 @@ function onBeforeRequest(details) {
     !uri.protocol === 'https:' &&
     !uri.hostname.slice(-6) === '.onion' &&
     !uri.hostname === 'localhost' &&
-    !/^127(\.\d{1,3}){3}$/.test(uri.hostname);
+    !/^127(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9]{1,2})){3}$/.test(uri.hostname);
 
   // Normalise hosts such as "www.example.com." or ".www.example.com"
   uri.hostname = uri.hostname.replace(/^\.+|\.+$/g, '');
