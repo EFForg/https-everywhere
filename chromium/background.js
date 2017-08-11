@@ -679,12 +679,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 // Send a message to the embedded webextension bootstrap.js to get settings to import
 chrome.runtime.sendMessage("import-legacy-data", import_settings);
 
-function setStorage(values) {
-  return new Promise(resolve => {
-    storage.set(values, resolve);
-  })
-}
-
 /**
  * Import extension settings (custom rulesets, ruleset toggles, globals) from an object
  * @param settings the settings object
@@ -703,11 +697,13 @@ async function import_settings(settings) {
     load_legacy_custom_rulesets(settings.custom_rulesets);
 
     // Save settings
-    await setStorage({
-      legacy_custom_rulesets: settings.custom_rulesets,
-      httpNowhere: settings.prefs.http_nowhere_enabled,
-      showCounter: settings.prefs.show_counter,
-      globalEnabled: settings.prefs.global_enabled
+    await new Promise(resolve => {
+      storage.set({
+        legacy_custom_rulesets: settings.custom_rulesets,
+        httpNowhere: settings.prefs.http_nowhere_enabled,
+        showCounter: settings.prefs.show_counter,
+        globalEnabled: settings.prefs.global_enabled
+      }, resolve);
     });
   }
 }
