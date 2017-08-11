@@ -682,7 +682,7 @@ chrome.runtime.sendMessage("import-legacy-data", import_settings);
 function setStorage(values) {
   return new Promise(resolve => {
     storage.set(values, resolve);
-  }
+  })
 }
 
 /**
