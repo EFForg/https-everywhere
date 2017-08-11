@@ -140,7 +140,7 @@ var updateState = function() {
       }
     });
     chrome.browserAction.setTitle({
-      title: "HTTPS Everywhere (" + iconState + ")"
+      title: chrome.i18n.getMessage('about_ext_name')
     });
   });
 }
