@@ -1,55 +1,45 @@
 <!--
-	For other Sony coverage, see Sony.xml.
+	For other Sony coverage, see
+		+ Sony.xml
 
+	Non-functional hosts
+		Timeout was reached:
+		- se-mc.com
+		- sonyericsson.com
+		- extranet.sonyericsson.com
 
-	Nonfunctional domains:
+		SSL peer certificate was not OK:
+		- www.se-mc.com
+		- shop.sonymobile.com
 
-		- blogs.sonymobile.com		(401)
-		- developer.sonymobile.com *
-		- talk.sonymobile.com		(404, CN: gp1.wac.edgecastcdn.net)
-
-	* 401, valid cert
-
-
-	Problematic domains:
-
-		- changepassword.extranet.sonyericsson.com	(expired)
-		- sonymobile.com				(times out)
-
-
-	Partially covered domains:
-
-		- (www.)sonymobile.com		(at least some pages 401, global.css 403s)
-
-
-	Fully covered sonymobile.com subdomains:
-
-		- foris.extranet
-		- foris
-		- shop
-		- thesourceplus
-		- assets.thesourceplus
-
+		Status code mismatch:
+		- blogs.sonymobile.com
+		- foris.sonymobile.com
 -->
-<ruleset name="Sony Mobile (buggy)" default_off="https://lists.eff.org/pipermail/https-everywhere-rules/2013-November/001737.html">
+<ruleset name="Sony Mobile (partial)">
+	<!-- *sonyericsson.com -->
+	<target host="sonyericsson.com" />
+	<target host="www.sonyericsson.com" />
+	<target host="changepassword.extranet.sonyericsson.com" />
 
-	<target host="*.se-mc.com" />
+	<!-- *sonymobile.com -->
 	<target host="sonymobile.com" />
-	<target host="*.sonymobile.com" />
-		<exclusion pattern="^http://(?:www\.)?sonymobile\.com/wp-content/themes/semc-main/css/global\.css" />
+	<target host="www.sonymobile.com" />
+	<target host="developer.sonymobile.com" />
 	<target host="foris.extranet.sonymobile.com" />
+	<target host="talk.sonymobile.com" />
+	<target host="thesourceplus.sonymobile.com" />
+	<target host="assets.thesourceplus.sonymobile.com" />
 
+	<!-- *se-mc.com -->
+	<target host="www-static.se-mc.com" />
+		<test url="http://www-static.se-mc.com/blogs.dir/0/files/2012/01/smartwatch.png" />
+	
+	<securecookie host=".+" name=".+" />
 
-	<securecookie host="^(?:shop|\.?thesourceplus)\.sonymobile\.com$" name=".+" />
+	<rule from="^http://sonyericsson\.com/"
+			to="https://www.sonyericsson.com/" />
 
-
-	<rule from="^http://(developer|www)-static\.se-mc\.com/"
-		to="https://$1-static.se-mc.com/" />
-
-	<rule from="^http://(?:www\.)?sonymobile\.com/(cws|wp-content)/"
-		to="https://www.sonymobile.com/$1/" />
-
-	<rule from="^http://(foris(?:\.extranet)?|shop|(?:assets\.)?thesourceplus)\.sonymobile\.com/"
-		to="https://$1.sonymobile.com/" />
-
+	<rule from="^http:" 
+			to="https:" />
 </ruleset>

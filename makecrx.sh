@@ -29,6 +29,7 @@ if [ -n "$1" ]; then
   cp -r -f -a .git $SUBDIR
   cd $SUBDIR
   git reset --hard "$1"
+  git submodule update --recursive -f
 fi
 
 VERSION=`python2.7 -c "import json ; print(json.loads(open('chromium/manifest.json').read())['version'])"`

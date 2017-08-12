@@ -1,60 +1,84 @@
 <!--
-	For problematic rules, see TED-mismatches.xml.
+	Invalid certificate:
+		images.ted.com
+			<test url="https://images.ted.com/assets/conferences/TED2016/images/T16_homepage_main.jpg" />
+		t.ted.com
 
+	No working URL known:
+		api.ted.com
 
-	CDN buckets:
+	Redirect to http:
+		blog.ted.com
+		ideas.ted.com
 
-		- video.ted.com.edgesuite.net
-
-		- lvlt.tedcdn.com.c.footprint.net
-
-			- images.ted.com
-
-
-	Nonfunctional domains:
-
-		- conferences.ted.com	(shows default RHEL page)
-		- images.ted.com *
-		- media.ted.com *
-
-	* Times out
+	Time out:
+		video.ted.com
 
 -->
-<ruleset name="TED (buggy)" >
+<ruleset name="TED" >
 
-	<target host="*.ted.com" />
-	<target host="*.tedcdn.com" />
+	<target host="ted.com" />
+	<target host="www.ted.com" />
+	<target host="appletv.ted.com" />
+	<target host="auth.ted.com" />
+	<target host="conferences.ted.com" />
+	<target host="devices.ted.com" />
+	<target host="download.ted.com" />
+		<test url="http://download.ted.com/talks/JimYongKim_2017-320k.mp4" />
+	<target host="ed.ted.com" />
+	<target host="embed.ted.com" />
+		<test url="http://embed.ted.com/talks/jim_yong_kim_doesn_t_everyone_deserve_a_chance_at_a_good_life" />
+	<target host="fellowsblog.ted.com" />
+	<target host="goto.ted.com" />
+	<target host="hello.ted.com" />
+	<target host="hls.ted.com" />
+		<test url="http://hls.ted.com/talks/2806.json" />
+	<target host="images-ssl.ted.com" />
+	<target host="reproxy.ted.com" />
+		<test url="http://images-ssl.ted.com/assets/conferences/TED2016/images/T16_homepage_main.jpg" />
+	<target host="support.ted.com" />
+	<target host="ted2017.ted.com" />
+	<target host="ted2018.ted.com" />
+	<target host="tedglobal2017.ted.com" />
+	<target host="tedlive.ted.com" />
+	<target host="tedwomen2016.ted.com" />
+	<target host="tedwomen2017.ted.com" />
+	<target host="tedxbillion.ted.com" />
+	<target host="tedxinnovations.ted.com" />
+	<target host="tedxtalks.ted.com" />
 
-		<!--
-			Handled in TED-mismatches.xml.
-							-->
-		<exclusion pattern="^http://video\.ted\.com/" />
+
+	<target host="img.tedcdn.com" /><!-- Needs test url -->
+	<target host="img-ssl.tedcdn.com" /><!-- Needs test url -->
+	<target host="geo-assets.tedcdn.com" />
+		<test url="http://geo-assets.tedcdn.com/cookie-notice/tcn.js" />
+	<target host="pa.tedcdn.com" />
+		<test url="http://pa.tedcdn.com/mask-icon.svg" />
+	<target host="pb.tedcdn.com" />
+		<test url="http://pb.tedcdn.com/assets/player/flash_hls/player_4_01_002.swf" />
+	<target host="pb-assets.tedcdn.com" />
+		<test url="http://pb-assets.tedcdn.com/system/baubles/files/000/002/348/original/tedlive_poster_image_confpg.jpg" />
+	<target host="pc.tedcdn.com" />
+		<test url="http://pc.tedcdn.com/talk/stream/2017/None/JimYongKim_2017-320k.mp4" />
+	<target host="pe.tedcdn.com" />
+		<test url="http://pe.tedcdn.com/images/ted/f26393b438dfc2ed8c8ae66d0c7291ac08629153_2880x1620.jpg" />
+	<target host="pf.tedcdn.com" />
+		<test url="http://pf.tedcdn.com/images/playlists/20_most_popular_268x268.jpg" />
+	<target host="pi.tedcdn.com" />
+		<test url="http://pi.tedcdn.com/r/pl.tedcdn.com/social/ted-logo-fb.png" />
+	<target host="pl.tedcdn.com" />
+		<test url="http://pl.tedcdn.com/social/ted-logo-fb.png" />
+	<target host="teded.tedcdn.com" />
+		<test url="http://teded.tedcdn.com/assets/application-92442c34a6f7cd903a357eee9c50a770327c3ad82782fb2356c200b403d9f707.css" />
+
+	<target host="tedcinema.com" />
 
   <!-- do not securecookie this ruleset :
     https://trac.torproject.org/projects/tor/ticket/7548
 	  <securecookie host="^.*\.ted\.com$" name=".+" />
   -->
 
-	<rule from="^http://ed\.ted\.com/"
-		to="https://teded.herokuapp.com/" />
+	<rule from="^http:"
+		to="https:" />
 
-	<rule from="^http://(?:images\.ted|lvlt\.tedcdn)\.com/"
-		to="https://www.ted.com/" />
-
-	<rule from="^http://www\.ted\.com/"
-		to="https://www.ted.com/" />
-
-	<rule from="^http://pb\-assets\.tedcdn\.com/"
-		to="https://pb-assets.tedcdn.com/" />
-
-	<rule from="^http://img\.tedcdn\.com/"
-		to="https://img-ssl.tedcdn.com/" />
-
-	<test url="http://ed.ted.com/" />
-	<test url="http://images.ted.com/" />
-	<test url="http://video.ted.com/" />
-	<test url="http://www.ted.com/" />
-	<test url="http://pb-assets.tedcdn.com/" />
-	<test url="http://img.tedcdn.com/" />
-	<test url="http://lvlt.tedcdn.com/" />
 </ruleset>

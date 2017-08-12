@@ -1,18 +1,67 @@
-<ruleset name="AMS.org (partial)">
+<!--
+	Non-functional hosts
+		Couldn't connect to server:
+			 - eims.ams.org
+			 - emis.ams.org
+			 - www.emis.ams.org
+			 - ftp.ams.org
+			 - genealogy.ams.org
+			 - www.genealogy.ams.org
+			 - hosted.ams.org
 
+		SSL connect error:
+			 - staff.ams.org
+
+		SSL peer certificate was not OK:
+			 - bookstore.ams.org
+			 - community.ams.org
+
+		Peer certificate cannot be authenticated with given CA certificates:
+			 - blogs.ams.org
+			 - capps.ams.org
+
+		Status code mismatch:
+			 - autodiscover.ams.org
+			 - mail.ams.org
+
+		Secure connection redirects to plaintext:
+			 - www.ams.org
+
+		Different content:
+			 - download.ams.org
+-->
+<ruleset name="AMS.org">
 	<target host="ams.org" />
 	<target host="www.ams.org" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://www\.ams\.org/($|account$)" /-->
-		<!--
-			Exceptions:
-					-->
-		<!--exclusion pattern="^http://www\.ams\.org/(?!animated_favicon1\.gif|css/|favicon\.ico|images/)" /-->
+	<exclusion pattern="^http://www\.ams\.org/$" />
+
+	<target host="amsweb.ams.org" />
+	<target host="attach.ams.org" />
+	<target host="surveys.ams.org" />
 
 
-	<rule from="^http://(www\.)?ams\.org/(?=animated_favicon1\.gif|css/|favicon\.ico|images/)"
-		to="https://$1ams.org/" />
+	<!-- Complications -->
+	<rule from="^http://www\.ams\.org/(css|images|js|journals|mathmoments)/"
+			to="https://www.ams.org/$1/" />
 
+		<!-- +ve -->
+		<test url="http://www.ams.org/css/aFinalCss.css" />
+		<test url="http://www.ams.org/images/homepageLogoUpperLeft.png" />
+		<test url="http://www.ams.org/journals/images/journal.cover.proc.gif" />
+		<test url="http://www.ams.org/js/ajax.js" />
+		<test url="http://www.ams.org/mathmoments/images/japan.gif" />
+
+	<rule from="^http://www\.ams\.org/(animated_favicon1\.gif|favicon\.ico)"
+			to="https://www.ams.org/$1"/>
+
+		<!-- +ve -->
+		<test url="http://www.ams.org/animated_favicon1.gif" />
+		<test url="http://www.ams.org/favicon.ico" />
+
+	<!-- Direct rewrites -->
+	<rule from="^http://ams\.org/" 
+			to="https://ams.org/" />
+
+	<rule from="^http://(amsweb|attach|surveys)\.ams\.org/" 
+			to="https://$1.ams.org/" />
 </ruleset>
