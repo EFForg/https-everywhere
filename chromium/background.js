@@ -59,7 +59,8 @@ let httpNowhere = false;
 let showAppliedCount = true;
 
 storage.get({ httpNowhere: false, showAppliedCount: true }, item => {
-  { httpNowhere, showAppliedCount } = item;
+  httpNowhere = item.httpNowhere
+  showAppliedCount = item.showAppliedCount;
   updateState();
 });
 
