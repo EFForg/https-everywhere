@@ -148,7 +148,7 @@ var updateState = function() {
   if (!chrome.tabs) {
     return;
   }
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+  chrome.tabs.query({active: true, lastFocusedWindow: true}, function(tabs) {
     if (!tabs || tabs.length === 0) {
       return;
     }
