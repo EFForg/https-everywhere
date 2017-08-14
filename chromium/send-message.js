@@ -1,5 +1,7 @@
 'use strict'
 
-function sendMessage (type, object, callback) {
-  chrome.runtime.sendMessage({ type, object }, callback)
+function sendMessage (type, object) {
+  return new Promise(resolve => {
+  	chrome.runtime.sendMessage({ type, object }, resolve)
+  })
 }

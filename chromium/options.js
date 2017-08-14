@@ -17,16 +17,24 @@ function readFile (file) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  const showAppliedCount = document.getElementById('show-applied-count')
+
+  sendMessage('get_show_applied_count').then(value => {
+    showAppliedCount.checked = on
+    showAppliedCount.addEventListener('change', event => {
+      sendMessage('set_show_applied_count', showAppliedCount.checked)
+    })
+  })
+
   const importButton = document.getElementById('import')
 
-  importButton.addEventListener('click', async event => {
+  importButton.addEventListener('click', event => {
     const file = event.target.files[0]
 
-    const fileContents = await readFile(file)
-
-    const settings = JSON.parse(fileContents)
-
-    sendMessage('import_settings', settings, function () {})
+    readFile(file).then(data => {
+      const settings = JSON.parse(fileContents)
+      sendMessage('import_settings', settings)
+    })
   })
 
   document.getElementById('import-settings').addEventListener('change', event => {
