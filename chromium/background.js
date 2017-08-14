@@ -52,23 +52,30 @@ var switchPlannerInfo = {};
 // Is HTTPSe enabled, or has it been manually disabled by the user?
 var isExtensionEnabled = true;
 
-// Load prefs about whether http nowhere is on. Structure is:
-//  { httpNowhere: true/false }
-var httpNowhereOn = false;
-storage.get({httpNowhere: false}, function(item) {
-  httpNowhereOn = item.httpNowhere;
+// Load preferences. Structure is:
+//  { httpNowhere: Boolean, showAppliedCount: Boolean }
+
+let httpNowhere = false;
+let showAppliedCount = true;
+
+storage.get({ httpNowhere: false, showAppliedCount: true }, item => {
+  { httpNowhere, showAppliedCount } = item;
   updateState();
 });
-chrome.storage.onChanged.addListener(function(changes, areaName) {
+
+chrome.storage.onChanged.addListener((changes, areaName) => {
   if (areaName === 'sync' || areaName === 'local') {
-    for (var key in changes) {
-      if (key === 'httpNowhere') {
-        httpNowhereOn = changes[key].newValue;
-        updateState();
-      }
+    if ('httpNowhere' in changes) {
+      httpNowhere = changes.httpNowhere.newValue;
+      updateState();
+    }
+    if ('showAppliedCount' in changes) {
+      showAppliedCount = changes.showAppliedCount.newValue;
+      updateState();
     }
   }
 });
+
 if (chrome.tabs) {
   chrome.tabs.onActivated.addListener(function() {
     updateState();
@@ -150,7 +157,7 @@ var updateState = function() {
 
     if (!isExtensionEnabled) {
       iconState = "disabled";
-    } else if (httpNowhereOn) {
+    } else if (httpNowhere) {
       iconState = "blocking";
     } else if (activeCount > 0) {
       iconState = "active";
@@ -272,7 +279,7 @@ function onBeforeRequest(details) {
 
   // Should the request be canceled?
   var shouldCancel = (
-    httpNowhereOn &&
+    httpNowhere &&
     uri.protocol === 'http:' &&
     !/\.onion$/.test(uri.hostname) &&
     !/^localhost$/.test(uri.hostname) &&
@@ -352,7 +359,7 @@ function onBeforeRequest(details) {
                          newuristr);
   }
 
-  if (httpNowhereOn) {
+  if (httpNowhere) {
     // If loading a main frame, try the HTTPS version as an alternative to
     // failing.
     if (shouldCancel) {

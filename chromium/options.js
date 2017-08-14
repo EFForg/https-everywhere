@@ -22,9 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   sendMessage('get_option', { showAppliedCount: true }).then(value => {
     showAppliedCountCheckbox.checked = on
     showAppliedCountCheckbox.addEventListener('change', event => {
-      sendMessage('set_option', { showAppliedCount: showAppliedCountCheckbox.checked }).then(() => {
-        sendMessage('update_state')
-      })
+      sendMessage('set_option', { showAppliedCount: showAppliedCountCheckbox.checked })
     })
   })
 
