@@ -1,28 +1,63 @@
-document.addEventListener("DOMContentLoaded", () => {
+'use strict'
 
-  let json_data;
-  let import_button = document.querySelector("#import");
+function readFile (file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
 
-  function import_json(e) {
-    e.preventDefault();
+    reader.addEventListener('error', event => {
+      reject(new Error('FileReader error: ' + event.target.error.name))
+    })
 
-    let settings = JSON.parse(json_data);
-    sendMessage("import_settings", settings, resp => {
-      document.querySelector("#import-confirmed").style.display = "block";
-      document.querySelector("form").style.display = "none";
-    });
-  }
+    reader.addEventListener('load', event => {
+      resolve(event.target.result)
+    })
 
-  document.querySelector("#import-settings").addEventListener("change", event => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = event => {
-      json_data = event.target.result;
-      import_button.disabled = false;
-    };
+    reader.readAsText(file)
+  })
+}
 
-    reader.readAsText(file);
-  });
+function saveFile (blob, fileName) {
+  const blobUrl = URL.createObjectURL(blob)
 
-  document.querySelector("form").addEventListener("submit", import_json);
-});
+  const anchor = document.createElement('a')
+  anchor.href = blobUrl
+  anchor.download = fileName
+  anchor.click()
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const showAppliedCountCheckbox = document.getElementById('show-applied-count')
+
+  sendMessage('get_option', { showAppliedCount: true }).then(item => {
+    showAppliedCountCheckbox.checked = item.showAppliedCount
+    showAppliedCountCheckbox.addEventListener('change', event => {
+      sendMessage('set_option', { showAppliedCount: showAppliedCountCheckbox.checked })
+    })
+  })
+
+  const importButton = document.getElementById('import')
+  const importSettings = document.getElementById('import-settings')
+
+  importButton.addEventListener('click', event => {
+    const file = importSettings.files[0]
+
+    readFile(file).then(data => {
+      const settings = JSON.parse(fileContents)
+      sendMessage('import_settings', settings)
+    })
+  })
+
+  document.getElementById('import-settings').addEventListener('change', event => {
+    importButton.disabled = (event.target.files.length === 0)
+  })
+
+  document.getElementById('rulesetSettingsExport').addEventListener('click', () => {
+    const json = JSON.stringify(localStorage)
+    const blob = new Blob([json], { type: 'application/json' })
+    saveFile(blob, 'settings.json')
+  })
+
+  document.getElementById('rulesetSettingsImport').addEventListener('click', () => {
+
+  })
+})

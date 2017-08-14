@@ -52,23 +52,31 @@ var switchPlannerInfo = {};
 // Is HTTPSe enabled, or has it been manually disabled by the user?
 var isExtensionEnabled = true;
 
-// Load prefs about whether http nowhere is on. Structure is:
-//  { httpNowhere: true/false }
-var httpNowhereOn = false;
-storage.get({httpNowhere: false}, function(item) {
-  httpNowhereOn = item.httpNowhere;
+// Load preferences. Structure is:
+//  { httpNowhere: Boolean, showAppliedCount: Boolean }
+
+let httpNowhere = false;
+let showAppliedCount = true;
+
+storage.get({ httpNowhere: false, showAppliedCount: true }, item => {
+  httpNowhere = item.httpNowhere
+  showAppliedCount = item.showAppliedCount;
   updateState();
 });
-chrome.storage.onChanged.addListener(function(changes, areaName) {
+
+chrome.storage.onChanged.addListener((changes, areaName) => {
   if (areaName === 'sync' || areaName === 'local') {
-    for (var key in changes) {
-      if (key === 'httpNowhere') {
-        httpNowhereOn = changes[key].newValue;
-        updateState();
-      }
+    if ('httpNowhere' in changes) {
+      httpNowhere = changes.httpNowhere.newValue;
+      updateState();
+    }
+    if ('showAppliedCount' in changes) {
+      showAppliedCount = changes.showAppliedCount.newValue;
+      updateState();
     }
   }
 });
+
 if (chrome.tabs) {
   chrome.tabs.onActivated.addListener(function() {
     updateState();
@@ -110,6 +118,25 @@ var loadStoredUserRules = function() {
 
 loadStoredUserRules();
 
+function getActiveRulesetCount(id) {
+  const applied = activeRulesets.getRulesets(id);
+
+  if (!applied)
+  {
+    return 0;
+  }
+
+  let activeCount = 0;
+
+  for (const key in applied) {
+    if (applied[key].active) {
+      activeCount++;
+    }
+  }
+
+  return activeCount;
+}
+
 /**
  * Set the icon color correctly
  * inactive: extension is enabled, but no rules were triggered on this page.
@@ -121,17 +148,19 @@ var updateState = function() {
   if (!chrome.tabs) {
     return;
   }
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+  chrome.tabs.query({active: true, lastFocusedWindow: true}, function(tabs) {
     if (!tabs || tabs.length === 0) {
       return;
     }
-    var applied = activeRulesets.getRulesets(tabs[0].id)
-    var iconState = "inactive";
+
+    const activeCount = getActiveRulesetCount(tabs[0].id);
+    let iconState = "inactive";
+
     if (!isExtensionEnabled) {
       iconState = "disabled";
-    } else if (httpNowhereOn) {
+    } else if (httpNowhere) {
       iconState = "blocking";
-    } else if (applied) {
+    } else if (activeCount > 0) {
       iconState = "active";
     }
     chrome.browserAction.setIcon({
@@ -142,6 +171,12 @@ var updateState = function() {
     chrome.browserAction.setTitle({
       title: "HTTPS Everywhere (" + iconState + ")"
     });
+
+    chrome.browserAction.setBadgeBackgroundColor({color: "#00cc00"});
+
+    const showBadge = activeCount > 0 && isExtensionEnabled && showAppliedCount;
+
+    chrome.browserAction.setBadgeText({text: showBadge ? "" + activeCount : ""});
   });
 }
 
@@ -245,7 +280,7 @@ function onBeforeRequest(details) {
 
   // Should the request be canceled?
   var shouldCancel = (
-    httpNowhereOn &&
+    httpNowhere &&
     uri.protocol === 'http:' &&
     !/\.onion$/.test(uri.hostname) &&
     !/^localhost$/.test(uri.hostname) &&
@@ -305,6 +340,8 @@ function onBeforeRequest(details) {
     }
   }
 
+  updateState();
+
   if (newuristr && using_credentials_in_url) {
     // re-insert userpass info which was stripped temporarily
     const uri_with_credentials = new URL(newuristr);
@@ -323,7 +360,7 @@ function onBeforeRequest(details) {
                          newuristr);
   }
 
-  if (httpNowhereOn) {
+  if (httpNowhere) {
     // If loading a main frame, try the HTTPS version as an alternative to
     // failing.
     if (shouldCancel) {
