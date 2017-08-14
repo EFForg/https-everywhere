@@ -4,8 +4,6 @@ function sendMessageCallback (type, object, callback) {
   chrome.runtime.sendMessage({ type, object }, callback)
 }
 
-const hostReg = /.*\/\/[^$/]*\//
-
 /**
  * Handles rule (de)activation in the popup
  * @param checkbox checkbox being clicked
@@ -32,6 +30,8 @@ function setRulesetActive (ruleset, tabId, active) {
     chrome.tabs.reload()
   })
 }
+
+const hostReg = /.*\/\/[^$/]*\//
 
 /**
  * Creates a rule line (including checkbox and icon) for the popup
