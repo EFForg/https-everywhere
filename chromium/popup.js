@@ -53,19 +53,21 @@ function appendRuleLineToListDiv (ruleset, tabId, listDiv) {
 
   label.appendChild(checkbox)
 
-  // favicon (from chrome's cache)
-  const favicon = document.createElement('img')
-  favicon.className = 'favicon'
+  if (navigator.userAgent.match('Chrome')) {
+    // favicon (from chrome's cache)
+    const favicon = document.createElement('img')
+    favicon.className = 'favicon'
 
-  for (const rule of ruleset.rules) {
-    const host = hostReg.exec(rule.to)[0]
-    if (host) {
-      favicon.src = 'chrome://favicon/' + host
-      break
+    for (const rule of ruleset.rules) {
+      const host = hostReg.exec(rule.to)[0]
+      if (host) {
+        favicon.src = 'chrome://favicon/' + host
+        break
+      }
     }
-  }
 
-  label.appendChild(favicon)
+    label.appendChild(favicon)
+  }
 
   // label text
   const text = document.createElement('span')
