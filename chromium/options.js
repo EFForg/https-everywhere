@@ -17,12 +17,14 @@ function readFile (file) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const showAppliedCount = document.getElementById('show-applied-count')
+  const showAppliedCountCheckbox = document.getElementById('show-applied-count')
 
-  sendMessage('get_show_applied_count').then(value => {
-    showAppliedCount.checked = on
-    showAppliedCount.addEventListener('change', event => {
-      sendMessage('set_show_applied_count', showAppliedCount.checked)
+  sendMessage('get_option', { showAppliedCount: true }).then(value => {
+    showAppliedCountCheckbox.checked = on
+    showAppliedCountCheckbox.addEventListener('change', event => {
+      sendMessage('set_option', { showAppliedCount: showAppliedCountCheckbox.checked }).then(() => {
+        sendMessage('update_state')
+      })
     })
   })
 
