@@ -19,8 +19,8 @@ function readFile (file) {
 document.addEventListener('DOMContentLoaded', () => {
   const showAppliedCountCheckbox = document.getElementById('show-applied-count')
 
-  sendMessage('get_option', { showAppliedCount: true }).then(value => {
-    showAppliedCountCheckbox.checked = on
+  sendMessage('get_option', { showAppliedCount: true }).then(item => {
+    showAppliedCountCheckbox.checked = item.showAppliedCount
     showAppliedCountCheckbox.addEventListener('change', event => {
       sendMessage('set_option', { showAppliedCount: showAppliedCountCheckbox.checked })
     })
