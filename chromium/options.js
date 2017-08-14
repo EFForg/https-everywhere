@@ -36,9 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
   const importButton = document.getElementById('import')
+  const importSettings = document.getElementById('import-settings')
 
   importButton.addEventListener('click', event => {
-    const file = event.target.files[0]
+    const file = importSettings.files[0]
 
     readFile(file).then(data => {
       const settings = JSON.parse(fileContents)
@@ -52,7 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('rulesetSettingsExport').addEventListener('click', () => {
     const json = JSON.stringify(localStorage)
-    const blob = new Blob([ json ], { type: 'application/json' })
+    const blob = new Blob([json], { type: 'application/json' })
     saveFile(blob, 'settings.json')
+  })
+
+  document.getElementById('rulesetSettingsImport').addEventListener('click', () => {
+
   })
 })
