@@ -16,6 +16,15 @@ function readFile (file) {
   })
 }
 
+function saveFile (blob, fileName) {
+  const blobUrl = URL.createObjectURL(blob)
+
+  const anchor = document.createElement('a')
+  anchor.href = blobUrl
+  anchor.download = fileName
+  anchor.click()
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const showAppliedCountCheckbox = document.getElementById('show-applied-count')
 
@@ -39,5 +48,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('import-settings').addEventListener('change', event => {
     importButton.disabled = (event.target.files.length === 0)
+  })
+
+  document.getElementById('rulesetSettingsExport').addEventListener('click', () => {
+    const json = JSON.stringify(localStorage)
+    const blob = new Blob([ json ], { type: 'application/json' })
+    saveFile(blob, 'settings.json')
   })
 })
