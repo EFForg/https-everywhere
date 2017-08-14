@@ -1,5 +1,9 @@
 "use strict";
 
+function sendMessageCallback(type, object, callback) {
+  chrome.runtime.sendMessage({ type, object }, callback);
+}
+
 var stableRules = null;
 var unstableRules = null;
 var hostReg = /.*\/\/[^$/]*\//;
@@ -21,14 +25,14 @@ function toggleRuleLine(checkbox, ruleset, tab_id) {
     tab_id: tab_id
   };
 
-  sendMessage("set_ruleset_active_status", set_ruleset, function(){
+  sendMessageCallback("set_ruleset_active_status", set_ruleset, function(){
 
     if (ruleset_active != ruleset.default_state) {
       localStorage[ruleset.name] = ruleset_active;
     } else {
       delete localStorage[ruleset.name];
       // purge the name from the cache so that this unchecking is persistent.
-      sendMessage("delete_from_ruleset_cache", ruleset.name);
+      sendMessageCallback("delete_from_ruleset_cache", ruleset.name);
     }
 
     // Now reload the selected tab of the current window.
@@ -95,7 +99,7 @@ function appendRuleLineToListDiv(ruleset, list_div) {
     line.appendChild(remove);
 
     remove.addEventListener("click", function(){
-      sendMessage("remove_rule", ruleset);
+      sendMessageCallback("remove_rule", ruleset);
       list_div.removeChild(line);
     });
   }
@@ -109,7 +113,7 @@ function appendRuleLineToListDiv(ruleset, list_div) {
 
 // Change the UI to reflect extension enabled/disabled
 function updateEnabledDisabledUI() {
-  sendMessage("get_is_extension_enabled", null, function(enabled){
+  sendMessageCallback("get_is_extension_enabled", null, function(enabled){
     document.getElementById('onoffswitch').checked = enabled;
     // Hide or show the rules sections
     if (enabled) {
@@ -117,7 +121,7 @@ function updateEnabledDisabledUI() {
     } else {
       document.body.className = "disabled"
     }
-    sendMessage("update_state");
+    sendMessageCallback("update_state");
   });
 }
 
@@ -130,13 +134,13 @@ function toggleEnabledDisabled() {
     window.close();
   }
 
-  sendMessage("get_is_extension_enabled", null, function(enabled){
+  sendMessageCallback("get_is_extension_enabled", null, function(enabled){
     if (enabled) {
       // User wants to disable us
-      sendMessage("set_is_extension_enabled", false, extension_toggle_effect);
+      sendMessageCallback("set_is_extension_enabled", false, extension_toggle_effect);
     } else {
       // User wants to enable us
-      sendMessage("set_is_extension_enabled", true, extension_toggle_effect);
+      sendMessageCallback("set_is_extension_enabled", true, extension_toggle_effect);
     }
   });
 }
@@ -148,7 +152,7 @@ function toggleEnabledDisabled() {
 function gotTab(tabArray) {
   var activeTab = tabArray[0];
 
-  sendMessage("get_active_rulesets", activeTab.id, function(rulesets){
+  sendMessageCallback("get_active_rulesets", activeTab.id, function(rulesets){
     for (var r in rulesets) {
       var listDiv = stableRules;
 
@@ -236,7 +240,7 @@ function addManualRule() {
         redirectTo : e("new-rule-redirect").value,
         urlMatcher : e("new-rule-regex").value
       };
-      sendMessage("add_new_rule", params, function() {
+      sendMessageCallback("add_new_rule", params, function() {
         location.reload();
       });
     });
@@ -265,11 +269,11 @@ function toggleHttpNowhere() {
 function getOption_(opt, defaultOpt, callback) {
   var details = {};
   details[opt] = defaultOpt;
-  sendMessage("get_option", details, callback);
+  sendMessageCallback("get_option", details, callback);
 }
 
 function setOption_(opt, value) {
   var details = {};
   details[opt] = value;
-  sendMessage("set_option", details);
+  sendMessageCallback("set_option", details);
 }
