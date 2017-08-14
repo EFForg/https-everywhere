@@ -23,6 +23,22 @@ const vows = require('perjury'),
       assert = vows.assert,
       _ = require('lodash');
 
+function assertCorrectBody(text) {
+	return {
+		topic: function(parse) {
+			return parse(text);
+		},
+		'it returns an object': function(err, obj) {
+			assert.ifError(err);
+			assert.isObject(obj);
+		},
+		'the object has the right data': function(err, obj) {
+			assert.includes(obj, 'domain');
+			assert.equal(obj.domain, 'example.com');
+		}
+	};
+}
+
 vows.describe('issue parser module').addBatch({
 	'When we require the module': {
 		topic: function() {
@@ -34,19 +50,7 @@ vows.describe('issue parser module').addBatch({
 		'it\'s a function': function(err, parse) {
 			assert.isFunction(parse);
 		},
-		'and we pass it a body that\'s a ruleset issue': {
-			topic: function(parse) {
-				return parse('Type: ruleset issue\nDomain: example.com');
-			},
-			'it returns an object': function(err, obj) {
-				assert.ifError(err);
-				assert.isObject(obj);
-			},
-			'the object has the right data': function(err, obj) {
-				assert.includes(obj, 'domain');
-				assert.equal(obj.domain, 'example.com');
-			}
-		},
+		'and we pass it a body that\'s a ruleset issue': assertCorrectBody('Type: ruleset issue\nDomain: example.com'),
 		'and we pass it a body with funky capitalization': {
 			topic: function(parse) {
 				return parse('tyPe: ruleset issue\nDoMaIn: example.com');
@@ -60,19 +64,7 @@ vows.describe('issue parser module').addBatch({
 				assert.equal(obj.domain, 'example.com');
 			}
 		},
-		'and we pass it a body with out-of-order data': {
-			topic: function(parse) {
-				return parse('Domain: example.com\nType: ruleset issue');
-			},
-			'it returns an object': function(err, obj) {
-				assert.ifError(err);
-				assert.isObject(obj);
-			},
-			'the object has the right data': function(err, obj) {
-				assert.includes(obj, 'domain');
-				assert.equal(obj.domain, 'example.com');
-			}
-		},
+		'and we pass it a body with out-of-order data': assertCorrectBody('Domain: example.com\nType: ruleset issue'),
 		'and we pass it a body with lots of whitespace': {
 			topic: function(parse) {
 				return parse('Type:  ruleset issue         \nDomain:  \t\t   example.com   \t');
@@ -115,6 +107,10 @@ vows.describe('issue parser module').addBatch({
 				assert.equal(_.size(obj), 2);
 			}
 		},
+		'and we pass it a body that has a freeform comment': assertCorrectBody('Type: new ruleset\nDomain: example.com\nAnd let me say, what a great GitHub bot HTTPS Everywhere has!'),
+		'and we pass it a body that has a freeform comment with a Markdown link': assertCorrectBody('Type: new ruleset\nDomain: example.com\nPlease add [example.com][].\n\n [example.com]: http://example.com.'),
+		'and we pass it a body that has a freeform comment with colons': assertCorrectBody('Type: new ruleset\nDomain: example.com\nHere\'s a secret: I like colons.'),
+		'and we pass it a body that has a freeform comment with multiple colons': assertCorrectBody('Type: new ruleset\nDomain: example.com\nHere\'s a secret: I like colons. Another secret: I like them a lot.'),
 		'and we pass it a body that isn\'t a valid issue type': {
 			topic: function(parse) {
 				return parse('Type: something else\nDomain: example.com');
