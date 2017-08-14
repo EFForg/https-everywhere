@@ -1,28 +1,29 @@
-document.addEventListener("DOMContentLoaded", () => {
+'use strict'
 
-  let json_data;
-  let import_button = document.querySelector("#import");
+document.addEventListener('DOMContentLoaded', () => {
+  let jsonData
+  const importButton = document.getElementById('import')
 
-  function import_json(e) {
-    e.preventDefault();
+  function importJson (e) {
+    const file = event.target.files[0]
+    const reader = new FileReader()
+    reader.addEventListener('error', evt => {
+      reject(new Error('FileReader error: ' + evt.target.error.name))
+    }
 
-    let settings = JSON.parse(json_data);
-    sendMessage("import_settings", settings, resp => {
-      document.querySelector("#import-confirmed").style.display = "block";
-      document.querySelector("form").style.display = "none";
-    });
+    reader.addEventListener('load', evt => {
+      resolve(evt.target.result)
+    })
+
+    reader.readAsText(file)
+    
+    const settings = JSON.parse(jsonData)
+    sendMessage('import_settings', settings, function () {})
   }
 
-  document.querySelector("#import-settings").addEventListener("change", event => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = event => {
-      json_data = event.target.result;
-      import_button.disabled = false;
-    };
+  document.getElementById('import-settings').addEventListener('change', event => {
+    importButton.disabled = (event.target.files.length === 0)
+  })
 
-    reader.readAsText(file);
-  });
-
-  document.querySelector("form").addEventListener("submit", import_json);
-});
+  importButton.addEventListener('click', importJson)
+})

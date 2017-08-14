@@ -191,6 +191,8 @@ document.addEventListener("DOMContentLoaded", function () {
       httpNowhereCheckbox.setAttribute('checked', '');
     }
   });
+
+  e("add-rule-link").addEventListener("click", addManualRule);
 });
 
 
