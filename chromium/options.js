@@ -1,29 +1,35 @@
 'use strict'
 
-document.addEventListener('DOMContentLoaded', () => {
-  let jsonData
-  const importButton = document.getElementById('import')
-
-  function importJson (e) {
-    const file = event.target.files[0]
+function readFile (file) {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader()
-    reader.addEventListener('error', evt => {
-      reject(new Error('FileReader error: ' + evt.target.error.name))
+
+    reader.addEventListener('error', event => {
+      reject(new Error('FileReader error: ' + event.target.error.name))
     }
 
-    reader.addEventListener('load', evt => {
-      resolve(evt.target.result)
+    reader.addEventListener('load', event => {
+      resolve(event.target.result)
     })
 
     reader.readAsText(file)
-    
-    const settings = JSON.parse(jsonData)
+  })
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const importButton = document.getElementById('import')
+
+  importButton.addEventListener('click', async event => {
+    const file = event.target.files[0]
+
+    const fileContents = await readFile(file)
+
+    const settings = JSON.parse(fileContents)
+
     sendMessage('import_settings', settings, function () {})
-  }
+  })
 
   document.getElementById('import-settings').addEventListener('change', event => {
     importButton.disabled = (event.target.files.length === 0)
   })
-
-  importButton.addEventListener('click', importJson)
 })
