@@ -174,7 +174,7 @@ function gotTab(tabArray) {
 document.addEventListener("DOMContentLoaded", function () {
   stableRules = document.getElementById("StableRules");
   unstableRules = document.getElementById("UnstableRules");
-  chrome.tabs.query({ active: true }, gotTab);
+  chrome.tabs.query({ active: true, lastFocusedWindow: true }, gotTab);
 
   // Set up the enabled/disabled switch & hide/show rules
   updateEnabledDisabledUI();
