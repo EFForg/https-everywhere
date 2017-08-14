@@ -96,7 +96,7 @@ function startup({webExtension}) {
             changed: changed
           });
 
-          globals.setBoolPref("webextensions-migrated", true);
+          globals.setBoolPref("webextension-migrated", true);
         } else {
           sendReply({changed: false});
         }
