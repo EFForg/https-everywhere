@@ -173,7 +173,7 @@ var updateState = function() {
 
     chrome.browserAction.setBadgeBackgroundColor({color: "#00cc00"});
 
-    const showBadge = activeCount > 0 && isExtensionEnabled;
+    const showBadge = activeCount > 0 && isExtensionEnabled && showAppliedCount;
 
     chrome.browserAction.setBadgeText({text: showBadge ? "" + activeCount : ""});
   });
