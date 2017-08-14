@@ -1,9 +1,5 @@
 'use strict'
 
-function sendMessageCallback (type, object, callback) {
-  chrome.runtime.sendMessage({ type, object }, callback)
-}
-
 /**
  * Handles rule (de)activation in the popup
  * @param checkbox checkbox being clicked
@@ -16,14 +12,14 @@ function setRulesetActive (ruleset, tabId, active) {
     tab_id: tabId
   }
 
-  sendMessageCallback('set_ruleset_active_status', rulesetData, () => {
+  sendMessage('set_ruleset_active_status', rulesetData).then(() => {
     if (active !== ruleset.default_state) {
       localStorage[ruleset.name] = active
     } else {
       delete localStorage[ruleset.name]
 
       // Purge the name from the cache so that this unchecking is persistent.
-      sendMessageCallback('delete_from_ruleset_cache', ruleset.name)
+      sendMessage('delete_from_ruleset_cache', ruleset.name)
     }
 
     // Now reload the selected tab of the current window.
@@ -86,7 +82,7 @@ function appendRuleLineToListDiv (ruleset, tabId, listDiv) {
     line.appendChild(remove)
 
     remove.addEventListener('click', function () {
-      sendMessageCallback('remove_rule', ruleset)
+      sendMessage('remove_rule', ruleset)
       listDiv.removeChild(line)
     })
   }
@@ -98,7 +94,7 @@ function appendRuleLineToListDiv (ruleset, tabId, listDiv) {
 
 // Set extension enabled/disabled status
 function setEnabled (enabled) {
-  sendMessageCallback('set_is_extension_enabled', enabled, () => {
+  sendMessage('set_is_extension_enabled', enabled).then(() => {
     // The extension state changed, so reload this tab.
     chrome.tabs.reload()
     window.close()
@@ -107,7 +103,7 @@ function setEnabled (enabled) {
 
 // Set HTTP nowhere mode
 function setHttpNowhere (enabled) {
-  sendMessageCallback('set_option', { httpNowhere: enabled }, () => {
+  sendMessage('set_option', { httpNowhere: enabled }).then(() => {
     // The extension state changed, so reload this tab.
     chrome.tabs.reload()
     window.close()
@@ -123,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
   chrome.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
     const activeTab = tabs[0]
 
-    sendMessageCallback('get_active_rulesets', activeTab.id, rulesets => {
+    sendMessage('get_active_rulesets', activeTab.id).then(rulesets => {
       for (const name in rulesets) {
         const listDiv = rulesets[name].default_state ? stableRules : unstableRules
 
@@ -141,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
   // Set up the enabled/disabled switch & hide/show rules
-  sendMessageCallback('get_is_extension_enabled', null, enabled => {
+  sendMessage('get_is_extension_enabled').then(enabled => {
     const extensionEnabled = document.getElementById('onoffswitch')
     extensionEnabled.checked = enabled
     extensionEnabled.addEventListener('change', event => {
@@ -157,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
   versionInfo.innerText = chrome.runtime.getManifest().version
 
   // Set up toggle checkbox for HTTP nowhere mode
-  sendMessageCallback({ httpNowhere: false }, item => {
+  sendMessage('get_option', { httpNowhere: false }).then(item => {
     const httpNowhereCheckbox = document.getElementById('http-nowhere-checkbox')
     httpNowhereCheckbox.checked = item.httpNowhere
     httpNowhereCheckbox.addEventListener('change', event => {
@@ -187,7 +183,7 @@ function addManualRule () {
         urlMatcher: document.getElementById('new-rule-regex').value
       }
 
-      sendMessageCallback('add_new_rule', params, () => {
+      sendMessage('add_new_rule', params).then(() => {
         location.reload()
       })
     })
