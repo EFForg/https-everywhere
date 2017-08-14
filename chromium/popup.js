@@ -151,11 +151,15 @@ function gotTab(tabArray) {
   sendMessage("get_active_rulesets", activeTab.id, function(rulesets){
     for (var r in rulesets) {
       var listDiv = stableRules;
+
       if (!rulesets[r].default_state) {
         listDiv = unstableRules;
       }
+
       appendRuleLineToListDiv(rulesets[r], listDiv);
-      listDiv.style.display = 'block';
+
+      // Un-hide the div
+      listDiv.className = '';
     }
     // Only show the "Add a rule" link if we're on an HTTPS page
     if (/^https:/.test(activeTab.url)) {
