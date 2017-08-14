@@ -4,16 +4,41 @@ function sendMessageCallback (type, object, callback) {
   chrome.runtime.sendMessage({ type, object }, callback)
 }
 
-let stableRules = null
-let unstableRules = null
 const hostReg = /.*\/\/[^$/]*\//
+
+/**
+ * Handles rule (de)activation in the popup
+ * @param checkbox checkbox being clicked
+ * @param ruleset the ruleset tied tot he checkbox
+ */
+function setRulesetActive (ruleset, tabId, active) {
+  const rulesetData = {
+    active,
+    name: ruleset.name,
+    tab_id: tabId
+  }
+
+  sendMessageCallback('set_ruleset_active_status', rulesetData, () => {
+    if (active !== ruleset.default_state) {
+      localStorage[ruleset.name] = active
+    } else {
+      delete localStorage[ruleset.name]
+
+      // Purge the name from the cache so that this unchecking is persistent.
+      sendMessageCallback('delete_from_ruleset_cache', ruleset.name)
+    }
+
+    // Now reload the selected tab of the current window.
+    chrome.tabs.reload()
+  })
+}
 
 /**
  * Creates a rule line (including checkbox and icon) for the popup
  * @param ruleset the ruleset to build the line for
  * @returns {*}
  */
-function appendRuleLineToListDiv (ruleset, list_div) {
+function appendRuleLineToListDiv (ruleset, tabId, listDiv) {
   // parent block for line
   const line = document.createElement('div')
   line.className = 'rule checkbox'
@@ -27,7 +52,7 @@ function appendRuleLineToListDiv (ruleset, list_div) {
   checkbox.checked = ruleset.active
 
   checkbox.addEventListener('change', () => {
-    setRulesetActive(ruleset, checkbox.checked)
+    setRulesetActive(ruleset, tabId, checkbox.checked)
   })
 
   label.appendChild(checkbox)
@@ -54,26 +79,35 @@ function appendRuleLineToListDiv (ruleset, list_div) {
     text.title = ruleset.note
   }
 
-  if (ruleset.note == 'user rule') {
+  if (ruleset.note === 'user rule') {
     const remove = document.createElement('img')
     remove.src = chrome.extension.getURL('remove.png')
     remove.className = 'remove'
     line.appendChild(remove)
 
     remove.addEventListener('click', function () {
-      backgroundPage.removeRule(ruleset)
-      list_div.removeChild(line)
+      sendMessageCallback('remove_rule', ruleset)
+      listDiv.removeChild(line)
     })
   }
 
   label.appendChild(text)
   line.appendChild(label)
-  list_div.appendChild(line)
+  listDiv.appendChild(line)
 }
 
-// Toggle extension enabled/disabled status
+// Set extension enabled/disabled status
 function setEnabled (enabled) {
   sendMessageCallback('set_is_extension_enabled', enabled, () => {
+    // The extension state changed, so reload this tab.
+    chrome.tabs.reload()
+    window.close()
+  })
+}
+
+// Set HTTP nowhere mode
+function setHttpNowhere (enabled) {
+  sendMessageCallback('set_option', { httpNowhere: enabled }, () => {
     // The extension state changed, so reload this tab.
     chrome.tabs.reload()
     window.close()
@@ -90,10 +124,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const activeTab = tabs[0]
 
     sendMessageCallback('get_active_rulesets', activeTab.id, rulesets => {
-      for (const r in rulesets) {
-        const listDiv = rulesets[r].default_state ? stableRules : unstableRules
+      for (const name in rulesets) {
+        const listDiv = rulesets[name].default_state ? stableRules : unstableRules
 
-        appendRuleLineToListDiv(rulesets[r], listDiv)
+        appendRuleLineToListDiv(rulesets[name], activeTab.id, listDiv)
 
         // Un-hide the div
         listDiv.className = ''
@@ -117,16 +151,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Hide or show the rules sections
     document.body.className = enabled ? '' : 'disabled'
   })
-  
 
   // Print the extension's current version.
-  const version_info = document.getElementById('current-version')
-  version_info.innerText = chrome.runtime.getManifest().version
+  const versionInfo = document.getElementById('current-version')
+  versionInfo.innerText = chrome.runtime.getManifest().version
 
   // Set up toggle checkbox for HTTP nowhere mode
-  getOption_('httpNowhere', false, item => {
-    const httpNowhereCheckbox = document.getElementById('http-nowhere-checkbox');
-    httpNowhereCheckbox.checked = item.httpNowhere;
+  sendMessageCallback({ httpNowhere: false }, item => {
+    const httpNowhereCheckbox = document.getElementById('http-nowhere-checkbox')
+    httpNowhereCheckbox.checked = item.httpNowhere
     httpNowhereCheckbox.addEventListener('change', event => {
       setHttpNowhere(event.target.checked)
     })
@@ -148,11 +181,13 @@ function addManualRule () {
     document.getElementById('new-rule-redirect').value = 'https:'
     document.getElementById('new-rule-name').value = 'Manual rule for ' + url.host
     document.getElementById('add-new-rule-button').addEventListener('click', () => {
-      backgroundPage.addNewRule({
+      const params = {
         host: document.getElementById('new-rule-host').value,
         redirectTo: document.getElementById('new-rule-redirect').value,
         urlMatcher: document.getElementById('new-rule-regex').value
-      }, () => {
+      }
+
+      sendMessageCallback('add_new_rule', params, () => {
         location.reload()
       })
     })
@@ -170,16 +205,4 @@ function addManualRule () {
       document.getElementById('new-rule-regular-text').style.display = 'block'
     })
   })
-}
-
-function getOption_ (opt, defaultOpt, callback) {
-  let details = {}
-  details[opt] = defaultOpt
-  sendMessageCallback('get_option', details, callback)
-}
-
-function setOption_ (opt, value) {
-  let details = {}
-  details[opt] = value
-  sendMessageCallback('set_option', details)
 }
