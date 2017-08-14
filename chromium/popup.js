@@ -168,8 +168,8 @@ document.addEventListener('DOMContentLoaded', () => {
  * Handles the manual addition of rules
  */
 function addManualRule () {
-  chrome.tabs.query({ active: true, currentWindow: true }, tab => {
-    const url = new URL(tab[0].url)
+  chrome.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
+    const url = new URL(tabs[0].url)
     document.getElementById('add-new-rule-div').style.display = 'block'
     document.getElementById('add-rule-link').style.display = 'none'
     document.getElementById('new-rule-host').value = url.host
