@@ -109,15 +109,14 @@ function appendRuleLineToListDiv(ruleset, list_div) {
 
 // Change the UI to reflect extension enabled/disabled
 function updateEnabledDisabledUI() {
-  sendMessage("get_is_extension_enabled", null, function(enabled){
-    document.getElementById('onoffswitch').checked = enabled;
+  getOption_('globalEnabled', true, function(item) {
+    document.getElementById('onoffswitch').checked = item.globalEnabled;
     // Hide or show the rules sections
-    if (enabled) {
+    if (item.globalEnabled) {
       document.body.className = ""
     } else {
       document.body.className = "disabled"
     }
-    sendMessage("update_state");
   });
 }
 
@@ -130,15 +129,10 @@ function toggleEnabledDisabled() {
     window.close();
   }
 
-  sendMessage("get_is_extension_enabled", null, function(enabled){
-    if (enabled) {
-      // User wants to disable us
-      sendMessage("set_is_extension_enabled", false, extension_toggle_effect);
-    } else {
-      // User wants to enable us
-      sendMessage("set_is_extension_enabled", true, extension_toggle_effect);
-    }
+  getOption_('globalEnabled', true, function(item) {
+    setOption_('globalEnabled', !item.globalEnabled, extension_toggle_effect);
   });
+
 }
 
 /**
@@ -263,8 +257,8 @@ function getOption_(opt, defaultOpt, callback) {
   sendMessage("get_option", details, callback);
 }
 
-function setOption_(opt, value) {
+function setOption_(opt, value, callback) {
   var details = {};
   details[opt] = value;
-  sendMessage("set_option", details);
+  sendMessage("set_option", details, callback);
 }

@@ -51,6 +51,10 @@ var switchPlannerInfo = {};
 
 // Is HTTPSe enabled, or has it been manually disabled by the user?
 var isExtensionEnabled = true;
+storage.get({globalEnabled: true}, function(item) {
+  isExtensionEnabled = item.globalEnabled;
+  updateState();
+});
 
 // Load prefs about whether http nowhere is on. Structure is:
 //  { httpNowhere: true/false }
@@ -59,16 +63,21 @@ storage.get({httpNowhere: false}, function(item) {
   httpNowhereOn = item.httpNowhere;
   updateState();
 });
+
 chrome.storage.onChanged.addListener(function(changes, areaName) {
   if (areaName === 'sync' || areaName === 'local') {
     for (var key in changes) {
       if (key === 'httpNowhere') {
         httpNowhereOn = changes[key].newValue;
         updateState();
+      } else if (key === 'globalEnabled') {
+        isExtensionEnabled = changes[key].newValue;
+        updateState();
       }
     }
   }
 });
+
 if (chrome.tabs) {
   chrome.tabs.onActivated.addListener(function() {
     updateState();
@@ -640,17 +649,14 @@ chrome.runtime.onConnect.addListener(function (port) {
 // Browsing Mode, see https://bugzilla.mozilla.org/show_bug.cgi?id=1329304
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   if (message.type == "get_option") {
-    storage.get(message.object, function(item){
-      sendResponse(item);
-    });
+    storage.get(message.object, sendResponse);
     return true;
   } else if (message.type == "set_option") {
-    storage.set(message.object);
-  } else if (message.type == "get_is_extension_enabled") {
-    sendResponse(isExtensionEnabled);
-  } else if (message.type == "set_is_extension_enabled") {
-    isExtensionEnabled = message.object;
-    sendResponse(isExtensionEnabled);
+    storage.set(message.object, item => {
+      if (sendResponse) {
+        sendResponse(item);
+      }
+    });
   } else if (message.type == "delete_from_ruleset_cache") {
     all_rules.ruleCache.delete(message.object);
   } else if (message.type == "get_active_rulesets") {
@@ -664,8 +670,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
       sendResponse(true);
     });
     return true;
-  } else if (message.type == "update_state") {
-    updateState();
   } else if (message.type == "remove_rule") {
     removeRule(message.object);
   } else if (message.type == "import_settings") {
