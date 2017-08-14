@@ -53,7 +53,9 @@ function appendRuleLineToListDiv (ruleset, tabId, listDiv) {
 
   label.appendChild(checkbox)
 
-  if (navigator.userAgent.match('Chrome')) {
+  // Temporarily disabled until we will find a better way.
+  
+  if (false && navigator.userAgent.match('Chrome')) {
     // favicon (from chrome's cache)
     const favicon = document.createElement('img')
     favicon.className = 'favicon'
