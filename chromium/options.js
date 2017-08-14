@@ -6,7 +6,7 @@ function readFile (file) {
 
     reader.addEventListener('error', event => {
       reject(new Error('FileReader error: ' + event.target.error.name))
-    }
+    })
 
     reader.addEventListener('load', event => {
       resolve(event.target.result)
