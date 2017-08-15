@@ -72,6 +72,9 @@ cd ../..
 cp src/$RULESETS pkg/crx/rules/default.rulesets
 
 sed -i -e "s/VERSION/$VERSION/g" pkg/crx/manifest.json
+
+python2.7 -c "import json; m=json.loads(open('pkg/crx/manifest.json').read()); e=m['author']; m['author']={'email': e}; open('pkg/crx/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+
 #sed -i -e "s/VERSION/$VERSION/g" pkg/crx/updates.xml
 #sed -e "s/VERSION/$VERSION/g" pkg/updates-master.xml > pkg/crx/updates.xml
 
