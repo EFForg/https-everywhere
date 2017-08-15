@@ -24,7 +24,8 @@
 const strip = require('strip-markdown'),
       remark = require('remark'),
       processor = remark().use(strip),
-      _ = require('lodash');
+      _ = require('lodash'),
+      domainFromPartialUrl = require('domain-from-partial-url');
 
 const validTypes = ['ruleset issue', 'new ruleset', 'code issue', 'feature request'];
 
@@ -46,6 +47,9 @@ module.exports = function parseDescription(body) {
 
 	// Convert to object
 	let normalized = _.fromPairs(lines);
+
+	// TODO Markdown mangles this
+	normalized.domain = domainFromPartialUrl(normalized.domain);
 
 	return normalized;
 };

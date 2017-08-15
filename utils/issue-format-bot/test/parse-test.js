@@ -107,6 +107,19 @@ vows.describe('issue parser module').addBatch({
 				assert.equal(_.size(obj), 2);
 			}
 		},
+		'and we pass it a body that has a full URL in the domain': {
+			topic: function(parse) {
+				return parse('Type: ruleset issue\nDomain: http://example.com/index.html');
+			},
+			'it returns an object': function(err, obj) {
+				assert.ifError(err);
+				assert.isObject(obj);
+			},
+			'the URL was converted into a bare domain': function(err, obj) {
+				assert.includes(obj, 'domain');
+				assert.equal(obj.domain, 'example.com');
+			}
+		},
 		'and we pass it a body that has a freeform comment': assertCorrectBody('Type: new ruleset\nDomain: example.com\nAnd let me say, what a great GitHub bot HTTPS Everywhere has!'),
 		'and we pass it a body that has a freeform comment with a Markdown link': assertCorrectBody('Type: new ruleset\nDomain: example.com\nPlease add [example.com][].\n\n [example.com]: http://example.com.'),
 		'and we pass it a body that has a freeform comment with colons': assertCorrectBody('Type: new ruleset\nDomain: example.com\nHere\'s a secret: I like colons.'),
