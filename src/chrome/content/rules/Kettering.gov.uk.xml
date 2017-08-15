@@ -1,8 +1,5 @@
 <!--
-	Kettering Borough Council
-
 	For other UK government coverage, see GOV.UK.xml.
-
 
 	Problematic hosts in *kettering.gov.uk:
 
@@ -10,19 +7,6 @@
 		- consult ᵐ
 
 	ᵐ Mismatched
-
-
-	These altnames don't exist:
-
-		- www.secure.kettering.gov.uk
-
-
-	Insecure cookies are set for these domains and hosts: ᶜ
-
-		- .kettering.gov.uk
-		- consult.kettering.gov.uk
-
-	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="Kettering.gov.uk">
@@ -34,31 +18,16 @@
 	<!--	Complications:
 				-->
 	<target host="kettering.gov.uk" />
-	<target host="consult.kettering.gov.uk" />
 	<target host="www.kettering.gov.uk" />
+	<target host="consult.kettering.gov.uk" />
 
+	<securecookie host=".+" name=".+" />
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.kettering\.gov\.uk$" name="^(?:\w{8}|TestCookie)$" /-->
-	<!--securecookie host="^consult\.kettering\.gov\.uk$" name="^(?:JSESSION|Server)ID$" /-->
-
-	<securecookie host="^\." name="^TestCookie$" />
-	<securecookie host="^\w" name="." />
-
-
-	<rule from="^http://kettering\.gov\.uk/"
+	<rule from="^http://(www\.)?kettering\.gov\.uk/"
 		to="https://secure.kettering.gov.uk/" />
 
 	<rule from="^http://consult\.kettering\.gov\.uk/"
 		to="https://kettering-consult.objective.co.uk/" />
-
-	<!--	s? for protocol-relative links from secure:
-							-->
-	<rule from="^https?://www\.kettering\.gov\.uk/"
-		to="https://secure.kettering.gov.uk/" />
-
-		<test url="https://www.kettering.gov.uk/info/100002/business" />
 
 	<rule from="^http:"
 		to="https:" />
