@@ -14,7 +14,7 @@ manifest = json.loads(f.read())
 f.close()
 manifest['version'] = `t.year` +'.'+ `t.month` +'.'+ `t.day`
 f = open('chromium/manifest.json','w')
-f.write(json.dumps(manifest,indent=4,sort_keys=True))
+f.write(json.dumps(manifest,indent=4,sort_keys=True,separators=(',', ': ')))
 
 def replace_in_file(from_re, to, filename):
     contents = open(filename).read()

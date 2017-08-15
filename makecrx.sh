@@ -29,6 +29,7 @@ if [ -n "$1" ]; then
   cp -r -f -a .git $SUBDIR
   cd $SUBDIR
   git reset --hard "$1"
+  git submodule update --recursive -f
 fi
 
 VERSION=`python2.7 -c "import json ; print(json.loads(open('chromium/manifest.json').read())['version'])"`
@@ -98,7 +99,6 @@ trap 'rm -f "$pub" "$sig" "$zip"' EXIT
 # zip up the crx dir
 cwd=$(pwd -P)
 (cd "$dir" && ../../utils/create_xpi.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
-echo >&2 "Unsigned package has sha1sum: $(openssl dgst -sha1 "$cwd/$zip" | awk '{print $2}')"
 
 # signature
 openssl sha1 -sha1 -binary -sign "$key" < "$zip" > "$sig"

@@ -1,122 +1,32 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://m.lowes.com/favicon.ico (200) => https://m.lowes.com/favicon.ico (403)
-Non-2xx HTTP code: http://www.lowes.com/webapp/wcs/stores/servlet/UserRegistrationForm?langId= (200) => https://www.lowes.com/webapp/wcs/stores/servlet/UserRegistrationForm?langId= (403)
-Fetch error: http://dpmbapps.lowes.com/ => https://dpmbapps.lowes.com/: (28, 'Operation timed out after 30001 milliseconds with 0 bytes received')
-Fetch error: http://dpmbappsqa.lowes.com/ => https://dpmbappsqa.lowes.com/: (28, 'Operation timed out after 30001 milliseconds with 0 bytes received')
-Fetch error: http://www7.lowes.com/ => https://www7.lowes.com/: (7, 'Failed to connect to www7.lowes.com port 443: Connection timed out')
-Non-2xx HTTP code: http://lowes.com/ (200) => https://www.lowes.com/ (403)
+	Non-functional hosts
+		Couldn't connect to server:
+			 - www7.lowes.com
 
-	Nonfunctional subdomains:
+		Timeout was reached:
+			 - deploy.lowes.com
+			 - dpmbapps.lowes.com
+			 - dpmbappsqa.lowes.com
+			 - mobileapps.lowes.com
+			 - sadclwscom.lowes.com
 
-		- ppmobileapps *
-
-	* Dropped
-
-
-	Problematic subdomains:
-
-		- ^ *
-		- metrics *
-
-	* Metrics
-
-
-	deploy.lowes.com: Dropped over http & https
-
+		SSL peer certificate was not OK:
+			 - metrics.lowes.com
 -->
-<ruleset name="Lowes.com (partial)" default_off='failed ruleset test'>
-
-	<!--	Direct rewrites:
-				-->
-	<target host="dpmbapps.lowes.com" />
-	<target host="dpmbappsqa.lowes.com" />
+<ruleset name="Lowes.com (partial)">
+	<target host="lowes.com" />
+	<target host="www.lowes.com" />
 	<target host="images.lowes.com" />
+	<target host="lda.lowes.com" />
 	<target host="lwscomdtq8.lowes.com" />
 	<target host="lwssvcs.lowes.com" />
 	<target host="m.lowes.com" />
-	<target host="mobileapps.lowes.com" />
 	<target host="mobileimages.lowes.com" />
-	<target host="pplwssvcs.lowes.com" />
-	<target host="ppm.lowes.com" />
 	<target host="ppmobileimages.lowes.com" />
-	<target host="sadclwscom.lowes.com" />
-	<target host="www.lowes.com" />
 	<target host="www1.lowes.com" />
-	<target host="www7.lowes.com" />
 
-	<!--	Complications:
-				-->
-	<target host="lowes.com" />
-	<target host="metrics.lowes.com" />
+	<securecookie host=".+" name=".+" />
 
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://m\.lowes\.com/(?:$|etc/)" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://m\.lowes\.com/+(?!favicon\.ico)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://m.lowes.com/etc/clientlibs/foundation/main.min.css" />
-			<test url="http://m.lowes.com/etc/designs/lowes-mobile-first.css" />
-
-			<!--	-ve:
-					-->
-			<test url="http://m.lowes.com/favicon.ico" />
-
-		<!--	Redirects to http:
-					-->
-		<!--exclusion pattern="^http://www\.lowes\.com/SearchCatalog\?" /-->
-		<!--
-			Exceptions:
-					-->
-		<!--exclusion pattern="^http://www\.lowes\.com/(?!css/|favicon\.ico|(?:espot/.+/)?images/|etc/|img_savings/|javascript/|pdf/|UserAccountLanding(?:$|[?/])|wcstore/|webapp/)" /-->
-
-		<!--	Minus /javascript/ & webapp/(?!wcs/stores/servlet/UserRegistrationForm)
-			for https://github.com/EFForg/https-everywhere/issues/2274#issuecomment-122752763
-								-->
-		<exclusion pattern="^http://www\.lowes\.com/(?!css/|favicon\.ico|(?:espot/.+/)?images/|etc/|img_savings/|pdf/|UserAccountLanding(?:$|[?/])|wcstore/|webapp/wcs/stores/servlet/UserRegistrationForm)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://www.lowes.com/Levolor" />
-			<test url="http://www.lowes.com/OrderItemDisplay" />
-			<test url="http://www.lowes.com/Search=" />
-			<test url="http://www.lowes.com/SearchCatalog?rpp=" />
-			<test url="http://www.lowes.com/TopCategoriesDisplay" />
-			<test url="http://www.lowes.com/UserSubscriptionView" />
-			<test url="http://www.lowes.com/creative-ideas" />
-			<test url="http://www.lowes.com/en_us/l/savings-t.html" />
-			<test url="http://www.lowes.com/en_us/mylowes.html" />
-			<test url="http://www.lowes.com/pella" />
-			<test url="http://www.lowes.com/selectsiteoption" />
-			<test url="http://www.lowes.com/webapp/wcs/stores/servlet/ContactUsLandingPageView" />
-
-			<!--	-ve:
-					-->
-			<test url="http://www.lowes.com/UserAccountLanding" />
-			<test url="http://www.lowes.com/etc/clientlibs/foundation/main.min.css" />
-			<test url="http://www.lowes.com/favicon.ico" />
-			<test url="http://www.lowes.com/images/logo.png" />
-			<test url="http://www.lowes.com/img_savings/weekly_ad.jpg" />
-			<test url="http://www.lowes.com/wcsstore/B2BDirectStorefrontAssetStore/images/stars_review_50.gif" />
-			<test url="http://www.lowes.com/webapp/wcs/stores/servlet/UserRegistrationForm?langId=" />
-
-
-	<securecookie host="^(?:lwssvcs|pplwssvcs|ppm|www7)\.lowes\.com$" name=".+" />
-
-
-	<rule from="^http://metrics\.lowes\.com/"
-		to="https://lowes.d2.sc.omtrdc.net/" />
-
-	<rule from="^http://lowes\.com/"
-		to="https://www.lowes.com/" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" 
+			to="https:" />
 </ruleset>

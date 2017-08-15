@@ -1,10 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://dh-docs.objects.dreamhost.com/managed-wordpress-hosting.pdf => https://dh-docs.objects.dreamhost.com/managed-wordpress-hosting.pdf: (60, 'SSL certificate problem: certificate has expired')
-Fetch error: http://legal-docs.objects.dreamhost.com/dh-transparency-report-2014.pdf => https://legal-docs.objects.dreamhost.com/dh-transparency-report-2014.pdf: (60, 'SSL certificate problem: certificate has expired')
-Fetch error: http://media-dh-com.objects.dreamhost.com/mp4/player.swf => https://media-dh-com.objects.dreamhost.com/mp4/player.swf: (60, 'SSL certificate problem: certificate has expired')
-Fetch error: http://objects.dreamhost.com/ => https://objects.dreamhost.com/: (60, 'SSL certificate problem: certificate has expired')
 
 	For other New Dream Network coverage, see New-Dream-Network.xml.
 
@@ -18,35 +12,31 @@ Fetch error: http://objects.dreamhost.com/ => https://objects.dreamhost.com/: (6
 
 		- blog.dreamhost.com			(self-signed & cert mismatch)
 		- links.dreamhost.com			(cert mismatch)
+		- objects.dreamhost.com			(cert expired)
+		- *.objects.dreamhost.com		(cert expired)
 		- whois.dreamhost.com			(refused)
 		- whoisweb.dreamhost.com		(refused)
 		- wiki.dreamhost.com			(refused)
-		- dreamhoststatus.com			(refused)
-		- www.dreamhoststatus.com		(cert mismatch)
+		- dreamhoststatus.com			(cert mismatch)
 
-	Note: It appears that the dreamhost.com domain has a number of subdomains
-	under which third party sites are hosted, such as http://mug.dreamhost.com/,
-	http://crookedtimber1.dreamhost.com/, and http://ovaltine.dreamhost.com/. In
-	addition, it appears that these subdomains for third party sites do not
+
+	Note: It appears that the dreamhost.com domain has a number of subdomains under
+	which third party sites are hosted, such as http://bokane-beta.dreamhost.com/,
+	http://crookedtimber1.dreamhost.com/, and http://otismaxwell.dreamhost.com/.
+	In addition, it appears that these subdomains for third party sites do not
 	necessarily support HTTPS. Given the possibility that the dreamhost.com
 	domain may have subdomains for third party hosted sites added or removed over
 	time, it is advisable for the DreamHost ruleset to have an explicit list of
 	target domains that are redirected to HTTPS instead of a wildcard
 	*.dreamhost.com rule combined with exclusions for nonfunctional domains.
 
-
-	Mixed content:
-
-		- images on www from dreamhost-com-media.objects *
-
-	* Secured by us, doesn't trigger MCB anyway.
-
 -->
-<ruleset name="DreamHost.com (partial)" default_off='failed ruleset test'>
+<ruleset name="DreamHost.com (partial)">
 
 	<target host="dreamhost.com" />
 	<target host="www.dreamhost.com" />
 	<target host="abuse.dreamhost.com" />
+	<target host="api.dreamhost.com" />
 	<target host="atmail.dreamhost.com" />
 	<target host="blog.dreamhost.com" />
 	<target host="discussion.dreamhost.com" />
@@ -54,19 +44,18 @@ Fetch error: http://objects.dreamhost.com/ => https://objects.dreamhost.com/: (6
 	<target host="help.dreamhost.com" />
 	<target host="mailboxes.dreamhost.com" />
 	<target host="media.dreamhost.com" />
-	<target host="objects.dreamhost.com" />
-	<target host="*.objects.dreamhost.com" />
 	<target host="panel.dreamhost.com" />
+	<target host="remixer.panel.dreamhost.com" />
 	<target host="roundcube.dreamhost.com" />
 	<target host="signup.dreamhost.com" />
 	<target host="transferapproval.dreamhost.com" />
 	<target host="webftp.dreamhost.com" />
 	<target host="webmail.dreamhost.com" />
 
+	<target host="dreamhostremixer.com" />
 
-	<test url="http://dh-docs.objects.dreamhost.com/managed-wordpress-hosting.pdf" />
-	<test url="http://legal-docs.objects.dreamhost.com/dh-transparency-report-2014.pdf" />
-	<test url="http://media-dh-com.objects.dreamhost.com/mp4/player.swf" />
+	<target host="dreamhoststatus.com" />
+	<target host="www.dreamhoststatus.com" />
 
 
 	<securecookie host=".+" name=".+" />
@@ -74,7 +63,11 @@ Fetch error: http://objects.dreamhost.com/ => https://objects.dreamhost.com/: (6
 
 	<rule from="^http://blog\.dreamhost\.com/"
 		to="https://www.dreamhost.com/blog/" />
-		<test url="http://blog.dreamhost.com/2005/09/13/some-residual-issues/" />
+		<test url="http://blog.dreamhost.com/2008/01/17/the-final-update/" />
+
+	<rule from="^http://dreamhoststatus\.com/"
+		to="https://www.dreamhoststatus.com/" />
+		<test url="http://dreamhoststatus.com/" />
 
 	<rule from="^http:"
 		to="https:" />

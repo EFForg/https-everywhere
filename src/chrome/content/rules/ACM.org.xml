@@ -1,123 +1,56 @@
 <!--
-	For rules causing false/broken MCB, see ACM.org-falsemixed.xml.
+	Invalid certificate:
+		authors.acm.org
+		delivery.acm.org
+		deliveryimages.acm.org
+		jobs.acm.org
+		portalparts.acm.org
+		technews.acm.org
 
+	Different content http/https:
+		dev.acm.org
 
-	CDN buckets:
+	Time out:
+		librarians.acm.org
+		store.acm.org
 
-		- delivery.acm.org.edgesuite.net
-
-		- deliveryimages.acm.org.edgesuite.net
-
-			- a1907.g.akamai.net
-
-		- portalparts.acm.org.edgesuite.net
-
-			- a1896.g.akamai.net
-
-
-	acm.org lacks proper ssl for the following subdomains
-
-		- amturing ¹
-		- awards ²
-		- delivery ³
-		- dev			<- shows www
-		- jobs			<- sends to jobtarget.com
-		- librarians		<- displays what appears to be
-					   an old version of the website.
-		- mags
-
-	² Shows awards, valid cert
-	² Redirects to http, valid cert
-	³ 504, akamai
-
-
-	Problematic subdomains:
-
-		- deliveryimages *
-		- jobs ²
-		- portalparts *
-		- store ³
-
-	* Works, akamai
-	² Partially works; mismatched, CN: *.jobtarget.com
-	³ Shows an old version of the website
-
-
-	Partially covered subdomains:
-
-		- (www.) ¹
-		- cacm		(some pages redirect to http)
-
-	¹ Avoiding mixed stylesheets
-
-
-	Fully covered subdomains:
-
-		- cacm
-		- campus
-		- deliveryimages *
-		- dl
-		- learning
-		- myacm
-		- pd
-		- plone
-		- portal
-		- portalparts *
-		- queue
-		- spam
-		- store		(→ campus)
-		- techpack
-
-	* → akamai
-
+	Refused:
+		mags.acm.org
 
 	Mixed content:
-
-		- Scripts, on:
-
-			- www from www *
-
-		- css, on:
-
-			- util from myacm *
-			- www from www *
-
-		- Images:
-
-			- campus from portalparts *
-			- dl from $self *
-			- queue from deliveryimages *
-			- util from $self
-			- util from www *
-
-		- favicons on myacm and util from www *
-
-	* Secured by us
+		china.acm.org
+		plone.acm.org
+		queue.acm.org
+			<test url="http://queue.acm.org/detail.cfm?id=3043967" />
 
 -->
-<ruleset name="ACM.org (partial)">
+<ruleset name="ACM.org">
 
 	<target host="acm.org" />
-	<target host="*.acm.org" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://(?:www\.)?acm\.org/+(?!.+\.(?:/image_thumb$|\.gif$|\.jpg$|\.png$)|favicon\.ico|images-mail/|portal_css/)" />
-		<exclusion pattern="^http://cacm.acm.org/(?!(?:accounts/(?:forgot-password|new)|login)/*(?:\?.*)?$|favicon\.ico|images/|javascripts/|stylesheets/|system/)" />
+	<target host="www.acm.org" />
+	<target host="acmeurope-conference.acm.org" />
+	<target host="amturing.acm.org" />
+	<target host="awards.acm.org" />
+	<target host="cacm.acm.org" />
+		<test url="http://cacm.acm.org/favicon.ico" />
+	<target host="campus.acm.org" />
+	<target host="dl.acm.org" />
+	<target host="learning.acm.org" />
+	<target host="librarians.acm.org" />
+	<target host="libraries.acm.org" />
+	<target host="myacm.acm.org" />
+	<target host="pd.acm.org" />
+	<target host="portal.acm.org" />
+	<target host="spam.acm.org" />
+	<target host="techpack.acm.org" />
+	<target host="techpolicy.acm.org" />
 
+	<securecookie host=".+" name=".+" />
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^(www\.)?acm\.org$" name="^I18N_LANGUAGE$" /-->
-	<!--securecookie host="^\.acm\.org$" name="^MYACM$" /-->
-	<!--securecookie host="^cacm\.acm\.org$" name="^_cacm_session$" /-->
-	<!--securecookie host="^(dl|learning|myacm|techpack)\.acm\.org$" name="^(CFID|CFTOKEN)$" /-->
-	<!--securecookie host="^jobs\.acm\.org$" name="^JTSUBREF$" /-->
+	<rule from="^http://librarians\.acm\.org/"
+		to="https://libraries.acm.org/" />
 
-	<securecookie host="^(?!cacm\.).*\.acm\.org$" name=".+" />
-
-
-	<rule from="^http://((?:cacm|campus|dl|myacm|pd|learning|myacm|plone|portal|queue|spam|techpack|www)\.)?acm\.org/"
-		to="https://$1acm.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

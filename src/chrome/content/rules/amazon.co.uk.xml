@@ -1,8 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://associates.amazon.co.uk/ (200) => https://associates.amazon.co.uk/ (400)
-
 	For other Amazon coverage, see Amazon.xml.
 
 
@@ -11,29 +7,19 @@ Non-2xx HTTP code: http://associates.amazon.co.uk/ (200) => https://associates.a
 		- m ʳ
 
 	ʳ Refused, preemptable redirect
-
-
-	Insecure cookies are set for these domains and hosts: ᶜ
-
-		- .amazon.co.uk
-		- tickets.amazon.co.uk
-
-	ᶜ See https://owasp.org/index.php/SecureFlag
-
 -->
-<ruleset name="Amazon.co.uk" default_off='failed ruleset test'>
 
-	<!--	Direct rewrites:
-				-->
+<ruleset name="Amazon.co.uk">
 	<target host="amazon.co.uk" />
 	<target host="aan.amazon.co.uk" />
 	<target host="advertising.amazon.co.uk" />
 	<target host="affiliate-program.amazon.co.uk" />
-	<target host="ams.amazon.co.uk" />
 	<target host="associates.amazon.co.uk" />
+	<target host="ams.amazon.co.uk" />
 	<target host="completion.amazon.co.uk" />
 	<target host="kindle.amazon.co.uk" />
 	<target host="local.amazon.co.uk" />
+	<target host="m.amazon.co.uk" />
 	<target host="payments.amazon.co.uk" />
 	<target host="rcm-uk.amazon.co.uk" />
 	<target host="sellercentral.amazon.co.uk" />
@@ -42,56 +28,49 @@ Non-2xx HTTP code: http://associates.amazon.co.uk/ (200) => https://associates.a
 	<target host="ws.amazon.co.uk" />
 	<target host="www1.amazon.co.uk" />
 
-		<!--	Amazon has a history of breaking us soon after
-			adding rulesets, so these are here to detect that.
-									-->
-		<test url="http://www.amazon.co.uk/-/e/B001HPEAOY" />
-		<test url="http://www.amazon.co.uk/-/e/B002GWKPOQ" />
-		<test url="http://www.amazon.co.uk/-/e/B003J6SKF4" />
-		<test url="http://www.amazon.co.uk/-/e/B00G5KPMJI" />
-		<test url="http://www.amazon.co.uk/-/e/B00VKFKEIM" />
-		<test url="http://www.amazon.co.uk//?" />
-		<test url="http://www.amazon.co.uk/Jenny-Harper/e/B00HXIE2Q0" />
-		<test url="http://www.amazon.co.uk/Stewart-Bint/e/B00D18IARS" />
-		<test url="http://www.amazon.co.uk/Victoria-L.-James/e/B00RKL6AME" />
-		<test url="http://www.amazon.co.uk/ap/forgotpassword?openid.pape.max_auth_age=&amp;openid.return_to=&amp;prevRID=&amp;openid.identity=&amp;openid.assoc_handle=&amp;openid.mode=&amp;openid.ns.pape=&amp;openid.claimed_id=&amp;pageId=&amp;openid.ns=" />
-		<test url="http://www.amazon.co.uk/ap/signin?_encoding=&amp;accountStatusPolicy=&amp;openid.assoc_handle=&amp;openid.claimed_id=&amp;openid.identity=&amp;openid.mode=&amp;openid.ns=&amp;openid.ns.pape=&amp;openid.pape.max_auth_age=0&amp;openid.return_to=&amp;pageId=&amp;showRmrMe=" />
-		<test url="http://www.amazon.co.uk/b?node=3581866031" />
-		<test url="http://www.amazon.co.uk/dp/B007HNP1I4" />
-		<test url="http://www.amazon.co.uk/forum/kindle" />
-		<test url="http://www.amazon.co.uk/gp/BIT/InternetBasedAds" />
-		<test url="http://www.amazon.co.uk/gp/cart/view.html/ref=" />
-		<test url="http://www.amazon.co.uk/gp/css/homepage.html/ref=" />
-		<test url="http://www.amazon.co.uk/gp/css/order-history/ref=" />
-		<test url="http://www.amazon.co.uk/gp/help/customer/display.html/ref=" />
-		<test url="http://www.amazon.co.uk/gp/prime" />
-		<test url="http://www.amazon.co.uk/gp/primecentral/ref=" />
-		<test url="http://www.amazon.co.uk/gp/registry/wishlist/ref=" />
-		<test url="http://www.amazon.co.uk/s/?&amp;search-alias=lighting" />
+	<securecookie host=".+" name=".+" />
 
-	<!--	Complications:
-				-->
-	<target host="m.amazon.co.uk" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.amazon\.co\.uk$" name="^(?:session-id|session-id-time|session-token|ubid-acbuk)$" /-->
-	<!--securecookie host="^tickets\.amazon\.co\.uk$" name="^_flash(?:AlertType|Body|Form|Title)$" /-->
-
-	<securecookie host="." name="^aps-trtmnt$" />
-	<securecookie host="^\w" name="." />
-
-
-	<!--	Redirect drops path and forward
+	<!--
+		Redirect drops path and forward
 		slash, but not args:
-					-->
-	<rule from="^http://m\.amazon\.co\.uk/[^?]*"
-		to="https://www.amazon.co.uk/gp/aw" />
+	-->
 
-		<test url="http://m.amazon.co.uk/index.htm" />
+	<rule from="^http://m\.amazon\.co\.uk/[^?]*" to="https://www.amazon.co.uk/gp/aw" />
 
-	<rule from="^http:"
-		to="https:" />
+	<test url="http://m.amazon.co.uk/index.htm" />
 
+	<rule from="^http:"	to="https:" />
+
+	<!--
+		Amazon has a history of breaking us soon after
+		adding rulesets, so these are here to detect that.
+	-->
+
+	<test url="http://www.amazon.co.uk/-/e/B001HPEAOY" />
+	<test url="http://www.amazon.co.uk/-/e/B002GWKPOQ" />
+	<test url="http://www.amazon.co.uk/-/e/B003J6SKF4" />
+	<test url="http://www.amazon.co.uk/-/e/B00G5KPMJI" />
+	<test url="http://www.amazon.co.uk/-/e/B00VKFKEIM" />
+	<test url="http://www.amazon.co.uk//?" />
+	<test url="http://www.amazon.co.uk/Jenny-Harper/e/B00HXIE2Q0" />
+	<test url="http://www.amazon.co.uk/Stewart-Bint/e/B00D18IARS" />
+	<test url="http://www.amazon.co.uk/Victoria-L.-James/e/B00RKL6AME" />
+	<test url="http://www.amazon.co.uk/ap/forgotpassword?openid.pape.max_auth_age=&amp;openid.return_to=&amp;prevRID=&amp;openid.identity=&amp;openid.assoc_handle=&amp;openid.mode=&amp;openid.ns.pape=&amp;openid.claimed_id=&amp;pageId=&amp;openid.ns=" />
+	<test url="http://www.amazon.co.uk/ap/signin?_encoding=&amp;accountStatusPolicy=&amp;openid.assoc_handle=&amp;openid.claimed_id=&amp;openid.identity=&amp;openid.mode=&amp;openid.ns=&amp;openid.ns.pape=&amp;openid.pape.max_auth_age=0&amp;openid.return_to=&amp;pageId=&amp;showRmrMe=" />
+	<test url="http://www.amazon.co.uk/b?node=3581866031" />
+	<test url="http://www.amazon.co.uk/dp/B007HNP1I4" />
+	<test url="http://www.amazon.co.uk/forum/kindle" />
+	<test url="http://www.amazon.co.uk/gp/BIT/InternetBasedAds" />
+	<test url="http://www.amazon.co.uk/gp/cart/view.html/ref=" />
+	<test url="http://www.amazon.co.uk/gp/css/homepage.html/ref=" />
+	<test url="http://www.amazon.co.uk/gp/css/order-history/ref=" />
+	<test url="http://www.amazon.co.uk/gp/help/customer/display.html/ref=" />
+	<test url="http://www.amazon.co.uk/gp/prime" />
+	<test url="http://www.amazon.co.uk/gp/primecentral/ref=" />
+	<test url="http://www.amazon.co.uk/gp/registry/wishlist/ref=" />
+	<test url="http://www.amazon.co.uk/s/?&amp;search-alias=lighting" />
+
+	<exclusion pattern="^http://associates\.amazon\.co\.uk/$" />
+
+	<test url="http://associates.amazon.co.uk/gp/advertising/api/detail/agreement.html" />
 </ruleset>
