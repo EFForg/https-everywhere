@@ -36,6 +36,7 @@ RULESETS_CHANGED=$(git diff --name-only $COMMON_BASE_COMMIT | grep $RULESETFOLDE
 if [ "$(git diff --name-only $COMMON_BASE_COMMIT)" != "$RULESETS_CHANGED" ]; then
   ONLY_RULESETS_CHANGED=false
 fi
+WHITELIST_CHANGED=$(git diff --name-only $COMMON_BASE_COMMIT | grep utils/ruleset-coverage-whitelist-cleanup.sh)
 
 # At this point, if anything fails, the test should fail
 set -e
@@ -83,6 +84,13 @@ if [ "$RULESETS_CHANGED" ]; then
   if [ "$TEST" == "preloaded" ]; then
     echo >&2 "Ensuring rulesets do not introduce targets which are already HSTS preloaded."
     docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" node bash -c "cd /opt/utils/hsts-prune && npm install && node index.js"
+    [ `git diff --name-only | wc -l` -eq 0 ]
+  fi
+fi
+
+if $RULESETS_CHANGED || $WHITELIST_CHANGED; then
+  if [ "$TEST" == "whitelist" ]; then
+    utils/ruleset-coverage-whitelist-cleanup.sh
     [ `git diff --name-only | wc -l` -eq 0 ]
   fi
 fi
