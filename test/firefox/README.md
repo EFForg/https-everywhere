@@ -1,13 +1,15 @@
 # Tests for HTTPS Everywhere
 
-## Prerequisites
-* Latest release of the Firefox Add-On SDK as a submodule:
-    git submodule update
-
 # Running
     bash test.sh
 
-To add tests, put them in `./https-everywhere-tests/tests`.
+# Requirements
+
+- Python 2.7
+- Selenium
+      - Install Selenium as a python package using ```pip install selenium```, or run install-dev-dependencies.sh and it will do the job
+- GeckoDriver
+      - Manually download GeckoDriver from https://github.com/mozilla/geckodriver/releases. Extract the executable to /usr/bin/, so that the pasted executable's full path becomes /usr/bin/geckodriver.
 
 # Manual tests
 
