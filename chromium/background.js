@@ -31,6 +31,14 @@ storage.get({enableMixedRulesets: false}, function(item) {
   all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
 });
 
+// Load in the legacy custom rulesets, if any
+function load_legacy_custom_rulesets(legacy_custom_rulesets){
+  for(let legacy_custom_ruleset of legacy_custom_rulesets){
+    all_rules.addFromXml((new DOMParser()).parseFromString(legacy_custom_ruleset, 'text/xml'));
+  }
+}
+storage.get({legacy_custom_rulesets: []}, item => load_legacy_custom_rulesets(item.legacy_custom_rulesets));
+
 var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
 // devtools-panel.js).
@@ -43,6 +51,10 @@ var switchPlannerInfo = {};
 
 // Is HTTPSe enabled, or has it been manually disabled by the user?
 var isExtensionEnabled = true;
+storage.get({globalEnabled: true}, function(item) {
+  isExtensionEnabled = item.globalEnabled;
+  updateState();
+});
 
 // Load prefs about whether http nowhere is on. Structure is:
 //  { httpNowhere: true/false }
@@ -51,22 +63,31 @@ storage.get({httpNowhere: false}, function(item) {
   httpNowhereOn = item.httpNowhere;
   updateState();
 });
+
 chrome.storage.onChanged.addListener(function(changes, areaName) {
   if (areaName === 'sync' || areaName === 'local') {
     for (var key in changes) {
       if (key === 'httpNowhere') {
         httpNowhereOn = changes[key].newValue;
         updateState();
+      } else if (key === 'globalEnabled') {
+        isExtensionEnabled = changes[key].newValue;
+        updateState();
       }
     }
   }
 });
-chrome.tabs.onActivated.addListener(function() {
-  updateState();
-});
-chrome.windows.onFocusChanged.addListener(function() {
-  updateState();
-});
+
+if (chrome.tabs) {
+  chrome.tabs.onActivated.addListener(function() {
+    updateState();
+  });
+}
+if (chrome.windows) {
+  chrome.windows.onFocusChanged.addListener(function() {
+    updateState();
+  });
+}
 chrome.webNavigation.onCompleted.addListener(function() {
   updateState();
 });
@@ -106,6 +127,9 @@ loadStoredUserRules();
  * disabled: extension is disabled from the popup menu.
  */
 var updateState = function() {
+  if (!chrome.tabs) {
+    return;
+  }
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     if (!tabs || tabs.length === 0) {
       return;
@@ -176,9 +200,11 @@ function AppliedRulesets() {
   this.active_tab_rules = {};
 
   var that = this;
-  chrome.tabs.onRemoved.addListener(function(tabId, info) {
-    that.removeTab(tabId);
-  });
+  if (chrome.tabs) {
+    chrome.tabs.onRemoved.addListener(function(tabId, info) {
+      that.removeTab(tabId);
+    });
+  }
 }
 
 AppliedRulesets.prototype = {
@@ -616,3 +642,70 @@ chrome.runtime.onConnect.addListener(function (port) {
     });
   }
 });
+
+// This is necessary for communication with the popup in Firefox Private
+// Browsing Mode, see https://bugzilla.mozilla.org/show_bug.cgi?id=1329304
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+  if (message.type == "get_option") {
+    storage.get(message.object, sendResponse);
+    return true;
+  } else if (message.type == "set_option") {
+    storage.set(message.object, item => {
+      if (sendResponse) {
+        sendResponse(item);
+      }
+    });
+  } else if (message.type == "delete_from_ruleset_cache") {
+    all_rules.ruleCache.delete(message.object);
+  } else if (message.type == "get_active_rulesets") {
+    sendResponse(activeRulesets.getRulesets(message.object));
+  } else if (message.type == "set_ruleset_active_status") {
+    var ruleset = activeRulesets.getRulesets(message.object.tab_id)[message.object.name];
+    ruleset.active = message.object.active;
+    sendResponse(true);
+  } else if (message.type == "add_new_rule") {
+    addNewRule(message.object, function() {
+      sendResponse(true);
+    });
+    return true;
+  } else if (message.type == "remove_rule") {
+    removeRule(message.object);
+  } else if (message.type == "import_settings") {
+    // This is used when importing settings from the options ui
+    import_settings(message.object).then(() => {
+      sendResponse(true);
+    });
+  }
+});
+
+// Send a message to the embedded webextension bootstrap.js to get settings to import
+chrome.runtime.sendMessage("import-legacy-data", import_settings);
+
+/**
+ * Import extension settings (custom rulesets, ruleset toggles, globals) from an object
+ * @param settings the settings object
+ */
+async function import_settings(settings) {
+  if (settings.changed) {
+    // Load all the ruleset toggles into memory and store
+    for (const ruleset_name in settings.rule_toggle) {
+      localStorage[ruleset_name] = settings.rule_toggle[ruleset_name];
+    }
+
+    all_rules = new RuleSets(localStorage);
+    all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
+
+    // Load custom rulesets
+    load_legacy_custom_rulesets(settings.custom_rulesets);
+
+    // Save settings
+    await new Promise(resolve => {
+      storage.set({
+        legacy_custom_rulesets: settings.custom_rulesets,
+        httpNowhere: settings.prefs.http_nowhere_enabled,
+        showCounter: settings.prefs.show_counter,
+        globalEnabled: settings.prefs.global_enabled
+      }, resolve);
+    });
+  }
+}
