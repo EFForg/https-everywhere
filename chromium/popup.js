@@ -73,7 +73,7 @@ function appendRuleLineToListDiv(ruleset, list_div) {
     }
   }
 
-  if (navigator.userAgent.match("Chrome")) {
+  if (false) { //navigator.userAgent.match("Chrome")) {
     var xhr = new XMLHttpRequest();
     try {
       xhr.open("GET", favicon.src, true);
