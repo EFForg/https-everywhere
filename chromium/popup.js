@@ -4,6 +4,13 @@ var stableRules = null;
 var unstableRules = null;
 var hostReg = /.*\/\/[^$/]*\//;
 
+var ls;
+try{
+  ls = localStorage;
+} catch(e) {
+  ls = {setItem: () => {}, getItem: () => {}};
+}
+
 function e(id) {
   return document.getElementById(id);
 }
@@ -24,9 +31,9 @@ function toggleRuleLine(checkbox, ruleset, tab_id) {
   sendMessage("set_ruleset_active_status", set_ruleset, function(){
 
     if (ruleset_active != ruleset.default_state) {
-      localStorage[ruleset.name] = ruleset_active;
+      ls[ruleset.name] = ruleset_active;
     } else {
-      delete localStorage[ruleset.name];
+      delete ls[ruleset.name];
       // purge the name from the cache so that this unchecking is persistent.
       sendMessage("delete_from_ruleset_cache", ruleset.name);
     }
@@ -41,7 +48,7 @@ function toggleRuleLine(checkbox, ruleset, tab_id) {
  * @param ruleset the ruleset to build the line for
  * @returns {*}
  */
-function appendRuleLineToListDiv(ruleset, list_div) {
+function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
 
   // parent block for line
   var line = document.createElement("div");
@@ -148,7 +155,7 @@ function gotTab(tabArray) {
       if (!rulesets[r].default_state) {
         listDiv = unstableRules;
       }
-      appendRuleLineToListDiv(rulesets[r], listDiv);
+      appendRuleLineToListDiv(rulesets[r], listDiv, activeTab.id);
       listDiv.style.position = "static";
       listDiv.style.visibility = "visible";
     }
