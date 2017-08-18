@@ -25,16 +25,19 @@ parser.add_argument("directory", type=str,
 
 args = parser.parse_args()
 
-exclusions = []
-with open(args.exclusions) as f:
-    for line in f:
-        exclusions.extend(glob.glob(line.strip()))
-exclusions = map(lambda x: './'+x, exclusions)
-
 compress = zipfile.ZIP_DEFLATED
 
 xpiFile = zipfile.ZipFile(args.xpiname, mode='w', compression=compress)
 
+f = open(args.exclusions)
+
 os.chdir(args.directory)
+
+exclusions = []
+for line in f:
+    exclusions.extend(glob.glob(line.strip()))
+exclusions = map(lambda x: './'+x, exclusions)
+print exclusions
+
 xpiFile.write_from_directory(".", exclusions, compress_type=compress)
 xpiFile.close()
