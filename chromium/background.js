@@ -127,37 +127,29 @@ loadStoredUserRules();
 
 /**
  * Set the icon color correctly
- * inactive: extension is enabled, but no rules were triggered on this page.
- * blocking: extension is in "block all HTTP requests" mode.
  * active: extension is enabled and rewrote URLs on this page.
+ * blocking: extension is in "block all HTTP requests" mode.
  * disabled: extension is disabled from the popup menu.
  */
-var updateState = function() {
-  if (!chrome.tabs) {
-    return;
+
+function updateState () {
+  let iconState = 'active'
+
+  if (!isExtensionEnabled) {
+    iconState = 'disabled'
+  } else if (httpNowhereOn) {
+    iconState = 'blocking'
   }
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    if (!tabs || tabs.length === 0) {
-      return;
+
+  chrome.browserAction.setIcon({
+    path: {
+      38: 'icons/icon-' + iconState + '-38.png'
     }
-    var applied = activeRulesets.getRulesets(tabs[0].id)
-    var iconState = "inactive";
-    if (!isExtensionEnabled) {
-      iconState = "disabled";
-    } else if (httpNowhereOn) {
-      iconState = "blocking";
-    } else if (applied) {
-      iconState = "active";
-    }
-    chrome.browserAction.setIcon({
-      path: {
-        "38": "icons/icon-" + iconState + "-38.png"
-      }
-    });
-    chrome.browserAction.setTitle({
-      title: "HTTPS Everywhere (" + iconState + ")"
-    });
-  });
+  })
+
+  chrome.browserAction.setTitle({
+    title: 'HTTPS Everywhere' + (iconState === 'active') ? '' : ' (' + iconState + ')'
+  })
 }
 
 /**
