@@ -37,7 +37,6 @@ exclusions = []
 for line in f:
     exclusions.extend(glob.glob(line.strip()))
 exclusions = map(lambda x: './'+x, exclusions)
-print exclusions
 
 xpiFile.write_from_directory(".", exclusions, compress_type=compress)
 xpiFile.close()
