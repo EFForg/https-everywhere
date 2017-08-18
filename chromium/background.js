@@ -22,7 +22,13 @@ function loadExtensionFile(url, returnType) {
 
 
 // Rules are loaded here
-var all_rules = new RuleSets(localStorage);
+var all_rules, ls;
+try{
+  ls = localStorage;
+} catch(e) {
+  ls = {setItem: () => {}, getItem: () => {}};
+}
+all_rules = new RuleSets(ls);
 
 // Allow users to enable `platform="mixedcontent"` rulesets
 var enableMixedRulesets = false;
@@ -96,7 +102,7 @@ chrome.webNavigation.onCompleted.addListener(function() {
 * Load stored user rules
  **/
 var getStoredUserRules = function() {
-  var oldUserRuleString = localStorage.getItem(USER_RULE_KEY);
+  var oldUserRuleString = ls.getItem(USER_RULE_KEY);
   var oldUserRules = [];
   if (oldUserRuleString) {
     oldUserRules = JSON.parse(oldUserRuleString);
@@ -169,7 +175,7 @@ var addNewRule = function(params, cb) {
     // client windows in different event loops.
     oldUserRules.push(params);
     // TODO: can we exceed the max size for storage?
-    localStorage.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules));
+    ls.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules));
     cb(true);
   } else {
     cb(false);
@@ -189,7 +195,7 @@ var removeRule = function(ruleset) {
         r.redirectTo == ruleset.rules[0].to &&
         String(RegExp(r.urlMatcher)) == String(ruleset.rules[0].from_c))
     );
-    localStorage.setItem(USER_RULE_KEY, JSON.stringify(userRules));
+    ls.setItem(USER_RULE_KEY, JSON.stringify(userRules));
   }
 }
 
@@ -689,10 +695,10 @@ async function import_settings(settings) {
   if (settings.changed) {
     // Load all the ruleset toggles into memory and store
     for (const ruleset_name in settings.rule_toggle) {
-      localStorage[ruleset_name] = settings.rule_toggle[ruleset_name];
+      ls[ruleset_name] = settings.rule_toggle[ruleset_name];
     }
 
-    all_rules = new RuleSets(localStorage);
+    all_rules = new RuleSets(ls);
     all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
 
     // Load custom rulesets
