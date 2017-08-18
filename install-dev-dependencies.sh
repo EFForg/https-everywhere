@@ -20,7 +20,15 @@ if type apt-get >/dev/null ; then
   # In Debian, `python-` is assumed to be python 2.7, no need to specify - dkg
   $SUDO_SHIM apt-get install libxml2-dev libxml2-utils libxslt1-dev \
     python-dev $BROWSERS zip sqlite3 python-pip libcurl4-openssl-dev xvfb \
-    libssl-dev git $CHROMEDRIVER
+    libssl-dev git curl $CHROMEDRIVER
+  if ! type geckodriver >/dev/null; then
+    curl -LO "https://github.com/mozilla/geckodriver/releases/download/v0.16.1/geckodriver-v0.16.1-linux64.tar.gz"
+    tar -zxvf "geckodriver-v0.16.1-linux64.tar.gz"
+    rm -f "geckodriver-v0.16.1-linux64.tar.gz"
+    $SUDO_SHIM mv geckodriver /usr/bin/geckodriver
+    $SUDO_SHIM chown root /usr/bin/geckodriver
+    $SUDO_SHIM chmod 755 /usr/bin/geckodriver
+  fi
 elif type brew >/dev/null ; then
   brew list python &>/dev/null || brew install python
   brew install libxml2 gnu-sed chromedriver
@@ -42,8 +50,15 @@ elif type dnf >/dev/null ; then
     rm -f "chromedriver_linux$ARCH.zip"
     $SUDO_SHIM mv chromedriver /usr/bin/chromedriver
     $SUDO_SHIM chown root /usr/bin/chromedriver
-    $SUDO_SHIM chmod +x /usr/bin/chromedriver
     $SUDO_SHIM chmod 755 /usr/bin/chromedriver
+  fi
+  if ! type geckodriver >/dev/null; then
+    curl -LO "https://github.com/mozilla/geckodriver/releases/download/v0.16.1/geckodriver-v0.16.1-macos.tar.gz"
+    tar -zxvf "geckodriver-v0.16.1-macos.tar.gz"
+    rm -f "geckodriver-v0.16.1-macos.tar.gz"
+    $SUDO_SHIM mv geckodriver /usr/bin/geckodriver
+    $SUDO_SHIM chown root /usr/bin/geckodriver
+    $SUDO_SHIM chmod 755 /usr/bin/geckodriver
   fi
   # This is needed for Firefox on some systems. See here for more information:
   # https://github.com/EFForg/https-everywhere/pull/5584#issuecomment-238655443

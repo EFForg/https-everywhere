@@ -22,7 +22,13 @@ function loadExtensionFile(url, returnType) {
 
 
 // Rules are loaded here
-var all_rules = new RuleSets(localStorage);
+var all_rules, ls;
+try{
+  ls = localStorage;
+} catch(e) {
+  ls = {setItem: () => {}, getItem: () => {}};
+}
+all_rules = new RuleSets(ls);
 
 // Allow users to enable `platform="mixedcontent"` rulesets
 var enableMixedRulesets = false;
@@ -30,6 +36,14 @@ storage.get({enableMixedRulesets: false}, function(item) {
   enableMixedRulesets = item.enableMixedRulesets;
   all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
 });
+
+// Load in the legacy custom rulesets, if any
+function load_legacy_custom_rulesets(legacy_custom_rulesets){
+  for(let legacy_custom_ruleset of legacy_custom_rulesets){
+    all_rules.addFromXml((new DOMParser()).parseFromString(legacy_custom_ruleset, 'text/xml'));
+  }
+}
+storage.get({legacy_custom_rulesets: []}, item => load_legacy_custom_rulesets(item.legacy_custom_rulesets));
 
 var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
@@ -43,6 +57,10 @@ var switchPlannerInfo = {};
 
 // Is HTTPSe enabled, or has it been manually disabled by the user?
 var isExtensionEnabled = true;
+storage.get({globalEnabled: true}, function(item) {
+  isExtensionEnabled = item.globalEnabled;
+  updateState();
+});
 
 // Load prefs about whether http nowhere is on. Structure is:
 //  { httpNowhere: true/false }
@@ -51,22 +69,31 @@ storage.get({httpNowhere: false}, function(item) {
   httpNowhereOn = item.httpNowhere;
   updateState();
 });
+
 chrome.storage.onChanged.addListener(function(changes, areaName) {
   if (areaName === 'sync' || areaName === 'local') {
     for (var key in changes) {
       if (key === 'httpNowhere') {
         httpNowhereOn = changes[key].newValue;
         updateState();
+      } else if (key === 'globalEnabled') {
+        isExtensionEnabled = changes[key].newValue;
+        updateState();
       }
     }
   }
 });
-chrome.tabs.onActivated.addListener(function() {
-  updateState();
-});
-chrome.windows.onFocusChanged.addListener(function() {
-  updateState();
-});
+
+if (chrome.tabs) {
+  chrome.tabs.onActivated.addListener(function() {
+    updateState();
+  });
+}
+if (chrome.windows) {
+  chrome.windows.onFocusChanged.addListener(function() {
+    updateState();
+  });
+}
 chrome.webNavigation.onCompleted.addListener(function() {
   updateState();
 });
@@ -75,7 +102,7 @@ chrome.webNavigation.onCompleted.addListener(function() {
 * Load stored user rules
  **/
 var getStoredUserRules = function() {
-  var oldUserRuleString = localStorage.getItem(USER_RULE_KEY);
+  var oldUserRuleString = ls.getItem(USER_RULE_KEY);
   var oldUserRules = [];
   if (oldUserRuleString) {
     oldUserRules = JSON.parse(oldUserRuleString);
@@ -90,8 +117,8 @@ var wr = chrome.webRequest;
 var loadStoredUserRules = function() {
   var rules = getStoredUserRules();
   var i;
-  for (i = 0; i < rules.length; ++i) {
-    all_rules.addUserRule(rules[i]);
+  for (let rule of rules) {
+    all_rules.addUserRule(rule);
   }
   log('INFO', 'loaded ' + i + ' stored user rules');
 };
@@ -106,6 +133,9 @@ loadStoredUserRules();
  * disabled: extension is disabled from the popup menu.
  */
 var updateState = function() {
+  if (!chrome.tabs) {
+    return;
+  }
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     if (!tabs || tabs.length === 0) {
       return;
@@ -145,7 +175,7 @@ var addNewRule = function(params, cb) {
     // client windows in different event loops.
     oldUserRules.push(params);
     // TODO: can we exceed the max size for storage?
-    localStorage.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules));
+    ls.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules));
     cb(true);
   } else {
     cb(false);
@@ -159,16 +189,13 @@ var addNewRule = function(params, cb) {
 var removeRule = function(ruleset) {
   if (all_rules.removeUserRule(ruleset)) {
     // If we successfully removed the user rule, remove it in local storage too
-    var oldUserRules = getStoredUserRules();
-    for (let x = 0; x < oldUserRules.length; x++) {
-      if (oldUserRules[x].host == ruleset.name &&
-          oldUserRules[x].redirectTo == ruleset.rules[0].to &&
-          String(RegExp(oldUserRules[x].urlMatcher)) == String(ruleset.rules[0].from_c)) {
-        oldUserRules.splice(x, 1);
-        break;
-      }
-    }
-    localStorage.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules));
+    var userRules = getStoredUserRules();
+    userRules = userRules.filter(r =>
+      !(r.host == ruleset.name &&
+        r.redirectTo == ruleset.rules[0].to &&
+        String(RegExp(r.urlMatcher)) == String(ruleset.rules[0].from_c))
+    );
+    ls.setItem(USER_RULE_KEY, JSON.stringify(userRules));
   }
 }
 
@@ -179,9 +206,11 @@ function AppliedRulesets() {
   this.active_tab_rules = {};
 
   var that = this;
-  chrome.tabs.onRemoved.addListener(function(tabId, info) {
-    that.removeTab(tabId);
-  });
+  if (chrome.tabs) {
+    chrome.tabs.onRemoved.addListener(function(tabId, info) {
+      that.removeTab(tabId);
+    });
+  }
 }
 
 AppliedRulesets.prototype = {
@@ -227,8 +256,7 @@ function onBeforeRequest(details) {
     return;
   }
 
-  var uri = document.createElement('a');
-  uri.href = details.url;
+  const uri = new URL(details.url);
 
   // Should the request be canceled?
   var shouldCancel = (
@@ -294,8 +322,7 @@ function onBeforeRequest(details) {
 
   if (newuristr && using_credentials_in_url) {
     // re-insert userpass info which was stripped temporarily
-    var uri_with_credentials = document.createElement('a');
-    uri_with_credentials.href = newuristr;
+    const uri_with_credentials = new URL(newuristr);
     uri_with_credentials.username = tmp_user;
     uri_with_credentials.password = tmp_pass;
     newuristr = uri_with_credentials.href;
@@ -573,7 +600,7 @@ function onBeforeRedirect(details) {
 
 // Registers the handler for requests
 // See: https://github.com/EFForg/https-everywhere/issues/10039
-wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["<all_urls>"]}, ["blocking"]);
+wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"]);
 
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
@@ -623,3 +650,70 @@ chrome.runtime.onConnect.addListener(function (port) {
     });
   }
 });
+
+// This is necessary for communication with the popup in Firefox Private
+// Browsing Mode, see https://bugzilla.mozilla.org/show_bug.cgi?id=1329304
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+  if (message.type == "get_option") {
+    storage.get(message.object, sendResponse);
+    return true;
+  } else if (message.type == "set_option") {
+    storage.set(message.object, item => {
+      if (sendResponse) {
+        sendResponse(item);
+      }
+    });
+  } else if (message.type == "delete_from_ruleset_cache") {
+    all_rules.ruleCache.delete(message.object);
+  } else if (message.type == "get_active_rulesets") {
+    sendResponse(activeRulesets.getRulesets(message.object));
+  } else if (message.type == "set_ruleset_active_status") {
+    var ruleset = activeRulesets.getRulesets(message.object.tab_id)[message.object.name];
+    ruleset.active = message.object.active;
+    sendResponse(true);
+  } else if (message.type == "add_new_rule") {
+    addNewRule(message.object, function() {
+      sendResponse(true);
+    });
+    return true;
+  } else if (message.type == "remove_rule") {
+    removeRule(message.object);
+  } else if (message.type == "import_settings") {
+    // This is used when importing settings from the options ui
+    import_settings(message.object).then(() => {
+      sendResponse(true);
+    });
+  }
+});
+
+// Send a message to the embedded webextension bootstrap.js to get settings to import
+chrome.runtime.sendMessage("import-legacy-data", import_settings);
+
+/**
+ * Import extension settings (custom rulesets, ruleset toggles, globals) from an object
+ * @param settings the settings object
+ */
+async function import_settings(settings) {
+  if (settings.changed) {
+    // Load all the ruleset toggles into memory and store
+    for (const ruleset_name in settings.rule_toggle) {
+      ls[ruleset_name] = settings.rule_toggle[ruleset_name];
+    }
+
+    all_rules = new RuleSets(ls);
+    all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
+
+    // Load custom rulesets
+    load_legacy_custom_rulesets(settings.custom_rulesets);
+
+    // Save settings
+    await new Promise(resolve => {
+      storage.set({
+        legacy_custom_rulesets: settings.custom_rulesets,
+        httpNowhere: settings.prefs.http_nowhere_enabled,
+        showCounter: settings.prefs.show_counter,
+        globalEnabled: settings.prefs.global_enabled
+      }, resolve);
+    });
+  }
+}

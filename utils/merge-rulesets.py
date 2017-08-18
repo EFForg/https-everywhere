@@ -15,7 +15,12 @@ import sys
 import traceback
 import re
 import unicodedata
+import argparse
 
+parser = argparse.ArgumentParser(description='Merge rulesets.')
+parser.add_argument('--source_dir', default='src/chrome/content/rules', help='source directory')
+parser.add_argument('--fast', help='fast merge', action='store_true')
+args = parser.parse_args()
 
 def normalize(f):
     """
@@ -25,9 +30,8 @@ def normalize(f):
     f = unicodedata.normalize('NFC', unicode(f, 'utf-8')).encode('utf-8')
     return f
 
-os.chdir("src")
-rulesets_fn="chrome/content/rules/default.rulesets"
-xml_ruleset_files = map(normalize, glob("chrome/content/rules/*.xml"))
+rulesets_fn= args.source_dir + "/default.rulesets"
+xml_ruleset_files = map(normalize, glob(args.source_dir + "/*.xml"))
 
 # cleanup after bugs :/
 misfile = rulesets_fn + "r"
@@ -35,7 +39,7 @@ if os.path.exists(misfile):
   print("Cleaning up malformed rulesets file...")
   os.unlink(misfile)
 
-if "--fast" in sys.argv:
+if args.fast:
   library_compiled_time = os.path.getmtime(rulesets_fn)
   newest_xml = max([os.path.getmtime(f) for f in xml_ruleset_files])
   if library_compiled_time >= newest_xml:
@@ -97,5 +101,5 @@ except OSError as e:
 
 # We make default.rulesets at build time, but it shouldn't have a variable
 # timestamp
-call(["touch", "-r", "install.rdf", rulesets_fn])
+call(["touch", "-r", "src/install.rdf", rulesets_fn])
 
