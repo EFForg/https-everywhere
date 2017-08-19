@@ -41,12 +41,65 @@ function disableSwitchPlanner() {
  */
 function display() {
   chrome.runtime.sendMessage({
-      type: "getSmallHtml",
+      type: "getHosts",
       tabId: chrome.devtools.inspectedWindow.tabId,
   }, function(response) {
-    e("SwitchPlannerDetails").innerHTML = response.html;
+    var resources = e("resources");
+    var switch_planner_details = e("SwitchPlannerDetails");
+    while (switch_planner_details.firstChild) {
+      switch_planner_details.removeChild(switch_planner_details.firstChild);
+    }
+
+    var nrw_text_div = document.createElement("div");
+    nrw_text_div.innerText = "Unrewritten HTTP resources loaded from this tab (enable HTTPS on these domains and add them to HTTPS Everywhere):"
+    var nrw_div = switchPlannerSmallHtmlSection(response.nrw);
+    var rw_text_div = document.createElement("div");
+    rw_text_div.style.marginTop = "20px";
+    rw_text_div.innerText = "Resources rewritten successfully from this tab (update these in your source code):"
+    var rw_div = switchPlannerSmallHtmlSection(response.rw);
+
+    switch_planner_details.appendChild(nrw_text_div);
+    switch_planner_details.appendChild(nrw_div);
+    switch_planner_details.appendChild(rw_text_div);
+    switch_planner_details.appendChild(rw_div);
+
     e("SwitchPlannerResults").style.display = "block";
   });
+}
+
+/**
+* Format the switch planner output for presentation to a user.
+* */
+function switchPlannerSmallHtmlSection(asset_host_list) {
+  var wrapper_div = document.createElement("div");
+  if (asset_host_list.length == 0) {
+    wrapper_div.style.fontWeight = "bold";
+    wrapper_div.innerText = "none";
+    return wrapper_div;
+  }
+
+  for (var i = asset_host_list.length - 1; i >= 0; i--) {
+    var host = asset_host_list[i][3];
+    var activeCount = asset_host_list[i][1];
+    var passiveCount = asset_host_list[i][2];
+
+    var div = document.createElement("div");
+    var b = document.createElement("b");
+    b.innerText = host;
+    div.appendChild(b);
+
+    var text_arr = [];
+    if (activeCount > 0) {
+      text_arr.push(activeCount + " active");
+    }
+    if (passiveCount > 0) {
+      text_arr.push(passiveCount + " passive");
+    }
+    div.appendChild(document.createTextNode(": " + text_arr.join(', ')));
+
+    wrapper_div.appendChild(div);
+  }
+  return wrapper_div;
 }
 
 window.onload = function() {
