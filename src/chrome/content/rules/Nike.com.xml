@@ -1,8 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://help-zh-tw.nike.com/ => https://help-zh-tw.nike.com/: (51, "SSL: no alternative certificate subject name matches target host name 'help-zh-tw.nike.com'")
-Non-2xx HTTP code: http://origin-www.nike.com/ (200) => https://origin-www.nike.com/ (403)
 
 	CDN buckets:
 
@@ -30,15 +26,18 @@ Non-2xx HTTP code: http://origin-www.nike.com/ (200) => https://origin-www.nike.
 
 		- legacydev	(refused)
 		- news ³
+		- origin-www ⁴
 
 	³ 503, Akamai
+	⁴ 404
 
 
 	Problematic subdomains:
 
 		- ^ ¹
+		- help-zh-tw ᵐ
 		- images *
-		- modus		(mismatched, CN: *.112.2o7.net)
+		- modus	ᵐ
 		- nikeplus *
 		- nikevideo *
 		- secure-nikeplus ᵀ
@@ -49,6 +48,7 @@ Non-2xx HTTP code: http://origin-www.nike.com/ (200) => https://origin-www.nike.
 	¹ Refused
 	ᵀ Blocks Tor users
 	* Works, akamai
+	ᵐ Mismatched
 
 
 	Partially covered subdomains:
@@ -75,10 +75,8 @@ Non-2xx HTTP code: http://origin-www.nike.com/ (200) => https://origin-www.nike.
 		- help-ja-jp
 		- help-nl-eu
 		- help-pt-br
-		- help-zh-tw
 		- images *
 		- modus		(→ nike-com.112.2o7.net)
-		- origin-www
 		- secure-nikeplus
 		- secure-niketown
 		- secure-store
@@ -110,7 +108,7 @@ Non-2xx HTTP code: http://origin-www.nike.com/ (200) => https://origin-www.nike.
 	** Secured by us, doesn't trip MCB anyway.
 
 -->
-<ruleset name="Nike.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Nike.com (partial)">
 
 	<!--	Direct rewrites:
 				-->
@@ -130,13 +128,11 @@ Non-2xx HTTP code: http://origin-www.nike.com/ (200) => https://origin-www.nike.
 	<target host="help-ja-jp.nike.com" />
 	<target host="help-nl-eu.nike.com" />
 	<target host="help-pt-br.nike.com" />
-	<target host="help-zh-tw.nike.com" />
-	<target host="origin-www.nike.com" />
 	<target host="secure-nikeplus.nike.com" />
 	<target host="secure-niketown.nike.com" />
 	<target host="smodus.nike.com" />
 	<target host="secure-store.nike.com" />
-	<!--target host="www.nike.com" /-->	<!-- ← needs clearnet testing	-->
+	<target host="www.nike.com" />
 
 	<!--	Complications:
 				-->
@@ -146,15 +142,7 @@ Non-2xx HTTP code: http://origin-www.nike.com/ (200) => https://origin-www.nike.
 	<target host="nikevideo.nike.com" />
 	<target host="store.nike.com" />
 
-		<!--exclusion pattern="^http://www\.nike\.com/+(?!apps/|content/|dat/tealeaftarget\.html|etc/|nikeos/scripts/)" /-->
-
-
-	<!--	Tracking cookies:
-					-->
-	<securecookie host="^\.nike\.com$" name="^(?:AnalysisUserId|ResonanceSegment|RES_TRACKINGID|s_\w+|utag_main)$" />
-	<!--securecookie host="^(help-(?:all|de-de|de-eu|en-cn|en-eu|en-gb|en-us|es-eu|es-la|fr-eu|fr-fr|it-eu|ja-jp|nl-eu|pt-br|zh-tw)|secure-store)\.nike\.com$" name=".+" /-->
-	<securecookie host="^(?:help-[\w-]+|secure-store)\.nike\.com$" name=".+" />
-
+	<securecookie host="^(help-[\w-]+|secure-store)?\.nike\.com$" name=".+" />
 
 	<rule from="^http://nike\.com/"
 		to="https://www.nike.com/" />
@@ -168,7 +156,6 @@ Non-2xx HTTP code: http://origin-www.nike.com/ (200) => https://origin-www.nike.
 	<rule from="^http://store\.nike\.com/"
 		to="https://secure-store.nike.com/" />
 
-	<rule from="^http:"
-		to="https:" />
+	<rule from="^http:"	to="https:" />
 
 </ruleset>

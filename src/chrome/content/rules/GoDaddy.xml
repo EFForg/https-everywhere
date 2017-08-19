@@ -1,22 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://ca.m.godaddy.com/ (200) => https://ca.m.godaddy.com/ (403)
-Non-2xx HTTP code: http://sg.m.godaddy.com/ (200) => https://sg.m.godaddy.com/ (403)
-Non-2xx HTTP code: http://godaddy.com/ (200) => https://godaddy.com/ (403)
-Fetch error: http://community.godaddy.com/ => https://community.godaddy.com/: (51, "SSL: no alternative certificate subject name matches target host name 'community.godaddy.com'")
-Fetch error: http://support.godaddy.com/ => https://support.godaddy.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Non-2xx HTTP code: http://supportcenter.godaddy.com/ (200) => https://supportcenter.godaddy.com/ (403)
-Non-2xx HTTP code: http://au.godaddy.com/ (200) => https://au.godaddy.com/ (403)
-Non-2xx HTTP code: http://dk.godaddy.com/ (200) => https://dk.godaddy.com/ (403)
-Non-2xx HTTP code: http://fr.godaddy.com/ (200) => https://fr.godaddy.com/ (403)
-Non-2xx HTTP code: http://it.godaddy.com/ (200) => https://it.godaddy.com/ (403)
-Non-2xx HTTP code: http://no.godaddy.com/ (200) => https://no.godaddy.com/ (403)
-Non-2xx HTTP code: http://pk.godaddy.com/ (200) => https://pk.godaddy.com/ (403)
-Non-2xx HTTP code: http://pt.godaddy.com/ (200) => https://pt.godaddy.com/ (403)
-Non-2xx HTTP code: http://sg.godaddy.com/ (200) => https://sg.godaddy.com/ (403)
-Non-2xx HTTP code: http://fi.godaddy.com/ (200) => https://fi.godaddy.com/ (403)
-Non-2xx HTTP code: http://tr.godaddy.com/ (200) => https://tr.godaddy.com/ (403)
 
 	Other GoDaddy rulesets:
 
@@ -26,13 +8,17 @@ Non-2xx HTTP code: http://tr.godaddy.com/ (200) => https://tr.godaddy.com/ (403)
 		- Tdnam.com.xml
 
 
-	Nonfunctional domains:
+	Nonfunctional subdomains:
 
 		- shops.godaddy.com ¹
 		- video.godaddy.com	(at least some pages redirect to http)
 
 	¹ Dropped
 
+	Problematic subdomains:
+
+		- community (mismatched)
+		- support (incomplete certificate chain)
 
 	Fully covered domains:
 
@@ -47,7 +33,6 @@ Non-2xx HTTP code: http://tr.godaddy.com/ (200) => https://tr.godaddy.com/ (403)
 
 			- cart
 			- certs
-			- community
 			- idp
 			- img
 			- m
@@ -91,7 +76,6 @@ Non-2xx HTTP code: http://tr.godaddy.com/ (200) => https://tr.godaddy.com/ (403)
 			- za
 			- fi
 			- se
-			- support
 			- supportcenter
 			- tr
 			- uk
@@ -130,7 +114,7 @@ Non-2xx HTTP code: http://tr.godaddy.com/ (200) => https://tr.godaddy.com/ (403)
 		- who.godaddy.com
 
 -->
-<ruleset name="GoDaddy.com (partial)" default_off='failed ruleset test'>
+<ruleset name="GoDaddy.com (partial)">
 
 	<!--	Direct rewrites:
 				-->
@@ -139,7 +123,6 @@ Non-2xx HTTP code: http://tr.godaddy.com/ (200) => https://tr.godaddy.com/ (403)
 	<target host="*.auctions.godaddy.com" />
 	<target host="cart.godaddy.com" />
 	<target host="certs.godaddy.com" />
-	<target host="community.godaddy.com" />
 	<target host="idp.godaddy.com" />
 	<target host="img.godaddy.com" />
 	<target host="m.godaddy.com" />
@@ -147,7 +130,6 @@ Non-2xx HTTP code: http://tr.godaddy.com/ (200) => https://tr.godaddy.com/ (403)
 	<target host="mcc.godaddy.com" />
 	<target host="mya.godaddy.com" />
 	<target host="seal.godaddy.com" />
-	<target host="support.godaddy.com" />
 	<target host="supportcenter.godaddy.com" />
 	<target host="who.godaddy.com" />
 	<target host="www.godaddy.com" />
@@ -188,26 +170,12 @@ Non-2xx HTTP code: http://tr.godaddy.com/ (200) => https://tr.godaddy.com/ (403)
 	<target host="ru.godaddy.com" />
 	<target host="ua.godaddy.com" />
 
-		<test url="http://nl.auctions.godaddy.com/" />
-		<test url="http://ca.m.godaddy.com/" />
-		<test url="http://idp.m.godaddy.com/user/retrieveloginname.aspx?spkey=" />
-		<test url="http://sg.m.godaddy.com/" />
+	<test url="http://nl.auctions.godaddy.com/" />
+	<test url="http://ca.m.godaddy.com/" />
+	<test url="http://idp.m.godaddy.com/user/retrieveloginname.aspx?spkey=" />
+	<test url="http://sg.m.godaddy.com/" />
 
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.godaddy\.com$" name="^(PCSplitValue1|SplitValue1|countrysite1|fb_sessionpagecount|fb_sessiontraffic|language1|market|pathway|preferences|preferences1|tcc_refer|traffic|visitor)$" /-->
-	<!--securecookie host="^\w\w\.godaddy\.com$" name="^(ATL\.SID\.SALES|fastball_promos_1)$" /-->
-	<!--securecookie host="^(\w\w|who)\.godaddy\.com$" name="^MemBotChk$" /-->
-	<!--securecookie host="^cart\.godaddy\.com$" name="^mobile\.redirect\.browser$" /-->
-	<!--securecookie host="^idp\.godaddy\.com$" name="^gdCassCluster\.F/\w+$" /-->
-	<!--securecookie host="^(\.auctions|\w\w\.m|idp\.m|mcc|supportcenter)\.godaddy\.com$" name="^ASP\.NET_SessionId" /-->
-	<!--securecookie host="^\w\w\.m\.godaddy\.com$" name="^GoogleADServices_googleadremarketing$" /-->
-	<!--securecookie host="^(\w\w|cart|\w\w\.m|idp\.m|mya)\.godaddy\.com$" name="^gdCassCluster\.\w+" /-->
-	<!--securecookie host="^who\.godaddy\.com$" name="^(ATL\.SID\.WHOIS|gdCassCluster\.JL\+[\dA-Z]+)$" /-->
-
-	<securecookie host="^(?:.*\.)?godaddy\.com$" name=".+" />
-
+	<securecookie host=".+" name=".+" />
 
 	<rule from="^http:"
 		to="https:" />
