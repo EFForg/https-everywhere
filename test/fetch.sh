@@ -5,6 +5,9 @@
 
 RULETESTFOLDER="test/rules"
 
+# Needed for .onion domains
+service tor start
+
 # Exclude those rulesets that do not exist.
 for RULESET in $RULESETS_CHANGED; do
   # First check if the given ruleset actually exists
