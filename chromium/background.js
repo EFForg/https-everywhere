@@ -336,26 +336,20 @@ function onBeforeRequest(details) {
                          newuristr);
   }
 
-  if (httpNowhereOn) {
-    // If loading a main frame, try the HTTPS version as an alternative to
-    // failing.
-    if (shouldCancel) {
-      if (!newuristr) {
-        return {redirectUrl: canonical_url.replace(/^http:/, "https:")};
-      } else {
-        return {redirectUrl: newuristr.replace(/^http:/, "https:")};
-      }
-    }
-    if (newuristr && newuristr.substring(0, 5) === "http:") {
-      // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
-      return {cancel: true};
-    }
+  const resultUrl = new URL(newuristr || details.url);
+
+  // If loading a main frame, try the HTTPS version as an alternative to
+  // failing.
+  if (shouldCancel && details.type === 'main_frame' && resultUrl.protocol === 'http:') {
+    resultUrl.protocol = 'https:';
+    return { redirectUrl: resultUrl.href };
   }
 
-  if (newuristr) {
-    return {redirectUrl: newuristr};
+  // We only allow HTTPS rewrite targets.
+  if (newuristr && newuristr.substring(0, 5) === "https:") {
+    return { redirectUrl: newuristr };
   } else {
-    return {cancel: shouldCancel};
+    return { cancel: shouldCancel };
   }
 }
 
