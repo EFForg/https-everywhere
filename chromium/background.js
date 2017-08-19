@@ -450,66 +450,6 @@ function sortSwitchPlanner(tab_id, rewritten) {
 }
 
 /**
- * Create switch planner sections
- * */
-function switchPlannerRenderSections(tab_id, f) {
-  return "Unrewritten HTTP resources loaded from this tab (enable HTTPS on " +
-         "these domains and add them to HTTPS Everywhere):<br/>" +
-         f(tab_id, "nrw") +
-         "<br/>Resources rewritten successfully from this tab (update these " +
-         "in your source code):<br/>" +
-         f(tab_id, "rw");
-}
-
-/**
- * Generate a HTML link from urls in map
- * map: the map containing the urls
- * */
-function linksFromKeys(map) {
-  if (typeof map == 'undefined') return "";
-  var output = "";
-  for (var key in map) {
-    if (map.hasOwnProperty(key)) {
-      output += "<a href='" + key + "'>" + key + "</a><br/>";
-    }
-  }
-  return output;
-}
-
-/**
- * Generate the detailed html fot the switch planner
- * */
-function switchPlannerDetailsHtml(tab_id) {
-  return switchPlannerRenderSections(tab_id, switchPlannerDetailsHtmlSection);
-}
-
-/**
- * Generate the detailed html fot the switch planner, by section
- * */
-function switchPlannerDetailsHtmlSection(tab_id, rewritten) {
-  var asset_host_list = sortSwitchPlanner(tab_id, rewritten);
-  var output = "";
-
-  for (var i = asset_host_list.length - 1; i >= 0; i--) {
-    var host = asset_host_list[i][3];
-    var activeCount = asset_host_list[i][1];
-    var passiveCount = asset_host_list[i][2];
-
-    output += "<b>" + host + "</b>: ";
-    if (activeCount > 0) {
-      output += activeCount + " active<br/>";
-      output += linksFromKeys(switchPlannerInfo[tab_id][rewritten][host][1]);
-    }
-    if (passiveCount > 0) {
-      output += "<br/>" + passiveCount + " passive<br/>";
-      output += linksFromKeys(switchPlannerInfo[tab_id][rewritten][host][0]);
-    }
-    output += "<br/>";
-  }
-  return output;
-}
-
-/**
  * monitor cookie changes. Automatically convert them to secure cookies
  * @param changeInfo Cookie changed info, see Chrome doc
  * */
