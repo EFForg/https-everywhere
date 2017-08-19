@@ -341,11 +341,11 @@ RuleSets.prototype = {
 
     // Replace each portion of the domain with a * in turn
     var segmented = host.split(".");
-    for (let s of segmented) {
-      tmp = s;
-      s = "*";
+    for (let i=0; i < segmented.length; i++) {
+      let tmp = segmented[i];
+      segmented[i] = "*";
       results = results.concat(this.targets[segmented.join(".")]);
-      s = tmp;
+      segmented[i] = tmp;
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
