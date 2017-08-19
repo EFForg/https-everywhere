@@ -450,35 +450,6 @@ function sortSwitchPlanner(tab_id, rewritten) {
 }
 
 /**
-* Format the switch planner output for presentation to a user.
-* */
-function switchPlannerSmallHtmlSection(tab_id, rewritten) {
-  var asset_host_list = sortSwitchPlanner(tab_id, rewritten);
-  if (asset_host_list.length == 0) {
-    return "<b>none</b>";
-  }
-
-  var output = "";
-  for (var i = asset_host_list.length - 1; i >= 0; i--) {
-    var host = asset_host_list[i][3];
-    var activeCount = asset_host_list[i][1];
-    var passiveCount = asset_host_list[i][2];
-
-    output += "<b>" + host + "</b>: ";
-    if (activeCount > 0) {
-      output += activeCount + " active";
-      if (passiveCount > 0)
-        output += ", ";
-    }
-    if (passiveCount > 0) {
-      output += passiveCount + " passive";
-    }
-    output += "<br/>";
-  }
-  return output;
-}
-
-/**
  * Create switch planner sections
  * */
 function switchPlannerRenderSections(tab_id, f) {
@@ -488,13 +459,6 @@ function switchPlannerRenderSections(tab_id, f) {
          "<br/>Resources rewritten successfully from this tab (update these " +
          "in your source code):<br/>" +
          f(tab_id, "rw");
-}
-
-/**
- * Generate the small switch planner html content
- * */
-function switchPlannerSmallHtml(tab_id) {
-  return switchPlannerRenderSections(tab_id, switchPlannerSmallHtmlSection);
 }
 
 /**
@@ -644,8 +608,11 @@ chrome.runtime.onConnect.addListener(function (port) {
         port.onDisconnect.addListener(disableOnCloseCallback);
       } else if (message.type === "disable") {
         disableSwitchPlannerFor(tabId);
-      } else if (message.type === "getSmallHtml") {
-        sendResponse({html: switchPlannerSmallHtml(tabId)});
+      } else if (message.type === "getHosts") {
+        sendResponse({
+          nrw: sortSwitchPlanner(tabId, "nrw"),
+          rw: sortSwitchPlanner(tabId, "rw")
+        });
       }
     });
   }
