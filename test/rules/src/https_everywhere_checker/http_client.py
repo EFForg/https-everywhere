@@ -10,6 +10,7 @@ import tempfile
 import traceback
 import subprocess
 import re
+from urlparse import urlparse
 
 # We need a cookie jar because some sites (e.g. forums.aws.amazon.com) go into a
 # redirect loop without it.
@@ -306,6 +307,8 @@ class HTTPFetcher(object):
 			buf = cStringIO.StringIO()
 			headerBuf = cStringIO.StringIO()
 			
+			urlParts = urlparse(url)
+			
 			c = pycurl.Curl()
 			c.setopt(c.URL, url)
 			c.setopt(c.WRITEFUNCTION, buf.write)
@@ -325,6 +328,9 @@ class HTTPFetcher(object):
 			c.setopt(c.SSLVERSION, options.sslVersion)
 			c.setopt(c.VERBOSE, options.curlVerbose)
 			c.setopt(c.SSL_CIPHER_LIST, options.cipherList)
+			if urlParts.hostname[-6:] == '.onion':
+				c.setopt(c.CURLOPT_PROXY, '127.0.0.1:9050')
+				c.setopt(c.CURLOPT_PROXYTYPE, pycurl.CURLPROXY_SOCKS5_HOSTNAME)
 			c.perform()
 			
 			bufValue = buf.getvalue()
