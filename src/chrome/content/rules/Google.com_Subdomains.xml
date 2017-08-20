@@ -1,9 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://ipv6.google.com/ => https://ipv6.google.com/: (7, '')
-Non-2xx HTTP code: http://suggestqueries.google.com/ (200) => https://suggestqueries.google.com/ (404)
-
 	See Google.com_Subdomains_Complex.html for rules that don't match the simple rule here
 	For other Google coverage, see GoogleServices.xml
 
@@ -32,7 +27,9 @@ Non-2xx HTTP code: http://suggestqueries.google.com/ (200) => https://suggestque
 			- gg		($ 404s)
 			- knoll *
 			- scholar **
+			- suggestqueries (different content http/https)
 			- trends *
+
 
 	Partially covered domains:
 
@@ -48,7 +45,7 @@ Non-2xx HTTP code: http://suggestqueries.google.com/ (200) => https://suggestque
 			- news		(→ www)
 			- scholar	(→ www)
 -->
-<ruleset name="Google.com Subdomains" default_off='failed ruleset test'>
+<ruleset name="Google.com Subdomains">
 	<target host="admin.google.com" />
 	<target host="apis.google.com" />
 		<!-- See the complex ruleset for chart.apis -->
@@ -65,13 +62,18 @@ Non-2xx HTTP code: http://suggestqueries.google.com/ (200) => https://suggestque
 	<target host="code.google.com" />
 		<!-- See the complex ruleset for codesearch -->
 		<target host="*.corp.google.com" />
-		<!-- See the wildcard section -->
+			<test url="http://discovery.corp.google.com/" />
+			<test url="http://ideas.corp.google.com/" />
+			<test url="http://login.corp.google.com/" />
+			<test url="http://next.dasher-qa.corp.google.com/" /><!-- 3rd level subdomain -->
+			<test url="http://onepick.corp.google.com/" />
 	<target host="developers.google.com" />
 	<target host="dl.google.com" />
 	<target host="docs.google.com" />
 		<!-- See the complex ruleset for docs\d -->
 		<!-- See the complex ruleset for \d\.docs -->
 	<target host="drive.google.com" />
+	<target host="earth.google.com" />
 	<target host="encrypted.google.com" />
 		<!-- See the complex ruleset for encrypted-tbn\d -->
 	<target host="feedburner.google.com" />
@@ -113,28 +115,16 @@ Non-2xx HTTP code: http://suggestqueries.google.com/ (200) => https://suggestque
 	<target host="slides.google.com" />
 	<!-- see GoogleSorry.xml for sorry -->
 	<target host="spreadsheets.google.com" />
-	<target host="suggestqueries.google.com" />
 	<target host="support.google.com" />
 	<target host="talk.google.com" />
 	<!-- See the complex ruleset for tbn\d -->
 	<target host="tools.google.com" />
+	<target host="trends.google.com" />
 	<target host="wallet.google.com" />
 
 	<securecookie host="^(?:\.code|login\.corp|developers|docs|\d\.docs|fiber|mail|plus|\.?productforums|support)\.google\.[\w.]{2,6}$" name=".+" />
 
-	<!-- *.corp wildcard -->
-	<rule from="^http://([\w-]+)\.corp\.google\.com/"
-			to="https://$1.corp.google.com/" />
-		<test url="http://login.corp.google.com/" />
-		<test url="http://ideas.corp.google.com/" />
-		<test url="http://discovery.corp.google.com/" />
-
-	<!-- subdomain to path redirects -->
-	<rule from="^http://(earth|trends)\.google\.com/"
-		 to="https://www.google.com/$1" />
-		<test url="http://earth.google.com/" />
-		<test url="http://trends.google.com/" />
-
 	<rule from="^http:"
-			to="https:" />
+		to="https:" />
+
 </ruleset>

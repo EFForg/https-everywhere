@@ -1,9 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://resources.glassdoor.com/css/mktLPSupport.css (200) => https://na-abm.marketo.com/css/mktLPSupport.css (403)
-Non-2xx HTTP code: http://resources.glassdoor.com/rs/glassdoor/images/arrow-green.png (200) => https://na-abm.marketo.com/rs/glassdoor/images/arrow-green.png (403)
-Fetch error: http://blog-content.glassdoor.com/ => https://blog-content.glassdoor.com/: Too many redirects while fetching 'https://blog-content.glassdoor.com/'
 
 	Other Glassdoor rulesets:
 
@@ -21,10 +16,12 @@ Fetch error: http://blog-content.glassdoor.com/ => https://blog-content.glassdoo
 	Nonfunctional hosts in *glassdoor.com:
 
 		- help ʰ
+		- blog-content ʰ
 		- jobs ¹
-		- resources ᵃ
+		- resources ᵃ ²
 
 	¹ 521
+	² 403
 	ᵃ Marketo / shows another domain
 	ʰ Redirects to http
 
@@ -38,39 +35,21 @@ Fetch error: http://blog-content.glassdoor.com/ => https://blog-content.glassdoo
 	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Glassdoor.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Glassdoor.com (partial)">
 
 	<!--	Direct rewrites:
 				-->
 	<target host="glassdoor.com" />
 	<target host="ads.glassdoor.com" />
 	<target host="b2b-assets.glassdoor.com" />
-	<target host="blog-content.glassdoor.com" />
 	<target host="static.glassdoor.com" />
+	<target host="static1.glassdoor.com" />
+	<target host="static2.glassdoor.com" />
+	<target host="static3.glassdoor.com" />
+	<target host="static4.glassdoor.com" />
+	<target host="static5.glassdoor.com" />
 	<target host="media.glassdoor.com" />
 	<target host="www.glassdoor.com" />
-
-		<test url="http://blog-content.glassdoor.com/app/plugins/GDsocialShare/css/GDsocialShare-styles.min.css" />
-
-	<!--	Complications:
-				-->
-	<target host="resources.glassdoor.com" />
-
-		<exclusion pattern="^http://resources\.glassdoor\.com/(?!/*(?:$|\?|css/|images/|rs/))" />
-
-			<!--	For negative cases see below respective rules.
-
-				+ve:
-					-->
-			<test url="http://resources.glassdoor.com/contact-sales-side.html" />
-			<test url="http://resources.glassdoor.com/default.aspx" />
-			<test url="http://resources.glassdoor.com/employer-branding-for-dummies-1.html" />
-			<test url="http://resources.glassdoor.com/employer-engagement-toolkit.html" />
-			<test url="http://resources.glassdoor.com/five-reasons-your-job-postings-arent-working.html" />
-			<test url="http://resources.glassdoor.com/hubspot-culture-code.html" />
-			<test url="http://resources.glassdoor.com/index.htm" />
-			<test url="http://resources.glassdoor.com/recruiting-budget-spreadsheet-2015.html" />
-
 
 	<!--    Not secured by server:
 					-->
@@ -78,22 +57,10 @@ Fetch error: http://blog-content.glassdoor.com/ => https://blog-content.glassdoo
 	<!--securecookie host="^\.glassdoor\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
 	<!--securecookie host="^www\.glassdoor\.com$" name="^(?:_uac|ARPNTS|gdId)$" /-->
 
-	<securecookie host="^\." name="^(?:__cfduid$|_gat?$|_gat_|cf_clearance$)" />
-	<securecookie host="^(?!resources\.)\w" name="." />
-
-
-	<rule from="^http://resources\.glassdoor\.com/(?=/*(?:cs|image|r)s/)"
-		to="https://na-abm.marketo.com/" />
-
-		<test url="http://resources.glassdoor.com/css/mktLPSupport.css" /><!--	888 -->
-		<test url="http://resources.glassdoor.com/rs/glassdoor/images/arrow-green.png" /><!--	313 -->
+	<securecookie host=".+" name=".+" />
 
 	<!--	Redirect drops forward slash and args:
 							-->
-	<rule from="^http://resources\.glassdoor\.com/.*"
-		to="https://www.glassdoor.com/" />
-
-		<test url="http://resources.glassdoor.com/?" />
 
 	<rule from="^http:"
 		to="https:" />

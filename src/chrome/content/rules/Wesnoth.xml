@@ -1,222 +1,51 @@
 
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://dev-addons.wesnoth.org/index.htm (200) => https://addons.wesnoth.org/1.13/index.htm (404)
-Non-2xx HTTP code: http://stable-addons.wesnoth.org/index.htm (200) => https://addons.wesnoth.org/1.12/index.htm (404)
+	http://*.wesnoth.org is a valid mirror of http://wesnoth.org but mismatched
 
-	See <https://en.wikipedia.org/wiki/The_Battle_for_Wesnoth>.
+	Mirrors of addons.wesnoth.org (mismatched):
+		add-on.wesnoth.org
+		add-ons.wesnoth.org
+		addon.wesnoth.org
+		www.addons.wesnoth.org
+		addonlist.wesnoth.org
+		campaign.wesnoth.org
+		campaigns.wesnoth.org
 
-	For rules causing false/broken MCB, see wesnoth.org-falsemixed.xml.
+	Invalid certificate:
+		changelog.wesnoth.org (→ github.com)
+		coc.wesnoth.org
+		dev-addons.wesnoth.org
+		devhelp.wesnoth.org
+		www.forums.wesnoth.org
+		gettext.wesnoth.org
+		git.wesnoth.org (→ github.com)
+		irclog.wesnoth.org
+		irclogs.wesnoth.org
+		manual.wesnoth.org
+		patches.wesnoth.org (→ github.com)
+		stable-addons.wesnoth.org
+		trunk-addonlist.wesnoth.org
 
-
-	Nonfunctional hosts in *wesnoth.org:
-
-		- status ʳ
-
-	ʳ Refused
-
-
-	Problematic hosts in *wesnoth.org:
-
-		- 1.12-changelog ᵐ
-		- add-ons ᵐ
-		- addonlist ᵐ
-		- bugs * ᵐ
-		- campaigns ᵐ
-		- changelog ᵐ
-		- collectd ˣ
-		- dev-addons ᵐ
-		- eclipse ᵐ ˣ
-		- forum ᵐ
-		- gettext ᵐ
-		- irclogs ᵐ
-		- manual ᵐ
-		- patches * ᵐ
-		- stable-addons ᵐ
-		- stable-changelog ᵐ
-		- svn * ᵐ
-		- websvn ᵐ
-		- wesnoth ᵐ
-		- wesnothd ᵐ
-
-	* Missing certificate chain at redirect destination
-	ᵐ Mismatched
-	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
-
-
-	Insecure cookies are set for these domains: ᶜ
-
-		- .wesnoth.org
-
-	ᶜ See https://owasp.org/index.php/SecureFlag
-
-
-	Mixed content:
-
-		- css, on:
-
-			- collectd from www.wesnoth.org ˢ
-			- eclipse from ^wesnoth.org ˢ
-
-		- Images, on:
-
-			- collectd from www.wesnoth.org ˢ
-			- eclipse from ^wesnoth.org ˢ
-
-	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+	Mixed content (handled in wesnoth.org-falsemixed.xml):
+		collectd.wesnoth.org
 
 -->
-<ruleset name="Battle for Wesnoth (partial)" default_off='failed ruleset test'>
+<ruleset name="Battle for Wesnoth">
 
-	<!--	Direct rewrites:
-				-->
 	<target host="wesnoth.org" />
+	<target host="www.wesnoth.org" />
 	<target host="addons.wesnoth.org" />
-	<!--target host="collectd.wesnoth.org" /-->
+	<target host="bugs.wesnoth.org" />
 	<target host="devdocs.wesnoth.org" />
+	<target host="files.wesnoth.org" />
+	<target host="forum.wesnoth.org" />
 	<target host="forums.wesnoth.org" />
 	<target host="replays.wesnoth.org" />
+	<target host="status.wesnoth.org" />
 	<target host="units.wesnoth.org" />
 	<target host="wiki.wesnoth.org" />
-	<target host="www.wesnoth.org" />
 
-	<!--	Complications:
-				-->
-	<target host="1.12-changelog.wesnoth.org" />
-	<target host="add-ons.wesnoth.org" />
-	<target host="addonlist.wesnoth.org" />
-	<!--target host="bugs.wesnoth.org" /-->
-	<target host="campaigns.wesnoth.org" />
-	<target host="changelog.wesnoth.org" />
-	<target host="dev-addons.wesnoth.org" />
-	<target host="forum.wesnoth.org" />
-	<target host="gettext.wesnoth.org" />
-	<target host="irclogs.wesnoth.org" />
-	<target host="manual.wesnoth.org" />
-	<!--target host="patches.wesnoth.org" /-->
-	<target host="stable-addons.wesnoth.org" />
-	<target host="stable-changelog.wesnoth.org" />
-	<!--target host="svn.wesnoth.org" /-->
-	<target host="wesnoth.wesnoth.org" />
-	<target host="wesnothd.wesnoth.org" />
-
-		<!--	/*\w$ 404s:
-					-->
-		<exclusion pattern="^http://(?:changelog|manual)\.wesnoth\.org/(?!/*(?:$|\?))" />
-
-			<!--	+ve:
-					-->
-			<test url="http://changelog.wesnoth.org/default.aspx" />
-			<test url="http://changelog.wesnoth.org/index.htm" />
-			<test url="http://changelog.wesnoth.org/index.html" />
-			<test url="http://manual.wesnoth.org/default.aspx" />
-			<test url="http://manual.wesnoth.org/index.htm" />
-			<test url="http://manual.wesnoth.org/index.html" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.wesnoth\.org$" name="^phpbb3_\w+_(?:k|sid|u)$" /-->
-
-	<securecookie host="^\." name="^phpbb" />
-	<securecookie host="^\w" name="." />
-
-
-	<!--	Redirect drops path and forward
-		slash, but not args:
-					-->
-	<rule from="^http://1\.12-changelog\.wesnoth\.org/[^?]*"
-		to="https://wiki.wesnoth.org/WesnothManual" />
-
-		<test url="http://1.12-changelog.wesnoth.org/index.htm" />
-
-	<rule from="^http://(?:add-on|campaign)s\.wesnoth\.org/"
-		to="https://addons.wesnoth.org/" />
-
-	<!--	Redirect keeps path and args,
-		but not forward slash:
-						-->
-	<rule from="^http://addonlist\.wesnoth\.org/+"
-		to="https://addons.wesnoth.org/" />
-
-		<test url="http://addonlist.wesnoth.org/index.htm" />
-
-	<!--	Redirect drops all:
-					-->
-	<!--rule from="^http://bugs\.wesnoth\.org/.*"
-		to="https://gna.org/bugs/index.php?group=wesnoth&amp;set=custom&amp;report_id=101&amp;status_id=1&amp;chunksz=150&amp;boxoptionwanted=1" /-->
-
-		<!--
-		<test url="http://bugs.wesnoth.org/index.htm" />
-		-->
-
-	<!--	Redirect keeps args but not forward slash:
-							-->
-	<rule from="^http://dev-addons\.wesnoth\.org/+"
-		to="https://addons.wesnoth.org/1.13/" />
-
-		<test url="http://dev-addons.wesnoth.org/index.htm" />
-
-	<!--	Redirect keeps args but not forward slash:
-							-->
-	<rule from="^http://changelog\.wesnoth\.org/+"
-		to="https://raw.github.com/wesnoth/wesnoth/master/changelog" />
-
-		<test url="http://changelog.wesnoth.org/?" />
-
-	<rule from="^http://forum\.wesnoth\.org/"
-		to="https://forums.wesnoth.org/" />
-
-	<!--	Redirect keeps path and args,
-		but not forward slash:
-						-->
-	<rule from="^http://(gettext|irclogs)\.wesnoth\.org/+"
-		to="https://www.wesnoth.org/$1/" />
-
-		<test url="http://gettext.wesnoth.org/index.htm" />
-		<test url="http://irclogs.wesnoth.org/index.htm" />
-
-	<!--	Redirect keeps args but not forward slash:
-							-->
-	<rule from="^http://manual\.wesnoth\.org/+"
-		to="https://wiki.wesnoth.org/WesnothManual" />
-
-		<test url="http://manual.wesnoth.org/?" />
-
-	<!--	Redirect drops all:
-					-->
-	<!--rule from="^http://patches\.wesnoth\.org/.*"
-		to="https://gna.org/patch/?group=wesnoth" /-->
-
-		<!--
-		<test url="http://patches.wesnoth.org/index.htm" />
-		-->
-
-	<!--	Redirect keeps args but not forward slash:
-							-->
-	<rule from="^http://stable-addons\.wesnoth\.org/+"
-		to="https://addons.wesnoth.org/1.12/" />
-
-		<test url="http://stable-addons.wesnoth.org/index.htm" />
-
-	<rule from="^http://(?:stable-changelog|wesnoth)\.wesnoth\.org/"
-		to="https://wesnoth.org/" />
-
-	<!--	Redirect drops all:
-					-->
-	<!--rule from="^http://svn\.wesnoth\.org/.*"
-		to="https://gna.org/svn/?group=wesnoth" /-->
-
-		<!--
-		<test url="http://svn.wesnoth.org/index.htm" />
-		-->
-
-	<!--	Redirect drops all:
-					-->
-	<rule from="^http://wesnothd\.wesnoth\.org/.*"
-		to="https://guest@www.wesnoth.org/cgi-bin/drraw/drraw.cgi?Mode=view;Dashboard=1381050100.25669" />
-
-		<test url="http://wesnothd.wesnoth.org/index.htm" />
+	<securecookie host=".+" name=".+" />
 
 	<rule from="^http:"
 		to="https:" />

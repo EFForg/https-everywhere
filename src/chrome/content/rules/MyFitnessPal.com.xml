@@ -1,0 +1,36 @@
+<!--
+	Mixed content:
+		- ads from self on www and community
+			<test url="http://www.myfitnesspal.com/" />
+		- images from d34yn14tavczy0.cloudfront.net on www and community
+
+	Breaks various site parts. See:
+		- https://github.com/EFForg/https-everywhere/issues/11029
+		- https://trac.torproject.org/projects/tor/ticket/22887
+
+	Redirect to http:
+		myfitnesspal.com (all pages when logged in)
+		www.myfitnesspal.com (all pages when logged in)
+			<test url="http://www.myfitnesspal.com/food/calorie-chart-nutrition-facts" /> (redirects even when logged out)
+		tickers.myfitnesspal.com
+			<test url="http://tickers.myfitnesspal.com/food/calories/487183300" />
+		tickers2.myfitnesspal.com
+			<test url="http://tickers2.myfitnesspal.com/food/calories/487183300" />
+
+	Invalid certificate:
+		images.myfitnesspal.com
+			<test url="http://images.myfitnesspal.com/images/brands/4/584/4584_small.gif" />
+
+	Announcement from their tech team (July 2017):
+		https://myfitnesspal.desk.com/customer/en/portal/articles/2840040-some-members-are-having-trouble-adding-food-to-their-food-diary-from-the-website
+
+-->
+<ruleset name="MyFitnessPal">
+
+	<target host="api.myfitnesspal.com" />
+		<test url="http://api.myfitnesspal.com/v2" />
+	<target host="blog.myfitnesspal.com" />
+
+	<rule from="^http:" to="https:" />
+
+</ruleset>

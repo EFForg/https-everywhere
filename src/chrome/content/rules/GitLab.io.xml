@@ -1,21 +1,38 @@
 <!--
 	For other GitLab coverage, see GitLab.com.xml.
--->
 
-	<ruleset name="GitLab Pages">
+-->
+<ruleset name="GitLab Pages">
+
 	<target host="gitlab.io"/>
 	<target host="*.gitlab.io"/>
 
-	<test url="http://www.gitlab.io/"/>
-	<test url="http://pages.gitlab.io/"/>
-	<test url="http://maxlaumeister.gitlab.io/"/>
+		<test url="http://www.gitlab.io/"/>
+		<test url="http://pages.gitlab.io/"/>
+		<test url="http://maxlaumeister.gitlab.io/"/>
+		<test url="http://moshmage.gitlab.io/" />
+		<test url="http://weel.gitlab.io/" />
 
 	<securecookie host=".+" name=".+"/>
 
-	<!-- (6/2016) GitLab.io doesn't support TLS on 4th level domains.
-		See http://docs.gitlab.com/ee/pages/README.html#limitations -->
+	<!-- GitLab.io doesn't support TLS on 4th level domains.
+
+		From their documentation:
+		"When using Pages under the general domain of a GitLab instance (*.example.io), you 
+		cannot use HTTPS with sub-subdomains. That means that if your username/groupname 
+		contains a dot, for example foo.bar, the domain foo.bar.example.io will not work. 
+		This is a limitation of the HTTP Over TLS protocol. HTTP pages will continue to 
+		work provided you don't redirect HTTP to HTTPS."
+
+		https://web.archive.org/web/20170121211447/http://docs.gitlab.com/ee/pages/README.html#limitations
+
+		<test url="http://jordi.torne.gitlab.io/csvio-f90/" />
+	-->
+
 	<rule from="^http://([\w-]+)\.gitlab\.io/"
 		to="https://$1.gitlab.io/"/>
+
 	<rule from="^http://gitlab\.io/"
 		to="https://gitlab.io/"/>
+
 </ruleset>

@@ -1,131 +1,65 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://67.media.tumblr.com/6639f1c847abba037039b8a62f8c10b7/tumblr_o2qh8ztGAt1r7hrego1_1280.jpg => https://67.media.tumblr.com/6639f1c847abba037039b8a62f8c10b7/tumblr_o2qh8ztGAt1r7hrego1_1280.jpg: (6, 'Could not resolve host: 67.media.tumblr.com')
-
 	Every user has it's own subdomain which is redirected to http.
-	
+
 	Other Tumblr rulesets:
 
-		- Tmblr.co.xml
-		- Txmblr.com.xml
-		- umblr.com.xml
+		+ Tmblr.co.xml
+		+ Txmblr.com.xml
+		+ umblr.com.xml
 
+	Non-functional hosts
+		SSL peer certificate was not OK:
+			 - data.tumblr.com
 
-	CDN buckets:
-
-		- s3.amazonaws.com/assets.tumblr.com/
-		- s3.amazonaws.com/data.tumblr.com/
-		- s3.amazonaws.com/static.tumblr.com/
-
-		- d2g9v1gts353nd.cloudfront.net
-
-			- a
-			- v
-
-		- d2glp9604qyu8g.cloudfront.net
-
-			- assets
-
-		- d2pi0bc9ewx28h.cloudfront.net
-
-			- static
-
-		- degx20iof9o2c.cloudfront.net
-
-			- vt
-
-		- dssedc4qxg7o6.cloudfront.net
-
-			- media
-			- \d+.media
-
-		- duktadvmmowhi.cloudfront.net
-
-			- secure.static
-
-		- cs38.wac.edgecastcdn.net/...
-
-			- secure.assets
-
-		- wac.19b6.edgecastcdn.net/??19B6/
-
-			- platform.tumblr.com
-
-		- gs1.wac.edgecastcdn.net/8019B6/data.tumblr.com/
-		- a.tumblr.com.edgesuite.net
-		- assets.tumblr.com.edgesuite.net
-		- media.tumblr.com.edgesuite.net
-		- static.tumblr.com.edgesuite.net
-		- vt.tumblr.com.edgesuite.net
-
-
-	Nonfunctional subdomains:
-
-		- data
-		- developers *
-		- engineering *
-		- staff *
-		- \w+ *
-
-	* Dropped
-	* Dropped, per-account vhosts
-
-	These altnames don't exist:
-
-		- origin.assets.tumblr.com
-		- assets.embed.tumblr.com
-		- origin.platform.tumblr.com
-
-
-	Insecure cookies are set for these domains:
-
-		- .tumblr.com
-		- .srvcs.tumblr.com
-		- www.tumblr.com
-
-	* Secured by us
+		Secure connection redirects to plaintext:
+			 - developers.tumblr.com
 
 	Users should enable tls support in tumblr settings:
 
-		http://staff.tumblr.com/post/75482980993/you-can-now-take-extra-precaution-against-hackers
+		https://staff.tumblr.com/post/75482980993/you-can-now-take-extra-precaution-against-hackers
 
 	Unfortunately, per-user subdomains don't support https either, so users
 	are still vulnerable whenever they browse blogs while logged in. :(
 
 -->
-<ruleset name="Tumblr.com (partial)" default_off='failed ruleset test'>
-
-	<!--	Direct rewrites:
-				-->
+<ruleset name="Tumblr.com (partial)">
 	<target host="tumblr.com" />
+	<target host="www.tumblr.com" />
 	<target host="a.tumblr.com" />
+		<test url="http://a.tumblr.com/tumblr_mss09owW141rdplduo1.mp3" />
 	<target host="assets.tumblr.com" />
+		<test url="http://assets.tumblr.com/assets/scripts/" />
+		<test url="http://assets.tumblr.com/assets/scripts/dashboard.js" />
+		<test url="http://assets.tumblr.com/assets/scripts/polyfills.js" />
+		<test url="http://assets.tumblr.com/assets/scripts/posting.js" />
+		<test url="http://assets.tumblr.com/assets/scripts/vendor/jquery_backbone_lodash.js" />
+		<test url="http://assets.tumblr.com/assets/scripts/vendor/tiny_mce_3_5_10/tiny_mce.js" />
 	<target host="secure.assets.tumblr.com" />
+		<test url="http://secure.assets.tumblr.com/images/reads_program.pdf" />
 	<target host="embed.tumblr.com" />
+		<test url="http://embed.tumblr.com/embed/post/NX56sHYxMxsNiYMhM3gx8A/139221102643" />
+	<target host="engineering.tumblr.com" />
 	<target host="media.tumblr.com" />
+		<test url="http://media.tumblr.com/tumblr_ly6fs5CdtS1qhcsyw.jpg" />
 	<target host="*.media.tumblr.com" />
-	<target host="mx.tumblr.com" />
+		<test url="http://37.media.tumblr.com/b7b007141713201d3692f6c2fae605e7/tumblr_mvoi8uOMTH1rnf5opo2_r1_250.gif" />
+		<test url="http://66.media.tumblr.com/3beca4f8c1e028a29e87394de17c86b1/tumblr_o2qh8ztGAt1r7hrego2_1280.jpg" />
+		<test url="http://68.media.tumblr.com/eb21f58707fa8f80d6f35979261e7a62/tumblr_oghnajATtI1uiqvf8o1_500.jpg" />
 	<target host="platform.tumblr.com" />
+		<test url="http://platform.tumblr.com/v1/follow_button.html" />
 	<target host="px.srvcs.tumblr.com" />
-	<target host="secure.static.tumblr.com" />
+		<test url="http://px.srvcs.tumblr.com/impixu" />
+	<target host="staff.tumblr.com" />
 	<target host="static.tumblr.com" />
+		<test url="http://static.tumblr.com/i21wc39/5sxmn9bjr/paperstacks_theme.css" />
+	<target host="secure.static.tumblr.com" />
+		<test url="http://secure.static.tumblr.com/tkqqpe9/4J6n0jyt7/bhrp_programguide_cairo_v9_press_secure.pdf" />
 	<target host="tm319.tumblr.com" />
 	<target host="v.tumblr.com" />
+		<test url="http://v.tumblr.com/tumblr_m5hdfrQdSp1r1bcej_r1.mov" />
 	<target host="vt.tumblr.com" />
-	<target host="www.tumblr.com" />
-	
-	<test url="http://assets.tumblr.com/assets/scripts/" />
-	<test url="http://assets.tumblr.com/assets/scripts/dashboard.js" />
-	<test url="http://assets.tumblr.com/assets/scripts/polyfills.js" />
-	<test url="http://assets.tumblr.com/assets/scripts/posting.js" />
-	<test url="http://assets.tumblr.com/assets/scripts/vendor/jquery_backbone_lodash.js" />
-	<test url="http://assets.tumblr.com/assets/scripts/vendor/tiny_mce_3_5_10/tiny_mce.js" />
-	<test url="http://37.media.tumblr.com/b7b007141713201d3692f6c2fae605e7/tumblr_mvoi8uOMTH1rnf5opo2_r1_250.gif" />
-	<test url="http://66.media.tumblr.com/3beca4f8c1e028a29e87394de17c86b1/tumblr_o2qh8ztGAt1r7hrego2_1280.jpg" />
-	<test url="http://67.media.tumblr.com/6639f1c847abba037039b8a62f8c10b7/tumblr_o2qh8ztGAt1r7hrego1_1280.jpg" />
-	<test url="http://static.tumblr.com/i21wc39/5sxmn9bjr/paperstacks_theme.css" />
-			
+		<test url="http://vt.tumblr.com/tumblr_mrhbqiTyqB1r8cz1x.mp4" />
+
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.tumblr\.com$" name="^(?:__cfduid|cf_clearance|language|logged_in)$" /-->
@@ -141,5 +75,4 @@ Fetch error: http://67.media.tumblr.com/6639f1c847abba037039b8a62f8c10b7/tumblr_
 	<securecookie host="^www\.tumblr\.com$" name="^d(?:evicePixelRatio|ocumentWidth)$" />
 
 	<rule from="^http:" to="https:" />
-
 </ruleset>
