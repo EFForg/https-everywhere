@@ -328,9 +328,7 @@ class HTTPFetcher(object):
 			c.setopt(c.VERBOSE, options.curlVerbose)
 			c.setopt(c.SSL_CIPHER_LIST, options.cipherList)
 			if urlParts.hostname[-6:] == '.onion':
-				c.setopt(c.PROXY, '127.0.0.1')
-				c.setopt(c.PROXYPORT, 9050)
-				c.setopt(c.PROXYTYPE, c.PROXYTYPE_SOCKS5_HOSTNAME)
+				c.setopt(c.PROXY, 'socks5h://127.0.0.1:9050')
 			c.perform()
 			
 			bufValue = buf.getvalue()
