@@ -162,25 +162,25 @@ function correctNewRuleset(issueText, text) {
 
 function problematicNewRuleset(text) {
 	return {
-			topic: function(handler) {
-				const context = makeContext.issue('Type: new ruleset');
+		topic: function(handler) {
+			const context = makeContext.issue('Type: new ruleset');
 
-				handler(context);
+			handler(context);
 
-				return context;
-			},
-			'it works': function(err) {
-				assert.ifError(err);
-			},
-			'it only creates one comment': function(err, context) {
-				assert.isTrue(context.github.issues.createComment.calledOnce);
-			},
-			'it includes the problem': function(err, context) {
-				// args[0] is first call arguments, second [0] is first arg
-				assert.isObject(context.issue.args[0][0]);
-				// TODO try to find a more decoupled way than matching text
-				assert.isTrue(context.issue.args[0][0].body.includes(text));
-			}
+			return context;
+		},
+		'it works': function(err) {
+			assert.ifError(err);
+		},
+		'it only creates one comment': function(err, context) {
+			assert.isTrue(context.github.issues.createComment.calledOnce);
+		},
+		'it includes the problem': function(err, context) {
+			// args[0] is first call arguments, second [0] is first arg
+			assert.isObject(context.issue.args[0][0]);
+			// TODO try to find a more decoupled way than matching text
+			assert.isTrue(context.issue.args[0][0].body.includes(text));
+		}
 	};
 }
 
