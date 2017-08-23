@@ -50,7 +50,7 @@ module.exports = function parseDescription(body) {
 	let normalized = _.fromPairs(lines);
 
 	// TODO Markdown mangles this
-	normalized.domain = domainFromPartialUrl(normalized.domain);
+	if (normalized.domain) normalized.domain = domainFromPartialUrl(normalized.domain);
 
 	return normalized;
 };
