@@ -39,6 +39,21 @@ function assertCorrectBody(text) {
 	};
 }
 
+function assertTypeSucceeds(type) {
+	return {
+		topic: function(parse) {
+			return parse('Type: ' + type);
+		},
+		'it returns an object': function(err, obj) {
+			assert.ifError(err);
+			assert.isObject(obj);
+		},
+		'the object is normal data': function(err, obj) {
+			assert.equal(obj.type, type);
+		}
+	};
+}
+
 vows.describe('issue parser module').addBatch({
 	'When we require the module': {
 		topic: function() {
@@ -124,6 +139,9 @@ vows.describe('issue parser module').addBatch({
 		'and we pass it a body that has a freeform comment with a Markdown link': assertCorrectBody('Type: new ruleset\nDomain: example.com\nPlease add [example.com][].\n\n [example.com]: http://example.com.'),
 		'and we pass it a body that has a freeform comment with colons': assertCorrectBody('Type: new ruleset\nDomain: example.com\nHere\'s a secret: I like colons.'),
 		'and we pass it a body that has a freeform comment with multiple colons': assertCorrectBody('Type: new ruleset\nDomain: example.com\nHere\'s a secret: I like colons. Another secret: I like them a lot.'),
+		'and we pass it a code issue without any other data': assertTypeSucceeds('code issue'),
+		'and we pass it a feature request without any other data': assertTypeSucceeds('feature request'),
+		'and we pass it an issue labeled "other" without any other data': assertTypeSucceeds('other'),
 		'and we pass it a body that isn\'t a valid issue type': {
 			topic: function(parse) {
 				return parse('Type: something else\nDomain: example.com');

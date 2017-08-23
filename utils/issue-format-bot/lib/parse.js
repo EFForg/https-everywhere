@@ -27,7 +27,8 @@ const strip = require('strip-markdown'),
       _ = require('lodash'),
       domainFromPartialUrl = require('domain-from-partial-url');
 
-const validTypes = ['ruleset issue', 'new ruleset', 'code issue', 'feature request'];
+// XXX should this be moved to the validator module?
+const validTypes = ['ruleset issue', 'new ruleset', 'code issue', 'feature request', 'other'];
 
 module.exports = function parseDescription(body) {
 	const plaintext = String(processor.processSync(body));
