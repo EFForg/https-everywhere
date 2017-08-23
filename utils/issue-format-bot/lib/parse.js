@@ -25,7 +25,9 @@ const strip = require('strip-markdown'),
       remark = require('remark'),
       processor = remark().use(strip),
       _ = require('lodash'),
-      domainFromPartialUrl = require('domain-from-partial-url');
+      domainFromPartialUrl = require('domain-from-partial-url'),
+      Entities = require('html-entities').AllHtmlEntities,
+      decode = (new Entities()).decode;
 
 // XXX should this be moved to the validator module?
 const validTypes = ['ruleset issue', 'new ruleset', 'code issue', 'feature request', 'other'];
@@ -49,8 +51,10 @@ module.exports = function parseDescription(body) {
 	// Convert to object
 	let normalized = _.fromPairs(lines);
 
-	// TODO Markdown mangles this
-	if (normalized.domain) normalized.domain = domainFromPartialUrl(normalized.domain);
+	// Markdown mangles full URLs into HTML entities
+	// (e.g. `http&#x3A;//example.com/` instead of
+	// `http://example.com/`). So we decode them again.
+	if (normalized.domain) normalized.domain = domainFromPartialUrl(decode(normalized.domain));
 
 	return normalized;
 };
