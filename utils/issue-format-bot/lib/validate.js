@@ -33,4 +33,4 @@ module.exports = function validate(data) {
 	}
 
 	return problems;
-}
+};
