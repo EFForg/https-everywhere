@@ -271,8 +271,11 @@ class Ruleset(object):
 			if not "*" in target and not self.excludes(("http://%s/" % target)):
 				continue
 
-			# '*.example.com' match 'www.example.com' but not 'secure.account.exmple.com'
-			pattern = target.replace('.', '\.').replace('*', '[^\.]+')
+			# According to the logic in rules.js available at
+			# EFForg/https-everywhere/blob/master/chromium/rules.js#L350-L355
+			# 
+			# `*.example.com` matches `bar.example.com` and `foo.bar.example.com` etc.
+			pattern = target.replace('.', '\.').replace('*', '.+')
 			pattern = '^' + pattern + '$'
 
 			for test in myTestTargets:
