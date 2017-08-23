@@ -25,4 +25,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.querySelector("form").addEventListener("submit", import_json);
+
+  const showCounter = document.getElementFromId("showCounter");
+
+  sendMessage("get_option", { showCounter: true }, item => {
+    showCounter.checked = item.showCounter;
+    showCounter.addEventListener("change", event => {
+      sendMessage("set_option", { showCounter: showCounter.checked });
+    });
+  });
 });
