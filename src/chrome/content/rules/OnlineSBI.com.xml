@@ -1,57 +1,19 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://cmp.onlinesbi.com/ => https://cmp.onlinesbi.com/: (28, 'Connection timed out after 20001 milliseconds')
-
 	Other SBI (State Bank of India) rulesets:
-
 		- SBI.xml
 
-
 	Problematic hosts:
-
-		- onlinesbi.com ¹
-		- www.onlinesbi.com ²
-
-	¹ Mismatched
-	² Insecure renegotiation
-
-
-	Fully covered hosts:
-
-		- (www.)?	(^ → www)
-		- acs
-		- cmp
-		- corp
-		- etradesbi
-		- hrms
-		- kiosk
-		- m
-		- merchant
-		- mobile
-		- mpi
-		- oaa
-		- pg
-		- prepaid
-		- remit
-		- retail
-
-	Nonfunctional subdomains:
-
-		- cms	(self-signed)
-
-
-	Insecure cookies are set for these domains:
-
-		- .onlinesbi.com
-
+		- ^ (mismatched)
+		- www (insecure renegotiation)
+		- cmp (dropped)
+		- sbi (self-signed)
 -->
-<ruleset name="OnlineSBI.com" default_off='failed ruleset test'>
 
-	<!--	Direct rewrites:
-				-->
+<ruleset name="OnlineSBI.com">
+	<target host="onlinesbi.com" />
+	<target host="www.onlinesbi.com" />
 	<target host="acs.onlinesbi.com" />
-	<target host="cmp.onlinesbi.com" />
+	<target host="cms.onlinesbi.com" />
 	<target host="corp.onlinesbi.com" />
 	<target host="etradesbi.onlinesbi.com" />
 	<target host="hrms.onlinesbi.com" />
@@ -65,24 +27,10 @@ Fetch error: http://cmp.onlinesbi.com/ => https://cmp.onlinesbi.com/: (28, 'Conn
 	<target host="prepaid.onlinesbi.com" />
 	<target host="remit.onlinesbi.com" />
 	<target host="retail.onlinesbi.com" />
-	<target host="www.onlinesbi.com" />
 
-	<!--	Complications:
-				-->
-	<target host="onlinesbi.com" />
+	<securecookie host=".+" name=".+" />
 
+	<rule from="^http://onlinesbi\.com/" to="https://www.onlinesbi.com/" />
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.onlinesbi\.com$" name="^dtCookie$" /-->
-
-	<securecookie host="^\.onlinesbi\.com$" name=".+" />
-
-
-	<rule from="^http://onlinesbi\.com/"
-		to="https://www.onlinesbi.com/" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:"	to="https:" />
 </ruleset>
