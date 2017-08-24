@@ -176,7 +176,7 @@ var updateState = function() {
       iconState = "disabled";
     } else if (httpNowhereOn) {
       iconState = "blocking";
-    } else if (applied) {
+    } else if (activeCount > 0) {
       iconState = "active";
     }
     chrome.browserAction.setIcon({
