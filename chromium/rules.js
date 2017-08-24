@@ -100,7 +100,7 @@ RuleSet.prototype = {
     // Okay, now find the first rule that triggers
     for (let rule of this.rules) {
       returl = urispec.replace(rule.from_c,
-                               rule.to);
+        rule.to);
       if (returl != urispec) {
         return returl;
       }
@@ -269,8 +269,8 @@ RuleSets.prototype = {
     }
 
     var rule_set = new RuleSet(ruletag.getAttribute("name"),
-                               default_state,
-                               note.trim());
+      default_state,
+      note.trim());
 
     // Read user prefs
     if (rule_set.name in this.ruleActiveStates) {
@@ -280,7 +280,7 @@ RuleSets.prototype = {
     var rules = ruletag.getElementsByTagName("rule");
     for (let rule of rules) {
       rule_set.rules.push(new Rule(rule.getAttribute("from"),
-                                    rule.getAttribute("to")));
+        rule.getAttribute("to")));
     }
 
     var exclusions = ruletag.getElementsByTagName("exclusion");
@@ -304,11 +304,11 @@ RuleSets.prototype = {
 
     var targets = ruletag.getElementsByTagName("target");
     for (let target of targets) {
-       var host = target.getAttribute("host");
-       if (!(host in this.targets)) {
-         this.targets[host] = [];
-       }
-       this.targets[host].push(rule_set);
+      var host = target.getAttribute("host");
+      if (!(host in this.targets)) {
+        this.targets[host] = [];
+      }
+      this.targets[host].push(rule_set);
     }
   },
 
@@ -321,8 +321,8 @@ RuleSets.prototype = {
     // Have we cached this result? If so, return it!
     var cached_item = this.ruleCache.get(host);
     if (cached_item !== undefined) {
-        log(DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.length);
-        return cached_item;
+      log(DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.length);
+      return cached_item;
     }
     log(DBUG, "Ruleset cache miss for " + host);
 
@@ -392,7 +392,7 @@ RuleSets.prototype = {
     }
 
     if (!this.safeToSecureCookie(hostname)) {
-        return null;
+      return null;
     }
 
     var potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
@@ -433,8 +433,8 @@ RuleSets.prototype = {
     }
     var cached_item = this.cookieHostCache.get(domain);
     if (cached_item !== undefined) {
-        log(DBUG, "Cookie host cache hit for " + domain);
-        return cached_item;
+      log(DBUG, "Cookie host cache hit for " + domain);
+      return cached_item;
     }
     log(DBUG, "Cookie host cache miss for " + domain);
 

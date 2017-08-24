@@ -280,11 +280,11 @@ function onBeforeRequest(details) {
   // analysis process
   var using_credentials_in_url = false;
   if (uri.password || uri.username) {
-      using_credentials_in_url = true;
-      var tmp_user = uri.username;
-      var tmp_pass = uri.password;
-      uri.username = null;
-      uri.password = null;
+    using_credentials_in_url = true;
+    var tmp_user = uri.username;
+    var tmp_pass = uri.password;
+    uri.username = null;
+    uri.password = null;
   }
 
   var canonical_url = uri.href;
@@ -332,10 +332,10 @@ function onBeforeRequest(details) {
   // HTTP URIs by parent hostname, along with the resource type.
   if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== "https:") {
     writeToSwitchPlanner(details.type,
-                         details.tabId,
-                         canonical_host,
-                         details.url,
-                         newuristr);
+      details.tabId,
+      canonical_host,
+      details.url,
+      newuristr);
   }
 
   if (httpNowhereOn) {
@@ -457,28 +457,28 @@ function onCookieChanged(changeInfo) {
   if (!changeInfo.removed && !changeInfo.cookie.secure && isExtensionEnabled) {
     if (all_rules.shouldSecureCookie(changeInfo.cookie)) {
       var cookie = {name:changeInfo.cookie.name,
-                    value:changeInfo.cookie.value,
-                    path:changeInfo.cookie.path,
-                    httpOnly:changeInfo.cookie.httpOnly,
-                    expirationDate:changeInfo.cookie.expirationDate,
-                    storeId:changeInfo.cookie.storeId,
-                    secure: true};
+        value:changeInfo.cookie.value,
+        path:changeInfo.cookie.path,
+        httpOnly:changeInfo.cookie.httpOnly,
+        expirationDate:changeInfo.cookie.expirationDate,
+        storeId:changeInfo.cookie.storeId,
+        secure: true};
 
       // Host-only cookies don't set the domain field.
       if (!changeInfo.cookie.hostOnly) {
-          cookie.domain = changeInfo.cookie.domain;
+        cookie.domain = changeInfo.cookie.domain;
       }
 
       // The cookie API is magical -- we must recreate the URL from the domain and path.
       if (changeInfo.cookie.domain[0] == ".") {
-          cookie.url = "https://www" + changeInfo.cookie.domain + cookie.path;
+        cookie.url = "https://www" + changeInfo.cookie.domain + cookie.path;
       } else {
-          cookie.url = "https://" + changeInfo.cookie.domain + cookie.path;
+        cookie.url = "https://" + changeInfo.cookie.domain + cookie.path;
       }
       // We get repeated events for some cookies because sites change their
       // value repeatedly and remove the "secure" flag.
       log(DBUG,
-       "Securing cookie " + cookie.name + " for " + changeInfo.cookie.domain + ", was secure=" + changeInfo.cookie.secure);
+        "Securing cookie " + cookie.name + " for " + changeInfo.cookie.domain + ", was secure=" + changeInfo.cookie.secure);
       chrome.cookies.set(cookie);
     }
   }
@@ -489,17 +489,17 @@ function onCookieChanged(changeInfo) {
  * @param details details for the redirect (see chrome doc)
  * */
 function onBeforeRedirect(details) {
-    // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
-    var prefix = details.redirectUrl.substring(0, 5);
-    if (prefix === "http:" || prefix === "https") {
-        if (details.requestId in redirectCounter) {
-            redirectCounter[details.requestId] += 1;
-            log(DBUG, "Got redirect id "+details.requestId+
+  // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
+  var prefix = details.redirectUrl.substring(0, 5);
+  if (prefix === "http:" || prefix === "https") {
+    if (details.requestId in redirectCounter) {
+      redirectCounter[details.requestId] += 1;
+      log(DBUG, "Got redirect id "+details.requestId+
                 ": "+redirectCounter[details.requestId]);
-        } else {
-            redirectCounter[details.requestId] = 1;
-        }
+    } else {
+      redirectCounter[details.requestId] = 1;
     }
+  }
 }
 
 // Registers the handler for requests
