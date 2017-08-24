@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelector("form").addEventListener("submit", import_json);
 
-  const showCounter = document.getElementFromId("showCounter");
+  const showCounter = document.getElementById("showCounter");
 
   sendMessage("get_option", { showCounter: true }, item => {
     showCounter.checked = item.showCounter;
