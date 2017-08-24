@@ -5,5 +5,5 @@
 function noop() {}
 
 module.exports = {
-	log: noop
+  log: noop
 };

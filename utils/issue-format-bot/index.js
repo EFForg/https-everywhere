@@ -3,20 +3,20 @@
 'use strict';
 
 const alexa = require('./lib/alexa'),
-      newissue = require('./lib/newissue'),
-      issueedit = require('./lib/issueedit');
+  newissue = require('./lib/newissue'),
+  issueedit = require('./lib/issueedit');
 
 module.exports = robot => {
-	robot.log('HTTPS Everywhere ruleset parser started.');
+  robot.log('HTTPS Everywhere ruleset parser started.');
 
-	alexa((err, domains) => {
-		if (err) throw err;
+  alexa((err, domains) => {
+    if (err) throw err;
 
-		robot.log('Retrieved Alexa rankings.');
+    robot.log('Retrieved Alexa rankings.');
 
-		robot.on('issues.opened', newissue(robot, domains));
-		robot.on('issues.edited', issueedit(robot, domains));
+    robot.on('issues.opened', newissue(robot, domains));
+    robot.on('issues.edited', issueedit(robot, domains));
 
-		robot.log('Listening for new issues and issue edits.');
-	});
+    robot.log('Listening for new issues and issue edits.');
+  });
 };
