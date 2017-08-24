@@ -41,7 +41,7 @@ const firefox_version_fetch = version_url => {
   return cb => {
     https.get(version_url, res => {
       cb(null, res.headers.location
-         .match(/firefox-(.*).tar.*/)[1].replace(/\./g, "_"));
+        .match(/firefox-(.*).tar.*/)[1].replace(/\./g, "_"));
     });
   };
 };
@@ -142,7 +142,7 @@ const check_header_directives = (check_domain, cb) => {
         max_age = Number(max_age_match[1]);
       }
       cb(null,
-          preload && include_subdomains && max_age >= 10886400);
+        preload && include_subdomains && max_age >= 10886400);
       sent_callback = true;
     } else {
       cb(null, false);
@@ -193,38 +193,38 @@ function remove_target_from_xml(source, target) {
 
 const files =
   read_dir(rules_dir)
-  .tap(rules => {
-    bar = new ProgressBar(':bar', { total: rules.length, stream: process.stdout });
-  })
-  .sequence()
-  .filter(name => {
-    if(rulesets_changed){
-      return ~rulesets_changed.indexOf(name);
-    } else {
-      return name.endsWith('.xml');
-    }
-  });
+    .tap(rules => {
+      bar = new ProgressBar(':bar', { total: rules.length, stream: process.stdout });
+    })
+    .sequence()
+    .filter(name => {
+      if(rulesets_changed){
+        return ~rulesets_changed.indexOf(name);
+      } else {
+        return name.endsWith('.xml');
+      }
+    });
 
 const sources =
   files.fork()
-  .map(name => read_file(`${rules_dir}/${name}`, 'utf-8'))
-  .parallel(10);
+    .map(name => read_file(`${rules_dir}/${name}`, 'utf-8'))
+    .parallel(10);
 
 const rules =
   sources.fork()
-  .flatMap(parse_xml)
-  .errors((err, push) => {
-    push(null, { err });
-  })
-  .zip(files.fork())
-  .map(([ { ruleset, err }, name ]) => {
-    if (err) {
-      err.message += ` (${name})`;
-      this.emit('error', err);
-    } else {
-      return ruleset;
-    }
-  });
+    .flatMap(parse_xml)
+    .errors((err, push) => {
+      push(null, { err });
+    })
+    .zip(files.fork())
+    .map(([ { ruleset, err }, name ]) => {
+      if (err) {
+        err.message += ` (${name})`;
+        this.emit('error', err);
+      } else {
+        return ruleset;
+      }
+    });
 
 // This async call determines the current versions of the supported browsers
 

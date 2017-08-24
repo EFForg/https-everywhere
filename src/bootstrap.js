@@ -5,7 +5,7 @@ const CC = Components.classes;
 
 function get_prefs(branch_name){
   let o_prefs = CC["@mozilla.org/preferences-service;1"]
-                      .getService(CI.nsIPrefService);
+    .getService(CI.nsIPrefService);
   let o_branch = o_prefs.getBranch(branch_name);
   return o_branch;
 }
@@ -14,9 +14,9 @@ function get_custom_rulesets_array(){
   var loc = "ProfD";  // profile directory
   var dir =
     CC["@mozilla.org/file/directory_service;1"]
-    .getService(CI.nsIProperties)
-    .get(loc, CI.nsILocalFile)
-    .clone();
+      .getService(CI.nsIProperties)
+      .get(loc, CI.nsILocalFile)
+      .clone();
   dir.append("HTTPSEverywhereUserRules");
   // Check for existence, if not, create.
   if (!dir.exists()) {
@@ -35,9 +35,9 @@ function get_custom_rulesets_array(){
   for(let file of files){
     var data = "";
     var fstream = CC["@mozilla.org/network/file-input-stream;1"]
-        .createInstance(CI.nsIFileInputStream);
+      .createInstance(CI.nsIFileInputStream);
     var sstream = CC["@mozilla.org/scriptableinputstream;1"]
-        .createInstance(CI.nsIScriptableInputStream);
+      .createInstance(CI.nsIScriptableInputStream);
     fstream.init(file, -1, 0, 0);
     sstream.init(fstream);
 
