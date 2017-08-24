@@ -274,15 +274,18 @@ class Ruleset(object):
 			# According to the logic in rules.js available at
 			# EFForg/https-everywhere/blob/master/chromium/rules.js#L350-L355
 			# 
-			# `*.example.com` matches `bar.example.com` and `foo.bar.example.com` etc.
-			# however, `example.*` match `example.com` but not `example.co.uk`
 			pattern = target.replace('.', '\.') # .replace('*', '.+')
 
+			# `*.example.com` matches `bar.example.com` and `foo.bar.example.com` etc.
 			if pattern[0] == '*':
 				pattern = pattern.replace('*', '.+')
 
+			# however, `example.*` match `example.com` but not `example.co.uk`
 			if pattern[len(pattern) - 1] == '*':
 				pattern = pattern.replace('*', '[^\.]+')
+
+			# `www.*.example.com` match `www.image.example.com` but not `www.ssl.image.example.com`
+			pattern = pattern.replace('*', '[^\.]+')
 
 			pattern = '^' + pattern + '$'
 
