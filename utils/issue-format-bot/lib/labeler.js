@@ -3,7 +3,7 @@
 'use strict';
 
 module.exports = function label(context, data, alexa) {
-  const alexaPosition = alexa.indexOf(data.domain);
+  const alexaPosition = alexa.data.indexOf(data.domain);
   const labels = [];
 
   // TODO remove existing labels in case of edits

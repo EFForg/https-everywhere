@@ -33,7 +33,7 @@ function indexOf(str) {
   }
 }
 
-module.exports = new Proxy(new Array(SIZE), {
+const arr = new Proxy(new Array(SIZE), {
   get: function(target, name) {
     // Override Array#indexOf
     if (name === 'indexOf') {
@@ -45,3 +45,5 @@ module.exports = new Proxy(new Array(SIZE), {
     return `domain${Number(name) + 1}.com`;
   }
 });
+
+module.exports = {data: arr};

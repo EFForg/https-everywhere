@@ -12,7 +12,10 @@ const request = require('request'),
 // TODO make this return Promises
 // TODO test this file
 
-module.exports = function getAlexa(cb) {
+const DAY = 1000 * 60 * 60 * 24,
+  obj = {data: null};
+
+function retrieveAlexa(cb) {
 
   const alexa = [];
   const csvRegex = /^[0-9]+,(.+)/;
@@ -38,4 +41,38 @@ module.exports = function getAlexa(cb) {
         cb(null, alexa);
       });
     });
+}
+
+module.exports = function getAlexa(cb) {
+  // If the data has already been retrieved, just return it
+  if (obj.data) {
+    cb(null, obj);
+    return;
+  }
+
+  // If it hasn't, invoke the retrieval function and schedule
+  // refreshes if we don't run into problems
+  retrieveAlexa((err, data) => {
+    if (err) {
+      cb(err, null);
+      return;
+    }
+
+    // We return an object so that setInterval can change the Array
+    // the `data` property points to
+    obj.data = data;
+
+    setInterval(retrieveAlexa, DAY, (_err, _data) => {
+      // This is the callback function passed to retrieveAlexa()
+
+      if (_err) {
+        cb(_err, null);
+        return;
+      }
+
+      obj.data = _data;
+    });
+
+    cb(null, obj);
+  });
 };
