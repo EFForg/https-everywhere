@@ -43,7 +43,7 @@ function retrieveAlexa(cb) {
     });
 }
 
-module.exports = function getAlexa(cb) {
+module.exports = function getAlexa(log, cb) {
   // If the data has already been retrieved, just return it
   if (obj.data) {
     cb(null, obj);
@@ -58,6 +58,8 @@ module.exports = function getAlexa(cb) {
       return;
     }
 
+    log('Retrieved Alexa rankings.');
+
     // We return an object so that setInterval can change the Array
     // the `data` property points to
     obj.data = data;
@@ -71,6 +73,8 @@ module.exports = function getAlexa(cb) {
       }
 
       obj.data = _data;
+
+      log('Refreshed Alexa rankings.');
     });
 
     cb(null, obj);
