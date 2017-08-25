@@ -192,6 +192,9 @@ document.addEventListener("DOMContentLoaded", function () {
       httpNowhereCheckbox.setAttribute('checked', '');
     }
   });
+
+  e("aboutTitle").setAttribute("title", chrome.i18n.getMessage("about_title"));
+  e("add-rule-link").addEventListener("click", addManualRule);
 });
 
 

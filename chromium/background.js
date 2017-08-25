@@ -55,31 +55,42 @@ var switchPlannerEnabledFor = {};
 // rw / nrw stand for "rewritten" versus "not rewritten"
 var switchPlannerInfo = {};
 
-// Is HTTPSe enabled, or has it been manually disabled by the user?
-var isExtensionEnabled = true;
-storage.get({globalEnabled: true}, function(item) {
-  isExtensionEnabled = item.globalEnabled;
-  updateState();
-});
-
-// Load prefs about whether http nowhere is on. Structure is:
-//  { httpNowhere: true/false }
+/**
+ * Load preferences. Structure is:
+ *  {
+ *    httpNowhere: Boolean,
+ *    showCounter: Boolean,
+ *    isExtensionEnabled: Boolean
+ *  }
+ */
 var httpNowhereOn = false;
-storage.get({httpNowhere: false}, function(item) {
+var showCounter = true;
+var isExtensionEnabled = true;
+
+storage.get({
+  httpNowhere: false,
+  showCounter: true,
+  globalEnabled: true
+}, function(item) {
   httpNowhereOn = item.httpNowhere;
+  showCounter = item.showCounter;
+  isExtensionEnabled = item.globalEnabled;
   updateState();
 });
 
 chrome.storage.onChanged.addListener(function(changes, areaName) {
   if (areaName === 'sync' || areaName === 'local') {
-    for (var key in changes) {
-      if (key === 'httpNowhere') {
-        httpNowhereOn = changes[key].newValue;
-        updateState();
-      } else if (key === 'globalEnabled') {
-        isExtensionEnabled = changes[key].newValue;
-        updateState();
-      }
+  	if ('httpNowhere' in changes) {
+      httpNowhere = changes.httpNowhere.newValue;
+      updateState();
+    }
+    if ('showCounter' in changes) {
+      showCounter = changes.showCounter.newValue;
+      updateState();
+    }
+    if ('globalEnabled' in changes) {
+      isExtensionEnabled = changes.globalEnabled.newValue;
+      updateState();
     }
   }
 });
@@ -125,6 +136,25 @@ var loadStoredUserRules = function() {
 
 loadStoredUserRules();
 
+function getActiveRulesetCount(id) {
+  const applied = activeRulesets.getRulesets(id);
+
+  if (!applied)
+  {
+    return 0;
+  }
+
+  let activeCount = 0;
+
+  for (const key in applied) {
+    if (applied[key].active) {
+      activeCount++;
+    }
+  }
+
+  return activeCount;
+}
+
 /**
  * Set the icon color correctly
  * inactive: extension is enabled, but no rules were triggered on this page.
@@ -136,17 +166,17 @@ var updateState = function() {
   if (!chrome.tabs) {
     return;
   }
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     if (!tabs || tabs.length === 0) {
       return;
     }
-    var applied = activeRulesets.getRulesets(tabs[0].id)
-    var iconState = "inactive";
+    const activeCount = getActiveRulesetCount(tabs[0].id);
+    let iconState = "inactive";
     if (!isExtensionEnabled) {
       iconState = "disabled";
     } else if (httpNowhereOn) {
       iconState = "blocking";
-    } else if (applied) {
+    } else if (activeCount > 0) {
       iconState = "active";
     }
     chrome.browserAction.setIcon({
@@ -157,6 +187,12 @@ var updateState = function() {
     chrome.browserAction.setTitle({
       title: "HTTPS Everywhere (" + iconState + ")"
     });
+
+    chrome.browserAction.setBadgeBackgroundColor({ color: "#00cc00" });
+
+    const showBadge = activeCount > 0 && isExtensionEnabled && showCounter;
+
+    chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : "" });
   });
 }
 
