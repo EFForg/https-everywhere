@@ -295,14 +295,12 @@ function onBeforeRequest(details) {
   const uri = new URL(details.url);
 
   // Should the request be canceled?
-  var shouldCancel = (
-    httpNowhereOn &&
-    uri.protocol === 'http:' &&
-    !/\.onion$/.test(uri.hostname) &&
-    !/^localhost$/.test(uri.hostname) &&
-    !/^127(\.[0-9]{1,3}){3}$/.test(uri.hostname) &&
-    !/^0\.0\.0\.0$/.test(uri.hostname)
-  );
+  const shouldCancel = httpNowhereOn &&
+    uri.protocol !== 'https:' &&
+    uri.hostname.slice(-6) !== '.onion' &&
+    uri.hostname !== 'localhost' &&
+    !/^127(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9]{1,2})){3}$/.test(uri.hostname) &&
+    uri.hostname !== '0.0.0.0';
 
   // Normalise hosts such as "www.example.com."
   var canonical_host = uri.hostname;
@@ -374,26 +372,20 @@ function onBeforeRequest(details) {
       newuristr);
   }
 
-  if (httpNowhereOn) {
-    // If loading a main frame, try the HTTPS version as an alternative to
-    // failing.
-    if (shouldCancel) {
-      if (!newuristr) {
-        return {redirectUrl: canonical_url.replace(/^http:/, "https:")};
-      } else {
-        return {redirectUrl: newuristr.replace(/^http:/, "https:")};
-      }
-    }
-    if (newuristr && newuristr.substring(0, 5) === "http:") {
-      // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
-      return {cancel: true};
-    }
+  const resultUrl = new URL(newuristr || details.url);
+
+  // If loading a main frame, try the HTTPS version as an alternative to
+  // failing.
+  if (shouldCancel && details.type === 'main_frame' && resultUrl.protocol === 'http:') {
+    resultUrl.protocol = 'https:';
+    return { redirectUrl: resultUrl.href };
   }
 
-  if (newuristr) {
-    return {redirectUrl: newuristr};
+  // We only allow HTTPS rewrite targets.
+  if (newuristr && newuristr.substring(0, 5) === "https:") {
+    return { redirectUrl: newuristr };
   } else {
-    return {cancel: shouldCancel};
+    return { cancel: shouldCancel };
   }
 }
 
@@ -540,7 +532,7 @@ function onBeforeRedirect(details) {
 
 // Registers the handler for requests
 // See: https://github.com/EFForg/https-everywhere/issues/10039
-wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"]);
+wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["http://*/*", "https://*/*", "ftp://*/*"]}, ["blocking"]);
 
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
