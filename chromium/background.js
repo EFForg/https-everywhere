@@ -55,31 +55,42 @@ var switchPlannerEnabledFor = {};
 // rw / nrw stand for "rewritten" versus "not rewritten"
 var switchPlannerInfo = {};
 
-// Is HTTPSe enabled, or has it been manually disabled by the user?
-var isExtensionEnabled = true;
-storage.get({globalEnabled: true}, function(item) {
-  isExtensionEnabled = item.globalEnabled;
-  updateState();
-});
-
-// Load prefs about whether http nowhere is on. Structure is:
-//  { httpNowhere: true/false }
+/**
+ * Load preferences. Structure is:
+ *  {
+ *    httpNowhere: Boolean,
+ *    showCounter: Boolean,
+ *    isExtensionEnabled: Boolean
+ *  }
+ */
 var httpNowhereOn = false;
-storage.get({httpNowhere: false}, function(item) {
+var showCounter = true;
+var isExtensionEnabled = true;
+
+storage.get({
+  httpNowhere: false,
+  showCounter: true,
+  globalEnabled: true
+}, function(item) {
   httpNowhereOn = item.httpNowhere;
+  showCounter = item.showCounter;
+  isExtensionEnabled = item.globalEnabled;
   updateState();
 });
 
 chrome.storage.onChanged.addListener(function(changes, areaName) {
   if (areaName === 'sync' || areaName === 'local') {
-    for (var key in changes) {
-      if (key === 'httpNowhere') {
-        httpNowhereOn = changes[key].newValue;
-        updateState();
-      } else if (key === 'globalEnabled') {
-        isExtensionEnabled = changes[key].newValue;
-        updateState();
-      }
+  	if ('httpNowhere' in changes) {
+      httpNowhere = changes.httpNowhere.newValue;
+      updateState();
+    }
+    if ('showCounter' in changes) {
+      showCounter = changes.showCounter.newValue;
+      updateState();
+    }
+    if ('globalEnabled' in changes) {
+      isExtensionEnabled = changes.globalEnabled.newValue;
+      updateState();
     }
   }
 });
@@ -125,6 +136,25 @@ var loadStoredUserRules = function() {
 
 loadStoredUserRules();
 
+function getActiveRulesetCount(id) {
+  const applied = activeRulesets.getRulesets(id);
+
+  if (!applied)
+  {
+    return 0;
+  }
+
+  let activeCount = 0;
+
+  for (const key in applied) {
+    if (applied[key].active) {
+      activeCount++;
+    }
+  }
+
+  return activeCount;
+}
+
 /**
  * Set the icon color correctly
  * active: extension is enabled and rewrote URLs on this page.
@@ -133,23 +163,37 @@ loadStoredUserRules();
  */
 
 function updateState () {
-  let iconState = 'active'
+  let iconState = 'active';
 
   if (!isExtensionEnabled) {
-    iconState = 'disabled'
+    iconState = 'disabled';
   } else if (httpNowhereOn) {
-    iconState = 'blocking'
+    iconState = 'blocking';
   }
 
   chrome.browserAction.setIcon({
     path: {
       38: 'icons/icon-' + iconState + '-38.png'
     }
-  })
+  });
 
   chrome.browserAction.setTitle({
     title: 'HTTPS Everywhere' + (iconState === 'active') ? '' : ' (' + iconState + ')'
-  })
+  });
+
+  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    if (!tabs || tabs.length === 0) {
+      return;
+    }
+
+    const activeCount = getActiveRulesetCount(tabs[0].id);
+
+    chrome.browserAction.setBadgeBackgroundColor({ color: '#00cc00' });
+
+    const showBadge = activeCount > 0 && isExtensionEnabled && showCounter;
+
+    chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '' });
+  });
 }
 
 /**
@@ -272,11 +316,11 @@ function onBeforeRequest(details) {
   // analysis process
   var using_credentials_in_url = false;
   if (uri.password || uri.username) {
-      using_credentials_in_url = true;
-      var tmp_user = uri.username;
-      var tmp_pass = uri.password;
-      uri.username = null;
-      uri.password = null;
+    using_credentials_in_url = true;
+    var tmp_user = uri.username;
+    var tmp_pass = uri.password;
+    uri.username = null;
+    uri.password = null;
   }
 
   var canonical_url = uri.href;
@@ -324,10 +368,10 @@ function onBeforeRequest(details) {
   // HTTP URIs by parent hostname, along with the resource type.
   if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== "https:") {
     writeToSwitchPlanner(details.type,
-                         details.tabId,
-                         canonical_host,
-                         details.url,
-                         newuristr);
+      details.tabId,
+      canonical_host,
+      details.url,
+      newuristr);
   }
 
   if (httpNowhereOn) {
@@ -442,102 +486,6 @@ function sortSwitchPlanner(tab_id, rewritten) {
 }
 
 /**
-* Format the switch planner output for presentation to a user.
-* */
-function switchPlannerSmallHtmlSection(tab_id, rewritten) {
-  var asset_host_list = sortSwitchPlanner(tab_id, rewritten);
-  if (asset_host_list.length == 0) {
-    return "<b>none</b>";
-  }
-
-  var output = "";
-  for (var i = asset_host_list.length - 1; i >= 0; i--) {
-    var host = asset_host_list[i][3];
-    var activeCount = asset_host_list[i][1];
-    var passiveCount = asset_host_list[i][2];
-
-    output += "<b>" + host + "</b>: ";
-    if (activeCount > 0) {
-      output += activeCount + " active";
-      if (passiveCount > 0)
-        output += ", ";
-    }
-    if (passiveCount > 0) {
-      output += passiveCount + " passive";
-    }
-    output += "<br/>";
-  }
-  return output;
-}
-
-/**
- * Create switch planner sections
- * */
-function switchPlannerRenderSections(tab_id, f) {
-  return "Unrewritten HTTP resources loaded from this tab (enable HTTPS on " +
-         "these domains and add them to HTTPS Everywhere):<br/>" +
-         f(tab_id, "nrw") +
-         "<br/>Resources rewritten successfully from this tab (update these " +
-         "in your source code):<br/>" +
-         f(tab_id, "rw");
-}
-
-/**
- * Generate the small switch planner html content
- * */
-function switchPlannerSmallHtml(tab_id) {
-  return switchPlannerRenderSections(tab_id, switchPlannerSmallHtmlSection);
-}
-
-/**
- * Generate a HTML link from urls in map
- * map: the map containing the urls
- * */
-function linksFromKeys(map) {
-  if (typeof map == 'undefined') return "";
-  var output = "";
-  for (var key in map) {
-    if (map.hasOwnProperty(key)) {
-      output += "<a href='" + key + "'>" + key + "</a><br/>";
-    }
-  }
-  return output;
-}
-
-/**
- * Generate the detailed html fot the switch planner
- * */
-function switchPlannerDetailsHtml(tab_id) {
-  return switchPlannerRenderSections(tab_id, switchPlannerDetailsHtmlSection);
-}
-
-/**
- * Generate the detailed html fot the switch planner, by section
- * */
-function switchPlannerDetailsHtmlSection(tab_id, rewritten) {
-  var asset_host_list = sortSwitchPlanner(tab_id, rewritten);
-  var output = "";
-
-  for (var i = asset_host_list.length - 1; i >= 0; i--) {
-    var host = asset_host_list[i][3];
-    var activeCount = asset_host_list[i][1];
-    var passiveCount = asset_host_list[i][2];
-
-    output += "<b>" + host + "</b>: ";
-    if (activeCount > 0) {
-      output += activeCount + " active<br/>";
-      output += linksFromKeys(switchPlannerInfo[tab_id][rewritten][host][1]);
-    }
-    if (passiveCount > 0) {
-      output += "<br/>" + passiveCount + " passive<br/>";
-      output += linksFromKeys(switchPlannerInfo[tab_id][rewritten][host][0]);
-    }
-    output += "<br/>";
-  }
-  return output;
-}
-
-/**
  * monitor cookie changes. Automatically convert them to secure cookies
  * @param changeInfo Cookie changed info, see Chrome doc
  * */
@@ -545,28 +493,28 @@ function onCookieChanged(changeInfo) {
   if (!changeInfo.removed && !changeInfo.cookie.secure && isExtensionEnabled) {
     if (all_rules.shouldSecureCookie(changeInfo.cookie)) {
       var cookie = {name:changeInfo.cookie.name,
-                    value:changeInfo.cookie.value,
-                    path:changeInfo.cookie.path,
-                    httpOnly:changeInfo.cookie.httpOnly,
-                    expirationDate:changeInfo.cookie.expirationDate,
-                    storeId:changeInfo.cookie.storeId,
-                    secure: true};
+        value:changeInfo.cookie.value,
+        path:changeInfo.cookie.path,
+        httpOnly:changeInfo.cookie.httpOnly,
+        expirationDate:changeInfo.cookie.expirationDate,
+        storeId:changeInfo.cookie.storeId,
+        secure: true};
 
       // Host-only cookies don't set the domain field.
       if (!changeInfo.cookie.hostOnly) {
-          cookie.domain = changeInfo.cookie.domain;
+        cookie.domain = changeInfo.cookie.domain;
       }
 
       // The cookie API is magical -- we must recreate the URL from the domain and path.
       if (changeInfo.cookie.domain[0] == ".") {
-          cookie.url = "https://www" + changeInfo.cookie.domain + cookie.path;
+        cookie.url = "https://www" + changeInfo.cookie.domain + cookie.path;
       } else {
-          cookie.url = "https://" + changeInfo.cookie.domain + cookie.path;
+        cookie.url = "https://" + changeInfo.cookie.domain + cookie.path;
       }
       // We get repeated events for some cookies because sites change their
       // value repeatedly and remove the "secure" flag.
       log(DBUG,
-       "Securing cookie " + cookie.name + " for " + changeInfo.cookie.domain + ", was secure=" + changeInfo.cookie.secure);
+        "Securing cookie " + cookie.name + " for " + changeInfo.cookie.domain + ", was secure=" + changeInfo.cookie.secure);
       chrome.cookies.set(cookie);
     }
   }
@@ -577,17 +525,17 @@ function onCookieChanged(changeInfo) {
  * @param details details for the redirect (see chrome doc)
  * */
 function onBeforeRedirect(details) {
-    // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
-    var prefix = details.redirectUrl.substring(0, 5);
-    if (prefix === "http:" || prefix === "https") {
-        if (details.requestId in redirectCounter) {
-            redirectCounter[details.requestId] += 1;
-            log(DBUG, "Got redirect id "+details.requestId+
+  // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
+  var prefix = details.redirectUrl.substring(0, 5);
+  if (prefix === "http:" || prefix === "https") {
+    if (details.requestId in redirectCounter) {
+      redirectCounter[details.requestId] += 1;
+      log(DBUG, "Got redirect id "+details.requestId+
                 ": "+redirectCounter[details.requestId]);
-        } else {
-            redirectCounter[details.requestId] = 1;
-        }
+    } else {
+      redirectCounter[details.requestId] = 1;
     }
+  }
 }
 
 // Registers the handler for requests
@@ -636,8 +584,11 @@ chrome.runtime.onConnect.addListener(function (port) {
         port.onDisconnect.addListener(disableOnCloseCallback);
       } else if (message.type === "disable") {
         disableSwitchPlannerFor(tabId);
-      } else if (message.type === "getSmallHtml") {
-        sendResponse({html: switchPlannerSmallHtml(tabId)});
+      } else if (message.type === "getHosts") {
+        sendResponse({
+          nrw: sortSwitchPlanner(tabId, "nrw"),
+          rw: sortSwitchPlanner(tabId, "rw")
+        });
       }
     });
   }
