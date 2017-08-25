@@ -157,7 +157,7 @@ function getActiveRulesetCount(id) {
 
 /**
  * Set the icon color correctly
- * active: extension is enabled and rewrote URLs on this page.
+ * active: extension is enabled.
  * blocking: extension is in "block all HTTP requests" mode.
  * disabled: extension is disabled from the popup menu.
  */
