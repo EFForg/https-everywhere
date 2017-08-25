@@ -156,8 +156,7 @@ function gotTab(tabArray) {
         listDiv = unstableRules;
       }
       appendRuleLineToListDiv(rulesets[r], listDiv, activeTab.id);
-      listDiv.style.position = "static";
-      listDiv.style.visibility = "visible";
+      listDiv.style.display = "block";
     }
     // Only show the "Add a rule" link if we're on an HTTPS page
     if (/^https:/.test(activeTab.url)) {
