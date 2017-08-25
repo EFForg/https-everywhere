@@ -8,8 +8,8 @@ function e(id) {
  */
 function sendMessage(type) {
   chrome.runtime.sendMessage({
-      type: type,
-      tabId: chrome.devtools.inspectedWindow.tabId,
+    type: type,
+    tabId: chrome.devtools.inspectedWindow.tabId,
   });
 }
 
@@ -41,8 +41,8 @@ function disableSwitchPlanner() {
  */
 function display() {
   chrome.runtime.sendMessage({
-      type: "getHosts",
-      tabId: chrome.devtools.inspectedWindow.tabId,
+    type: "getHosts",
+    tabId: chrome.devtools.inspectedWindow.tabId,
   }, function(response) {
     var resources = e("resources");
     var switch_planner_details = e("SwitchPlannerDetails");
