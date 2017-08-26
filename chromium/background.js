@@ -80,8 +80,8 @@ storage.get({
 
 chrome.storage.onChanged.addListener(function(changes, areaName) {
   if (areaName === 'sync' || areaName === 'local') {
-  	if ('httpNowhere' in changes) {
-      httpNowhere = changes.httpNowhere.newValue;
+    if ('httpNowhere' in changes) {
+      httpNowhereOn = changes.httpNowhere.newValue;
       updateState();
     }
     if ('showCounter' in changes) {
