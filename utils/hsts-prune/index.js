@@ -71,6 +71,9 @@ const parse_include = include_url => {
       })
       .pipe(split())
       .on('data', line => {
+        line = line.replace(new RegExp('/ 1 /g'), ' true ')
+        line = line.replace(new RegExp('/ 0 /g'), ' false ')
+
         let regex_res = line.match(regex)
         if(regex_res){
           hsts[regex_res[1]] = Boolean(regex_res[2])
@@ -236,7 +239,7 @@ async.parallel({
   versions.esr_major = versions.esr.replace(/_.*/, "");
 
   let stable_url = `https://hg.mozilla.org/releases/mozilla-release/raw-file/FIREFOX_${versions.stable}_RELEASE/security/manager/ssl/nsSTSPreloadList.inc`;
-  let dev_url = `https://hg.mozilla.org/releases/mozilla-aurora/raw-file/tip/security/manager/ssl/nsSTSPreloadList.inc`;
+  let dev_url = `https://hg.mozilla.org/releases/mozilla-beta/raw-file/tip/security/manager/ssl/nsSTSPreloadList.inc`;
   let esr_url = `https://hg.mozilla.org/releases/mozilla-esr${versions.esr_major}/raw-file/FIREFOX_${versions.esr}_RELEASE/security/manager/ssl/nsSTSPreloadList.inc`;
   let chromium_url = `https://chromium.googlesource.com/chromium/src.git/+/${versions.chromium}/net/http/transport_security_state_static.json?format=TEXT`;
 
