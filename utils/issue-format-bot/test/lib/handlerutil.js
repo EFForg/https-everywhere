@@ -121,7 +121,7 @@ function noType(text) {
 function correctNewRuleset(issueText, text) {
   const expectingEdit = Boolean(text);
 
-  let obj = {
+  const obj = {
     topic: function(handler) {
       const context = makeContext.issue(issueText);
 

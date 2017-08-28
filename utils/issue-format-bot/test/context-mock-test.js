@@ -1,5 +1,7 @@
 // Copyright 2017 AJ Jordan, AGPLv3+
 
+'use strict';
+
 const vows = require('perjury'),
   assert = vows.assert,
   _ = require('lodash');

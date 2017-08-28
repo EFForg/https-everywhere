@@ -18,7 +18,7 @@ const validTypes = ['ruleset issue', 'new ruleset', 'code issue', 'feature reque
 // XXX the Error API in this module is pretty funky and could use a better design
 
 module.exports = function parseDescription(body) {
-  const plaintext = String(processor.processSync(body));
+  const plaintext = String(processor.processSync(body)); // eslint-disable-line no-sync
 
   // Check if there's no description at all
   if (plaintext.trim().length === 0) return new Error('null description');
@@ -41,7 +41,7 @@ module.exports = function parseDescription(body) {
   if (!validTypes.includes(type)) return new Error('invalid type');
 
   // Convert to object
-  let normalized = _.fromPairs(lines);
+  const normalized = _.fromPairs(lines);
 
   // Markdown mangles full URLs into HTML entities
   // (e.g. `http&#x3A;//example.com/` instead of
