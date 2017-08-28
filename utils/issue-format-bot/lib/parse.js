@@ -12,8 +12,10 @@ const strip = require('strip-markdown'),
   Entities = require('html-entities').AllHtmlEntities,
   decode = (new Entities()).decode;
 
-// XXX should this be moved to the validator module?
+// XXX should type validation be moved to the validator module?
 const validTypes = ['ruleset issue', 'new ruleset', 'code issue', 'feature request', 'other'];
+
+// XXX the Error API in this module is pretty funky and could use a better design
 
 module.exports = function parseDescription(body) {
   const plaintext = String(processor.processSync(body));
@@ -26,8 +28,15 @@ module.exports = function parseDescription(body) {
     .filter(line => _.compact(line).length !== 0)
     .map(line => line.split(':').map(key => key.trim()))
     .map(line => [line[0].toLowerCase(), line[1]]);
-  // Filter result looks like [ [ 'Type', 'ruleset issue' ] ]
-  const type = lines.filter(line => line[0] === 'type')[0][1];
+
+  const types = lines.filter(line => line[0] === 'type');
+
+  // XXX should we check for duplicates of *all* keys?
+  if (types.length === 0) return new Error('no type');
+  if (types.length > 1) return new Error('multiple types');
+
+  // `types` looks like [ [ 'Type', 'ruleset issue' ] ]
+  const type = types[0][1];
 
   if (!validTypes.includes(type)) return new Error('invalid type');
 

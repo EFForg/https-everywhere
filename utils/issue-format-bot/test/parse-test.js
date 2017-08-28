@@ -135,6 +135,26 @@ vows.describe('issue parser module').addBatch({
         assert.equal(obj.message, 'invalid type');
       }
     },
+    'and we pass it a body with more than one type': {
+      topic: function(parse) {
+        return parse('Type: new ruleset\nType: ruleset issue');
+      },
+      'it returns the right error': function(err, obj) {
+        assert.ifError(err);
+        assert.instanceOf(obj, Error);
+        assert.equal(obj.message, 'multiple types');
+      }
+    },
+    'and we pass it a body with no type': {
+      topic: function(parse) {
+        return parse('I tried turning it off and on again and it still doesn\'t work');
+      },
+      'it returns the right error': function(err, obj) {
+        assert.ifError(err);
+        assert.instanceOf(obj, Error);
+        assert.equal(obj.message, 'no type');
+      }
+    },
     'and we pass it a null body': {
       topic: function(parse) {
         return parse('');

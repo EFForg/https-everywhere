@@ -28,6 +28,12 @@ module.exports = function(robot, alexa) {
       case 'invalid type':
         params = context.issue({body: 'Hey there, I didn\'t understand the type of issue you specified. Please edit it and try again.'});
         return context.github.issues.createComment(params);
+      case 'multiple types':
+        params = context.issue({body: 'Hello! You seem to have specified more than one type. Can you edit your issue and delete all but one of the types in your issue?'});
+        return context.github.issues.createComment(params);
+      case 'no type':
+        params = context.issue({body: 'Hey, I couldn\'t find the type of issue in your description. Can you edit your issue to add this (perhaps referring to the [issue template](https://github.com/EFForg/https-everywhere/blob/master/.github/ISSUE_TEMPLATE.md)?)'});
+        return context.github.issues.createComment(params);
       case 'null description':
         params = context.issue({body: 'Hi! I can\'t find any text in your description - please edit it to use the issue template.'});
         return context.github.issues.createComment(params);
