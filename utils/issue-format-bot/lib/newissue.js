@@ -4,7 +4,7 @@
 
 const parse = require('./parse'),
   validate = require('./validate'),
-  labeler = require('./labeler.js'),
+  labeler = require('./labeler'),
   _ = require('lodash');
 
 module.exports = function(robot, alexa) {
