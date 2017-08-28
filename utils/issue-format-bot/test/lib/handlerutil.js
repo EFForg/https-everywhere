@@ -11,15 +11,34 @@ const vows = require('perjury'),
 
 // TODO tests for this file
 
+// INTERNAL UTILITY FUNCTIONS
+
+function itWorks(err) {
+  assert.ifError(err);
+}
+
+function createsOneComment(err, context) {
+  assert.isTrue(context.github.issues.createComment.calledOnce);
+}
+
+function createsCommentWithMessage(text) {
+  return function(err, context) {
+    // args[0] is first call arguments, second [0] is first arg
+    assert.isObject(context.issue.args[0][0]);
+    // TODO try to find a more decoupled way than matching text
+    assert.isTrue(context.issue.args[0][0].body.includes(text));
+  };
+}
+
+// EXPORTS
+
 function setup(path, obj) {
   return {
     'When we require the module': {
       topic: function() {
         return require(path);
       },
-      'it works': function(err) {
-        assert.ifError(err);
-      },
+      'it works': itWorks,
       'it\'s a function': function(err, newissue) {
         assert.isFunction(newissue);
       },
@@ -48,18 +67,9 @@ function nullBody(text) {
 
       return context;
     },
-    'it works': function(err) {
-      assert.ifError(err);
-    },
-    'it only creates one comment': function(err, context) {
-      assert.isTrue(context.issue.calledOnce);
-    },
-    'it creates a comment with the right message': function(err, context) {
-      // args[0] is first call arguments, second [0] is first arg
-      assert.isObject(context.issue.args[0][0]);
-      // TODO try to find a more decoupled way than matching text
-      assert.isTrue(context.issue.args[0][0].body.includes(text));
-    }
+    'it works': itWorks,
+    'it only creates one comment': createsOneComment,
+    'it creates a comment with the right message': createsCommentWithMessage(text)
   };
 }
 
@@ -72,18 +82,9 @@ function badType(text) {
 
       return context;
     },
-    'it works': function(err) {
-      assert.ifError(err);
-    },
-    'it only creates one comment': function(err, context) {
-      assert.isTrue(context.issue.calledOnce);
-    },
-    'it creates a comment with the right message': function(err, context) {
-      // args[0] is first call arguments, second [0] is first arg
-      assert.isObject(context.issue.args[0][0]);
-      // TODO try to find a more decoupled way than matching text
-      assert.isTrue(context.issue.args[0][0].body.includes(text));
-    }
+    'it works': itWorks,
+    'it only creates one comment': createsOneComment,
+    'it creates a comment with the right message': createsCommentWithMessage(text)
   };
 }
 
@@ -96,18 +97,9 @@ function multipleTypes(text) {
 
       return context;
     },
-    'it works': function(err) {
-      assert.ifError(err);
-    },
-    'it only creates one comment': function(err, context) {
-      assert.isTrue(context.issue.calledOnce);
-    },
-    'it creates a comment with the right message': function(err, context) {
-      // args[0] is first call arguments, second [0] is first arg
-      assert.isObject(context.issue.args[0][0]);
-      // TODO try to find a more decoupled way than matching text
-      assert.isTrue(context.issue.args[0][0].body.includes(text));
-    }
+    'it works': itWorks,
+    'it only creates one comment': createsOneComment,
+    'it creates a comment with the right message': createsCommentWithMessage(text)
   };
 }
 
@@ -120,18 +112,9 @@ function noType(text) {
 
       return context;
     },
-    'it works': function(err) {
-      assert.ifError(err);
-    },
-    'it only creates one comment': function(err, context) {
-      assert.isTrue(context.issue.calledOnce);
-    },
-    'it creates a comment with the right message': function(err, context) {
-      // args[0] is first call arguments, second [0] is first arg
-      assert.isObject(context.issue.args[0][0]);
-      // TODO try to find a more decoupled way than matching text
-      assert.isTrue(context.issue.args[0][0].body.includes(text));
-    }
+    'it works': itWorks,
+    'it only creates one comment': createsOneComment,
+    'it creates a comment with the right message': createsCommentWithMessage(text)
   };
 }
 
@@ -154,9 +137,7 @@ function correctNewRuleset(issueText, text) {
         return context;
       }
     },
-    'it works': function(err) {
-      assert.ifError(err);
-    },
+    'it works': itWorks,
     'it labels the issue appropriately': function(err, context) {
       assert.isTrue(context.github.issues.addLabels.calledOnce);
 
@@ -171,16 +152,9 @@ function correctNewRuleset(issueText, text) {
   };
 
   if (text) {
-    obj['it only creates one comment'] = function(err, context) {
-      assert.isTrue(context.github.issues.createComment.calledOnce);
-    };
+    obj['it only creates one comment'] = createsOneComment;
 
-    obj['it says the user fixed it'] = function(err, context) {
-      // args[0] is first call arguments, second [0] is first arg
-      assert.isObject(context.issue.args[0][0]);
-      // TODO try to find a more decoupled way than matching text
-      assert.isTrue(context.issue.args[0][0].body.includes(text));
-    };
+    obj['it says the user fixed it'] = createsCommentWithMessage(text);
   } else {
     obj['it doesn\'t comment'] = function(err, context) {
       // Once for the labels, once for the comment
@@ -200,18 +174,9 @@ function problematicNewRuleset(text) {
 
       return context;
     },
-    'it works': function(err) {
-      assert.ifError(err);
-    },
-    'it only creates one comment': function(err, context) {
-      assert.isTrue(context.github.issues.createComment.calledOnce);
-    },
-    'it includes the problem': function(err, context) {
-      // args[0] is first call arguments, second [0] is first arg
-      assert.isObject(context.issue.args[0][0]);
-      // TODO try to find a more decoupled way than matching text
-      assert.isTrue(context.issue.args[0][0].body.includes(text));
-    }
+    'it works': itWorks,
+    'it only creates one comment': createsOneComment,
+    'it includes the problem': createsCommentWithMessage(text)
   };
 }
 
