@@ -9,4 +9,6 @@ Type: feature request
 Type: other
 
 <!-- If you're reporting a ruleset issue, fill out this section. -->
+<!-- If you want to report subdomains, fill in the top-level domain here and make a note of the subdomain below. -->
+<!-- If you want to report two separate domains, please open two separate issues. -->
 Domain:
