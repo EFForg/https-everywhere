@@ -19,7 +19,7 @@ There are several main areas of development on HTTPS Everywhere: the rulesets, t
 
 The rulesets can be found in the [`rules`](rules) top-level path and include all the rules for redirecting individual sites to HTTPS.  These are written in XML. If you want to get started contributing to HTTPS Everywhere, we recommend starting here.
 
-The core codebase consists of the code that performs the redirects, the UI, logging code, and ruleset loading.  It is written in JavaScript, using the `WebExtensions` API (located in [`chromium`](chromium)) on all supported browsers.  In Firefox, this extension is wrapped in a thin `XPCOM` layer for the purposes of migrating settings, located in [`src`](src), which will soon be deprecated.
+The core codebase consists of the code that performs the redirects, the UI, logging code, and ruleset loading.  This encompasses all code that is delivered with the extension itself that is *not* a ruleset.  It is written in JavaScript, using the `WebExtensions` API (located in [`chromium`](chromium)) on all supported browsers.  In Firefox, this extension is wrapped in a thin `XPCOM` layer for the purposes of migrating settings, located in [`src`](src), which will soon be deprecated.
 
 The utilities ([`utils`](utils) top-level path) include scripts that build the extension, sanitize and perform normalization on rulesets, simplify rules, and help label GitHub issues.  Historically, these utilities have been written in Python.  Many of the newer utilities are written in JavaScript, and are meant to be run in node.  Some of the wrappers for these utilities are in shell scripts.
 
@@ -76,7 +76,7 @@ This would create `Example.com.xml`, which you could then take a look at and edi
 
 ## Minimum Requirements for a Ruleset PR
 
-There are several volunteers to HTTPS Everywhere who have graciously dedicated their time to look at the `ruleset` contributions and work with contributors to ensure quality of the pull requests before merging.  It is typical for there to be several back-and-fourth communications with these `ruleset` maintainers before a PR is in a good shape to merge.  Please be patient and respectful, the maintainers are donating their time for no benefit other than the satisfaction of making the web more secure.  They are under no obligation to merge your request, and may reject it if it is impossible to ensure quality.
+There are several volunteers to HTTPS Everywhere who have graciously dedicated their time to look at the `ruleset` contributions and work with contributors to ensure quality of the pull requests before merging.  It is typical for there to be several back-and-forth communications with these `ruleset` maintainers before a PR is in a good shape to merge.  Please be patient and respectful, the maintainers are donating their time for no benefit other than the satisfaction of making the web more secure.  They are under no obligation to merge your request, and may reject it if it is impossible to ensure quality.
 
 These volunteers are currently: @gloomy-ghost, @J0WI, and @jeremyn.  Please use tagging sparingly.
 
