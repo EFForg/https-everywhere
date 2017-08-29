@@ -63,18 +63,13 @@ cp src/$RULESETS pkg/crx/rules/default.rulesets
 
 sed -i -e "s/VERSION/$VERSION/g" pkg/crx/manifest.json
 
-python2.7 -c "import json; m=json.loads(open('pkg/crx/manifest.json').read()); e=m['author']; m['author']={'email': e}; del m['applications']; open('pkg/crx/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
-
-#sed -i -e "s/VERSION/$VERSION/g" pkg/crx/updates.xml
-#sed -e "s/VERSION/$VERSION/g" pkg/updates-master.xml > pkg/crx/updates.xml
-
 cp -a pkg/crx pkg/xpi-amo
 cp -a pkg/crx pkg/xpi-eff
 cp -a src/META-INF pkg/xpi-amo
 cp -a src/META-INF pkg/xpi-eff
 
-# Remove the 'applications' manifest key from the crx version of the extension
-python2.7 -c "import json; m=json.loads(open('pkg/crx/manifest.json').read()); del m['applications']; open('pkg/crx/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+# Remove the 'applications' manifest key from the crx version of the extension and change the 'author' string to a hash
+python2.7 -c "import json; m=json.loads(open('pkg/crx/manifest.json').read()); e=m['author']; m['author']={'email': e}; del m['applications']; open('pkg/crx/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
 # Remove the 'update_url' manifest key from the xpi version of the extension delivered to AMO
 python2.7 -c "import json; m=json.loads(open('pkg/xpi-amo/manifest.json').read()); del m['applications']['gecko']['update_url']; open('pkg/xpi-amo/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
 
