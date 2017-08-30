@@ -160,42 +160,44 @@ function getActiveRulesetCount(id) {
 
 /**
  * Set the icon color correctly
- * inactive: extension is enabled, but no rules were triggered on this page.
+ * active: extension is enabled.
  * blocking: extension is in "block all HTTP requests" mode.
- * active: extension is enabled and rewrote URLs on this page.
  * disabled: extension is disabled from the popup menu.
  */
-var updateState = function() {
-  if (!chrome.tabs) {
-    return;
+
+function updateState () {
+  if (!chrome.tabs) return;
+
+  let iconState = 'active';
+
+  if (!isExtensionEnabled) {
+    iconState = 'disabled';
+  } else if (httpNowhereOn) {
+    iconState = 'blocking';
   }
+
+  chrome.browserAction.setIcon({
+    path: {
+      38: 'icons/icon-' + iconState + '-38.png'
+    }
+  });
+
+  chrome.browserAction.setTitle({
+    title: 'HTTPS Everywhere' + (iconState === 'active') ? '' : ' (' + iconState + ')'
+  });
+
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     if (!tabs || tabs.length === 0) {
       return;
     }
-    const activeCount = getActiveRulesetCount(tabs[0].id);
-    let iconState = "inactive";
-    if (!isExtensionEnabled) {
-      iconState = "disabled";
-    } else if (httpNowhereOn) {
-      iconState = "blocking";
-    } else if (activeCount > 0) {
-      iconState = "active";
-    }
-    chrome.browserAction.setIcon({
-      path: {
-        "38": "icons/icon-" + iconState + "-38.png"
-      }
-    });
-    chrome.browserAction.setTitle({
-      title: "HTTPS Everywhere (" + iconState + ")"
-    });
 
-    chrome.browserAction.setBadgeBackgroundColor({ color: "#00cc00" });
+    const activeCount = getActiveRulesetCount(tabs[0].id);
+
+    chrome.browserAction.setBadgeBackgroundColor({ color: '#00cc00' });
 
     const showBadge = activeCount > 0 && isExtensionEnabled && showCounter;
 
-    chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : "" });
+    chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '' });
   });
 }
 
