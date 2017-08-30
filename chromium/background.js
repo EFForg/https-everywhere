@@ -67,16 +67,19 @@ var httpNowhereOn = false;
 var showCounter = true;
 var isExtensionEnabled = true;
 
-storage.get({
-  httpNowhere: false,
-  showCounter: true,
-  globalEnabled: true
-}, function(item) {
-  httpNowhereOn = item.httpNowhere;
-  showCounter = item.showCounter;
-  isExtensionEnabled = item.globalEnabled;
-  updateState();
-});
+var initializeStoredGlobals = () => {
+  storage.get({
+    httpNowhere: false,
+    showCounter: true,
+    globalEnabled: true
+  }, function(item) {
+    httpNowhereOn = item.httpNowhere;
+    showCounter = item.showCounter;
+    isExtensionEnabled = item.globalEnabled;
+    updateState();
+  });
+}
+initializeStoredGlobals();
 
 chrome.storage.onChanged.addListener(function(changes, areaName) {
   if (areaName === 'sync' || areaName === 'local') {
