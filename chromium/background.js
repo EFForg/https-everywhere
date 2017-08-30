@@ -163,6 +163,8 @@ function getActiveRulesetCount(id) {
  */
 
 function updateState () {
+  if (!chrome.tabs) return;
+
   let iconState = 'active';
 
   if (!isExtensionEnabled) {
