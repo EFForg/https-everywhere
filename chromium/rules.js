@@ -1,10 +1,7 @@
 "use strict";
 // Stubs so this runs under nodejs. They get overwritten later by util.js
-var VERB=1;
-var DBUG=2;
-var INFO=3;
-var NOTE=4;
-var WARN=5;
+var VERB = 1;
+var NOTE = 4;
 function log(){}
 
 // To reduce memory usage for the numerous rules/cookies with trivial rules
@@ -331,7 +328,6 @@ RuleSets.prototype = {
     }
     log(DBUG, "Ruleset cache miss for " + host);
 
-    var tmp;
     var results = [];
     if (this.targets.has(host)) {
       // Copy the host targets so we don't modify them.
