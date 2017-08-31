@@ -175,7 +175,7 @@ RuleSet.prototype = {
  */
 function RuleSets(ruleActiveStates) {
   // Load rules into structure
-  this.targets = {};
+  this.targets = new Map();
 
   // A cache for potentiallyApplicableRulesets
   this.ruleCache = new Map();
@@ -213,12 +213,12 @@ RuleSets.prototype = {
     var new_rule_set = new RuleSet(params.host, true, "user rule");
     var new_rule = new Rule(params.urlMatcher, params.redirectTo);
     new_rule_set.rules.push(new_rule);
-    if (!(params.host in this.targets)) {
-      this.targets[params.host] = [];
+    if (!this.targets.has(params.host)) {
+      this.targets.set(params.host, []);
     }
     this.ruleCache.delete(params.host);
     // TODO: maybe promote this rule?
-    this.targets[params.host].push(new_rule_set);
+    this.targets.get(params.host).push(new_rule_set);
     if (new_rule_set.name in this.ruleActiveStates) {
       new_rule_set.active = (this.ruleActiveStates[new_rule_set.name] == "true");
     }
@@ -234,12 +234,17 @@ RuleSets.prototype = {
   removeUserRule: function(ruleset) {
     log(INFO, 'removing user rule for ' + JSON.stringify(ruleset));
     this.ruleCache.delete(ruleset.name);
-    this.targets[ruleset.name] = this.targets[ruleset.name].filter(r =>
+
+
+    var tmp = this.targets.get(ruleset.name).filter(r =>
       !(r.isEquivalentTo(ruleset))
     );
-    if (this.targets[ruleset.name].length == 0) {
-      delete this.targets[ruleset.name];
+    this.targets.set(ruleset.name, tmp);
+
+    if (this.targets.get(ruleset.name).length == 0) {
+      this.targets.delete(ruleset.name);
     }
+
     log(INFO, 'done removing rule');
     return true;
   },
@@ -305,10 +310,10 @@ RuleSets.prototype = {
     var targets = ruletag.getElementsByTagName("target");
     for (let target of targets) {
       var host = target.getAttribute("host");
-      if (!(host in this.targets)) {
-        this.targets[host] = [];
+      if (!this.targets.has(host)) {
+        this.targets.set(host, []);
       }
-      this.targets[host].push(rule_set);
+      this.targets.get(host).push(rule_set);
     }
   },
 
@@ -328,9 +333,9 @@ RuleSets.prototype = {
 
     var tmp;
     var results = [];
-    if (this.targets[host]) {
+    if (this.targets.has(host)) {
       // Copy the host targets so we don't modify them.
-      results = results.concat(this.targets[host]);
+      results = results.concat(this.targets.get(host));
     }
 
     // Ensure host is well-formed (RFC 1035)
@@ -344,14 +349,14 @@ RuleSets.prototype = {
     for (let i=0; i < segmented.length; i++) {
       let tmp = segmented[i];
       segmented[i] = "*";
-      results = results.concat(this.targets[segmented.join(".")]);
+      results = results.concat(this.targets.get(segmented.join(".")));
       segmented[i] = tmp;
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
     for (var i = 2; i <= segmented.length - 2; ++i) {
       var t = "*." + segmented.slice(i,segmented.length).join(".");
-      results = results.concat(this.targets[t]);
+      results = results.concat(this.targets.get(t));
     }
 
     // Clean the results list, which may contain duplicates or undefined entries
