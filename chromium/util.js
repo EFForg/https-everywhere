@@ -1,3 +1,11 @@
+/* exported VERB */
+/* exported DBUG */
+/* exported INFO */
+/* exported NOTE */
+/* exported WARN */
+/* exported DEFAULT_LOG_LEVEL */
+/* exported log */
+
 "use strict";
 
 var VERB = 1;
