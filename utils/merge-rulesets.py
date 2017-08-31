@@ -56,7 +56,8 @@ for filename in sorted(files):
 	
 	for child in root:
 		if child.tag in ["target", "rule", "securecookie", "exclusion"]:
-			ruleset[child.tag] = []
+			if child.tag not in ruleset:
+				ruleset[child.tag] = []
 		else:
 			continue
 
