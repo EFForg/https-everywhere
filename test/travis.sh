@@ -77,7 +77,7 @@ if [ "$RULESETS_CHANGED" ]; then
     echo >&2 "Testing test URLs in all changed rulesets."
     docker_build
     # --privileged is required here for miredo to create a network tunnel
-    docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" --privileged httpse bash -c "service miredo start && test/fetch.sh"
+    docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" --privileged httpse bash -c "service miredo start && service tor start && test/fetch.sh"
   fi
 
   if [ "$TEST" == "preloaded" ]; then
