@@ -203,6 +203,85 @@ RuleSets.prototype = {
     }
   },
 
+  addFromJson: function(ruleJson) {
+    for (let i = 0; i < ruleJson.length; i++) {
+      try {
+        this.parseOneJsonRuleset(ruleJson[i]);
+      } catch(e) {
+        log(WARN, 'Error processing ruleset:' + e);	
+      }
+    }
+  },
+
+  parseOneJsonRuleset: function(ruletag) {
+    var default_state = true;
+    var note = "";
+    var default_off = ruletag["default_off"];
+    if (default_off) {
+      default_state = false;
+      note += default_off + "\n";
+    }
+
+    // If a ruleset declares a platform, and we don't match it, treat it as
+    // off-by-default. In practice, this excludes "mixedcontent" & "cacert" rules.
+    var platform = ruletag["platform"]
+    if (platform) {
+      default_state = false;
+      if (platform == "mixedcontent" && enableMixedRulesets) {
+        default_state = true;
+      }
+      note += "Platform(s): " + platform + "\n";
+    }
+
+    var rule_set = new RuleSet(ruletag["name"], default_state, note.trim());
+
+    // Read user prefs
+    if (rule_set.name in this.ruleActiveStates) {
+      rule_set.active = (this.ruleActiveStates[rule_set.name] == "true");
+    }
+
+    var rules = ruletag["rule"];
+    for (let i in rules) {
+	  let rule = rules[i];
+      if (rule["from"] != null && rule["to"] != null) {
+        rule_set.rules.push(new Rule(rule["from"], rule["to"]));
+      }
+    }
+
+    var exclusions = ruletag["exclusion"];
+    for (let i in exclusions) {
+      let exclusion = exclusions[i];
+      if (exclusion != null) {
+        if (!rule_set.exclusions) {
+          rule_set.exclusions = [];
+        } 
+        rule_set.exclusions.push(new Exclusion(exclusion));
+      }
+    }
+
+    var cookierules = ruletag["securecookie"];
+    for (let i in cookierules) {
+      let cookierule = cookierules[i];
+      if (cookierule["host"] != null && cookierule["name"] != null) {
+        if (!rule_set.cookierules) {
+          rule_set.cookierules = [];
+        }
+        rule_set.cookierules.push(new CookieRule(cookierule["host"], cookierule["name"]));
+      }
+    }
+
+    var targets = ruletag["target"];
+    for (let i in targets) {
+      let target = targets[i];
+	  if (target != null) {
+        if (!this.targets.has(target)) {
+          this.targets.set(target, []);
+        }
+        this.targets.get(target).push(rule_set);
+      }
+    }
+  },
+
   /**
    * Load a user rule
    * @param params
