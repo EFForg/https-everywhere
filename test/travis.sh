@@ -1,10 +1,6 @@
 #!/bin/bash
 # Wrapper for travis tests
 
-function docker_build {
-  docker build -t httpse .
-}
-
 # Folder paths, relative to parent
 RULESETFOLDER="src/chrome/content/rules"
 
@@ -50,15 +46,14 @@ if ! $ONLY_RULESETS_CHANGED; then
 
   if [ "$TEST" == "firefox" ]; then
     echo >&2 "Running firefox test suite."
-    docker_build
-    docker run --rm -ti -v $(pwd):/opt -e FIREFOX=/$FIREFOX/firefox/firefox httpse bash -c "test/firefox.sh"
+    docker run --rm -ti -v $(pwd):/opt -e FIREFOX=/$FIREFOX/firefox/firefox electronicfrontierfoundation/https-everywhere-docker-base bash test/firefox.sh
   fi
 
   if [ "$TEST" == "chromium" ]; then
     echo >&2 "Running chromium test suite."
     docker_build
     # --privileged is required here because chromium requires kernel lxc access
-    docker run --rm -ti -v $(pwd):/opt --privileged httpse bash -c "test/chromium.sh"
+    docker run --rm -ti -v $(pwd):/opt --privileged electronicfrontierfoundation/https-everywhere-docker-base bash test/chromium.sh
   fi
 fi
 # Only run test if something has changed.
@@ -68,16 +63,16 @@ if [ "$RULESETS_CHANGED" ]; then
   if [ "$TEST" == "rules" ]; then
     echo >&2 "Performing comprehensive coverage test."
     docker_build
-    docker run --rm -ti -v $(pwd):/opt httpse python utils/ruleset_filenames_validate.py
-    docker run --rm -ti -v $(pwd):/opt httpse bash -c "utils/validate.sh"
-    docker run --rm -ti -v $(pwd):/opt httpse bash -c "test/rules.sh"
+    docker run --rm -ti -v $(pwd):/opt electronicfrontierfoundation/https-everywhere-docker-base python utils/ruleset_filenames_validate.py
+    docker run --rm -ti -v $(pwd):/opt electronicfrontierfoundation/https-everywhere-docker-base bash utils/validate.sh
+    docker run --rm -ti -v $(pwd):/opt electronicfrontierfoundation/https-everywhere-docker-base bash test/rules.sh
   fi
 
   if [ "$TEST" == "fetch" ]; then
     echo >&2 "Testing test URLs in all changed rulesets."
     docker_build
     # --privileged is required here for miredo to create a network tunnel
-    docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" --privileged httpse bash -c "service miredo start && service tor start && test/fetch.sh"
+    docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" --privileged electronicfrontierfoundation/https-everywhere-docker-base bash -c "service miredo start && service tor start && test/fetch.sh"
   fi
 
   if [ "$TEST" == "preloaded" ]; then
