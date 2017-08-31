@@ -84,6 +84,9 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
       let result = `[${tagName}] ${chalk.bold(name)}: ${strings[0]}`;
       for (let i = 1; i < strings.length; i++) {
         let value = values[i - 1];
+        if (value instanceof Set) {
+          value = Array.from(value);
+        }
         value = Array.isArray(value) ? value.join(', ') : value.toString();
         result += chalk.blue(value) + strings[i];
       }
@@ -107,35 +110,37 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
   }
 
   let targetRe = new RegExp(`^(?:${targets.map(target => target.replace(/\./g, '\\.').replace(/\*/g, '.*')).join('|')})$`);
-  let domains = [];
+  let domains = new Set();
 
   function isStatic(rule) {
     if (isTrivial(rule)) {
-      domains = domains.concat(targets);
+      for (let target of targets) {
+        domains.add(target);
+      }
       return true;
     }
 
     const { from, to } = rule;
     const fromRe = new RegExp(from);
-    let localDomains = [];
-    let unknownDomains = [];
-    let nonTrivialUrls = [];
-    let suspiciousStrings = [];
+    let localDomains = new Set();
+    let unknownDomains = new Set();
+    let nonTrivialUrls = new Set();
+    let suspiciousStrings = new Set();
 
     try {
       explodeRegExp(from, url => {
         let parsed = url.match(/^http(s?):\/\/(.+?)(?::(\d+))?\/(.*)$/);
         if (!parsed) {
-          suspiciousStrings.push(url);
+          suspiciousStrings.add(url);
           return;
         }
         let [, secure, host, port = '80', path] = parsed;
         if (!targetRe.test(host)) {
-          unknownDomains.push(host);
+          unknownDomains.add(host);
         } else if (!secure && port === '80' && path === '*' && url.replace(fromRe, to) === url.replace(/^http:/, 'https:')) {
-          localDomains.push(host);
+          localDomains.add(host);
         } else {
-          nonTrivialUrls.push(url);
+          nonTrivialUrls.add(url);
         }
       });
     } catch (e) {
@@ -150,26 +155,28 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
       return false;
     }
 
-    if (suspiciousStrings.length > 0) {
+    if (suspiciousStrings.size > 0) {
       fail`${from} matches ${suspiciousStrings} which don't look like URLs`;
     }
 
-    if (unknownDomains.length > 0) {
+    if (unknownDomains.size > 0) {
       fail`${from} matches ${unknownDomains} which are not in targets ${targets}`;
     }
 
-    if (suspiciousStrings.length > 0 || unknownDomains.length > 0) {
+    if (suspiciousStrings.size > 0 || unknownDomains.size > 0) {
       return false;
     }
 
-    if (nonTrivialUrls.length > 0) {
-      if (localDomains.length > 0) {
+    if (nonTrivialUrls.size > 0) {
+      if (localDomains.size > 0) {
         warn`${from} => ${to} can trivialize ${localDomains} but not urls like ${nonTrivialUrls}`;
       }
       return false;
     }
 
-    domains = domains.concat(localDomains);
+    for (let domain of localDomains) {
+      domains.add(domain);
+    }
 
     return true;
   }
@@ -178,7 +185,7 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
 
   info`trivialized`;
 
-  domains = Array.from(new Set(domains));
+  domains = Array.from(domains);
 
   if (domains.slice().sort().join('\n') !== targets.sort().join('\n')) {
     source = replaceXML(source, 'target', domains.map(domain => `<target host="${domain}" />`));
