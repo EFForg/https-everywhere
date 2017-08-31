@@ -1,0 +1,47 @@
+<!--
+	Other 20min rulesets:
+		- 20min-tv.ch.xml
+		- 20minuti.ch.xml
+
+	Nonfunctional hosts in *.20min.ch:
+		- 20min.ch (h)
+		- www.20min.ch (some pages redirect to http;
+			works with "?httpsredirect" parameter, but has mixed content issues then)
+		- deal.20min.ch (m)
+		- m.20min.ch (some pages have mixed content issues)
+		- tilllate.20min.ch (m)
+		- static01.20min.ch (r)
+
+		The host has various subdomains as shortlinks to articles.
+		Those subdomains redirect to http and their www prefixed alias mismatches the cert.
+
+	h: http redirect
+	m: certificate mismatch
+	r: connection refused
+	s: self-signed certificate
+	t: timeout on https
+-->
+<ruleset name="20min.ch (partial)">
+	<target host="www.20min.ch" />
+	<target host="api.20min.ch" />
+	<target host="m.20min.ch" />
+	<target host="mediadaten.20min.ch" />
+	<target host="mediakit.20min.ch" />
+	<target host="secretescapes.20min.ch" />
+
+	<exclusion pattern="^http://www.20min.ch/$" />
+	<exclusion pattern="^http://m.20min.ch/$" />
+
+	<test url="http://www.20min.ch/2010/img/navigation/20min_logo.png" />
+	<test url="http://m.20min.ch/webapp/img/de/logo.png" />
+	<test url="http://www.20min.ch/printpdf/GE_20170728.pdf" />
+	<test url="http://m.20min.ch/printpdf/GE_20170728.pdf" />
+
+	<rule from="^http://www\.20min\.ch/2010/" to="https://www.20min.ch/2010/" />
+	<rule from="^http://m\.20min\.ch/webapp/" to="https://m.20min.ch/webapp/" />
+	<rule from="^http://www\.20min\.ch/printpdf/" to="https://www.20min.ch/printpdf/" />
+	<rule from="^http://m\.20min\.ch/printpdf/" to="https://m.20min.ch/printpdf/" />
+
+	<rule from="^http://(api|mediadaten|mediakit|secretescapes)\.20min\.ch/"
+		to="https://$1.20min.ch/" />
+</ruleset>

@@ -44,7 +44,7 @@ if ! $ONLY_RULESETS_CHANGED; then
   echo >&2 "Core code changes have been made."
 
   if [ "$TEST" == "eslint" ]; then
-    echo >&2 "Running ESLint."
+    echo >&2 "Running ESLint on the Chromium extension."
     docker run --rm -ti -v $(pwd):/opt node bash -c "cd /opt/utils/eslint && npm install && ./node_modules/.bin/eslint ../../chromium"
   fi
 
@@ -77,7 +77,7 @@ if [ "$RULESETS_CHANGED" ]; then
     echo >&2 "Testing test URLs in all changed rulesets."
     docker_build
     # --privileged is required here for miredo to create a network tunnel
-    docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" --privileged httpse bash -c "service miredo start && test/fetch.sh"
+    docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" --privileged httpse bash -c "service miredo start && service tor start && test/fetch.sh"
   fi
 
   if [ "$TEST" == "preloaded" ]; then

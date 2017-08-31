@@ -1,10 +1,15 @@
 "use strict";
 
-var backgroundPage = chrome.extension.getBackgroundPage();
 var stableRules = null;
 var unstableRules = null;
 var hostReg = /.*\/\/[^$/]*\//;
-var storage = backgroundPage.storage;
+
+var ls;
+try{
+  ls = localStorage;
+} catch(e) {
+  ls = {setItem: () => {}, getItem: () => {}};
+}
 
 function e(id) {
   return document.getElementById(id);
@@ -15,18 +20,27 @@ function e(id) {
  * @param checkbox checkbox being clicked
  * @param ruleset the ruleset tied tot he checkbox
  */
-function toggleRuleLine(checkbox, ruleset) {
-  ruleset.active = checkbox.checked;
+function toggleRuleLine(checkbox, ruleset, tab_id) {
+  var ruleset_active = checkbox.checked;
+  var set_ruleset = {
+    active: ruleset_active,
+    name: ruleset.name,
+    tab_id: tab_id
+  };
 
-  if (ruleset.active != ruleset.default_state) {
-    localStorage[ruleset.name] = ruleset.active;
-  } else {
-    delete localStorage[ruleset.name];
-    // purge the name from the cache so that this unchecking is persistent.
-    backgroundPage.all_rules.ruleCache.delete(ruleset.name);
-  }
-  // Now reload the selected tab of the current window.
-  chrome.tabs.reload();
+  sendMessage("set_ruleset_active_status", set_ruleset, function(){
+
+    if (ruleset_active != ruleset.default_state) {
+      ls[ruleset.name] = ruleset_active;
+    } else {
+      delete ls[ruleset.name];
+      // purge the name from the cache so that this unchecking is persistent.
+      sendMessage("delete_from_ruleset_cache", ruleset.name);
+    }
+
+    // Now reload the selected tab of the current window.
+    chrome.tabs.reload();
+  });
 }
 
 /**
@@ -34,7 +48,7 @@ function toggleRuleLine(checkbox, ruleset) {
  * @param ruleset the ruleset to build the line for
  * @returns {*}
  */
-function appendRuleLineToListDiv(ruleset, list_div) {
+function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
 
   // parent block for line
   var line = document.createElement("div");
@@ -50,7 +64,7 @@ function appendRuleLineToListDiv(ruleset, list_div) {
     checkbox.setAttribute("checked", "");
   }
   checkbox.onchange = function(ev) {
-    toggleRuleLine(checkbox, ruleset);
+    toggleRuleLine(checkbox, ruleset, tab_id);
   };
   label.appendChild(checkbox);
 
@@ -58,18 +72,21 @@ function appendRuleLineToListDiv(ruleset, list_div) {
   var favicon = document.createElement("img");
   favicon.className = "favicon";
   favicon.src = "chrome://favicon/";
-  for (var i=0; i < ruleset.rules.length; i++) {
-    var host = hostReg.exec(ruleset.rules[i].to);
+  for (let rule of ruleset.rules) {
+    var host = hostReg.exec(rule.to);
     if (host) {
       favicon.src += host[0];
       break;
     }
   }
-  var xhr = new XMLHttpRequest();
-  try {
-    xhr.open("GET", favicon.src, true);
-    label.appendChild(favicon);
-  } catch (e) {}
+
+  if (false) { //navigator.userAgent.match("Chrome")) {
+    var xhr = new XMLHttpRequest();
+    try {
+      xhr.open("GET", favicon.src, true);
+      label.appendChild(favicon);
+    } catch (e) {}
+  }
 
   // label text
   var text = document.createElement("span");
@@ -85,7 +102,7 @@ function appendRuleLineToListDiv(ruleset, list_div) {
     line.appendChild(remove);
 
     remove.addEventListener("click", function(){
-      backgroundPage.removeRule(ruleset);
+      sendMessage("remove_rule", ruleset);
       list_div.removeChild(line);
     });
   }
@@ -99,29 +116,30 @@ function appendRuleLineToListDiv(ruleset, list_div) {
 
 // Change the UI to reflect extension enabled/disabled
 function updateEnabledDisabledUI() {
-  document.getElementById('onoffswitch').checked = backgroundPage.isExtensionEnabled;
-  // Hide or show the rules sections
-  if (backgroundPage.isExtensionEnabled) {
-    document.body.className = ""
-  } else {
-    document.body.className = "disabled"
-  }
-  backgroundPage.updateState();
+  getOption_('globalEnabled', true, function(item) {
+    document.getElementById('onoffswitch').checked = item.globalEnabled;
+    // Hide or show the rules sections
+    if (item.globalEnabled) {
+      document.body.className = ""
+    } else {
+      document.body.className = "disabled"
+    }
+  });
 }
 
 // Toggle extension enabled/disabled status
 function toggleEnabledDisabled() {
-  if (backgroundPage.isExtensionEnabled) {
-    // User wants to disable us
-    backgroundPage.isExtensionEnabled = false;
-  } else {
-    // User wants to enable us
-    backgroundPage.isExtensionEnabled = true;
+  var extension_toggle_effect = function(){
+    updateEnabledDisabledUI();
+    // The extension state changed, so reload this tab.
+    chrome.tabs.reload();
+    window.close();
   }
-  updateEnabledDisabledUI();
-  // The extension state changed, so reload this tab.
-  chrome.tabs.reload();
-  window.close();
+
+  getOption_('globalEnabled', true, function(item) {
+    setOption_('globalEnabled', !item.globalEnabled, extension_toggle_effect);
+  });
+
 }
 
 /**
@@ -130,21 +148,22 @@ function toggleEnabledDisabled() {
  */
 function gotTab(tabArray) {
   var activeTab = tabArray[0];
-  var rulesets = backgroundPage.activeRulesets.getRulesets(activeTab.id);
 
-  for (var r in rulesets) {
-    var listDiv = stableRules;
-    if (!rulesets[r].default_state) {
-      listDiv = unstableRules;
+  sendMessage("get_active_rulesets", activeTab.id, function(rulesets){
+    for (var r in rulesets) {
+      var listDiv = stableRules;
+      if (!rulesets[r].default_state) {
+        listDiv = unstableRules;
+      }
+      appendRuleLineToListDiv(rulesets[r], listDiv, activeTab.id);
+      listDiv.style.position = "static";
+      listDiv.style.visibility = "visible";
     }
-    appendRuleLineToListDiv(rulesets[r], listDiv);
-    listDiv.style.position = "static";
-    listDiv.style.visibility = "visible";
-  }
-  // Only show the "Add a rule" link if we're on an HTTPS page
-  if (/^https:/.test(activeTab.url)) {
-    show(e("add-rule-link"));
-  }
+    // Only show the "Add a rule" link if we're on an HTTPS page
+    if (/^https:/.test(activeTab.url)) {
+      show(e("add-rule-link"));
+    }
+  });
 }
 
 /**
@@ -174,13 +193,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // auto-translate all elements with i18n attributes
-  var elem = document.querySelectorAll("[i18n]");
-  for (var i=0; i < elem.length; i++) {
-    elem[i].innerHTML = chrome.i18n.getMessage(elem[i].getAttribute("i18n"));
-  }
-
-  // other translations
   e("aboutTitle").setAttribute("title", chrome.i18n.getMessage("about_title"));
   e("add-rule-link").addEventListener("click", addManualRule);
 });
@@ -223,7 +235,7 @@ function addManualRule() {
         redirectTo : e("new-rule-redirect").value,
         urlMatcher : e("new-rule-regex").value
       };
-      backgroundPage.addNewRule(params, function() {
+      sendMessage("add_new_rule", params, function() {
         location.reload();
       });
     });
@@ -252,11 +264,11 @@ function toggleHttpNowhere() {
 function getOption_(opt, defaultOpt, callback) {
   var details = {};
   details[opt] = defaultOpt;
-  return storage.get(details, callback);
+  sendMessage("get_option", details, callback);
 }
 
-function setOption_(opt, value) {
+function setOption_(opt, value, callback) {
   var details = {};
   details[opt] = value;
-  return storage.set(details);
+  sendMessage("set_option", details, callback);
 }

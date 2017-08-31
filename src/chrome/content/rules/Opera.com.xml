@@ -1,0 +1,281 @@
+<!--
+
+	Other Opera rulesets:
+
+		- AdMarvel.com.xml
+		- Operacdn.com.xml
+		- Operamediaworks.com.xml
+		- Operasoftware.com.xml
+
+
+	CDN buckets:
+
+		- d1ui9i2jp8fkao.cloudfront.net
+
+			- img.appstatic.opera.com
+			- img\d+.appstatic.opera.com
+
+		- d2jc9zwbrclgz3.cloudfront.net
+
+		- opera.globalsportsmedia.com.edgesuite.net
+
+			- sports.opera.com
+
+
+	Nonfunctional domains:
+
+		- devfiles.myopera.com *
+		- thumbs.myopera.com
+
+		- opera.com subdomains:
+
+			- blackberry.apps **
+			- html5.apps **
+			- iphone.apps **
+			- java.apps **
+			- html5.oms.apps *
+			- windows-mobile.apps **
+			- arc ᵃ
+			- my.cn		Rufused
+			- dev-beta **
+			- forums ʰ
+			- get.geo	(refused)
+			- get\d
+			- get-ice-1
+			- get-tsw-1
+			- help ᵈ
+			- mail ᵈ
+			- media *
+			- my ᵈ
+			- my-beta		(redirects to http)
+			- my-next		(reset, expired 2013-03-06)
+			- redir
+			- snapshot *
+
+		- (www.)operamini.com
+
+	ᵃ Shows another domain
+	* Times out
+	ᵈ Dropped
+	** Redirects to http
+	ʰ Redirects to http
+
+
+	Problematic hosts in *opera.com:
+
+		- img.appstatic *
+		- img\d+.appstatic *
+		- ar ʳ
+		- business ᵐ
+		- cn ʳ
+		- de ʳ
+		- fr ʳ
+		- in ʳ
+		- jp ʳ
+		- m ʳ
+		- mini ʳ
+		- mobilestore		(redirects to apps, mismatched, CN: apps.opera.com)
+		- portal ᵐ
+		- ru ʳ
+		- tw ʳ
+		- sports ᴬ
+		- www-static *
+
+	* Fastly
+	ᴬ Akamai / mismatched
+	ᵐ Mismatched
+	ʳ Refused, preemptable redirect
+
+
+	Partially covered hosts in *opera.com:
+
+		- apps *
+
+	* Some paths redirect to http
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- bugs.opera.com
+		- .micropage.opera.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on sports from ajax.googleapis.com ˢ
+		- css on sports from static.core.optasports.com
+		- Images on sports from cache.images.core.optasports.com
+		- Images on sports from static.core.optasports.com
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Opera.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="opera.com" />
+	<target host="addons.opera.com" />
+	<target host="apps.opera.com" />
+	<target host="auth.opera.com" />
+	<target host="blogs.opera.com" />
+	<target host="bugs.opera.com" />
+		<target host="mini.bugs.opera.com" />
+	<target host="deb.opera.com" />
+	<target host="dev.opera.com" />
+	<target host="echo.opera.com" />
+	<target host="ftp.opera.com" />
+	<target host="get.geo.opera.com" />
+	<target host="net.geo.opera.com" />
+	<target host="get.opera.com" />
+	<target host="labs.opera.com" />
+	<target host="micropage.opera.com" />
+	<target host="people.opera.com" />
+	<target host="redir.opera.com" />
+	<target host="unite.opera.com" />
+	<target host="widgets.opera.com" />
+	<target host="www.opera.com" />
+
+
+	<!--	Complications:
+				-->
+	<target host="ar.opera.com" />
+	<target host="cn.opera.com" />
+	<target host="de.opera.com" />
+	<target host="fr.opera.com" />
+	<target host="jp.opera.com" />
+	<target host="m.opera.com" />
+	<target host="mini.opera.com" />
+	<target host="portal.opera.com" />
+	<target host="ru.opera.com" />
+	<target host="tw.opera.com" />
+
+		<!--	These redirect to http.
+							-->
+		<!--exclusion pattern="^http://apps\.opera\.com/(?:\w\w(?:_\w\w)?/(?:$|\?|.+\.htm)|(?:cs|script)s/opt/|index\.php)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://apps\.opera\.com/(?!/*(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://apps.opera.com/download_tap_tap_tap_and_reach_local_buyers_sell_your_unwanted_good_for_cash_now.html" />
+			<test url="http://apps.opera.com/en_us/download_touch_4kids_free.html" />
+			<test url="http://apps.opera.com//en_us/download_touch_4kids_free.html" />
+			<test url="http://apps.opera.com/index.php" />
+			<test url="http://apps.opera.com//index.php" />
+
+		<!--	These don't seem to work over https.
+								-->
+		<!--exclusion pattern="^http://(?:arc|.+\.apps|.+\.appstatic|dev-beta|forums|get\.geo|get\d|get-[\w-]+|help|mobilestore|my-beta|my-next|redir|snapshot|www-static)\.opera\.com/" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://html5.oms.apps.opera.com/" /-->
+			<!--test url="http://img9.f.appstatic.opera.com/public/img/opera_logo_new.png" /-->
+			<!--test url="http://dev-beta.opera.com/" /-->
+			<!--test url="http://forums.opera.com/" /-->
+			<!--test url="http://forums.opera.com/themes/opera/design/static/css/img/opera-icon-header.png" /-->
+			<!--test url="http://www-static.opera.com/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^bugs\.opera\.com$" name="^(?:JSESSIONID|atlassian\.xsrf\.token)$" /-->
+	<!--securecookie host="^\.micropage\.opera\.com$" name="^mppers$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^(?:addons|bugs|\.micropage)\.opera\.com$" name=".+" />
+
+
+	<!--	Redirect keeps path, but not
+		? nor forward slash:
+					-->
+	<rule from="^http://(ar|de|fr|ru|tw)\.opera\.com/+([^?]*)\??$"
+		to="https://www.opera.com/$1/$2" />
+
+		<test url="http://ar.opera.com/mobile/" />
+		<test url="http://de.opera.com/mobile/" />
+		<test url="http://fr.opera.com/mobile/" />
+		<test url="http://ru.opera.com/mobile/" />
+		<test url="http://tw.opera.com/mobile/" />
+
+	<!--	Redirect keeps path and args, but not
+		forward slash; and duplicates args:
+							-->
+	<rule from="^http://(ar|de|fr|ru|tw)\.opera\.com/+([^?]*)(.*)"
+		to="https://www.opera.com/$1/$2$3$3" />
+
+		<test url="http://ar.opera.com/index.htm?foo" />
+		<test url="http://ar.opera.com/index.htm?bar" />
+		<test url="http://de.opera.com/index.htm?foo" />
+		<test url="http://de.opera.com/index.htm?bar" />
+		<test url="http://fr.opera.com/index.htm?foo" />
+		<test url="http://fr.opera.com/index.htm?bar" />
+		<test url="http://ru.opera.com/index.htm?foo" />
+		<test url="http://ru.opera.com/index.htm?bar" />
+		<test url="http://tw.opera.com/index.htm?foo" />
+		<test url="http://tw.opera.com/index.htm?bar" />
+
+	<!--	Redirect keeps path, but not
+		? nor forward slash:
+					-->
+	<rule from="^http://cn\.opera\.com/+([^?]*)\??$"
+		to="https://www.opera.com/zh-cn/$1" />
+
+		<test url="http://cn.opera.com/index.htm" />
+		<test url="http://cn.opera.com/mobile/" />
+
+	<!--	Redirect keeps path and args, but not
+		forward slash; and duplicates args:
+							-->
+	<rule from="^http://cn\.opera\.com/+([^?]*)(.*)"
+		to="https://www.opera.com/zh-cn/$1$2$2" />
+
+		<test url="http://cn.opera.com/index.htm?foo" />
+		<test url="http://cn.opera.com/index.htm?bar" />
+		<test url="http://cn.opera.com/index.htm?rab" />
+		<test url="http://cn.opera.com/index.htm?oof" />
+
+	<!--	Redirect keeps path, but not
+		? nor forward slash:
+					-->
+	<rule from="^http://jp\.opera\.com/+([^?]*)\??$"
+		to="https://www.opera.com/ja/$1" />
+
+		<test url="http://jp.opera.com/index.htm" />
+		<test url="http://jp.opera.com/mobile/" />
+
+	<!--	Redirect keeps path and args, but not
+		forward slash; and duplicates args:
+							-->
+	<rule from="^http://jp\.opera\.com/+([^?]*)(.*)"
+		to="https://www.opera.com/ja/$1$2$2" />
+
+		<test url="http://jp.opera.com/index.htm?foo" />
+		<test url="http://jp.opera.com/index.htm?bar" />
+		<test url="http://jp.opera.com/index.htm?rab" />
+		<test url="http://jp.opera.com/index.htm?oof" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://m(?:ini)?\.opera\.com/.*"
+		to="https://www.opera.com/mobile" />
+
+		<test url="http://m.opera.com/index.htm" />
+		<test url="http://mini.opera.com/index.html" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://portal\.opera\.com/.*"
+		to="https://www.opera.com/o/news-portal" />
+
+		<test url="http://portal.opera.com/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
