@@ -63,7 +63,7 @@ function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
   if (ruleset.active) {
     checkbox.setAttribute("checked", "");
   }
-  checkbox.onchange = function(ev) {
+  checkbox.onchange = function() {
     toggleRuleLine(checkbox, ruleset, tab_id);
   };
   label.appendChild(checkbox);

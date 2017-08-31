@@ -1,3 +1,5 @@
+/* exported enableMixedRulesets */
+
 "use strict";
 /**
  * Fetch and parse XML to be loaded as RuleSets.
@@ -248,7 +250,7 @@ function AppliedRulesets() {
 
   var that = this;
   if (chrome.tabs) {
-    chrome.tabs.onRemoved.addListener(function(tabId, info) {
+    chrome.tabs.onRemoved.addListener(function(tabId) {
       that.removeTab(tabId);
     });
   }
@@ -579,7 +581,7 @@ chrome.runtime.onConnect.addListener(function (port) {
     chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
       var tabId = message.tabId;
 
-      var disableOnCloseCallback = function(port) {
+      var disableOnCloseCallback = function() {
         log(DBUG, "Devtools window for tab " + tabId + " closed, clearing data.");
         disableSwitchPlannerFor(tabId);
       };
