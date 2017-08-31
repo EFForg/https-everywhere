@@ -1,3 +1,7 @@
+/* global enableMixedRulesets */
+/* global domainBlacklist */
+/* global exports */
+
 "use strict";
 // Stubs so this runs under nodejs. They get overwritten later by util.js
 var DBUG = 2;

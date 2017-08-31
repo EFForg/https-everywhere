@@ -1,4 +1,11 @@
 /* exported enableMixedRulesets */
+/* global RuleSets */
+/* global storage */
+/* global log */
+/* global INFO */
+/* global NOTE */
+/* global WARN */
+/* global DBUG */
 
 "use strict";
 /**

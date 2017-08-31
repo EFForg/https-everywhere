@@ -1,3 +1,5 @@
+/* global sendMessage */
+
 document.addEventListener("DOMContentLoaded", () => {
 
   let json_data;

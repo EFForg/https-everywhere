@@ -1,3 +1,5 @@
+/* global sendMessage */
+
 "use strict";
 
 var stableRules = null;
