@@ -652,7 +652,7 @@ async function import_settings(settings) {
     }
 
     all_rules = new RuleSets(ls);
-    all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
+    all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
 
     // Load custom rulesets
     load_legacy_custom_rulesets(settings.custom_rulesets);
