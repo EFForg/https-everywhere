@@ -60,22 +60,26 @@ var switchPlannerInfo = {};
  *  {
  *    httpNowhere: Boolean,
  *    showCounter: Boolean,
- *    isExtensionEnabled: Boolean
+ *    isExtensionEnabled: Boolean,
+ *    counterColor: String
  *  }
  */
 var httpNowhereOn = false;
 var showCounter = true;
 var isExtensionEnabled = true;
+var counterColor = '#00cc00';
 
 var initializeStoredGlobals = () => {
   storage.get({
     httpNowhere: false,
     showCounter: true,
-    globalEnabled: true
+    globalEnabled: true,
+    counterColor: '#00cc00'
   }, function(item) {
     httpNowhereOn = item.httpNowhere;
     showCounter = item.showCounter;
     isExtensionEnabled = item.globalEnabled;
+    counterColor = item.counterColor;
     updateState();
   });
 }
@@ -93,6 +97,10 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
     }
     if ('globalEnabled' in changes) {
       isExtensionEnabled = changes.globalEnabled.newValue;
+      updateState();
+    }
+    if ('counterColor' in changes) {
+      counterColor = changes.counterColor.newValue;
       updateState();
     }
   }
@@ -193,7 +201,7 @@ function updateState () {
 
     const activeCount = getActiveRulesetCount(tabs[0].id);
 
-    chrome.browserAction.setBadgeBackgroundColor({ color: '#00cc00' });
+    chrome.browserAction.setBadgeBackgroundColor({ color: counterColor });
 
     const showBadge = activeCount > 0 && isExtensionEnabled && showCounter;
 

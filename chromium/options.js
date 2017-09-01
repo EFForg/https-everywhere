@@ -27,11 +27,20 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelector("form").addEventListener("submit", import_json);
 
   const showCounter = document.getElementById("showCounter");
+  const counterColor = document.getElementById("counterColor");
 
-  sendMessage("get_option", { showCounter: true }, item => {
+  sendMessage("get_option", { showCounter: true, counterColor: "#00cc00" }, item => {
     showCounter.checked = item.showCounter;
+    counterColor.style.display = item.showCounter ? '' : 'none';
+    counterColor.value = item.counterColor;
+
     showCounter.addEventListener("change", event => {
       sendMessage("set_option", { showCounter: showCounter.checked });
+      counterColor.style.display = showCounter.checked ? '' : 'none';
+    });
+
+    counterColor.addEventListener("change", event => {
+      sendMessage("set_option", { counterColor: counterColor.value });
     });
   });
 });
