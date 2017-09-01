@@ -242,7 +242,7 @@ RuleSets.prototype = {
 
     var rules = ruletag["rule"];
     for (let i in rules) {
-	  let rule = rules[i];
+      let rule = rules[i];
       if (rule["from"] != null && rule["to"] != null) {
         rule_set.rules.push(new Rule(rule["from"], rule["to"]));
       }
@@ -273,7 +273,7 @@ RuleSets.prototype = {
     var targets = ruletag["target"];
     for (let i in targets) {
       let target = targets[i];
-	  if (target != null) {
+      if (target != null) {
         if (!this.targets.has(target)) {
           this.targets.set(target, []);
         }
