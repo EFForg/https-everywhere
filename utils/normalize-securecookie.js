@@ -6,6 +6,14 @@ const fs = require('fs')
 
 const path = require('path')
 
+const util = require('util')
+
+const readFile = util.promisify(fs.readFile)
+
+const writeFile = util.promisify(fs.writeFile)
+
+const readdir = util.promisify(fs.readdir)
+
 const regexes = [
   {
     from: /<securecookie\s+(host|name)=\s*["']\^?\.[+*]?\$?["']\s+(host|name)=\s*["']\^?\.[+*]?\$?["']\s*\/>/g,
@@ -48,47 +56,11 @@ function parseWhitelist (data) {
   return result
 }
 
-function readFile (path) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(path, 'utf8', (err, data) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(data)
-      }
-    })
-  })
-}
-
-function writeFile (path, data) {
-  return new Promise((resolve, reject) => {
-    fs.writeFile(path, data, 'utf8', (err) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve()
-      }
-    })
-  })
-}
-
-function readdir (path) {
-  return new Promise((resolve, reject) => {
-    fs.readdir(path, null, (err, files) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(files)
-      }
-    })
-  })
-}
-
 const rulesDir = path.resolve(__dirname, '../src/chrome/content/rules')
 const rulesetWhitelistFile = path.join(__dirname, 'ruleset-whitelist.csv')
 
 async function main () {
-  const rulesetWhitelistContents = await readFile(rulesetWhitelistFile)
+  const rulesetWhitelistContents = await readFile(rulesetWhitelistFile, 'utf8')
   let rulesetWhitelistNewContents = rulesetWhitelistContents
 
   const rulesetWhitelist = parseWhitelist(rulesetWhitelistContents)
@@ -101,7 +73,7 @@ async function main () {
 
     const file = path.join(rulesDir, fileName)
 
-    const originalContents = await readFile(file)
+    const originalContents = await readFile(file, 'utf8')
 
     let fixHash = false
     let originalHash
@@ -133,7 +105,7 @@ async function main () {
         console.log(`"${fileName}" has been modified.`)
       }
 
-      await writeFile(file, newContents)
+      await writeFile(file, newContents, 'utf8')
 
       changedCount++
     }
@@ -142,7 +114,7 @@ async function main () {
   console.log(`${changedCount} of ${files.length} files have changed (${changedCount / files.length * 100}%).`)
 
   if (rulesetWhitelistNewContents !== rulesetWhitelistContents) {
-    await writeFile(rulesetWhitelistFile, rulesetWhitelistNewContents)
+    await writeFile(rulesetWhitelistFile, rulesetWhitelistNewContents, 'utf8')
 
     console.log('Ruleset whitelist has been updated.')
   }
