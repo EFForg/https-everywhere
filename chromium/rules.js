@@ -196,7 +196,7 @@ RuleSets.prototype = {
     var sets = ruleXml.getElementsByTagName("ruleset");
     for (let s of sets) {
       try {
-        this.parseOneRuleset(s);
+        this.parseOneXmlRuleset(s);
       } catch (e) {
         log(WARN, 'Error processing ruleset:' + e);
       }
@@ -332,7 +332,7 @@ RuleSets.prototype = {
    * Does the loading of a ruleset.
    * @param ruletag The whole <ruleset> tag to parse
    */
-  parseOneRuleset: function(ruletag) {
+  parseOneXmlRuleset: function(ruletag) {
     var default_state = true;
     var note = "";
     var default_off = ruletag.getAttribute("default_off");
