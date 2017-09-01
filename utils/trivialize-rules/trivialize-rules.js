@@ -98,10 +98,6 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
   const info = createTag('INFO', chalk.green, console.info);
   const fail = createTag('FAIL', chalk.red, console.error);
 
-  if (ruleset.securecookie) {
-    return;
-  }
-
   let targets = ruleset.target.map(target => target.$.host);
   let rules = ruleset.rule.map(rule => rule.$);
 
@@ -183,15 +179,19 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
 
   if (!rules.every(isStatic)) return;
 
-  info`trivialized`;
-
   domains = Array.from(domains);
 
   if (domains.slice().sort().join('\n') !== targets.sort().join('\n')) {
+    if (ruleset.securecookie) {
+      return;
+    }
+
     source = replaceXML(source, 'target', domains.map(domain => `<target host="${domain}" />`));
   }
 
   source = replaceXML(source, 'rule', ['<rule from="^http:" to="https:" />']);
+
+  info`trivialized`;
 
   return writeFile(`${rulesDir}/${name}`, source);
 
