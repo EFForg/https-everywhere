@@ -1,8 +1,8 @@
 "use strict";
 /**
- * Fetch and parse XML to be loaded as RuleSets.
+ * Load a file packaged with the extension
  *
- * @param url: a relative URL to local XML
+ * @param url: a relative URL to local file
  */
 function loadExtensionFile(url, returnType) {
   var xhr = new XMLHttpRequest();
