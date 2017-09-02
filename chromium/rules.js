@@ -204,9 +204,9 @@ RuleSets.prototype = {
   },
 
   addFromJson: function(ruleJson) {
-    for (let i = 0; i < ruleJson.length; i++) {
+    for (let ruleset of ruleJson) {
       try {
-        this.parseOneJsonRuleset(ruleJson[i]);
+        this.parseOneJsonRuleset(ruleset);
       } catch(e) {
         log(WARN, 'Error processing ruleset:' + e);	
       }
@@ -241,38 +241,38 @@ RuleSets.prototype = {
     }
 
     var rules = ruletag["rule"];
-    for (let i in rules) {
-      let rule = rules[i];
+    for (let rule of rules) {
       if (rule["from"] != null && rule["to"] != null) {
         rule_set.rules.push(new Rule(rule["from"], rule["to"]));
       }
     }
 
     var exclusions = ruletag["exclusion"];
-    for (let i in exclusions) {
-      let exclusion = exclusions[i];
-      if (exclusion != null) {
-        if (!rule_set.exclusions) {
-          rule_set.exclusions = [];
-        } 
-        rule_set.exclusions.push(new Exclusion(exclusion));
+    if (exclusions != null) {
+      for (let exclusion of exclusions) {
+        if (exclusion != null) {
+          if (!rule_set.exclusions) {
+            rule_set.exclusions = [];
+          }
+          rule_set.exclusions.push(new Exclusion(exclusion));
+        }
       }
     }
 
     var cookierules = ruletag["securecookie"];
-    for (let i in cookierules) {
-      let cookierule = cookierules[i];
-      if (cookierule["host"] != null && cookierule["name"] != null) {
-        if (!rule_set.cookierules) {
-          rule_set.cookierules = [];
+    if (cookierules != null) {
+      for (let cookierule of cookierules) {
+        if (cookierule["host"] != null && cookierule["name"] != null) {
+          if (!rule_set.cookierules) {
+            rule_set.cookierules = [];
+          }
+          rule_set.cookierules.push(new CookieRule(cookierule["host"], cookierule["name"]));
         }
-        rule_set.cookierules.push(new CookieRule(cookierule["host"], cookierule["name"]));
       }
     }
 
     var targets = ruletag["target"];
-    for (let i in targets) {
-      let target = targets[i];
+    for (let target of targets) {
       if (target != null) {
         if (!this.targets.has(target)) {
           this.targets.set(target, []);
