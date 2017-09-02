@@ -324,8 +324,8 @@ function onBeforeRequest(details) {
     using_credentials_in_url = true;
     var tmp_user = uri.username;
     var tmp_pass = uri.password;
-    uri.username = null;
-    uri.password = null;
+    uri.username = '';
+    uri.password = '';
   }
 
   var canonical_url = uri.href;
@@ -384,7 +384,7 @@ function onBeforeRequest(details) {
     // failing.
     if (shouldCancel) {
       if (!newuristr) {
-        return {redirectUrl: canonical_url.replace(/^http:/, "https:")};
+        return {redirectUrl: details.url.replace(/^http:/, "https:")};
       } else {
         return {redirectUrl: newuristr.replace(/^http:/, "https:")};
       }
