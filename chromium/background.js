@@ -320,10 +320,12 @@ function onBeforeRequest(details) {
   // If there is a username / password, put them aside during the ruleset
   // analysis process
   var using_credentials_in_url = false;
+  var tmp_user = null;
+  var tmp_pass = null;
   if (uri.password || uri.username) {
     using_credentials_in_url = true;
-    var tmp_user = uri.username;
-    var tmp_pass = uri.password;
+    tmp_user = uri.username;
+    tmp_pass = uri.password;
     uri.username = null;
     uri.password = null;
   }
