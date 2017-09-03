@@ -284,7 +284,7 @@ var domainBlacklist = new Set();
 
 // redirect counter workaround
 // TODO: Remove this code if they ever give us a real counter
-var redirectCounter = {};
+var redirectCounter = new Map();
 
 /**
  * Called before a HTTP(s) request. Does the heavy lifting
@@ -343,7 +343,7 @@ function onBeforeRequest(details) {
 
   var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
 
-  if (redirectCounter[details.requestId] >= 8) {
+  if (redirectCounter.get(details.requestId) >= 8) {
     log(NOTE, "Redirect counter hit for " + canonical_url);
     urlBlacklist.add(canonical_url);
     var hostname = uri.hostname;
@@ -531,14 +531,15 @@ function onCookieChanged(changeInfo) {
  * */
 function onBeforeRedirect(details) {
   // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
-  var prefix = details.redirectUrl.substring(0, 5);
+  let prefix = details.redirectUrl.substring(0, 5);
   if (prefix === "http:" || prefix === "https") {
-    if (details.requestId in redirectCounter) {
-      redirectCounter[details.requestId] += 1;
+    let count = redirectCounter.get(details.requestId);
+    if (count) {
+      redirectCounter.set(details.requestId, count + 1);
       log(DBUG, "Got redirect id "+details.requestId+
-                ": "+redirectCounter[details.requestId]);
+                ": "+count);
     } else {
-      redirectCounter[details.requestId] = 1;
+      redirectCounter.set(details.requestId, 1);
     }
   }
 }
