@@ -16,13 +16,15 @@ function detect_incognito_creation(window) {
 }
 
 /**
- * Clear any caches we have.
+ * Clear any cache/ blacklist we have.
  * Called if an incognito session is destroyed.
  */
 function destroy_caches() {
   log(DBUG, "Destroying caches.");
   all_rules.cookieHostCache.clear();
   all_rules.ruleCache.clear();
+  domainBlacklist.clear();
+  urlBlacklist.clear();
 }
 
 /**
