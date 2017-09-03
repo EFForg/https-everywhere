@@ -573,10 +573,10 @@ wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"
 wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
 
 // Cleanup redirectCounter if neccessary
-wr.onCompleted.addListener(onCompleted, {urls: ["https://*/*"]});
+wr.onCompleted.addListener(onCompleted, {urls: ["*://*/*"]});
 
 // Cleanup redirectCounter if neccessary
-wr.onErrorOccurred.addListener(onErrorOccurred, {urls: ["https://*/*"]})
+wr.onErrorOccurred.addListener(onErrorOccurred, {urls: ["*://*/*"]})
 
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking.
 chrome.cookies.onChanged.addListener(onCookieChanged);
