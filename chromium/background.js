@@ -544,6 +544,26 @@ function onBeforeRedirect(details) {
   }
 }
 
+/**
+ * handle webrequest.onCompleted, cleanup redirectCounter
+ * @param details details for the chrome.webRequest (see chrome doc)
+ */
+function onCompleted(details) {
+  if (redirectCounter.has(details.requestId)) {
+    redirectCounter.delete(details.requestId);
+  }
+}
+
+/**
+ * handle webrequest.onErrorOccurred, cleanup redirectCounter
+ * @param details details for the chrome.webRequest (see chrome doc)
+ */
+function onErrorOccurred(details) {
+  if (redirectCounter.has(details.requestId)) {
+    redirectCounter.delete(details.requestId);
+  }
+}
+
 // Registers the handler for requests
 // See: https://github.com/EFForg/https-everywhere/issues/10039
 wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"]);
@@ -552,6 +572,11 @@ wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
 wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
 
+// Cleanup redirectCounter if neccessary
+wr.onCompleted.addListener(onCompleted, {urls: ["https://*/*"]});
+
+// Cleanup redirectCounter if neccessary
+wr.onErrorOccurred.addListener(onErrorOccurred, {urls: ["https://*/*"]})
 
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking.
 chrome.cookies.onChanged.addListener(onCookieChanged);
