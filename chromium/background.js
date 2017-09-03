@@ -197,7 +197,7 @@ function updateState () {
 
     const showBadge = activeCount > 0 && isExtensionEnabled && showCounter;
 
-    chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '' });
+    chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '', tabId: tabs[0].id });
   });
 }
 
