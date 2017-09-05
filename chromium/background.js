@@ -1,8 +1,8 @@
 "use strict";
 /**
- * Fetch and parse XML to be loaded as RuleSets.
+ * Load a file packaged with the extension
  *
- * @param url: a relative URL to local XML
+ * @param url: a relative URL to local file
  */
 function loadExtensionFile(url, returnType) {
   var xhr = new XMLHttpRequest();
@@ -16,6 +16,9 @@ function loadExtensionFile(url, returnType) {
   }
   if (returnType === 'xml') {
     return xhr.responseXML;
+  }
+  if (returnType === 'json') {
+    return JSON.parse(xhr.responseText);
   }
   return xhr.responseText;
 }
@@ -34,7 +37,7 @@ all_rules = new RuleSets(ls);
 var enableMixedRulesets = false;
 storage.get({enableMixedRulesets: false}, function(item) {
   enableMixedRulesets = item.enableMixedRulesets;
-  all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
+  all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
 });
 
 // Load in the legacy custom rulesets, if any
@@ -649,7 +652,7 @@ async function import_settings(settings) {
     }
 
     all_rules = new RuleSets(ls);
-    all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
+    all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
 
     // Load custom rulesets
     load_legacy_custom_rulesets(settings.custom_rulesets);
