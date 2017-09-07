@@ -83,9 +83,6 @@ async function main () {
 
       if (rulesetWhitelist[fileNameLowerCase] === originalHash) {
         fixHash = true
-        console.log(`"${fileName}" is in the whitelist and the hash matches. Fixing the hash if the file will be modified.`)
-      } else {
-        console.log(`"${fileName}" is in the whitelist and the hash DOESN'T MATCH!!! Actual hash is "${originalHash}". Not fixing the hash if the file will be modified.`)
       }
     }
 
