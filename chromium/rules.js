@@ -403,44 +403,61 @@ RuleSets.prototype = {
    */
   potentiallyApplicableRulesets: function(host) {
     // Have we cached this result? If so, return it!
-    var cached_item = this.ruleCache.get(host);
-    if (cached_item !== undefined) {
-      log(DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.length);
+    if (this.ruleCache.has(host)) {
+      let cached_item = this.ruleCache.get(host);
+      let len = cached_item ? cached_item.size : 0;
+      log(DBUG, "Ruleset cache hit for " + host + " items:" + len);
       return cached_item;
-    }
-    log(DBUG, "Ruleset cache miss for " + host);
-
-    var tmp;
-    var results = [];
-    if (this.targets.has(host)) {
-      // Copy the host targets so we don't modify them.
-      results = results.concat(this.targets.get(host));
+    } else {
+      log(DBUG, "Ruleset cache miss for " + host);
     }
 
     // Ensure host is well-formed (RFC 1035)
-    if (host.indexOf("..") != -1 || host.length > 255) {
+    if (host.length > 255 || host.indexOf('..') != -1) {
       log(WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
       return null;
     }
 
-    // Replace each portion of the domain with a * in turn
-    var segmented = host.split(".");
-    for (let i=0; i < segmented.length; i++) {
-      let tmp = segmented[i];
-      segmented[i] = "*";
-      results = results.concat(this.targets.get(segmented.join(".")));
-      segmented[i] = tmp;
-    }
-    // now eat away from the left, with *, so that for x.y.z.google.com we
-    // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
-    for (var i = 2; i <= segmented.length - 2; ++i) {
-      var t = "*." + segmented.slice(i,segmented.length).join(".");
-      results = results.concat(this.targets.get(t));
+    // Let's search!!
+    let resultSet = new Set();
+
+    // Look for exact matches
+    if (this.targets.has(host)) {
+      let results = this.targets.get(host);
+      if (results) {
+        for (let result of results) {
+          resultSet.add(result);
+        }
+      }
     }
 
-    // Clean the results list, which may contain duplicates or undefined entries
-    var resultSet = new Set(results);
-    resultSet.delete(undefined);
+    // Replace each portion of the domain with a * in turn
+    let segmented = host.split(".");
+    for (let i = 0; i < segmented.length; i++) {
+      let tmp = segmented[i];
+      segmented[i] = "*";
+
+      let results = this.targets.get(segmented.join('.'));
+      if (results) {
+        for (let result of results) {
+          resultSet.add(result);
+        }
+      }
+
+      segmented[i] = tmp;
+    }
+
+    // now eat away from the left, with *, so that for x.y.z.google.com we
+    // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
+    for (let i = 2; i <= segmented.length - 2; ++i) {
+      let domain  = "*." + segmented.slice(i, segmented.length).join(".");
+      let results = this.targets.get(domain);
+      if (results) {
+        for (let result of results) {
+          resultSet.add(result);
+        }
+      }
+    }
 
     log(DBUG,"Applicable rules for " + host + ":");
     if (resultSet.size == 0) {
@@ -452,7 +469,12 @@ RuleSets.prototype = {
     }
 
     // Insert results into the ruleset cache
-    this.ruleCache.set(host, resultSet);
+    if (resultSet.size == 0) {
+      this.ruleCache.set(host, null);
+      resultSet = null;
+    } else {
+      this.ruleCache.set(host, resultSet);
+    }
 
     // Cap the size of the cache. (Limit chosen somewhat arbitrarily)
     if (this.ruleCache.size > 1000) {
@@ -480,6 +502,10 @@ RuleSets.prototype = {
     }
 
     var potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
+    if (!potentiallyApplicable) {
+      return null;
+    }
+
     for (let ruleset of potentiallyApplicable) {
       if (ruleset.cookierules !== null && ruleset.active) {
         for (let cookierules of ruleset.cookierules) {
@@ -536,6 +562,10 @@ RuleSets.prototype = {
 
     log(INFO, "Testing securecookie applicability with " + test_uri);
     var potentiallyApplicable = this.potentiallyApplicableRulesets(domain);
+    if (!potentiallyApplicable) {
+      return false;
+    }
+
     for (let ruleset of potentiallyApplicable) {
       if (!ruleset.active) {
         continue;
@@ -560,6 +590,10 @@ RuleSets.prototype = {
   rewriteURI: function(urispec, host) {
     var newuri = null;
     var potentiallyApplicable = this.potentiallyApplicableRulesets(host);
+    if (!potentiallyApplicable) {
+      return null;
+    }
+
     for (let ruleset of potentiallyApplicable) {
       if (ruleset.active && (newuri = ruleset.apply(urispec))) {
         return newuri;
