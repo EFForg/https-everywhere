@@ -345,6 +345,9 @@ function onBeforeRequest(details) {
   }
 
   var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
+  if (!potentiallyApplicable) {
+    return ;
+  }
 
   if (redirectCounter.get(details.requestId) >= 8) {
     log(NOTE, "Redirect counter hit for " + canonical_url);
