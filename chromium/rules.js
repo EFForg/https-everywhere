@@ -175,7 +175,7 @@ RuleSet.prototype = {
  */
 function RuleSets(ruleActiveStates) {
   // Load rules into structure
-  this.targets = new Map();
+  this.targets = new Tree();
 
   // A cache for potentiallyApplicableRulesets
   this.ruleCache = new Map();
