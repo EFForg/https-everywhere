@@ -36,7 +36,7 @@ DELIM=","
   fi
 done) < "$WLIST"
 
-# Sorting by the second column (ruleset name)
+# Sorting by the 4th column (ruleset name)
 TMPFILE=`mktemp`
-(head -n1 "$WLIST" && tail -n +2 "$WLIST" | sort -t"," -b -u -k3) > "$TMPFILE"
+(head -n1 "$WLIST" && tail -n +2 "$WLIST" | sort -t"," -b -u -k4) > "$TMPFILE"
 mv "$TMPFILE" "$WLIST"
