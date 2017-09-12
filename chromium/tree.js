@@ -20,7 +20,7 @@ Tree.prototype = {
     return callback(parts, len, node);
   },
 
-  set: function(item, val) {
+  setNode: function(item, callback) {
     this._prep(item, (parts, len, node) => {
       for (let i = 0; i < len; i++) {
         let part = parts[i];
@@ -29,21 +29,29 @@ Tree.prototype = {
         }
         node = node.get(part);
       }
-      node.data = val;
+      return callback(node);
     });
   },
 
-  get: function(item) {
+  getNode: function(item, callback) {
     this._prep(item, (parts, len, node) => {
       for (let i = 0; i < len; i++) {
         let part = parts[i];
         if (!node.has(part)) {
-          return undefined;
+          return callback(undefined);
         }
         node = node.get(part);
       }
-      return node.data;
+      return callback(node);
     });
+  },
+
+  set: function(item, val) {
+    return this.setNode(item, val, node => node.data = val);
+  },
+
+  get: function(item) {
+    return this.getNode(item, node => (typeof node == 'undefined') ? node : node.data);
   },
 
   has: function(item) {
