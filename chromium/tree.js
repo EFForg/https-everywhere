@@ -9,9 +9,10 @@ function Tree() {
   this._base = new Node();
 }
 
+/**
+ * Prefix tree with same API as Map
+ */
 Tree.prototype = {
-  sentinel: '.', // since '.' should not appear in the label of a hostname
-
   set: function(item, val) {
     let parts = splitter(item),
       len = parts.length,
@@ -24,11 +25,11 @@ Tree.prototype = {
       }
       node = node.get(part);
     }
-    node.set(this.sentinel, val);
+    node.data = val;
   },
 
   get: function(item) {
-    let parts = splitter(item).concat(this.sentinel),
+    let parts = splitter(item),
       len = parts.length,
       node = this._base;
 
@@ -39,7 +40,7 @@ Tree.prototype = {
       }
       node = node.get(part);
     }
-    return node;
+    return node.data;
   },
 
   has: function(item) {
