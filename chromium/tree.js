@@ -13,34 +13,37 @@ function Tree() {
  * Prefix tree with same API as Map
  */
 Tree.prototype = {
-  set: function(item, val) {
+  _prep: function(item, callback) {
     let parts = splitter(item),
       len = parts.length,
       node = this._base;
+    return callback(parts, len, node);
+  },
 
-    for (let i = 0; i < len; i++) {
-      let part = parts[i];
-      if (!node.has(part)) {
-        node.set(part, new Node());
+  set: function(item, val) {
+    this._prep(item, (parts, len, node) => {
+      for (let i = 0; i < len; i++) {
+        let part = parts[i];
+        if (!node.has(part)) {
+          node.set(part, new Node());
+        }
+        node = node.get(part);
       }
-      node = node.get(part);
-    }
-    node.data = val;
+      node.data = val;
+    });
   },
 
   get: function(item) {
-    let parts = splitter(item),
-      len = parts.length,
-      node = this._base;
-
-    for (let i = 0; i < len; i++) {
-      let part = parts[i];
-      if (!node.has(part)) {
-        return undefined;
+    this._prep(item, (parts, len, node) => {
+      for (let i = 0; i < len; i++) {
+        let part = parts[i];
+        if (!node.has(part)) {
+          return undefined;
+        }
+        node = node.get(part);
       }
-      node = node.get(part);
-    }
-    return node.data;
+      return node.data;
+    });
   },
 
   has: function(item) {
@@ -51,34 +54,33 @@ Tree.prototype = {
   },
 
   delete: function(item) {
-    let parts = splitter(item),
-      len = parts.length,
-      node = this._base,
-      branch = [node];
+    this._prep(item, (parts, len, node) => {
+      let branch = [node];
 
-    // crawl to end of branch
-    for (let i = 0; i < len; i++) {
-      let part = parts[i];
-      if (!node.has(part)) {
+      // crawl to end of branch
+      for (let i = 0; i < len; i++) {
+        let part = parts[i];
+        if (!node.has(part)) {
+          return false;
+        }
+        node = node.get(part);
+        branch.push(node);
+      }
+
+      // delete if present
+      if (!node.hasOwnProperty('data')) {
         return false;
       }
-      node = node.get(part);
-      branch.push(node);
-    }
+      delete node.data;
 
-    // delete if present
-    if (!node.hasOwnProperty('data')) {
-      return false;
-    }
-    delete node.data;
-
-    // crawl back, deleting nodes with no children/data;
-    for (let i = branch.length - 1; i > 0; i--) {
-      if (branch[i].hasOwnProperty('data') || branch[i].size > 0) {
-        break;
+      // crawl back, deleting nodes with no children/data;
+      for (let i = branch.length - 1; i > 0; i--) {
+        if (branch[i].hasOwnProperty('data') || branch[i].size > 0) {
+          break;
+        }
+        branch[i].delete(parts[i]);
       }
-      branch[i].delete(parts[i]);
-    }
-    return true;
+      return true;
+    });
   },
 };
