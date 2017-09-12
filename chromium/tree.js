@@ -56,6 +56,7 @@ Tree.prototype = {
       node = this._base,
       branch = [node];
 
+    // crawl to end of branch
     for (let i = 0; i < len; i++) {
       let part = parts[i];
       if (!node.has(part)) {
@@ -64,10 +65,19 @@ Tree.prototype = {
       node = node.get(part);
       branch.push(node);
     }
+
+    // delete if present
+    if (!node.hasOwnProperty('data')) {
+      return false;
+    }
+    delete node.data;
+
+    // crawl back, deleting nodes with no children/data;
     for (let i = branch.length - 1; i > 0; i--) {
-      if (!branch[i].delete(parts[i])) {
-        return true;
+      if (branch[i].hasOwnProperty('data') || branch[i].size > 0) {
+        break;
       }
+      branch[i].delete(parts[i]);
     }
     return true;
   },
