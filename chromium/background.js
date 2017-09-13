@@ -135,7 +135,7 @@ function updateState () {
   });
 
   chrome.browserAction.setTitle({
-    title: 'HTTPS Everywhere' + (iconState === 'active') ? '' : ' (' + iconState + ')'
+    title: 'HTTPS Everywhere' + ((iconState === 'active') ? '' : ' (' + iconState + ')')
   });
 
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
