@@ -10,8 +10,6 @@ let settings = {
 };
 
 // To reduce memory usage for the numerous rules/cookies with trivial rules
-const trivial_rule_from_c = /^http:/;
-const trivial_rule_to = 'https:';
 const trivial_cookie_rule_c = /.+/;
 
 // Empty iterable singleton to reduce memory usage
@@ -28,20 +26,29 @@ const nullIterable = Object.create(null, {
 });
 
 /**
- * A single rule
+ * Constructs a single rule
  * @param from
  * @param to
  * @constructor
  */
 function Rule(from, to) {
+  this.from_c = new RegExp(from);
+  this.to = to;
+}
+
+// To reduce memory usage for the numerous rules/cookies with trivial rules
+const trivial_rule = new Rule("^http:", "https:");
+
+/**
+ * Returns a common trivial rule or constructs a new one.
+ */
+function getRule(from, to) {
   if (from === "^http:" && to === "https:") {
     // This is a trivial rule, rewriting http->https with no complex RegExp.
-    this.to = trivial_rule_to;
-    this.from_c = trivial_rule_from_c;
+    return trivial_rule;
   } else {
     // This is a non-trivial rule.
-    this.to = to;
-    this.from_c = new RegExp(from);
+    return new Rule(from, to);
   }
 }
 
@@ -275,7 +282,7 @@ RuleSets.prototype = {
     var rules = ruletag["rule"];
     for (let rule of rules) {
       if (rule["from"] != null && rule["to"] != null) {
-        rule_set.rules.push(new Rule(rule["from"], rule["to"]));
+        rule_set.rules.push(getRule(rule["from"], rule["to"]));
       }
     }
 
@@ -322,7 +329,7 @@ RuleSets.prototype = {
   addUserRule : function(params) {
     util.log(util.INFO, 'adding new user rule for ' + JSON.stringify(params));
     var new_rule_set = new RuleSet(params.host, true, "user rule");
-    var new_rule = new Rule(params.urlMatcher, params.redirectTo);
+    var new_rule = getRule(params.urlMatcher, params.redirectTo);
     new_rule_set.rules.push(new_rule);
     if (!this.targets.has(params.host)) {
       this.targets.set(params.host, []);
@@ -481,7 +488,7 @@ RuleSets.prototype = {
 
     var rules = ruletag.getElementsByTagName("rule");
     for (let rule of rules) {
-      rule_set.rules.push(new Rule(rule.getAttribute("from"),
+      rule_set.rules.push(getRule(rule.getAttribute("from"),
         rule.getAttribute("to")));
     }
 
@@ -696,8 +703,7 @@ RuleSets.prototype = {
 Object.assign(exports, {
   nullIterable,
   settings,
-  trivial_rule_to,
-  trivial_rule_from_c,
+  trivial_rule,
   Exclusion,
   Rule,
   RuleSet,
