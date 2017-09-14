@@ -1,10 +1,7 @@
-/* exported VERB */
-/* exported DBUG */
-/* exported INFO */
-/* exported NOTE */
-/* exported WARN */
 /* exported DEFAULT_LOG_LEVEL */
 /* exported log */
+/* global NOTE */
+/* global WARN */
 
 "use strict";
 
@@ -13,7 +10,7 @@
 
 // TODO: Add an easy UI to change the log level.
 // (Developers can just type DEFAULT_LOG_LEVEL=VERB in the console)
-var DEFAULT_LOG_LEVEL = NOTE;
+let DEFAULT_LOG_LEVEL = NOTE;
 console.log("Hey developer! Want to see more verbose logging?");
 console.log("Type this into the console: DEFAULT_LOG_LEVEL=VERB");
 console.log("Accepted levels are VERB, DBUG, INFO, NOTE and WARN, default is NOTE");

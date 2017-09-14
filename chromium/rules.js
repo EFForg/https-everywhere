@@ -1,5 +1,11 @@
-/* global enableMixedRulesets */
-/* global domainBlacklist */
+/* exported enableMixedRulesets */
+/* exported domainBlacklist */
+/* exported VERB */
+/* exported DBUG */
+/* exported INFO */
+/* exported NOTE */
+/* exported WARN */
+/* exported RuleSets */
 /* global exports */
 
 "use strict";

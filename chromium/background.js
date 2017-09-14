@@ -1,4 +1,6 @@
-/* exported enableMixedRulesets */
+/* exported initializeStoredGlobals */
+/* exported urlBlacklist */
+/* exported all_rules */
 /* global RuleSets */
 /* global storage */
 /* global log */
@@ -6,6 +8,9 @@
 /* global NOTE */
 /* global WARN */
 /* global DBUG */
+/* global domainBlacklist */
+// eslint-disable-next-line no-unused-vars
+/* global enableMixedRulesets */
 
 "use strict";
 /**
