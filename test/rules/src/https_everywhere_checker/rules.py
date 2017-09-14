@@ -245,7 +245,8 @@ class Ruleset(object):
 			 Returns an array of strings reporting any coverage problems if they exist,
 			 or empty list if coverage is sufficient.
 			 """
-		problems = self._determineTestApplication()
+		self._determineTestApplication()
+		problems = []
 
 		# First, check each target has the right number of tests
 		myTestTargets = []
