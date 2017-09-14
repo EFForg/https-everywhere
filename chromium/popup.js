@@ -1,6 +1,6 @@
 /* global sendMessage */
 
-"use strict";
+'use strict';
 
 var stableRules = null;
 var unstableRules = null;
@@ -30,14 +30,14 @@ function toggleRuleLine(checkbox, ruleset, tab_id) {
     tab_id: tab_id
   };
 
-  sendMessage("set_ruleset_active_status", set_ruleset, function(){
+  sendMessage('set_ruleset_active_status', set_ruleset, function(){
 
     if (ruleset_active != ruleset.default_state) {
       ls[ruleset.name] = ruleset_active;
     } else {
       delete ls[ruleset.name];
       // purge the name from the cache so that this unchecking is persistent.
-      sendMessage("delete_from_ruleset_cache", ruleset.name);
+      sendMessage('delete_from_ruleset_cache', ruleset.name);
     }
 
     // Now reload the selected tab of the current window.
@@ -53,17 +53,17 @@ function toggleRuleLine(checkbox, ruleset, tab_id) {
 function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
 
   // parent block for line
-  var line = document.createElement("div");
-  line.className = "rule checkbox";
+  var line = document.createElement('div');
+  line.className = 'rule checkbox';
 
   // label "container"
-  var label = document.createElement("label");
+  var label = document.createElement('label');
 
   // checkbox
-  var checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
+  var checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
   if (ruleset.active) {
-    checkbox.setAttribute("checked", "");
+    checkbox.setAttribute('checked', '');
   }
   checkbox.onchange = function() {
     toggleRuleLine(checkbox, ruleset, tab_id);
@@ -71,9 +71,9 @@ function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
   label.appendChild(checkbox);
 
   // favicon (from chrome's cache)
-  var favicon = document.createElement("img");
-  favicon.className = "favicon";
-  favicon.src = "chrome://favicon/";
+  var favicon = document.createElement('img');
+  favicon.className = 'favicon';
+  favicon.src = 'chrome://favicon/';
   for (let rule of ruleset.rules) {
     var host = hostReg.exec(rule.to);
     if (host) {
@@ -85,26 +85,26 @@ function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
   if (false) { //navigator.userAgent.match("Chrome")) {
     var xhr = new XMLHttpRequest();
     try {
-      xhr.open("GET", favicon.src, true);
+      xhr.open('GET', favicon.src, true);
       label.appendChild(favicon);
     } catch (e) {}
   }
 
   // label text
-  var text = document.createElement("span");
+  var text = document.createElement('span');
   text.innerText = ruleset.name;
   if (ruleset.note.length) {
     text.title = ruleset.note;
   }
 
-  if(ruleset.note == "user rule") {
-    var remove = document.createElement("img");
-    remove.src = chrome.extension.getURL("remove.png");
-    remove.className = "remove";
+  if(ruleset.note == 'user rule') {
+    var remove = document.createElement('img');
+    remove.src = chrome.extension.getURL('remove.png');
+    remove.className = 'remove';
     line.appendChild(remove);
 
-    remove.addEventListener("click", function(){
-      sendMessage("remove_rule", ruleset);
+    remove.addEventListener('click', function(){
+      sendMessage('remove_rule', ruleset);
       list_div.removeChild(line);
     });
   }
@@ -122,9 +122,9 @@ function updateEnabledDisabledUI() {
     document.getElementById('onoffswitch').checked = item.globalEnabled;
     // Hide or show the rules sections
     if (item.globalEnabled) {
-      document.body.className = ""
+      document.body.className = ''
     } else {
-      document.body.className = "disabled"
+      document.body.className = 'disabled'
     }
   });
 }
@@ -151,19 +151,19 @@ function toggleEnabledDisabled() {
 function gotTab(tabArray) {
   var activeTab = tabArray[0];
 
-  sendMessage("get_active_rulesets", activeTab.id, function(rulesets){
+  sendMessage('get_active_rulesets', activeTab.id, function(rulesets){
     for (var r in rulesets) {
       var listDiv = stableRules;
       if (!rulesets[r].default_state) {
         listDiv = unstableRules;
       }
       appendRuleLineToListDiv(rulesets[r], listDiv, activeTab.id);
-      listDiv.style.position = "static";
-      listDiv.style.visibility = "visible";
+      listDiv.style.position = 'static';
+      listDiv.style.visibility = 'visible';
     }
     // Only show the "Add a rule" link if we're on an HTTPS page
     if (/^https:/.test(activeTab.url)) {
-      show(e("add-rule-link"));
+      show(e('add-rule-link'));
     }
   });
 }
@@ -171,9 +171,9 @@ function gotTab(tabArray) {
 /**
  * Fill in content into the popup on load
  */
-document.addEventListener("DOMContentLoaded", function () {
-  stableRules = document.getElementById("StableRules");
-  unstableRules = document.getElementById("UnstableRules");
+document.addEventListener('DOMContentLoaded', function () {
+  stableRules = document.getElementById('StableRules');
+  unstableRules = document.getElementById('UnstableRules');
   chrome.tabs.query({ active: true, currentWindow: true }, gotTab);
 
   // Set up the enabled/disabled switch & hide/show rules
@@ -195,21 +195,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  e("aboutTitle").setAttribute("title", chrome.i18n.getMessage("about_title"));
-  e("add-rule-link").addEventListener("click", addManualRule);
+  e('aboutTitle').setAttribute('title', chrome.i18n.getMessage('about_title'));
+  e('add-rule-link').addEventListener('click', addManualRule);
 });
 
 
 var escapeForRegex = function( value ) {
-  return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
+  return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&');
 };
 
 function hide(elem) {
-  elem.style.display = "none";
+  elem.style.display = 'none';
 }
 
 function show(elem) {
-  elem.style.display = "block";
+  elem.style.display = 'block';
 }
 
 /**
@@ -217,42 +217,42 @@ function show(elem) {
  */
 function addManualRule() {
   chrome.tabs.query({ active: true, currentWindow: true }, function(tab) {
-    hide(e("add-rule-link"));
-    show(e("add-new-rule-div"));
+    hide(e('add-rule-link'));
+    show(e('add-new-rule-div'));
     var newUrl = document.createElement('a');
     newUrl.href = tab[0].url;
-    newUrl.protocol = "https:";
-    e("new-rule-host").value = newUrl.host;
+    newUrl.protocol = 'https:';
+    e('new-rule-host').value = newUrl.host;
     var oldUrl = document.createElement('a');
     oldUrl.href = tab[0].url;
-    oldUrl.protocol = "http:";
-    var oldMatcher = "^" + escapeForRegex(oldUrl.protocol + "//" + oldUrl.host+ "/");
-    e("new-rule-regex").value = oldMatcher;
-    var redirectPath = newUrl.protocol + "//" + newUrl.host + "/";
-    e("new-rule-redirect").value = redirectPath;
-    e("new-rule-name").value = "Manual rule for " + oldUrl.host;
-    e("add-new-rule-button").addEventListener("click", function() {
+    oldUrl.protocol = 'http:';
+    var oldMatcher = '^' + escapeForRegex(oldUrl.protocol + '//' + oldUrl.host+ '/');
+    e('new-rule-regex').value = oldMatcher;
+    var redirectPath = newUrl.protocol + '//' + newUrl.host + '/';
+    e('new-rule-redirect').value = redirectPath;
+    e('new-rule-name').value = 'Manual rule for ' + oldUrl.host;
+    e('add-new-rule-button').addEventListener('click', function() {
       var params = {
-        host : e("new-rule-host").value,
-        redirectTo : e("new-rule-redirect").value,
-        urlMatcher : e("new-rule-regex").value
+        host : e('new-rule-host').value,
+        redirectTo : e('new-rule-redirect').value,
+        urlMatcher : e('new-rule-regex').value
       };
-      sendMessage("add_new_rule", params, function() {
+      sendMessage('add_new_rule', params, function() {
         location.reload();
       });
     });
 
-    e("cancel-new-rule").addEventListener("click", function() {
-      show(e("add-rule-link"));
-      hide(e("add-new-rule-div"));
+    e('cancel-new-rule').addEventListener('click', function() {
+      show(e('add-rule-link'));
+      hide(e('add-new-rule-div'));
     });
-    e("new-rule-show-advanced-link").addEventListener("click", function() {
-      show(e("new-rule-advanced"));
-      hide(e("new-rule-regular-text"));
+    e('new-rule-show-advanced-link').addEventListener('click', function() {
+      show(e('new-rule-advanced'));
+      hide(e('new-rule-regular-text'));
     });
-    e("new-rule-hide-advanced-link").addEventListener("click", function() {
-      hide(e("new-rule-advanced"));
-      show(e("new-rule-regular-text"));
+    e('new-rule-hide-advanced-link').addEventListener('click', function() {
+      hide(e('new-rule-advanced'));
+      show(e('new-rule-regular-text'));
     });
   });
 }
@@ -266,11 +266,11 @@ function toggleHttpNowhere() {
 function getOption_(opt, defaultOpt, callback) {
   var details = {};
   details[opt] = defaultOpt;
-  sendMessage("get_option", details, callback);
+  sendMessage('get_option', details, callback);
 }
 
 function setOption_(opt, value, callback) {
   var details = {};
   details[opt] = value;
-  sendMessage("set_option", details, callback);
+  sendMessage('set_option', details, callback);
 }

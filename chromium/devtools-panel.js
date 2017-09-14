@@ -17,9 +17,9 @@ function sendMessage(type) {
  * Turn on the Switch Planner recording mode, and hide the long description.
  */
 function enableSwitchPlanner() {
-  sendMessage("enable");
-  e("SwitchPlannerDescription").style.display = "none";
-  e("SwitchPlannerDetails").style.display = "block";
+  sendMessage('enable');
+  e('SwitchPlannerDescription').style.display = 'none';
+  e('SwitchPlannerDetails').style.display = 'block';
   // Hack: Fetch and display summary information from background page
   // once per second.
   setInterval(display, 1000);
@@ -31,7 +31,7 @@ function enableSwitchPlanner() {
  * the long description is restored.
  */
 function disableSwitchPlanner() {
-  sendMessage("disable");
+  sendMessage('disable');
   document.location.reload();
 }
 
@@ -41,20 +41,20 @@ function disableSwitchPlanner() {
  */
 function display() {
   chrome.runtime.sendMessage({
-    type: "getHosts",
+    type: 'getHosts',
     tabId: chrome.devtools.inspectedWindow.tabId,
   }, function(response) {
-    var switch_planner_details = e("SwitchPlannerDetails");
+    var switch_planner_details = e('SwitchPlannerDetails');
     while (switch_planner_details.firstChild) {
       switch_planner_details.removeChild(switch_planner_details.firstChild);
     }
 
-    var nrw_text_div = document.createElement("div");
-    nrw_text_div.innerText = "Unrewritten HTTP resources loaded from this tab (enable HTTPS on these domains and add them to HTTPS Everywhere):"
+    var nrw_text_div = document.createElement('div');
+    nrw_text_div.innerText = 'Unrewritten HTTP resources loaded from this tab (enable HTTPS on these domains and add them to HTTPS Everywhere):'
     var nrw_div = switchPlannerSmallHtmlSection(response.nrw);
-    var rw_text_div = document.createElement("div");
-    rw_text_div.style.marginTop = "20px";
-    rw_text_div.innerText = "Resources rewritten successfully from this tab (update these in your source code):"
+    var rw_text_div = document.createElement('div');
+    rw_text_div.style.marginTop = '20px';
+    rw_text_div.innerText = 'Resources rewritten successfully from this tab (update these in your source code):'
     var rw_div = switchPlannerSmallHtmlSection(response.rw);
 
     switch_planner_details.appendChild(nrw_text_div);
@@ -62,7 +62,7 @@ function display() {
     switch_planner_details.appendChild(rw_text_div);
     switch_planner_details.appendChild(rw_div);
 
-    e("SwitchPlannerResults").style.display = "block";
+    e('SwitchPlannerResults').style.display = 'block';
   });
 }
 
@@ -70,10 +70,10 @@ function display() {
 * Format the switch planner output for presentation to a user.
 * */
 function switchPlannerSmallHtmlSection(asset_host_list) {
-  var wrapper_div = document.createElement("div");
+  var wrapper_div = document.createElement('div');
   if (asset_host_list.length == 0) {
-    wrapper_div.style.fontWeight = "bold";
-    wrapper_div.innerText = "none";
+    wrapper_div.style.fontWeight = 'bold';
+    wrapper_div.innerText = 'none';
     return wrapper_div;
   }
 
@@ -82,19 +82,19 @@ function switchPlannerSmallHtmlSection(asset_host_list) {
     var activeCount = asset_host_list[i][1];
     var passiveCount = asset_host_list[i][2];
 
-    var div = document.createElement("div");
-    var b = document.createElement("b");
+    var div = document.createElement('div');
+    var b = document.createElement('b');
     b.innerText = host;
     div.appendChild(b);
 
     var text_arr = [];
     if (activeCount > 0) {
-      text_arr.push(activeCount + " active");
+      text_arr.push(activeCount + ' active');
     }
     if (passiveCount > 0) {
-      text_arr.push(passiveCount + " passive");
+      text_arr.push(passiveCount + ' passive');
     }
-    div.appendChild(document.createTextNode(": " + text_arr.join(', ')));
+    div.appendChild(document.createTextNode(': ' + text_arr.join(', ')));
 
     wrapper_div.appendChild(div);
   }
@@ -107,10 +107,10 @@ window.onload = function() {
   // We don't receive messages from the background page currently, though that
   // may be a future improvement. Sending messages to the background page doesn't 
   // require an existing connection.
-  chrome.runtime.connect({ name: "devtools-page" });
+  chrome.runtime.connect({ name: 'devtools-page' });
 
-  var checkbox = e("SwitchPlannerCheckbox");
-  checkbox.addEventListener("change", function() {
+  var checkbox = e('SwitchPlannerCheckbox');
+  checkbox.addEventListener('change', function() {
     if (checkbox.checked) {
       enableSwitchPlanner();
     } else {
@@ -118,12 +118,12 @@ window.onload = function() {
     }
   });
 
-  e("SwitchPlannerDetailsLink").addEventListener("click", function() {
-    window.open("switch-planner.html?tab=" + chrome.devtools.inspectedWindow.tabId);
+  e('SwitchPlannerDetailsLink').addEventListener('click', function() {
+    window.open('switch-planner.html?tab=' + chrome.devtools.inspectedWindow.tabId);
   });
   // Since this is rendered in a devtools console, we have to make clicks on the
   // link open a new window.
-  e("MixedContentLink").addEventListener("click", function(e) {
+  e('MixedContentLink').addEventListener('click', function(e) {
     window.open(e.target.href);
   });
 };
