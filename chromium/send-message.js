@@ -1,3 +1,5 @@
+/* exported sendMessage */
+
 function sendMessage(type, object, callback) {
   var packet = {};
   packet.type = type;
