@@ -8,6 +8,10 @@ var INFO = 3;
 var WARN = 5;
 function log(){}
 
+// Set default values for the same reason. Later modified by background.js
+var enableMixedRulesets = false;
+var domainBlacklist = new Set();
+
 // To reduce memory usage for the numerous rules/cookies with trivial rules
 const trivial_rule_to = "https:";
 const trivial_rule_from_c = new RegExp("^http:");
@@ -209,7 +213,7 @@ RuleSets.prototype = {
       try {
         this.parseOneJsonRuleset(ruleset);
       } catch(e) {
-        log(WARN, 'Error processing ruleset:' + e);	
+        log(WARN, 'Error processing ruleset:' + e);
       }
     }
   },
@@ -228,7 +232,7 @@ RuleSets.prototype = {
     var platform = ruletag["platform"]
     if (platform) {
       default_state = false;
-      if (platform == "mixedcontent" && background.enableMixedRulesets) {
+      if (platform == "mixedcontent" && enableMixedRulesets) {
         default_state = true;
       }
       note += "Platform(s): " + platform + "\n";
@@ -347,7 +351,7 @@ RuleSets.prototype = {
     var platform = ruletag.getAttribute("platform");
     if (platform) {
       default_state = false;
-      if (platform == "mixedcontent" && background.enableMixedRulesets) {
+      if (platform == "mixedcontent" && enableMixedRulesets) {
         default_state = true;
       }
       note += "Platform(s): " + platform + "\n";
@@ -511,7 +515,7 @@ RuleSets.prototype = {
     // observed and the domain blacklisted, a cookie might already have been
     // flagged as secure.
 
-    if (background.domainBlacklist.has(domain)) {
+    if (domainBlacklist.has(domain)) {
       log(INFO, "cookies for " + domain + "blacklisted");
       return false;
     }
@@ -570,6 +574,8 @@ RuleSets.prototype = {
 };
 
 Object.assign(exports, {
+  enableMixedRulesets,
+  domainBlacklist,
   RuleSets,
 });
 
