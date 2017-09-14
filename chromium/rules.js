@@ -100,7 +100,7 @@ RuleSet.prototype = {
     // Okay, now find the first rule that triggers
     for (let rule of this.rules) {
       returl = urispec.replace(rule.from_c,
-                               rule.to);
+        rule.to);
       if (returl != urispec) {
         return returl;
       }
@@ -175,7 +175,7 @@ RuleSet.prototype = {
  */
 function RuleSets(ruleActiveStates) {
   // Load rules into structure
-  this.targets = {};
+  this.targets = new Map();
 
   // A cache for potentiallyApplicableRulesets
   this.ruleCache = new Map();
@@ -196,9 +196,88 @@ RuleSets.prototype = {
     var sets = ruleXml.getElementsByTagName("ruleset");
     for (let s of sets) {
       try {
-        this.parseOneRuleset(s);
+        this.parseOneXmlRuleset(s);
       } catch (e) {
         log(WARN, 'Error processing ruleset:' + e);
+      }
+    }
+  },
+
+  addFromJson: function(ruleJson) {
+    for (let ruleset of ruleJson) {
+      try {
+        this.parseOneJsonRuleset(ruleset);
+      } catch(e) {
+        log(WARN, 'Error processing ruleset:' + e);	
+      }
+    }
+  },
+
+  parseOneJsonRuleset: function(ruletag) {
+    var default_state = true;
+    var note = "";
+    var default_off = ruletag["default_off"];
+    if (default_off) {
+      default_state = false;
+      note += default_off + "\n";
+    }
+
+    // If a ruleset declares a platform, and we don't match it, treat it as
+    // off-by-default. In practice, this excludes "mixedcontent" & "cacert" rules.
+    var platform = ruletag["platform"]
+    if (platform) {
+      default_state = false;
+      if (platform == "mixedcontent" && enableMixedRulesets) {
+        default_state = true;
+      }
+      note += "Platform(s): " + platform + "\n";
+    }
+
+    var rule_set = new RuleSet(ruletag["name"], default_state, note.trim());
+
+    // Read user prefs
+    if (rule_set.name in this.ruleActiveStates) {
+      rule_set.active = (this.ruleActiveStates[rule_set.name] == "true");
+    }
+
+    var rules = ruletag["rule"];
+    for (let rule of rules) {
+      if (rule["from"] != null && rule["to"] != null) {
+        rule_set.rules.push(new Rule(rule["from"], rule["to"]));
+      }
+    }
+
+    var exclusions = ruletag["exclusion"];
+    if (exclusions != null) {
+      for (let exclusion of exclusions) {
+        if (exclusion != null) {
+          if (!rule_set.exclusions) {
+            rule_set.exclusions = [];
+          }
+          rule_set.exclusions.push(new Exclusion(exclusion));
+        }
+      }
+    }
+
+    var cookierules = ruletag["securecookie"];
+    if (cookierules != null) {
+      for (let cookierule of cookierules) {
+        if (cookierule["host"] != null && cookierule["name"] != null) {
+          if (!rule_set.cookierules) {
+            rule_set.cookierules = [];
+          }
+          rule_set.cookierules.push(new CookieRule(cookierule["host"], cookierule["name"]));
+        }
+      }
+    }
+
+    var targets = ruletag["target"];
+    for (let target of targets) {
+      if (target != null) {
+        if (!this.targets.has(target)) {
+          this.targets.set(target, []);
+        }
+        this.targets.get(target).push(rule_set);
       }
     }
   },
@@ -213,12 +292,12 @@ RuleSets.prototype = {
     var new_rule_set = new RuleSet(params.host, true, "user rule");
     var new_rule = new Rule(params.urlMatcher, params.redirectTo);
     new_rule_set.rules.push(new_rule);
-    if (!(params.host in this.targets)) {
-      this.targets[params.host] = [];
+    if (!this.targets.has(params.host)) {
+      this.targets.set(params.host, []);
     }
     this.ruleCache.delete(params.host);
     // TODO: maybe promote this rule?
-    this.targets[params.host].push(new_rule_set);
+    this.targets.get(params.host).push(new_rule_set);
     if (new_rule_set.name in this.ruleActiveStates) {
       new_rule_set.active = (this.ruleActiveStates[new_rule_set.name] == "true");
     }
@@ -234,12 +313,17 @@ RuleSets.prototype = {
   removeUserRule: function(ruleset) {
     log(INFO, 'removing user rule for ' + JSON.stringify(ruleset));
     this.ruleCache.delete(ruleset.name);
-    this.targets[ruleset.name] = this.targets[ruleset.name].filter(r =>
+
+
+    var tmp = this.targets.get(ruleset.name).filter(r =>
       !(r.isEquivalentTo(ruleset))
     );
-    if (this.targets[ruleset.name].length == 0) {
-      delete this.targets[ruleset.name];
+    this.targets.set(ruleset.name, tmp);
+
+    if (this.targets.get(ruleset.name).length == 0) {
+      this.targets.delete(ruleset.name);
     }
+
     log(INFO, 'done removing rule');
     return true;
   },
@@ -248,7 +332,7 @@ RuleSets.prototype = {
    * Does the loading of a ruleset.
    * @param ruletag The whole <ruleset> tag to parse
    */
-  parseOneRuleset: function(ruletag) {
+  parseOneXmlRuleset: function(ruletag) {
     var default_state = true;
     var note = "";
     var default_off = ruletag.getAttribute("default_off");
@@ -269,8 +353,8 @@ RuleSets.prototype = {
     }
 
     var rule_set = new RuleSet(ruletag.getAttribute("name"),
-                               default_state,
-                               note.trim());
+      default_state,
+      note.trim());
 
     // Read user prefs
     if (rule_set.name in this.ruleActiveStates) {
@@ -280,7 +364,7 @@ RuleSets.prototype = {
     var rules = ruletag.getElementsByTagName("rule");
     for (let rule of rules) {
       rule_set.rules.push(new Rule(rule.getAttribute("from"),
-                                    rule.getAttribute("to")));
+        rule.getAttribute("to")));
     }
 
     var exclusions = ruletag.getElementsByTagName("exclusion");
@@ -304,11 +388,11 @@ RuleSets.prototype = {
 
     var targets = ruletag.getElementsByTagName("target");
     for (let target of targets) {
-       var host = target.getAttribute("host");
-       if (!(host in this.targets)) {
-         this.targets[host] = [];
-       }
-       this.targets[host].push(rule_set);
+      var host = target.getAttribute("host");
+      if (!this.targets.has(host)) {
+        this.targets.set(host, []);
+      }
+      this.targets.get(host).push(rule_set);
     }
   },
 
@@ -321,16 +405,16 @@ RuleSets.prototype = {
     // Have we cached this result? If so, return it!
     var cached_item = this.ruleCache.get(host);
     if (cached_item !== undefined) {
-        log(DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.length);
-        return cached_item;
+      log(DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.length);
+      return cached_item;
     }
     log(DBUG, "Ruleset cache miss for " + host);
 
     var tmp;
     var results = [];
-    if (this.targets[host]) {
+    if (this.targets.has(host)) {
       // Copy the host targets so we don't modify them.
-      results = results.concat(this.targets[host]);
+      results = results.concat(this.targets.get(host));
     }
 
     // Ensure host is well-formed (RFC 1035)
@@ -341,17 +425,17 @@ RuleSets.prototype = {
 
     // Replace each portion of the domain with a * in turn
     var segmented = host.split(".");
-    for (let s of segmented) {
-      tmp = s;
-      s = "*";
-      results = results.concat(this.targets[segmented.join(".")]);
-      s = tmp;
+    for (let i=0; i < segmented.length; i++) {
+      let tmp = segmented[i];
+      segmented[i] = "*";
+      results = results.concat(this.targets.get(segmented.join(".")));
+      segmented[i] = tmp;
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
     for (var i = 2; i <= segmented.length - 2; ++i) {
       var t = "*." + segmented.slice(i,segmented.length).join(".");
-      results = results.concat(this.targets[t]);
+      results = results.concat(this.targets.get(t));
     }
 
     // Clean the results list, which may contain duplicates or undefined entries
@@ -392,7 +476,7 @@ RuleSets.prototype = {
     }
 
     if (!this.safeToSecureCookie(hostname)) {
-        return null;
+      return null;
     }
 
     var potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
@@ -433,8 +517,8 @@ RuleSets.prototype = {
     }
     var cached_item = this.cookieHostCache.get(domain);
     if (cached_item !== undefined) {
-        log(DBUG, "Cookie host cache hit for " + domain);
-        return cached_item;
+      log(DBUG, "Cookie host cache hit for " + domain);
+      return cached_item;
     }
     log(DBUG, "Cookie host cache miss for " + domain);
 

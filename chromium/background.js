@@ -1,8 +1,8 @@
 "use strict";
 /**
- * Fetch and parse XML to be loaded as RuleSets.
+ * Load a file packaged with the extension
  *
- * @param url: a relative URL to local XML
+ * @param url: a relative URL to local file
  */
 function loadExtensionFile(url, returnType) {
   var xhr = new XMLHttpRequest();
@@ -17,19 +17,36 @@ function loadExtensionFile(url, returnType) {
   if (returnType === 'xml') {
     return xhr.responseXML;
   }
+  if (returnType === 'json') {
+    return JSON.parse(xhr.responseText);
+  }
   return xhr.responseText;
 }
 
 
 // Rules are loaded here
-var all_rules = new RuleSets(localStorage);
+var all_rules, ls;
+try{
+  ls = localStorage;
+} catch(e) {
+  ls = {setItem: () => {}, getItem: () => {}};
+}
+all_rules = new RuleSets(ls);
 
 // Allow users to enable `platform="mixedcontent"` rulesets
 var enableMixedRulesets = false;
 storage.get({enableMixedRulesets: false}, function(item) {
   enableMixedRulesets = item.enableMixedRulesets;
-  all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
+  all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
 });
+
+// Load in the legacy custom rulesets, if any
+function load_legacy_custom_rulesets(legacy_custom_rulesets){
+  for(let legacy_custom_ruleset of legacy_custom_rulesets){
+    all_rules.addFromXml((new DOMParser()).parseFromString(legacy_custom_ruleset, 'text/xml'));
+  }
+}
+storage.get({legacy_custom_rulesets: []}, item => load_legacy_custom_rulesets(item.legacy_custom_rulesets));
 
 var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
@@ -41,32 +58,59 @@ var switchPlannerEnabledFor = {};
 // rw / nrw stand for "rewritten" versus "not rewritten"
 var switchPlannerInfo = {};
 
-// Is HTTPSe enabled, or has it been manually disabled by the user?
+/**
+ * Load preferences. Structure is:
+ *  {
+ *    httpNowhere: Boolean,
+ *    showCounter: Boolean,
+ *    isExtensionEnabled: Boolean
+ *  }
+ */
+var httpNowhereOn = false;
+var showCounter = true;
 var isExtensionEnabled = true;
 
-// Load prefs about whether http nowhere is on. Structure is:
-//  { httpNowhere: true/false }
-var httpNowhereOn = false;
-storage.get({httpNowhere: false}, function(item) {
-  httpNowhereOn = item.httpNowhere;
-  updateState();
-});
+var initializeStoredGlobals = () => {
+  storage.get({
+    httpNowhere: false,
+    showCounter: true,
+    globalEnabled: true
+  }, function(item) {
+    httpNowhereOn = item.httpNowhere;
+    showCounter = item.showCounter;
+    isExtensionEnabled = item.globalEnabled;
+    updateState();
+  });
+}
+initializeStoredGlobals();
+
 chrome.storage.onChanged.addListener(function(changes, areaName) {
   if (areaName === 'sync' || areaName === 'local') {
-    for (var key in changes) {
-      if (key === 'httpNowhere') {
-        httpNowhereOn = changes[key].newValue;
-        updateState();
-      }
+    if ('httpNowhere' in changes) {
+      httpNowhereOn = changes.httpNowhere.newValue;
+      updateState();
+    }
+    if ('showCounter' in changes) {
+      showCounter = changes.showCounter.newValue;
+      updateState();
+    }
+    if ('globalEnabled' in changes) {
+      isExtensionEnabled = changes.globalEnabled.newValue;
+      updateState();
     }
   }
 });
-chrome.tabs.onActivated.addListener(function() {
-  updateState();
-});
-chrome.windows.onFocusChanged.addListener(function() {
-  updateState();
-});
+
+if (chrome.tabs) {
+  chrome.tabs.onActivated.addListener(function() {
+    updateState();
+  });
+}
+if (chrome.windows) {
+  chrome.windows.onFocusChanged.addListener(function() {
+    updateState();
+  });
+}
 chrome.webNavigation.onCompleted.addListener(function() {
   updateState();
 });
@@ -75,7 +119,7 @@ chrome.webNavigation.onCompleted.addListener(function() {
 * Load stored user rules
  **/
 var getStoredUserRules = function() {
-  var oldUserRuleString = localStorage.getItem(USER_RULE_KEY);
+  var oldUserRuleString = ls.getItem(USER_RULE_KEY);
   var oldUserRules = [];
   if (oldUserRuleString) {
     oldUserRules = JSON.parse(oldUserRuleString);
@@ -98,35 +142,65 @@ var loadStoredUserRules = function() {
 
 loadStoredUserRules();
 
+function getActiveRulesetCount(id) {
+  const applied = activeRulesets.getRulesets(id);
+
+  if (!applied)
+  {
+    return 0;
+  }
+
+  let activeCount = 0;
+
+  for (const key in applied) {
+    if (applied[key].active) {
+      activeCount++;
+    }
+  }
+
+  return activeCount;
+}
+
 /**
  * Set the icon color correctly
- * inactive: extension is enabled, but no rules were triggered on this page.
+ * active: extension is enabled.
  * blocking: extension is in "block all HTTP requests" mode.
- * active: extension is enabled and rewrote URLs on this page.
  * disabled: extension is disabled from the popup menu.
  */
-var updateState = function() {
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+
+function updateState () {
+  if (!chrome.tabs) return;
+
+  let iconState = 'active';
+
+  if (!isExtensionEnabled) {
+    iconState = 'disabled';
+  } else if (httpNowhereOn) {
+    iconState = 'blocking';
+  }
+
+  chrome.browserAction.setIcon({
+    path: {
+      38: 'icons/icon-' + iconState + '-38.png'
+    }
+  });
+
+  chrome.browserAction.setTitle({
+    title: 'HTTPS Everywhere' + (iconState === 'active') ? '' : ' (' + iconState + ')'
+  });
+
+  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     if (!tabs || tabs.length === 0) {
       return;
     }
-    var applied = activeRulesets.getRulesets(tabs[0].id)
-    var iconState = "inactive";
-    if (!isExtensionEnabled) {
-      iconState = "disabled";
-    } else if (httpNowhereOn) {
-      iconState = "blocking";
-    } else if (applied) {
-      iconState = "active";
-    }
-    chrome.browserAction.setIcon({
-      path: {
-        "38": "icons/icon-" + iconState + "-38.png"
-      }
-    });
-    chrome.browserAction.setTitle({
-      title: "HTTPS Everywhere (" + iconState + ")"
-    });
+
+    const activeCount = getActiveRulesetCount(tabs[0].id);
+
+    chrome.browserAction.setBadgeBackgroundColor({ color: '#00cc00' });
+
+    const showBadge = activeCount > 0 && isExtensionEnabled && showCounter;
+
+    chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '', tabId: tabs[0].id });
   });
 }
 
@@ -145,7 +219,7 @@ var addNewRule = function(params, cb) {
     // client windows in different event loops.
     oldUserRules.push(params);
     // TODO: can we exceed the max size for storage?
-    localStorage.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules));
+    ls.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules));
     cb(true);
   } else {
     cb(false);
@@ -165,7 +239,7 @@ var removeRule = function(ruleset) {
         r.redirectTo == ruleset.rules[0].to &&
         String(RegExp(r.urlMatcher)) == String(ruleset.rules[0].from_c))
     );
-    localStorage.setItem(USER_RULE_KEY, JSON.stringify(userRules));
+    ls.setItem(USER_RULE_KEY, JSON.stringify(userRules));
   }
 }
 
@@ -176,9 +250,11 @@ function AppliedRulesets() {
   this.active_tab_rules = {};
 
   var that = this;
-  chrome.tabs.onRemoved.addListener(function(tabId, info) {
-    that.removeTab(tabId);
-  });
+  if (chrome.tabs) {
+    chrome.tabs.onRemoved.addListener(function(tabId, info) {
+      that.removeTab(tabId);
+    });
+  }
 }
 
 AppliedRulesets.prototype = {
@@ -211,7 +287,7 @@ var domainBlacklist = new Set();
 
 // redirect counter workaround
 // TODO: Remove this code if they ever give us a real counter
-var redirectCounter = {};
+var redirectCounter = new Map();
 
 /**
  * Called before a HTTP(s) request. Does the heavy lifting
@@ -248,11 +324,11 @@ function onBeforeRequest(details) {
   // analysis process
   var using_credentials_in_url = false;
   if (uri.password || uri.username) {
-      using_credentials_in_url = true;
-      var tmp_user = uri.username;
-      var tmp_pass = uri.password;
-      uri.username = null;
-      uri.password = null;
+    using_credentials_in_url = true;
+    var tmp_user = uri.username;
+    var tmp_pass = uri.password;
+    uri.username = null;
+    uri.password = null;
   }
 
   var canonical_url = uri.href;
@@ -270,7 +346,7 @@ function onBeforeRequest(details) {
 
   var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
 
-  if (redirectCounter[details.requestId] >= 8) {
+  if (redirectCounter.get(details.requestId) >= 8) {
     log(NOTE, "Redirect counter hit for " + canonical_url);
     urlBlacklist.add(canonical_url);
     var hostname = uri.hostname;
@@ -300,10 +376,10 @@ function onBeforeRequest(details) {
   // HTTP URIs by parent hostname, along with the resource type.
   if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== "https:") {
     writeToSwitchPlanner(details.type,
-                         details.tabId,
-                         canonical_host,
-                         details.url,
-                         newuristr);
+      details.tabId,
+      canonical_host,
+      details.url,
+      newuristr);
   }
 
   if (httpNowhereOn) {
@@ -418,102 +494,6 @@ function sortSwitchPlanner(tab_id, rewritten) {
 }
 
 /**
-* Format the switch planner output for presentation to a user.
-* */
-function switchPlannerSmallHtmlSection(tab_id, rewritten) {
-  var asset_host_list = sortSwitchPlanner(tab_id, rewritten);
-  if (asset_host_list.length == 0) {
-    return "<b>none</b>";
-  }
-
-  var output = "";
-  for (var i = asset_host_list.length - 1; i >= 0; i--) {
-    var host = asset_host_list[i][3];
-    var activeCount = asset_host_list[i][1];
-    var passiveCount = asset_host_list[i][2];
-
-    output += "<b>" + host + "</b>: ";
-    if (activeCount > 0) {
-      output += activeCount + " active";
-      if (passiveCount > 0)
-        output += ", ";
-    }
-    if (passiveCount > 0) {
-      output += passiveCount + " passive";
-    }
-    output += "<br/>";
-  }
-  return output;
-}
-
-/**
- * Create switch planner sections
- * */
-function switchPlannerRenderSections(tab_id, f) {
-  return "Unrewritten HTTP resources loaded from this tab (enable HTTPS on " +
-         "these domains and add them to HTTPS Everywhere):<br/>" +
-         f(tab_id, "nrw") +
-         "<br/>Resources rewritten successfully from this tab (update these " +
-         "in your source code):<br/>" +
-         f(tab_id, "rw");
-}
-
-/**
- * Generate the small switch planner html content
- * */
-function switchPlannerSmallHtml(tab_id) {
-  return switchPlannerRenderSections(tab_id, switchPlannerSmallHtmlSection);
-}
-
-/**
- * Generate a HTML link from urls in map
- * map: the map containing the urls
- * */
-function linksFromKeys(map) {
-  if (typeof map == 'undefined') return "";
-  var output = "";
-  for (var key in map) {
-    if (map.hasOwnProperty(key)) {
-      output += "<a href='" + key + "'>" + key + "</a><br/>";
-    }
-  }
-  return output;
-}
-
-/**
- * Generate the detailed html fot the switch planner
- * */
-function switchPlannerDetailsHtml(tab_id) {
-  return switchPlannerRenderSections(tab_id, switchPlannerDetailsHtmlSection);
-}
-
-/**
- * Generate the detailed html fot the switch planner, by section
- * */
-function switchPlannerDetailsHtmlSection(tab_id, rewritten) {
-  var asset_host_list = sortSwitchPlanner(tab_id, rewritten);
-  var output = "";
-
-  for (var i = asset_host_list.length - 1; i >= 0; i--) {
-    var host = asset_host_list[i][3];
-    var activeCount = asset_host_list[i][1];
-    var passiveCount = asset_host_list[i][2];
-
-    output += "<b>" + host + "</b>: ";
-    if (activeCount > 0) {
-      output += activeCount + " active<br/>";
-      output += linksFromKeys(switchPlannerInfo[tab_id][rewritten][host][1]);
-    }
-    if (passiveCount > 0) {
-      output += "<br/>" + passiveCount + " passive<br/>";
-      output += linksFromKeys(switchPlannerInfo[tab_id][rewritten][host][0]);
-    }
-    output += "<br/>";
-  }
-  return output;
-}
-
-/**
  * monitor cookie changes. Automatically convert them to secure cookies
  * @param changeInfo Cookie changed info, see Chrome doc
  * */
@@ -521,28 +501,28 @@ function onCookieChanged(changeInfo) {
   if (!changeInfo.removed && !changeInfo.cookie.secure && isExtensionEnabled) {
     if (all_rules.shouldSecureCookie(changeInfo.cookie)) {
       var cookie = {name:changeInfo.cookie.name,
-                    value:changeInfo.cookie.value,
-                    path:changeInfo.cookie.path,
-                    httpOnly:changeInfo.cookie.httpOnly,
-                    expirationDate:changeInfo.cookie.expirationDate,
-                    storeId:changeInfo.cookie.storeId,
-                    secure: true};
+        value:changeInfo.cookie.value,
+        path:changeInfo.cookie.path,
+        httpOnly:changeInfo.cookie.httpOnly,
+        expirationDate:changeInfo.cookie.expirationDate,
+        storeId:changeInfo.cookie.storeId,
+        secure: true};
 
       // Host-only cookies don't set the domain field.
       if (!changeInfo.cookie.hostOnly) {
-          cookie.domain = changeInfo.cookie.domain;
+        cookie.domain = changeInfo.cookie.domain;
       }
 
       // The cookie API is magical -- we must recreate the URL from the domain and path.
       if (changeInfo.cookie.domain[0] == ".") {
-          cookie.url = "https://www" + changeInfo.cookie.domain + cookie.path;
+        cookie.url = "https://www" + changeInfo.cookie.domain + cookie.path;
       } else {
-          cookie.url = "https://" + changeInfo.cookie.domain + cookie.path;
+        cookie.url = "https://" + changeInfo.cookie.domain + cookie.path;
       }
       // We get repeated events for some cookies because sites change their
       // value repeatedly and remove the "secure" flag.
       log(DBUG,
-       "Securing cookie " + cookie.name + " for " + changeInfo.cookie.domain + ", was secure=" + changeInfo.cookie.secure);
+        "Securing cookie " + cookie.name + " for " + changeInfo.cookie.domain + ", was secure=" + changeInfo.cookie.secure);
       chrome.cookies.set(cookie);
     }
   }
@@ -553,17 +533,38 @@ function onCookieChanged(changeInfo) {
  * @param details details for the redirect (see chrome doc)
  * */
 function onBeforeRedirect(details) {
-    // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
-    var prefix = details.redirectUrl.substring(0, 5);
-    if (prefix === "http:" || prefix === "https") {
-        if (details.requestId in redirectCounter) {
-            redirectCounter[details.requestId] += 1;
-            log(DBUG, "Got redirect id "+details.requestId+
-                ": "+redirectCounter[details.requestId]);
-        } else {
-            redirectCounter[details.requestId] = 1;
-        }
+  // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
+  let prefix = details.redirectUrl.substring(0, 5);
+  if (prefix === "http:" || prefix === "https") {
+    let count = redirectCounter.get(details.requestId);
+    if (count) {
+      redirectCounter.set(details.requestId, count + 1);
+      log(DBUG, "Got redirect id "+details.requestId+
+                ": "+count);
+    } else {
+      redirectCounter.set(details.requestId, 1);
     }
+  }
+}
+
+/**
+ * handle webrequest.onCompleted, cleanup redirectCounter
+ * @param details details for the chrome.webRequest (see chrome doc)
+ */
+function onCompleted(details) {
+  if (redirectCounter.has(details.requestId)) {
+    redirectCounter.delete(details.requestId);
+  }
+}
+
+/**
+ * handle webrequest.onErrorOccurred, cleanup redirectCounter
+ * @param details details for the chrome.webRequest (see chrome doc)
+ */
+function onErrorOccurred(details) {
+  if (redirectCounter.has(details.requestId)) {
+    redirectCounter.delete(details.requestId);
+  }
 }
 
 // Registers the handler for requests
@@ -574,6 +575,11 @@ wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
 wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
 
+// Cleanup redirectCounter if neccessary
+wr.onCompleted.addListener(onCompleted, {urls: ["*://*/*"]});
+
+// Cleanup redirectCounter if neccessary
+wr.onErrorOccurred.addListener(onErrorOccurred, {urls: ["*://*/*"]})
 
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking.
 chrome.cookies.onChanged.addListener(onCookieChanged);
@@ -612,9 +618,79 @@ chrome.runtime.onConnect.addListener(function (port) {
         port.onDisconnect.addListener(disableOnCloseCallback);
       } else if (message.type === "disable") {
         disableSwitchPlannerFor(tabId);
-      } else if (message.type === "getSmallHtml") {
-        sendResponse({html: switchPlannerSmallHtml(tabId)});
+      } else if (message.type === "getHosts") {
+        sendResponse({
+          nrw: sortSwitchPlanner(tabId, "nrw"),
+          rw: sortSwitchPlanner(tabId, "rw")
+        });
       }
     });
   }
 });
+
+// This is necessary for communication with the popup in Firefox Private
+// Browsing Mode, see https://bugzilla.mozilla.org/show_bug.cgi?id=1329304
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+  if (message.type == "get_option") {
+    storage.get(message.object, sendResponse);
+    return true;
+  } else if (message.type == "set_option") {
+    storage.set(message.object, item => {
+      if (sendResponse) {
+        sendResponse(item);
+      }
+    });
+  } else if (message.type == "delete_from_ruleset_cache") {
+    all_rules.ruleCache.delete(message.object);
+  } else if (message.type == "get_active_rulesets") {
+    sendResponse(activeRulesets.getRulesets(message.object));
+  } else if (message.type == "set_ruleset_active_status") {
+    var ruleset = activeRulesets.getRulesets(message.object.tab_id)[message.object.name];
+    ruleset.active = message.object.active;
+    sendResponse(true);
+  } else if (message.type == "add_new_rule") {
+    addNewRule(message.object, function() {
+      sendResponse(true);
+    });
+    return true;
+  } else if (message.type == "remove_rule") {
+    removeRule(message.object);
+  } else if (message.type == "import_settings") {
+    // This is used when importing settings from the options ui
+    import_settings(message.object).then(() => {
+      sendResponse(true);
+    });
+  }
+});
+
+// Send a message to the embedded webextension bootstrap.js to get settings to import
+chrome.runtime.sendMessage("import-legacy-data", import_settings);
+
+/**
+ * Import extension settings (custom rulesets, ruleset toggles, globals) from an object
+ * @param settings the settings object
+ */
+async function import_settings(settings) {
+  if (settings.changed) {
+    // Load all the ruleset toggles into memory and store
+    for (const ruleset_name in settings.rule_toggle) {
+      ls[ruleset_name] = settings.rule_toggle[ruleset_name];
+    }
+
+    all_rules = new RuleSets(ls);
+    all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
+
+    // Load custom rulesets
+    load_legacy_custom_rulesets(settings.custom_rulesets);
+
+    // Save settings
+    await new Promise(resolve => {
+      storage.set({
+        legacy_custom_rulesets: settings.custom_rulesets,
+        httpNowhere: settings.prefs.http_nowhere_enabled,
+        showCounter: settings.prefs.show_counter,
+        globalEnabled: settings.prefs.global_enabled
+      }, resolve);
+    });
+  }
+}

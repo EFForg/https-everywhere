@@ -4,8 +4,7 @@
 #
 # To build the current state of the tree:
 #
-#     ./makecrx.sh
-#
+#     ./makecrx.sh #
 # To build a particular tagged release:
 #
 #     ./makecrx.sh <version number>
@@ -72,6 +71,9 @@ cd ../..
 cp src/$RULESETS pkg/crx/rules/default.rulesets
 
 sed -i -e "s/VERSION/$VERSION/g" pkg/crx/manifest.json
+
+python2.7 -c "import json; m=json.loads(open('pkg/crx/manifest.json').read()); e=m['author']; m['author']={'email': e}; del m['applications']; open('pkg/crx/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+
 #sed -i -e "s/VERSION/$VERSION/g" pkg/crx/updates.xml
 #sed -e "s/VERSION/$VERSION/g" pkg/updates-master.xml > pkg/crx/updates.xml
 
@@ -99,7 +101,6 @@ trap 'rm -f "$pub" "$sig" "$zip"' EXIT
 # zip up the crx dir
 cwd=$(pwd -P)
 (cd "$dir" && ../../utils/create_xpi.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
-echo >&2 "Unsigned package has sha1sum: $(openssl dgst -sha1 "$cwd/$zip" | awk '{print $2}')"
 
 # signature
 openssl sha1 -sha1 -binary -sign "$key" < "$zip" > "$sig"

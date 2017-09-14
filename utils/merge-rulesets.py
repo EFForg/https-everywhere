@@ -1,105 +1,97 @@
 #!/usr/bin/env python2.7
 
 # Merge all the .xml rulesets into a single "default.rulesets" file -- this
-# prevents inodes from wasting disk space, but more importantly, works around
-# the fact that zip does not perform well on a pile of small files.
+# prevents inodes from wasting disk space, but more importantly, this works
+# around the fact that zip does not perform well on a pile of small files.
 
-# currently a very literal translation of merge-rulesets.sh, but about five
-# times faster
-from __future__ import print_function
-pass
-import os
-from glob import glob
-from subprocess import call
-import sys
-import traceback
-import re
-import unicodedata
+# Currently, it merges rulesets into a JSON Object for minimal overhead,
+# in both storage and parsing speed.
+
 import argparse
-
-parser = argparse.ArgumentParser(description='Merge rulesets.')
-parser.add_argument('--source_dir', default='src/chrome/content/rules', help='source directory')
-parser.add_argument('--fast', help='fast merge', action='store_true')
-args = parser.parse_args()
+import glob
+import json
+import os
+import subprocess
+import sys
+import unicodedata
+import xml.etree.ElementTree
 
 def normalize(f):
-    """
-    OSX and Linux filesystems encode composite characters differently in filenames.
-    We should normalize to NFC: http://unicode.org/reports/tr15/.
-    """
-    f = unicodedata.normalize('NFC', unicode(f, 'utf-8')).encode('utf-8')
-    return f
+	"""
+	OSX and Linux filesystems encode composite characters differently in
+	filenames. We should normalize to NFC: http://unicode.org/reports/tr15/
+	"""
+	f = unicodedata.normalize("NFC", unicode(f, "utf-8")).encode("utf-8")
+	return f
 
-rulesets_fn= args.source_dir + "/default.rulesets"
-xml_ruleset_files = map(normalize, glob(args.source_dir + "/*.xml"))
+# commandline arguments parsing (nobody use it, though)
+parser = argparse.ArgumentParser(description="Merge rulesets")
+parser.add_argument("--source_dir", default="src/chrome/content/rules")
 
-# cleanup after bugs :/
-misfile = rulesets_fn + "r"
-if os.path.exists(misfile):
-  print("Cleaning up malformed rulesets file...")
-  os.unlink(misfile)
+args = parser.parse_args()
 
-if args.fast:
-  library_compiled_time = os.path.getmtime(rulesets_fn)
-  newest_xml = max([os.path.getmtime(f) for f in xml_ruleset_files])
-  if library_compiled_time >= newest_xml:
-    print("Library is newer that all rulesets, skipping rebuild...")
-    sys.exit(0)
+# output filename, pointed to the merged ruleset
+ofn = os.path.join(args.source_dir, "default.rulesets")
 
-print("Creating ruleset library...")
+# XML Ruleset Files
+files = map(normalize, glob.glob(os.path.join(args.source_dir, "*.xml")))
 
-# Under git bash, sed -i issues errors and sets the file "read only".  Thanks.
-if os.path.isfile(rulesets_fn):
-  os.system("chmod u+w " + rulesets_fn)
+# Under git bash, sed -i issues errors and sets the file "read-only".
+if os.path.isfile(ofn):
+	os.system("chmod u+w " + ofn)
 
-def rulesize():
-  return len(open(rulesets_fn).read())
+# Library (JSON Object)
+library = []
 
-def clean_up(rulefile):
-    """Remove extra whitespace, comments and tests from a ruleset"""
-    comment_and_newline_pattern = re.compile(r"<!--.*?-->|\n|\r", flags=re.DOTALL)
-    rulefile = comment_and_newline_pattern.sub('', rulefile)
-    to_and_from_pattern = re.compile(r'\s*(from=)')
-    rulefile = to_and_from_pattern.sub(r' \1', rulefile)
-    rulefile = re.sub(r'"\s*(to=)', r'" \1', rulefile)
-    rulefile = re.sub(r">\s*<", r"><", rulefile)
-    rulefile = re.sub(r"</ruleset>\s*", r"</ruleset>\n", rulefile)
-    rulefile = re.sub(r"\s*(/>|<ruleset)", r"\1", rulefile)
-    rulefile = re.sub(r"<test.+?/>", r"", rulefile)
-    return rulefile
+# Parse XML ruleset and construct JSON library
+print(" * Parsing XML ruleset and constructing JSON library...")
+for filename in sorted(files):
+	tree = xml.etree.ElementTree.parse(filename)
+	root = tree.getroot()
+	
+	ruleset = {}
 
-library = open(rulesets_fn,"w")
+	for attr in root.attrib:
+		ruleset[attr] = root.attrib[attr]
+	
+	for child in root:
+		if child.tag in ["target", "rule", "securecookie", "exclusion"]:
+			if child.tag not in ruleset:
+				ruleset[child.tag] = []
+		else:
+			continue
 
-try:
-  commit_id = os.environ["GIT_COMMIT_ID"]
-  library.write('<rulesetlibrary gitcommitid="%s">' % commit_id)
-except:
-  # Chromium
-  library.write('<rulesetlibrary>')
+		if child.tag == "target":
+			ruleset["target"].append(child.attrib["host"])
 
-# Include the filename.xml as the "f" attribute
-print("Removing whitespaces and comments...")
+		elif child.tag == "rule":
+			ru = {}
+			ru["from"] = child.attrib["from"]
+			ru["to"] = child.attrib["to"]
 
-for rfile in sorted(xml_ruleset_files):
-  ruleset = open(rfile).read()
-  fn = os.path.basename(rfile)
-  ruleset = ruleset.replace("<ruleset", '<ruleset f="%s"' % fn, 1)
-  library.write(clean_up(ruleset))
-library.write("</rulesetlibrary>\n")
-library.close()
+			ruleset["rule"].append(ru)
 
-try:
-  if 0 == call(["xmllint", "--noout", rulesets_fn]):
-    print(rulesets_fn, "passed XML validity test.")
-  else:
-    print("ERROR:", rulesets_fn, "failed XML validity test!")
-    sys.exit(1)
-except OSError as e:
-  if "No such file or directory" not in traceback.format_exc():
-    raise
-  print("WARNING: xmllint not present; validation of", rulesets_fn, " skipped.")
+		elif child.tag == "securecookie":
+			sc = {}
+			sc["host"] = child.attrib["host"]
+			sc["name"] = child.attrib["name"]
 
-# We make default.rulesets at build time, but it shouldn't have a variable
-# timestamp
-call(["touch", "-r", "src/install.rdf", rulesets_fn])
+			ruleset["securecookie"].append(sc)
 
+		elif child.tag == "exclusion":
+			ruleset["exclusion"].append(child.attrib["pattern"])
+
+	library.append(ruleset);
+
+# Write to default.rulesets
+print(" * Writing JSON library to %s" % ofn)
+outfile = open(ofn, "w")
+outfile.write(json.dumps(library))
+outfile.close()
+
+# We make default.rulesets at build time, 
+# but it shouldn't have a variable timestamp
+subprocess.call(["touch", "-r", "src/install.rdf", ofn])
+
+# Everything is okay.
+print(" * Everything is Okay.")

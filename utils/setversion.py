@@ -25,7 +25,3 @@ firefox_version = sys.argv[1]
 replace_in_file('<em:version>.*</em:version>',
           '<em:version>' + firefox_version + '</em:version>',
           'src/install.rdf')
-
-replace_in_file('(?s)(https-everywhere.about.version.*?<label>).*?</label>',
-          '\g<1>' + firefox_version + '</label>',
-          'src/chrome/content/about.xul')
