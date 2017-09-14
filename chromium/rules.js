@@ -5,13 +5,13 @@
 "use strict";
 
 // Stubs so this runs under nodejs. Also used by util.js
-const VERB=1;
-const DBUG=2;
-const INFO=3;
-const NOTE=4;
-const WARN=5;
+const VERB = 1;
+const DBUG = 2;
+const INFO = 3;
+const NOTE = 4;
+const WARN = 5;
 
-function log(){}
+function log() {}
 
 // Set default values for the same reason. Later modified by background.js
 const enableMixedRulesets = false;
