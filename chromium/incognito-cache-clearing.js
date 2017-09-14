@@ -1,6 +1,8 @@
 /* global log */
 /* global DBUG */
 /* global all_rules */
+/* global domainBlacklist */
+/* global urlBlacklist */
 
 "use strict";
 // This file keeps track of incognito sessions, and clears any caches after
