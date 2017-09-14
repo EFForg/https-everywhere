@@ -1,6 +1,8 @@
 /* global log */
 /* global DBUG */
 /* global all_rules */
+/* global domainBlacklist */
+/* global urlBlacklist */
 
 "use strict";
 // This file keeps track of incognito sessions, and clears any caches after
@@ -36,7 +38,7 @@ function destroy_caches() {
  * @param arrayOfWindows: A array of all open Window objects.
  */
 function check_for_incognito_session(arrayOfWindows) {
-  for (let window of arrayOfWindows) {
+  for (const window of arrayOfWindows) {
     if (window.incognito === true) {
       // An incognito window still exists, so don't destroy caches yet.
       return;

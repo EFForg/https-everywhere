@@ -51,7 +51,7 @@ storage.get({enableMixedRulesets: false}, function(item) {
 
 // Load in the legacy custom rulesets, if any
 function load_legacy_custom_rulesets(legacy_custom_rulesets){
-  for(let legacy_custom_ruleset of legacy_custom_rulesets){
+  for(const legacy_custom_ruleset of legacy_custom_rulesets){
     all_rules.addFromXml((new DOMParser()).parseFromString(legacy_custom_ruleset, 'text/xml'));
   }
 }
@@ -143,7 +143,7 @@ var wr = chrome.webRequest;
 var loadStoredUserRules = function() {
   var rules = getStoredUserRules();
   var i;
-  for (let rule of rules) {
+  for (const rule of rules) {
     all_rules.addUserRule(rule);
   }
   log('INFO', 'loaded ' + i + ' stored user rules');
@@ -366,7 +366,7 @@ function onBeforeRequest(details) {
 
   var newuristr = null;
 
-  for (let ruleset of potentiallyApplicable) {
+  for (const ruleset of potentiallyApplicable) {
     activeRulesets.addRulesetToTab(details.tabId, ruleset);
     if (ruleset.active && !newuristr) {
       newuristr = ruleset.apply(canonical_url);
@@ -543,9 +543,9 @@ function onCookieChanged(changeInfo) {
  * */
 function onBeforeRedirect(details) {
   // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
-  let prefix = details.redirectUrl.substring(0, 5);
+  const prefix = details.redirectUrl.substring(0, 5);
   if (prefix === "http:" || prefix === "https") {
-    let count = redirectCounter.get(details.requestId);
+    const count = redirectCounter.get(details.requestId);
     if (count) {
       redirectCounter.set(details.requestId, count + 1);
       log(DBUG, "Got redirect id "+details.requestId+
