@@ -48,12 +48,12 @@ print(" * Parsing XML ruleset and constructing JSON library...")
 for filename in sorted(files):
 	tree = xml.etree.ElementTree.parse(filename)
 	root = tree.getroot()
-	
+
 	ruleset = {}
 
 	for attr in root.attrib:
 		ruleset[attr] = root.attrib[attr]
-	
+
 	for child in root:
 		if child.tag in ["target", "rule", "securecookie", "exclusion"]:
 			if child.tag not in ruleset:
@@ -81,6 +81,9 @@ for filename in sorted(files):
 		elif child.tag == "exclusion":
 			ruleset["exclusion"].append(child.attrib["pattern"])
 
+	if "exclusion" in ruleset:
+		ruleset["exclusion"] = "|".join(ruleset["exclusion"])
+
 	library.append(ruleset);
 
 # Write to default.rulesets
@@ -89,7 +92,7 @@ outfile = open(ofn, "w")
 outfile.write(json.dumps(library))
 outfile.close()
 
-# We make default.rulesets at build time, 
+# We make default.rulesets at build time,
 # but it shouldn't have a variable timestamp
 subprocess.call(["touch", "-r", "src/install.rdf", ofn])
 
