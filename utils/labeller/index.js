@@ -65,7 +65,7 @@ function get_most_recent_pr(alexa, recent_cb){
 
 function github_process_prs(res, pr_cb){
   var alexa = res[0],
-      most_recent_pr_checked = res[1];
+    most_recent_pr_checked = res[1];
 
   var github = new GitHubApi();
   var wildcard_www_regex = /^(www|\*)\.(.+)/

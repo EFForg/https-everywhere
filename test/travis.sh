@@ -71,13 +71,15 @@ if [ "$RULESETS_CHANGED" ]; then
     docker run --rm -ti -v $(pwd):/opt httpse python utils/ruleset_filenames_validate.py
     docker run --rm -ti -v $(pwd):/opt httpse bash -c "utils/validate.sh"
     docker run --rm -ti -v $(pwd):/opt httpse bash -c "test/rules.sh"
+    docker run --rm -ti -v $(pwd):/opt node bash -c "cd /opt && node utils/normalize-securecookie.js"
+    [ `git diff --name-only | wc -l` -eq 0 ]
   fi
 
   if [ "$TEST" == "fetch" ]; then
     echo >&2 "Testing test URLs in all changed rulesets."
     docker_build
     # --privileged is required here for miredo to create a network tunnel
-    docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" --privileged httpse bash -c "service miredo start && test/fetch.sh"
+    docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" --privileged httpse bash -c "service miredo start && service tor start && test/fetch.sh"
   fi
 
   if [ "$TEST" == "preloaded" ]; then
