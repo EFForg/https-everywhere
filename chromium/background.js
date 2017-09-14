@@ -43,7 +43,6 @@ try{
 all_rules = new RuleSets(ls);
 
 // Allow users to enable `platform="mixedcontent"` rulesets
-var enableMixedRulesets = false;
 storage.get({enableMixedRulesets: false}, function(item) {
   enableMixedRulesets = item.enableMixedRulesets;
   all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
@@ -220,11 +219,11 @@ function updateState () {
  * */
 var addNewRule = function(params, cb) {
   if (all_rules.addUserRule(params)) {
-    // If we successfully added the user rule, save it in local 
-    // storage so it's automatically applied when the extension is 
+    // If we successfully added the user rule, save it in local
+    // storage so it's automatically applied when the extension is
     // reloaded.
     var oldUserRules = getStoredUserRules();
-    // TODO: there's a race condition here, if this code is ever executed from multiple 
+    // TODO: there's a race condition here, if this code is ever executed from multiple
     // client windows in different event loops.
     oldUserRules.push(params);
     // TODO: can we exceed the max size for storage?
@@ -292,7 +291,6 @@ AppliedRulesets.prototype = {
 var activeRulesets = new AppliedRulesets();
 
 var urlBlacklist = new Set();
-var domainBlacklist = new Set();
 
 // redirect counter workaround
 // TODO: Remove this code if they ever give us a real counter
@@ -342,7 +340,7 @@ function onBeforeRequest(details) {
 
   var canonical_url = uri.href;
   if (details.url != canonical_url && !using_credentials_in_url) {
-    log(INFO, "Original url " + details.url + 
+    log(INFO, "Original url " + details.url +
         " changed before processing to " + canonical_url);
   }
   if (urlBlacklist.has(canonical_url)) {

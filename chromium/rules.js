@@ -3,11 +3,19 @@
 /* global exports */
 
 "use strict";
-// Stubs so this runs under nodejs. They get overwritten later by util.js
-var DBUG = 2;
-var INFO = 3;
-var WARN = 5;
+
+// Stubs so this runs under nodejs. Also used by util.js
+const VERB=1;
+const DBUG=2;
+const INFO=3;
+const NOTE=4;
+const WARN=5;
+
 function log(){}
+
+// Set default values for the same reason. Later modified by background.js
+const enableMixedRulesets = false;
+const domainBlacklist = new Set();
 
 // To reduce memory usage for the numerous rules/cookies with trivial rules
 const trivial_rule_to = "https:";
@@ -210,7 +218,7 @@ RuleSets.prototype = {
       try {
         this.parseOneJsonRuleset(ruleset);
       } catch(e) {
-        log(WARN, 'Error processing ruleset:' + e);	
+        log(WARN, 'Error processing ruleset:' + e);
       }
     }
   },
