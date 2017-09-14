@@ -20,7 +20,7 @@ const WARN = 5;
 function log() {}
 
 // Set default values for the same reason. Later modified by background.js
-const enableMixedRulesets = false;
+let enableMixedRulesets = false;
 const domainBlacklist = new Set();
 
 // To reduce memory usage for the numerous rules/cookies with trivial rules
