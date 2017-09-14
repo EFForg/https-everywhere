@@ -1,11 +1,22 @@
 "use strict";
-// Stubs so this runs under nodejs. They get overwritten later by util.js
-var VERB=1;
-var DBUG=2;
-var INFO=3;
-var NOTE=4;
-var WARN=5;
-function log(){}
+
+// Stubs so this runs under nodejs. Also used by util.js
+const VERB=1;
+const DBUG=2;
+const INFO=3;
+const NOTE=4;
+const WARN=5;
+
+function log(level, str) {
+  if (level === WARN) {
+    // Stub as error for nodejs usage; util.js overrides with pure logging
+    throw new Error(str);
+  }
+}
+
+// Set default values for the same reason. Later modified by background.js
+var enableMixedRulesets = false;
+var domainBlacklist = new Set();
 
 // To reduce memory usage for the numerous rules/cookies with trivial rules
 const trivial_rule_to = "https:";
@@ -208,7 +219,7 @@ RuleSets.prototype = {
       try {
         this.parseOneJsonRuleset(ruleset);
       } catch(e) {
-        log(WARN, 'Error processing ruleset:' + e);	
+        log(WARN, 'Error processing ruleset:' + e);
       }
     }
   },
@@ -410,7 +421,6 @@ RuleSets.prototype = {
     }
     log(DBUG, "Ruleset cache miss for " + host);
 
-    var tmp;
     var results = [];
     if (this.targets.has(host)) {
       // Copy the host targets so we don't modify them.
