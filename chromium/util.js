@@ -1,10 +1,4 @@
-/* exported VERB */
-/* exported DBUG */
-/* exported INFO */
-/* exported NOTE */
-/* exported WARN */
-/* exported DEFAULT_LOG_LEVEL */
-/* exported log */
+(function(exports) {
 
 "use strict";
 
@@ -33,3 +27,5 @@ function log(level, str) {
     }
   }
 }
+
+})(typeof exports == 'undefined' ? window.util = {} : exports);

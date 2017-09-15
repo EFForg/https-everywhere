@@ -1,6 +1,4 @@
-/* global enableMixedRulesets */
-/* global domainBlacklist */
-/* global exports */
+(function(exports) {
 
 "use strict";
 // Stubs so this runs under nodejs. They get overwritten later by util.js
@@ -570,7 +568,5 @@ RuleSets.prototype = {
   }
 };
 
-// Export for HTTPS Rewriter if applicable.
-if (typeof exports != 'undefined') {
-  exports.RuleSets = RuleSets;
-}
+
+})(typeof exports == 'undefined' ? window.rules = {} : exports);

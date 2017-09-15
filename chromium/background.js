@@ -1,13 +1,7 @@
-/* exported enableMixedRulesets */
-/* global RuleSets */
-/* global storage */
-/* global log */
-/* global INFO */
-/* global NOTE */
-/* global WARN */
-/* global DBUG */
+(function(exports) {
 
 "use strict";
+
 /**
  * Load a file packaged with the extension
  *
@@ -703,3 +697,5 @@ async function import_settings(settings) {
     });
   }
 }
+
+})(typeof exports == 'undefined' ? window.background = {} : exports);

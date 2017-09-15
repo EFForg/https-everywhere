@@ -1,8 +1,7 @@
-/* global log */
-/* global DBUG */
-/* global all_rules */
+(function(exports) {
 
 "use strict";
+
 // This file keeps track of incognito sessions, and clears any caches after
 // an entire incognito session is closed (i.e. all incognito windows are closed).
 
@@ -65,3 +64,5 @@ if (chrome.windows) {
 if (chrome.windows) {
   chrome.windows.onRemoved.addListener(detect_incognito_destruction);
 }
+
+})(typeof exports == 'undefined' ? window.incognito = {} : exports);

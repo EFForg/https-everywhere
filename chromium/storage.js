@@ -1,6 +1,5 @@
-/* exported storage */
-/* global initializeStoredGlobals */
-/* global exports */
+(function(exports) {
+
 
 var storage = chrome.storage.local;
 if (chrome.storage.sync) {
@@ -11,6 +10,5 @@ if (chrome.storage.sync) {
     }
   });
 }
-if (typeof exports != 'undefined') {
-  exports = storage;
-}
+
+})(typeof exports == 'undefined' ? window.storage = {} : exports);
