@@ -1,12 +1,20 @@
 (function(exports) {
 
+Object.assign(exports, {
+  get: chrome.storage.local.get,
+  set: chrome.storage.local.set,
+});
 
-var storage = chrome.storage.local;
 if (chrome.storage.sync) {
   chrome.storage.sync.set({"sync-set-test": true}, () => {
     if(!chrome.runtime.lastError){
-      storage = chrome.storage.sync;
-      initializeStoredGlobals();
+
+      Object.assign(exports, {
+        get: chrome.storage.sync.get,
+        set: chrome.storage.sync.set,
+      });
+
+      background.initializeStoredGlobals();
     }
   });
 }

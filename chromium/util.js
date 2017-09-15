@@ -28,4 +28,13 @@ function log(level, str) {
   }
 }
 
+Object.assign(exports, {
+  VERB,
+  DBUG,
+  INFO,
+  NOTE,
+  WARN,
+  log,
+});
+
 })(typeof exports == 'undefined' ? window.util = {} : exports);

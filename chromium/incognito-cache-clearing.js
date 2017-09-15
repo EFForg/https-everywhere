@@ -23,11 +23,11 @@ function detect_incognito_creation(window) {
  * Called if an incognito session is destroyed.
  */
 function destroy_caches() {
-  log(DBUG, "Destroying caches.");
-  all_rules.cookieHostCache.clear();
-  all_rules.ruleCache.clear();
-  domainBlacklist.clear();
-  urlBlacklist.clear();
+  util.log(util.DBUG, "Destroying caches.");
+  background.all_rules.cookieHostCache.clear();
+  background.all_rules.ruleCache.clear();
+  background.domainBlacklist.clear();
+  background.urlBlacklist.clear();
 }
 
 /**
@@ -64,5 +64,7 @@ if (chrome.windows) {
 if (chrome.windows) {
   chrome.windows.onRemoved.addListener(detect_incognito_destruction);
 }
+
+Object.assign(exports, {});
 
 })(typeof exports == 'undefined' ? window.incognito = {} : exports);

@@ -34,7 +34,7 @@ try{
 } catch(e) {
   ls = {setItem: () => {}, getItem: () => {}};
 }
-all_rules = new RuleSets(ls);
+all_rules = new rules.RuleSets(ls);
 
 // Allow users to enable `platform="mixedcontent"` rulesets
 var enableMixedRulesets = false;
@@ -140,7 +140,7 @@ var loadStoredUserRules = function() {
   for (let rule of rules) {
     all_rules.addUserRule(rule);
   }
-  log('INFO', 'loaded ' + i + ' stored user rules');
+  util.log(util.INFO, 'loaded ' + i + ' stored user rules');
 };
 
 loadStoredUserRules();
@@ -336,7 +336,7 @@ function onBeforeRequest(details) {
 
   var canonical_url = uri.href;
   if (details.url != canonical_url && !using_credentials_in_url) {
-    log(INFO, "Original url " + details.url + 
+    util.log(util.INFO, "Original url " + details.url +
         " changed before processing to " + canonical_url);
   }
   if (urlBlacklist.has(canonical_url)) {
@@ -350,11 +350,11 @@ function onBeforeRequest(details) {
   var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
 
   if (redirectCounter.get(details.requestId) >= 8) {
-    log(NOTE, "Redirect counter hit for " + canonical_url);
+    util.log(util.NOTE, "Redirect counter hit for " + canonical_url);
     urlBlacklist.add(canonical_url);
     var hostname = uri.hostname;
     domainBlacklist.add(hostname);
-    log(WARN, "Domain blacklisted " + hostname);
+    util.log(util.WARN, "Domain blacklisted " + hostname);
     return {cancel: shouldCancel};
   }
 
@@ -443,7 +443,7 @@ function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritt
   } else if (passiveTypes[type]) {
     active_content = 0;
   } else {
-    log(WARN, "Unknown type from onBeforeRequest details: `" + type + "', assuming active");
+    util.log(util.WARN, "Unknown type from onBeforeRequest details: `" + type + "', assuming active");
     active_content = 1;
   }
 
@@ -524,7 +524,7 @@ function onCookieChanged(changeInfo) {
       }
       // We get repeated events for some cookies because sites change their
       // value repeatedly and remove the "secure" flag.
-      log(DBUG,
+      util.log(util.DBUG,
         "Securing cookie " + cookie.name + " for " + changeInfo.cookie.domain + ", was secure=" + changeInfo.cookie.secure);
       chrome.cookies.set(cookie);
     }
@@ -542,7 +542,7 @@ function onBeforeRedirect(details) {
     let count = redirectCounter.get(details.requestId);
     if (count) {
       redirectCounter.set(details.requestId, count + 1);
-      log(DBUG, "Got redirect id "+details.requestId+
+      util.log(util.DBUG, "Got redirect id "+details.requestId+
                 ": "+count);
     } else {
       redirectCounter.set(details.requestId, 1);
@@ -612,7 +612,7 @@ chrome.runtime.onConnect.addListener(function (port) {
       var tabId = message.tabId;
 
       var disableOnCloseCallback = function() {
-        log(DBUG, "Devtools window for tab " + tabId + " closed, clearing data.");
+        util.log(util.DBUG, "Devtools window for tab " + tabId + " closed, clearing data.");
         disableSwitchPlannerFor(tabId);
       };
 
@@ -680,7 +680,7 @@ async function import_settings(settings) {
       ls[ruleset_name] = settings.rule_toggle[ruleset_name];
     }
 
-    all_rules = new RuleSets(ls);
+    all_rules = new rules.RuleSets(ls);
     all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
 
     // Load custom rulesets
@@ -697,5 +697,11 @@ async function import_settings(settings) {
     });
   }
 }
+
+Object.assign(exports, {
+  enableMixedRulesets,
+  all_rules,
+  initializeStoredGlobals,
+});
 
 })(typeof exports == 'undefined' ? window.background = {} : exports);
