@@ -1,6 +1,6 @@
-(function(exports) {
-
 "use strict";
+
+(function(exports) {
 
 /**
  * Load a file packaged with the extension
@@ -38,7 +38,7 @@ all_rules = new rules.RuleSets(ls);
 
 // Allow users to enable `platform="mixedcontent"` rulesets
 var enableMixedRulesets = false;
-storage.get({enableMixedRulesets: false}, function(item) {
+store.get({enableMixedRulesets: false}, function(item) {
   enableMixedRulesets = item.enableMixedRulesets;
   all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
 });
@@ -49,7 +49,7 @@ function load_legacy_custom_rulesets(legacy_custom_rulesets){
     all_rules.addFromXml((new DOMParser()).parseFromString(legacy_custom_ruleset, 'text/xml'));
   }
 }
-storage.get({legacy_custom_rulesets: []}, item => load_legacy_custom_rulesets(item.legacy_custom_rulesets));
+store.get({legacy_custom_rulesets: []}, item => load_legacy_custom_rulesets(item.legacy_custom_rulesets));
 
 var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
@@ -74,7 +74,7 @@ var showCounter = true;
 var isExtensionEnabled = true;
 
 var initializeStoredGlobals = () => {
-  storage.get({
+  store.get({
     httpNowhere: false,
     showCounter: true,
     globalEnabled: true
@@ -635,10 +635,10 @@ chrome.runtime.onConnect.addListener(function (port) {
 // Browsing Mode, see https://bugzilla.mozilla.org/show_bug.cgi?id=1329304
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   if (message.type == "get_option") {
-    storage.get(message.object, sendResponse);
+    store.get(message.object, sendResponse);
     return true;
   } else if (message.type == "set_option") {
-    storage.set(message.object, item => {
+    store.set(message.object, item => {
       if (sendResponse) {
         sendResponse(item);
       }
@@ -688,7 +688,7 @@ async function import_settings(settings) {
 
     // Save settings
     await new Promise(resolve => {
-      storage.set({
+      store.set({
         legacy_custom_rulesets: settings.custom_rulesets,
         httpNowhere: settings.prefs.http_nowhere_enabled,
         showCounter: settings.prefs.show_counter,
