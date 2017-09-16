@@ -702,6 +702,8 @@ Object.assign(exports, {
   enableMixedRulesets,
   all_rules,
   initializeStoredGlobals,
+  domainBlacklist,
+  urlBlacklist,
 });
 
 })(typeof exports == 'undefined' ? window.background = {} : exports);
