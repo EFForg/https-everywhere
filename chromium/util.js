@@ -1,6 +1,6 @@
-(function(exports) {
-
 "use strict";
+
+(function(exports) {
 
 var VERB = 1;
 var DBUG = 2;

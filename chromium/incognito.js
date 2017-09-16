@@ -1,6 +1,6 @@
-(function(exports) {
-
 "use strict";
+
+(function(exports) {
 
 // This file keeps track of incognito sessions, and clears any caches after
 // an entire incognito session is closed (i.e. all incognito windows are closed).

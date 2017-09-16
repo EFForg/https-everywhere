@@ -1,6 +1,6 @@
-(function(exports) {
-
 "use strict";
+
+(function(exports) {
 
 // Stubs so this runs under nodejs. They get overwritten later by util.js
 var DBUG = 2;
