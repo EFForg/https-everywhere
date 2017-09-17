@@ -24,9 +24,9 @@ function createsOneComment(err, context) {
 function createsCommentWithMessage(text) {
   return function(err, context) {
     // args[0] is first call arguments, second [0] is first arg
-    assert.isObject(context.issue.args[0][0]);
+    assert.isObject(context.github.issues.createComment.args[0][0]);
     // TODO try to find a more decoupled way than matching text
-    assert.isTrue(context.issue.args[0][0].body.includes(text));
+    assert.isTrue(context.github.issues.createComment.args[0][0].body.includes(text));
   };
 }
 
@@ -119,8 +119,6 @@ function noType(text) {
 }
 
 function correctNewRuleset(issueText, text) {
-  const expectingEdit = Boolean(text);
-
   const obj = {
     topic: function(handler) {
       const context = makeContext.issue(issueText);
@@ -141,9 +139,7 @@ function correctNewRuleset(issueText, text) {
     'it labels the issue appropriately': function(err, context) {
       assert.isTrue(context.github.issues.addLabels.calledOnce);
 
-      // I'm not really sure why these magic numbers work? But they do, sooo...
-      // With apologies to whoever's come to edit this
-      const args = context.issue.args[expectingEdit ? 1 : 0];
+      const args = context.github.issues.addLabels.args[0];
 
       assert.isObject(args[0]);
       assert.isArray(args[0].labels);
@@ -157,8 +153,7 @@ function correctNewRuleset(issueText, text) {
     obj['it says the user fixed it'] = createsCommentWithMessage(text);
   } else {
     obj['it doesn\'t comment'] = function(err, context) {
-      // Once for the labels, once for the comment
-      assert.isTrue(context.issue.calledOnce);
+      assert.isTrue(context.github.issues.createComment.notCalled);
     };
   }
 

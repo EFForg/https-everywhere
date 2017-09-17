@@ -52,10 +52,7 @@ vows.describe('issue labeler module').addBatch(setup(
       assert.ok(context.github.issues.addLabels.calledOnce);
     },
     'the label was the top-100 label': function(err, context) {
-      // XXX should we test addLabels() arguments?
-      // Currently we don't because context.issue is a Sinon spy that returns nothing, which gets passed to addLabels()
-      const args = context.issue.args[0];
-
+      const args = context.github.issues.addLabels.args[0];
       assert.isObject(args[0]);
       assert.isArray(args[0].labels);
       assert.deepEqual(args[0].labels, ['top-100']);
@@ -77,9 +74,7 @@ vows.describe('issue labeler module').addBatch(setup(
       assert.ok(context.github.issues.addLabels.calledOnce);
     },
     'the label was the top-1k label': function(err, context) {
-      // XXX should we test addLabels() arguments?
-      // Currently we don't because context.issue is a Sinon spy that returns nothing, which gets passed to addLabels()
-      const args = context.issue.args[0];
+      const args = context.github.issues.addLabels.args[0];
 
       assert.isObject(args[0]);
       assert.isArray(args[0].labels);
