@@ -7,6 +7,8 @@ const sinon = require('sinon');
 let issueNumber = 1;
 
 module.exports = {
+  // Note: this is NOT the `context.issue` you see in-source
+  // This is used to create `context` itself; `context.issue` is the Sinon spy you see below
   issue(body) {
     return {
       payload: {
