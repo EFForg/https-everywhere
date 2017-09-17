@@ -1,8 +1,17 @@
+/* exported enableMixedRulesets */
+/* global RuleSets */
+/* global storage */
+/* global log */
+/* global INFO */
+/* global NOTE */
+/* global WARN */
+/* global DBUG */
+
 "use strict";
 /**
- * Fetch and parse XML to be loaded as RuleSets.
+ * Load a file packaged with the extension
  *
- * @param url: a relative URL to local XML
+ * @param url: a relative URL to local file
  */
 function loadExtensionFile(url, returnType) {
   var xhr = new XMLHttpRequest();
@@ -16,6 +25,9 @@ function loadExtensionFile(url, returnType) {
   }
   if (returnType === 'xml') {
     return xhr.responseXML;
+  }
+  if (returnType === 'json') {
+    return JSON.parse(xhr.responseText);
   }
   return xhr.responseText;
 }
@@ -34,7 +46,7 @@ all_rules = new RuleSets(ls);
 var enableMixedRulesets = false;
 storage.get({enableMixedRulesets: false}, function(item) {
   enableMixedRulesets = item.enableMixedRulesets;
-  all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
+  all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
 });
 
 // Load in the legacy custom rulesets, if any
@@ -197,7 +209,7 @@ function updateState () {
 
     const showBadge = activeCount > 0 && isExtensionEnabled && showCounter;
 
-    chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '' });
+    chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '', tabId: tabs[0].id });
   });
 }
 
@@ -248,7 +260,7 @@ function AppliedRulesets() {
 
   var that = this;
   if (chrome.tabs) {
-    chrome.tabs.onRemoved.addListener(function(tabId, info) {
+    chrome.tabs.onRemoved.addListener(function(tabId) {
       that.removeTab(tabId);
     });
   }
@@ -284,7 +296,7 @@ var domainBlacklist = new Set();
 
 // redirect counter workaround
 // TODO: Remove this code if they ever give us a real counter
-var redirectCounter = {};
+var redirectCounter = new Map();
 
 /**
  * Called before a HTTP(s) request. Does the heavy lifting
@@ -343,7 +355,7 @@ function onBeforeRequest(details) {
 
   var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
 
-  if (redirectCounter[details.requestId] >= 8) {
+  if (redirectCounter.get(details.requestId) >= 8) {
     log(NOTE, "Redirect counter hit for " + canonical_url);
     urlBlacklist.add(canonical_url);
     var hostname = uri.hostname;
@@ -531,15 +543,36 @@ function onCookieChanged(changeInfo) {
  * */
 function onBeforeRedirect(details) {
   // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
-  var prefix = details.redirectUrl.substring(0, 5);
+  let prefix = details.redirectUrl.substring(0, 5);
   if (prefix === "http:" || prefix === "https") {
-    if (details.requestId in redirectCounter) {
-      redirectCounter[details.requestId] += 1;
+    let count = redirectCounter.get(details.requestId);
+    if (count) {
+      redirectCounter.set(details.requestId, count + 1);
       log(DBUG, "Got redirect id "+details.requestId+
-                ": "+redirectCounter[details.requestId]);
+                ": "+count);
     } else {
-      redirectCounter[details.requestId] = 1;
+      redirectCounter.set(details.requestId, 1);
     }
+  }
+}
+
+/**
+ * handle webrequest.onCompleted, cleanup redirectCounter
+ * @param details details for the chrome.webRequest (see chrome doc)
+ */
+function onCompleted(details) {
+  if (redirectCounter.has(details.requestId)) {
+    redirectCounter.delete(details.requestId);
+  }
+}
+
+/**
+ * handle webrequest.onErrorOccurred, cleanup redirectCounter
+ * @param details details for the chrome.webRequest (see chrome doc)
+ */
+function onErrorOccurred(details) {
+  if (redirectCounter.has(details.requestId)) {
+    redirectCounter.delete(details.requestId);
   }
 }
 
@@ -551,6 +584,11 @@ wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
 wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
 
+// Cleanup redirectCounter if neccessary
+wr.onCompleted.addListener(onCompleted, {urls: ["*://*/*"]});
+
+// Cleanup redirectCounter if neccessary
+wr.onErrorOccurred.addListener(onErrorOccurred, {urls: ["*://*/*"]})
 
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking.
 chrome.cookies.onChanged.addListener(onCookieChanged);
@@ -579,7 +617,7 @@ chrome.runtime.onConnect.addListener(function (port) {
     chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
       var tabId = message.tabId;
 
-      var disableOnCloseCallback = function(port) {
+      var disableOnCloseCallback = function() {
         log(DBUG, "Devtools window for tab " + tabId + " closed, clearing data.");
         disableSwitchPlannerFor(tabId);
       };
@@ -649,7 +687,7 @@ async function import_settings(settings) {
     }
 
     all_rules = new RuleSets(ls);
-    all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
+    all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
 
     // Load custom rulesets
     load_legacy_custom_rulesets(settings.custom_rulesets);

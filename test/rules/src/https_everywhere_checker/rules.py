@@ -190,9 +190,26 @@ class Ruleset(object):
 			 or empty list if coverage is sufficient.
 			 """
 		problems = self._determineTestApplication()
-		# Next, make sure each target has a valid TLD
+
+		# Next, make sure each target has a valid TLD and doesn't overlap with others
 		for target in self.targets:
-			# Ignore right-wildcard targets
+			# If it's a wildcard, check which other targets it covers
+			if '*' in target:
+				target_re = regex.escape(target)
+
+				if target_re.startswith(r'\*'):
+					target_re = target_re[2:]
+				else:
+					target_re = r'\A' + target_re
+
+				target_re = regex.compile(target_re.replace(r'\*', r'[^.]*') + r'\Z')
+
+				others = [other for other in self.targets if other != target and target_re.search(other)]
+
+				if others:
+						problems.append("%s: Target '%s' also covers %s" % (self.filename, target, others))
+
+			# Ignore right-wildcard targets for TLD checks
 			if target.endswith(".*"):
 				continue
 

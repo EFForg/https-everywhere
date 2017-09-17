@@ -1,3 +1,7 @@
+/* exported storage */
+/* global initializeStoredGlobals */
+/* global exports */
+
 var storage = chrome.storage.local;
 if (chrome.storage.sync) {
   chrome.storage.sync.set({"sync-set-test": true}, () => {

@@ -1,3 +1,7 @@
+/* global log */
+/* global DBUG */
+/* global all_rules */
+
 "use strict";
 // This file keeps track of incognito sessions, and clears any caches after
 // an entire incognito session is closed (i.e. all incognito windows are closed).
@@ -16,13 +20,15 @@ function detect_incognito_creation(window) {
 }
 
 /**
- * Clear any caches we have.
+ * Clear any cache/ blacklist we have.
  * Called if an incognito session is destroyed.
  */
 function destroy_caches() {
   log(DBUG, "Destroying caches.");
   all_rules.cookieHostCache.clear();
   all_rules.ruleCache.clear();
+  domainBlacklist.clear();
+  urlBlacklist.clear();
 }
 
 /**
@@ -41,12 +47,8 @@ function check_for_incognito_session(arrayOfWindows) {
   destroy_caches();
 }
 
-/**
- * If a window is destroyed, and an incognito session existed, see if it still does.
- *
- * @param windowId: Ignored.
- */
-function detect_incognito_destruction(windowId) {
+// If a window is destroyed, and an incognito session existed, see if it still does.
+function detect_incognito_destruction() {
   if (incognito_session_exists) {
     // Are any current windows incognito?
     chrome.windows.getAll(check_for_incognito_session);

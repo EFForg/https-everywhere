@@ -1,8 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://pages.optimizely.com/rs/optimizely/images/Customer_Story_Backcountry.pdf (200) => https://na-sjn.marketo.com/rs/optimizely/images/Customer_Story_Backcountry.pdf (403)
-
 	For rules covering resources which do not secure
 	mixed content, see optimizely.com-resources.xml.
 
@@ -13,21 +9,13 @@ Non-2xx HTTP code: http://pages.optimizely.com/rs/optimizely/images/Customer_Sto
 		- cdn.optimizely.com.edgekey.net	← cdn3
 
 
-	Nonfunctional hosts in *optimizely.com:
-
-		- pages ᵃ
-
-	ᵃ Marketo / shows another domain
-
-
 	Problematic hosts in *optimizely.com:
 
 		- cdn4 ᴬ
-		- support ᵈ
 		- log3 ᵐ
+		- pages ᵐ
 
 	ᴬ Akamai / mismatched
-	ᵈ Dropped, preemptable redirect
 	ᵐ Mismatched
 
 
@@ -48,7 +36,7 @@ Non-2xx HTTP code: http://pages.optimizely.com/rs/optimizely/images/Customer_Sto
 		- optimizelySegments
 
 -->
-<ruleset name="Optimizely (partial)" default_off='failed ruleset test'>
+<ruleset name="Optimizely (partial)">
 
 	<!--	Direct rewrites:
 				-->
@@ -64,6 +52,7 @@ Non-2xx HTTP code: http://pages.optimizely.com/rs/optimizely/images/Customer_Sto
 	<target host="learn.optimizely.com" />
 	<target host="log.optimizely.com" />
 	<target host="*.log.optimizely.com" />
+	<target host="support.optimizely.com" />
 	<target host="www.optimizely.com" />
 
 		<exclusion pattern="^http://(?:[^./]+\.){2,}log\.optimizely\.com/" />
@@ -80,61 +69,9 @@ Non-2xx HTTP code: http://pages.optimizely.com/rs/optimizely/images/Customer_Sto
 	<!--	Complications:
 				-->
 	<target host="log3.optimizely.com" />
-	<target host="pages.optimizely.com" />
-	<target host="support.optimizely.com" />
-
-		<!--exclusion pattern="^http://pages\.optimizely\.com/(?!/*(?:$|\?|css/|images/|rs/))" /-->
-		<!--
-			Reduce non-Tor distinguishability:
-								-->
-		<exclusion pattern="^http://pages\.optimizely\.com/(?!/*(?:$|\?|rs/.+\.pdf(?:$|\?)))" />
-
-			<!--	+ve:
-					-->
-			<test url="http://pages.optimizely.com/book" />
-			<test url="http://pages.optimizely.com/eBook_The_Ultimate_Guide_to_Optimizing_Your_Online_Store.html" />
-			<test url="http://pages.optimizely.com/email-ab-testing-toolkit.html" />
-			<test url="http://pages.optimizely.com/shopper-survey.html" />
-			<test url="http://pages.optimizely.com/thrive-new-digital-reality-webinar-series-1.html" />
-			<test url="http://pages.optimizely.com/thrive-new-digital-reality-webinar-series-2.html" />
-			<test url="http://pages.optimizely.com/thrive-new-digital-reality-webinar-series-3.html" />
-			<test url="http://pages.optimizely.com/thrive-new-digital-reality-webinar-series-4.html" />
-			<test url="http://pages.optimizely.com/thrive-new-digital-reality-webinar-series.html" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^community\.optimizely\.com$" name="^Lithium(?:UserInfo|UserSecure|Visitor)$" /-->
-	<!--securecookie host="^learn\.optimizely\.com$" name="^(?:YII_CSRF_TOKEN|backend_us_east_1)$" /-->
-
-	<securecookie host="^(?!pages\.)." name="." />
-
 
 	<rule from="^http://log3\.optimizely\.com/"
 		to="https://3.log.optimizely.com/" />
-
-	<!--	Redirect drops forward slash and args:
-							-->
-	<rule from="^http://pages\.optimizely\.com/+(?:\?.*)?$"
-		to="https://www.optimizely.com/" />
-
-		<test url="http://pages.optimizely.com/?" />
-
-	<rule from="^http://pages\.optimizely\.com/"
-		to="https://na-sjn.marketo.com/" />
-
-		<!--
-		<test url="http://pages.optimizely.com/rs/361-GER-922/images/Share1.png" />
-		-->
-		<test url="http://pages.optimizely.com/rs/optimizely/images/Customer_Story_Backcountry.pdf" />
-
-	<!--	Redirect drops path and forward
-		slash, but not args:
-					-->
-	<rule from="^http://support\.optimizely\.com/[^?]*"
-		to="https://help.optimizely.com/" />
-
-		<test url="http://support.optimizely.com/Get_Started" />
 
 	<rule from="^http:"
 		to="https:" />
