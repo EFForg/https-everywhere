@@ -23,7 +23,8 @@ module.exports = {
           addLabels: sinon.spy()
         }
       },
-      issue: sinon.spy()
+      // Blindly pass through the first argument as the return value
+      issue: sinon.spy(arg => arg)
     };
   }
 };
