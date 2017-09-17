@@ -29,7 +29,13 @@ module.exports = function label(context, data, alexa) {
   toRemove.forEach(label => {
     const removalParams = context.issue({name: label});
     // This is racy with addLabels() but honestly who cares
-    context.github.issues.removeLabel(removalParams);
+    context.github.issues.removeLabel(removalParams).catch(err => {
+      // GitHub returns 404 if the label doesn't exist on the issue, so we just swallow those errors
+      // XXX should we query labels and do a diff?
+      if (err.code === 404) return;
+
+      throw err;
+    });
   });
 
   const params = context.issue({labels});

@@ -52,6 +52,10 @@ vows.describe('context mock object').addBatch({
       'context.github.issues is an object': assertProp('github.issues', assert.isObject),
       'context.github.issues.createComment is a Sinon spy': assertSinonSpy('github.issues.createComment'),
       'context.github.issues.addLabels is a Sinon spy': assertSinonSpy('github.issues.addLabels'),
+      'context.github.issues.removeLabel returns a Promise': function(err, context) {
+        const promise = context.github.issues.removeLabel();
+        assert.isFunction(promise.then);
+      },
       'context.github.issues.removeLabel is a Sinon spy': assertSinonSpy('github.issues.removeLabel'),
       'context.issue is a Sinon spy': assertSinonSpy('issue'),
       'and we call context.issue()': {

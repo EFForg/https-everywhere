@@ -6,6 +6,8 @@ const sinon = require('sinon');
 
 let issueNumber = 1;
 
+function noop() {}
+
 module.exports = {
   // Note: this is NOT the `context.issue` you see in-source
   // This is used to create `context` itself; `context.issue` is the Sinon spy you see below
@@ -21,7 +23,7 @@ module.exports = {
         issues: {
           createComment: sinon.spy(),
           addLabels: sinon.spy(),
-          removeLabel: sinon.spy()
+          removeLabel: sinon.spy(() => new Promise(noop))
         }
       },
       // Blindly pass through the first argument as the return value
