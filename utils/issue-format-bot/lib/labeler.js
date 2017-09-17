@@ -2,6 +2,8 @@
 
 'use strict';
 
+const alexaLabels = ['top-100', 'top-1k', 'top-10k', 'top-100k', 'top-1m'];
+
 module.exports = function label(context, data, alexa) {
   const alexaPosition = alexa.data.indexOf(data.domain);
   const labels = [];
@@ -21,6 +23,14 @@ module.exports = function label(context, data, alexa) {
   } else if (alexaPosition < 1000000) {
     labels.push('top-1m');
   }
+
+  // Every Alexa label *except* our new one
+  const toRemove = alexaLabels.filter(label => label !== labels[0]);
+  toRemove.forEach(label => {
+    const removalParams = context.issue({name: label});
+    // This is racy with addLabels() but honestly who cares
+    context.github.issues.removeLabel(removalParams);
+  });
 
   const params = context.issue({labels});
   return context.github.issues.addLabels(params);

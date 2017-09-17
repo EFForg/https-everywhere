@@ -20,7 +20,8 @@ module.exports = {
       github: {
         issues: {
           createComment: sinon.spy(),
-          addLabels: sinon.spy()
+          addLabels: sinon.spy(),
+          removeLabel: sinon.spy()
         }
       },
       // Blindly pass through the first argument as the return value

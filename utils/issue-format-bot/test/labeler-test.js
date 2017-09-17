@@ -50,6 +50,13 @@ function assertWhichLabel(label) {
   };
 }
 
+function assertOtherLabelsRemoved(labels) {
+  return function(err, context) {
+    const calledLabels = context.github.issues.removeLabel.args.map(args => args[0].name);
+    assert.deepEqual(calledLabels, labels);
+  };
+}
+
 vows.describe('issue labeler module').addBatch(setup(
   'and we pass it an issue in the top 100 domains', {
     topic: function(labeler) {
@@ -63,7 +70,8 @@ vows.describe('issue labeler module').addBatch(setup(
       assert.ifError(err);
     },
     'it adds labels to the issue only once': addLabelsCalledOnce,
-    'the label was the top-100 label': assertWhichLabel('top-100')
+    'the label was the top-100 label': assertWhichLabel('top-100'),
+    'all other labels were removed': assertOtherLabelsRemoved(['top-1k', 'top-10k', 'top-100k', 'top-1m'])
   }
 )).addBatch(setup(
   'and we pass it an issue in the top 1,000 domains', {
@@ -78,6 +86,7 @@ vows.describe('issue labeler module').addBatch(setup(
       assert.ifError(err);
     },
     'it adds labels to the issue only once': addLabelsCalledOnce,
-    'the label was the top-1k label': assertWhichLabel('top-1k')
+    'the label was the top-1k label': assertWhichLabel('top-1k'),
+    'all other labels were removed': assertOtherLabelsRemoved(['top-100', 'top-10k', 'top-100k', 'top-1m'])
   }
 )).export(module);
