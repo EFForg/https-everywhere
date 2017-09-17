@@ -36,6 +36,20 @@ function resetSpies(context) {
   return context.github.issues.addLabels.reset();
 }
 
+function addLabelsCalledOnce(err, context) {
+  assert.ok(context.github.issues.addLabels.calledOnce);
+}
+
+function assertWhichLabel(label) {
+  return function(err, context) {
+    const args = context.github.issues.addLabels.args[0];
+
+    assert.isObject(args[0]);
+    assert.isArray(args[0].labels);
+    assert.deepEqual(args[0].labels, [label]);
+  };
+}
+
 vows.describe('issue labeler module').addBatch(setup(
   'and we pass it an issue in the top 100 domains', {
     topic: function(labeler) {
@@ -48,15 +62,8 @@ vows.describe('issue labeler module').addBatch(setup(
     'it works': function(err) {
       assert.ifError(err);
     },
-    'it adds labels to the issue only once': function(err, context) {
-      assert.ok(context.github.issues.addLabels.calledOnce);
-    },
-    'the label was the top-100 label': function(err, context) {
-      const args = context.github.issues.addLabels.args[0];
-      assert.isObject(args[0]);
-      assert.isArray(args[0].labels);
-      assert.deepEqual(args[0].labels, ['top-100']);
-    }
+    'it adds labels to the issue only once': addLabelsCalledOnce,
+    'the label was the top-100 label': assertWhichLabel('top-100')
   }
 )).addBatch(setup(
   'and we pass it an issue in the top 1,000 domains', {
@@ -70,15 +77,7 @@ vows.describe('issue labeler module').addBatch(setup(
     'it works': function(err) {
       assert.ifError(err);
     },
-    'it adds labels to the issue only once': function(err, context) {
-      assert.ok(context.github.issues.addLabels.calledOnce);
-    },
-    'the label was the top-1k label': function(err, context) {
-      const args = context.github.issues.addLabels.args[0];
-
-      assert.isObject(args[0]);
-      assert.isArray(args[0].labels);
-      assert.deepEqual(args[0].labels, ['top-1k']);
-    }
+    'it adds labels to the issue only once': addLabelsCalledOnce,
+    'the label was the top-1k label': assertWhichLabel('top-1k')
   }
 )).export(module);
