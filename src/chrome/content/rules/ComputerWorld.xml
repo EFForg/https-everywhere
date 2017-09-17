@@ -1,69 +1,42 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://computerworld.com/ => https://www.computerworld.com/: (51, "SSL: no alternative certificate subject name matches target host name 'www.computerworld.com'")
-
-Disabled by https-everywhere-checker because:
-Fetch error: http://computerworld.com/ => https://www.computerworld.com/: (28, 'Connection timed out after 10001 milliseconds')
 	For other IDG coverage, see IDG.se.xml.
 
-
 	CDN buckets:
-
 		- computerworld.com.edgesuite.net/newsletter_images/
 		- computerworld.com.edgesuite.net/techbrief/
-
 		- redirect.etouches.com
-
 			- events.computerworld.com
-
 		- computerworld.jobamatic.com
-
-			- itjobs.compterworld.com
-
+			- itjobs.computerworld.com
 		- computerworld.mobify.me
-
 			- m.computerworld.com
-
 		- computerworld.idg.netdna-cdn.com
-
-			- -ssl doesn't exist
+			- SSL doesn't exist
 			- cdn[1-4].computerworlduk.com
 
-
 	Nonfunctional domains:
-
 		- blogs.computerworld.com *
-		- resources.computerworld.com	(refused)
+		- resources.computerworld.com (refused)
 		- (www.)computerworlduk.com *
 		- cdn[1-4].computerworlduk.com	(404; mismatched, CN: *.netdna-ssl.com)
 
 	* Dropped
 
-
 	Problematic computerworld.com subdomains:
-
-		- ^		(works; expired 2010-07-23, cert only matches www)
-		- events	(works; mismatched, CN: *.eiseverywhere.com)
-		- itjobs	(works; mismatched, CN: *.jobamatic.com)
-		- m		(shows mobify.com; mismatched, CN: *.mobify.com)
-
+		- ^	(works; expired 2010-07-23, cert only matches www)
+		- events (works; mismatched, CN: *.eiseverywhere.com)
+		- itjobs (works; mismatched, CN: *.jobamatic.com)
+		- m	(shows mobify.com; mismatched, CN: *.mobify.com)
 
 	Partially covered domains:
-
 		- m.computerworld.com	(→ computerworld.mobify.com)
 
-
 	Fully covered domains:
-
 		- events.computerworld.com	(→ eiseverywhere.com)
-		- itjobs.compterworld.com	(→ computerworld.jobamatic.com)
-
+		- itjobs.computerworld.com	(→ computerworld.jobamatic.com)
 
 	Mixed content:
-
 		- Scripts, on www from:
-
 			- m *
 			- api.brightcove.com *
 			- disqus.com
@@ -71,7 +44,6 @@ Fetch error: http://computerworld.com/ => https://www.computerworld.com/: (28, '
 			- wd.sharethis.com *
 
 		- Images, on www from:
-
 			- blogs ***
 			- from www *
 			- d1piko3ylsjhpd.cloudfront.net *
@@ -79,7 +51,6 @@ Fetch error: http://computerworld.com/ => https://www.computerworld.com/: (28, '
 			- resources.idgenterprise.com ***
 
 		- Web bugs, on www from:
-
 			- bit.ly *
 			- s.bit.ly *
 			- tags.bkrtx.com *
@@ -96,9 +67,7 @@ Fetch error: http://computerworld.com/ => https://www.computerworld.com/: (28, '
 	** Unsecurable, but who cares. 404s anyway.
 	*** Unsecurable, doesn't trip MCB anyway
 
-
 		All secured by us, apart from:
-
 			- a.visualrevenue.com
 			- p.visualrevenue.com
 			- t.visualrevenue.com
@@ -106,28 +75,48 @@ Fetch error: http://computerworld.com/ => https://www.computerworld.com/: (28, '
 		for which no secure equivalents have been found.
 		Being web bugs, do we really care about these
 		being blocked?
-
 -->
-<ruleset name="ComputerWorld (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+<!--
+	Invalid security certificate:
+		- events.computerworld.com
 
+	Redirects:
+		- resources.computerworld.com → resources.computerworld.com/ccd/login
+
+	Server not found:
+		- itjobs.computerworld.com
+
+	Timeout was reached:
+		- avail.computerworld.com
+		- cw.computerworld.com
+		- cwbmgt02.computerworld.com i
+		- cwbweb01.computerworld.com
+		- cwbweb02.computerworld.com
+		- cwfbes.computerworld.com
+		- cwfeventsweb.computerworld.com
+		- cwfsmtp.computerworld.com
+		- cwfsmtp2.computerworld.com
+		- cwflyris.computerworld.com
+		- cwonline.computerworld.com
+		- cwresources.computerworld.com
+		- focus.computerworld.com
+		- ftp1.computerworld.com
+		- marketing.computerworld.com
+		- prototype.computerworld.com
+		- reg.computerworld.com
+		- spesftp.computerworld.com
+		- store.computerworld.com
+		- survey.computerworld.com
+		- webreg.computerworld.com
+		- zones.computerworld.com
+-->
+<ruleset name="ComputerWorld">
 	<target host="computerworld.com" />
-	<target host="*.computerworld.com" />
+	<target host="www.computerworld.com" />
+	<target host="blogs.computerworld.com" />
+	<target host="m.computerworld.com" />
 
+	<securecookie host=".+" name=".+" />
 
-	<!--securecookie host="^\.computerworld\.com$" name="^(idglg_ref_domain|mobify|s_pers|s_sess|__vr[flmuy]|__vrid)$" /-->
-	<securecookie host="^\.computerworld\.com$" name=".+" />
-
-
-	<rule from="^http://(?:www\.)?computerworld\.com/"
-		to="https://www.computerworld.com/"/>
-
-	<rule from="^http://events\.computerworld\.com/"
-		to="https://eiseverywhere.com/ehome/Computerworld/" />
-
-	<rule from="^http://itjobs\.computerworld\.com/"
-		to="https://computerworld.jobamatic.com/" />
-
-	<rule from="^http://m\.computerworld\.com/mobify/"
-		to="https://computerworld.mobify.com/mobify/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
