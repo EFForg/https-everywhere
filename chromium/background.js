@@ -1,6 +1,6 @@
 "use strict";
 
-(function(exports) {
+(function() {
 
 function _resolveModule (name) {
   if (this.require) {
