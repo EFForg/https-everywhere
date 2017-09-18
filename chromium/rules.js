@@ -1,8 +1,7 @@
-/* global enableMixedRulesets */
-/* global domainBlacklist */
-/* global exports */
-
 "use strict";
+
+(function(exports) {
+
 // Stubs so this runs under nodejs. They get overwritten later by util.js
 var DBUG = 2;
 var INFO = 3;
@@ -229,7 +228,7 @@ RuleSets.prototype = {
     var platform = ruletag["platform"]
     if (platform) {
       default_state = false;
-      if (platform == "mixedcontent" && enableMixedRulesets) {
+      if (platform == "mixedcontent" && background.enableMixedRulesets) {
         default_state = true;
       }
       note += "Platform(s): " + platform + "\n";
@@ -348,7 +347,7 @@ RuleSets.prototype = {
     var platform = ruletag.getAttribute("platform");
     if (platform) {
       default_state = false;
-      if (platform == "mixedcontent" && enableMixedRulesets) {
+      if (platform == "mixedcontent" && background.enableMixedRulesets) {
         default_state = true;
       }
       note += "Platform(s): " + platform + "\n";
@@ -512,7 +511,7 @@ RuleSets.prototype = {
     // observed and the domain blacklisted, a cookie might already have been
     // flagged as secure.
 
-    if (domainBlacklist.has(domain)) {
+    if (background.domainBlacklist.has(domain)) {
       log(INFO, "cookies for " + domain + "blacklisted");
       return false;
     }
@@ -570,7 +569,8 @@ RuleSets.prototype = {
   }
 };
 
-// Export for HTTPS Rewriter if applicable.
-if (typeof exports != 'undefined') {
-  exports.RuleSets = RuleSets;
-}
+Object.assign(exports, {
+  RuleSets,
+});
+
+})(typeof exports == 'undefined' ? window.rules = {} : exports);

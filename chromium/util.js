@@ -1,12 +1,6 @@
-/* exported VERB */
-/* exported DBUG */
-/* exported INFO */
-/* exported NOTE */
-/* exported WARN */
-/* exported DEFAULT_LOG_LEVEL */
-/* exported log */
-
 "use strict";
+
+(function(exports) {
 
 var VERB = 1;
 var DBUG = 2;
@@ -33,3 +27,14 @@ function log(level, str) {
     }
   }
 }
+
+Object.assign(exports, {
+  VERB,
+  DBUG,
+  INFO,
+  NOTE,
+  WARN,
+  log,
+});
+
+})(typeof exports == 'undefined' ? window.util = {} : exports);
