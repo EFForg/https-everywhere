@@ -200,7 +200,7 @@ function updateState () {
 
     const activeCount = getActiveRulesetCount(tabs[0].id);
 
-    chrome.browserAction.setBadgeBackgroundColor({ color: '#00cc00' });
+    chrome.browserAction.setBadgeBackgroundColor({ color: '#666666' });
 
     const showBadge = activeCount > 0 && isExtensionEnabled && showCounter;
 
