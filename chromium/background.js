@@ -106,18 +106,13 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
 });
 
 if (chrome.tabs) {
-  chrome.tabs.onActivated.addListener(function() {
-    updateState();
-  });
+  chrome.tabs.onActivated.addListener(updateState);
+  chrome.tabs.onUpdated.addListener(updateState);
 }
 if (chrome.windows) {
-  chrome.windows.onFocusChanged.addListener(function() {
-    updateState();
-  });
+  chrome.windows.onFocusChanged.addListener(updateState);
 }
-chrome.webNavigation.onCompleted.addListener(function() {
-  updateState();
-});
+chrome.webNavigation.onCompleted.addListener(updateState);
 
 /**
 * Load stored user rules
