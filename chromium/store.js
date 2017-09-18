@@ -8,6 +8,8 @@
 
   const exports = getExports('store')
 
+  const background = resolveModule('background')
+
   function setStorage(store) {
     Object.assign(exports, {
       get: store.get,

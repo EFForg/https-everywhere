@@ -14,6 +14,8 @@
     throw new Error(`Can't find module ${name}.`)
   }
 
+  const background = resolveModule('background')
+
   const util = resolveModule('util')
 
   // This file keeps track of incognito sessions, and clears any caches after
