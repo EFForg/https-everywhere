@@ -49,7 +49,6 @@ function load_legacy_custom_rulesets(legacy_custom_rulesets){
     all_rules.addFromXml((new DOMParser()).parseFromString(legacy_custom_ruleset, 'text/xml'));
   }
 }
-store.get({legacy_custom_rulesets: []}, item => load_legacy_custom_rulesets(item.legacy_custom_rulesets));
 
 var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
@@ -77,12 +76,14 @@ var initializeStoredGlobals = () => {
   store.get({
     httpNowhere: false,
     showCounter: true,
-    globalEnabled: true
+    globalEnabled: true,
+    legacy_custom_rulesets: []
   }, function(item) {
     httpNowhereOn = item.httpNowhere;
     showCounter = item.showCounter;
     isExtensionEnabled = item.globalEnabled;
     updateState();
+    load_legacy_custom_rulesets(item.legacy_custom_rulesets);
   });
 }
 initializeStoredGlobals();
