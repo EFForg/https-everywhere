@@ -1,5 +1,7 @@
 /* global log */
 /* global DBUG */
+/* global domainBlacklist */
+/* global urlBlacklist */
 /* global all_rules */
 
 "use strict";
