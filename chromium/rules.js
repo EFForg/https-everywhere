@@ -1,6 +1,8 @@
-import { enableMixedRulesets, domainBlacklist } from './background.js'
-
 import { DBUG, INFO, WARN, log } from './util.js'
+
+export let enableMixedRulesets = false;
+
+export const domainBlacklist = new Set();
 
 // To reduce memory usage for the numerous rules/cookies with trivial rules
 const trivial_rule_to = "https:";

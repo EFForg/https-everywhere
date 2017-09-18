@@ -1,4 +1,4 @@
-import { RuleSets } from './rules.js'
+import { RuleSets, domainBlacklist, enableMixedRulesets } from './rules.js'
 
 import { store } from './store.js'
 
@@ -40,7 +40,6 @@ try{
 all_rules = new RuleSets(ls);
 
 // Allow users to enable `platform="mixedcontent"` rulesets
-export let enableMixedRulesets = false;
 store.get({enableMixedRulesets: false}, function(item) {
   enableMixedRulesets = item.enableMixedRulesets;
   all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
@@ -289,7 +288,6 @@ AppliedRulesets.prototype = {
 var activeRulesets = new AppliedRulesets();
 
 export let urlBlacklist = new Set();
-export let domainBlacklist = new Set();
 
 // redirect counter workaround
 // TODO: Remove this code if they ever give us a real counter
