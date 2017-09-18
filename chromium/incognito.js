@@ -2,81 +2,81 @@
 
 (function(global) {
 
-function resolveModule (name) {
-  if (typeof require === 'function') {
-    return require('./' + name)
+  function resolveModule (name) {
+    if (typeof require === 'function') {
+      return require('./' + name)
+    }
+
+    if (global[name]) {
+      return global[name]
+    }
+
+    throw new Error(`Can't find module ${name}.`)
   }
 
-  if (global[name]) {
-    return global[name]
-  }
+  const util = resolveModule('util')
 
-  throw new Error(`Can't find module ${name}.`)
-}
+  // This file keeps track of incognito sessions, and clears any caches after
+  // an entire incognito session is closed (i.e. all incognito windows are closed).
 
-const util = resolveModule('util')
+  let incognito_session_exists = false;
 
-// This file keeps track of incognito sessions, and clears any caches after
-// an entire incognito session is closed (i.e. all incognito windows are closed).
-
-let incognito_session_exists = false;
-
-/**
+  /**
  * Detect if an incognito session is created, so we can clear caches when it's destroyed.
  *
  * @param window: A standard Window object.
  */
-function detect_incognito_creation(window) {
-  if (window.incognito === true) {
-    incognito_session_exists = true;
+  function detect_incognito_creation(window) {
+    if (window.incognito === true) {
+      incognito_session_exists = true;
+    }
   }
-}
 
-/**
+  /**
  * Clear any cache/ blacklist we have.
  * Called if an incognito session is destroyed.
  */
-function destroy_caches() {
-  util.log(util.DBUG, "Destroying caches.");
-  background.all_rules.cookieHostCache.clear();
-  background.all_rules.ruleCache.clear();
-  background.domainBlacklist.clear();
-  background.urlBlacklist.clear();
-}
+  function destroy_caches() {
+    util.log(util.DBUG, "Destroying caches.");
+    background.all_rules.cookieHostCache.clear();
+    background.all_rules.ruleCache.clear();
+    background.domainBlacklist.clear();
+    background.urlBlacklist.clear();
+  }
 
-/**
+  /**
  * Check if any incognito window still exists. If not, destroy caches.
  * @param arrayOfWindows: A array of all open Window objects.
  */
-function check_for_incognito_session(arrayOfWindows) {
-  for (let window of arrayOfWindows) {
-    if (window.incognito === true) {
+  function check_for_incognito_session(arrayOfWindows) {
+    for (let window of arrayOfWindows) {
+      if (window.incognito === true) {
       // An incognito window still exists, so don't destroy caches yet.
-      return;
+        return;
+      }
+    }
+    // All incognito windows have been closed.
+    incognito_session_exists = false;
+    destroy_caches();
+  }
+
+  // If a window is destroyed, and an incognito session existed, see if it still does.
+  function detect_incognito_destruction() {
+    if (incognito_session_exists) {
+    // Are any current windows incognito?
+      chrome.windows.getAll(check_for_incognito_session);
     }
   }
-  // All incognito windows have been closed.
-  incognito_session_exists = false;
-  destroy_caches();
-}
 
-// If a window is destroyed, and an incognito session existed, see if it still does.
-function detect_incognito_destruction() {
-  if (incognito_session_exists) {
-    // Are any current windows incognito?
-    chrome.windows.getAll(check_for_incognito_session);
+
+  // Listen to window creation, so we can detect if an incognito window is created
+  if (chrome.windows) {
+    chrome.windows.onCreated.addListener(detect_incognito_creation);
   }
-}
 
-
-// Listen to window creation, so we can detect if an incognito window is created
-if (chrome.windows) {
-  chrome.windows.onCreated.addListener(detect_incognito_creation);
-}
-
-// Listen to window destruction, so we can clear caches if all incognito windows are destroyed
-if (chrome.windows) {
-  chrome.windows.onRemoved.addListener(detect_incognito_destruction);
-}
+  // Listen to window destruction, so we can clear caches if all incognito windows are destroyed
+  if (chrome.windows) {
+    chrome.windows.onRemoved.addListener(detect_incognito_destruction);
+  }
 
 })();
