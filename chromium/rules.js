@@ -1,6 +1,26 @@
 "use strict";
 
-(function(exports) {
+(function() {
+
+function _resolveModule (name) {
+  if (this.require) {
+    return this.require('./' + name)
+  }
+
+  if (this[name]) {
+    return this[name]
+  }
+
+  throw new Error(`Can't find module ${name}.`)
+}
+
+function _getExports (name) {
+  return this.exports || (this[name] = {})
+}
+
+const exports = _getExports('rules')
+
+const background = _resolveModule('background')
 
 // Stubs so this runs under nodejs. They get overwritten later by util.js
 var DBUG = 2;
@@ -569,8 +589,6 @@ RuleSets.prototype = {
   }
 };
 
-Object.assign(exports, {
-  RuleSets,
-});
+exports.RuleSets = RuleSets;
 
-})(typeof exports == 'undefined' ? window.rules = {} : exports);
+})()
