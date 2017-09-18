@@ -1,6 +1,6 @@
 "use strict";
 
-(function() {
+(function(global) {
 
 function getExports (name) {
   return global.module && global.module.exports || (global[name] = {})

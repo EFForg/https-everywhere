@@ -1,14 +1,14 @@
 "use strict";
 
-(function() {
+(function(global) {
 
 function resolveModule (name) {
-  if (this.require) {
-    return this.require('./' + name)
+  if (typeof require === 'function') {
+    return require('./' + name)
   }
 
-  if (this[name]) {
-    return this[name]
+  if (global[name]) {
+    return global[name]
   }
 
   throw new Error(`Can't find module ${name}.`)
