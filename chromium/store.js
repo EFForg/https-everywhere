@@ -1,22 +1,21 @@
-"use strict";
+import { initializeStoredGlobals } from './background.js'
 
-(function(exports) {
+export const store = {};
 
-function setStorage(store) {
-  Object.assign(exports, {
-    get: store.get,
-    set: store.set,
+function setStorage(newStore) {
+  Object.assign(store, {
+    get: newStore.get,
+    set: newStore.set,
   });
 }
 
 setStorage(chrome.storage.local);
+
 if (chrome.storage.sync) {
   chrome.storage.sync.set({"sync-set-test": true}, () => {
     if(!chrome.runtime.lastError){
       setStorage(chrome.storage.sync);
-      background.initializeStoredGlobals();
+      initializeStoredGlobals();
     }
   });
 }
-
-})(typeof exports == 'undefined' ? window.store = {} : exports);

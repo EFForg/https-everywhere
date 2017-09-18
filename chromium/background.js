@@ -1,6 +1,8 @@
-"use strict";
+import { RuleSets } from './rules.js'
 
-(function(exports) {
+import { store } from './store.js'
+
+import { DBUG, INFO, NOTE, WARN, log } from './util.js'
 
 /**
  * Load a file packaged with the extension
@@ -28,16 +30,17 @@ function loadExtensionFile(url, returnType) {
 
 
 // Rules are loaded here
-var all_rules, ls;
+export let all_rules;
+var ls;
 try{
   ls = localStorage;
 } catch(e) {
   ls = {setItem: () => {}, getItem: () => {}};
 }
-all_rules = new rules.RuleSets(ls);
+all_rules = new RuleSets(ls);
 
 // Allow users to enable `platform="mixedcontent"` rulesets
-var enableMixedRulesets = false;
+export let enableMixedRulesets = false;
 store.get({enableMixedRulesets: false}, function(item) {
   enableMixedRulesets = item.enableMixedRulesets;
   all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
@@ -73,7 +76,7 @@ var httpNowhereOn = false;
 var showCounter = true;
 var isExtensionEnabled = true;
 
-var initializeStoredGlobals = () => {
+export function initializeStoredGlobals () {
   store.get({
     httpNowhere: false,
     showCounter: true,
@@ -140,7 +143,7 @@ var loadStoredUserRules = function() {
   for (let rule of rules) {
     all_rules.addUserRule(rule);
   }
-  util.log(util.INFO, 'loaded ' + i + ' stored user rules');
+  log(INFO, 'loaded ' + i + ' stored user rules');
 };
 
 loadStoredUserRules();
@@ -285,8 +288,8 @@ AppliedRulesets.prototype = {
 // FIXME: change this name
 var activeRulesets = new AppliedRulesets();
 
-var urlBlacklist = new Set();
-var domainBlacklist = new Set();
+export let urlBlacklist = new Set();
+export let domainBlacklist = new Set();
 
 // redirect counter workaround
 // TODO: Remove this code if they ever give us a real counter
@@ -336,7 +339,7 @@ function onBeforeRequest(details) {
 
   var canonical_url = uri.href;
   if (details.url != canonical_url && !using_credentials_in_url) {
-    util.log(util.INFO, "Original url " + details.url +
+    log(INFO, "Original url " + details.url +
         " changed before processing to " + canonical_url);
   }
   if (urlBlacklist.has(canonical_url)) {
@@ -350,11 +353,11 @@ function onBeforeRequest(details) {
   var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
 
   if (redirectCounter.get(details.requestId) >= 8) {
-    util.log(util.NOTE, "Redirect counter hit for " + canonical_url);
+    log(NOTE, "Redirect counter hit for " + canonical_url);
     urlBlacklist.add(canonical_url);
     var hostname = uri.hostname;
     domainBlacklist.add(hostname);
-    util.log(util.WARN, "Domain blacklisted " + hostname);
+    log(WARN, "Domain blacklisted " + hostname);
     return {cancel: shouldCancel};
   }
 
@@ -443,7 +446,7 @@ function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritt
   } else if (passiveTypes[type]) {
     active_content = 0;
   } else {
-    util.log(util.WARN, "Unknown type from onBeforeRequest details: `" + type + "', assuming active");
+    log(WARN, "Unknown type from onBeforeRequest details: `" + type + "', assuming active");
     active_content = 1;
   }
 
@@ -524,7 +527,7 @@ function onCookieChanged(changeInfo) {
       }
       // We get repeated events for some cookies because sites change their
       // value repeatedly and remove the "secure" flag.
-      util.log(util.DBUG,
+      log(DBUG,
         "Securing cookie " + cookie.name + " for " + changeInfo.cookie.domain + ", was secure=" + changeInfo.cookie.secure);
       chrome.cookies.set(cookie);
     }
@@ -542,7 +545,7 @@ function onBeforeRedirect(details) {
     let count = redirectCounter.get(details.requestId);
     if (count) {
       redirectCounter.set(details.requestId, count + 1);
-      util.log(util.DBUG, "Got redirect id "+details.requestId+
+      log(DBUG, "Got redirect id "+details.requestId+
                 ": "+count);
     } else {
       redirectCounter.set(details.requestId, 1);
@@ -612,7 +615,7 @@ chrome.runtime.onConnect.addListener(function (port) {
       var tabId = message.tabId;
 
       var disableOnCloseCallback = function() {
-        util.log(util.DBUG, "Devtools window for tab " + tabId + " closed, clearing data.");
+        log(DBUG, "Devtools window for tab " + tabId + " closed, clearing data.");
         disableSwitchPlannerFor(tabId);
       };
 
@@ -680,7 +683,7 @@ async function import_settings(settings) {
       ls[ruleset_name] = settings.rule_toggle[ruleset_name];
     }
 
-    all_rules = new rules.RuleSets(ls);
+    all_rules = new RuleSets(ls);
     all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
 
     // Load custom rulesets
@@ -697,13 +700,3 @@ async function import_settings(settings) {
     });
   }
 }
-
-Object.assign(exports, {
-  enableMixedRulesets,
-  all_rules,
-  initializeStoredGlobals,
-  domainBlacklist,
-  urlBlacklist,
-});
-
-})(typeof exports == 'undefined' ? window.background = {} : exports);

@@ -1,6 +1,5 @@
-"use strict";
-
-(function(exports) {
+import { log, DBUG } from './util.js'
+import { all_rules, domainBlacklist, urlBlacklist } from './background.js'
 
 // This file keeps track of incognito sessions, and clears any caches after
 // an entire incognito session is closed (i.e. all incognito windows are closed).
@@ -23,11 +22,11 @@ function detect_incognito_creation(window) {
  * Called if an incognito session is destroyed.
  */
 function destroy_caches() {
-  util.log(util.DBUG, "Destroying caches.");
-  background.all_rules.cookieHostCache.clear();
-  background.all_rules.ruleCache.clear();
-  background.domainBlacklist.clear();
-  background.urlBlacklist.clear();
+  log(DBUG, "Destroying caches.");
+  all_rules.cookieHostCache.clear();
+  all_rules.ruleCache.clear();
+  domainBlacklist.clear();
+  urlBlacklist.clear();
 }
 
 /**
@@ -64,7 +63,3 @@ if (chrome.windows) {
 if (chrome.windows) {
   chrome.windows.onRemoved.addListener(detect_incognito_destruction);
 }
-
-Object.assign(exports, {});
-
-})(typeof exports == 'undefined' ? window.incognito = {} : exports);

@@ -1,12 +1,6 @@
-"use strict";
+import { enableMixedRulesets, domainBlacklist } from './background.js'
 
-(function(exports) {
-
-// Stubs so this runs under nodejs. They get overwritten later by util.js
-var DBUG = 2;
-var INFO = 3;
-var WARN = 5;
-function log(){}
+import { DBUG, INFO, WARN, log } from './util.js'
 
 // To reduce memory usage for the numerous rules/cookies with trivial rules
 const trivial_rule_to = "https:";
@@ -20,7 +14,7 @@ const trivial_cookie_host_c = new RegExp(".*");
  * @param to
  * @constructor
  */
-function Rule(from, to) {
+export function Rule(from, to) {
   if (from === "^http:" && to === "https:") {
     // This is a trivial rule, rewriting http->https with no complex RegExp.
     this.to = trivial_rule_to;
@@ -37,7 +31,7 @@ function Rule(from, to) {
  * @param pattern The pattern to compile
  * @constructor
  */
-function Exclusion(pattern) {
+export function Exclusion(pattern) {
   this.pattern_c = new RegExp(pattern);
 }
 
@@ -47,7 +41,7 @@ function Exclusion(pattern) {
  * @param cookiename The cookie name Regex to compile
  * @constructor
  */
-function CookieRule(host, cookiename) {
+export function CookieRule(host, cookiename) {
   if (host === ".*" || host === ".+" || host === ".") {
     // Some cookie rules trivially match any host.
     this.host_c = trivial_cookie_host_c;
@@ -70,7 +64,7 @@ function CookieRule(host, cookiename) {
  * @param note Note will be displayed in popup
  * @constructor
  */
-function RuleSet(set_name, default_state, note) {
+export function RuleSet(set_name, default_state, note) {
   this.name = set_name;
   this.rules = [];
   this.exclusions = null;
@@ -174,7 +168,7 @@ RuleSet.prototype = {
  * @param ruleActiveStates default state for rules
  * @constructor
  */
-function RuleSets(ruleActiveStates) {
+export function RuleSets(ruleActiveStates) {
   // Load rules into structure
   this.targets = new Map();
 
@@ -228,7 +222,7 @@ RuleSets.prototype = {
     var platform = ruletag["platform"]
     if (platform) {
       default_state = false;
-      if (platform == "mixedcontent" && background.enableMixedRulesets) {
+      if (platform == "mixedcontent" && enableMixedRulesets) {
         default_state = true;
       }
       note += "Platform(s): " + platform + "\n";
@@ -347,7 +341,7 @@ RuleSets.prototype = {
     var platform = ruletag.getAttribute("platform");
     if (platform) {
       default_state = false;
-      if (platform == "mixedcontent" && background.enableMixedRulesets) {
+      if (platform == "mixedcontent" && enableMixedRulesets) {
         default_state = true;
       }
       note += "Platform(s): " + platform + "\n";
@@ -511,7 +505,7 @@ RuleSets.prototype = {
     // observed and the domain blacklisted, a cookie might already have been
     // flagged as secure.
 
-    if (background.domainBlacklist.has(domain)) {
+    if (domainBlacklist.has(domain)) {
       log(INFO, "cookies for " + domain + "blacklisted");
       return false;
     }
@@ -568,9 +562,3 @@ RuleSets.prototype = {
     return null;
   }
 };
-
-Object.assign(exports, {
-  RuleSets,
-});
-
-})(typeof exports == 'undefined' ? window.rules = {} : exports);
