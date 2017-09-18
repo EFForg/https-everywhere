@@ -2,7 +2,7 @@
 
 (function(global) {
 
-function _resolveModule (name) {
+function resolveModule (name) {
   if (typeof require === 'function') {
     return require('./' + name)
   }
@@ -14,17 +14,17 @@ function _resolveModule (name) {
   throw new Error(`Can't find module ${name}.`)
 }
 
-function _getExports (name) {
+function getExports (name) {
   return global.module && global.module.exports || (global[name] = {})
 }
 
-const exports = _getExports('background')
+const exports = getExports('background')
 
-const rules = _resolveModule('rules')
+const rules = resolveModule('rules')
 
-const store = _resolveModule('store')
+const store = resolveModule('store')
 
-const util = _resolveModule('util')
+const util = resolveModule('util')
 
 /**
  * Load a file packaged with the extension

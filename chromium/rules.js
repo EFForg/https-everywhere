@@ -2,7 +2,7 @@
 
 (function(global) {
 
-function _resolveModule (name) {
+function resolveModule (name) {
   if (typeof require === 'function') {
     return require('./' + name)
   }
@@ -14,13 +14,13 @@ function _resolveModule (name) {
   throw new Error(`Can't find module ${name}.`)
 }
 
-function _getExports (name) {
+function getExports (name) {
   return global.module && global.module.exports || (global[name] = {})
 }
 
-const exports = _getExports('rules')
+const exports = getExports('rules')
 
-const background = _resolveModule('background')
+const background = resolveModule('background')
 
 // Stubs so this runs under nodejs. They get overwritten later by util.js
 var DBUG = 2;

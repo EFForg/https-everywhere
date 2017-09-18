@@ -2,11 +2,11 @@
 
 (function() {
 
-function _getExports (name) {
+function getExports (name) {
   return global.module && global.module.exports || (global[name] = {})
 }
 
-const exports = _getExports('util')
+const exports = getExports('util')
 
 var VERB = 1;
 var DBUG = 2;

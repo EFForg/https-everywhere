@@ -2,7 +2,7 @@
 
 (function() {
 
-function _resolveModule (name) {
+function resolveModule (name) {
   if (this.require) {
     return this.require('./' + name)
   }
@@ -14,7 +14,7 @@ function _resolveModule (name) {
   throw new Error(`Can't find module ${name}.`)
 }
 
-const util = _resolveModule('util')
+const util = resolveModule('util')
 
 // This file keeps track of incognito sessions, and clears any caches after
 // an entire incognito session is closed (i.e. all incognito windows are closed).

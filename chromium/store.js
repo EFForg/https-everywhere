@@ -2,11 +2,11 @@
 
 (function() {
 
-function _getExports (name) {
+function getExports (name) {
   return global.module && global.module.exports || (global[name] = {})
 }
 
-const exports = _getExports('store')
+const exports = getExports('store')
 
 function setStorage(store) {
   Object.assign(exports, {
