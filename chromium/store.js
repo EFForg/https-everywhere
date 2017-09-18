@@ -3,7 +3,7 @@
 (function() {
 
 function _getExports (name) {
-  return this.exports || (this[name] = {})
+  return global.module && global.module.exports || (global[name] = {})
 }
 
 const exports = _getExports('store')
@@ -25,4 +25,4 @@ if (chrome.storage.sync) {
   });
 }
 
-})();
+})(this);

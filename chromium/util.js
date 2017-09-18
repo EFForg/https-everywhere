@@ -3,7 +3,7 @@
 (function() {
 
 function _getExports (name) {
-  return this.exports || (this[name] = {})
+  return global.module && global.module.exports || (global[name] = {})
 }
 
 const exports = _getExports('util')
@@ -43,4 +43,4 @@ Object.assign(exports, {
   log,
 });
 
-})();
+})(this);

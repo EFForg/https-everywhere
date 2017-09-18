@@ -1,21 +1,21 @@
 "use strict";
 
-(function() {
+(function(global) {
 
 function _resolveModule (name) {
-  if (this.require) {
-    return this.require('./' + name)
+  if (typeof require === 'function') {
+    return require('./' + name)
   }
 
-  if (this[name]) {
-    return this[name]
+  if (global[name]) {
+    return global[name]
   }
 
   throw new Error(`Can't find module ${name}.`)
 }
 
 function _getExports (name) {
-  return this.exports || (this[name] = {})
+  return global.module && global.module.exports || (global[name] = {})
 }
 
 const exports = _getExports('background')
@@ -730,4 +730,4 @@ Object.assign(exports, {
   urlBlacklist,
 });
 
-})();
+})(this);
