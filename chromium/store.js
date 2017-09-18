@@ -1,6 +1,12 @@
 "use strict";
 
-(function(exports) {
+(function() {
+
+function _getExports (name) {
+  return this.exports || (this[name] = {})
+}
+
+const exports = _getExports('store')
 
 function setStorage(store) {
   Object.assign(exports, {
@@ -19,4 +25,4 @@ if (chrome.storage.sync) {
   });
 }
 
-})(typeof exports == 'undefined' ? window.store = {} : exports);
+})();

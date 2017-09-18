@@ -2,6 +2,30 @@
 
 (function(exports) {
 
+function _resolveModule (name) {
+  if (this.require) {
+    return this.require('./' + name)
+  }
+
+  if (this[name]) {
+    return this[name]
+  }
+
+  throw new Error(`Can't find module ${name}.`)
+}
+
+function _getExports (name) {
+  return this.exports || (this[name] = {})
+}
+
+const exports = _getExports('background')
+
+const rules = _resolveModule('rules')
+
+const store = _resolveModule('store')
+
+const util = _resolveModule('util')
+
 /**
  * Load a file packaged with the extension
  *
@@ -706,4 +730,4 @@ Object.assign(exports, {
   urlBlacklist,
 });
 
-})(typeof exports == 'undefined' ? window.background = {} : exports);
+})();

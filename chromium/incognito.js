@@ -1,6 +1,20 @@
 "use strict";
 
-(function(exports) {
+(function() {
+
+function _resolveModule (name) {
+  if (this.require) {
+    return this.require('./' + name)
+  }
+
+  if (this[name]) {
+    return this[name]
+  }
+
+  throw new Error(`Can't find module ${name}.`)
+}
+
+const util = _resolveModule('util')
 
 // This file keeps track of incognito sessions, and clears any caches after
 // an entire incognito session is closed (i.e. all incognito windows are closed).
@@ -65,6 +79,4 @@ if (chrome.windows) {
   chrome.windows.onRemoved.addListener(detect_incognito_destruction);
 }
 
-Object.assign(exports, {});
-
-})(typeof exports == 'undefined' ? window.incognito = {} : exports);
+})();

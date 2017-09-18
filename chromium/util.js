@@ -1,6 +1,12 @@
 "use strict";
 
-(function(exports) {
+(function() {
+
+function _getExports (name) {
+  return this.exports || (this[name] = {})
+}
+
+const exports = _getExports('util')
 
 var VERB = 1;
 var DBUG = 2;
@@ -37,4 +43,4 @@ Object.assign(exports, {
   log,
 });
 
-})(typeof exports == 'undefined' ? window.util = {} : exports);
+})();
