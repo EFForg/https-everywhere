@@ -3,12 +3,12 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   let json_data;
-  let import_button = document.querySelector("#import");
+  const import_button = document.querySelector("#import");
 
   function import_json(e) {
     e.preventDefault();
 
-    let settings = JSON.parse(json_data);
+    const settings = JSON.parse(json_data);
     sendMessage("import_settings", settings, () => {
       document.querySelector("#import-confirmed").style.display = "block";
       document.querySelector("form").style.display = "none";

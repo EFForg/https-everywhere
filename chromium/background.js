@@ -1,4 +1,6 @@
-/* exported enableMixedRulesets */
+/* exported initializeStoredGlobals */
+/* exported urlBlacklist */
+/* exported all_rules */
 /* global RuleSets */
 /* global storage */
 /* global log */
@@ -6,6 +8,9 @@
 /* global NOTE */
 /* global WARN */
 /* global DBUG */
+/* global domainBlacklist */
+// eslint-disable-next-line no-unused-vars
+/* global enableMixedRulesets */
 
 "use strict";
 /**
@@ -43,7 +48,6 @@ try{
 all_rules = new RuleSets(ls);
 
 // Allow users to enable `platform="mixedcontent"` rulesets
-var enableMixedRulesets = false;
 storage.get({enableMixedRulesets: false}, function(item) {
   enableMixedRulesets = item.enableMixedRulesets;
   all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
@@ -51,7 +55,7 @@ storage.get({enableMixedRulesets: false}, function(item) {
 
 // Load in the legacy custom rulesets, if any
 function load_legacy_custom_rulesets(legacy_custom_rulesets){
-  for(let legacy_custom_ruleset of legacy_custom_rulesets){
+  for(const legacy_custom_ruleset of legacy_custom_rulesets){
     all_rules.addFromXml((new DOMParser()).parseFromString(legacy_custom_ruleset, 'text/xml'));
   }
 }
@@ -143,7 +147,7 @@ var wr = chrome.webRequest;
 var loadStoredUserRules = function() {
   var rules = getStoredUserRules();
   var i;
-  for (let rule of rules) {
+  for (const rule of rules) {
     all_rules.addUserRule(rule);
   }
   log('INFO', 'loaded ' + i + ' stored user rules');
@@ -220,11 +224,11 @@ function updateState () {
  * */
 var addNewRule = function(params, cb) {
   if (all_rules.addUserRule(params)) {
-    // If we successfully added the user rule, save it in local 
-    // storage so it's automatically applied when the extension is 
+    // If we successfully added the user rule, save it in local
+    // storage so it's automatically applied when the extension is
     // reloaded.
     var oldUserRules = getStoredUserRules();
-    // TODO: there's a race condition here, if this code is ever executed from multiple 
+    // TODO: there's a race condition here, if this code is ever executed from multiple
     // client windows in different event loops.
     oldUserRules.push(params);
     // TODO: can we exceed the max size for storage?
@@ -292,7 +296,6 @@ AppliedRulesets.prototype = {
 var activeRulesets = new AppliedRulesets();
 
 var urlBlacklist = new Set();
-var domainBlacklist = new Set();
 
 // redirect counter workaround
 // TODO: Remove this code if they ever give us a real counter
@@ -342,7 +345,7 @@ function onBeforeRequest(details) {
 
   var canonical_url = uri.href;
   if (details.url != canonical_url && !using_credentials_in_url) {
-    log(INFO, "Original url " + details.url + 
+    log(INFO, "Original url " + details.url +
         " changed before processing to " + canonical_url);
   }
   if (urlBlacklist.has(canonical_url)) {
@@ -366,7 +369,7 @@ function onBeforeRequest(details) {
 
   var newuristr = null;
 
-  for (let ruleset of potentiallyApplicable) {
+  for (const ruleset of potentiallyApplicable) {
     activeRulesets.addRulesetToTab(details.tabId, ruleset);
     if (ruleset.active && !newuristr) {
       newuristr = ruleset.apply(canonical_url);
@@ -543,9 +546,9 @@ function onCookieChanged(changeInfo) {
  * */
 function onBeforeRedirect(details) {
   // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
-  let prefix = details.redirectUrl.substring(0, 5);
+  const prefix = details.redirectUrl.substring(0, 5);
   if (prefix === "http:" || prefix === "https") {
-    let count = redirectCounter.get(details.requestId);
+    const count = redirectCounter.get(details.requestId);
     if (count) {
       redirectCounter.set(details.requestId, count + 1);
       log(DBUG, "Got redirect id "+details.requestId+

@@ -1,13 +1,27 @@
-/* global enableMixedRulesets */
-/* global domainBlacklist */
+/* exported enableMixedRulesets */
+/* exported domainBlacklist */
+/* exported VERB */
+/* exported DBUG */
+/* exported INFO */
+/* exported NOTE */
+/* exported WARN */
+/* exported RuleSets */
 /* global exports */
 
 "use strict";
-// Stubs so this runs under nodejs. They get overwritten later by util.js
-var DBUG = 2;
-var INFO = 3;
-var WARN = 5;
-function log(){}
+
+// Stubs so this runs under nodejs. Also used by util.js
+const VERB = 1;
+const DBUG = 2;
+const INFO = 3;
+const NOTE = 4;
+const WARN = 5;
+
+function log() {}
+
+// Set default values for the same reason. Later modified by background.js
+let enableMixedRulesets = false;
+const domainBlacklist = new Set();
 
 // To reduce memory usage for the numerous rules/cookies with trivial rules
 const trivial_rule_to = "https:";
@@ -91,7 +105,7 @@ RuleSet.prototype = {
     var returl = null;
     // If we're covered by an exclusion, go home
     if (this.exclusions !== null) {
-      for (let exclusion of this.exclusions) {
+      for (const exclusion of this.exclusions) {
         if (exclusion.pattern_c.test(urispec)) {
           log(DBUG, "excluded uri " + urispec);
           return null;
@@ -100,7 +114,7 @@ RuleSet.prototype = {
     }
 
     // Okay, now find the first rule that triggers
-    for (let rule of this.rules) {
+    for (const rule of this.rules) {
       returl = urispec.replace(rule.from_c,
         rule.to);
       if (returl != urispec) {
@@ -196,7 +210,7 @@ RuleSets.prototype = {
    */
   addFromXml: function(ruleXml) {
     var sets = ruleXml.getElementsByTagName("ruleset");
-    for (let s of sets) {
+    for (const s of sets) {
       try {
         this.parseOneXmlRuleset(s);
       } catch (e) {
@@ -206,11 +220,11 @@ RuleSets.prototype = {
   },
 
   addFromJson: function(ruleJson) {
-    for (let ruleset of ruleJson) {
+    for (const ruleset of ruleJson) {
       try {
         this.parseOneJsonRuleset(ruleset);
       } catch(e) {
-        log(WARN, 'Error processing ruleset:' + e);	
+        log(WARN, 'Error processing ruleset:' + e);
       }
     }
   },
@@ -243,7 +257,7 @@ RuleSets.prototype = {
     }
 
     var rules = ruletag["rule"];
-    for (let rule of rules) {
+    for (const rule of rules) {
       if (rule["from"] != null && rule["to"] != null) {
         rule_set.rules.push(new Rule(rule["from"], rule["to"]));
       }
@@ -251,7 +265,7 @@ RuleSets.prototype = {
 
     var exclusions = ruletag["exclusion"];
     if (exclusions != null) {
-      for (let exclusion of exclusions) {
+      for (const exclusion of exclusions) {
         if (exclusion != null) {
           if (!rule_set.exclusions) {
             rule_set.exclusions = [];
@@ -263,7 +277,7 @@ RuleSets.prototype = {
 
     var cookierules = ruletag["securecookie"];
     if (cookierules != null) {
-      for (let cookierule of cookierules) {
+      for (const cookierule of cookierules) {
         if (cookierule["host"] != null && cookierule["name"] != null) {
           if (!rule_set.cookierules) {
             rule_set.cookierules = [];
@@ -274,7 +288,7 @@ RuleSets.prototype = {
     }
 
     var targets = ruletag["target"];
-    for (let target of targets) {
+    for (const target of targets) {
       if (target != null) {
         if (!this.targets.has(target)) {
           this.targets.set(target, []);
@@ -364,7 +378,7 @@ RuleSets.prototype = {
     }
 
     var rules = ruletag.getElementsByTagName("rule");
-    for (let rule of rules) {
+    for (const rule of rules) {
       rule_set.rules.push(new Rule(rule.getAttribute("from"),
         rule.getAttribute("to")));
     }
@@ -372,7 +386,7 @@ RuleSets.prototype = {
     var exclusions = ruletag.getElementsByTagName("exclusion");
     if (exclusions.length > 0) {
       rule_set.exclusions = [];
-      for (let exclusion of exclusions) {
+      for (const exclusion of exclusions) {
         rule_set.exclusions.push(
           new Exclusion(exclusion.getAttribute("pattern")));
       }
@@ -381,7 +395,7 @@ RuleSets.prototype = {
     var cookierules = ruletag.getElementsByTagName("securecookie");
     if (cookierules.length > 0) {
       rule_set.cookierules = [];
-      for (let cookierule of cookierules) {
+      for (const cookierule of cookierules) {
         rule_set.cookierules.push(
           new CookieRule(cookierule.getAttribute("host"),
             cookierule.getAttribute("name")));
@@ -389,7 +403,7 @@ RuleSets.prototype = {
     }
 
     var targets = ruletag.getElementsByTagName("target");
-    for (let target of targets) {
+    for (const target of targets) {
       var host = target.getAttribute("host");
       if (!this.targets.has(host)) {
         this.targets.set(host, []);
@@ -427,7 +441,7 @@ RuleSets.prototype = {
     // Replace each portion of the domain with a * in turn
     var segmented = host.split(".");
     for (let i=0; i < segmented.length; i++) {
-      let tmp = segmented[i];
+      const tmp = segmented[i];
       segmented[i] = "*";
       results = results.concat(this.targets.get(segmented.join(".")));
       segmented[i] = tmp;
@@ -447,7 +461,7 @@ RuleSets.prototype = {
     if (resultSet.size == 0) {
       log(DBUG, "  None");
     } else {
-      for (let target of resultSet.values()) {
+      for (const target of resultSet.values()) {
         log(DBUG, "  " + target.name);
       }
     }
@@ -481,9 +495,9 @@ RuleSets.prototype = {
     }
 
     var potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
-    for (let ruleset of potentiallyApplicable) {
+    for (const ruleset of potentiallyApplicable) {
       if (ruleset.cookierules !== null && ruleset.active) {
-        for (let cookierules of ruleset.cookierules) {
+        for (const cookierules of ruleset.cookierules) {
           var cr = cookierules;
           if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
             return ruleset;
@@ -537,7 +551,7 @@ RuleSets.prototype = {
 
     log(INFO, "Testing securecookie applicability with " + test_uri);
     var potentiallyApplicable = this.potentiallyApplicableRulesets(domain);
-    for (let ruleset of potentiallyApplicable) {
+    for (const ruleset of potentiallyApplicable) {
       if (!ruleset.active) {
         continue;
       }
@@ -561,7 +575,7 @@ RuleSets.prototype = {
   rewriteURI: function(urispec, host) {
     var newuri = null;
     var potentiallyApplicable = this.potentiallyApplicableRulesets(host);
-    for (let ruleset of potentiallyApplicable) {
+    for (const ruleset of potentiallyApplicable) {
       if (ruleset.active && (newuri = ruleset.apply(urispec))) {
         return newuri;
       }
