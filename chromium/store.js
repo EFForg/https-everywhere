@@ -2,6 +2,18 @@
 
 (function(global) {
 
+  function resolveModule (name) {
+    if (typeof require === 'function') {
+      return require('./' + name)
+    }
+
+    if (global[name]) {
+      return global[name]
+    }
+
+    throw new Error(`Can't find module ${name}.`)
+  }
+
   function getExports (name) {
     return global.module && global.module.exports || (global[name] = {})
   }
