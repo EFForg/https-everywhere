@@ -394,20 +394,20 @@
       }
     }
 
-  // re-insert userpass info which was stripped temporarily
-  if (using_credentials_in_url) {
-    if (newuristr) {
-      const uri_with_credentials = new URL(newuristr);
-      uri_with_credentials.username = tmp_user;
-      uri_with_credentials.password = tmp_pass;
-      newuristr = uri_with_credentials.href;
-    } else {
-      const canonical_url_with_credentials = new URL(canonical_url);
-      canonical_url_with_credentials.username = tmp_user;
-      canonical_url_with_credentials.password = tmp_pass;
-      canonical_url = canonical_url_with_credentials.href;
+    // re-insert userpass info which was stripped temporarily
+    if (using_credentials_in_url) {
+      if (newuristr) {
+        const uri_with_credentials = new URL(newuristr);
+        uri_with_credentials.username = tmp_user;
+        uri_with_credentials.password = tmp_pass;
+        newuristr = uri_with_credentials.href;
+      } else {
+        const canonical_url_with_credentials = new URL(canonical_url);
+        canonical_url_with_credentials.username = tmp_user;
+        canonical_url_with_credentials.password = tmp_pass;
+        canonical_url = canonical_url_with_credentials.href;
+      }
     }
-  }
 
     // In Switch Planner Mode, record any non-rewriteable
     // HTTP URIs by parent hostname, along with the resource type.
