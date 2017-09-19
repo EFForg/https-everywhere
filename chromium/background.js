@@ -327,12 +327,14 @@ function onBeforeRequest(details) {
   // If there is a username / password, put them aside during the ruleset
   // analysis process
   var using_credentials_in_url = false;
+  let tmp_user;
+  let tmp_pass;
   if (uri.password || uri.username) {
     using_credentials_in_url = true;
-    var tmp_user = uri.username;
-    var tmp_pass = uri.password;
-    uri.username = null;
-    uri.password = null;
+    tmp_user = uri.username;
+    tmp_pass = uri.password;
+    uri.username = '';
+    uri.password = '';
   }
 
   var canonical_url = uri.href;
@@ -368,12 +370,18 @@ function onBeforeRequest(details) {
     }
   }
 
-  if (newuristr && using_credentials_in_url) {
-    // re-insert userpass info which was stripped temporarily
-    const uri_with_credentials = new URL(newuristr);
-    uri_with_credentials.username = tmp_user;
-    uri_with_credentials.password = tmp_pass;
-    newuristr = uri_with_credentials.href;
+  if (using_credentials_in_url) {
+    const canonical_url_with_credentials = new URL(canonical_url);
+    canonical_url_with_credentials.username = tmp_user;
+    canonical_url_with_credentials.password = tmp_pass;
+    canonical_url = canonical_url_with_credentials.href;
+    if (newuristr) {
+      // re-insert userpass info which was stripped temporarily
+      const uri_with_credentials = new URL(newuristr);
+      uri_with_credentials.username = tmp_user;
+      uri_with_credentials.password = tmp_pass;
+      newuristr = uri_with_credentials.href;
+    }
   }
 
   // In Switch Planner Mode, record any non-rewriteable
