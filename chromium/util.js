@@ -1,5 +1,7 @@
 "use strict";
 
+(function(exports) {
+
 var VERB = 1;
 var DBUG = 2;
 var INFO = 3;
@@ -25,3 +27,14 @@ function log(level, str) {
     }
   }
 }
+
+Object.assign(exports, {
+  VERB,
+  DBUG,
+  INFO,
+  NOTE,
+  WARN,
+  log,
+});
+
+})(typeof exports == 'undefined' ? window.util = {} : exports);

@@ -37,9 +37,6 @@
 
 			- linkhelp
 
-		- ssl.google-analytics.com
-		- www.google-analytics.com
-
 		- googleapis.com subdomains:
 
 			- ajax
@@ -61,11 +58,6 @@
 			- ssl
 			- t\d
 
-		- gdata.youtube.com
-
-
-	ssl.google-analytics.com/ga.js sets __utm\w wildcard
-	cookies on whichever domain it is loaded from.
 
 -->
 <ruleset name="Google APIs">
@@ -73,10 +65,6 @@
 	<target host="www.gmodules.com" />
 		<!-- need this exclusion otherwise the test checker will use the hosts as test urls -->
 		<exclusion pattern="^http://(www\.)?gmodules\.com/$" />
-
-	<target host="click.google-analytics.com" />
-	<target host="www.google-analytics.com" />
-	<target host="ssl.google-analytics.com" />
 
 	<target host="ajax.googleapis.com" />
 		<!-- The implicit test URL at the root of this domain generates a 404.
@@ -96,7 +84,6 @@
 
 	<target host="gstatic.com" />
 	<target host="*.gstatic.com" />
-	<target host="gdata.youtube.com" />
 
 	<!--	Captive portal detection redirects to this URL, and many captive
 		portals break TLS, so exempt this redirect URL.
@@ -105,26 +92,16 @@
 	<exclusion pattern="^http://www\.gstatic\.com/generate_204" />
 		<test url="http://www.gstatic.com/generate_204" />
 
-	<exclusion pattern="^http://gdata\.youtube\.com/crossdomain\.xml" />
-		<test url="http://gdata.youtube.com/crossdomain.xml" />
-	
 	<!--	Breaks digitalattackmap.com, cf.
 		https://trac.torproject.org/projects/tor/ticket/15154
 			-->
 	<exclusion pattern="^http://www\.gstatic\.com/ddos-viz/attacks\.json" />
 		<test url="http://www.gstatic.com/ddos-viz/attacks.json" />
 
-	<securecookie host="^ssl\.google-analytics\.com$" name=".+" />
-
 	<rule from="^http://(?:www\.)?gmodules\.com/ig/images/"
 		to="https://www.google.com/ig/images/" />
 		<test url="http://gmodules.com/ig/images/" />
 		<test url="http://www.gmodules.com/ig/images/" />
-
-	<rule from="^http://(click|ssl|www)\.google-analytics\.com/"
-		to="https://$1.google-analytics.com/" />
-
-		<test url="http://www.google-analytics.com/analytics.js" />
 
 	<rule from="^http://(ajax|chart|ct|fonts|imasdk|www)\.googleapis\.com/"
 		to="https://$1.googleapis.com/" />
@@ -170,6 +147,4 @@
 		<test url="http://t2.gstatic.com/" />
 		<test url="http://t3.gstatic.com/" />
 
-	<rule from="^http://gdata\.youtube\.com/"
-		to="https://gdata.youtube.com/" />
 </ruleset>

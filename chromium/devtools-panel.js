@@ -44,7 +44,6 @@ function display() {
     type: "getHosts",
     tabId: chrome.devtools.inspectedWindow.tabId,
   }, function(response) {
-    var resources = e("resources");
     var switch_planner_details = e("SwitchPlannerDetails");
     while (switch_planner_details.firstChild) {
       switch_planner_details.removeChild(switch_planner_details.firstChild);
