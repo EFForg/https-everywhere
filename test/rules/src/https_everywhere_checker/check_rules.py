@@ -13,6 +13,7 @@ import re
 import sys
 import threading
 import time
+from itertools import imap
 
 from ConfigParser import SafeConfigParser
 
@@ -26,7 +27,7 @@ from rule_trie import RuleTrie
 def convertLoglevel(levelString):
 	"""Converts string 'debug', 'info', etc. into corresponding
 	logging.XXX value which is returned.
-	
+
 	@raises ValueError if the level is undefined
 	"""
 	try:
@@ -36,17 +37,17 @@ def convertLoglevel(levelString):
 
 def getMetricClass(metricType):
 	"""Get class for metric type from config file.
-	
+
 	@raises ValueError if the metric type is unknown
 	"""
 	metricMap = {
 		"markup": metrics.MarkupMetric,
 		"bsdiff": metrics.BSDiffMetric,
 	}
-	
+
 	if metricType not in metricMap:
 		raise ValueError("Metric type '%s' is not known" % metricType)
-	
+
 	return metricMap[metricType]
 
 
@@ -54,22 +55,22 @@ class ComparisonTask(object):
 	"""Container for objects necessary for several plain/rewritten URL comparison
 		 associated with a single ruleset.
 	"""
-	
+
 	def __init__(self, urls, fetcherPlain, fetcherRewriting, ruleset):
 		self.urls = urls
 		self.fetcherPlain = fetcherPlain
 		self.fetcherRewriting = fetcherRewriting
 		self.ruleset = ruleset
 		self.ruleFname = ruleset.filename
-	
+
 class UrlComparisonThread(threading.Thread):
 	"""Thread worker for comparing plain and rewritten URLs.
 	"""
-	
+
 	def __init__(self, taskQueue, metric, thresholdDistance, autoDisable, resQueue):
 		"""
 		Comparison thread running HTTP/HTTPS scans.
-		
+
 		@param taskQueue: Queue.Queue filled with ComparisonTask objects
 		@param metric: metric.Metric instance
 		@param threshold: min distance that is reported as "too big"
@@ -276,7 +277,7 @@ def cli():
 
 	config = SafeConfigParser()
 	config.read(args.checker_config)
-	
+
 	logfile = config.get("log", "logfile")
 	loglevel = convertLoglevel(config.get("log", "loglevel"))
 	if logfile == "-":
@@ -285,7 +286,7 @@ def cli():
 	else:
 		logging.basicConfig(filename=logfile, level=loglevel,
 			format="%(asctime)s %(levelname)s %(message)s [%(pathname)s:%(lineno)d]")
-		
+
 	autoDisable = False
 	if config.has_option("rulesets", "auto_disable"):
 		autoDisable = config.getboolean("rulesets", "auto_disable")
@@ -303,6 +304,9 @@ def cli():
 	checkNonmatchGroups = False
 	if config.has_option("rulesets", "check_nonmatch_groups"):
 		checkNonmatchGroups = config.getboolean("rulesets", "check_nonmatch_groups")
+	checkConflictingRules = False
+	if config.has_option("rulesets", "check_conflicting_rules"):
+		checkConflictingRules = config.getboolean("rulesets", "check_conflicting_rules")
 	checkTestFormatting = False
 	if config.has_option("rulesets", "check_test_formatting"):
 		checkTestFormatting = config.getboolean("rulesets", "check_test_formatting")
@@ -322,19 +326,19 @@ def cli():
 	httpEnabled = True
 	if config.has_option("http", "enabled"):
 		httpEnabled = config.getboolean("http", "enabled")
-	
+
 	#get all platform dirs, make sure "default" is among them
 	certdirFiles = glob.glob(os.path.join(certdir, "*"))
 	havePlatforms = set([os.path.basename(fname) for fname in certdirFiles if os.path.isdir(fname)])
 	logging.debug("Loaded certificate platforms: %s", ",".join(havePlatforms))
 	if "default" not in havePlatforms:
 		raise RuntimeError("Platform 'default' is missing from certificate directories")
-	
+
 	metricName = config.get("thresholds", "metric")
 	thresholdDistance = config.getfloat("thresholds", "max_distance")
 	metricClass = getMetricClass(metricName)
 	metric = metricClass()
-	
+
 	# Debugging options, graphviz dump
 	dumpGraphvizTrie = False
 	if config.has_option("debug", "dump_graphviz_trie"):
@@ -342,17 +346,18 @@ def cli():
 	if dumpGraphvizTrie:
 		graphvizFile = config.get("debug", "graphviz_file")
 		exitAfterDump = config.getboolean("debug", "exit_after_dump")
-	
+
 	if args.rule_files:
 		xmlFnames = args.rule_files
 	else:
 		xmlFnames = glob.glob(os.path.join(ruledir, "*.xml"))
 	trie = RuleTrie()
-	
+
 	rulesets = []
 	coverageProblemsExist = False
 	targetValidityProblemExist = False
 	nonmatchGroupProblemsExist = False
+	ruleConflictProblemsExist = False
 	testFormattingProblemsExist = False
 	for xmlFname in xmlFnames:
 		logging.debug("Parsing %s", xmlFname)
@@ -394,7 +399,24 @@ def cli():
 				logging.error(problem)
 		trie.addRuleset(ruleset)
 		rulesets.append(ruleset)
-	
+
+	if checkConflictingRules:
+		logging.debug("Checking ruleset conflicts")
+		for ruleset in rulesets:
+			for test in ruleset.tests:
+				matches = list(trie.transformUrlWithAll(test.url))
+				if len(matches) <= 1:
+					continue
+				ruleConflictProblemsExist = True
+				logging.error("%s: Test url '%s' can be rewritten in several ways:\n%s" % (
+					ruleset.filename,
+					test.url,
+					'\n'.join(imap(
+						lambda match: '  %s: %s' % (match.ruleset.filename, match.url),
+						matches
+					))
+				))
+
 	# Trie is built now, dump it if it's set in config
 	if dumpGraphvizTrie:
 		logging.debug("Dumping graphviz ruleset trie")
@@ -408,22 +430,22 @@ def cli():
 			sys.exit(0)
 	fetchOptions = http_client.FetchOptions(config)
 	fetcherMap = dict() #maps platform to fetcher
-	
+
 	platforms = http_client.CertificatePlatforms(os.path.join(certdir, "default"))
 	for platform in havePlatforms:
 		#adding "default" again won't break things
 		platforms.addPlatform(platform, os.path.join(certdir, platform))
 		fetcher = http_client.HTTPFetcher(platform, platforms, fetchOptions, trie)
 		fetcherMap[platform] = fetcher
-	
+
 	#fetches pages with unrewritten URLs
 	fetcherPlain = http_client.HTTPFetcher("default", platforms, fetchOptions)
-	
+
 	urlList = []
 	if config.has_option("http", "url_list"):
 		with file(config.get("http", "url_list")) as urlFile:
 			urlList = [line.rstrip() for line in urlFile.readlines()]
-			
+
 	if httpEnabled:
 		taskQueue = Queue.Queue(1000)
 		resQueue = Queue.Queue()
@@ -467,6 +489,9 @@ def cli():
 			return 1 # exit with error code
 	if checkNonmatchGroups:
 		if nonmatchGroupProblemsExist:
+			return 1 # exit with error code
+	if checkConflictingRules:
+		if ruleConflictProblemsExist:
 			return 1 # exit with error code
 	if checkTestFormatting:
 		if testFormattingProblemsExist:
