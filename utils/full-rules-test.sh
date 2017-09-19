@@ -2,7 +2,7 @@
 
 # Undo whitelisting from `rules-test` if possible
 
-# Change directory to git root; taken from ../test/test.sh
+# Change directory to git root; taken from ../test/rules.sh
 if [ -n "$GIT_DIR" ]
 then
     # $GIT_DIR is set, so we're running as a hook.
