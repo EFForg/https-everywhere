@@ -3,10 +3,17 @@
 (function(exports) {
 
 // Stubs so this runs under nodejs. They get overwritten later by util.js
-var DBUG = 2;
-var INFO = 3;
-var WARN = 5;
-function log(){}
+if (typeof util == 'undefined') {
+  let base = typeof window == 'undefined' ? global : window; // eslint-disable-line
+  Object.assign(base, {
+    util: {
+      DBUG: 2,
+      INFO: 3,
+      WARN: 5,
+      log: ()=>{},
+    }
+  });
+}
 
 // Set default values for the same reason. Later modified by background.js
 var enableMixedRulesets = false;
