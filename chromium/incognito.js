@@ -1,5 +1,6 @@
 import { log, DBUG } from './util.js'
-import { all_rules, domainBlacklist, urlBlacklist } from './background.js'
+import { all_rules, urlBlacklist } from './background.js'
+import { domainBlacklist } from './rules.js'
 
 // This file keeps track of incognito sessions, and clears any caches after
 // an entire incognito session is closed (i.e. all incognito windows are closed).
