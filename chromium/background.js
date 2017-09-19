@@ -370,9 +370,9 @@ function onBeforeRequest(details) {
     }
   }
 
+  // re-insert userpass info which was stripped temporarily
   if (using_credentials_in_url) {
     if (newuristr) {
-      // re-insert userpass info which was stripped temporarily
       const uri_with_credentials = new URL(newuristr);
       uri_with_credentials.username = tmp_user;
       uri_with_credentials.password = tmp_pass;
