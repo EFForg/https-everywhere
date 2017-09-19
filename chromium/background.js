@@ -61,7 +61,6 @@
   all_rules = new rules.RuleSets(ls);
 
   // Allow users to enable `platform="mixedcontent"` rulesets
-  rules.enableMixedRulesets = false;
   store.get({enableMixedRulesets: false}, function(item) {
     rules.enableMixedRulesets.enable = item.enableMixedRulesets;
     all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));

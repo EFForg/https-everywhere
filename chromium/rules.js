@@ -20,8 +20,6 @@
 
   const exports = getExports('rules')
 
-  const background = resolveModule('background')
-
   // Stubs so this runs under nodejs. They get overwritten later by util.js
   var DBUG = 2;
   var INFO = 3;
@@ -252,7 +250,7 @@
       var platform = ruletag["platform"]
       if (platform) {
         default_state = false;
-        if (platform == "mixedcontent" && background.enableMixedRulesets.enable) {
+        if (platform == "mixedcontent" && enableMixedRulesets.enable) {
           default_state = true;
         }
         note += "Platform(s): " + platform + "\n";
@@ -371,7 +369,7 @@
       var platform = ruletag.getAttribute("platform");
       if (platform) {
         default_state = false;
-        if (platform == "mixedcontent" && background.enableMixedRulesets.enable) {
+        if (platform == "mixedcontent" && enableMixedRulesets.enable) {
           default_state = true;
         }
         note += "Platform(s): " + platform + "\n";
@@ -535,7 +533,7 @@
     // observed and the domain blacklisted, a cookie might already have been
     // flagged as secure.
 
-      if (background.domainBlacklist.has(domain)) {
+      if (domainBlacklist.has(domain)) {
         log(INFO, "cookies for " + domain + "blacklisted");
         return false;
       }
