@@ -3,9 +3,8 @@
 (function(exports) {
 
 // Stubs so this runs under nodejs. They get overwritten later by util.js
-if (typeof util == 'undefined') {
-  let base = typeof window == 'undefined' ? global : window; // eslint-disable-line
-  Object.assign(base, {
+if (typeof util == 'undefined' || typeof global != 'undefined') {
+  Object.assign(global, {
     util: {
       DBUG: 2,
       INFO: 3,
