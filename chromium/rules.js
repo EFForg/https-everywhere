@@ -103,7 +103,7 @@ RuleSet.prototype = {
     if (this.exclusions !== null) {
       for (let exclusion of this.exclusions) {
         if (exclusion.pattern_c.test(urispec)) {
-          log(DBUG, "excluded uri " + urispec);
+          util.log(util.DBUG, "excluded uri " + urispec);
           return null;
         }
       }
@@ -210,7 +210,7 @@ RuleSets.prototype = {
       try {
         this.parseOneXmlRuleset(s);
       } catch (e) {
-        log(WARN, 'Error processing ruleset:' + e);
+        util.log(util.WARN, 'Error processing ruleset:' + e);
       }
     }
   },
@@ -220,7 +220,7 @@ RuleSets.prototype = {
       try {
         this.parseOneJsonRuleset(ruleset);
       } catch(e) {
-        log(WARN, 'Error processing ruleset:' + e);
+        util.log(util.WARN, 'Error processing ruleset:' + e);
       }
     }
   },
@@ -300,7 +300,7 @@ RuleSets.prototype = {
    * @returns {boolean}
    */
   addUserRule : function(params) {
-    log(INFO, 'adding new user rule for ' + JSON.stringify(params));
+    util.log(util.INFO, 'adding new user rule for ' + JSON.stringify(params));
     var new_rule_set = new RuleSet(params.host, true, "user rule");
     var new_rule = new Rule(params.urlMatcher, params.redirectTo);
     new_rule_set.rules.push(new_rule);
@@ -313,7 +313,7 @@ RuleSets.prototype = {
     if (new_rule_set.name in this.ruleActiveStates) {
       new_rule_set.active = (this.ruleActiveStates[new_rule_set.name] == "true");
     }
-    log(INFO, 'done adding rule');
+    util.log(util.INFO, 'done adding rule');
     return true;
   },
 
@@ -323,7 +323,7 @@ RuleSets.prototype = {
    * @returns {boolean}
    */
   removeUserRule: function(ruleset) {
-    log(INFO, 'removing user rule for ' + JSON.stringify(ruleset));
+    util.log(util.INFO, 'removing user rule for ' + JSON.stringify(ruleset));
     this.ruleCache.delete(ruleset.name);
 
 
@@ -336,7 +336,7 @@ RuleSets.prototype = {
       this.targets.delete(ruleset.name);
     }
 
-    log(INFO, 'done removing rule');
+    util.log(util.INFO, 'done removing rule');
     return true;
   },
 
@@ -417,10 +417,10 @@ RuleSets.prototype = {
     // Have we cached this result? If so, return it!
     var cached_item = this.ruleCache.get(host);
     if (cached_item !== undefined) {
-      log(DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.length);
+      util.log(util.DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.length);
       return cached_item;
     }
-    log(DBUG, "Ruleset cache miss for " + host);
+    util.log(util.DBUG, "Ruleset cache miss for " + host);
 
     var results = [];
     if (this.targets.has(host)) {
@@ -430,7 +430,7 @@ RuleSets.prototype = {
 
     // Ensure host is well-formed (RFC 1035)
     if (host.indexOf("..") != -1 || host.length > 255) {
-      log(WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
+      util.log(util.WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
       return null;
     }
 
@@ -453,12 +453,12 @@ RuleSets.prototype = {
     var resultSet = new Set(results);
     resultSet.delete(undefined);
 
-    log(DBUG,"Applicable rules for " + host + ":");
+    util.log(util.DBUG,"Applicable rules for " + host + ":");
     if (resultSet.size == 0) {
-      log(DBUG, "  None");
+      util.log(util.DBUG, "  None");
     } else {
       for (let target of resultSet.values()) {
-        log(DBUG, "  " + target.name);
+        util.log(util.DBUG, "  " + target.name);
       }
     }
 
@@ -523,15 +523,15 @@ RuleSets.prototype = {
     // flagged as secure.
 
     if (domainBlacklist.has(domain)) {
-      log(INFO, "cookies for " + domain + "blacklisted");
+      util.log(util.INFO, "cookies for " + domain + "blacklisted");
       return false;
     }
     var cached_item = this.cookieHostCache.get(domain);
     if (cached_item !== undefined) {
-      log(DBUG, "Cookie host cache hit for " + domain);
+      util.log(util.DBUG, "Cookie host cache hit for " + domain);
       return cached_item;
     }
-    log(DBUG, "Cookie host cache miss for " + domain);
+    util.log(util.DBUG, "Cookie host cache miss for " + domain);
 
     // If we passed that test, make up a random URL on the domain, and see if
     // we would HTTPSify that.
@@ -545,19 +545,19 @@ RuleSets.prototype = {
       this.cookieHostCache.delete(this.cookieHostCache.keys().next().value);
     }
 
-    log(INFO, "Testing securecookie applicability with " + test_uri);
+    util.log(util.INFO, "Testing securecookie applicability with " + test_uri);
     var potentiallyApplicable = this.potentiallyApplicableRulesets(domain);
     for (let ruleset of potentiallyApplicable) {
       if (!ruleset.active) {
         continue;
       }
       if (ruleset.apply(test_uri)) {
-        log(INFO, "Cookie domain could be secured.");
+        util.log(util.INFO, "Cookie domain could be secured.");
         this.cookieHostCache.set(domain, true);
         return true;
       }
     }
-    log(INFO, "Cookie domain could NOT be secured.");
+    util.log(util.INFO, "Cookie domain could NOT be secured.");
     this.cookieHostCache.set(domain, false);
     return false;
   },
