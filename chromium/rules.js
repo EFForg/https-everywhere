@@ -1,6 +1,6 @@
 import { DBUG, INFO, WARN, log } from './util.js'
 
-export let enableMixedRulesets = { enabled: false };
+export let enableMixedRulesets = { enable: false };
 
 export const domainBlacklist = new Set();
 
@@ -224,7 +224,7 @@ RuleSets.prototype = {
     var platform = ruletag["platform"]
     if (platform) {
       default_state = false;
-      if (platform == "mixedcontent" && enableMixedRulesets.enabled) {
+      if (platform == "mixedcontent" && enableMixedRulesets.enable) {
         default_state = true;
       }
       note += "Platform(s): " + platform + "\n";
@@ -343,7 +343,7 @@ RuleSets.prototype = {
     var platform = ruletag.getAttribute("platform");
     if (platform) {
       default_state = false;
-      if (platform == "mixedcontent" && enableMixedRulesets.enabled) {
+      if (platform == "mixedcontent" && enableMixedRulesets.enable) {
         default_state = true;
       }
       note += "Platform(s): " + platform + "\n";
