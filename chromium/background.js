@@ -61,9 +61,9 @@
   all_rules = new rules.RuleSets(ls);
 
   // Allow users to enable `platform="mixedcontent"` rulesets
-  var enableMixedRulesets = false;
+  rules.enableMixedRulesets = false;
   store.get({enableMixedRulesets: false}, function(item) {
-    enableMixedRulesets = item.enableMixedRulesets;
+    rules.enableMixedRulesets.enable = item.enableMixedRulesets;
     all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
   });
 
@@ -310,7 +310,6 @@
   var activeRulesets = new AppliedRulesets();
 
   var urlBlacklist = new Set();
-  var domainBlacklist = new Set();
 
   // redirect counter workaround
   // TODO: Remove this code if they ever give us a real counter
@@ -377,7 +376,7 @@
       util.log(util.NOTE, "Redirect counter hit for " + canonical_url);
       urlBlacklist.add(canonical_url);
       var hostname = uri.hostname;
-      domainBlacklist.add(hostname);
+      rules.domainBlacklist.add(hostname);
       util.log(util.WARN, "Domain blacklisted " + hostname);
       return {cancel: shouldCancel};
     }
@@ -723,11 +722,9 @@
   }
 
   Object.assign(exports, {
-    enableMixedRulesets,
     all_rules,
     initializeStoredGlobals,
-    domainBlacklist,
-    urlBlacklist,
+    urlBlacklist
   });
 
 })(this);

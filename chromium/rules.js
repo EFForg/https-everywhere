@@ -26,6 +26,10 @@
   var DBUG = 2;
   var INFO = 3;
   var WARN = 5;
+
+  const enableMixedRulesets = { enable: false };
+  const domainBlacklist = new Set();
+
   function log(){}
 
   // To reduce memory usage for the numerous rules/cookies with trivial rules
@@ -248,7 +252,7 @@
       var platform = ruletag["platform"]
       if (platform) {
         default_state = false;
-        if (platform == "mixedcontent" && background.enableMixedRulesets) {
+        if (platform == "mixedcontent" && background.enableMixedRulesets.enable) {
           default_state = true;
         }
         note += "Platform(s): " + platform + "\n";
@@ -367,7 +371,7 @@
       var platform = ruletag.getAttribute("platform");
       if (platform) {
         default_state = false;
-        if (platform == "mixedcontent" && background.enableMixedRulesets) {
+        if (platform == "mixedcontent" && background.enableMixedRulesets.enable) {
           default_state = true;
         }
         note += "Platform(s): " + platform + "\n";
@@ -590,5 +594,7 @@
   };
 
   exports.RuleSets = RuleSets;
+  exports.domainBlacklist = domainBlacklist;
+  exports.enableMixedRulesets = enableMixedRulesets;
 
 })(this)
