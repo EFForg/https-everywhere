@@ -407,6 +407,7 @@
       canonical_url_with_credentials.password = tmp_pass;
       canonical_url = canonical_url_with_credentials.href;
     }
+  }
 
     // In Switch Planner Mode, record any non-rewriteable
     // HTTP URIs by parent hostname, along with the resource type.
