@@ -83,3 +83,7 @@ cd -
 
 # Install git hook to run tests before pushing.
 ln -sf ../../test.sh .git/hooks/pre-push
+
+# Install Node.js 8.
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+sudo apt-get install -y nodejs
