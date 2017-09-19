@@ -413,7 +413,7 @@
     if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== "https:") {
       writeToSwitchPlanner(details.type,
         details.tabId,
-        canonical_host,
+        uri.hostname,
         details.url,
         newuristr);
     }
