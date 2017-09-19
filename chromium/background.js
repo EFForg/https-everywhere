@@ -73,19 +73,19 @@
       all_rules.addFromXml((new DOMParser()).parseFromString(legacy_custom_ruleset, 'text/xml'));
     }
   }
-  store.get({legacy_custom_rulesets: []}, item => load_legacy_custom_rulesets(item.legacy_custom_rulesets));
+}
 
-  var USER_RULE_KEY = 'userRules';
-  // Records which tabId's are active in the HTTPS Switch Planner (see
-  // devtools-panel.js).
-  var switchPlannerEnabledFor = {};
-  // Detailed information recorded when the HTTPS Switch Planner is active.
-  // Structure is:
-  //   switchPlannerInfo[tabId]["rw"/"nrw"][resource_host][active_content][url];
-  // rw / nrw stand for "rewritten" versus "not rewritten"
-  var switchPlannerInfo = {};
+var USER_RULE_KEY = 'userRules';
+// Records which tabId's are active in the HTTPS Switch Planner (see
+// devtools-panel.js).
+var switchPlannerEnabledFor = {};
+// Detailed information recorded when the HTTPS Switch Planner is active.
+// Structure is:
+//   switchPlannerInfo[tabId]["rw"/"nrw"][resource_host][active_content][url];
+// rw / nrw stand for "rewritten" versus "not rewritten"
+var switchPlannerInfo = {};
 
-  /**
+/**
  * Load preferences. Structure is:
  *  {
  *    httpNowhere: Boolean,
@@ -93,19 +93,30 @@
  *    isExtensionEnabled: Boolean
  *  }
  */
-  var httpNowhereOn = false;
-  var showCounter = true;
-  var isExtensionEnabled = true;
+var httpNowhereOn = false;
+var showCounter = true;
+var isExtensionEnabled = true;
 
-  var initializeStoredGlobals = () => {
-    store.get({
-      httpNowhere: false,
-      showCounter: true,
-      globalEnabled: true
-    }, function(item) {
-      httpNowhereOn = item.httpNowhere;
-      showCounter = item.showCounter;
-      isExtensionEnabled = item.globalEnabled;
+var initializeStoredGlobals = () => {
+  store.get({
+    httpNowhere: false,
+    showCounter: true,
+    globalEnabled: true,
+    legacy_custom_rulesets: []
+  }, function(item) {
+    httpNowhereOn = item.httpNowhere;
+    showCounter = item.showCounter;
+    isExtensionEnabled = item.globalEnabled;
+    updateState();
+    load_legacy_custom_rulesets(item.legacy_custom_rulesets);
+  });
+}
+initializeStoredGlobals();
+
+chrome.storage.onChanged.addListener(function(changes, areaName) {
+  if (areaName === 'sync' || areaName === 'local') {
+    if ('httpNowhere' in changes) {
+      httpNowhereOn = changes.httpNowhere.newValue;
       updateState();
     });
   }
@@ -223,7 +234,7 @@
 
       const activeCount = getActiveRulesetCount(tabs[0].id);
 
-      chrome.browserAction.setBadgeBackgroundColor({ color: '#00cc00' });
+      chrome.browserAction.setBadgeBackgroundColor({ color: '#666666' });
 
       const showBadge = activeCount > 0 && isExtensionEnabled && showCounter;
 
