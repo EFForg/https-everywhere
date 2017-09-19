@@ -27,10 +27,10 @@
   const util = resolveModule('util')
 
   /**
- * Load a file packaged with the extension
- *
- * @param url: a relative URL to local file
- */
+   * Load a file packaged with the extension
+   *
+   * @param url: a relative URL to local file
+   */
   function loadExtensionFile(url, returnType) {
     var xhr = new XMLHttpRequest();
     // Use blocking XHR to ensure everything is loaded by the time
@@ -73,19 +73,18 @@
       all_rules.addFromXml((new DOMParser()).parseFromString(legacy_custom_ruleset, 'text/xml'));
     }
   }
-}
 
-var USER_RULE_KEY = 'userRules';
-// Records which tabId's are active in the HTTPS Switch Planner (see
-// devtools-panel.js).
-var switchPlannerEnabledFor = {};
-// Detailed information recorded when the HTTPS Switch Planner is active.
-// Structure is:
-//   switchPlannerInfo[tabId]["rw"/"nrw"][resource_host][active_content][url];
-// rw / nrw stand for "rewritten" versus "not rewritten"
-var switchPlannerInfo = {};
+  var USER_RULE_KEY = 'userRules';
+  // Records which tabId's are active in the HTTPS Switch Planner (see
+  // devtools-panel.js).
+  var switchPlannerEnabledFor = {};
+  // Detailed information recorded when the HTTPS Switch Planner is active.
+  // Structure is:
+  //   switchPlannerInfo[tabId]["rw"/"nrw"][resource_host][active_content][url];
+  // rw / nrw stand for "rewritten" versus "not rewritten"
+  var switchPlannerInfo = {};
 
-/**
+  /**
  * Load preferences. Structure is:
  *  {
  *    httpNowhere: Boolean,
@@ -93,34 +92,35 @@ var switchPlannerInfo = {};
  *    isExtensionEnabled: Boolean
  *  }
  */
-var httpNowhereOn = false;
-var showCounter = true;
-var isExtensionEnabled = true;
+  var httpNowhereOn = false;
+  var showCounter = true;
+  var isExtensionEnabled = true;
 
-var initializeStoredGlobals = () => {
-  store.get({
-    httpNowhere: false,
-    showCounter: true,
-    globalEnabled: true,
-    legacy_custom_rulesets: []
-  }, function(item) {
-    httpNowhereOn = item.httpNowhere;
-    showCounter = item.showCounter;
-    isExtensionEnabled = item.globalEnabled;
-    updateState();
-    load_legacy_custom_rulesets(item.legacy_custom_rulesets);
-  });
-}
-initializeStoredGlobals();
-
-chrome.storage.onChanged.addListener(function(changes, areaName) {
-  if (areaName === 'sync' || areaName === 'local') {
-    if ('httpNowhere' in changes) {
-      httpNowhereOn = changes.httpNowhere.newValue;
+  var initializeStoredGlobals = () => {
+    store.get({
+      httpNowhere: false,
+      showCounter: true,
+      globalEnabled: true,
+      legacy_custom_rulesets: []
+    }, function(item) {
+      httpNowhereOn = item.httpNowhere;
+      showCounter = item.showCounter;
+      isExtensionEnabled = item.globalEnabled;
       updateState();
+      load_legacy_custom_rulesets(item.legacy_custom_rulesets);
     });
   }
   initializeStoredGlobals();
+
+  chrome.storage.onChanged.addListener(function(changes, areaName) {
+    if (areaName === 'sync' || areaName === 'local') {
+      if ('httpNowhere' in changes) {
+        httpNowhereOn = changes.httpNowhere.newValue;
+        updateState();
+      };
+    }
+    initializeStoredGlobals();
+  });
 
   chrome.storage.onChanged.addListener(function(changes, areaName) {
     if (areaName === 'sync' || areaName === 'local') {
@@ -154,8 +154,8 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
   });
 
   /**
-* Load stored user rules
- **/
+   * Load stored user rules
+   */
   var getStoredUserRules = function() {
     var oldUserRuleString = ls.getItem(USER_RULE_KEY);
     var oldUserRules = [];
@@ -167,8 +167,8 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
   var wr = chrome.webRequest;
 
   /**
- * Load all stored user rules
- */
+   * Load all stored user rules
+   */
   var loadStoredUserRules = function() {
     var rules = getStoredUserRules();
     var i;
@@ -200,11 +200,11 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
   }
 
   /**
- * Set the icon color correctly
- * active: extension is enabled.
- * blocking: extension is in "block all HTTP requests" mode.
- * disabled: extension is disabled from the popup menu.
- */
+   * Set the icon color correctly
+   * active: extension is enabled.
+   * blocking: extension is in "block all HTTP requests" mode.
+   * disabled: extension is disabled from the popup menu.
+   */
 
   function updateState () {
     if (!chrome.tabs) return;
@@ -243,10 +243,10 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
   }
 
   /**
- * Adds a new user rule
- * @param params: params defining the rule
- * @param cb: Callback to call after success/fail
- * */
+   * Adds a new user rule
+   * @param params: params defining the rule
+   * @param cb: Callback to call after success/fail
+   */
   var addNewRule = function(params, cb) {
     if (all_rules.addUserRule(params)) {
     // If we successfully added the user rule, save it in local 
@@ -265,9 +265,9 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
   };
 
   /**
- * Removes a user rule
- * @param ruleset: the ruleset to remove
- * */
+   * Removes a user rule
+   * @param ruleset: the ruleset to remove
+   */
   var removeRule = function(ruleset) {
     if (all_rules.removeUserRule(ruleset)) {
     // If we successfully removed the user rule, remove it in local storage too
@@ -282,8 +282,8 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
   }
 
   /**
- * Adds a listener for removed tabs
- * */
+   * Adds a listener for removed tabs
+   */
   function AppliedRulesets() {
     this.active_tab_rules = {};
 
@@ -327,10 +327,10 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
   var redirectCounter = new Map();
 
   /**
- * Called before a HTTP(s) request. Does the heavy lifting
- * Cancels the request/redirects it to HTTPS. URL modification happens in here.
- * @param details of the handler, see Chrome doc
- * */
+   * Called before a HTTP(s) request. Does the heavy lifting
+   * Cancels the request/redirects it to HTTPS. URL modification happens in here.
+   * @param details of the handler, see Chrome doc
+   */
   function onBeforeRequest(details) {
   // If HTTPSe has been disabled by the user, return immediately.
     if (!isExtensionEnabled) {
@@ -456,16 +456,16 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
   var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
 
   /**
- * Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
- * use in determining which resources need to be ported to HTTPS.
- * (Reminder: Switch planner is the pro-tool enabled by switching into debug-mode)
- *
- * @param type: type of the resource (see activeTypes and passiveTypes arrays)
- * @param tab_id: The id of the tab
- * @param resource_host: The host of the original url
- * @param resource_url: the original url
- * @param rewritten_url: The url rewritten to
- * */
+   * Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
+   * use in determining which resources need to be ported to HTTPS.
+   * (Reminder: Switch planner is the pro-tool enabled by switching into debug-mode)
+   *
+   * @param type: type of the resource (see activeTypes and passiveTypes arrays)
+   * @param tab_id: The id of the tab
+   * @param resource_host: The host of the original url
+   * @param resource_url: the original url
+   * @param rewritten_url: The url rewritten to
+   */
   function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritten_url) {
     var rw = "rw";
     if (rewritten_url == null)
@@ -495,10 +495,10 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
   }
 
   /**
- * Return the number of properties in an object. For associative maps, this is
- * their size.
- * @param obj: object to calc the size for
- * */
+   * Return the number of properties in an object. For associative maps, this is
+   * their size.
+   * @param obj: object to calc the size for
+   */
   function objSize(obj) {
     if (typeof obj == 'undefined') return 0;
     var size = 0, key;
@@ -509,9 +509,9 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
   }
 
   /**
- * Make an array of asset hosts by score so we can sort them,
- * presenting the most important ones first.
- * */
+   * Make an array of asset hosts by score so we can sort them,
+   * presenting the most important ones first.
+   */
   function sortSwitchPlanner(tab_id, rewritten) {
     var asset_host_list = [];
     if (typeof switchPlannerInfo[tab_id] === 'undefined' ||
@@ -531,9 +531,9 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
   }
 
   /**
- * monitor cookie changes. Automatically convert them to secure cookies
- * @param changeInfo Cookie changed info, see Chrome doc
- * */
+   * monitor cookie changes. Automatically convert them to secure cookies
+   * @param changeInfo Cookie changed info, see Chrome doc
+   */
   function onCookieChanged(changeInfo) {
     if (!changeInfo.removed && !changeInfo.cookie.secure && isExtensionEnabled) {
       if (all_rules.shouldSecureCookie(changeInfo.cookie)) {
@@ -566,9 +566,9 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
   }
 
   /**
- * handling redirects, breaking loops
- * @param details details for the redirect (see chrome doc)
- * */
+   * handling redirects, breaking loops
+   * @param details details for the redirect (see chrome doc)
+   */
   function onBeforeRedirect(details) {
   // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
     let prefix = details.redirectUrl.substring(0, 5);
@@ -585,9 +585,9 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
   }
 
   /**
- * handle webrequest.onCompleted, cleanup redirectCounter
- * @param details details for the chrome.webRequest (see chrome doc)
- */
+   * handle webrequest.onCompleted, cleanup redirectCounter
+   * @param details details for the chrome.webRequest (see chrome doc)
+   */
   function onCompleted(details) {
     if (redirectCounter.has(details.requestId)) {
       redirectCounter.delete(details.requestId);
@@ -595,9 +595,9 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
   }
 
   /**
- * handle webrequest.onErrorOccurred, cleanup redirectCounter
- * @param details details for the chrome.webRequest (see chrome doc)
- */
+   * handle webrequest.onErrorOccurred, cleanup redirectCounter
+   * @param details details for the chrome.webRequest (see chrome doc)
+   */
   function onErrorOccurred(details) {
     if (redirectCounter.has(details.requestId)) {
       redirectCounter.delete(details.requestId);
@@ -622,9 +622,9 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
   chrome.cookies.onChanged.addListener(onCookieChanged);
 
   /**
- * disable switch Planner
- * @param tabId the Tab to disable for
- */
+   * disable switch Planner
+   * @param tabId the Tab to disable for
+   */
   function disableSwitchPlannerFor(tabId) {
     delete switchPlannerEnabledFor[tabId];
     // Clear stored URL info.
@@ -632,9 +632,9 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
   }
 
   /**
- * Enable switch planner for specific tab
- * @param tabId the tab to enable it for
- */
+   * Enable switch planner for specific tab
+   * @param tabId the tab to enable it for
+   */
   function enableSwitchPlannerFor(tabId) {
     switchPlannerEnabledFor[tabId] = true;
   }
@@ -704,9 +704,9 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
   chrome.runtime.sendMessage("import-legacy-data", import_settings);
 
   /**
- * Import extension settings (custom rulesets, ruleset toggles, globals) from an object
- * @param settings the settings object
- */
+   * Import extension settings (custom rulesets, ruleset toggles, globals) from an object
+   * @param settings the settings object
+   */
   async function import_settings(settings) {
     if (settings.changed) {
     // Load all the ruleset toggles into memory and store
