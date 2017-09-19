@@ -38,7 +38,7 @@ all_rules = new rules.RuleSets(ls);
 
 // Allow users to enable `platform="mixedcontent"` rulesets
 store.get({enableMixedRulesets: false}, function(item) {
-  rules.enableMixedRulesets = item.enableMixedRulesets;
+  rules.settings.enableMixedRulesets = item.enableMixedRulesets;
   all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
 });
 
@@ -354,7 +354,7 @@ function onBeforeRequest(details) {
     util.log(util.NOTE, "Redirect counter hit for " + canonical_url);
     urlBlacklist.add(canonical_url);
     var hostname = uri.hostname;
-    rules.domainBlacklist.add(hostname);
+    rules.settings.domainBlacklist.add(hostname);
     util.log(util.WARN, "Domain blacklisted " + hostname);
     return {cancel: shouldCancel};
   }

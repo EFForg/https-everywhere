@@ -26,7 +26,7 @@ function destroy_caches() {
   util.log(util.DBUG, "Destroying caches.");
   background.all_rules.cookieHostCache.clear();
   background.all_rules.ruleCache.clear();
-  rules.domainBlacklist.clear();
+  rules.settings.domainBlacklist.clear();
   background.urlBlacklist.clear();
 }
 

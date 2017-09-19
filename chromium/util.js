@@ -7,7 +7,6 @@ var DBUG = 2;
 var INFO = 3;
 var NOTE = 4;
 var WARN = 5;
-//
 // FYI: Logging everything is /very/ slow. Chrome will log & buffer
 // these console logs even when the debug tools are closed. :(
 

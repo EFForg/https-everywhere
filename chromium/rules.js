@@ -15,9 +15,10 @@ if (typeof util == 'undefined') {
   });
 }
 
-// Set default values for the same reason. Later modified by background.js
-var enableMixedRulesets = false;
-var domainBlacklist = new Set();
+let settings = {
+  enableMixedRulesets: false,
+  domainBlacklist: new Set(),
+};
 
 // To reduce memory usage for the numerous rules/cookies with trivial rules
 const trivial_rule_to = "https:";
@@ -239,7 +240,7 @@ RuleSets.prototype = {
     var platform = ruletag["platform"]
     if (platform) {
       default_state = false;
-      if (platform == "mixedcontent" && enableMixedRulesets) {
+      if (platform == "mixedcontent" && settings.enableMixedRulesets) {
         default_state = true;
       }
       note += "Platform(s): " + platform + "\n";
@@ -358,7 +359,7 @@ RuleSets.prototype = {
     var platform = ruletag.getAttribute("platform");
     if (platform) {
       default_state = false;
-      if (platform == "mixedcontent" && enableMixedRulesets) {
+      if (platform == "mixedcontent" && settings.enableMixedRulesets) {
         default_state = true;
       }
       note += "Platform(s): " + platform + "\n";
@@ -522,7 +523,7 @@ RuleSets.prototype = {
     // observed and the domain blacklisted, a cookie might already have been
     // flagged as secure.
 
-    if (domainBlacklist.has(domain)) {
+    if (settings.domainBlacklist.has(domain)) {
       util.log(util.INFO, "cookies for " + domain + "blacklisted");
       return false;
     }
@@ -581,8 +582,7 @@ RuleSets.prototype = {
 };
 
 Object.assign(exports, {
-  enableMixedRulesets,
-  domainBlacklist,
+  settings,
   RuleSets,
 });
 
