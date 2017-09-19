@@ -337,11 +337,7 @@ function onBeforeRequest(details) {
 
   var canonical_url = uri.href;
   if (details.url != canonical_url && !using_credentials_in_url) {
-<<<<<<< HEAD
     util.log(util.INFO, "Original url " + details.url +
-=======
-    log(INFO, "Original url " + details.url +
->>>>>>> Add few more missing vars to rules.js
         " changed before processing to " + canonical_url);
   }
   if (urlBlacklist.has(canonical_url)) {
