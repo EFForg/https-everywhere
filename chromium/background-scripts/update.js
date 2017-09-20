@@ -159,7 +159,7 @@ async function applyStoredRulesets(){
 
   let rulesets_jsons = await Promise.all(rulesets_promises);
   if(rulesets_jsons.join("").length > 0){
-    background.all_rules = new rules.RuleSets(background.ls);
+    Object.assign(background.all_rules, new rules.RuleSets(background.ls));
     for(let rulesets_json of rulesets_jsons){
       background.all_rules.addFromJson(rulesets_json);
     }
