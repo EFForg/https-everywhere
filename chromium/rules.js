@@ -176,7 +176,7 @@ RuleSet.prototype = {
  */
 function RuleSets(ruleActiveStates) {
   // Load rules into structure
-  this.targets = new Map();
+  this.targets = new Tree();
 
   // A cache for potentiallyApplicableRulesets
   this.ruleCache = new Map();
@@ -190,6 +190,15 @@ function RuleSets(ruleActiveStates) {
 
 
 RuleSets.prototype = {
+  _pushTarget: function(target, rule_set) {
+    this.targets.setNode(target, node => {
+      if (typeof node.data == 'undefined') {
+        node.data = [];
+      }
+      node.data.push(rule_set);
+    });
+  },
+
   /**
    * Iterate through data XML and load rulesets
    */
@@ -275,10 +284,7 @@ RuleSets.prototype = {
     var targets = ruletag["target"];
     for (let target of targets) {
       if (target != null) {
-        if (!this.targets.has(target)) {
-          this.targets.set(target, []);
-        }
-        this.targets.get(target).push(rule_set);
+        this._pushTarget(target, rule_set);
       }
     }
   },
@@ -293,12 +299,10 @@ RuleSets.prototype = {
     var new_rule_set = new RuleSet(params.host, true, "user rule");
     var new_rule = new Rule(params.urlMatcher, params.redirectTo);
     new_rule_set.rules.push(new_rule);
-    if (!this.targets.has(params.host)) {
-      this.targets.set(params.host, []);
-    }
     this.ruleCache.delete(params.host);
-    // TODO: maybe promote this rule?
-    this.targets.get(params.host).push(new_rule_set);
+
+    this._pushTarget(params.host, new_rule_set);
+
     if (new_rule_set.name in this.ruleActiveStates) {
       new_rule_set.active = (this.ruleActiveStates[new_rule_set.name] == "true");
     }
@@ -315,13 +319,11 @@ RuleSets.prototype = {
     log(INFO, 'removing user rule for ' + JSON.stringify(ruleset));
     this.ruleCache.delete(ruleset.name);
 
-
-    var tmp = this.targets.get(ruleset.name).filter(r =>
-      !(r.isEquivalentTo(ruleset))
-    );
-    this.targets.set(ruleset.name, tmp);
-
-    if (this.targets.get(ruleset.name).length == 0) {
+    let len = this.targets.getNode(ruleset.name, node => {
+      node.data = node.data.filter(r => !(r.isEquivalentTo(ruleset)));
+      return node.data.len;
+    });
+    if (len == 0) {
       this.targets.delete(ruleset.name);
     }
 
@@ -390,10 +392,7 @@ RuleSets.prototype = {
     var targets = ruletag.getElementsByTagName("target");
     for (let target of targets) {
       var host = target.getAttribute("host");
-      if (!this.targets.has(host)) {
-        this.targets.set(host, []);
-      }
-      this.targets.get(host).push(rule_set);
+      this._pushTarget(host, rule_set);
     }
   },
 
