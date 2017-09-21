@@ -1,19 +1,16 @@
-/* globals global: false */
 "use strict";
 
-(function(exports) {
-
-// Stubs so this runs under nodejs. They get overwritten later by util.js
-if (typeof util == 'undefined' || typeof global != 'undefined') {
-  Object.assign(global, {
-    util: {
-      DBUG: 2,
-      INFO: 3,
-      WARN: 5,
-      log: ()=>{},
-    }
-  });
+// Stubs so this runs under nodejs where util.js didn't define `util` globally.
+if (typeof util == 'undefined') {
+  var util = {
+    DBUG: 2,
+    INFO: 3,
+    WARN: 5,
+    log: ()=>{},
+  };
 }
+
+(function(exports) {
 
 let settings = {
   enableMixedRulesets: false,
