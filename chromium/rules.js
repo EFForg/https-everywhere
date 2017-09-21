@@ -179,10 +179,10 @@ function RuleSets(ruleActiveStates) {
   this.targets = new Map();
 
   // A cache for potentiallyApplicableRulesets
-  this.ruleCache = new Map();
+  this.ruleCache = new LRUMap(256);
 
   // A cache for cookie hostnames.
-  this.cookieHostCache = new Map();
+  this.cookieHostCache = new LRUMap(256);
 
   // A hash of rule name -> active status (true/false).
   this.ruleActiveStates = ruleActiveStates;
