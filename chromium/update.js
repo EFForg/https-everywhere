@@ -12,7 +12,7 @@ for(let update_channel of update_channels){
     "jwk",
     update_channel.jwk,
     {
-      name: "RSASSA-PKCS1-v1_5",
+      name: "RSASSA-PSS",
       hash: {name: "SHA-256"},
     },
     false,
