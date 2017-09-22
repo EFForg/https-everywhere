@@ -13,7 +13,7 @@ read -p "(press enter to continue)"
 SIGNED_SHA256SUM_BASE64_QR=`mktemp /tmp/ruleset-signature.sha256.base64.XXXXXXXX.png`
 trap 'rm $SIGNED_SHA256SUM_BASE64_QR' EXIT
 
-echo $2 | xxd -r -p | openssl pkeyutl -sign -pkeyopt digest:sha256 -pkeyopt rsa_padding_mode:pss -pkeyoptrsa_pss_saltlen:32 -inkey $1 |
-base64 | qrencode -o $SIGNED_SHA256SUM_BASE64_QR
+echo $2 | xxd -r -p | openssl pkeyutl -sign -pkeyopt digest:sha256 -pkeyopt rsa_padding_mode:pss -pkeyoptrsa_pss_saltlen:32 -inkey $1 | \
+  base64 | qrencode -o $SIGNED_SHA256SUM_BASE64_QR
 
 eog $SIGNED_SHA256SUM_BASE64_QR 2>/dev/null
