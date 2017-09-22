@@ -1,31 +1,34 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://frequentis.com/ => https://frequentis.com/: Too many redirects while fetching 'https://frequentis.com/'
+	^ and www redirect to http.
 
-Disabled by https-everywhere-checker because:
-Fetch error: http://frequentis.com/ => https://frequentis.com/: Cycle detected - URL already encountered: http://www.frequentis.com
-	For rules causing false/broken MCB, see Frequentis.com-falsemixed.xml.
+	We can only secure static files
 
 -->
-<ruleset name="Frequentis.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Frequentis.com (partial)">
 
 	<target host="frequentis.com" />
 	<target host="www.frequentis.com" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://www\.frequentis\.com/+(?!favicon\.ico|fileadmin/|typo3temp/)" />
-		<!--
-			https://... redirects to http://www...., so we can avoid
-			a duplicate target warning by blanket-rewriting ^.	-->
+
+	<!--
+		Redirect to http. Needed to exclude implicit URL from tests
+	-->
+	<exclusion pattern="^http://(www\.)?frequentis\.com/$" />
 
 
-	<!--	Tracking cookies:
-					-->
-	<securecookie host="^\.frequentis\.com$" name="^s_\w+$" />
+	<rule from="^http://(www\.)?frequentis\.com/favicon\.ico$"
+		to="https://$1frequentis.com/favicon.ico" />
 
+		<test url="http://frequentis.com/favicon.ico" />
 
-	<rule from="^http:" to="https:" />
+	<rule from="^http://(www\.)?frequentis\.com/(fileadmin|typo3temp)/"
+		to="https://$1frequentis.com/$2/" />
+
+		<test url="http://www.frequentis.com/fileadmin/content/headerbilder/france/public_transport_home.jpg" />
+		<test url="http://www.frequentis.com/fileadmin/_processed_/csm_logo_e24e6fe3ab.png" />
+		<test url="http://www.frequentis.com/fileadmin/content/headerbilder/france/public_safety_home.jpg" />
+		<test url="http://www.frequentis.com/fileadmin/system/assets/img/background/header_stripe_layout1.gif" />
+		<test url="http://www.frequentis.com/fileadmin/system/assets/img/background/map_infopoint_bg.png" />
+		<test url="http://www.frequentis.com/fileadmin/system/assets/img/header_main_nav_sprite.png" />
+		<test url="http://www.frequentis.com/typo3temp/_processed_/csm_Coast-Guard-Rescue_istock_e9128d5828.jpg" />
 
 </ruleset>
