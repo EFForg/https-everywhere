@@ -73,10 +73,14 @@ for filename in sorted(files):
 
 		elif child.tag == "securecookie":
 			sc = {}
-			sc["host"] = child.attrib["host"]
-			sc["name"] = child.attrib["name"]
+			if child.attrib["host"] == ".+" and child.attrib["name"] == ".+":
+				ruleset["securecookie"] = True
 
-			ruleset["securecookie"].append(sc)
+			elif isinstance(ruleset["securecookie"], list):
+				sc["host"] = child.attrib["host"]
+				sc["name"] = child.attrib["name"]
+
+				ruleset["securecookie"].append(sc)
 
 		elif child.tag == "exclusion":
 			ruleset["exclusion"].append(child.attrib["pattern"])
