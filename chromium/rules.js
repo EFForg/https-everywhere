@@ -273,7 +273,7 @@ RuleSets.prototype = {
     }
 
     var cookierules = ruletag["securecookie"];
-    if (cookierules != null) {
+    if (Array.isArray(cookierules)) {
       for (let cookierule of cookierules) {
         if (cookierule["host"] != null && cookierule["name"] != null) {
           if (!rule_set.cookierules) {
@@ -282,6 +282,8 @@ RuleSets.prototype = {
           rule_set.cookierules.push(new CookieRule(cookierule["host"], cookierule["name"]));
         }
       }
+    } else if (cookierules === true) {
+      rule_set.cookierules = true;
     }
 
     var targets = ruletag["target"];
@@ -493,11 +495,17 @@ RuleSets.prototype = {
 
     var potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
     for (let ruleset of potentiallyApplicable) {
-      if (ruleset.cookierules !== null && ruleset.active) {
-        for (let cookierules of ruleset.cookierules) {
-          var cr = cookierules;
-          if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
-            return ruleset;
+      if (ruleset.active) {
+        if (ruleset.cookierules === true) {
+          return true;
+        }
+
+        if (ruleset.cookierules !== null) {
+          for (let cookierules of ruleset.cookierules) {
+            var cr = cookierules;
+            if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
+              return ruleset;
+            }
           }
         }
       }
