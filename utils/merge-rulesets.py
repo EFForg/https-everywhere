@@ -89,9 +89,5 @@ outfile = open(ofn, "w")
 outfile.write(json.dumps(library))
 outfile.close()
 
-# We make default.rulesets at build time, 
-# but it shouldn't have a variable timestamp
-subprocess.call(["touch", "-r", "src/install.rdf", ofn])
-
 # Everything is okay.
-print(" * Everything is Okay.")
+print(" * Everything is okay.")
