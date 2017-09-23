@@ -476,7 +476,7 @@ RuleSets.prototype = {
     // Clean the results list, which may contain duplicates or undefined entries
     results.delete(undefined);
 
-    log(DBUG,"Applicable rules for " + host + ":");
+    util.log(util.DBUG,"Applicable rules for " + host + ":");
     if (results.size == 0) {
       util.log(util.DBUG, "  None");
       results = nullIterable;
