@@ -72,11 +72,12 @@ for filename in sorted(files):
 			ruleset["rule"].append(ru)
 
 		elif child.tag == "securecookie":
-			sc = {}
 			if child.attrib["host"] == ".+" and child.attrib["name"] == ".+":
 				ruleset["securecookie"] = True
 
 			elif isinstance(ruleset["securecookie"], list):
+				sc = {}
+
 				sc["host"] = child.attrib["host"]
 				sc["name"] = child.attrib["name"]
 
