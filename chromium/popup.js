@@ -1,3 +1,5 @@
+/* global sendMessage */
+
 "use strict";
 
 var stableRules = null;
@@ -63,7 +65,7 @@ function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
   if (ruleset.active) {
     checkbox.setAttribute("checked", "");
   }
-  checkbox.onchange = function(ev) {
+  checkbox.onchange = function() {
     toggleRuleLine(checkbox, ruleset, tab_id);
   };
   label.appendChild(checkbox);
@@ -192,6 +194,9 @@ document.addEventListener("DOMContentLoaded", function () {
       httpNowhereCheckbox.setAttribute('checked', '');
     }
   });
+
+  e("aboutTitle").title = chrome.i18n.getMessage("about_title");
+  e("add-rule-link").addEventListener("click", addManualRule);
 });
 
 

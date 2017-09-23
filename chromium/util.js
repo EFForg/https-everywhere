@@ -1,5 +1,7 @@
 "use strict";
 
+(function(exports) {
+
 var VERB = 1;
 var DBUG = 2;
 var INFO = 3;
@@ -16,12 +18,23 @@ console.log("Type this into the console: DEFAULT_LOG_LEVEL=VERB");
 console.log("Accepted levels are VERB, DBUG, INFO, NOTE and WARN, default is NOTE");
 
 function log(level, str) {
-    if (level >= DEFAULT_LOG_LEVEL) {
-        if (level === WARN) {
-            // Show warning with a little yellow icon in Chrome.
-            console.warn(str);
-        } else {
-            console.log(str);
-        }
+  if (level >= DEFAULT_LOG_LEVEL) {
+    if (level === WARN) {
+      // Show warning with a little yellow icon in Chrome.
+      console.warn(str);
+    } else {
+      console.log(str);
     }
+  }
 }
+
+Object.assign(exports, {
+  VERB,
+  DBUG,
+  INFO,
+  NOTE,
+  WARN,
+  log,
+});
+
+})(typeof exports == 'undefined' ? window.util = {} : exports);

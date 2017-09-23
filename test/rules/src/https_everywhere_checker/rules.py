@@ -1,6 +1,8 @@
+from tldextract import tldextract
 from urlparse import urlparse
 
 import regex
+import socket
 
 class Rule(object):
 	"""Represents one from->to rule element."""
@@ -178,6 +180,61 @@ class Ruleset(object):
 						self.filename, test.url))
 				self.determine_test_application_run = True
 		return self.test_application_problems
+
+	def getTargetValidityProblems(self):
+		"""Verify that each target has a valid TLD in order to prevent problematic rewrite
+			 as stated in EFForg/https-everywhere/issues/10877. In particular, 
+			 right-wildcard target are ignored from this test.
+
+			 Returns an array of strings reporting any coverage problems if they exist,
+			 or empty list if coverage is sufficient.
+			 """
+		problems = self._determineTestApplication()
+
+		# Next, make sure each target has a valid TLD and doesn't overlap with others
+		for target in self.targets:
+			# If it's a wildcard, check which other targets it covers
+			if '*' in target:
+				target_re = regex.escape(target)
+
+				if target_re.startswith(r'\*'):
+					target_re = target_re[2:]
+				else:
+					target_re = r'\A' + target_re
+
+				target_re = regex.compile(target_re.replace(r'\*', r'[^.]*') + r'\Z')
+
+				others = [other for other in self.targets if other != target and target_re.search(other)]
+
+				if others:
+						problems.append("%s: Target '%s' also covers %s" % (self.filename, target, others))
+
+			# Ignore right-wildcard targets for TLD checks
+			if target.endswith(".*"):
+				continue
+
+			# Ignore if target is an ipv4 address
+			try:
+				socket.inet_aton(target)
+				continue
+			except:
+				pass
+
+			# Ignore if target is an ipv6 address
+			try:
+				socket.inet_pton(socket.AF_INET6, target)
+				continue
+			except:
+				pass
+				
+			# Extract TLD from target if possible
+			res = tldextract.extract(target)
+			if res.suffix == "":
+				problems.append("%s: Target '%s' missing eTLD" % (self.filename, target))
+			elif res.domain == "":
+				problems.append("%s: Target '%s' containing entire eTLD" % (self.filename, target))
+				
+		return problems
 
 	def getCoverageProblems(self):
 		"""Verify that each rule and each exclusion has the right number of tests

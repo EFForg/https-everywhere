@@ -1,78 +1,56 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://amahi.org/ => https://amahi.org/: (51, "SSL: no alternative certificate subject name matches target host name 'amahi.org'")
+	Invalid certificate:
+		amahi.org
+		acs.amahi.org
+		docs.amahi.org
+		help.amahi.org
+		static.amahi.org
+		store.amahi.org
+		talk.amahi.org
+		transparent.amahi.org
 
-	Nonfunctional subdomains:
-
-		- docs *
-
-	*404; mismatched, CN: *.github.com
-
-
-	Problematic subdomains:
-
-		- talk *
-
-	* Redirects to wiki, valid cert
-
-
-	Fully covered subdomains:
-
-		- (www.)
-		- blog
-		- bugs
-		- forums
-		- shop
-		- talk	(→ webchat.freenode.net)
-		- wiki
-
-
-	Observed cookie domains:
-
-		- ^ ¹
-		- bugs ¹
-		- .forums ²
-		- .shop ¹
-		- wiki ¹
-		- www ¹
-
-	¹ Secured by us <= not secured by server
-	² Secured by server
-
+	Different content http/https:
+		api.amahi.org
+			<test url="http://api.amahi.org/assets/audio-9da276ef9eee60aab3c591e4a658600b016bfc02e5c77802e973d4d5e71e81c4.png" />
 
 	Mixed content:
+		blog.amahi.org (ads)
 
-		- Images on blog from $self *
+	Login required:
+		gitlab.amahi.org
+		grinder.amahi.org
 
-	* Secured by us
+	No working URL known:
+		shop.amahi.org (500)
 
 -->
-<ruleset name="Amahi.org (partial)" default_off='failed ruleset test'>
+<ruleset name="Amahi.org">
 
 	<target host="amahi.org" />
-	<target host="*.amahi.org" />
-		<!--
-			404s:
-				-->
-		<!--exclusion pattern="^http://docs\.amahi\.org/" /-->
+	<target host="www.amahi.org" />
+	<target host="assets.amahi.org" />
+	<target host="blog.amahi.org" />
+	<target host="bugs.amahi.org" />
+	<target host="forums.amahi.org" />
+	<target host="talk.amahi.org" />
+	<target host="wiki.amahi.org" />
+	<target host="wtp.amahi.org" />
 
-
-	<!--	Not secured by server:
-					-->
-	<securecookie host="^(?:(?:bugs|\.shop|wiki|www)\.)?amahi\.org$" name=".+" />
-	<!--
-		Secured by server:
-					-->
-	<!--securecookie host="^\.forums\.amahi\.org$" name=".+" /-->
-
-
-	<rule from="^http://((?:blog|bugs|forums|shop|wiki|www)\.)?amahi\.org/"
-		to="https://$1amahi.org/" />
+	<securecookie host=".+" name=".+" />
 
 	<!--	Redirect drops path and args:
 						-->
 	<rule from="^http://talk\.amahi\.org/.*"
 		to="https://webchat.freenode.net/?channels=amahi" />
+
+		<test url="http://talk.amahi.org/test1" />
+		<test url="http://talk.amahi.org/test2" />
+		<test url="http://talk.amahi.org/test3" />
+
+	<rule from="^http://amahi\.org/"
+		to="https://www.amahi.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
