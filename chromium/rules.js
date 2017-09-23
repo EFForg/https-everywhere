@@ -432,10 +432,10 @@ RuleSets.prototype = {
     // Have we cached this result? If so, return it!
     if (this.ruleCache.has(host)) {
       let cached_item = this.ruleCache.get(host);
-      util.log(DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.size);
+      util.log(util.DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.size);
       return cached_item;
     } else {
-      util.log(DBUG, "Ruleset cache miss for " + host);
+      util.log(util.DBUG, "Ruleset cache miss for " + host);
     }
 
     // Let's begin search
@@ -446,7 +446,7 @@ RuleSets.prototype = {
 
     // Ensure host is well-formed (RFC 1035)
     if (host.length > 255 || host.indexOf("..") != -1) {
-      util.log(WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
+      util.log(util.WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
       return nullIterable;
     }
     
@@ -478,10 +478,10 @@ RuleSets.prototype = {
 
     log(DBUG,"Applicable rules for " + host + ":");
     if (results.size == 0) {
-      util.log(DBUG, "  None");
+      util.log(util.DBUG, "  None");
       results = nullIterable;
     } else {
-      results.forEach(result => util.log(DBUG, "  " + result.name));
+      results.forEach(result => util.log(util.DBUG, "  " + result.name));
     }
 
     // Insert results into the ruleset cache
