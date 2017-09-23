@@ -7,3 +7,5 @@
 python2.7 ./utils/merge-rulesets.py
 
 RULESETS=chrome/content/rules/default.rulesets
+
+touch -r src/install.rdf $RULESETS
