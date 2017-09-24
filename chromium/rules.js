@@ -101,7 +101,7 @@ RuleSet.prototype = {
   apply: function(urispec) {
     var returl = null;
     // If we're covered by an exclusion, go home
-    if (this.exclusions !== null) {
+    if (this.exclusions) {
       for (let exclusion of this.exclusions) {
         if (exclusion.pattern_c.test(urispec)) {
           util.log(util.DBUG, "excluded uri " + urispec);
@@ -255,15 +255,15 @@ RuleSets.prototype = {
 
     var rules = ruletag["rule"];
     for (let rule of rules) {
-      if (rule["from"] !== null && rule["to"] !== null) {
+      if (rule["from"] && rule["to"]) {
         rule_set.rules.push(new Rule(rule["from"], rule["to"]));
       }
     }
 
     var exclusions = ruletag["exclusion"];
-    if (exclusions !== null) {
+    if (exclusions) {
       for (let exclusion of exclusions) {
-        if (exclusion !== null) {
+        if (exclusion) {
           if (!rule_set.exclusions) {
             rule_set.exclusions = [];
           }
@@ -273,9 +273,9 @@ RuleSets.prototype = {
     }
 
     var cookierules = ruletag["securecookie"];
-    if (cookierules !== null) {
+    if (cookierules) {
       for (let cookierule of cookierules) {
-        if (cookierule["host"] !== null && cookierule["name"] !== null) {
+        if (cookierule["host"] && cookierule["name"]) {
           if (!rule_set.cookierules) {
             rule_set.cookierules = [];
           }
@@ -286,7 +286,7 @@ RuleSets.prototype = {
 
     var targets = ruletag["target"];
     for (let target of targets) {
-      if (target !== null) {
+      if (target) {
         if (!this.targets.has(target)) {
           this.targets.set(target, []);
         }
@@ -493,7 +493,7 @@ RuleSets.prototype = {
 
     var potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
     for (let ruleset of potentiallyApplicable) {
-      if (ruleset.cookierules !== null && ruleset.active) {
+      if (ruleset.cookierules && ruleset.active) {
         for (let cookierules of ruleset.cookierules) {
           var cr = cookierules;
           if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
