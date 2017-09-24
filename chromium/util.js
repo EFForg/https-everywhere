@@ -37,4 +37,4 @@ Object.assign(exports, {
   log,
 });
 
-})(typeof exports == 'undefined' ? window.util = {} : exports);
+})(typeof exports === 'undefined' ? window.util = {} : exports);

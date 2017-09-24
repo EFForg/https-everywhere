@@ -19,4 +19,4 @@ if (chrome.storage.sync) {
   });
 }
 
-})(typeof exports == 'undefined' ? window.store = {} : exports);
+})(typeof exports === 'undefined' ? window.store = {} : exports);

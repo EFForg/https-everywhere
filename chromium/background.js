@@ -474,7 +474,7 @@ function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritt
  * @param obj: object to calc the size for
  * */
 function objSize(obj) {
-  if (typeof obj == 'undefined') return 0;
+  if (typeof obj === 'undefined') return 0;
   var size = 0, key;
   for (key in obj) {
     if (obj.hasOwnProperty(key)) size++;
@@ -712,4 +712,4 @@ Object.assign(exports, {
   urlBlacklist,
 });
 
-})(typeof exports == 'undefined' ? window.background = {} : exports);
+})(typeof exports === 'undefined' ? window.background = {} : exports);

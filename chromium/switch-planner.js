@@ -71,7 +71,7 @@ function switchPlannerDetailsHtmlSection(asset_host_list, link_keys) {
  * map: the map containing the urls
  * */
 function linksFromKeys(map) {
-  if (typeof map == 'undefined') return "";
+  if (typeof map === 'undefined') return "";
   var links = [];
   for (var key in map) {
     if (map.hasOwnProperty(key)) {

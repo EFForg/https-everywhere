@@ -4,7 +4,7 @@
 (function(exports) {
 
 // Stubs so this runs under nodejs. They get overwritten later by util.js
-if (typeof util == 'undefined' || typeof global != 'undefined') {
+if (typeof util === 'undefined' || typeof global !== 'undefined') {
   Object.assign(global, {
     util: {
       DBUG: 2,
@@ -586,4 +586,4 @@ Object.assign(exports, {
   RuleSets,
 });
 
-})(typeof exports == 'undefined' ? window.rules = {} : exports);
+})(typeof exports === 'undefined' ? window.rules = {} : exports);
