@@ -14,7 +14,7 @@ function loadExtensionFile(url, returnType) {
   xhr.open("GET", chrome.extension.getURL(url), false);
   xhr.send(null);
   // Get file contents
-  if (xhr.readyState != 4) {
+  if (xhr.readyState !== 4) {
     return;
   }
   if (returnType === 'xml') {
@@ -238,9 +238,9 @@ var removeRule = function(ruleset) {
     // If we successfully removed the user rule, remove it in local storage too
     var userRules = getStoredUserRules();
     userRules = userRules.filter(r =>
-      !(r.host == ruleset.name &&
-        r.redirectTo == ruleset.rules[0].to &&
-        String(RegExp(r.urlMatcher)) == String(ruleset.rules[0].from_c))
+      !(r.host === ruleset.name &&
+        r.redirectTo === ruleset.rules[0].to &&
+        String(RegExp(r.urlMatcher)) === String(ruleset.rules[0].from_c))
     );
     ls.setItem(USER_RULE_KEY, JSON.stringify(userRules));
   }
@@ -316,8 +316,8 @@ function onBeforeRequest(details) {
 
   // Normalise hosts such as "www.example.com."
   var canonical_host = uri.hostname;
-  if (canonical_host.charAt(canonical_host.length - 1) == ".") {
-    while (canonical_host.charAt(canonical_host.length - 1) == ".")
+  if (canonical_host.charAt(canonical_host.length - 1) === ".") {
+    while (canonical_host.charAt(canonical_host.length - 1) === ".")
       canonical_host = canonical_host.slice(0,-1);
     uri.hostname = canonical_host;
   }
@@ -336,7 +336,7 @@ function onBeforeRequest(details) {
   }
 
   var canonical_url = uri.href;
-  if (details.url != canonical_url && !using_credentials_in_url) {
+  if (details.url !== canonical_url && !using_credentials_in_url) {
     util.log(util.INFO, "Original url " + details.url +
         " changed before processing to " + canonical_url);
   }
@@ -344,7 +344,7 @@ function onBeforeRequest(details) {
     return {cancel: shouldCancel};
   }
 
-  if (details.type == "main_frame") {
+  if (details.type === "main_frame") {
     activeRulesets.removeTab(details.tabId);
   }
 
@@ -525,7 +525,7 @@ function onCookieChanged(changeInfo) {
       }
 
       // The cookie API is magical -- we must recreate the URL from the domain and path.
-      if (changeInfo.cookie.domain[0] == ".") {
+      if (changeInfo.cookie.domain[0] === ".") {
         cookie.url = "https://www" + changeInfo.cookie.domain + cookie.path;
       } else {
         cookie.url = "https://" + changeInfo.cookie.domain + cookie.path;
@@ -615,7 +615,7 @@ function enableSwitchPlannerFor(tabId) {
 
 // Listen for connection from the DevTools panel so we can set up communication.
 chrome.runtime.onConnect.addListener(function (port) {
-  if (port.name == "devtools-page") {
+  if (port.name === "devtools-page") {
     chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
       var tabId = message.tabId;
 
@@ -642,31 +642,31 @@ chrome.runtime.onConnect.addListener(function (port) {
 // This is necessary for communication with the popup in Firefox Private
 // Browsing Mode, see https://bugzilla.mozilla.org/show_bug.cgi?id=1329304
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
-  if (message.type == "get_option") {
+  if (message.type === "get_option") {
     store.get(message.object, sendResponse);
     return true;
-  } else if (message.type == "set_option") {
+  } else if (message.type === "set_option") {
     store.set(message.object, item => {
       if (sendResponse) {
         sendResponse(item);
       }
     });
-  } else if (message.type == "delete_from_ruleset_cache") {
+  } else if (message.type === "delete_from_ruleset_cache") {
     all_rules.ruleCache.delete(message.object);
-  } else if (message.type == "get_active_rulesets") {
+  } else if (message.type === "get_active_rulesets") {
     sendResponse(activeRulesets.getRulesets(message.object));
-  } else if (message.type == "set_ruleset_active_status") {
+  } else if (message.type === "set_ruleset_active_status") {
     var ruleset = activeRulesets.getRulesets(message.object.tab_id)[message.object.name];
     ruleset.active = message.object.active;
     sendResponse(true);
-  } else if (message.type == "add_new_rule") {
+  } else if (message.type === "add_new_rule") {
     addNewRule(message.object, function() {
       sendResponse(true);
     });
     return true;
-  } else if (message.type == "remove_rule") {
+  } else if (message.type === "remove_rule") {
     removeRule(message.object);
-  } else if (message.type == "import_settings") {
+  } else if (message.type === "import_settings") {
     // This is used when importing settings from the options ui
     import_settings(message.object).then(() => {
       sendResponse(true);

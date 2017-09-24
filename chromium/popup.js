@@ -32,7 +32,7 @@ function toggleRuleLine(checkbox, ruleset, tab_id) {
 
   sendMessage("set_ruleset_active_status", set_ruleset, function(){
 
-    if (ruleset_active != ruleset.default_state) {
+    if (ruleset_active !== ruleset.default_state) {
       ls[ruleset.name] = ruleset_active;
     } else {
       delete ls[ruleset.name];
@@ -97,7 +97,7 @@ function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
     text.title = ruleset.note;
   }
 
-  if(ruleset.note == "user rule") {
+  if(ruleset.note === "user rule") {
     var remove = document.createElement("img");
     remove.src = chrome.extension.getURL("remove.png");
     remove.className = "remove";
