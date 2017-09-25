@@ -1,5 +1,7 @@
 /* global sendMessage */
 
+"use strict";
+
 document.addEventListener("DOMContentLoaded", () => {
 
   let json_data;
