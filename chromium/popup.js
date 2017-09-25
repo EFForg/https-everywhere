@@ -199,11 +199,6 @@ document.addEventListener("DOMContentLoaded", function () {
   e("add-rule-link").addEventListener("click", addManualRule);
 });
 
-
-var escapeForRegex = function( value ) {
-  return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
-};
-
 function hide(elem) {
   elem.style.display = "none";
 }
