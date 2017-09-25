@@ -1,4 +1,4 @@
-window.onload = function() {
+document.addEventListener("DOMContentLoaded", () => {
   var backgroundPage = chrome.extension.getBackgroundPage(); 
   var tab = document.location.search.match(/tab=([^&]*)/)[1];
   var content = document.getElementById("content");
@@ -21,7 +21,7 @@ window.onload = function() {
   content.appendChild(nrw_div);
   content.appendChild(rw_text_div);
   content.appendChild(rw_div);
-};
+});
 
 /**
  * Generate the detailed html fot the switch planner, by section
