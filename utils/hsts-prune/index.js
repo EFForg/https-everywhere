@@ -71,8 +71,8 @@ const parse_include = include_url => {
       })
       .pipe(split())
       .on('data', line => {
-        line = line.replace(new RegExp('/ 1 /g'), ' true ')
-        line = line.replace(new RegExp('/ 0 /g'), ' false ')
+        line = line.replace(new RegExp('^([^,]+), 1'), ' \"$1\", true ');
+        line = line.replace(new RegExp('^([^,]+), 0'), ' \"$1\", false ');
 
         let regex_res = line.match(regex)
         if(regex_res){
