@@ -41,7 +41,7 @@ all_rules = new RuleSets(ls);
 
 // Allow users to enable `platform="mixedcontent"` rulesets
 store.get({enableMixedRulesets: false}, function(item) {
-  enableMixedRulesets.enable = item.enableMixedRulesets;
+  rules.settings.enableMixedRulesets = item.enableMixedRulesets;
   all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
 });
 
@@ -51,7 +51,6 @@ function load_legacy_custom_rulesets(legacy_custom_rulesets){
     all_rules.addFromXml((new DOMParser()).parseFromString(legacy_custom_ruleset, 'text/xml'));
   }
 }
-store.get({legacy_custom_rulesets: []}, item => load_legacy_custom_rulesets(item.legacy_custom_rulesets));
 
 var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
@@ -79,12 +78,14 @@ export function initializeStoredGlobals () {
   store.get({
     httpNowhere: false,
     showCounter: true,
-    globalEnabled: true
+    globalEnabled: true,
+    legacy_custom_rulesets: []
   }, function(item) {
     httpNowhereOn = item.httpNowhere;
     showCounter = item.showCounter;
     isExtensionEnabled = item.globalEnabled;
     updateState();
+    load_legacy_custom_rulesets(item.legacy_custom_rulesets);
   });
 }
 initializeStoredGlobals();
@@ -201,7 +202,7 @@ function updateState () {
 
     const activeCount = getActiveRulesetCount(tabs[0].id);
 
-    chrome.browserAction.setBadgeBackgroundColor({ color: '#00cc00' });
+    chrome.browserAction.setBadgeBackgroundColor({ color: '#666666' });
 
     const showBadge = activeCount > 0 && isExtensionEnabled && showCounter;
 
@@ -216,11 +217,11 @@ function updateState () {
  * */
 var addNewRule = function(params, cb) {
   if (all_rules.addUserRule(params)) {
-    // If we successfully added the user rule, save it in local 
-    // storage so it's automatically applied when the extension is 
+    // If we successfully added the user rule, save it in local
+    // storage so it's automatically applied when the extension is
     // reloaded.
     var oldUserRules = getStoredUserRules();
-    // TODO: there's a race condition here, if this code is ever executed from multiple 
+    // TODO: there's a race condition here, if this code is ever executed from multiple
     // client windows in different event loops.
     oldUserRules.push(params);
     // TODO: can we exceed the max size for storage?
@@ -327,12 +328,14 @@ function onBeforeRequest(details) {
   // If there is a username / password, put them aside during the ruleset
   // analysis process
   var using_credentials_in_url = false;
+  let tmp_user;
+  let tmp_pass;
   if (uri.password || uri.username) {
     using_credentials_in_url = true;
-    var tmp_user = uri.username;
-    var tmp_pass = uri.password;
-    uri.username = null;
-    uri.password = null;
+    tmp_user = uri.username;
+    tmp_pass = uri.password;
+    uri.username = '';
+    uri.password = '';
   }
 
   var canonical_url = uri.href;
@@ -354,8 +357,8 @@ function onBeforeRequest(details) {
     log(NOTE, "Redirect counter hit for " + canonical_url);
     urlBlacklist.add(canonical_url);
     var hostname = uri.hostname;
-    domainBlacklist.add(hostname);
-    log(WARN, "Domain blacklisted " + hostname);
+    rules.settings.domainBlacklist.add(hostname);
+    log(util.WARN, "Domain blacklisted " + hostname);
     return {cancel: shouldCancel};
   }
 
@@ -368,12 +371,19 @@ function onBeforeRequest(details) {
     }
   }
 
-  if (newuristr && using_credentials_in_url) {
-    // re-insert userpass info which was stripped temporarily
-    const uri_with_credentials = new URL(newuristr);
-    uri_with_credentials.username = tmp_user;
-    uri_with_credentials.password = tmp_pass;
-    newuristr = uri_with_credentials.href;
+  // re-insert userpass info which was stripped temporarily
+  if (using_credentials_in_url) {
+    if (newuristr) {
+      const uri_with_credentials = new URL(newuristr);
+      uri_with_credentials.username = tmp_user;
+      uri_with_credentials.password = tmp_pass;
+      newuristr = uri_with_credentials.href;
+    } else {
+      const canonical_url_with_credentials = new URL(canonical_url);
+      canonical_url_with_credentials.username = tmp_user;
+      canonical_url_with_credentials.password = tmp_pass;
+      canonical_url = canonical_url_with_credentials.href;
+    }
   }
 
   // In Switch Planner Mode, record any non-rewriteable

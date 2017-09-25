@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  e("aboutTitle").setAttribute("title", chrome.i18n.getMessage("about_title"));
+  e("aboutTitle").title = chrome.i18n.getMessage("about_title");
   e("add-rule-link").addEventListener("click", addManualRule);
 });
 

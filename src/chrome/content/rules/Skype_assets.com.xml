@@ -1,38 +1,30 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://beta.skypeassets.com/ => https://beta.skypeassets.com/: (6, 'Could not resolve host: beta.skypeassets.com')
-Non-2xx HTTP code: http://www.skypeassets.com/ (200) => https://secure.skypeassets.com/ (504)
-
 	For other Microsoft coverage, see Microsoft.xml.
 
+	Nonfunctional hosts in *.skypeassets.com:
 
-	www: Akamai
+		- www.skypeassets.com (m, secure.skypeassets.com would work but status code is not the same)
 
-
-	Fully covered hosts in *skypeassets.com:
-
-		- apps
-		- beta
-		- secure
-		- www		(→ secure.skypeassets.com)
-
+	h: http redirect
+	m: certificate mismatch
+	r: connection refused
+	s: self-signed certificate
+	t: timeout on https
 -->
-<ruleset name="Skype assets.com" default_off='failed ruleset test'>
+<ruleset name="Skypeassets.com">
 
-	<!--	Direct rewrites:
-				-->
 	<target host="apps.skypeassets.com" />
-	<target host="beta.skypeassets.com" />
 	<target host="secure.skypeassets.com" />
+	<target host="static.skypeassets.com" />
 
-	<!--	Complications:
-				-->
-	<target host="www.skypeassets.com" />
+	<!-- connection times out on $ for Travis -->
+	<exclusion pattern="^http://secure\.skypeassets\.com/$" />
 
+	<test url="http://apps.skypeassets.com/static/skype.client.login/3.0/3.30/release/images/normal/skype-logo-136x60.png" />
+	<test url="http://secure.skypeassets.com/favicon.ico" />
+	<test url="http://static.skypeassets.com/adserver/AdLoader.html" />
 
-	<rule from="^http://www\.skypeassets\.com/"
-		to="https://secure.skypeassets.com/" />
+	<securecookie host=".+" name=".+" />
 
 	<rule from="^http:"
 		to="https:" />
