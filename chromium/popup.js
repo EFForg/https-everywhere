@@ -219,20 +219,14 @@ function addManualRule() {
   chrome.tabs.query({ active: true, currentWindow: true }, function(tab) {
     hide(e("add-rule-link"));
     show(e("add-new-rule-div"));
-    var newUrl = document.createElement('a');
-    newUrl.href = tab[0].url;
-    newUrl.protocol = "https:";
-    e("new-rule-host").value = newUrl.host;
-    var oldUrl = document.createElement('a');
-    oldUrl.href = tab[0].url;
-    oldUrl.protocol = "http:";
-    var oldMatcher = "^" + escapeForRegex(oldUrl.protocol + "//" + oldUrl.host+ "/");
-    e("new-rule-regex").value = oldMatcher;
-    var redirectPath = newUrl.protocol + "//" + newUrl.host + "/";
-    e("new-rule-redirect").value = redirectPath;
+
+    const url = new URL(tab[0].url);
+    e("new-rule-host").value = url.host;
+    e("new-rule-regex").value = `^http://${escapeForRegex(url.host)}/`;
+    e("new-rule-redirect").value = `https://${url.host}/`;
     e("new-rule-name").value = "Manual rule for " + oldUrl.host;
     e("add-new-rule-button").addEventListener("click", function() {
-      var params = {
+      const params = {
         host : e("new-rule-host").value,
         redirectTo : e("new-rule-redirect").value,
         urlMatcher : e("new-rule-regex").value
