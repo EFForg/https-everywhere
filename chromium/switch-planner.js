@@ -1,3 +1,5 @@
+"use strict";
+
 document.addEventListener("DOMContentLoaded", () => {
   var backgroundPage = chrome.extension.getBackgroundPage(); 
   var tab = document.location.search.match(/tab=([^&]*)/)[1];
