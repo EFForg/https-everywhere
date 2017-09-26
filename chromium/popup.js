@@ -221,10 +221,15 @@ function addManualRule() {
     show(e("add-new-rule-div"));
 
     const url = new URL(tab[0].url);
+
     e("new-rule-host").value = url.host;
-    e("new-rule-regex").value = `^http://${escapeForRegex(url.host)}/`;
+
+    const escapedHost = escapeForRegex(url.host);
+
+    e("new-rule-regex").value = `^http://${escapedHost}/`;
     e("new-rule-redirect").value = `https://${url.host}/`;
-    e("new-rule-name").value = "Manual rule for " + oldUrl.host;
+    e("new-rule-name").value = "Manual rule for " + url.host;
+
     e("add-new-rule-button").addEventListener("click", function() {
       const params = {
         host : e("new-rule-host").value,
@@ -240,10 +245,12 @@ function addManualRule() {
       show(e("add-rule-link"));
       hide(e("add-new-rule-div"));
     });
+
     e("new-rule-show-advanced-link").addEventListener("click", function() {
       show(e("new-rule-advanced"));
       hide(e("new-rule-regular-text"));
     });
+
     e("new-rule-hide-advanced-link").addEventListener("click", function() {
       hide(e("new-rule-advanced"));
       show(e("new-rule-regular-text"));
