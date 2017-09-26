@@ -249,7 +249,7 @@ async.parallel({
   async.parallel({
     esr: parse_include(esr_url),
     dev: parse_include(dev_url),
-    stable: parse_include(esr_url),
+    stable: parse_include(stable_url),
     chromium: parse_json(chromium_url)
   }, (err, structs) => {
 
