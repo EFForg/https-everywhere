@@ -682,7 +682,7 @@ chrome.runtime.sendMessage("import-legacy-data", import_settings);
  * @param settings the settings object
  */
 async function import_settings(settings) {
-  if (settings.changed) {
+  if (settings && settings.changed) {
     // Load all the ruleset toggles into memory and store
     for (const ruleset_name in settings.rule_toggle) {
       ls[ruleset_name] = settings.rule_toggle[ruleset_name];
