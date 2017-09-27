@@ -1,15 +1,21 @@
 <!--
 	Nonfunctional hosts in *.zakonypreludi.sk:
 
-	h: http redirect
-	m: certificate mismatch
-	r: connection refused
-	s: self-signed certificate
-	t: timeout on https
+	certificate mismatch:
+	    - zakonypreludi.sk
+	    - mobile.zakonypreludi.sk
+
+https://zakonypreludi.sk has certificate mismatch, but
+http://zakonypreludi.sk redirects to http://www.zakonypreludi.sk
+https://www.zakonypreludi.sk has correct certificate
+
 -->
 <ruleset name="Zakonypreludi.sk">
 	<target host="zakonypreludi.sk" />
 	<target host="www.zakonypreludi.sk" />
+
+	<rule from="^http://zakonypreludi\.sk/"
+		to="https://www.zakonypreludi.sk/" />
 
 	<rule from="^http:" to="https:" />
 </ruleset>
