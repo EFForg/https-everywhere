@@ -22,7 +22,7 @@ function e(id) {
  * @param ruleset the ruleset to build the line for
  * @returns {*}
  */
-function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
+function appendRuleLineToListDiv(ruleset, list_div) {
   // parent block for line
   var line = document.createElement("div");
   line.className = "rule checkbox";
