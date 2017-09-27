@@ -195,6 +195,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  // Set up toggle checkbox for "block all mixed content" mode
+  getOption_('blockAllMixedContent', false, item => {
+    const blockAllMixedContentCheckbox = document.getElementById('block-all-mixed-content-checkbox');
+    blockAllMixedContentCheckbox.checked = item.blockAllMixedContent;
+
+    blockAllMixedContentCheckbox.addEventListener('change', evt => {
+      setOption_('blockAllMixedContent', evt.target.checked);
+    });
+  });
+
   e("aboutTitle").title = chrome.i18n.getMessage("about_title");
   e("add-rule-link").addEventListener("click", addManualRule);
 });

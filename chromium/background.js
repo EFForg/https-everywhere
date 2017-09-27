@@ -70,17 +70,20 @@ var switchPlannerInfo = {};
 var httpNowhereOn = false;
 var showCounter = true;
 var isExtensionEnabled = true;
+var blockAllMixedContent = true;
 
 var initializeStoredGlobals = () => {
   store.get({
     httpNowhere: false,
     showCounter: true,
     globalEnabled: true,
+    blockAllMixedContent: false,
     legacy_custom_rulesets: []
   }, function(item) {
     httpNowhereOn = item.httpNowhere;
     showCounter = item.showCounter;
     isExtensionEnabled = item.globalEnabled;
+    blockAllMixedContent = item.blockAllMixedContent;
     updateState();
     load_legacy_custom_rulesets(item.legacy_custom_rulesets);
   });
@@ -99,6 +102,10 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
     }
     if ('globalEnabled' in changes) {
       isExtensionEnabled = changes.globalEnabled.newValue;
+      updateState();
+    }
+    if ('blockAllMixedContent' in changes) {
+      blockAllMixedContent = changes.blockAllMixedContent.newValue;
       updateState();
     }
   }
@@ -558,6 +565,24 @@ function onBeforeRedirect(details) {
   }
 }
 
+function onHeadersReceived(details) {
+  if (blockAllMixedContent) {
+    const headers = details.responseHeaders;
+
+    const header = headers.find(header => header.name.toLowerCase() === 'content-security-policy');
+
+    if (header) {
+      header.value = header.value + ', block-all-mixed-content';
+    } else {
+      headers.push({ name: 'Content-Security-Policy', value: 'block-all-mixed-content' });
+    }
+
+    return { responseHeaders: headers };
+  }
+
+  return {};
+}
+
 /**
  * handle webrequest.onCompleted, cleanup redirectCounter
  * @param details details for the chrome.webRequest (see chrome doc)
@@ -585,6 +610,8 @@ wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
 wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
+
+wr.onHeadersReceived.addListener(onHeadersReceived, {urls: ["https://*/*"]}, ["blocking", "responseHeaders"]);
 
 // Cleanup redirectCounter if neccessary
 wr.onCompleted.addListener(onCompleted, {urls: ["*://*/*"]});
