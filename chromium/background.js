@@ -680,7 +680,7 @@ chrome.runtime.sendMessage("import-legacy-data", import_settings);
 /**
  * Import extension settings (custom rulesets, ruleset toggles, globals) from an object
  * @param settings the settings object
- * @param callback called on finish
+ * @param callback called when settings are saved
  */
 function import_settings(settings, callback) {
   if (settings && settings.changed) {
