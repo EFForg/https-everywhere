@@ -668,7 +668,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     removeRule(message.object);
   } else if (message.type == "import_settings") {
     // This is used when importing settings from the options ui
-    import_settings(message.object).then(() => {
+    import_settings(message.object, () => {
       sendResponse(true);
     });
   }
@@ -680,8 +680,9 @@ chrome.runtime.sendMessage("import-legacy-data", import_settings);
 /**
  * Import extension settings (custom rulesets, ruleset toggles, globals) from an object
  * @param settings the settings object
+ * @param callback called on finish
  */
-async function import_settings(settings) {
+function import_settings(settings, callback) {
   if (settings && settings.changed) {
     // Load all the ruleset toggles into memory and store
     for (const ruleset_name in settings.rule_toggle) {
@@ -695,14 +696,12 @@ async function import_settings(settings) {
     load_legacy_custom_rulesets(settings.custom_rulesets);
 
     // Save settings
-    await new Promise(resolve => {
-      store.set({
-        legacy_custom_rulesets: settings.custom_rulesets,
-        httpNowhere: settings.prefs.http_nowhere_enabled,
-        showCounter: settings.prefs.show_counter,
-        globalEnabled: settings.prefs.global_enabled
-      }, resolve);
-    });
+    store.set({
+      legacy_custom_rulesets: settings.custom_rulesets,
+      httpNowhere: settings.prefs.http_nowhere_enabled,
+      showCounter: settings.prefs.show_counter,
+      globalEnabled: settings.prefs.global_enabled
+    }, callback);
   }
 }
 
