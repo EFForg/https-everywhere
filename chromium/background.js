@@ -328,15 +328,10 @@ function onBeforeRequest(details) {
 
 // Map of which values for the `type' enum denote active vs passive content.
 // https://developer.chrome.com/extensions/webRequest.html#event-onBeforeRequest
-var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1};
-
-// We consider sub_frame to be passive even though it can contain JS or flash.
-// This is because code running in the sub_frame cannot access the main frame's
-// content, by same-origin policy. This is true even if the sub_frame is on the
-// same domain but different protocol - i.e. HTTP while the parent is HTTPS -
-// because same-origin policy includes the protocol. This also mimics Chrome's
-// UI treatment of insecure subframes.
-var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
+const mixedContentTypes = {
+  object: true, other: true, script: true, stylesheet: true, sub_frame: true, xmlhttprequest: true,
+  image: false, main_frame: false
+};
 
 /**
  * Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
@@ -350,18 +345,13 @@ var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
  * @param rewritten_url: The url rewritten to
  * */
 function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritten_url) {
-  var rw = "rw";
-  if (rewritten_url == null)
-    rw = "nrw";
+  let rw = rewritten_url ? "rw" : "nrw";
 
-  var active_content = 0;
-  if (activeTypes[type]) {
-    active_content = 1;
-  } else if (passiveTypes[type]) {
-    active_content = 0;
+  let active_content = true;
+  if (mixedContentTypes.hasOwnProperty(type)) {
+    active_content = mixedContentTypes[type];
   } else {
     util.log(util.WARN, "Unknown type from onBeforeRequest details: `" + type + "', assuming active");
-    active_content = 1;
   }
 
   if (!switchPlannerInfo[tab_id]) {
