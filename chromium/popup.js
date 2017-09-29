@@ -7,7 +7,7 @@ var unstableRules = null;
 var hostReg = /.*\/\/[^$/]*\//;
 
 var ls;
-try {
+try{
   ls = localStorage;
 } catch(e) {
   ls = {setItem: () => {}, getItem: () => {}};
