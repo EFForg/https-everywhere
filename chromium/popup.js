@@ -225,13 +225,13 @@ function addManualRule() {
 }
 
 function getOption_(opt, defaultOpt, callback) {
-  const details = {};
+  var details = {};
   details[opt] = defaultOpt;
   sendMessage("get_option", details, callback);
 }
 
 function setOption_(opt, value, callback) {
-  const details = {};
+  var details = {};
   details[opt] = value;
   sendMessage("set_option", details, callback);
 }
