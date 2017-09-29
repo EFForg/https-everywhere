@@ -2,6 +2,28 @@
 
 (function(exports) {
 
+var all_rules, ls;
+
+try{
+  ls = localStorage;
+} catch(e) {
+  ls = {setItem: () => {}, getItem: () => {}};
+}
+
+function initialize(){
+  // Rules are loaded here
+  all_rules = new rules.RuleSets(ls);
+
+  initializeStoredGlobals(() => {
+    all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
+
+    // Send a message to the embedded webextension bootstrap.js to get settings to import
+    chrome.runtime.sendMessage("import-legacy-data", import_settings);
+
+    loadStoredUserRules();
+  });
+}
+
 /**
  * Load a file packaged with the extension
  *
@@ -27,37 +49,12 @@ function loadExtensionFile(url, returnType) {
 }
 
 
-// Rules are loaded here
-var all_rules, ls;
-try{
-  ls = localStorage;
-} catch(e) {
-  ls = {setItem: () => {}, getItem: () => {}};
-}
-all_rules = new rules.RuleSets(ls);
-
-// Allow users to enable `platform="mixedcontent"` rulesets
-store.get({enableMixedRulesets: false}, function(item) {
-  rules.settings.enableMixedRulesets = item.enableMixedRulesets;
-  all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
-});
-
 // Load in the legacy custom rulesets, if any
 function load_legacy_custom_rulesets(legacy_custom_rulesets){
   for(let legacy_custom_ruleset of legacy_custom_rulesets){
     all_rules.addFromXml((new DOMParser()).parseFromString(legacy_custom_ruleset, 'text/xml'));
   }
 }
-
-var USER_RULE_KEY = 'userRules';
-// Records which tabId's are active in the HTTPS Switch Planner (see
-// devtools-panel.js).
-var switchPlannerEnabledFor = {};
-// Detailed information recorded when the HTTPS Switch Planner is active.
-// Structure is:
-//   switchPlannerInfo[tabId]["rw"/"nrw"][resource_host][active_content][url];
-// rw / nrw stand for "rewritten" versus "not rewritten"
-var switchPlannerInfo = {};
 
 /**
  * Load preferences. Structure is:
@@ -71,21 +68,25 @@ var httpNowhereOn = false;
 var showCounter = true;
 var isExtensionEnabled = true;
 
-var initializeStoredGlobals = () => {
+function initializeStoredGlobals(cb){
   store.get({
     httpNowhere: false,
     showCounter: true,
     globalEnabled: true,
+    enableMixedRulesets: false,
     legacy_custom_rulesets: []
   }, function(item) {
     httpNowhereOn = item.httpNowhere;
     showCounter = item.showCounter;
     isExtensionEnabled = item.globalEnabled;
     updateState();
+
+    rules.settings.enableMixedRulesets = item.enableMixedRulesets;
     load_legacy_custom_rulesets(item.legacy_custom_rulesets);
+
+    cb();
   });
 }
-initializeStoredGlobals();
 
 chrome.storage.onChanged.addListener(function(changes, areaName) {
   if (areaName === 'sync' || areaName === 'local') {
@@ -118,32 +119,40 @@ chrome.webNavigation.onCompleted.addListener(function() {
   updateState();
 });
 
+var USER_RULE_KEY = 'userRules';
+// Records which tabId's are active in the HTTPS Switch Planner (see
+// devtools-panel.js).
+var switchPlannerEnabledFor = {};
+// Detailed information recorded when the HTTPS Switch Planner is active.
+// Structure is:
+//   switchPlannerInfo[tabId]["rw"/"nrw"][resource_host][active_content][url];
+// rw / nrw stand for "rewritten" versus "not rewritten"
+var switchPlannerInfo = {};
+
 /**
 * Load stored user rules
  **/
-var getStoredUserRules = function() {
+function getStoredUserRules() {
   var oldUserRuleString = ls.getItem(USER_RULE_KEY);
   var oldUserRules = [];
   if (oldUserRuleString) {
     oldUserRules = JSON.parse(oldUserRuleString);
   }
   return oldUserRules;
-};
+}
 var wr = chrome.webRequest;
 
 /**
  * Load all stored user rules
  */
-var loadStoredUserRules = function() {
+function loadStoredUserRules() {
   var rules = getStoredUserRules();
   var i;
   for (let rule of rules) {
     all_rules.addUserRule(rule);
   }
   util.log(util.INFO, 'loaded ' + i + ' stored user rules');
-};
-
-loadStoredUserRules();
+}
 
 function getActiveRulesetCount(id) {
   const applied = activeRulesets.getRulesets(id);
@@ -674,9 +683,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   }
 });
 
-// Send a message to the embedded webextension bootstrap.js to get settings to import
-chrome.runtime.sendMessage("import-legacy-data", import_settings);
-
 /**
  * Import extension settings (custom rulesets, ruleset toggles, globals) from an object
  * @param settings the settings object
@@ -687,9 +693,6 @@ async function import_settings(settings) {
     for (const ruleset_name in settings.rule_toggle) {
       ls[ruleset_name] = settings.rule_toggle[ruleset_name];
     }
-
-    all_rules = new rules.RuleSets(ls);
-    all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
 
     // Load custom rulesets
     load_legacy_custom_rulesets(settings.custom_rulesets);
@@ -708,8 +711,8 @@ async function import_settings(settings) {
 
 Object.assign(exports, {
   all_rules,
-  initializeStoredGlobals,
   urlBlacklist,
+  initialize,
 });
 
 })(typeof exports == 'undefined' ? window.background = {} : exports);

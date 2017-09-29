@@ -9,14 +9,18 @@ function setStorage(store) {
   });
 }
 
-setStorage(chrome.storage.local);
 if (chrome.storage.sync) {
   chrome.storage.sync.set({"sync-set-test": true}, () => {
-    if(!chrome.runtime.lastError){
+    if(chrome.runtime.lastError){
+      setStorage(chrome.storage.local);
+    } else {
       setStorage(chrome.storage.sync);
-      background.initializeStoredGlobals();
     }
+    background.initialize();
   });
+} else {
+  setStorage(chrome.storage.local);
+  background.initialize();
 }
 
 })(typeof exports == 'undefined' ? window.store = {} : exports);
