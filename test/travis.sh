@@ -45,7 +45,7 @@ if ! $ONLY_RULESETS_CHANGED; then
 
   if [ "$TEST" == "eslint" ]; then
     echo >&2 "Running ESLint on the Chromium extension."
-    docker run --rm -v $(pwd)/chromium:/opt electronicfrontierfoundation/eslint
+    docker run --rm -v $(pwd):/opt electronicfrontierfoundation/eslint /opt/chromium
   fi
 
   if [ "$TEST" == "firefox" ]; then
