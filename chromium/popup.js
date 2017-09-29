@@ -62,11 +62,10 @@ function appendRuleLineToListDiv(ruleset, list_div) {
   // favicon (from chrome's cache)
   var favicon = document.createElement("img");
   favicon.className = "favicon";
-  favicon.src = "chrome://favicon/";
   for (let rule of ruleset.rules) {
     var host = hostReg.exec(rule.to);
     if (host) {
-      favicon.src += host[0];
+      favicon.src = "chrome://favicon/" + host[0];
       break;
     }
   }
