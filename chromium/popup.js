@@ -197,7 +197,7 @@ function addManualRule() {
     e("new-rule-name").value = "Manual rule for " + url.host;
 
     e("add-new-rule-button").addEventListener("click", function() {
-      const params = {
+      var params = {
         host : e("new-rule-host").value,
         redirectTo : e("new-rule-redirect").value,
         urlMatcher : e("new-rule-regex").value
