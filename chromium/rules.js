@@ -240,7 +240,7 @@ RuleSets.prototype = {
     var platform = ruletag["platform"]
     if (platform) {
       default_state = false;
-      if (platform === "mixedcontent" && settings.enableMixedRulesets) {
+      if ((platform === "mixedcontent") && settings.enableMixedRulesets) {
         default_state = true;
       }
       note += "Platform(s): " + platform + "\n";
@@ -255,7 +255,7 @@ RuleSets.prototype = {
 
     var rules = ruletag["rule"];
     for (let rule of rules) {
-      if (rule["from"] && rule["to"]) {
+      if (rule["from"] !== && rule["to"]) {
         rule_set.rules.push(new Rule(rule["from"], rule["to"]));
       }
     }
