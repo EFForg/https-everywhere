@@ -158,3 +158,4 @@ if [ -n "$BRANCH" ]; then
   cp $SUBDIR/${XPI_NAME}-eff.xpi $SUBDIR/${XPI_NAME}-amo.xpi pkg
   rm -rf $SUBDIR
 fi
+echo ${XPI_NAME}-eff.xpi
