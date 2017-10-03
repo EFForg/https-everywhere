@@ -4,7 +4,7 @@
 
 let all_rules = new rules.RuleSets();
 
-async function initialize(){
+async function initialize() {
   await store.initialize();
   await initializeStoredGlobals();
   all_rules.initialize();
