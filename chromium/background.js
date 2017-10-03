@@ -95,7 +95,6 @@ var switchPlannerEnabledFor = {};
 // rw / nrw stand for "rewritten" versus "not rewritten"
 var switchPlannerInfo = {};
 
-var wr = chrome.webRequest;
 function getActiveRulesetCount(id) {
   const applied = activeRulesets.getRulesets(id);
 
@@ -492,17 +491,17 @@ function onErrorOccurred(details) {
 
 // Registers the handler for requests
 // See: https://github.com/EFForg/https-everywhere/issues/10039
-wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"]);
+chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"]);
 
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
-wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
+chrome.webRequest.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
 
 // Cleanup redirectCounter if neccessary
-wr.onCompleted.addListener(onCompleted, {urls: ["*://*/*"]});
+chrome.webRequest.onCompleted.addListener(onCompleted, {urls: ["*://*/*"]});
 
 // Cleanup redirectCounter if neccessary
-wr.onErrorOccurred.addListener(onErrorOccurred, {urls: ["*://*/*"]})
+chrome.webRequest.onErrorOccurred.addListener(onErrorOccurred, {urls: ["*://*/*"]})
 
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking.
 chrome.cookies.onChanged.addListener(onCookieChanged);
