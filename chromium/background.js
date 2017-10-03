@@ -2,25 +2,14 @@
 
 (function(exports) {
 
-var all_rules, ls;
-
-try{
-  ls = localStorage;
-} catch(e) {
-  ls = {setItem: () => {}, getItem: () => {}};
-}
+let all_rules = new rules.RuleSets();
 
 function initialize(){
-  // Rules are loaded here
-  all_rules = new rules.RuleSets(ls);
-
-  initializeStoredGlobals(() => {
-    all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
+  initializeStoredGlobals().then(() => {
+    all_rules.initialize();
 
     // Send a message to the embedded webextension bootstrap.js to get settings to import
     chrome.runtime.sendMessage("import-legacy-data", import_settings);
-
-    loadStoredUserRules();
   });
 }
 
@@ -44,23 +33,25 @@ var httpNowhereOn = false;
 var showCounter = true;
 var isExtensionEnabled = true;
 
-function initializeStoredGlobals(cb){
-  store.get({
-    httpNowhere: false,
-    showCounter: true,
-    globalEnabled: true,
-    enableMixedRulesets: false,
-    legacy_custom_rulesets: []
-  }, function(item) {
-    httpNowhereOn = item.httpNowhere;
-    showCounter = item.showCounter;
-    isExtensionEnabled = item.globalEnabled;
-    updateState();
+function initializeStoredGlobals(){
+  return new Promise(resolve => {
+    store.get({
+      httpNowhere: false,
+      showCounter: true,
+      globalEnabled: true,
+      enableMixedRulesets: false,
+      legacy_custom_rulesets: []
+    }, function(item) {
+      httpNowhereOn = item.httpNowhere;
+      showCounter = item.showCounter;
+      isExtensionEnabled = item.globalEnabled;
+      updateState();
 
-    rules.settings.enableMixedRulesets = item.enableMixedRulesets;
-    load_legacy_custom_rulesets(item.legacy_custom_rulesets);
+      rules.settings.enableMixedRulesets = item.enableMixedRulesets;
+      load_legacy_custom_rulesets(item.legacy_custom_rulesets);
 
-    cb();
+      resolve();
+    });
   });
 }
 
@@ -95,7 +86,6 @@ chrome.webNavigation.onCompleted.addListener(function() {
   updateState();
 });
 
-var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
 // devtools-panel.js).
 var switchPlannerEnabledFor = {};
@@ -105,31 +95,7 @@ var switchPlannerEnabledFor = {};
 // rw / nrw stand for "rewritten" versus "not rewritten"
 var switchPlannerInfo = {};
 
-/**
-* Load stored user rules
- **/
-function getStoredUserRules() {
-  var oldUserRuleString = ls.getItem(USER_RULE_KEY);
-  var oldUserRules = [];
-  if (oldUserRuleString) {
-    oldUserRules = JSON.parse(oldUserRuleString);
-  }
-  return oldUserRules;
-}
 var wr = chrome.webRequest;
-
-/**
- * Load all stored user rules
- */
-function loadStoredUserRules() {
-  var rules = getStoredUserRules();
-  var i;
-  for (let rule of rules) {
-    all_rules.addUserRule(rule);
-  }
-  util.log(util.INFO, 'loaded ' + i + ' stored user rules');
-}
-
 function getActiveRulesetCount(id) {
   const applied = activeRulesets.getRulesets(id);
 
@@ -190,45 +156,6 @@ function updateState () {
 
     chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '', tabId: tabs[0].id });
   });
-}
-
-/**
- * Adds a new user rule
- * @param params: params defining the rule
- * @param cb: Callback to call after success/fail
- * */
-var addNewRule = function(params, cb) {
-  if (all_rules.addUserRule(params)) {
-    // If we successfully added the user rule, save it in local
-    // storage so it's automatically applied when the extension is
-    // reloaded.
-    var oldUserRules = getStoredUserRules();
-    // TODO: there's a race condition here, if this code is ever executed from multiple
-    // client windows in different event loops.
-    oldUserRules.push(params);
-    // TODO: can we exceed the max size for storage?
-    ls.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules));
-    cb(true);
-  } else {
-    cb(false);
-  }
-};
-
-/**
- * Removes a user rule
- * @param ruleset: the ruleset to remove
- * */
-var removeRule = function(ruleset) {
-  if (all_rules.removeUserRule(ruleset)) {
-    // If we successfully removed the user rule, remove it in local storage too
-    var userRules = getStoredUserRules();
-    userRules = userRules.filter(r =>
-      !(r.host == ruleset.name &&
-        r.redirectTo == ruleset.rules[0].to &&
-        String(RegExp(r.urlMatcher)) == String(ruleset.rules[0].from_c))
-    );
-    ls.setItem(USER_RULE_KEY, JSON.stringify(userRules));
-  }
 }
 
 /**
@@ -645,12 +572,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     ruleset.active = message.object.active;
     sendResponse(true);
   } else if (message.type == "add_new_rule") {
-    addNewRule(message.object, function() {
-      sendResponse(true);
-    });
+    all_rules.addNewRuleAndStore(message.object).then(sendResponse);
     return true;
   } else if (message.type == "remove_rule") {
-    removeRule(message.object);
+    all_rules.removeRuleAndStore(message.object);
   } else if (message.type == "import_settings") {
     // This is used when importing settings from the options ui
     import_settings(message.object).then(() => {
@@ -667,7 +592,7 @@ async function import_settings(settings) {
   if (settings && settings.changed) {
     // Load all the ruleset toggles into memory and store
     for (const ruleset_name in settings.rule_toggle) {
-      ls[ruleset_name] = settings.rule_toggle[ruleset_name];
+      store.localStorage[ruleset_name] = settings.rule_toggle[ruleset_name];
     }
 
     // Load custom rulesets
