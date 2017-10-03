@@ -116,13 +116,25 @@ function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
   list_div.appendChild(line);
 }
 
+function showHttpNowhereUI() {
+  // Set up checkbox for HTTP nowhere mode
+  getOption_('httpNowhere', false, function(item) {
+    if (item.httpNowhere) {
+      e('http-nowhere-checkbox').setAttribute('checked', '');
+    }
+    show(e('HttpNowhere'));
+  });
+};
+
 // Change the UI to reflect extension enabled/disabled
 function updateEnabledDisabledUI() {
   getOption_('globalEnabled', true, function(item) {
     document.getElementById('onoffswitch').checked = item.globalEnabled;
+    show(e('disableButton'));
     // Hide or show the rules sections
     if (item.globalEnabled) {
       document.body.className = ""
+      showHttpNowhereUI()
     } else {
       document.body.className = "disabled"
     }
@@ -177,21 +189,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // Set up the enabled/disabled switch & hide/show rules
   updateEnabledDisabledUI();
   document.getElementById('onoffswitch').addEventListener('click', toggleEnabledDisabled);
+  e('http-nowhere-checkbox').addEventListener('click', toggleHttpNowhere, false);
 
   // Print the extension's current version.
   var the_manifest = chrome.runtime.getManifest();
   var version_info = document.getElementById('current-version');
   version_info.innerText = the_manifest.version;
-
-  // Set up toggle checkbox for HTTP nowhere mode
-  getOption_('httpNowhere', false, function(item) {
-    var httpNowhereCheckbox = document.getElementById('http-nowhere-checkbox');
-    httpNowhereCheckbox.addEventListener('click', toggleHttpNowhere, false);
-    var httpNowhereEnabled = item.httpNowhere;
-    if (httpNowhereEnabled) {
-      httpNowhereCheckbox.setAttribute('checked', '');
-    }
-  });
 
   e("aboutTitle").title = chrome.i18n.getMessage("about_title");
   e("add-rule-link").addEventListener("click", addManualRule);
