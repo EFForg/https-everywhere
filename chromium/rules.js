@@ -207,9 +207,9 @@ function RuleSets() {
 RuleSets.prototype = {
 
   initialize: function() {
+    this.ruleActiveStates = store.localStorage;
     this.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
     this.loadStoredUserRules();
-    this.ruleActiveStates = store.localStorage;
   },
 
   /**
