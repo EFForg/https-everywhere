@@ -40,7 +40,7 @@ function loadExtensionFile(url, returnType) {
   xhr.open("GET", chrome.extension.getURL(url), false);
   xhr.send(null);
   // Get file contents
-  if (xhr.readyState != 4) {
+  if (xhr.readyState !== 4) {
     return;
   }
   if (returnType === 'xml') {

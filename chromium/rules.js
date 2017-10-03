@@ -352,7 +352,7 @@ RuleSets.prototype = {
   },
   
   /**
-  * Load stored user rules
+  * Retrieve stored user rules from localStorage
   **/
   getStoredUserRules: function() {
     const oldUserRuleString = store.localStorage.getItem(this.USER_RULE_KEY);
@@ -364,7 +364,7 @@ RuleSets.prototype = {
   },
 
   /**
-  * Load all stored user rules
+  * Load all stored user rules into this RuleSet object
   */
   loadStoredUserRules: function() {
     const user_rules = this.getStoredUserRules();

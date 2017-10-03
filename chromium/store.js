@@ -4,13 +4,13 @@
 
 let ls;
 
-try{
+try {
   ls = localStorage;
 } catch(e) {
   ls = {setItem: () => {}, getItem: () => {}};
 }
 
-function initialize(){
+function initialize() {
   return new Promise(resolve => {
     if (chrome.storage.sync) {
       chrome.storage.sync.set({"sync-set-test": true}, () => {
@@ -33,12 +33,12 @@ function setStorage(store) {
     get: store.get,
     set: store.set,
     localStorage: ls,
-    initialize: initialize
+    initialize
   });
 }
 
 Object.assign(exports, {
-  initialize: initialize
+  initialize
 });
 
 })(typeof exports == 'undefined' ? window.store = {} : exports);
