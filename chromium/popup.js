@@ -148,9 +148,7 @@ function toggleEnabledDisabled() {
  * Create the list of rules for a specific tab
  * @param tabArray
  */
-function gotTab(tabArray) {
-  var activeTab = tabArray[0];
-
+function gotTab(activeTab) {
   sendMessage("get_active_rulesets", activeTab.id, function(rulesets){
     for (var r in rulesets) {
       var listDiv = stableRules;
@@ -174,7 +172,7 @@ function gotTab(tabArray) {
 document.addEventListener("DOMContentLoaded", function () {
   stableRules = document.getElementById("StableRules");
   unstableRules = document.getElementById("UnstableRules");
-  chrome.tabs.query({ active: true, currentWindow: true }, gotTab);
+  getTab(gotTab);
 
   // Set up the enabled/disabled switch & hide/show rules
   updateEnabledDisabledUI();
@@ -216,11 +214,11 @@ function show(elem) {
  * Handles the manual addition of rules
  */
 function addManualRule() {
-  chrome.tabs.query({ active: true, currentWindow: true }, function(tab) {
+  getTab(function(tab) {
     hide(e("add-rule-link"));
     show(e("add-new-rule-div"));
 
-    const url = new URL(tab[0].url);
+    const url = new URL(tab.url);
 
     e("new-rule-host").value = url.host;
 
@@ -274,4 +272,13 @@ function setOption_(opt, value, callback) {
   var details = {};
   details[opt] = value;
   sendMessage("set_option", details, callback);
+}
+
+function getTab(callback) {
+  let url = new URL(window.location.href);
+  if (url.searchParams.has('tabId')) {
+    var parentId = parseInt(url.searchParams.get('tabId'));
+    return chrome.tabs.get(parentId, callback);
+  }
+  chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => callback(tabs[0]));
 }
