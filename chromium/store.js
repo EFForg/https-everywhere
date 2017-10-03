@@ -10,26 +10,35 @@ try{
   ls = {setItem: () => {}, getItem: () => {}};
 }
 
+function initialize(){
+  return new Promise(resolve => {
+    if (chrome.storage.sync) {
+      chrome.storage.sync.set({"sync-set-test": true}, () => {
+        if(chrome.runtime.lastError){
+          setStorage(chrome.storage.local);
+        } else {
+          setStorage(chrome.storage.sync);
+        }
+        resolve();
+      });
+    } else {
+      setStorage(chrome.storage.local);
+      resolve();
+    }
+  });
+}
+
 function setStorage(store) {
   Object.assign(exports, {
     get: store.get,
     set: store.set,
-    localStorage: ls
+    localStorage: ls,
+    initialize: initialize
   });
 }
 
-if (chrome.storage.sync) {
-  chrome.storage.sync.set({"sync-set-test": true}, () => {
-    if(chrome.runtime.lastError){
-      setStorage(chrome.storage.local);
-    } else {
-      setStorage(chrome.storage.sync);
-    }
-    background.initialize();
-  });
-} else {
-  setStorage(chrome.storage.local);
-  background.initialize();
-}
+Object.assign(exports, {
+  initialize: initialize
+});
 
 })(typeof exports == 'undefined' ? window.store = {} : exports);
