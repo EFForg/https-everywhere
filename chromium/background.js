@@ -572,7 +572,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     ruleset.active = message.object.active;
     sendResponse(true);
   } else if (message.type == "add_new_rule") {
-    all_rules.addNewRuleAndStore(message.object).then(sendResponse);
+    all_rules.addNewRuleAndStore(message.object);
+    sendResponse(true);
     return true;
   } else if (message.type == "remove_rule") {
     all_rules.removeRuleAndStore(message.object);

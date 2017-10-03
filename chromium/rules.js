@@ -380,22 +380,17 @@ RuleSets.prototype = {
   * @param cb: Callback to call after success/fail
   * */
   addNewRuleAndStore: function(params) {
-    return new Promise(resolve => {
-      if (this.addUserRule(params)) {
-        // If we successfully added the user rule, save it in local
-        // storage so it's automatically applied when the extension is
-        // reloaded.
-        var oldUserRules = this.getStoredUserRules();
-        // TODO: there's a race condition here, if this code is ever executed from multiple
-        // client windows in different event loops.
-        oldUserRules.push(params);
-        // TODO: can we exceed the max size for storage?
-        store.localStorage.setItem(this.USER_RULE_KEY, JSON.stringify(oldUserRules));
-        resolve(true);
-      } else {
-        resolve(false);
-      }
-    });
+    if (this.addUserRule(params)) {
+      // If we successfully added the user rule, save it in local
+      // storage so it's automatically applied when the extension is
+      // reloaded.
+      var oldUserRules = this.getStoredUserRules();
+      // TODO: there's a race condition here, if this code is ever executed from multiple
+      // client windows in different event loops.
+      oldUserRules.push(params);
+      // TODO: can we exceed the max size for storage?
+      store.localStorage.setItem(this.USER_RULE_KEY, JSON.stringify(oldUserRules));
+    }
   },
 
   /**
