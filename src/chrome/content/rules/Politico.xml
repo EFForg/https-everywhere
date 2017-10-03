@@ -19,6 +19,7 @@
 		- images ᵐ
 		- static ⁵
 		- static2 ᵐ
+		- static3 ⁴
 		- tk ᵐ
 		- www ⁴
 
@@ -32,9 +33,11 @@
 	Mixed content:
 
 		- Images on secure from static2.politico.com ᵐ
+		- Images on secure from static3.politico.com/dims4/ ⁴
 		- favicon on secure from static.politico.com ˢ
 
 	ᵐ Not secured by us <= mismatched
+	⁴ 404, equivalent to another domain
 	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
@@ -52,7 +55,6 @@
 		<test url="http://login.politico.com/_login?base=http%3A%2F%2Fwww.politico.com" />
 		<test url="http://static3.politico.com/resource/images/website/shared/template/bg-noise.24d18bcf9d414e030c36ffd7f30648e8.jpg" /><!--	2033 -->
 
-		<test url="http://tk.politico.com/zmr6qqx.js" />
 
 	<!--	Complications:
 				-->
@@ -62,16 +64,41 @@
 
 		<test url="http://static.politico.com/cf/05/ee684a274496b04fa20ba2978da1/politico.png" /><!--	1064 -->
 
-
 	<securecookie host="^\." name="^(?:_ga|optimizely)" />
-	<securecookie host="^\w" name="." />
+	<securecookie host="^\w" name=".+" />
 
+	<exclusion pattern="^http://tk\.politico\.com/" />
+		<test url="http://tk.politico.com/zmr6qqx.js" />
 
-	<rule from="^http://(?:www\.)?politico\.com/"
-		to="https://secure.politico.com/" />
+	<exclusion pattern="^http://(www\.)?politico\.com/about" />
+		<test url="http://www.politico.com/about/" />
+		<test url="http://www.politico.com/about/advertising" />
+
+	<exclusion pattern="^http://(www\.)?politico\.com/agenda" />
+		<test url="http://www.politico.com/agenda/" />
+		<test url="http://www.politico.com/agenda/story/2015/05/what-does-hillary-stand-for-check-her-staff-twitter-000057" />
+
+	<exclusion pattern="^http://(www\.)?politico\.com/magazine" />
+		<test url="http://www.politico.com/magazine/" />
+		<test url="http://www.politico.com/magazine/story/2014/01/waterboarding-cia-lawyer-john-rizzo-torture-101758" />
+
+	<exclusion pattern="^http://(www\.)?politico\.com/[0-9]+-election/" />
+		<test url="http://www.politico.com/2014-election/results/map/house" />
+		<test url="http://www.politico.com/2014-election/results/map/senate" />
+		<test url="http://www.politico.com/2016-election/results/map/house" />
+
+	<!-- many images cannot be rewritten to static3 -->
+	<exclusion pattern="^http://static\.politico\.com/dims4/" />
+		<test url="http://static.politico.com/dims4/default/07b4c8d/2147483647/legacy_thumbnail/1200x800%3E/quality/90/?url=http%3A%2F%2Fstatic.politico.com%2F2b%2F6b%2F8a85c0cf44bba0a33514ee41db43%2Fap540355375077.jpg" />
+
+	<!-- currently 404 on www as well as secure -->
+	<!-- <exclusion pattern="^http://www.politico.com/rss/.+\.xml$" /> -->
+
+	<rule from="^http://(www\.)?politico\.com/"
+		to="https://secure.politico.com/" /> 
 
 	<rule from="^http://static\.politico\.com/"
-		to="https://static3.politico.com/" />
+		to="https://static3.politico.com/" /> 
 
 	<rule from="^http:"
 		to="https:" />

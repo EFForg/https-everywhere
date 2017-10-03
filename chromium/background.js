@@ -1,8 +1,11 @@
 "use strict";
+
+(function(exports) {
+
 /**
- * Fetch and parse XML to be loaded as RuleSets.
+ * Load a file packaged with the extension
  *
- * @param url: a relative URL to local XML
+ * @param url: a relative URL to local file
  */
 function loadExtensionFile(url, returnType) {
   var xhr = new XMLHttpRequest();
@@ -17,6 +20,9 @@ function loadExtensionFile(url, returnType) {
   if (returnType === 'xml') {
     return xhr.responseXML;
   }
+  if (returnType === 'json') {
+    return JSON.parse(xhr.responseText);
+  }
   return xhr.responseText;
 }
 
@@ -28,13 +34,12 @@ try{
 } catch(e) {
   ls = {setItem: () => {}, getItem: () => {}};
 }
-all_rules = new RuleSets(ls);
+all_rules = new rules.RuleSets(ls);
 
 // Allow users to enable `platform="mixedcontent"` rulesets
-var enableMixedRulesets = false;
-storage.get({enableMixedRulesets: false}, function(item) {
-  enableMixedRulesets = item.enableMixedRulesets;
-  all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
+store.get({enableMixedRulesets: false}, function(item) {
+  rules.settings.enableMixedRulesets = item.enableMixedRulesets;
+  all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
 });
 
 // Load in the legacy custom rulesets, if any
@@ -43,7 +48,6 @@ function load_legacy_custom_rulesets(legacy_custom_rulesets){
     all_rules.addFromXml((new DOMParser()).parseFromString(legacy_custom_ruleset, 'text/xml'));
   }
 }
-storage.get({legacy_custom_rulesets: []}, item => load_legacy_custom_rulesets(item.legacy_custom_rulesets));
 
 var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
@@ -68,15 +72,17 @@ var showCounter = true;
 var isExtensionEnabled = true;
 
 var initializeStoredGlobals = () => {
-  storage.get({
+  store.get({
     httpNowhere: false,
     showCounter: true,
-    globalEnabled: true
+    globalEnabled: true,
+    legacy_custom_rulesets: []
   }, function(item) {
     httpNowhereOn = item.httpNowhere;
     showCounter = item.showCounter;
     isExtensionEnabled = item.globalEnabled;
     updateState();
+    load_legacy_custom_rulesets(item.legacy_custom_rulesets);
   });
 }
 initializeStoredGlobals();
@@ -134,7 +140,7 @@ var loadStoredUserRules = function() {
   for (let rule of rules) {
     all_rules.addUserRule(rule);
   }
-  log('INFO', 'loaded ' + i + ' stored user rules');
+  util.log(util.INFO, 'loaded ' + i + ' stored user rules');
 };
 
 loadStoredUserRules();
@@ -193,11 +199,11 @@ function updateState () {
 
     const activeCount = getActiveRulesetCount(tabs[0].id);
 
-    chrome.browserAction.setBadgeBackgroundColor({ color: '#00cc00' });
+    chrome.browserAction.setBadgeBackgroundColor({ color: '#666666' });
 
     const showBadge = activeCount > 0 && isExtensionEnabled && showCounter;
 
-    chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '' });
+    chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '', tabId: tabs[0].id });
   });
 }
 
@@ -208,11 +214,11 @@ function updateState () {
  * */
 var addNewRule = function(params, cb) {
   if (all_rules.addUserRule(params)) {
-    // If we successfully added the user rule, save it in local 
-    // storage so it's automatically applied when the extension is 
+    // If we successfully added the user rule, save it in local
+    // storage so it's automatically applied when the extension is
     // reloaded.
     var oldUserRules = getStoredUserRules();
-    // TODO: there's a race condition here, if this code is ever executed from multiple 
+    // TODO: there's a race condition here, if this code is ever executed from multiple
     // client windows in different event loops.
     oldUserRules.push(params);
     // TODO: can we exceed the max size for storage?
@@ -248,7 +254,7 @@ function AppliedRulesets() {
 
   var that = this;
   if (chrome.tabs) {
-    chrome.tabs.onRemoved.addListener(function(tabId, info) {
+    chrome.tabs.onRemoved.addListener(function(tabId) {
       that.removeTab(tabId);
     });
   }
@@ -280,11 +286,10 @@ AppliedRulesets.prototype = {
 var activeRulesets = new AppliedRulesets();
 
 var urlBlacklist = new Set();
-var domainBlacklist = new Set();
 
 // redirect counter workaround
 // TODO: Remove this code if they ever give us a real counter
-var redirectCounter = {};
+var redirectCounter = new Map();
 
 /**
  * Called before a HTTP(s) request. Does the heavy lifting
@@ -320,17 +325,19 @@ function onBeforeRequest(details) {
   // If there is a username / password, put them aside during the ruleset
   // analysis process
   var using_credentials_in_url = false;
+  let tmp_user;
+  let tmp_pass;
   if (uri.password || uri.username) {
     using_credentials_in_url = true;
-    var tmp_user = uri.username;
-    var tmp_pass = uri.password;
-    uri.username = null;
-    uri.password = null;
+    tmp_user = uri.username;
+    tmp_pass = uri.password;
+    uri.username = '';
+    uri.password = '';
   }
 
   var canonical_url = uri.href;
   if (details.url != canonical_url && !using_credentials_in_url) {
-    log(INFO, "Original url " + details.url + 
+    util.log(util.INFO, "Original url " + details.url +
         " changed before processing to " + canonical_url);
   }
   if (urlBlacklist.has(canonical_url)) {
@@ -343,12 +350,12 @@ function onBeforeRequest(details) {
 
   var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
 
-  if (redirectCounter[details.requestId] >= 8) {
-    log(NOTE, "Redirect counter hit for " + canonical_url);
+  if (redirectCounter.get(details.requestId) >= 8) {
+    util.log(util.NOTE, "Redirect counter hit for " + canonical_url);
     urlBlacklist.add(canonical_url);
     var hostname = uri.hostname;
-    domainBlacklist.add(hostname);
-    log(WARN, "Domain blacklisted " + hostname);
+    rules.settings.domainBlacklist.add(hostname);
+    util.log(util.WARN, "Domain blacklisted " + hostname);
     return {cancel: shouldCancel};
   }
 
@@ -361,12 +368,19 @@ function onBeforeRequest(details) {
     }
   }
 
-  if (newuristr && using_credentials_in_url) {
-    // re-insert userpass info which was stripped temporarily
-    const uri_with_credentials = new URL(newuristr);
-    uri_with_credentials.username = tmp_user;
-    uri_with_credentials.password = tmp_pass;
-    newuristr = uri_with_credentials.href;
+  // re-insert userpass info which was stripped temporarily
+  if (using_credentials_in_url) {
+    if (newuristr) {
+      const uri_with_credentials = new URL(newuristr);
+      uri_with_credentials.username = tmp_user;
+      uri_with_credentials.password = tmp_pass;
+      newuristr = uri_with_credentials.href;
+    } else {
+      const canonical_url_with_credentials = new URL(canonical_url);
+      canonical_url_with_credentials.username = tmp_user;
+      canonical_url_with_credentials.password = tmp_pass;
+      canonical_url = canonical_url_with_credentials.href;
+    }
   }
 
   // In Switch Planner Mode, record any non-rewriteable
@@ -437,7 +451,7 @@ function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritt
   } else if (passiveTypes[type]) {
     active_content = 0;
   } else {
-    log(WARN, "Unknown type from onBeforeRequest details: `" + type + "', assuming active");
+    util.log(util.WARN, "Unknown type from onBeforeRequest details: `" + type + "', assuming active");
     active_content = 1;
   }
 
@@ -518,7 +532,7 @@ function onCookieChanged(changeInfo) {
       }
       // We get repeated events for some cookies because sites change their
       // value repeatedly and remove the "secure" flag.
-      log(DBUG,
+      util.log(util.DBUG,
         "Securing cookie " + cookie.name + " for " + changeInfo.cookie.domain + ", was secure=" + changeInfo.cookie.secure);
       chrome.cookies.set(cookie);
     }
@@ -531,15 +545,36 @@ function onCookieChanged(changeInfo) {
  * */
 function onBeforeRedirect(details) {
   // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
-  var prefix = details.redirectUrl.substring(0, 5);
+  let prefix = details.redirectUrl.substring(0, 5);
   if (prefix === "http:" || prefix === "https") {
-    if (details.requestId in redirectCounter) {
-      redirectCounter[details.requestId] += 1;
-      log(DBUG, "Got redirect id "+details.requestId+
-                ": "+redirectCounter[details.requestId]);
+    let count = redirectCounter.get(details.requestId);
+    if (count) {
+      redirectCounter.set(details.requestId, count + 1);
+      util.log(util.DBUG, "Got redirect id "+details.requestId+
+                ": "+count);
     } else {
-      redirectCounter[details.requestId] = 1;
+      redirectCounter.set(details.requestId, 1);
     }
+  }
+}
+
+/**
+ * handle webrequest.onCompleted, cleanup redirectCounter
+ * @param details details for the chrome.webRequest (see chrome doc)
+ */
+function onCompleted(details) {
+  if (redirectCounter.has(details.requestId)) {
+    redirectCounter.delete(details.requestId);
+  }
+}
+
+/**
+ * handle webrequest.onErrorOccurred, cleanup redirectCounter
+ * @param details details for the chrome.webRequest (see chrome doc)
+ */
+function onErrorOccurred(details) {
+  if (redirectCounter.has(details.requestId)) {
+    redirectCounter.delete(details.requestId);
   }
 }
 
@@ -551,6 +586,11 @@ wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
 wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
 
+// Cleanup redirectCounter if neccessary
+wr.onCompleted.addListener(onCompleted, {urls: ["*://*/*"]});
+
+// Cleanup redirectCounter if neccessary
+wr.onErrorOccurred.addListener(onErrorOccurred, {urls: ["*://*/*"]})
 
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking.
 chrome.cookies.onChanged.addListener(onCookieChanged);
@@ -579,8 +619,8 @@ chrome.runtime.onConnect.addListener(function (port) {
     chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
       var tabId = message.tabId;
 
-      var disableOnCloseCallback = function(port) {
-        log(DBUG, "Devtools window for tab " + tabId + " closed, clearing data.");
+      var disableOnCloseCallback = function() {
+        util.log(util.DBUG, "Devtools window for tab " + tabId + " closed, clearing data.");
         disableSwitchPlannerFor(tabId);
       };
 
@@ -603,10 +643,10 @@ chrome.runtime.onConnect.addListener(function (port) {
 // Browsing Mode, see https://bugzilla.mozilla.org/show_bug.cgi?id=1329304
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   if (message.type == "get_option") {
-    storage.get(message.object, sendResponse);
+    store.get(message.object, sendResponse);
     return true;
   } else if (message.type == "set_option") {
-    storage.set(message.object, item => {
+    store.set(message.object, item => {
       if (sendResponse) {
         sendResponse(item);
       }
@@ -642,21 +682,21 @@ chrome.runtime.sendMessage("import-legacy-data", import_settings);
  * @param settings the settings object
  */
 async function import_settings(settings) {
-  if (settings.changed) {
+  if (settings && settings.changed) {
     // Load all the ruleset toggles into memory and store
     for (const ruleset_name in settings.rule_toggle) {
       ls[ruleset_name] = settings.rule_toggle[ruleset_name];
     }
 
-    all_rules = new RuleSets(ls);
-    all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
+    all_rules = new rules.RuleSets(ls);
+    all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
 
     // Load custom rulesets
     load_legacy_custom_rulesets(settings.custom_rulesets);
 
     // Save settings
     await new Promise(resolve => {
-      storage.set({
+      store.set({
         legacy_custom_rulesets: settings.custom_rulesets,
         httpNowhere: settings.prefs.http_nowhere_enabled,
         showCounter: settings.prefs.show_counter,
@@ -665,3 +705,11 @@ async function import_settings(settings) {
     });
   }
 }
+
+Object.assign(exports, {
+  all_rules,
+  initializeStoredGlobals,
+  urlBlacklist,
+});
+
+})(typeof exports == 'undefined' ? window.background = {} : exports);

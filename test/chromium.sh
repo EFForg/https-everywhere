@@ -26,11 +26,9 @@ if [ "$1" == "--justrun" ]; then
 	PROFILE_DIRECTORY="$(mktemp -d)"
 	trap 'rm -r "$PROFILE_DIRECTORY"' EXIT
 	
-	# Chromium package name is 'chromium' in Debian 7 (wheezy) and later
+	# Chromium package name is 'chromium' in Debian 7 (wheezy) and other distros like Arch
 	BROWSER="chromium-browser"
-	if [[ "$(lsb_release -is)" == "Debian" ]]; then
-	  BROWSER="chromium"
-	fi
+	which $BROWSER || BROWSER="chromium"
 	$BROWSER \
 		--user-data-dir="$PROFILE_DIRECTORY" \
 		--load-extension=pkg/crx/ \
