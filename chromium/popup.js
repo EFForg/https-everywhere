@@ -6,13 +6,6 @@ var stableRules = null;
 var unstableRules = null;
 var hostReg = /.*\/\/[^$/]*\//;
 
-var ls;
-try{
-  ls = localStorage;
-} catch(e) {
-  ls = {setItem: () => {}, getItem: () => {}};
-}
-
 function e(id) {
   return document.getElementById(id);
 }
@@ -33,9 +26,9 @@ function toggleRuleLine(checkbox, ruleset, tab_id) {
   sendMessage("set_ruleset_active_status", set_ruleset, function(){
 
     if (ruleset_active != ruleset.default_state) {
-      ls[ruleset.name] = ruleset_active;
+      store.localStorage[ruleset.name] = ruleset_active;
     } else {
-      delete ls[ruleset.name];
+      delete store.localStorage[ruleset.name];
       // purge the name from the cache so that this unchecking is persistent.
       sendMessage("delete_from_ruleset_cache", ruleset.name);
     }
