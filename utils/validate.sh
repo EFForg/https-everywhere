@@ -13,7 +13,7 @@ die() {
   exit 1
 }
 
-if python2.7 trivial-validate.py --quiet >&2
+if ./trivial-validate.py --quiet >&2
 then
   echo Validation of included rulesets completed. >&2
   echo >&2
