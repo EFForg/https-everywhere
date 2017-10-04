@@ -7,20 +7,12 @@ let all_rules = new rules.RuleSets();
 async function initialize() {
   await store.initialize();
   await initializeStoredGlobals();
-  all_rules.initialize();
+  await all_rules.initialize();
 
   // Send a message to the embedded webextension bootstrap.js to get settings to import
   chrome.runtime.sendMessage("import-legacy-data", import_settings);
 }
 initialize();
-
-
-// Load in the legacy custom rulesets, if any
-function load_legacy_custom_rulesets(legacy_custom_rulesets){
-  for(let legacy_custom_ruleset of legacy_custom_rulesets){
-    all_rules.addFromXml((new DOMParser()).parseFromString(legacy_custom_ruleset, 'text/xml'));
-  }
-}
 
 /**
  * Load preferences. Structure is:
@@ -40,8 +32,7 @@ function initializeStoredGlobals(){
       httpNowhere: false,
       showCounter: true,
       globalEnabled: true,
-      enableMixedRulesets: false,
-      legacy_custom_rulesets: []
+      enableMixedRulesets: false
     }, function(item) {
       httpNowhereOn = item.httpNowhere;
       showCounter = item.showCounter;
@@ -49,14 +40,13 @@ function initializeStoredGlobals(){
       updateState();
 
       rules.settings.enableMixedRulesets = item.enableMixedRulesets;
-      load_legacy_custom_rulesets(item.legacy_custom_rulesets);
 
       resolve();
     });
   });
 }
 
-chrome.storage.onChanged.addListener(function(changes, areaName) {
+chrome.storage.onChanged.addListener(async function(changes, areaName) {
   if (areaName === 'sync' || areaName === 'local') {
     if ('httpNowhere' in changes) {
       httpNowhereOn = changes.httpNowhere.newValue;
@@ -596,9 +586,6 @@ async function import_settings(settings) {
       store.localStorage[ruleset_name] = settings.rule_toggle[ruleset_name];
     }
 
-    // Load custom rulesets
-    load_legacy_custom_rulesets(settings.custom_rulesets);
-
     // Save settings
     await new Promise(resolve => {
       store.set({
@@ -608,6 +595,10 @@ async function import_settings(settings) {
         globalEnabled: settings.prefs.global_enabled
       }, resolve);
     });
+
+    Object.assign(all_rules, new rules.RuleSets());
+    await all_rules.initialize();
+
   }
 }
 
