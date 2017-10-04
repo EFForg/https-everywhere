@@ -589,7 +589,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
  * Import extension settings (custom rulesets, ruleset toggles, globals) from an object
  * @param settings the settings object
  */
-async function import_settings(settings) {
+function import_settings(settings) {
   if (settings && settings.changed) {
     // Load all the ruleset toggles into memory and store
     for (const ruleset_name in settings.rule_toggle) {
@@ -600,7 +600,7 @@ async function import_settings(settings) {
     load_legacy_custom_rulesets(settings.custom_rulesets);
 
     // Save settings
-    await new Promise(resolve => {
+    return new Promise(resolve => {
       store.set({
         legacy_custom_rulesets: settings.custom_rulesets,
         httpNowhere: settings.prefs.http_nowhere_enabled,
