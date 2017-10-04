@@ -59,17 +59,6 @@ function appendRuleLineToListDiv(ruleset, list_div) {
 
   label.appendChild(checkbox);
 
-  // favicon (from chrome's cache)
-  var favicon = document.createElement("img");
-  favicon.className = "favicon";
-  for (let rule of ruleset.rules) {
-    var host = hostReg.exec(rule.to);
-    if (host) {
-      favicon.src = "chrome://favicon/" + host[0];
-      break;
-    }
-  }
-
   // label text
   var text = document.createElement("span");
   text.innerText = ruleset.name;
