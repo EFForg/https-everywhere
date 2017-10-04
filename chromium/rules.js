@@ -32,15 +32,17 @@ const trivial_cookie_host_c = new RegExp(".*");
  * @param to
  * @constructor
  */
-function Rule(from, to) {
-  if (from === "^http:" && to === "https:") {
-    // This is a trivial rule, rewriting http->https with no complex RegExp.
-    this.to = trivial_rule_to;
-    this.from_c = trivial_rule_from_c;
-  } else {
-    // This is a non-trivial rule.
-    this.to = to;
-    this.from_c = new RegExp(from);
+class Rule {
+  constructor(from, to) {
+    if (from === "^http:" && to === "https:") {
+      // This is a trivial rule, rewriting http->https with no complex RegExp.
+      this.to = trivial_rule_to;
+      this.from_c = trivial_rule_from_c;
+    } else {
+      // This is a non-trivial rule.
+      this.to = to;
+      this.from_c = new RegExp(from);
+    }
   }
 }
 
@@ -49,8 +51,10 @@ function Rule(from, to) {
  * @param pattern The pattern to compile
  * @constructor
  */
-function Exclusion(pattern) {
-  this.pattern_c = new RegExp(pattern);
+class Exclusion {
+    constructor(pattern) {
+    this.pattern_c = new RegExp(pattern);
+  }
 }
 
 /**
@@ -59,19 +63,21 @@ function Exclusion(pattern) {
  * @param cookiename The cookie name Regex to compile
  * @constructor
  */
-function CookieRule(host, cookiename) {
-  if (host === ".*" || host === ".+" || host === ".") {
-    // Some cookie rules trivially match any host.
-    this.host_c = trivial_cookie_host_c;
-  } else {
-    this.host_c = new RegExp(host);
-  }
+class CookieRule {
+  constructor(host, cookiename) {
+    if (host === ".*" || host === ".+" || host === ".") {
+      // Some cookie rules trivially match any host.
+      this.host_c = trivial_cookie_host_c;
+    } else {
+      this.host_c = new RegExp(host);
+    }
 
-  if (cookiename === ".*" || cookiename === ".+" || cookiename === ".") {
-    // About 50% of cookie rules trivially match any name.
-    this.name_c = trivial_cookie_name_c;
-  } else {
-    this.name_c = new RegExp(cookiename);
+    if (cookiename === ".*" || cookiename === ".+" || cookiename === ".") {
+      // About 50% of cookie rules trivially match any name.
+      this.name_c = trivial_cookie_name_c;
+    } else {
+      this.name_c = new RegExp(cookiename);
+    }
   }
 }
 
