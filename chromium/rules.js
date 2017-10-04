@@ -82,23 +82,23 @@ function CookieRule(host, cookiename) {
  * @param note Note will be displayed in popup
  * @constructor
  */
-function RuleSet(set_name, default_state, note) {
-  this.name = set_name;
-  this.rules = [];
-  this.exclusions = null;
-  this.cookierules = null;
-  this.active = default_state;
-  this.default_state = default_state;
-  this.note = note;
-}
+class RuleSet {
+  constructor(set_name, default_state, note) {
+    this.name = set_name;
+    this.rules = [];
+    this.exclusions = null;
+    this.cookierules = null;
+    this.active = default_state;
+    this.default_state = default_state;
+    this.note = note;
+  }
 
-RuleSet.prototype = {
   /**
    * Check if a URI can be rewritten and rewrite it
    * @param urispec The uri to rewrite
    * @returns {*} null or the rewritten uri
    */
-  apply: function(urispec) {
+  apply(urispec) {
     var returl = null;
     // If we're covered by an exclusion, go home
     if (this.exclusions !== null) {
@@ -119,14 +119,14 @@ RuleSet.prototype = {
       }
     }
     return null;
-  },
+  }
 
   /**
    * Deep equivalence comparison
    * @param ruleset The ruleset to compare with
    * @returns true or false, depending on whether it's deeply equivalent
    */
-  isEquivalentTo: function(ruleset) {
+  isEquivalentTo(ruleset) {
     if(this.name != ruleset.name ||
        this.note != ruleset.note ||
        this.state != ruleset.state ||
@@ -178,44 +178,41 @@ RuleSet.prototype = {
     }
     return true;
   }
-
-};
+}
 
 /**
  * Initialize Rule Sets
  * @param ruleActiveStates default state for rules
  * @constructor
  */
-function RuleSets() {
-  // Load rules into structure
-  this.targets = new Map();
+class RuleSets {
+  constructor() {
+    // Load rules into structure
+    this.targets = new Map();
 
-  // A cache for potentiallyApplicableRulesets
-  this.ruleCache = new Map();
+    // A cache for potentiallyApplicableRulesets
+    this.ruleCache = new Map();
 
-  // A cache for cookie hostnames.
-  this.cookieHostCache = new Map();
+    // A cache for cookie hostnames.
+    this.cookieHostCache = new Map();
 
-  // A hash of rule name -> active status (true/false).
-  this.ruleActiveStates = {};
+    // A hash of rule name -> active status (true/false).
+    this.ruleActiveStates = {};
 
-  // The key to retrieve user rules from localStorage
-  this.USER_RULE_KEY = 'userRules';
-}
+    // The key to retrieve user rules from localStorage
+    this.USER_RULE_KEY = 'userRules';
+  }
 
-
-RuleSets.prototype = {
-
-  initialize: function() {
+  initialize() {
     this.ruleActiveStates = store.localStorage;
     this.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
     this.loadStoredUserRules();
-  },
+  }
 
   /**
    * Iterate through data XML and load rulesets
    */
-  addFromXml: function(ruleXml) {
+  addFromXml(ruleXml) {
     var sets = ruleXml.getElementsByTagName("ruleset");
     for (let s of sets) {
       try {
@@ -224,9 +221,9 @@ RuleSets.prototype = {
         util.log(util.WARN, 'Error processing ruleset:' + e);
       }
     }
-  },
+  }
 
-  addFromJson: function(ruleJson) {
+  addFromJson(ruleJson) {
     for (let ruleset of ruleJson) {
       try {
         this.parseOneJsonRuleset(ruleset);
@@ -234,9 +231,9 @@ RuleSets.prototype = {
         util.log(util.WARN, 'Error processing ruleset:' + e);
       }
     }
-  },
+  }
 
-  parseOneJsonRuleset: function(ruletag) {
+  parseOneJsonRuleset(ruletag) {
     var default_state = true;
     var note = "";
     var default_off = ruletag["default_off"];
@@ -303,14 +300,14 @@ RuleSets.prototype = {
         this.targets.get(target).push(rule_set);
       }
     }
-  },
+  }
 
   /**
    * Load a user rule
    * @param params
    * @returns {boolean}
    */
-  addUserRule : function(params) {
+  addUserRule(params) {
     util.log(util.INFO, 'adding new user rule for ' + JSON.stringify(params));
     var new_rule_set = new RuleSet(params.host, true, "user rule");
     var new_rule = new Rule(params.urlMatcher, params.redirectTo);
@@ -326,14 +323,14 @@ RuleSets.prototype = {
     }
     util.log(util.INFO, 'done adding rule');
     return true;
-  },
+  }
 
   /**
    * Remove a user rule
    * @param params
    * @returns {boolean}
    */
-  removeUserRule: function(ruleset) {
+  removeUserRule(ruleset) {
     util.log(util.INFO, 'removing user rule for ' + JSON.stringify(ruleset));
     this.ruleCache.delete(ruleset.name);
 
@@ -349,37 +346,37 @@ RuleSets.prototype = {
 
     util.log(util.INFO, 'done removing rule');
     return true;
-  },
+  }
   
   /**
   * Retrieve stored user rules from localStorage
   **/
-  getStoredUserRules: function() {
+  getStoredUserRules() {
     const oldUserRuleString = store.localStorage.getItem(this.USER_RULE_KEY);
     let oldUserRules = [];
     if (oldUserRuleString) {
       oldUserRules = JSON.parse(oldUserRuleString);
     }
     return oldUserRules;
-  },
+  }
 
   /**
   * Load all stored user rules into this RuleSet object
   */
-  loadStoredUserRules: function() {
+  loadStoredUserRules() {
     const user_rules = this.getStoredUserRules();
     for (let user_rule of user_rules) {
       this.addUserRule(user_rule);
     }
     util.log(util.INFO, 'loaded ' + user_rules.length + ' stored user rules');
-  },
+  }
 
   /**
   * Adds a new user rule
   * @param params: params defining the rule
   * @param cb: Callback to call after success/fail
   * */
-  addNewRuleAndStore: function(params) {
+  addNewRuleAndStore(params) {
     if (this.addUserRule(params)) {
       // If we successfully added the user rule, save it in local
       // storage so it's automatically applied when the extension is
@@ -391,13 +388,13 @@ RuleSets.prototype = {
       // TODO: can we exceed the max size for storage?
       store.localStorage.setItem(this.USER_RULE_KEY, JSON.stringify(oldUserRules));
     }
-  },
+  }
 
   /**
   * Removes a user rule
   * @param ruleset: the ruleset to remove
   * */
-  removeRuleAndStore: function(ruleset) {
+  removeRuleAndStore(ruleset) {
     if (this.removeUserRule(ruleset)) {
       // If we successfully removed the user rule, remove it in local storage too
       var userRules = this.getStoredUserRules();
@@ -408,13 +405,13 @@ RuleSets.prototype = {
       );
       store.localStorage.setItem(this.USER_RULE_KEY, JSON.stringify(userRules));
     }
-  },
+  }
 
   /**
    * Does the loading of a ruleset.
    * @param ruletag The whole <ruleset> tag to parse
    */
-  parseOneXmlRuleset: function(ruletag) {
+  parseOneXmlRuleset(ruletag) {
     var default_state = true;
     var note = "";
     var default_off = ruletag.getAttribute("default_off");
@@ -476,14 +473,14 @@ RuleSets.prototype = {
       }
       this.targets.get(host).push(rule_set);
     }
-  },
+  }
 
   /**
    * Return a list of rulesets that apply to this host
    * @param host The host to check
    * @returns {*} (empty) list
    */
-  potentiallyApplicableRulesets: function(host) {
+  potentiallyApplicableRulesets(host) {
     // Have we cached this result? If so, return it!
     var cached_item = this.ruleCache.get(host);
     if (cached_item !== undefined) {
@@ -542,14 +539,14 @@ RuleSets.prototype = {
     }
 
     return resultSet;
-  },
+  }
 
   /**
    * Check to see if the Cookie object c meets any of our cookierule criteria for being marked as secure.
    * @param cookie The cookie to test
    * @returns {*} ruleset or null
    */
-  shouldSecureCookie: function(cookie) {
+  shouldSecureCookie(cookie) {
     var hostname = cookie.domain;
     // cookie domain scopes can start with .
     while (hostname.charAt(0) == ".") {
@@ -572,14 +569,14 @@ RuleSets.prototype = {
       }
     }
     return null;
-  },
+  }
 
   /**
    * Check if it is secure to secure the cookie (=patch the secure flag in).
    * @param domain The domain of the cookie
    * @returns {*} true or false
    */
-  safeToSecureCookie: function(domain) {
+  safeToSecureCookie(domain) {
     // Check if the domain might be being served over HTTP.  If so, it isn't
     // safe to secure a cookie!  We can't always know this for sure because
     // observing cookie-changed doesn't give us enough context to know the
@@ -630,7 +627,7 @@ RuleSets.prototype = {
     util.log(util.INFO, "Cookie domain could NOT be secured.");
     this.cookieHostCache.set(domain, false);
     return false;
-  },
+  }
 
   /**
    * Rewrite an URI
@@ -638,7 +635,7 @@ RuleSets.prototype = {
    * @param host The host of this uri
    * @returns {*} the new uri or null
    */
-  rewriteURI: function(urispec, host) {
+  rewriteURI(urispec, host) {
     var newuri = null;
     var potentiallyApplicable = this.potentiallyApplicableRulesets(host);
     for (let ruleset of potentiallyApplicable) {
@@ -648,7 +645,7 @@ RuleSets.prototype = {
     }
     return null;
   }
-};
+}
 
 Object.assign(exports, {
   settings,

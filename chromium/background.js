@@ -161,38 +161,37 @@ function updateState () {
 /**
  * Adds a listener for removed tabs
  * */
-function AppliedRulesets() {
-  this.active_tab_rules = {};
+class AppliedRulesets {
+  constructor() {
+    this.active_tab_rules = {};
 
-  var that = this;
-  if (chrome.tabs) {
-    chrome.tabs.onRemoved.addListener(function(tabId) {
-      that.removeTab(tabId);
-    });
+    if (chrome.tabs) {
+      chrome.tabs.onRemoved.addListener(function(tabId) {
+        this.removeTab(tabId);
+      });
+    }
   }
-}
 
-AppliedRulesets.prototype = {
-  addRulesetToTab: function(tabId, ruleset) {
+  addRulesetToTab(tabId, ruleset) {
     if (tabId in this.active_tab_rules) {
       this.active_tab_rules[tabId][ruleset.name] = ruleset;
     } else {
       this.active_tab_rules[tabId] = {};
       this.active_tab_rules[tabId][ruleset.name] = ruleset;
     }
-  },
+  }
 
-  getRulesets: function(tabId) {
+  getRulesets(tabId) {
     if (tabId in this.active_tab_rules) {
       return this.active_tab_rules[tabId];
     }
     return null;
-  },
+  }
 
-  removeTab: function(tabId) {
+  removeTab(tabId) {
     delete this.active_tab_rules[tabId];
   }
-};
+}
 
 // FIXME: change this name
 var activeRulesets = new AppliedRulesets();
