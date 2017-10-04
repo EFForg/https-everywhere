@@ -52,7 +52,7 @@ class Rule {
  * @constructor
  */
 class Exclusion {
-    constructor(pattern) {
+  constructor(pattern) {
     this.pattern_c = new RegExp(pattern);
   }
 }
