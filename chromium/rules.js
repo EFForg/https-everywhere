@@ -209,10 +209,11 @@ class RuleSets {
     this.USER_RULE_KEY = 'userRules';
   }
 
-  initialize() {
+  async initialize() {
     this.ruleActiveStates = store.localStorage;
     this.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
     this.loadStoredUserRules();
+    await this.addStoredCustomRulesets();
   }
 
   /**
@@ -412,6 +413,30 @@ class RuleSets {
       store.localStorage.setItem(this.USER_RULE_KEY, JSON.stringify(userRules));
     }
   }
+
+  addStoredCustomRulesets: function(){
+    return new Promise(resolve => {
+      store.get({
+        legacy_custom_rulesets: [],
+        debugging_rulesets: ""
+      }, item => {
+        this.loadCustomRulesets(item.legacy_custom_rulesets);
+        this.loadCustomRuleset(item.debugging_rulesets);
+        resolve();
+      });
+    });
+  },
+
+  // Load in the legacy custom rulesets, if any
+  loadCustomRulesets: function(legacy_custom_rulesets){
+    for(let legacy_custom_ruleset of legacy_custom_rulesets){
+      this.loadCustomRuleset(legacy_custom_ruleset);
+    }
+  },
+
+  loadCustomRuleset: function(ruleset_string){
+    this.addFromXml((new DOMParser()).parseFromString(ruleset_string, 'text/xml'));
+  },
 
   /**
    * Does the loading of a ruleset.
