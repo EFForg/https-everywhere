@@ -404,8 +404,7 @@ RuleSets.prototype = {
       var userRules = this.getStoredUserRules();
       userRules = userRules.filter(r =>
         !(r.host == ruleset.name &&
-          r.redirectTo == ruleset.rules[0].to &&
-          String(RegExp(r.urlMatcher)) == String(ruleset.rules[0].from_c))
+          r.redirectTo == ruleset.rules[0].to)
       );
       store.localStorage.setItem(this.USER_RULE_KEY, JSON.stringify(userRules));
     }
