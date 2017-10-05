@@ -414,7 +414,7 @@ class RuleSets {
     }
   }
 
-  addStoredCustomRulesets: function(){
+  addStoredCustomRulesets() {
     return new Promise(resolve => {
       store.get({
         legacy_custom_rulesets: [],
@@ -428,13 +428,13 @@ class RuleSets {
   },
 
   // Load in the legacy custom rulesets, if any
-  loadCustomRulesets: function(legacy_custom_rulesets){
+  loadCustomRulesets(legacy_custom_rulesets) {
     for(let legacy_custom_ruleset of legacy_custom_rulesets){
       this.loadCustomRuleset(legacy_custom_ruleset);
     }
   },
 
-  loadCustomRuleset: function(ruleset_string){
+  loadCustomRuleset(ruleset_string) {
     this.addFromXml((new DOMParser()).parseFromString(ruleset_string, 'text/xml'));
   },
 
