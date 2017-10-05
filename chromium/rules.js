@@ -206,10 +206,11 @@ function RuleSets() {
 
 RuleSets.prototype = {
 
-  initialize: function() {
+  initialize: async function() {
     this.ruleActiveStates = store.localStorage;
     this.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
     this.loadStoredUserRules();
+    await this.addStoredCustomRulesets();
   },
 
   /**
@@ -403,11 +404,34 @@ RuleSets.prototype = {
       var userRules = this.getStoredUserRules();
       userRules = userRules.filter(r =>
         !(r.host == ruleset.name &&
-          r.redirectTo == ruleset.rules[0].to &&
-          String(RegExp(r.urlMatcher)) == String(ruleset.rules[0].from_c))
+          r.redirectTo == ruleset.rules[0].to)
       );
       store.localStorage.setItem(this.USER_RULE_KEY, JSON.stringify(userRules));
     }
+  },
+
+  addStoredCustomRulesets: function(){
+    return new Promise(resolve => {
+      store.get({
+        legacy_custom_rulesets: [],
+        debugging_rulesets: ""
+      }, item => {
+        this.loadCustomRulesets(item.legacy_custom_rulesets);
+        this.loadCustomRuleset(item.debugging_rulesets);
+        resolve();
+      });
+    });
+  },
+
+  // Load in the legacy custom rulesets, if any
+  loadCustomRulesets: function(legacy_custom_rulesets){
+    for(let legacy_custom_ruleset of legacy_custom_rulesets){
+      this.loadCustomRuleset(legacy_custom_ruleset);
+    }
+  },
+
+  loadCustomRuleset: function(ruleset_string){
+    this.addFromXml((new DOMParser()).parseFromString(ruleset_string, 'text/xml'));
   },
 
   /**
