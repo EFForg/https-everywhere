@@ -68,8 +68,9 @@ chrome.storage.onChanged.addListener(async function(changes, areaName) {
       updateState();
     }
     if ('debugging_rulesets' in changes) {
-      Object.assign(all_rules, new rules.RuleSets());
-      await all_rules.initialize();
+      const r = new rules.RuleSets();
+      await r.initialize();
+      Object.assign(all_rules, r);
     }
   }
 });

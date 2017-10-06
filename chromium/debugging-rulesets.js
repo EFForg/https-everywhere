@@ -2,13 +2,13 @@
 
 "use strict";
 
-window.onload = function() {
-  document.querySelector("form").addEventListener("submit", save_debugging_rulesets);
+document.getElementById("debugging-rulesets-form").addEventListener("submit", save_debugging_rulesets);
 
-  sendMessage("get_option", { debugging_rulesets: "" }, item => {
-    document.getElementById("debugging-rulesets").value = item.debugging_rulesets;
-  });
-}
+sendMessage("get_option", { debugging_rulesets: "" }, item => {
+  let debugging_rulesets_textarea = document.getElementById("debugging-rulesets");
+  debugging_rulesets_textarea.value = item.debugging_rulesets;
+  debugging_rulesets_textarea.style.display = "block";
+});
 
 function save_debugging_rulesets(e){
   e.preventDefault();
