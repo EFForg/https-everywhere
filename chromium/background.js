@@ -546,7 +546,6 @@ chrome.runtime.onConnect.addListener(function (port) {
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   if (message.type == "get_option") {
     store.get(message.object, sendResponse);
-    return true;
   } else if (message.type == "set_option") {
     store.set(message.object, item => {
       if (sendResponse) {
@@ -564,7 +563,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   } else if (message.type == "add_new_rule") {
     all_rules.addNewRuleAndStore(message.object);
     sendResponse(true);
-    return true;
   } else if (message.type == "remove_rule") {
     all_rules.removeRuleAndStore(message.object);
   } else if (message.type == "import_settings") {
