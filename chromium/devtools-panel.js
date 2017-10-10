@@ -1,3 +1,5 @@
+"use strict";
+
 function e(id) {
   return document.getElementById(id);
 }

@@ -71,8 +71,8 @@ const parse_include = include_url => {
       })
       .pipe(split())
       .on('data', line => {
-        line = line.replace(new RegExp('/ 1 /g'), ' true ')
-        line = line.replace(new RegExp('/ 0 /g'), ' false ')
+        line = line.replace(new RegExp('^([^,]+), 1'), ' \"$1\", true ');
+        line = line.replace(new RegExp('^([^,]+), 0'), ' \"$1\", false ');
 
         let regex_res = line.match(regex)
         if(regex_res){
@@ -249,7 +249,7 @@ async.parallel({
   async.parallel({
     esr: parse_include(esr_url),
     dev: parse_include(dev_url),
-    stable: parse_include(esr_url),
+    stable: parse_include(stable_url),
     chromium: parse_json(chromium_url)
   }, (err, structs) => {
 

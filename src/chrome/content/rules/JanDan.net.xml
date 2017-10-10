@@ -1,22 +1,30 @@
 <!--
-	mismatch:
-		www.jandan.net	( equal to ^ )
 
-	Redirect to http:
-		s.jandan.net
+	Problematic domains in *jandan.net:
+
+		- www (expects client certificate)
+		- s (redirects to http)
+		- wan (TLS error)
+		- feed (no https)
+
 -->
-
-<ruleset name="JanDan.net" default_off="incomplete certificate chain">
-
-	<target host="www.jandan.net" />
-	<rule from="^http://www\.jandan\.net/" to="https://jandan.net/" />
-		<test url="http://www.jandan.net/ofk.gif" />
+<ruleset name="JanDan.net" default_off="cert-chain">
 
 	<target host="jandan.net" />
+	<target host="www.jandan.net" />
+		<test url="http://www.jandan.net/ofk.gif" />
+	<target host="api.jandan.net" />
 	<target host="cdn.jandan.net" />
 	<target host="g.jandan.net" />
 	<target host="i.jandan.net" />
+	<target host="mail.jandan.net" />
 	<target host="sslcdn.jandan.net" />
+	<target host="x.jandan.net" />
 
-	<rule from="^http:" to="https:" />
+	<rule from="^http://www\.jandan\.net/"
+		to="https://jandan.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>
