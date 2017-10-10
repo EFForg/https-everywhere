@@ -575,8 +575,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 });
 
 /**
- * Import extension settings (custom rulesets, ruleset toggles, globals) from an object.
- * @param settings the settings object.
+ * Import extension settings (custom rulesets, ruleset toggles, globals) from an object
+ * @param settings the settings object
  */
 async function import_settings(settings) {
   if (settings && settings.changed) {
