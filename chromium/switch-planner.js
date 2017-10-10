@@ -1,3 +1,5 @@
+"use strict";
+
 window.onload = function() {
   var backgroundPage = chrome.extension.getBackgroundPage(); 
   var tab = document.location.search.match(/tab=([^&]*)/)[1];
@@ -48,7 +50,7 @@ function switchPlannerDetailsHtmlSection(asset_host_list, link_keys) {
     if (activeCount > 0) {
       var active_div = document.createElement("div");
       active_div.appendChild(document.createTextNode(activeCount + " active"));
-      for(link of linksFromKeys(link_keys[host][1])){
+      for (const link of linksFromKeys(link_keys[host][1])) {
         active_div.appendChild(link);
       }
       div.appendChild(active_div);
@@ -56,7 +58,7 @@ function switchPlannerDetailsHtmlSection(asset_host_list, link_keys) {
     if (passiveCount > 0) {
       var passive_div = document.createElement("div");
       passive_div.appendChild(document.createTextNode(passiveCount + " passive"));
-      for(link of linksFromKeys(link_keys[host][0])){
+      for (const link of linksFromKeys(link_keys[host][0])) {
         passive_div.appendChild(link);
       }
       div.appendChild(passive_div);

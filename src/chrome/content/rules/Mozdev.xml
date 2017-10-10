@@ -1,32 +1,28 @@
 <!--
-	Problematic subdomains:
 
-		- bugzilla *
+	Problematic hosts in *mozdev.org:
 
-	* Shows www
+		- ^ (mismatched)
+		- bugzilla (mismatched, different content)
+		- hg (mismatched)
+		- svn (mismatched, different content)
+		- * (mismatched, see Mozdev-mismatches.xml)
 
 -->
-<ruleset name="Mozdev (expired cert)" default_off="cert expired">
+<ruleset name="Mozdev">
 
-	<target host="mozdev.org"/>
-	<target host="bugzilla.mozdev.org"/>
-	<target host="hg.mozdev.org"/>
-	<target host="svn.mozdev.org"/>
-	<target host="www.mozdev.org"/>
-	<target host="*.www.mozdev.org"/>
+	<target host="mozdev.org" />
+	<target host="www.mozdev.org" />
+	<target host="bugzilla.mozdev.org" />
+		<test url="http://bugzilla.mozdev.org/enter_bug.cgi?product=forward" />
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.www\.mozdev\.org$" name="^DEFAULTFORMAT$"/-->
+	<rule from="^http://bugzilla\.mozdev\.org/"
+		to="https://www.mozdev.org/bugs/" />
 
-	<securecookie host="^(?:.*\.)?mozdev\.org$" name=".*"/>
+	<rule from="^http://mozdev\.org/"
+		to="https://www.mozdev.org/" />
 
-	<rule from="^http://(hg\.|svn\.|www\.)?mozdev\.org/"
-		to="https://$1mozdev.org/"/>
-
-	<!--	Redirects like so:
-					-->
-	<rule from="^http://bugzilla\.mozdev\.org/+"
-		to="https://www.mozdev.org/bugs/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
