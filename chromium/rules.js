@@ -432,11 +432,11 @@ class RuleSets {
     for(let legacy_custom_ruleset of legacy_custom_rulesets){
       this.loadCustomRuleset(legacy_custom_ruleset);
     }
-  },
+  }
 
   loadCustomRuleset(ruleset_string) {
     this.addFromXml((new DOMParser()).parseFromString(ruleset_string, 'text/xml'));
-  },
+  }
 
   /**
    * Does the loading of a ruleset.
