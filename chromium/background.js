@@ -14,6 +14,8 @@ function initialize() {
     });
 }
 
+initialize();
+
 /**
  * Load preferences. Structure is:
  *  {
