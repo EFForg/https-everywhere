@@ -425,7 +425,7 @@ class RuleSets {
         resolve();
       });
     });
-  },
+  }
 
   // Load in the legacy custom rulesets, if any
   loadCustomRulesets(legacy_custom_rulesets) {
