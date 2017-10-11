@@ -120,7 +120,7 @@ function showHttpNowhereUI() {
   // Set up checkbox for HTTP nowhere mode
   getOption_('httpNowhere', false, function(item) {
     if (item.httpNowhere) {
-      e('http-nowhere-checkbox').setAttribute('checked', '');
+      e('http-nowhere-checkbox').checked = true;
     }
     show(e('HttpNowhere'));
   });
@@ -280,7 +280,7 @@ function setOption_(opt, value, callback) {
 function getTab(callback) {
   let url = new URL(window.location.href);
   if (url.searchParams.has('tabId')) {
-    var parentId = parseInt(url.searchParams.get('tabId'));
+    let parentId = parseInt(url.searchParams.get('tabId'));
     return chrome.tabs.get(parentId, callback);
   }
   chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => callback(tabs[0]));
