@@ -3,7 +3,7 @@
 "use strict";
 
 function sendMessage(type, object, callback) {
-  var packet = {};
+  let packet = {};
   packet.type = type;
   if(object){
     packet.object = object;

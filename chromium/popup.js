@@ -2,11 +2,11 @@
 
 "use strict";
 
-var stableRules = null;
-var unstableRules = null;
-var hostReg = /.*\/\/[^$/]*\//;
+let stableRules = null;
+let unstableRules = null;
+let hostReg = /.*\/\/[^$/]*\//;
 
-var ls;
+let ls;
 try{
   ls = localStorage;
 } catch(e) {
@@ -23,8 +23,8 @@ function e(id) {
  * @param ruleset the ruleset tied tot he checkbox
  */
 function toggleRuleLine(checkbox, ruleset, tab_id) {
-  var ruleset_active = checkbox.checked;
-  var set_ruleset = {
+  let ruleset_active = checkbox.checked;
+  let set_ruleset = {
     active: ruleset_active,
     name: ruleset.name,
     tab_id: tab_id
@@ -53,14 +53,14 @@ function toggleRuleLine(checkbox, ruleset, tab_id) {
 function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
 
   // parent block for line
-  var line = document.createElement("div");
+  let line = document.createElement("div");
   line.className = "rule checkbox";
 
   // label "container"
-  var label = document.createElement("label");
+  let label = document.createElement("label");
 
   // checkbox
-  var checkbox = document.createElement("input");
+  let checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   if (ruleset.active) {
     checkbox.setAttribute("checked", "");
@@ -71,11 +71,11 @@ function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
   label.appendChild(checkbox);
 
   // favicon (from chrome's cache)
-  var favicon = document.createElement("img");
+  let favicon = document.createElement("img");
   favicon.className = "favicon";
   favicon.src = "chrome://favicon/";
   for (let rule of ruleset.rules) {
-    var host = hostReg.exec(rule.to);
+    let host = hostReg.exec(rule.to);
     if (host) {
       favicon.src += host[0];
       break;
@@ -83,7 +83,7 @@ function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
   }
 
   if (false) { //navigator.userAgent.match("Chrome")) {
-    var xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
     try {
       xhr.open("GET", favicon.src, true);
       label.appendChild(favicon);
@@ -91,14 +91,14 @@ function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
   }
 
   // label text
-  var text = document.createElement("span");
+  let text = document.createElement("span");
   text.innerText = ruleset.name;
   if (ruleset.note.length) {
     text.title = ruleset.note;
   }
 
   if(ruleset.note == "user rule") {
-    var remove = document.createElement("img");
+    let remove = document.createElement("img");
     remove.src = chrome.extension.getURL("remove.png");
     remove.className = "remove";
     line.appendChild(remove);
@@ -131,7 +131,7 @@ function updateEnabledDisabledUI() {
 
 // Toggle extension enabled/disabled status
 function toggleEnabledDisabled() {
-  var extension_toggle_effect = function(){
+  let extension_toggle_effect = function(){
     updateEnabledDisabledUI();
     // The extension state changed, so reload this tab.
     chrome.tabs.reload();
@@ -149,11 +149,11 @@ function toggleEnabledDisabled() {
  * @param tabArray
  */
 function gotTab(tabArray) {
-  var activeTab = tabArray[0];
+  let activeTab = tabArray[0];
 
   sendMessage("get_active_rulesets", activeTab.id, function(rulesets){
-    for (var r in rulesets) {
-      var listDiv = stableRules;
+    for (let r in rulesets) {
+      let listDiv = stableRules;
       if (!rulesets[r].default_state) {
         listDiv = unstableRules;
       }
@@ -181,15 +181,15 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById('onoffswitch').addEventListener('click', toggleEnabledDisabled);
 
   // Print the extension's current version.
-  var the_manifest = chrome.runtime.getManifest();
-  var version_info = document.getElementById('current-version');
+  let the_manifest = chrome.runtime.getManifest();
+  let version_info = document.getElementById('current-version');
   version_info.innerText = the_manifest.version;
 
   // Set up toggle checkbox for HTTP nowhere mode
   getOption_('httpNowhere', false, function(item) {
-    var httpNowhereCheckbox = document.getElementById('http-nowhere-checkbox');
+    let httpNowhereCheckbox = document.getElementById('http-nowhere-checkbox');
     httpNowhereCheckbox.addEventListener('click', toggleHttpNowhere, false);
-    var httpNowhereEnabled = item.httpNowhere;
+    let httpNowhereEnabled = item.httpNowhere;
     if (httpNowhereEnabled) {
       httpNowhereCheckbox.setAttribute('checked', '');
     }
@@ -200,7 +200,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-var escapeForRegex = function( value ) {
+let escapeForRegex = function( value ) {
   return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
 };
 
@@ -265,13 +265,13 @@ function toggleHttpNowhere() {
 }
 
 function getOption_(opt, defaultOpt, callback) {
-  var details = {};
+  let details = {};
   details[opt] = defaultOpt;
   sendMessage("get_option", details, callback);
 }
 
 function setOption_(opt, value, callback) {
-  var details = {};
+  let details = {};
   details[opt] = value;
   sendMessage("set_option", details, callback);
 }

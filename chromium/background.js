@@ -22,9 +22,9 @@ initialize();
  *    isExtensionEnabled: Boolean
  *  }
  */
-var httpNowhereOn = false;
-var showCounter = true;
-var isExtensionEnabled = true;
+let httpNowhereOn = false;
+let showCounter = true;
+let isExtensionEnabled = true;
 
 function initializeStoredGlobals(){
   return new Promise(resolve => {
@@ -79,12 +79,12 @@ chrome.webNavigation.onCompleted.addListener(function() {
 
 // Records which tabId's are active in the HTTPS Switch Planner (see
 // devtools-panel.js).
-var switchPlannerEnabledFor = {};
+let switchPlannerEnabledFor = {};
 // Detailed information recorded when the HTTPS Switch Planner is active.
 // Structure is:
 //   switchPlannerInfo[tabId]["rw"/"nrw"][resource_host][active_content][url];
 // rw / nrw stand for "rewritten" versus "not rewritten"
-var switchPlannerInfo = {};
+let switchPlannerInfo = {};
 
 function getActiveRulesetCount(id) {
   const applied = activeRulesets.getRulesets(id);
@@ -154,7 +154,7 @@ function updateState () {
 function AppliedRulesets() {
   this.active_tab_rules = {};
 
-  var that = this;
+  let that = this;
   if (chrome.tabs) {
     chrome.tabs.onRemoved.addListener(function(tabId) {
       that.removeTab(tabId);
@@ -185,13 +185,13 @@ AppliedRulesets.prototype = {
 };
 
 // FIXME: change this name
-var activeRulesets = new AppliedRulesets();
+let activeRulesets = new AppliedRulesets();
 
-var urlBlacklist = new Set();
+let urlBlacklist = new Set();
 
 // redirect counter workaround
 // TODO: Remove this code if they ever give us a real counter
-var redirectCounter = new Map();
+let redirectCounter = new Map();
 
 /**
  * Called before a HTTP(s) request. Does the heavy lifting
@@ -207,7 +207,7 @@ function onBeforeRequest(details) {
   const uri = new URL(details.url);
 
   // Should the request be canceled?
-  var shouldCancel = (
+  let shouldCancel = (
     httpNowhereOn &&
     uri.protocol === 'http:' &&
     !/\.onion$/.test(uri.hostname) &&
@@ -217,7 +217,7 @@ function onBeforeRequest(details) {
   );
 
   // Normalise hosts such as "www.example.com."
-  var canonical_host = uri.hostname;
+  let canonical_host = uri.hostname;
   if (canonical_host.charAt(canonical_host.length - 1) == ".") {
     while (canonical_host.charAt(canonical_host.length - 1) == ".")
       canonical_host = canonical_host.slice(0,-1);
@@ -226,7 +226,7 @@ function onBeforeRequest(details) {
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
-  var using_credentials_in_url = false;
+  let using_credentials_in_url = false;
   let tmp_user;
   let tmp_pass;
   if (uri.password || uri.username) {
@@ -237,7 +237,7 @@ function onBeforeRequest(details) {
     uri.password = '';
   }
 
-  var canonical_url = uri.href;
+  let canonical_url = uri.href;
   if (details.url != canonical_url && !using_credentials_in_url) {
     util.log(util.INFO, "Original url " + details.url +
         " changed before processing to " + canonical_url);
@@ -250,18 +250,18 @@ function onBeforeRequest(details) {
     activeRulesets.removeTab(details.tabId);
   }
 
-  var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
+  let potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
 
   if (redirectCounter.get(details.requestId) >= 8) {
     util.log(util.NOTE, "Redirect counter hit for " + canonical_url);
     urlBlacklist.add(canonical_url);
-    var hostname = uri.hostname;
+    let hostname = uri.hostname;
     rules.settings.domainBlacklist.add(hostname);
     util.log(util.WARN, "Domain blacklisted " + hostname);
     return {cancel: shouldCancel};
   }
 
-  var newuristr = null;
+  let newuristr = null;
 
   for (let ruleset of potentiallyApplicable) {
     activeRulesets.addRulesetToTab(details.tabId, ruleset);
@@ -321,7 +321,7 @@ function onBeforeRequest(details) {
 
 // Map of which values for the `type' enum denote active vs passive content.
 // https://developer.chrome.com/extensions/webRequest.html#event-onBeforeRequest
-var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1};
+let activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1};
 
 // We consider sub_frame to be passive even though it can contain JS or flash.
 // This is because code running in the sub_frame cannot access the main frame's
@@ -329,7 +329,7 @@ var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1};
 // same domain but different protocol - i.e. HTTP while the parent is HTTPS -
 // because same-origin policy includes the protocol. This also mimics Chrome's
 // UI treatment of insecure subframes.
-var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
+let passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
 
 /**
  * Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
@@ -343,11 +343,11 @@ var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
  * @param rewritten_url: The url rewritten to
  * */
 function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritten_url) {
-  var rw = "rw";
+  let rw = "rw";
   if (rewritten_url == null)
     rw = "nrw";
 
-  var active_content = 0;
+  let active_content = 0;
   if (activeTypes[type]) {
     active_content = 1;
   } else if (passiveTypes[type]) {
@@ -377,7 +377,7 @@ function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritt
  * */
 function objSize(obj) {
   if (typeof obj == 'undefined') return 0;
-  var size = 0, key;
+  let size = 0, key;
   for (key in obj) {
     if (obj.hasOwnProperty(key)) size++;
   }
@@ -389,17 +389,17 @@ function objSize(obj) {
  * presenting the most important ones first.
  * */
 function sortSwitchPlanner(tab_id, rewritten) {
-  var asset_host_list = [];
+  let asset_host_list = [];
   if (typeof switchPlannerInfo[tab_id] === 'undefined' ||
       typeof switchPlannerInfo[tab_id][rewritten] === 'undefined') {
     return [];
   }
-  var tabInfo = switchPlannerInfo[tab_id][rewritten];
-  for (var asset_host in tabInfo) {
-    var ah = tabInfo[asset_host];
-    var activeCount = objSize(ah[1]);
-    var passiveCount = objSize(ah[0]);
-    var score = activeCount * 100 + passiveCount;
+  let tabInfo = switchPlannerInfo[tab_id][rewritten];
+  for (let asset_host in tabInfo) {
+    let ah = tabInfo[asset_host];
+    let activeCount = objSize(ah[1]);
+    let passiveCount = objSize(ah[0]);
+    let score = activeCount * 100 + passiveCount;
     asset_host_list.push([score, activeCount, passiveCount, asset_host]);
   }
   asset_host_list.sort(function(a,b){return a[0]-b[0];});
@@ -413,7 +413,7 @@ function sortSwitchPlanner(tab_id, rewritten) {
 function onCookieChanged(changeInfo) {
   if (!changeInfo.removed && !changeInfo.cookie.secure && isExtensionEnabled) {
     if (all_rules.shouldSecureCookie(changeInfo.cookie)) {
-      var cookie = {name:changeInfo.cookie.name,
+      let cookie = {name:changeInfo.cookie.name,
         value:changeInfo.cookie.value,
         path:changeInfo.cookie.path,
         httpOnly:changeInfo.cookie.httpOnly,
@@ -519,9 +519,9 @@ function enableSwitchPlannerFor(tabId) {
 chrome.runtime.onConnect.addListener(function (port) {
   if (port.name == "devtools-page") {
     chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
-      var tabId = message.tabId;
+      let tabId = message.tabId;
 
-      var disableOnCloseCallback = function() {
+      let disableOnCloseCallback = function() {
         util.log(util.DBUG, "Devtools window for tab " + tabId + " closed, clearing data.");
         disableSwitchPlannerFor(tabId);
       };
@@ -558,7 +558,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   } else if (message.type == "get_active_rulesets") {
     sendResponse(activeRulesets.getRulesets(message.object));
   } else if (message.type == "set_ruleset_active_status") {
-    var ruleset = activeRulesets.getRulesets(message.object.tab_id)[message.object.name];
+    let ruleset = activeRulesets.getRulesets(message.object.tab_id)[message.object.name];
     ruleset.active = message.object.active;
     sendResponse(true);
   } else if (message.type == "add_new_rule") {
