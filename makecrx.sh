@@ -147,3 +147,4 @@ if [ -n "$BRANCH" ]; then
   cp $SUBDIR/$crx pkg
   rm -rf $SUBDIR
 fi
+echo "$crx" # send to stdout so scripts can parse it
