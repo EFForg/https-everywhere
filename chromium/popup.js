@@ -70,26 +70,6 @@ function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
   };
   label.appendChild(checkbox);
 
-  // favicon (from chrome's cache)
-  var favicon = document.createElement("img");
-  favicon.className = "favicon";
-  favicon.src = "chrome://favicon/";
-  for (let rule of ruleset.rules) {
-    var host = hostReg.exec(rule.to);
-    if (host) {
-      favicon.src += host[0];
-      break;
-    }
-  }
-
-  if (false) { //navigator.userAgent.match("Chrome")) {
-    var xhr = new XMLHttpRequest();
-    try {
-      xhr.open("GET", favicon.src, true);
-      label.appendChild(favicon);
-    } catch (e) {}
-  }
-
   // label text
   var text = document.createElement("span");
   text.innerText = ruleset.name;
