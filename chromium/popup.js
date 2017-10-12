@@ -4,7 +4,6 @@
 
 var stableRules = null;
 var unstableRules = null;
-var hostReg = /.*\/\/[^$/]*\//;
 
 var ls;
 try{
