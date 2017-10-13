@@ -2,6 +2,11 @@
 
 (function(exports) {
 
+const rules = require('./rules'),
+  store = require('./store'),
+  util = require('./util');
+
+
 let all_rules = new rules.RuleSets();
 
 async function initialize() {
@@ -607,4 +612,4 @@ Object.assign(exports, {
   urlBlacklist
 });
 
-})(typeof exports == 'undefined' ? window.background = {} : exports);
+})(typeof exports == 'undefined' ? require.scopes.background = {} : exports);
