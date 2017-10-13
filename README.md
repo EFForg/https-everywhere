@@ -92,6 +92,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-The build system incorporates code from Python 2.6
-Copyright © 2001-2006 Python Software Foundation
-Python Software Foundation License Version 2
+The build system incorporates code from Python 2.6.
+Copyright © 2001-2006 Python Software Foundation.
+Python Software Foundation License Version 2.
