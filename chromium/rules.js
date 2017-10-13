@@ -1,21 +1,8 @@
-/* globals global: false */
 "use strict";
 
 (function(exports) {
 
 const util = require('./util');
-
-// Stubs so this runs under nodejs. They get overwritten later by util.js
-if (typeof util == 'undefined' || typeof global != 'undefined') {
-  Object.assign(global, {
-    util: {
-      DBUG: 2,
-      INFO: 3,
-      WARN: 5,
-      log: ()=>{},
-    }
-  });
-}
 
 let settings = {
   enableMixedRulesets: false,
