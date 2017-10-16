@@ -4,14 +4,16 @@
 
 let all_rules = new rules.RuleSets();
 
-async function initialize() {
-  await store.initialize();
-  await initializeStoredGlobals();
-  await all_rules.initialize();
-
-  // Send a message to the embedded webextension bootstrap.js to get settings to import
-  chrome.runtime.sendMessage("import-legacy-data", import_settings);
+function initialize() {
+  return store.initialize()
+    .then(initializeStoredGlobals())
+    .then(() => all_rules.initialize())
+    .then(() => {
+      // Send a message to the embedded webextension bootstrap.js to get settings to import
+      chrome.runtime.sendMessage("import-legacy-data", import_settings);
+    });
 }
+
 initialize();
 
 /**
