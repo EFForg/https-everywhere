@@ -2,12 +2,17 @@
 
 (function(exports) {
 
+const rules = require('./rules'),
+  store = require('./store'),
+  util = require('./util');
+
+
 let all_rules = new rules.RuleSets();
 
 async function initialize() {
   await store.initialize();
   await initializeStoredGlobals();
-  await all_rules.initialize();
+  await all_rules.initialize(store);
 
   // Send a message to the embedded webextension bootstrap.js to get settings to import
   chrome.runtime.sendMessage("import-legacy-data", import_settings);
@@ -597,7 +602,7 @@ async function import_settings(settings) {
     });
 
     Object.assign(all_rules, new rules.RuleSets());
-    await all_rules.initialize();
+    await all_rules.initialize(store);
 
   }
 }
@@ -607,4 +612,4 @@ Object.assign(exports, {
   urlBlacklist
 });
 
-})(typeof exports == 'undefined' ? window.background = {} : exports);
+})(typeof exports == 'undefined' ? require.scopes.background = {} : exports);
