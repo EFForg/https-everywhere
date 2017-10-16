@@ -67,4 +67,4 @@ if (chrome.windows) {
 
 Object.assign(exports, {});
 
-})(typeof exports == 'undefined' ? window.incognito = {} : exports);
+})(typeof exports === 'undefined' ? window.incognito = {} : exports);

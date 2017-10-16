@@ -4,7 +4,7 @@
 (function(exports) {
 
 // Stubs so this runs under nodejs. They get overwritten later by util.js
-if (typeof util == 'undefined' || typeof global != 'undefined') {
+if (typeof util === 'undefined' || typeof global !== 'undefined') {
   Object.assign(global, {
     util: {
       DBUG: 2,
@@ -101,7 +101,7 @@ RuleSet.prototype = {
   apply: function(urispec) {
     var returl = null;
     // If we're covered by an exclusion, go home
-    if (this.exclusions !== null) {
+    if (this.exclusions) {
       for (let exclusion of this.exclusions) {
         if (exclusion.pattern_c.test(urispec)) {
           util.log(util.DBUG, "excluded uri " + urispec);
@@ -114,7 +114,7 @@ RuleSet.prototype = {
     for (let rule of this.rules) {
       returl = urispec.replace(rule.from_c,
         rule.to);
-      if (returl != urispec) {
+      if (returl !== urispec) {
         return returl;
       }
     }
@@ -127,10 +127,10 @@ RuleSet.prototype = {
    * @returns true or false, depending on whether it's deeply equivalent
    */
   isEquivalentTo: function(ruleset) {
-    if(this.name != ruleset.name ||
-       this.note != ruleset.note ||
-       this.state != ruleset.state ||
-       this.default_state != ruleset.default_state) {
+    if(this.name !== ruleset.name ||
+       this.note !== ruleset.note ||
+       this.state !== ruleset.state ||
+       this.default_state !== ruleset.default_state) {
       return false;
     }
 
@@ -158,20 +158,20 @@ RuleSet.prototype = {
       var ruleset_rules_length = 0;
     }
 
-    if(this_exclusions_length != ruleset_exclusions_length ||
-       this_rules_length != ruleset_rules_length) {
+    if(this_exclusions_length !== ruleset_exclusions_length ||
+       this_rules_length !== ruleset_rules_length) {
       return false;
     }
     if(this_exclusions_length > 0) {
       for(let x = 0; x < this.exclusions.length; x++){
-        if(this.exclusions[x].pattern_c != ruleset.exclusions[x].pattern_c) {
+        if(this.exclusions[x].pattern_c !== ruleset.exclusions[x].pattern_c) {
           return false;
         }
       }
     }
     if(this_rules_length > 0) {
       for(let x = 0; x < this.rules.length; x++){
-        if(this.rules[x].to != ruleset.rules[x].to) {
+        if(this.rules[x].to !== ruleset.rules[x].to) {
           return false;
         }
       }
@@ -251,7 +251,7 @@ RuleSets.prototype = {
     var platform = ruletag["platform"]
     if (platform) {
       default_state = false;
-      if (platform == "mixedcontent" && settings.enableMixedRulesets) {
+      if ((platform === "mixedcontent") && settings.enableMixedRulesets) {
         default_state = true;
       }
       note += "Platform(s): " + platform + "\n";
@@ -261,20 +261,20 @@ RuleSets.prototype = {
 
     // Read user prefs
     if (rule_set.name in this.ruleActiveStates) {
-      rule_set.active = (this.ruleActiveStates[rule_set.name] == "true");
+      rule_set.active = this.ruleActiveStates[rule_set.name];
     }
 
     var rules = ruletag["rule"];
     for (let rule of rules) {
-      if (rule["from"] != null && rule["to"] != null) {
+      if (rule["from"] !== && rule["to"]) {
         rule_set.rules.push(new Rule(rule["from"], rule["to"]));
       }
     }
 
     var exclusions = ruletag["exclusion"];
-    if (exclusions != null) {
+    if (exclusions) {
       for (let exclusion of exclusions) {
-        if (exclusion != null) {
+        if (exclusion) {
           if (!rule_set.exclusions) {
             rule_set.exclusions = [];
           }
@@ -284,9 +284,9 @@ RuleSets.prototype = {
     }
 
     var cookierules = ruletag["securecookie"];
-    if (cookierules != null) {
+    if (cookierules) {
       for (let cookierule of cookierules) {
-        if (cookierule["host"] != null && cookierule["name"] != null) {
+        if (cookierule["host"] && cookierule["name"]) {
           if (!rule_set.cookierules) {
             rule_set.cookierules = [];
           }
@@ -297,7 +297,7 @@ RuleSets.prototype = {
 
     var targets = ruletag["target"];
     for (let target of targets) {
-      if (target != null) {
+      if (target) {
         if (!this.targets.has(target)) {
           this.targets.set(target, []);
         }
@@ -323,7 +323,7 @@ RuleSets.prototype = {
     // TODO: maybe promote this rule?
     this.targets.get(params.host).push(new_rule_set);
     if (new_rule_set.name in this.ruleActiveStates) {
-      new_rule_set.active = (this.ruleActiveStates[new_rule_set.name] == "true");
+      new_rule_set.active = this.ruleActiveStates[new_rule_set.name];
     }
     util.log(util.INFO, 'done adding rule');
     return true;
@@ -344,7 +344,7 @@ RuleSets.prototype = {
     );
     this.targets.set(ruleset.name, tmp);
 
-    if (this.targets.get(ruleset.name).length == 0) {
+    if (this.targets.get(ruleset.name).length === 0) {
       this.targets.delete(ruleset.name);
     }
 
@@ -452,7 +452,7 @@ RuleSets.prototype = {
     var platform = ruletag.getAttribute("platform");
     if (platform) {
       default_state = false;
-      if (platform == "mixedcontent" && settings.enableMixedRulesets) {
+      if (platform === "mixedcontent" && settings.enableMixedRulesets) {
         default_state = true;
       }
       note += "Platform(s): " + platform + "\n";
@@ -464,7 +464,7 @@ RuleSets.prototype = {
 
     // Read user prefs
     if (rule_set.name in this.ruleActiveStates) {
-      rule_set.active = (this.ruleActiveStates[rule_set.name] == "true");
+      rule_set.active = this.ruleActiveStates[rule_set.name];
     }
 
     var rules = ruletag.getElementsByTagName("rule");
@@ -523,7 +523,7 @@ RuleSets.prototype = {
     }
 
     // Ensure host is well-formed (RFC 1035)
-    if (host.indexOf("..") != -1 || host.length > 255) {
+    if (host.indexOf("..") !== -1 || host.length > 255) {
       util.log(util.WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
       return null;
     }
@@ -548,7 +548,7 @@ RuleSets.prototype = {
     resultSet.delete(undefined);
 
     util.log(util.DBUG,"Applicable rules for " + host + ":");
-    if (resultSet.size == 0) {
+    if (resultSet.size === 0) {
       util.log(util.DBUG, "  None");
     } else {
       for (let target of resultSet.values()) {
@@ -576,7 +576,7 @@ RuleSets.prototype = {
   shouldSecureCookie: function(cookie) {
     var hostname = cookie.domain;
     // cookie domain scopes can start with .
-    while (hostname.charAt(0) == ".") {
+    while (hostname.charAt(0) === ".") {
       hostname = hostname.slice(1);
     }
 
@@ -586,7 +586,7 @@ RuleSets.prototype = {
 
     var potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
     for (let ruleset of potentiallyApplicable) {
-      if (ruleset.cookierules !== null && ruleset.active) {
+      if (ruleset.cookierules && ruleset.active) {
         for (let cookierules of ruleset.cookierules) {
           var cr = cookierules;
           if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
@@ -679,4 +679,4 @@ Object.assign(exports, {
   RuleSets
 });
 
-})(typeof exports == 'undefined' ? window.rules = {} : exports);
+})(typeof exports === 'undefined' ? window.rules = {} : exports);

@@ -73,7 +73,7 @@ function display() {
 * */
 function switchPlannerSmallHtmlSection(asset_host_list) {
   var wrapper_div = document.createElement("div");
-  if (asset_host_list.length == 0) {
+  if (asset_host_list.length === 0) {
     wrapper_div.style.fontWeight = "bold";
     wrapper_div.innerText = "none";
     return wrapper_div;

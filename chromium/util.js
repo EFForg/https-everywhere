@@ -62,4 +62,4 @@ Object.assign(exports, {
   loadExtensionFile
 });
 
-})(typeof exports == 'undefined' ? window.util = {} : exports);
+})(typeof exports === 'undefined' ? window.util = {} : exports);

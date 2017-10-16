@@ -218,8 +218,8 @@ function onBeforeRequest(details) {
 
   // Normalise hosts such as "www.example.com."
   var canonical_host = uri.hostname;
-  if (canonical_host.charAt(canonical_host.length - 1) == ".") {
-    while (canonical_host.charAt(canonical_host.length - 1) == ".")
+  if (canonical_host.charAt(canonical_host.length - 1) === ".") {
+    while (canonical_host.charAt(canonical_host.length - 1) === ".")
       canonical_host = canonical_host.slice(0,-1);
     uri.hostname = canonical_host;
   }
@@ -238,7 +238,7 @@ function onBeforeRequest(details) {
   }
 
   var canonical_url = uri.href;
-  if (details.url != canonical_url && !using_credentials_in_url) {
+  if (details.url !== canonical_url && !using_credentials_in_url) {
     util.log(util.INFO, "Original url " + details.url +
         " changed before processing to " + canonical_url);
   }
@@ -246,7 +246,7 @@ function onBeforeRequest(details) {
     return {cancel: shouldCancel};
   }
 
-  if (details.type == "main_frame") {
+  if (details.type === "main_frame") {
     activeRulesets.removeTab(details.tabId);
   }
 
@@ -376,7 +376,7 @@ function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritt
  * @param obj: object to calc the size for
  * */
 function objSize(obj) {
-  if (typeof obj == 'undefined') return 0;
+  if (typeof obj === 'undefined') return 0;
   var size = 0, key;
   for (key in obj) {
     if (obj.hasOwnProperty(key)) size++;
@@ -427,7 +427,7 @@ function onCookieChanged(changeInfo) {
       }
 
       // The cookie API is magical -- we must recreate the URL from the domain and path.
-      if (changeInfo.cookie.domain[0] == ".") {
+      if (changeInfo.cookie.domain[0] === ".") {
         cookie.url = "https://www" + changeInfo.cookie.domain + cookie.path;
       } else {
         cookie.url = "https://" + changeInfo.cookie.domain + cookie.path;
@@ -517,7 +517,7 @@ function enableSwitchPlannerFor(tabId) {
 
 // Listen for connection from the DevTools panel so we can set up communication.
 chrome.runtime.onConnect.addListener(function (port) {
-  if (port.name == "devtools-page") {
+  if (port.name === "devtools-page") {
     chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
       var tabId = message.tabId;
 
@@ -544,30 +544,30 @@ chrome.runtime.onConnect.addListener(function (port) {
 // This is necessary for communication with the popup in Firefox Private
 // Browsing Mode, see https://bugzilla.mozilla.org/show_bug.cgi?id=1329304
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
-  if (message.type == "get_option") {
+  if (message.type === "get_option") {
     store.get(message.object, sendResponse);
     return true;
-  } else if (message.type == "set_option") {
+  } else if (message.type === "set_option") {
     store.set(message.object, item => {
       if (sendResponse) {
         sendResponse(item);
       }
     });
-  } else if (message.type == "delete_from_ruleset_cache") {
+  } else if (message.type === "delete_from_ruleset_cache") {
     all_rules.ruleCache.delete(message.object);
-  } else if (message.type == "get_active_rulesets") {
+  } else if (message.type === "get_active_rulesets") {
     sendResponse(activeRulesets.getRulesets(message.object));
-  } else if (message.type == "set_ruleset_active_status") {
+  } else if (message.type === "set_ruleset_active_status") {
     var ruleset = activeRulesets.getRulesets(message.object.tab_id)[message.object.name];
     ruleset.active = message.object.active;
     sendResponse(true);
-  } else if (message.type == "add_new_rule") {
+  } else if (message.type === "add_new_rule") {
     all_rules.addNewRuleAndStore(message.object);
     sendResponse(true);
     return true;
-  } else if (message.type == "remove_rule") {
+  } else if (message.type === "remove_rule") {
     all_rules.removeRuleAndStore(message.object);
-  } else if (message.type == "import_settings") {
+  } else if (message.type === "import_settings") {
     // This is used when importing settings from the options ui
     import_settings(message.object).then(() => {
       sendResponse(true);
@@ -607,4 +607,4 @@ Object.assign(exports, {
   urlBlacklist
 });
 
-})(typeof exports == 'undefined' ? window.background = {} : exports);
+})(typeof exports === 'undefined' ? window.background = {} : exports);
