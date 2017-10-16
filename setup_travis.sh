@@ -36,6 +36,12 @@ function setup_lint {
   popd
 }
 
+function setup_unittests {
+  pushd ${toplevel}/chromium
+    npm install
+  popd
+}
+
 function setup_docker {
   docker build -t httpse .
 }
@@ -51,6 +57,9 @@ case $INFO in
     ;;
   *lint*)
     setup_lint
+    ;;
+  *unittests*)
+    setup_unittests
     ;;
   *rules*|*fetch*|*preloaded*)
     setup_docker

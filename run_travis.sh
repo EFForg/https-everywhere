@@ -3,15 +3,26 @@ set -x
 toplevel=$(git rev-parse --show-toplevel)
 testdir=${toplevel}/test/selenium
 linter=${toplevel}/utils/eslint/node_modules/.bin/eslint
-linttarget=${toplevel}/chromium
+srcdir=${toplevel}/chromium
 
 
 function run_lint {
-  $linter $linttarget
+  $linter $srcdir
   if [ $? != 0 ]; then
     echo "Linting errors"
     exit 1
   fi
+}
+
+function run_unittests {
+  pushd ${srcdir}
+    npm run cover # run with coverage
+    if [ $? != 0 ]; then
+        echo "unittest errors"
+        exit 1
+    fi
+    npm run report
+  popd
 }
 
 function run_selenium {
@@ -21,6 +32,9 @@ function run_selenium {
 if [ "$INFO" == "lint" ]; then
     echo "running lint tests"
     run_lint
+elif [ "$INFO" == "unittests" ]; then
+    echo "Running unittests"
+    run_unittests
 elif [ "$INFO" == "rules" ] || [ "$INFO" == "fetch" ] || [ "$INFO" == "preloaded" ]; then
     export TEST=${INFO}
     ${toplevel}/test/travis.sh # run old travis tests
