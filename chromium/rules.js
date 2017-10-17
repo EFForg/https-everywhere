@@ -666,6 +666,11 @@ RuleSets.prototype = {
 
 Object.assign(exports, {
   settings,
+  trivial_rule_to,
+  trivial_rule_from_c,
+  Exclusion,
+  Rule,
+  RuleSet,
   RuleSets
 });
 
