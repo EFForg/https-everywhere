@@ -686,6 +686,7 @@ RuleSets.prototype = {
 };
 
 Object.assign(exports, {
+  nullIterable,
   settings,
   trivial_rule_to,
   trivial_rule_from_c,
