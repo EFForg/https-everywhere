@@ -2,6 +2,10 @@
 
 (function(exports) {
 
+const util = require('./util'),
+  background = require('./background'),
+  rules = require('./rules');
+
 // This file keeps track of incognito sessions, and clears any caches after
 // an entire incognito session is closed (i.e. all incognito windows are closed).
 
@@ -67,4 +71,4 @@ if (chrome.windows) {
 
 Object.assign(exports, {});
 
-})(typeof exports == 'undefined' ? window.incognito = {} : exports);
+})(typeof exports == 'undefined' ? require.scopes.incognito = {} : exports);

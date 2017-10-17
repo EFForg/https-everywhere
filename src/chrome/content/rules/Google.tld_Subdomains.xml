@@ -4,7 +4,6 @@
 
 	This ruleset is subdomains that exist on google.tld (not just google.com)
 
-	*** images.google.tld is covered in GoogleImages.xml ***
 -->
 <ruleset name="Google.tld Subdomains">
 	<!--
@@ -15,6 +14,7 @@
 	<target host="finance.google.*" />
 	<target host="groups.google.*" />
 	<target host="id.google.*" />
+	<target host="images.google.*" />
 	<target host="lh2.google.*" />
 	<target host="lh3.google.*" />
 	<target host="lh4.google.*" />
@@ -31,6 +31,7 @@
 	<target host="finance.google.co.*" />
 	<target host="groups.google.co.*" />
 	<target host="id.google.co.*" />
+	<target host="images.google.co.*" />
 	<target host="lh2.google.co.*" />
 	<target host="lh3.google.co.*" />
 	<target host="lh4.google.co.*" />
@@ -47,6 +48,7 @@
 	<target host="finance.google.com.*" />
 	<target host="groups.google.com.*" />
 	<target host="id.google.com.*" />
+	<target host="images.google.com.*" />
 	<target host="lh2.google.com.*" />
 	<target host="lh3.google.com.*" />
 	<target host="lh4.google.com.*" />
@@ -60,7 +62,7 @@
 
 	<securecookie host="^(accounts|adwords|m|picasaweb|translate)\.google\.[\w.]{2,6}$" name=".+" />
 
-	<rule from="^http://(accounts|adwords|finance|groups|id|lh\d|m|news|picasaweb|scholar|translate)\.google\.((com?\.)?\w{2,3})/"
+	<rule from="^http://(accounts|adwords|finance|groups|id|images|lh\d|m|news|picasaweb|scholar|translate)\.google\.((com?\.)?\w{2,3})/"
 			to="https://$1.google.$2/" />
 		<test url="http://accounts.google.ca/" />
 		<test url="http://accounts.google.com/" />
@@ -77,6 +79,9 @@
 		<test url="http://id.google.ca/" />
 		<test url="http://id.google.com/" />
 		<test url="http://id.google.com.au/" />
+		<test url="http://images.google.ca/" />
+		<test url="http://images.google.com/" />
+		<test url="http://images.google.com.au/" />
 		<test url="http://lh3.google.ca/" />
 		<test url="http://lh4.google.com/" />
 		<test url="http://lh5.google.com.au/" />
@@ -98,4 +103,11 @@
 		<test url="http://translate.google.com/" />
 		<test url="http://translate.google.co.jp/" />
 		<test url="http://translate.google.com.kh/" />
+
+		<!-- This exclusion is for the Google-hosted LIFE photo archive, which can be
+		found at http://images.google.com/hosted/life (no trailing slash)
+		and which does not support HTTPS as of September 2017. -->
+		<exclusion pattern="^http://images\.google\.com/hosted/" />
+			<test url="http://images.google.com/hosted/life/67933df915a33f1f.html" />
+
 </ruleset>

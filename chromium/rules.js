@@ -1,19 +1,8 @@
-/* globals global: false */
 "use strict";
 
 (function(exports) {
 
-// Stubs so this runs under nodejs. They get overwritten later by util.js
-if (typeof util == 'undefined' || typeof global != 'undefined') {
-  Object.assign(global, {
-    util: {
-      DBUG: 2,
-      INFO: 3,
-      WARN: 5,
-      log: ()=>{},
-    }
-  });
-}
+const util = require('./util');
 
 let settings = {
   enableMixedRulesets: false,
@@ -206,7 +195,8 @@ function RuleSets() {
 
 RuleSets.prototype = {
 
-  initialize: async function() {
+  initialize: async function(store) {
+    this.store = store;
     this.ruleActiveStates = store.localStorage;
     this.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
     this.loadStoredUserRules();
@@ -356,7 +346,7 @@ RuleSets.prototype = {
   * Retrieve stored user rules from localStorage
   **/
   getStoredUserRules: function() {
-    const oldUserRuleString = store.localStorage.getItem(this.USER_RULE_KEY);
+    const oldUserRuleString = this.store.localStorage.getItem(this.USER_RULE_KEY);
     let oldUserRules = [];
     if (oldUserRuleString) {
       oldUserRules = JSON.parse(oldUserRuleString);
@@ -390,7 +380,7 @@ RuleSets.prototype = {
       // client windows in different event loops.
       oldUserRules.push(params);
       // TODO: can we exceed the max size for storage?
-      store.localStorage.setItem(this.USER_RULE_KEY, JSON.stringify(oldUserRules));
+      this.store.localStorage.setItem(this.USER_RULE_KEY, JSON.stringify(oldUserRules));
     }
   },
 
@@ -406,13 +396,13 @@ RuleSets.prototype = {
         !(r.host == ruleset.name &&
           r.redirectTo == ruleset.rules[0].to)
       );
-      store.localStorage.setItem(this.USER_RULE_KEY, JSON.stringify(userRules));
+      this.store.localStorage.setItem(this.USER_RULE_KEY, JSON.stringify(userRules));
     }
   },
 
   addStoredCustomRulesets: function(){
     return new Promise(resolve => {
-      store.get({
+      this.store.get({
         legacy_custom_rulesets: [],
         debugging_rulesets: ""
       }, item => {
@@ -676,7 +666,12 @@ RuleSets.prototype = {
 
 Object.assign(exports, {
   settings,
+  trivial_rule_to,
+  trivial_rule_from_c,
+  Exclusion,
+  Rule,
+  RuleSet,
   RuleSets
 });
 
-})(typeof exports == 'undefined' ? window.rules = {} : exports);
+})(typeof exports == 'undefined' ? require.scopes.rules = {} : exports);
