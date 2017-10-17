@@ -15,7 +15,6 @@ const trivial_rule_from_c = new RegExp("^http:");
 const trivial_cookie_name_c = new RegExp(".*");
 const trivial_cookie_host_c = new RegExp(".*");
 
-
 // Empty iterable singleton to reduce memory usage
 const nullIterable = Object.create(null, {
   [Symbol.iterator]: {
@@ -355,7 +354,7 @@ RuleSets.prototype = {
     util.log(util.INFO, 'done removing rule');
     return true;
   },
-  
+
   /**
   * Retrieve stored user rules from localStorage
   **/
@@ -523,7 +522,7 @@ RuleSets.prototype = {
 
     // Let's begin search
     // Copy the host targsts so we don't modify them.
-    let results = (this.targets.has(host) ? 
+    let results = (this.targets.has(host) ?
       new Set([...this.targets.get(host)]) :
       new Set());
 
@@ -532,15 +531,15 @@ RuleSets.prototype = {
       util.log(util.WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
       return nullIterable;
     }
-    
+
     // Replace each portion of the domain with a * in turn
     let segmented = host.split(".");
     for (let i = 0; i < segmented.length; i++) {
       let tmp = segmented[i];
       segmented[i] = "*";
 
-      results = (this.targets.has(segmented.join(".")) ? 
-        new Set([...results, ...this.targets.get(segmented.join("."))]) : 
+      results = (this.targets.has(segmented.join(".")) ?
+        new Set([...results, ...this.targets.get(segmented.join("."))]) :
         results);
 
       segmented[i] = tmp;
@@ -551,7 +550,7 @@ RuleSets.prototype = {
     for (let i = 2; i <= segmented.length - 2; i++) {
       let t = "*." + segmented.slice(i, segmented.length).join(".");
 
-      results = (this.targets.has(t) ? 
+      results = (this.targets.has(t) ?
         new Set([...results, ...this.targets.get(t)]) :
         results);
     }
