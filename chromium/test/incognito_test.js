@@ -51,7 +51,7 @@ describe('incognito.js', function() {
       expect(this.callbackCalled).to.be.true;
     });
 
-    it('detcts when an incognito window is created', function() {
+    it('detects when an incognito window is created', function() {
       this.instance.detect_incognito_creation({incognito: true});
       expect(incognito.state.incognito_session_exists, 'constant changed').to.be.true;
     })
