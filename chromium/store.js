@@ -41,4 +41,4 @@ Object.assign(exports, {
   initialize
 });
 
-})(typeof exports == 'undefined' ? window.store = {} : exports);
+})(typeof exports == 'undefined' ? require.scopes.store = {} : exports);

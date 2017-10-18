@@ -237,15 +237,70 @@ class Ruleset(object):
 		return problems
 
 	def getCoverageProblems(self):
-		"""Verify that each rule and each exclusion has the right number of tests
-			 that applies to it. TODO: Also check that each target has the right
+		"""Verify that each target, rule and exclusion has the right number of tests
+			 that applies to it. Also check that each target has the right
 			 number of tests. In particular left-wildcard targets should have at least
 			 three tests. Right-wildcard targets should have at least ten tests.
 
 			 Returns an array of strings reporting any coverage problems if they exist,
 			 or empty list if coverage is sufficient.
 			 """
-		problems = self._determineTestApplication()
+		self._determineTestApplication()
+		problems = []
+
+		# First, check each target has the right number of tests
+		myTestTargets = []
+
+		# Only take tests which are not excluded into account
+		for test in self.tests:
+			if not self.excludes(test.url):
+				urlParts = urlparse(test.url)
+				hostname = urlParts.hostname
+				myTestTargets.append(hostname)
+
+		for target in self.targets:
+			actual_count = 0
+			needed_count = 1
+
+			if target.startswith("*."):
+				needed_count = 3
+
+			if target.endswith(".*"):
+				needed_count = 10
+
+			# non-wildcard target always have a implicit test url, if is it not excluded
+			if not "*" in target and not self.excludes(("http://%s/" % target)):
+				continue
+
+			# According to the logic in rules.js available at
+			# EFForg/https-everywhere/blob/07fe9bd51456cc963c2d99e327f3183e032374ee/chromium/rules.js#L404
+			# 
+			pattern = target.replace('.', '\.') # .replace('*', '.+')
+
+			# `*.example.com` matches `bar.example.com` and `foo.bar.example.com` etc.
+			if pattern[0] == '*':
+				pattern = pattern.replace('*', '.+')
+
+			# however, `example.*` match `example.com` but not `example.co.uk`
+			if pattern[-1] == '*':
+				pattern = pattern.replace('*', '[^\.]+')
+
+			# `www.*.example.com` match `www.image.example.com` but not `www.ssl.image.example.com`
+			pattern = pattern.replace('*', '[^\.]+')
+
+			pattern = '^' + pattern + '$'
+
+			for test in myTestTargets:
+				if regex.search(pattern, test) is not None:
+					actual_count += 1
+
+					if not actual_count < needed_count:
+						break
+
+			if actual_count < needed_count:
+					problems.append("%s: Not enough tests (%d vs %d) for %s" % (
+									self.filename, actual_count, needed_count, target))
+
 		# Next, make sure each rule or exclusion has sufficient tests.
 		for rule in self.rules:
 			needed_count = 1 + len(regex.findall("[+*?|]", rule.fromPattern))

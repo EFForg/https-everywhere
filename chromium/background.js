@@ -2,12 +2,19 @@
 
 (function(exports) {
 
+const rules = require('./rules'),
+  store = require('./store'),
+  incognito = require('./incognito'),
+  util = require('./util');
+
+
 let all_rules = new rules.RuleSets();
 
 async function initialize() {
   await store.initialize();
   await initializeStoredGlobals();
-  await all_rules.initialize();
+  await all_rules.initialize(store);
+  await incognito.onIncognitoDestruction(destroy_caches);
 
   // Send a message to the embedded webextension bootstrap.js to get settings to import
   chrome.runtime.sendMessage("import-legacy-data", import_settings);
@@ -130,21 +137,21 @@ function updateState () {
   });
 
   chrome.browserAction.setTitle({
-    title: 'HTTPS Everywhere' + (iconState === 'active') ? '' : ' (' + iconState + ')'
+    title: 'HTTPS Everywhere' + ((iconState === 'active') ? '' : ' (' + iconState + ')')
   });
 
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     if (!tabs || tabs.length === 0) {
       return;
     }
+    const tabId = tabs[0].id;
+    const activeCount = getActiveRulesetCount(tabId);
 
-    const activeCount = getActiveRulesetCount(tabs[0].id);
-
-    chrome.browserAction.setBadgeBackgroundColor({ color: '#666666' });
+    chrome.browserAction.setBadgeBackgroundColor({ color: '#666666', tabId });
 
     const showBadge = activeCount > 0 && isExtensionEnabled && showCounter;
 
-    chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '', tabId: tabs[0].id });
+    chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '', tabId });
   });
 }
 
@@ -596,9 +603,20 @@ async function import_settings(settings) {
     });
 
     Object.assign(all_rules, new rules.RuleSets());
-    await all_rules.initialize();
+    await all_rules.initialize(store);
 
   }
+}
+
+/**
+ * Clear any cache/ blacklist we have.
+ */
+function destroy_caches() {
+  util.log(util.DBUG, "Destroying caches.");
+  all_rules.cookieHostCache.clear();
+  all_rules.ruleCache.clear();
+  rules.settings.domainBlacklist.clear();
+  urlBlacklist.clear();
 }
 
 Object.assign(exports, {
@@ -606,4 +624,4 @@ Object.assign(exports, {
   urlBlacklist
 });
 
-})(typeof exports == 'undefined' ? window.background = {} : exports);
+})(typeof exports == 'undefined' ? require.scopes.background = {} : exports);
