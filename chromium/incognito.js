@@ -9,40 +9,40 @@ let state = {
   incognito_session_exists: false,
 };
 
-function Incognito(onIncognitoDestruction) {
-  Object.assign(this, {onIncognitoDestruction});
-  // Listen to window creation, so we can detect if an incognito window is created
-  if (chrome.windows) {
-    chrome.windows.onCreated.addListener(this.detect_incognito_creation);
-  }
+class Incognito {
+  constructor(onIncognitoDestruction) {
+    Object.assign(this, {onIncognitoDestruction});
+    // Listen to window creation, so we can detect if an incognito window is created
+    if (chrome.windows) {
+      chrome.windows.onCreated.addListener(this.detect_incognito_creation);
+    }
 
-  // Listen to window destruction, so we can clear caches if all incognito windows are destroyed
-  if (chrome.windows) {
-    chrome.windows.onRemoved.addListener(this.detect_incognito_destruction);
+    // Listen to window destruction, so we can clear caches if all incognito windows are destroyed
+    if (chrome.windows) {
+      chrome.windows.onRemoved.addListener(this.detect_incognito_destruction);
+    }
   }
-}
-
-Incognito.prototype = {
+  
   /**
    * Detect if an incognito session is created, so we can clear caches when it's destroyed.
    *
    * @param window: A standard Window object.
    */
-  detect_incognito_creation: function(window_) {
+  detect_incognito_creation(window_) {
     if (window_.incognito === true) {
       state.incognito_session_exists = true;
     }
-  },
+  }
 
   // If a window is destroyed, and an incognito session existed, see if it still does.
-  detect_incognito_destruction: async function() {
+  async detect_incognito_destruction() {
     if (state.incognito_session_exists) {
       if (!(await any_incognito_windows())) {
         state.incognito_session_exists = false;
         this.onIncognitoDestruction();
       }
     }
-  },
+  }
 }
 
 /**
