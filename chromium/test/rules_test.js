@@ -126,6 +126,10 @@ describe('rules.js', function() {
 
         assert.strictEqual(newuri, 'https://' + host + '/', 'protocol changed to https')
       })
+
+      it('does not rewrite unknown hosts', function() {
+        assert.isNull(this.rsets.rewriteURI('http://unknown.com/', 'unknown.com'));
+      })
     });
 
     describe('#potentiallyApplicableRulesets', function() {
