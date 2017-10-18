@@ -137,21 +137,21 @@ function updateState () {
   });
 
   chrome.browserAction.setTitle({
-    title: 'HTTPS Everywhere' + (iconState === 'active') ? '' : ' (' + iconState + ')'
+    title: 'HTTPS Everywhere' + ((iconState === 'active') ? '' : ' (' + iconState + ')')
   });
 
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     if (!tabs || tabs.length === 0) {
       return;
     }
+    const tabId = tabs[0].id;
+    const activeCount = getActiveRulesetCount(tabId);
 
-    const activeCount = getActiveRulesetCount(tabs[0].id);
-
-    chrome.browserAction.setBadgeBackgroundColor({ color: '#666666' });
+    chrome.browserAction.setBadgeBackgroundColor({ color: '#666666', tabId });
 
     const showBadge = activeCount > 0 && isExtensionEnabled && showCounter;
 
-    chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '', tabId: tabs[0].id });
+    chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '', tabId });
   });
 }
 
