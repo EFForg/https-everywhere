@@ -96,7 +96,14 @@ describe('rules.js', function() {
   })
 
   describe('RuleSets', function() {
-    let rules_json = JSON.parse('[{"name":"Freerangekitten.com","rule":[{"to":"https:","from":"^http:"}],"target":["freerangekitten.com","www.freerangekitten.com"]}]');
+    let rules_json = [{
+      name: "Freerangekitten.com",
+      rule: [{
+        to: "https:",
+        from: "^http:"
+      }],
+      target: ["freerangekitten.com", "www.freerangekitten.com"]
+    }];
 
     beforeEach(function() {
       this.rsets = new RuleSets();
