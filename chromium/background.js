@@ -13,7 +13,7 @@ let all_rules = new rules.RuleSets();
 async function initialize() {
   await store.initialize();
   await initializeStoredGlobals();
-  await all_rules.initialize(store);
+  await all_rules.loadFromBrowserStorage(store);
   await incognito.onIncognitoDestruction(destroy_caches);
 
   // Send a message to the embedded webextension bootstrap.js to get settings to import
@@ -604,7 +604,7 @@ async function import_settings(settings) {
     });
 
     Object.assign(all_rules, new rules.RuleSets());
-    await all_rules.initialize(store);
+    await all_rules.loadFromBrowserStorage(store);
 
   }
 }
