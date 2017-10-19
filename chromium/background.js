@@ -130,11 +130,13 @@ function updateState () {
     iconState = 'blocking';
   }
 
-  chrome.browserAction.setIcon({
-    path: {
-      38: 'icons/icon-' + iconState + '-38.png'
-    }
-  });
+  if ('setIcon' in chrome.browserAction) {
+    chrome.browserAction.setIcon({
+      path: {
+        38: 'icons/icon-' + iconState + '-38.png'
+      }
+    });
+  }
 
   chrome.browserAction.setTitle({
     title: 'HTTPS Everywhere' + ((iconState === 'active') ? '' : ' (' + iconState + ')')
@@ -147,11 +149,15 @@ function updateState () {
     const tabId = tabs[0].id;
     const activeCount = getActiveRulesetCount(tabId);
 
-    chrome.browserAction.setBadgeBackgroundColor({ color: '#666666', tabId });
+    if ('setBadgeBackgroundColor' in chrome.browserAction) {
+      chrome.browserAction.setBadgeBackgroundColor({ color: '#666666', tabId });
+    }
 
     const showBadge = activeCount > 0 && isExtensionEnabled && showCounter;
 
-    chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '', tabId });
+    if ('setBadgeText' in chrome.browserAction) {
+      chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '', tabId });
+    }
   });
 }
 
