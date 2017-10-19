@@ -579,7 +579,7 @@ class RuleSets {
     }
 
     return results;
-  },
+  }
 
   /**
    * Check to see if the Cookie object c meets any of our cookierule criteria for being marked as secure.
