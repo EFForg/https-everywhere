@@ -211,7 +211,11 @@ class RuleSets {
     this.USER_RULE_KEY = 'userRules';
   }
 
-  async initialize() {
+  /**
+   * Load packaged rulesets, and rulesets in browser storage
+   * @param store object from store.js
+   */
+  async loadFromBrowserStorage(store) {
     this.store = store;
     this.ruleActiveStates = store.localStorage;
     this.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
