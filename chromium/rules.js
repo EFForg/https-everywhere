@@ -424,7 +424,7 @@ RuleSets.prototype = {
         debugging_rulesets: ""
       }, item => {
         this.loadCustomRulesets(item.legacy_custom_rulesets);
-        this.loadCustomRuleset(item.debugging_rulesets);
+        this.loadCustomRuleset("<root>" + item.debugging_rulesets + "</root>");
         resolve();
       });
     });
