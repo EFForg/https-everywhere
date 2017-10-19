@@ -96,13 +96,45 @@ describe('rules.js', function() {
   })
 
   describe('RuleSets', function() {
+    let rules_json = [{
+      name: "Freerangekitten.com",
+      rule: [{
+        to: "https:",
+        from: "^http:"
+      }],
+      target: ["freerangekitten.com", "www.freerangekitten.com"]
+    }];
+
+    beforeEach(function() {
+      this.rsets = new RuleSets();
+    });
+
+    describe('#addFromJson', function() {
+      it('can add a rule', function() {
+        this.rsets.addFromJson(rules_json);
+
+        assert.isTrue(this.rsets.targets.has('freerangekitten.com'));
+      });
+    });
+
+    describe('#rewriteURI', function() {
+      it('rewrites host added from json', function() {
+        let host = 'freerangekitten.com';
+        this.rsets.addFromJson(rules_json);
+
+        let newuri = this.rsets.rewriteURI('http://' + host + '/', host);
+
+        assert.strictEqual(newuri, 'https://' + host + '/', 'protocol changed to https')
+      })
+
+      it('does not rewrite unknown hosts', function() {
+        assert.isNull(this.rsets.rewriteURI('http://unknown.com/', 'unknown.com'));
+      })
+    });
+
     describe('#potentiallyApplicableRulesets', function() {
       let host = 'example.com',
         value = [host];
-
-      beforeEach(function() {
-        this.rsets = new RuleSets();
-      });
 
       it('returns nothing when empty', function() {
         assert.isEmpty(this.rsets.potentiallyApplicableRulesets(host));
