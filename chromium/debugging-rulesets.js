@@ -3,6 +3,7 @@
 "use strict";
 
 const debugging_rulesets_textarea = document.getElementById("debugging-rulesets");
+const changed = document.getElementById("changed");
 const default_title = "Debugging Rulesets";
 const unsaved_title = "* Debugging Rulesets";
 
@@ -25,10 +26,12 @@ function save_debugging_rulesets(e){
 
     document.title = default_title;
     debugging_rulesets_textarea.className = "";
+    changed.style.visibility = "hidden";
   });
 }
 
 function debugging_rulesets_changed(){
   debugging_rulesets_textarea.className = "unsaved";
   document.title = unsaved_title;
+  changed.style.visibility = "visible";
 }
