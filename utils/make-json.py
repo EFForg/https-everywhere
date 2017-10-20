@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python
 #
 # Builds a JSON DB containing all the rulesets, indexed by target.
 # The JSON DB is used by the Firefox addon.
@@ -57,13 +57,13 @@ for fi in validate_filenames():
 
     # Store the filename in the `f' attribute so "view source XML" for rules in
     # FF version can find it.
-    xpath_ruleset(tree)[0].attrib["f"] = os.path.basename(fi).decode(encoding="UTF-8")
+    xpath_ruleset(tree)[0].attrib["f"] = os.path.basename(fi)
 
     for target in targets:
         # id is the current length of the rules list - i.e. the offset at which
         # this rule will be added in the list.
         json_output["targets"][target].append(len(json_output["rulesetStrings"]))
-    json_output["rulesetStrings"].append(etree.tostring(tree))
+    json_output["rulesetStrings"].append(etree.tounicode(tree))
 
 with open(json_path, 'w') as f:
     f.write(json.dumps(json_output))

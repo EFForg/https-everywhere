@@ -31,7 +31,7 @@ if [ -n "$1" ]; then
   git submodule update --recursive -f
 fi
 
-VERSION=`python2.7 -c "import json ; print(json.loads(open('chromium/manifest.json').read())['version'])"`
+VERSION=`python -c "import json ; print(json.loads(open('chromium/manifest.json').read())['version'])"`
 
 echo "Building chrome version" $VERSION
 
@@ -49,7 +49,7 @@ needs_update() {
 }
 if [ ! -f "$RULESETS_JSON" ] || needs_update ; then
   echo "Generating ruleset DB"
-  python2.7 ./utils/make-json.py && bash utils/validate.sh && cp pkg/rulesets.json src/chrome/content/rulesets.json
+  python ./utils/make-json.py && bash utils/validate.sh && cp pkg/rulesets.json src/chrome/content/rulesets.json
 fi
 
 sed -e "s/VERSION/$VERSION/g" chromium/updates-master.xml > chromium/updates.xml
@@ -60,8 +60,8 @@ rsync -aL ../../chromium/ ./
 # Turn the Firefox translations into the appropriate Chrome format:
 rm -rf _locales/
 mkdir _locales/
-python2.7 ../../utils/chromium-translations.py ../../translations/ _locales/
-python2.7 ../../utils/chromium-translations.py ../../src/chrome/locale/ _locales/
+python ../../utils/chromium-translations.py ../../translations/ _locales/
+python ../../utils/chromium-translations.py ../../src/chrome/locale/ _locales/
 do_not_ship="*.py *.xml icon.jpg"
 rm -f $do_not_ship
 cd ../..
@@ -72,7 +72,7 @@ cp src/$RULESETS pkg/crx/rules/default.rulesets
 
 sed -i -e "s/VERSION/$VERSION/g" pkg/crx/manifest.json
 
-python2.7 -c "import json; m=json.loads(open('pkg/crx/manifest.json').read()); e=m['author']; m['author']={'email': e}; del m['applications']; open('pkg/crx/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+python -c "import json; m=json.loads(open('pkg/crx/manifest.json').read()); e=m['author']; m['author']={'email': e}; del m['applications']; open('pkg/crx/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
 
 #sed -i -e "s/VERSION/$VERSION/g" pkg/crx/updates.xml
 #sed -e "s/VERSION/$VERSION/g" pkg/updates-master.xml > pkg/crx/updates.xml

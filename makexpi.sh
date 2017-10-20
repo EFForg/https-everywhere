@@ -72,7 +72,7 @@ if [ ! -f "$RULESETS_JSON" ] || needs_update ; then
     nohup cat src/chrome/content/rules/"$firstchar"*.xml >/dev/null 2>/dev/null &
   done
   echo "Generating ruleset DB"
-  python2.7 ./utils/make-json.py
+  python ./utils/make-json.py
 fi
 
 # =============== BEGIN VALIDATION ================
@@ -106,8 +106,8 @@ rsync -aL --delete --delete-excluded --exclude /chrome/content/rules src/ pkg/xp
 rsync -aL --delete chromium/ pkg/xpi-eff/webextension/
 
 mkdir pkg/xpi-eff/webextension/_locales/
-python2.7 utils/chromium-translations.py translations/ pkg/xpi-eff/webextension/_locales/
-python2.7 utils/chromium-translations.py src/chrome/locale/ pkg/xpi-eff/webextension/_locales/
+python utils/chromium-translations.py translations/ pkg/xpi-eff/webextension/_locales/
+python utils/chromium-translations.py src/chrome/locale/ pkg/xpi-eff/webextension/_locales/
 
 cd pkg/xpi-eff/webextension
 do_not_ship="*.py *.xml icon.jpg"
@@ -145,8 +145,8 @@ fi
 rm -f "${XPI_NAME}.xpi"
 rm -f "${XPI_NAME}-eff.xpi"
 rm -f "${XPI_NAME}-amo.xpi"
-python2.7 utils/create_xpi.py -n "${XPI_NAME}-eff.xpi" -x ".build_exclusions" "pkg/xpi-eff"
-python2.7 utils/create_xpi.py -n "${XPI_NAME}-amo.xpi" -x ".build_exclusions" "pkg/xpi-amo"
+./utils/create_xpi.py -n "${XPI_NAME}-eff.xpi" -x ".build_exclusions" "pkg/xpi-eff"
+./utils/create_xpi.py -n "${XPI_NAME}-amo.xpi" -x ".build_exclusions" "pkg/xpi-amo"
 
 echo >&2 "Total included rules: `find src/chrome/content/rules -name "*.xml" | wc -l`"
 echo >&2 "Rules disabled by default: `find src/chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
