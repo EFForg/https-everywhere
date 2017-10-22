@@ -144,6 +144,10 @@ describe('rules.js', function() {
         assert.isEmpty(this.rsets.potentiallyApplicableRulesets('....'));
       });
 
+      it('returns nothing for empty hosts', function() {
+        assert.isEmpty(this.rsets.potentiallyApplicableRulesets(''));
+      });
+
       it('returns cached rulesets', function() {
         this.rsets.ruleCache.set(host, value);
         assert.deepEqual(this.rsets.potentiallyApplicableRulesets(host), value);
