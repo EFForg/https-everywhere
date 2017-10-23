@@ -48,7 +48,34 @@ module.exports = function(robot, alexa) {
 
     if (problems.length === 0) {
       // User submission is OK
-      const params = context.issue({body: 'Thanks! Your edit helped me out. I\'ll take it from here now.'});
+
+      let commentedBefore = false;
+
+      // This won't work if the bot comments success past 100 comments
+      // but since this will probably never happen, who cares. Also,
+      // the bot was originally put into production late September, so
+      // only ask for comments after then.
+      //
+      // XXX handle the user screwing up, then fixing it (and getting
+      // the success comment), then screwing up again
+      const _allComments = await context.github.issues.getComments(context.issue({
+        per_page: 100, // eslint-disable-line camelcase
+        since: '2017-09-25'
+      }));
+      const allComments = _allComments.data;
+
+      allComments.forEach(comment => {
+        // 'Your edit helped me out' is here to match legacy comments
+        // before this conditional was put in place
+        if (comment.body.includes('HELPED_COMMENT_POSTED')
+            || comment.body.includes('Your edit helped me out')) {
+          commentedBefore = true;
+        }
+      });
+
+      if (commentedBefore) return;
+
+      const params = context.issue({body: 'Thanks! Your edit helped me out. I\'ll take it from here now. <!-- HELPED_COMMENT_POSTED -->'});
       await context.github.issues.createComment(params);
 
       return labeler(context, data, alexa);
