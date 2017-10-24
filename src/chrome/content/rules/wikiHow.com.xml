@@ -1,0 +1,22 @@
+<!--
+	Mismatched:
+		- *.whstatic.com
+
+	wikiHow.com has both a wildcard DNS record and a wildcard SSL certificate.
+-->
+
+<ruleset name="wikiHow.com">
+	<target host="wikihow.com" />
+	<target host="*.wikihow.com" />
+
+	<securecookie host=".+" name=".+" />
+
+	<rule from="^http://wikihow\.com/" to="https://wikihow.com/" />
+
+	<!-- Only redirect domains one level deep. -->
+	<rule from="^http://([a-zA-Z0-9-_]+)\.wikihow\.com/" to="https://$1.wikihow.com/" />
+
+	<test url="http://www.wikihow.com/" />
+	<test url="http://de.wikihow.com/" />
+	<test url="http://es.wikihow.com/" />
+</ruleset>

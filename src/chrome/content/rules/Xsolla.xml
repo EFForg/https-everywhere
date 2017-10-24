@@ -1,92 +1,42 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://analytics.xsolla.com/ => https://analytics.xsolla.com/: (60, 'SSL certificate problem: certificate has expired')
-
 	Other Xsolla rulesets:
-
 		- 2pay.ru.xml
 
-
-	CDN buckets:
-
-		- xsolla.cachefly.net
-
-
-	Problematic hosts in *xsolla.com:
-
-		- blog ²
-		- status ⁴
-
-	² 403
-	⁴ StatusPage.io
-
-
-	These altnames don't exist:
-
-		- www.ps.xsolla.com
-		- www.merchant.xsolla.com
-
-
-	Insecure cookies are set for these domains and hosts:
-
-		- xsolla.com
-		- .xsolla.com
-		- www.xsolla.com
-
-
-	Mixed content:
-
-		- css on developers, help from fonts.googleapis.com *
-
-	* Secured by us
-
+	Problematic subdomains:
+		- analytics (expired)
+		- blog (403)
+		- cdn (SSL protocol error)
+		- status (mismatched, statuspage.io)
 -->
-<ruleset name="Xsolla.com (partial)" default_off='failed ruleset test'>
 
-	<!--	Direct rewrites:
-				-->
+<ruleset name="Xsolla.com (partial)">
 	<target host="xsolla.com" />
+	<target host="www.xsolla.com" />
 	<target host="account.xsolla.com" />
-	<target host="analytics.xsolla.com" />
-	<target host="cdn.xsolla.com" />
+	<target host="blog.xsolla.com" />
 	<target host="cdn3.xsolla.com" />
 	<target host="demo-merchant.xsolla.com" />
 	<target host="developers.xsolla.com" />
+	<target host="forum.xsolla.com" />
+	<target host="h.xsolla.com" />
 	<target host="help.xsolla.com" />
+	<target host="inside.xsolla.com" />
 	<target host="livedemo.xsolla.com" />
 	<target host="merchant.xsolla.com" />
 	<target host="ps.xsolla.com" />
+	<target host="publisher.xsolla.com" />
 	<target host="secure.xsolla.com" />
 	<target host="static.xsolla.com" />
-	<target host="tools.xsolla.com" />
-	<target host="www.xsolla.com" />
-
-	<!--	Complications:
-				-->
-	<target host="blog.xsolla.com" />
 	<target host="status.xsolla.com" />
+	<target host="support.xsolla.com" />
+	<target host="tools.xsolla.com" />
+	<target host="verify.xsolla.com" />
 
+	<securecookie host=".+" name=".+" />
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="(www\.)?xsolla\.com$" name="^_icl_current_languag$" /-->
-	<!--securecookie host="\.xsolla\.com$" name="^AdRoll_vs$" /-->
+	<rule from="^http://blog\.xsolla\.com/" to="https://xsolla.com/blog/" />
 
-	<securecookie host="^(?:.+\.)?xsolla\.com$" name="." />
-	<securecookie host="\." name="^(?:__utm|_gat?$|AdRoll_vs$)" />
+	<rule from="^http://status\.xsolla\.com/" to="https://xsolla.statuspage.io/" />
 
-
-	<!--	Redirect keeps path, args,
-		and forward slash:
-					-->
-	<rule from="^http://blog\.xsolla\.com/"
-		to="https://xsolla.com/blog/" />
-
-	<rule from="^http://status\.xsolla\.com/"
-		to="https://xsolla.statuspage.io/" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

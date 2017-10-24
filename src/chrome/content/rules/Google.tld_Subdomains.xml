@@ -4,7 +4,6 @@
 
 	This ruleset is subdomains that exist on google.tld (not just google.com)
 
-	*** images.google.tld is covered in GoogleImages.xml ***
 -->
 <ruleset name="Google.tld Subdomains">
 	<!--
@@ -15,12 +14,14 @@
 	<target host="finance.google.*" />
 	<target host="groups.google.*" />
 	<target host="id.google.*" />
+	<target host="images.google.*" />
 	<target host="lh2.google.*" />
 	<target host="lh3.google.*" />
 	<target host="lh4.google.*" />
 	<target host="lh5.google.*" />
 	<target host="lh6.google.*" />
 	<target host="m.google.*" />
+	<target host="maps.google.*" />
 	<target host="news.google.*" />
 	<target host="picasaweb.google.*" />
 	<target host="scholar.google.*" />
@@ -31,12 +32,14 @@
 	<target host="finance.google.co.*" />
 	<target host="groups.google.co.*" />
 	<target host="id.google.co.*" />
+	<target host="images.google.co.*" />
 	<target host="lh2.google.co.*" />
 	<target host="lh3.google.co.*" />
 	<target host="lh4.google.co.*" />
 	<target host="lh5.google.co.*" />
 	<target host="lh6.google.co.*" />
 	<target host="m.google.co.*" />
+	<target host="maps.google.co.*" />
 	<target host="news.google.co.*" />
 	<target host="picasaweb.google.co.*" />
 	<target host="scholar.google.co.*" />
@@ -47,27 +50,22 @@
 	<target host="finance.google.com.*" />
 	<target host="groups.google.com.*" />
 	<target host="id.google.com.*" />
+	<target host="images.google.com.*" />
 	<target host="lh2.google.com.*" />
 	<target host="lh3.google.com.*" />
 	<target host="lh4.google.com.*" />
 	<target host="lh5.google.com.*" />
 	<target host="lh6.google.com.*" />
 	<target host="m.google.com.*" />
+	<target host="maps.google.com.*" />
 	<target host="news.google.com.*" />
 	<target host="picasaweb.google.com.*" />
 	<target host="scholar.google.com.*" />
 	<target host="translate.google.com.*" />
 
-	<securecookie host="^(accounts|adwords|m|picasaweb|translate)\.google\.[\w.]{2,6}$" name=".+" />
+	<securecookie host="^(accounts|adwords|m|maps|picasaweb|translate)\.google\.[\w.]{2,6}$" name=".+" />
 
-	<!-- path that 404 on https but 301 on http -->
-	<rule from="^http://news\.google\.((com?\.)?\w{2,3})/archivesearch"
-			to="https://news.google.$1/news/advanced_news_search" />
-		<test url="http://news.google.ca/archivesearch" />
-		<test url="http://news.google.com/archivesearch" />
-		<test url="http://news.google.com.au/archivesearch" />
-
-	<rule from="^http://(accounts|adwords|finance|groups|id|lh\d|m|news|picasaweb|scholar|translate)\.google\.((com?\.)?\w{2,3})/"
+	<rule from="^http://(accounts|adwords|finance|groups|id|images|lh\d|m|maps|news|picasaweb|scholar|translate)\.google\.((com?\.)?\w{2,3})/"
 			to="https://$1.google.$2/" />
 		<test url="http://accounts.google.ca/" />
 		<test url="http://accounts.google.com/" />
@@ -84,15 +82,30 @@
 		<test url="http://id.google.ca/" />
 		<test url="http://id.google.com/" />
 		<test url="http://id.google.com.au/" />
+		<test url="http://images.google.ca/" />
+		<test url="http://images.google.com/" />
+		<test url="http://images.google.com.au/" />
 		<test url="http://lh3.google.ca/" />
 		<test url="http://lh4.google.com/" />
 		<test url="http://lh5.google.com.au/" />
 		<test url="http://m.google.ca/" />
 		<test url="http://m.google.com/" />
 		<test url="http://m.google.com.au/" />
+		<test url="http://maps.google.ca/" />
+		<test url="http://maps.google.com/" />
+		<test url="http://maps.google.fr/" />
+		<test url="http://maps.google.co.kr/" />
+		<test url="http://maps.google.co.nz/" />
+		<test url="http://maps.google.co.uk/" />
+		<test url="http://maps.google.com.au/" />
+		<test url="http://maps.google.com.br/" />
+		<test url="http://maps.google.com.hk/" />
 		<test url="http://news.google.ca/" />
 		<test url="http://news.google.com/" />
 		<test url="http://news.google.com.au/" />
+		<test url="http://news.google.ca/archivesearch" />
+		<test url="http://news.google.com/archivesearch" />
+		<test url="http://news.google.com.au/archivesearch" />
 		<test url="http://picasaweb.google.ca/" />
 		<test url="http://picasaweb.google.com/" />
 		<test url="http://picasaweb.google.com.au/" />
@@ -102,4 +115,11 @@
 		<test url="http://translate.google.com/" />
 		<test url="http://translate.google.co.jp/" />
 		<test url="http://translate.google.com.kh/" />
+
+		<!-- This exclusion is for the Google-hosted LIFE photo archive, which can be
+		found at http://images.google.com/hosted/life (no trailing slash)
+		and which does not support HTTPS as of September 2017. -->
+		<exclusion pattern="^http://images\.google\.com/hosted/" />
+			<test url="http://images.google.com/hosted/life/67933df915a33f1f.html" />
+
 </ruleset>

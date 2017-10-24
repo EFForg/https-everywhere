@@ -37,9 +37,6 @@
 
 			- linkhelp
 
-		- ssl.google-analytics.com
-		- www.google-analytics.com
-
 		- googleapis.com subdomains:
 
 			- ajax
@@ -61,11 +58,6 @@
 			- ssl
 			- t\d
 
-		- gdata.youtube.com
-
-
-	ssl.google-analytics.com/ga.js sets __utm\w wildcard
-	cookies on whichever domain it is loaded from.
 
 -->
 <ruleset name="Google APIs">
@@ -73,10 +65,6 @@
 	<target host="www.gmodules.com" />
 		<!-- need this exclusion otherwise the test checker will use the hosts as test urls -->
 		<exclusion pattern="^http://(www\.)?gmodules\.com/$" />
-
-	<target host="click.google-analytics.com" />
-	<target host="www.google-analytics.com" />
-	<target host="ssl.google-analytics.com" />
 
 	<target host="ajax.googleapis.com" />
 		<!-- The implicit test URL at the root of this domain generates a 404.
@@ -89,6 +77,7 @@
 	<target host="ct.googleapis.com" />
 	<target host="fonts.googleapis.com" />
 	<target host="imasdk.googleapis.com" />
+	<target host="maps.googleapis.com" />
 	<target host="www.googleapis.com" />
 	<target host="*.commondatastorage.googleapis.com" />
 	<target host="*.storage.googleapis.com" />
@@ -96,7 +85,8 @@
 
 	<target host="gstatic.com" />
 	<target host="*.gstatic.com" />
-	<target host="gdata.youtube.com" />
+
+	<securecookie host="^maps\.gstatic\.com$" name=".+" />
 
 	<!--	Captive portal detection redirects to this URL, and many captive
 		portals break TLS, so exempt this redirect URL.
@@ -105,34 +95,25 @@
 	<exclusion pattern="^http://www\.gstatic\.com/generate_204" />
 		<test url="http://www.gstatic.com/generate_204" />
 
-	<exclusion pattern="^http://gdata\.youtube\.com/crossdomain\.xml" />
-		<test url="http://gdata.youtube.com/crossdomain.xml" />
-	
 	<!--	Breaks digitalattackmap.com, cf.
 		https://trac.torproject.org/projects/tor/ticket/15154
 			-->
 	<exclusion pattern="^http://www\.gstatic\.com/ddos-viz/attacks\.json" />
 		<test url="http://www.gstatic.com/ddos-viz/attacks.json" />
 
-	<securecookie host="^ssl\.google-analytics\.com$" name=".+" />
-
 	<rule from="^http://(?:www\.)?gmodules\.com/ig/images/"
 		to="https://www.google.com/ig/images/" />
 		<test url="http://gmodules.com/ig/images/" />
 		<test url="http://www.gmodules.com/ig/images/" />
 
-	<rule from="^http://(click|ssl|www)\.google-analytics\.com/"
-		to="https://$1.google-analytics.com/" />
-
-		<test url="http://www.google-analytics.com/analytics.js" />
-
-	<rule from="^http://(ajax|chart|ct|fonts|imasdk|www)\.googleapis\.com/"
+	<rule from="^http://(ajax|chart|ct|fonts|imasdk|maps|www)\.googleapis\.com/"
 		to="https://$1.googleapis.com/" />
 		<test url="http://ajax.googleapis.com/ajax/libs/angular_material/0.8.2/angular-material.min.js" />
 		<test url="http://ct.googleapis.com/aviator/ct/v1/get-entries?start=0&amp;end=1" />
 		<test url="http://chart.googleapis.com/chart?cht=p3&amp;chs=250x100&amp;chd=t:60,40&amp;chl=Hello|World" />
 		<test url="http://fonts.googleapis.com/css?family=Tangerine" />
 		<test url="http://imasdk.googleapis.com/" />
+		<test url="http://maps.googleapis.com/maps/ms?hl=da&amp;ie=UTF8&amp;msa=0&amp;msid=213981917930555964408.00044f8886ceeef1c1b88&amp;source=embed&amp;ll=55.432276,9.439402&amp;spn=0.017045,0.043774&amp;z=14" />
 
 	<rule from="^http://([^@:\./]+\.)?(commondata)?storage\.googleapis\.com/"
 		to="https://$1$2storage.googleapis.com/" />
@@ -154,7 +135,7 @@
 		to="https://www.gstatic.com/" />
 		<test url="http://www.gstatic.com/" />
 
-	<rule from="^http://(csi|encrypted-tbn\d|fonts|g0|[\w-]+\.metric|ssl|t\d)\.gstatic\.com/"
+	<rule from="^http://(csi|encrypted-tbn\d|fonts|g0|maps|[\w-]+\.metric|ssl|t\d)\.gstatic\.com/"
 		to="https://$1.gstatic.com/" />
 		<test url="http://csi.gstatic.com/" />
 		<test url="http://encrypted-tbn1.gstatic.com/" />
@@ -162,6 +143,7 @@
 		<test url="http://encrypted-tbn3.gstatic.com/" />
 		<test url="http://fonts.gstatic.com/" />
 		<test url="http://g0.gstatic.com/" />
+		<test url="http://maps.gstatic.com/" />
 		<test url="http://test1-ds.metric.gstatic.com/" />
 		<test url="http://test2-ds.metric.gstatic.com/" />
 		<test url="http://test3-ds.metric.gstatic.com/" />
@@ -170,6 +152,4 @@
 		<test url="http://t2.gstatic.com/" />
 		<test url="http://t3.gstatic.com/" />
 
-	<rule from="^http://gdata\.youtube\.com/"
-		to="https://gdata.youtube.com/" />
 </ruleset>
