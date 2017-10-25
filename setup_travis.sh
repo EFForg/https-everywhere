@@ -61,8 +61,10 @@ case $INFO in
   *unittests*)
     setup_unittests
     ;;
-  *rules*|*fetch*|*preloaded*)
+  *rules*|*fetch*)
     setup_docker
+    ;;
+  *preloaded*)
     ;;
   *)
     echo "bad INFO variable, got $INFO"
