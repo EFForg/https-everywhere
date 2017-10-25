@@ -67,6 +67,11 @@ chrome.storage.onChanged.addListener(async function(changes, areaName) {
       isExtensionEnabled = changes.globalEnabled.newValue;
       updateState();
     }
+    if ('debugging_rulesets' in changes) {
+      const r = new rules.RuleSets();
+      await r.loadFromBrowserStorage(store);
+      Object.assign(all_rules, r);
+    }
   }
 });
 
