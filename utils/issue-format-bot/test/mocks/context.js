@@ -22,6 +22,12 @@ module.exports = {
       github: {
         issues: {
           createComment: sinon.spy(),
+          // TODO actually make this keep track of data
+          getComments: function() {
+            return {
+              data: []
+            };
+          },
           addLabels: sinon.spy(),
           removeLabel: sinon.spy(() => new Promise(noop))
         }
