@@ -16,7 +16,6 @@ APP_NAME=https-everywhere
 #  ./makexpi.sh 0.2.3.development.2
 
 cd "`dirname $0`"
-RULESETS_JSON=pkg/rulesets.json
 ANDROID_APP_ID=org.mozilla.firefox
 VERSION=`echo $1 | cut -d "-" -f 2`
 
@@ -56,24 +55,6 @@ fi
 
 # Clean up obsolete ruleset databases, just in case they still exist.
 rm -f src/chrome/content/rules/default.rulesets src/defaults/rulesets.sqlite
-
-# Only generate the ruleset database if any rulesets have changed. Tried
-# implementing this with make, but make is very slow with 15k+ input files.
-needs_update() {
-  find src/chrome/content/rules/ -newer $RULESETS_JSON |\
-    grep -q .
-}
-if [ ! -f "$RULESETS_JSON" ] || needs_update ; then
-  # This is an optimization to get the OS reading the rulesets into RAM ASAP;
-  # it's useful on machines with slow disk seek times; doing several of these
-  # at once allows the IO subsystem to seek more efficiently.
-  for firstchar in `echo {a..z} {A..Z} {0..9}` ; do
-    # Those cover everything but it wouldn't matter if they didn't
-    nohup cat src/chrome/content/rules/"$firstchar"*.xml >/dev/null 2>/dev/null &
-  done
-  echo "Generating ruleset DB"
-  python2.7 ./utils/make-json.py
-fi
 
 # =============== BEGIN VALIDATION ================
 # Unless we're in a hurry, validate the ruleset library & locales

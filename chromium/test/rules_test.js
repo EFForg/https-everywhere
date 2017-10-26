@@ -12,18 +12,30 @@ const Exclusion = rules.Exclusion,
 describe('rules.js', function() {
   let test_str = 'test';
 
+  describe('nullIterable', function() {
+    it('is iterable zero times and is size 0', function() {
+      let count = 0;
+      for (let _ of rules.nullIterable) { // eslint-disable-line no-unused-vars
+        count += 1;
+      }
+      assert.strictEqual(count, 0);
+      assert.strictEqual(rules.nullIterable.size,  0);
+      assert.isEmpty(rules.nullIterable);
+    });
+  });
+
   describe('Exclusion', function() {
     it('constructs', function() {
       let exclusion = new Exclusion(test_str);
-      assert(exclusion.pattern_c.test(test_str), true);
+      assert.isTrue(exclusion.pattern_c.test(test_str), true);
     });
   });
 
   describe('Rule', function() {
     it('constructs trivial rule', function() {
       let rule = new Rule('^http:', 'https:');
-      assert(rule.to, rules.trivial_rule_to);
-      assert(rule.from_c, rules.trivial_rule_from);
+      assert.equal(rule.to, rules.trivial_rule_to);
+      assert.equal(rule.from_c, rules.trivial_rule_from_c);
     });
   });
 
@@ -41,7 +53,7 @@ describe('rules.js', function() {
       it('rewrites uris', function() {
         let rule = new Rule('^http:', 'https:');
         this.ruleset.rules.push(rule);
-        assert(this.ruleset.apply('http://example.com/'), 'https://example.com/');
+        assert.equal(this.ruleset.apply('http://example.com/'), 'https://example.com/');
       });
 
       it('does nothing when empty', function() {
@@ -84,29 +96,103 @@ describe('rules.js', function() {
   })
 
   describe('RuleSets', function() {
-    describe('#potentiallyApplicableRulesets', function() {
-      let example_host = 'example.com';
+    let rules_json = [{
+      name: "Freerangekitten.com",
+      rule: [{
+        to: "https:",
+        from: "^http:"
+      }],
+      target: ["freerangekitten.com", "www.freerangekitten.com"]
+    }];
 
-      beforeEach(function() {
-        this.rsets = new RuleSets();
+    beforeEach(function() {
+      this.rsets = new RuleSets();
+    });
+
+    describe('#addFromJson', function() {
+      it('can add a rule', function() {
+        this.rsets.addFromJson(rules_json);
+
+        assert.isTrue(this.rsets.targets.has('freerangekitten.com'));
       });
+    });
+
+    describe('#rewriteURI', function() {
+      it('rewrites host added from json', function() {
+        let host = 'freerangekitten.com';
+        this.rsets.addFromJson(rules_json);
+
+        let newuri = this.rsets.rewriteURI('http://' + host + '/', host);
+
+        assert.strictEqual(newuri, 'https://' + host + '/', 'protocol changed to https')
+      })
+
+      it('does not rewrite unknown hosts', function() {
+        assert.isNull(this.rsets.rewriteURI('http://unknown.com/', 'unknown.com'));
+      })
+    });
+
+    describe('#potentiallyApplicableRulesets', function() {
+      let host = 'example.com',
+        value = [host];
 
       it('returns nothing when empty', function() {
-        assert.isEmpty(this.rsets.potentiallyApplicableRulesets(example_host));
+        assert.isEmpty(this.rsets.potentiallyApplicableRulesets(host));
+      });
+
+      it('returns nothing for malformed hosts', function() {
+        assert.isEmpty(this.rsets.potentiallyApplicableRulesets('....'));
       });
 
       it('returns cached rulesets', function() {
-        this.rsets.ruleCache.set(example_host, 'value');
-        assert(this.rsets.potentiallyApplicableRulesets(example_host), 'value');
+        this.rsets.ruleCache.set(host, value);
+        assert.deepEqual(this.rsets.potentiallyApplicableRulesets(host), value);
       });
 
-      it('returns applicable rule sets', function() {
-        let target = ['value'];
-        this.rsets.targets.set(example_host, target);
+      it('caches results', function() {
+        this.rsets.targets.set(host, value);
 
-        let result = this.rsets.potentiallyApplicableRulesets(example_host),
-          expected = new Set(target);
-        assert.deepEqual(result, expected);
+        assert.isEmpty(this.rsets.ruleCache);
+        this.rsets.potentiallyApplicableRulesets(host);
+        assert.isTrue(this.rsets.ruleCache.has(host));
+      });
+
+      describe('wildcard matching', function() {
+
+        it('no wildcard', function() {
+          let target = host;
+          this.rsets.targets.set(target, value);
+
+          let result = this.rsets.potentiallyApplicableRulesets(target),
+            expected = new Set(value);
+
+          assert.deepEqual(result, expected);
+        });
+
+        it('matches left hand side wildcards', function() {
+          let target = '*.' + host;
+          this.rsets.targets.set(target, value);
+
+          let res1 = this.rsets.potentiallyApplicableRulesets('sub.' + host);
+          assert.deepEqual(res1, new Set(value), 'default case');
+
+          let res2 = this.rsets.potentiallyApplicableRulesets(host);
+          assert.isEmpty(res2, 'wildcard does not match parent domains');
+
+          let res3 = this.rsets.potentiallyApplicableRulesets('moresub.sub.' + host);
+          assert.deepEqual(res3, new Set(value), 'wildcard matches sub domains');
+        });
+
+        it('matches middle wildcards', function() {
+          let target = 'sub.*.' + host;
+          this.rsets.targets.set(target, value);
+
+          let res1 = this.rsets.potentiallyApplicableRulesets('sub.star.' + host);
+          assert.deepEqual(res1, new Set(value), 'default case');
+
+          let res2 = this.rsets.potentiallyApplicableRulesets('sub.foo.bar.' + host);
+          assert.isEmpty(res2, new Set(value), 'only matches one label');
+        });
       });
     });
   });

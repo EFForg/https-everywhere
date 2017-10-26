@@ -280,7 +280,7 @@ function setOption_(opt, value, callback) {
 function getTab(callback) {
   let url = new URL(window.location.href);
   if (url.searchParams.has('tabId')) {
-    let parentId = parseInt(url.searchParams.get('tabId'));
+    let parentId = Number(url.searchParams.get('tabId'));
     return chrome.tabs.get(parentId, callback);
   }
   chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => callback(tabs[0]));

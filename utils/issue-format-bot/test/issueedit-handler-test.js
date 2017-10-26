@@ -5,6 +5,8 @@
 const vows = require('perjury'),
   handlerutil = require('./lib/handlerutil');
 
+// TODO make this test that the bot doesn't post >1 "you fixed it" comments
+
 vows.describe('issue edit handler').addBatch(
   handlerutil.setup('../../lib/issueedit', {
     'and we pass it the context of an issue edit with a null body': handlerutil.nullBody('don\'t see any text'),

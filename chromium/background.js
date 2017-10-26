@@ -4,6 +4,7 @@
 
 const rules = require('./rules'),
   store = require('./store'),
+  incognito = require('./incognito'),
   util = require('./util');
 
 
@@ -12,7 +13,8 @@ let all_rules = new rules.RuleSets();
 async function initialize() {
   await store.initialize();
   await initializeStoredGlobals();
-  await all_rules.initialize(store);
+  await all_rules.loadFromBrowserStorage(store);
+  await incognito.onIncognitoDestruction(destroy_caches);
 
   // Send a message to the embedded webextension bootstrap.js to get settings to import
   chrome.runtime.sendMessage("import-legacy-data", import_settings);
@@ -64,6 +66,11 @@ chrome.storage.onChanged.addListener(async function(changes, areaName) {
     if ('globalEnabled' in changes) {
       isExtensionEnabled = changes.globalEnabled.newValue;
       updateState();
+    }
+    if ('debugging_rulesets' in changes) {
+      const r = new rules.RuleSets();
+      await r.loadFromBrowserStorage(store);
+      Object.assign(all_rules, r);
     }
   }
 });
@@ -128,28 +135,34 @@ function updateState () {
     iconState = 'blocking';
   }
 
-  chrome.browserAction.setIcon({
-    path: {
-      38: 'icons/icon-' + iconState + '-38.png'
-    }
-  });
+  if ('setIcon' in chrome.browserAction) {
+    chrome.browserAction.setIcon({
+      path: {
+        38: 'icons/icon-' + iconState + '-38.png'
+      }
+    });
+  }
 
   chrome.browserAction.setTitle({
-    title: 'HTTPS Everywhere' + (iconState === 'active') ? '' : ' (' + iconState + ')'
+    title: 'HTTPS Everywhere' + ((iconState === 'active') ? '' : ' (' + iconState + ')')
   });
 
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     if (!tabs || tabs.length === 0) {
       return;
     }
+    const tabId = tabs[0].id;
+    const activeCount = getActiveRulesetCount(tabId);
 
-    const activeCount = getActiveRulesetCount(tabs[0].id);
-
-    chrome.browserAction.setBadgeBackgroundColor({ color: '#666666' });
+    if ('setBadgeBackgroundColor' in chrome.browserAction) {
+      chrome.browserAction.setBadgeBackgroundColor({ color: '#666666', tabId });
+    }
 
     const showBadge = activeCount > 0 && isExtensionEnabled && showCounter;
 
-    chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '', tabId: tabs[0].id });
+    if ('setBadgeText' in chrome.browserAction) {
+      chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '', tabId });
+    }
   });
 }
 
@@ -602,9 +615,20 @@ async function import_settings(settings) {
     });
 
     Object.assign(all_rules, new rules.RuleSets());
-    await all_rules.initialize(store);
+    await all_rules.loadFromBrowserStorage(store);
 
   }
+}
+
+/**
+ * Clear any cache/ blacklist we have.
+ */
+function destroy_caches() {
+  util.log(util.DBUG, "Destroying caches.");
+  all_rules.cookieHostCache.clear();
+  all_rules.ruleCache.clear();
+  rules.settings.domainBlacklist.clear();
+  urlBlacklist.clear();
 }
 
 Object.assign(exports, {

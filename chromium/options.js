@@ -38,4 +38,11 @@ document.addEventListener("DOMContentLoaded", () => {
       sendMessage("set_option", { showCounter: showCounter.checked });
     });
   });
+
+  document.onkeydown = function(evt) {
+    evt = evt || window.event;
+    if (evt.ctrlKey && evt.keyCode == 90) {
+      window.open("debugging-rulesets.html");
+    }
+  };
 });

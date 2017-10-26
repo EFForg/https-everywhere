@@ -42,7 +42,7 @@ if [ "$TEST" == "rules" ]; then
   docker run --rm -ti -v $(pwd):/opt httpse bash -c "utils/validate.sh"
   docker run --rm -ti -v $(pwd):/opt httpse bash -c "test/rules.sh"
   docker run --rm -ti -v $(pwd):/opt node bash -c "cd /opt && node utils/normalize-securecookie.js"
-  [ `git diff --name-only | wc -l` -eq 0 ]
+  [ `git diff --name-only $RULESETFOLDER | wc -l` -eq 0 ]
 fi
 
 if [ "$TEST" == "fetch" ]; then
@@ -54,7 +54,7 @@ fi
 if [ "$TEST" == "preloaded" ]; then
   echo >&2 "Ensuring rulesets do not introduce targets which are already HSTS preloaded."
   docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" node bash -c "cd /opt/utils/hsts-prune && npm install && node index.js"
-  [ `git diff --name-only | wc -l` -eq 0 ]
+  [ `git diff --name-only $RULESETFOLDER | wc -l` -eq 0 ]
 fi
 
 exit 0
