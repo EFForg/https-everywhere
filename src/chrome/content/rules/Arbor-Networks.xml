@@ -1,13 +1,11 @@
 
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://partner.arbornetworks.com/ => https://partner.arbornetworks.com/: (28, 'Connection timed out after 20000 milliseconds')
-
 	Problematic domains:
 
 		- (www.)?arbor.net ¹
 		- atlas.arbornetworks.com ¹
 		- ddos.arbornetworks.com ²
+		- partner.arbornetworks.com
 
 	¹ Redirect differs
 	² Shows www
@@ -31,14 +29,15 @@ Fetch error: http://partner.arbornetworks.com/ => https://partner.arbornetworks.
 	ˢ Secured by us
 
 -->
-<ruleset name="Arbor Networks" default_off='failed ruleset test'>
+<ruleset name="Arbor Networks">
 
 	<target host="atlas.arbor.net" />
 
 	<target host="arbornetworks.com" />
 	<target host="asert.arbornetworks.com" />
 	<target host="blog.arbornetworks.com" />
-	<target host="partner.arbornetworks.com" />
+	<target host="pages.arbornetworks.com" />
+	<target host="partnercenter.arbornetworks.com" />
 	<target host="www.arbornetworks.com" />
 
 	<!--	Complications:
@@ -65,6 +64,9 @@ Fetch error: http://partner.arbornetworks.com/ => https://partner.arbornetworks.
 
 		<test url="http://www.arbor.net/home.htm" />
 
+        <rule from="^http://asert\.arbornetworks\.com/"
+                to="https://www.arbornetworks.com/blog/asert/" />
+
 	<!--	Redirect keeps path and args:
 						-->
 	<rule from="^http://atlas\.arbornetworks\.com/+"
@@ -72,12 +74,22 @@ Fetch error: http://partner.arbornetworks.com/ => https://partner.arbornetworks.
 
 		<test url="http://atlas.arbornetworks.com/home.htm" />
 
+	<rule from="^http://blog\.arbornetworks\.com/"
+                to="https://www.arbornetworks.com/blog/insight/" />
+
 	<!--	Redirect keeps path and args:
 						-->
 	<rule from="^http://ddos\.arbornetworks\.com/+"
 		to="https://www.arbornetworks.com/asert/" />
 
 		<test url="http://ddos.arbornetworks.com/home.htm" />
+	
+		<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://partner\.arbornetworks\.com/+"
+		to="https://partnercenter.arbornetworks.com/" />
+	
+		<test url="http://partner.arbornetworks.com/" />
 
 	<rule from="^http:"
 		to="https:" />
