@@ -52,13 +52,13 @@ def get_browser_name(string):
 
 def build_crx():
     '''Builds the .crx file for Chrome and returns the path to it'''
-    cmd = [os.path.join(get_git_root(), 'makecrx.sh')]
+    cmd = [os.path.join(get_git_root(), 'make.sh')]
     return os.path.join(get_git_root(), run_shell_command(cmd).split()[-1])
 
 
 def build_xpi():
-    cmd = [os.path.join(get_git_root(), 'makexpi.sh')]
-    return os.path.join(get_git_root(), run_shell_command(cmd).split()[-1])
+    cmd = [os.path.join(get_git_root(), 'make.sh')]
+    return os.path.join(get_git_root(), run_shell_command(cmd).split()[-3])
 
 
 def install_ext_on_ff(driver, extension_path):

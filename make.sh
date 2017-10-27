@@ -180,9 +180,13 @@ bash utils/android-push.sh "$xpi_eff"
 
 echo >&2 "Total included rules: `find src/chrome/content/rules -name "*.xml" | wc -l`"
 echo >&2 "Rules disabled by default: `find src/chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
-echo >&2 "Created $xpi_amo"
-echo >&2 "Created $xpi_eff"
-echo >&2 "Created $crx"
+
+# send the following to stdout so scripts can parse it
+# see test/selenium/shim.py
+echo "Created $xpi_amo"
+echo "Created $xpi_eff"
+echo "Created $crx"
+
 if [ -n "$BRANCH" ]; then
   cd ..
   cp $SUBDIR/$crx pkg
@@ -190,4 +194,3 @@ if [ -n "$BRANCH" ]; then
   cp $SUBDIR/$xpi_eff pkg
   rm -rf $SUBDIR
 fi
-echo "$crx" # send to stdout so scripts can parse it
