@@ -12,6 +12,7 @@ let all_rules = new rules.RuleSets();
 
 async function initialize() {
   await store.initialize();
+  await store.performMigrations();
   await initializeStoredGlobals();
   await all_rules.loadFromBrowserStorage(store);
   await incognito.onIncognitoDestruction(destroy_caches);
@@ -578,10 +579,17 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   } else if (message.type == "set_ruleset_active_status") {
     var ruleset = activeRulesets.getRulesets(message.object.tab_id)[message.object.name];
     ruleset.active = message.object.active;
-    sendResponse(true);
+    if (ruleset.default_state == message.object.active) {
+      message.object.active = undefined;
+    }
+    all_rules.setRuleActiveState(message.object.name, message.object.active).then(() => {
+      sendResponse(true);
+    });
+    return true;
   } else if (message.type == "add_new_rule") {
-    all_rules.addNewRuleAndStore(message.object);
-    sendResponse(true);
+    all_rules.addNewRuleAndStore(message.object).then(() => {
+      sendResponse(true);
+    });
     return true;
   } else if (message.type == "remove_rule") {
     all_rules.removeRuleAndStore(message.object);
@@ -599,9 +607,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
  */
 async function import_settings(settings) {
   if (settings && settings.changed) {
+    let ruleActiveStates = {};
     // Load all the ruleset toggles into memory and store
     for (const ruleset_name in settings.rule_toggle) {
-      store.localStorage[ruleset_name] = settings.rule_toggle[ruleset_name];
+      ruleActiveStates[ruleset_name] = (settings.rule_toggle[ruleset_name] == "true");
     }
 
     // Save settings
@@ -610,7 +619,8 @@ async function import_settings(settings) {
         legacy_custom_rulesets: settings.custom_rulesets,
         httpNowhere: settings.prefs.http_nowhere_enabled,
         showCounter: settings.prefs.show_counter,
-        globalEnabled: settings.prefs.global_enabled
+        globalEnabled: settings.prefs.global_enabled,
+        ruleActiveStates
       }, resolve);
     });
 
