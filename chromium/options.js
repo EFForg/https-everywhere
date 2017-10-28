@@ -1,3 +1,7 @@
+/* global sendMessage */
+
+"use strict";
+
 document.addEventListener("DOMContentLoaded", () => {
 
   let json_data;
@@ -7,13 +11,13 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
 
     let settings = JSON.parse(json_data);
-    sendMessage("import_settings", settings, resp => {
+    sendMessage("import_settings", settings, () => {
       document.querySelector("#import-confirmed").style.display = "block";
       document.querySelector("form").style.display = "none";
     });
   }
 
-  document.querySelector("#import-settings").addEventListener("change", event => {
+  document.querySelector("#import-settings").addEventListener("change", () => {
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.onload = event => {
@@ -30,8 +34,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   sendMessage("get_option", { showCounter: true }, item => {
     showCounter.checked = item.showCounter;
-    showCounter.addEventListener("change", event => {
+    showCounter.addEventListener("change", () => {
       sendMessage("set_option", { showCounter: showCounter.checked });
     });
   });
+
+  document.onkeydown = function(evt) {
+    evt = evt || window.event;
+    if (evt.ctrlKey && evt.keyCode == 90) {
+      window.open("debugging-rulesets.html");
+    }
+  };
 });

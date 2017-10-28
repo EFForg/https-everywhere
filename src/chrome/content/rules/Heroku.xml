@@ -3,21 +3,21 @@
 
 		- prod-heroku.s3.amazonaws.com
 
+	www.*.herokuapp.com have a valid DNS record but host no content.
+
 -->
 <ruleset name="Heroku">
 
-	<target host="heroku.com" />
-	<target host="*.heroku.com" />
+	<target host="herokuapp.com" />
 	<target host="*.herokuapp.com" />
+		<test url="http://blog.herokuapp.com/" />
+		<test url="http://chempro101.herokuapp.com/" />
+		<test url="http://cosio.herokuapp.com/" />
+		<test url="http://voices.herokuapp.com/" />
 
-	<exclusion pattern="^http://mc\.heroku\.com/"/>
+	<securecookie host="^[\w\-]+\.herokuapp\.com$" name=".+" />
 
-	<!--	Avoiding cross-domain cookies.
-						-->
-	<securecookie host="^[\w\-]+\.herokuapp\.com$" name=".*" />
-
-
-	<rule from="^http://([^/:@\.]+\.)?heroku(app)?\.com/"
-		to="https://$1heroku$2.com/" />
+	<rule from="^http://([\w-]+\.)?herokuapp\.com/"
+		to="https://$1herokuapp.com/" />
 
 </ruleset>
