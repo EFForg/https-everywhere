@@ -1,17 +1,32 @@
 "use strict";
-// Stubs so this runs under nodejs. They get overwritten later by util.js
-var VERB=1;
-var DBUG=2;
-var INFO=3;
-var NOTE=4;
-var WARN=5;
-function log(){}
+
+(function(exports) {
+
+const util = require('./util');
+
+let settings = {
+  enableMixedRulesets: false,
+  domainBlacklist: new Set(),
+};
 
 // To reduce memory usage for the numerous rules/cookies with trivial rules
 const trivial_rule_to = "https:";
 const trivial_rule_from_c = new RegExp("^http:");
 const trivial_cookie_name_c = new RegExp(".*");
 const trivial_cookie_host_c = new RegExp(".*");
+
+// Empty iterable singleton to reduce memory usage
+const nullIterable = Object.create(null, {
+  [Symbol.iterator]: {
+    value: function* () {
+      // do nothing
+    }
+  },
+
+  size: {
+    value: 0
+  },
+});
 
 /**
  * A single rule
@@ -89,18 +104,18 @@ RuleSet.prototype = {
     var returl = null;
     // If we're covered by an exclusion, go home
     if (this.exclusions !== null) {
-      for (var i = 0; i < this.exclusions.length; ++i) {
-        if (this.exclusions[i].pattern_c.test(urispec)) {
-          log(DBUG, "excluded uri " + urispec);
+      for (let exclusion of this.exclusions) {
+        if (exclusion.pattern_c.test(urispec)) {
+          util.log(util.DBUG, "excluded uri " + urispec);
           return null;
         }
       }
     }
 
     // Okay, now find the first rule that triggers
-    for(var i = 0; i < this.rules.length; ++i) {
-      returl = urispec.replace(this.rules[i].from_c,
-                               this.rules[i].to);
+    for (let rule of this.rules) {
+      returl = urispec.replace(rule.from_c,
+        rule.to);
       if (returl != urispec) {
         return returl;
       }
@@ -173,9 +188,9 @@ RuleSet.prototype = {
  * @param ruleActiveStates default state for rules
  * @constructor
  */
-function RuleSets(ruleActiveStates) {
+function RuleSets() {
   // Load rules into structure
-  this.targets = {};
+  this.targets = new Map();
 
   // A cache for potentiallyApplicableRulesets
   this.ruleCache = new Map();
@@ -184,21 +199,118 @@ function RuleSets(ruleActiveStates) {
   this.cookieHostCache = new Map();
 
   // A hash of rule name -> active status (true/false).
-  this.ruleActiveStates = ruleActiveStates;
+  this.ruleActiveStates = {};
+
+  // The key to retrieve user rules from the storage api
+  this.USER_RULE_KEY = 'userRules';
+
+  return this;
 }
 
 
 RuleSets.prototype = {
+
+  /**
+   * Load packaged rulesets, and rulesets in browser storage
+   * @param store object from store.js
+   */
+  loadFromBrowserStorage: async function(store) {
+    this.store = store;
+    this.ruleActiveStates = await this.store.get_promise('ruleActiveStates', {});
+    this.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
+    this.loadStoredUserRules();
+    await this.addStoredCustomRulesets();
+  },
+
   /**
    * Iterate through data XML and load rulesets
    */
   addFromXml: function(ruleXml) {
     var sets = ruleXml.getElementsByTagName("ruleset");
-    for (var i = 0; i < sets.length; ++i) {
+    for (let s of sets) {
       try {
-        this.parseOneRuleset(sets[i]);
+        this.parseOneXmlRuleset(s);
       } catch (e) {
-        log(WARN, 'Error processing ruleset:' + e);
+        util.log(util.WARN, 'Error processing ruleset:' + e);
+      }
+    }
+  },
+
+  addFromJson: function(ruleJson) {
+    for (let ruleset of ruleJson) {
+      try {
+        this.parseOneJsonRuleset(ruleset);
+      } catch(e) {
+        util.log(util.WARN, 'Error processing ruleset:' + e);
+      }
+    }
+  },
+
+  parseOneJsonRuleset: function(ruletag) {
+    var default_state = true;
+    var note = "";
+    var default_off = ruletag["default_off"];
+    if (default_off) {
+      default_state = false;
+      note += default_off + "\n";
+    }
+
+    // If a ruleset declares a platform, and we don't match it, treat it as
+    // off-by-default. In practice, this excludes "mixedcontent" & "cacert" rules.
+    var platform = ruletag["platform"]
+    if (platform) {
+      default_state = false;
+      if (platform == "mixedcontent" && settings.enableMixedRulesets) {
+        default_state = true;
+      }
+      note += "Platform(s): " + platform + "\n";
+    }
+
+    var rule_set = new RuleSet(ruletag["name"], default_state, note.trim());
+
+    // Read user prefs
+    if (rule_set.name in this.ruleActiveStates) {
+      rule_set.active = this.ruleActiveStates[rule_set.name];
+    }
+
+    var rules = ruletag["rule"];
+    for (let rule of rules) {
+      if (rule["from"] != null && rule["to"] != null) {
+        rule_set.rules.push(new Rule(rule["from"], rule["to"]));
+      }
+    }
+
+    var exclusions = ruletag["exclusion"];
+    if (exclusions != null) {
+      for (let exclusion of exclusions) {
+        if (exclusion != null) {
+          if (!rule_set.exclusions) {
+            rule_set.exclusions = [];
+          }
+          rule_set.exclusions.push(new Exclusion(exclusion));
+        }
+      }
+    }
+
+    var cookierules = ruletag["securecookie"];
+    if (cookierules != null) {
+      for (let cookierule of cookierules) {
+        if (cookierule["host"] != null && cookierule["name"] != null) {
+          if (!rule_set.cookierules) {
+            rule_set.cookierules = [];
+          }
+          rule_set.cookierules.push(new CookieRule(cookierule["host"], cookierule["name"]));
+        }
+      }
+    }
+
+    var targets = ruletag["target"];
+    for (let target of targets) {
+      if (target != null) {
+        if (!this.targets.has(target)) {
+          this.targets.set(target, []);
+        }
+        this.targets.get(target).push(rule_set);
       }
     }
   },
@@ -209,20 +321,20 @@ RuleSets.prototype = {
    * @returns {boolean}
    */
   addUserRule : function(params) {
-    log(INFO, 'adding new user rule for ' + JSON.stringify(params));
+    util.log(util.INFO, 'adding new user rule for ' + JSON.stringify(params));
     var new_rule_set = new RuleSet(params.host, true, "user rule");
     var new_rule = new Rule(params.urlMatcher, params.redirectTo);
     new_rule_set.rules.push(new_rule);
-    if (!(params.host in this.targets)) {
-      this.targets[params.host] = [];
+    if (!this.targets.has(params.host)) {
+      this.targets.set(params.host, []);
     }
     this.ruleCache.delete(params.host);
     // TODO: maybe promote this rule?
-    this.targets[params.host].push(new_rule_set);
+    this.targets.get(params.host).push(new_rule_set);
     if (new_rule_set.name in this.ruleActiveStates) {
-      new_rule_set.active = (this.ruleActiveStates[new_rule_set.name] == "true");
+      new_rule_set.active = this.ruleActiveStates[new_rule_set.name];
     }
-    log(INFO, 'done adding rule');
+    util.log(util.INFO, 'done adding rule');
     return true;
   },
 
@@ -232,25 +344,114 @@ RuleSets.prototype = {
    * @returns {boolean}
    */
   removeUserRule: function(ruleset) {
-    log(INFO, 'removing user rule for ' + JSON.stringify(ruleset));
+    util.log(util.INFO, 'removing user rule for ' + JSON.stringify(ruleset));
     this.ruleCache.delete(ruleset.name);
-    for(let x = 0; x < this.targets[ruleset.name].length; x++) {
-      if(this.targets[ruleset.name][x].isEquivalentTo(ruleset)) {
-        this.targets[ruleset.name].splice(x, 1);
-      }
+
+
+    var tmp = this.targets.get(ruleset.name).filter(r =>
+      !(r.isEquivalentTo(ruleset))
+    );
+    this.targets.set(ruleset.name, tmp);
+
+    if (this.targets.get(ruleset.name).length == 0) {
+      this.targets.delete(ruleset.name);
     }
-    if (this.targets[ruleset.name].length == 0) {
-      delete this.targets[ruleset.name];
-    }
-    log(INFO, 'done removing rule');
+
+    util.log(util.INFO, 'done removing rule');
     return true;
+  },
+
+  /**
+  * Retrieve stored user rules from storage api
+  **/
+  getStoredUserRules: async function() {
+    return await this.store.get_promise(this.USER_RULE_KEY, []);
+  },
+
+  /**
+  * Load all stored user rules into this RuleSet object
+  */
+  loadStoredUserRules: async function() {
+    const user_rules = await this.getStoredUserRules();
+    for (let user_rule of user_rules) {
+      this.addUserRule(user_rule);
+    }
+    util.log(util.INFO, 'loaded ' + user_rules.length + ' stored user rules');
+  },
+
+  /**
+  * Adds a new user rule
+  * @param params: params defining the rule
+  * @param cb: Callback to call after success/fail
+  * */
+  addNewRuleAndStore: async function(params) {
+    if (this.addUserRule(params)) {
+      // If we successfully added the user rule, save it in the storage
+      // api so it's automatically applied when the extension is
+      // reloaded.
+      let userRules = await this.getStoredUserRules();
+      // TODO: there's a race condition here, if this code is ever executed from multiple
+      // client windows in different event loops.
+      userRules.push(params);
+      // TODO: can we exceed the max size for storage?
+      await this.store.set_promise(this.USER_RULE_KEY, userRules);
+    }
+  },
+
+  /**
+  * Removes a user rule
+  * @param ruleset: the ruleset to remove
+  * */
+  removeRuleAndStore: async function(ruleset) {
+    if (this.removeUserRule(ruleset)) {
+      // If we successfully removed the user rule, remove it in local storage too
+      let userRules = await this.getStoredUserRules();
+      userRules = userRules.filter(r =>
+        !(r.host == ruleset.name &&
+          r.redirectTo == ruleset.rules[0].to)
+      );
+      await this.store.set_promise(this.USER_RULE_KEY, userRules);
+    }
+  },
+
+  addStoredCustomRulesets: function(){
+    return new Promise(resolve => {
+      this.store.get({
+        legacy_custom_rulesets: [],
+        debugging_rulesets: ""
+      }, item => {
+        this.loadCustomRulesets(item.legacy_custom_rulesets);
+        this.loadCustomRuleset("<root>" + item.debugging_rulesets + "</root>");
+        resolve();
+      });
+    });
+  },
+
+  // Load in the legacy custom rulesets, if any
+  loadCustomRulesets: function(legacy_custom_rulesets){
+    for(let legacy_custom_ruleset of legacy_custom_rulesets){
+      this.loadCustomRuleset(legacy_custom_ruleset);
+    }
+  },
+
+  loadCustomRuleset: function(ruleset_string){
+    this.addFromXml((new DOMParser()).parseFromString(ruleset_string, 'text/xml'));
+  },
+
+  setRuleActiveState: async function(ruleset_name, active){
+    if (active == undefined) {
+      delete this.ruleActiveStates[ruleset_name];
+    } else {
+      this.ruleActiveStates[ruleset_name] = active;
+    }
+    await this.store.set_promise('ruleActiveStates', this.ruleActiveStates);
   },
 
   /**
    * Does the loading of a ruleset.
    * @param ruletag The whole <ruleset> tag to parse
    */
-  parseOneRuleset: function(ruletag) {
+  parseOneXmlRuleset: function(ruletag) {
     var default_state = true;
     var note = "";
     var default_off = ruletag.getAttribute("default_off");
@@ -264,15 +465,15 @@ RuleSets.prototype = {
     var platform = ruletag.getAttribute("platform");
     if (platform) {
       default_state = false;
-      if (platform == "mixedcontent" && enableMixedRulesets) {
+      if (platform == "mixedcontent" && settings.enableMixedRulesets) {
         default_state = true;
       }
       note += "Platform(s): " + platform + "\n";
     }
 
     var rule_set = new RuleSet(ruletag.getAttribute("name"),
-                               default_state,
-                               note.trim());
+      default_state,
+      note.trim());
 
     // Read user prefs
     if (rule_set.name in this.ruleActiveStates) {
@@ -280,37 +481,37 @@ RuleSets.prototype = {
     }
 
     var rules = ruletag.getElementsByTagName("rule");
-    for(var j = 0; j < rules.length; j++) {
-      rule_set.rules.push(new Rule(rules[j].getAttribute("from"),
-                                    rules[j].getAttribute("to")));
+    for (let rule of rules) {
+      rule_set.rules.push(new Rule(rule.getAttribute("from"),
+        rule.getAttribute("to")));
     }
 
     var exclusions = ruletag.getElementsByTagName("exclusion");
     if (exclusions.length > 0) {
       rule_set.exclusions = [];
-      for (var j = 0; j < exclusions.length; j++) {
+      for (let exclusion of exclusions) {
         rule_set.exclusions.push(
-            new Exclusion(exclusions[j].getAttribute("pattern")));
+          new Exclusion(exclusion.getAttribute("pattern")));
       }
     }
 
     var cookierules = ruletag.getElementsByTagName("securecookie");
     if (cookierules.length > 0) {
       rule_set.cookierules = [];
-      for(var j = 0; j < cookierules.length; j++) {
+      for (let cookierule of cookierules) {
         rule_set.cookierules.push(
-            new CookieRule(cookierules[j].getAttribute("host"),
-                cookierules[j].getAttribute("name")));
+          new CookieRule(cookierule.getAttribute("host"),
+            cookierule.getAttribute("name")));
       }
     }
 
     var targets = ruletag.getElementsByTagName("target");
-    for(var j = 0; j < targets.length; j++) {
-       var host = targets[j].getAttribute("host");
-       if (!(host in this.targets)) {
-         this.targets[host] = [];
-       }
-       this.targets[host].push(rule_set);
+    for (let target of targets) {
+      var host = target.getAttribute("host");
+      if (!this.targets.has(host)) {
+        this.targets.set(host, []);
+      }
+      this.targets.get(host).push(rule_set);
     }
   },
 
@@ -321,56 +522,62 @@ RuleSets.prototype = {
    */
   potentiallyApplicableRulesets: function(host) {
     // Have we cached this result? If so, return it!
-    var cached_item = this.ruleCache.get(host);
-    if (cached_item !== undefined) {
-        log(DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.length);
-        return cached_item;
+    if (this.ruleCache.has(host)) {
+      let cached_item = this.ruleCache.get(host);
+      util.log(util.DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.size);
+      return cached_item;
+    } else {
+      util.log(util.DBUG, "Ruleset cache miss for " + host);
     }
-    log(DBUG, "Ruleset cache miss for " + host);
 
-    var tmp;
-    var results = [];
-    if (this.targets[host]) {
-      // Copy the host targets so we don't modify them.
-      results = results.concat(this.targets[host]);
-    }
+    // Let's begin search
+    // Copy the host targsts so we don't modify them.
+    let results = (this.targets.has(host) ?
+      new Set([...this.targets.get(host)]) :
+      new Set());
 
     // Ensure host is well-formed (RFC 1035)
-    if (host.indexOf("..") != -1 || host.length > 255) {
-      log(WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
-      return null;
+    if (host.length > 255 || host.indexOf("..") != -1) {
+      util.log(util.WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
+      return nullIterable;
     }
 
     // Replace each portion of the domain with a * in turn
-    var segmented = host.split(".");
-    for (var i = 0; i < segmented.length; ++i) {
-      tmp = segmented[i];
+    let segmented = host.split(".");
+    for (let i = 0; i < segmented.length; i++) {
+      let tmp = segmented[i];
       segmented[i] = "*";
-      results = results.concat(this.targets[segmented.join(".")]);
+
+      results = (this.targets.has(segmented.join(".")) ?
+        new Set([...results, ...this.targets.get(segmented.join("."))]) :
+        results);
+
       segmented[i] = tmp;
     }
+
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
-    for (var i = 2; i <= segmented.length - 2; ++i) {
-      var t = "*." + segmented.slice(i,segmented.length).join(".");
-      results = results.concat(this.targets[t]);
+    for (let i = 2; i <= segmented.length - 2; i++) {
+      let t = "*." + segmented.slice(i, segmented.length).join(".");
+
+      results = (this.targets.has(t) ?
+        new Set([...results, ...this.targets.get(t)]) :
+        results);
     }
 
     // Clean the results list, which may contain duplicates or undefined entries
-    var resultSet = new Set(results);
-    resultSet.delete(undefined);
+    results.delete(undefined);
 
-    log(DBUG,"Applicable rules for " + host + ":");
-    if (resultSet.size == 0) {
-      log(DBUG, "  None");
+    util.log(util.DBUG,"Applicable rules for " + host + ":");
+    if (results.size == 0) {
+      util.log(util.DBUG, "  None");
+      results = nullIterable;
     } else {
-      for (let target of resultSet.values()) {
-        log(DBUG, "  " + target.name);
-      }
+      results.forEach(result => util.log(util.DBUG, "  " + result.name));
     }
 
     // Insert results into the ruleset cache
-    this.ruleCache.set(host, resultSet);
+    this.ruleCache.set(host, results);
 
     // Cap the size of the cache. (Limit chosen somewhat arbitrarily)
     if (this.ruleCache.size > 1000) {
@@ -378,7 +585,7 @@ RuleSets.prototype = {
       this.ruleCache.delete(this.ruleCache.keys().next().value);
     }
 
-    return resultSet;
+    return results;
   },
 
   /**
@@ -394,14 +601,14 @@ RuleSets.prototype = {
     }
 
     if (!this.safeToSecureCookie(hostname)) {
-        return null;
+      return null;
     }
 
     var potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
     for (let ruleset of potentiallyApplicable) {
       if (ruleset.cookierules !== null && ruleset.active) {
-        for (var j = 0; j < ruleset.cookierules.length; j++) {
-          var cr = ruleset.cookierules[j];
+        for (let cookierules of ruleset.cookierules) {
+          var cr = cookierules;
           if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
             return ruleset;
           }
@@ -429,16 +636,16 @@ RuleSets.prototype = {
     // observed and the domain blacklisted, a cookie might already have been
     // flagged as secure.
 
-    if (domainBlacklist.has(domain)) {
-      log(INFO, "cookies for " + domain + "blacklisted");
+    if (settings.domainBlacklist.has(domain)) {
+      util.log(util.INFO, "cookies for " + domain + "blacklisted");
       return false;
     }
     var cached_item = this.cookieHostCache.get(domain);
     if (cached_item !== undefined) {
-        log(DBUG, "Cookie host cache hit for " + domain);
-        return cached_item;
+      util.log(util.DBUG, "Cookie host cache hit for " + domain);
+      return cached_item;
     }
-    log(DBUG, "Cookie host cache miss for " + domain);
+    util.log(util.DBUG, "Cookie host cache miss for " + domain);
 
     // If we passed that test, make up a random URL on the domain, and see if
     // we would HTTPSify that.
@@ -452,19 +659,19 @@ RuleSets.prototype = {
       this.cookieHostCache.delete(this.cookieHostCache.keys().next().value);
     }
 
-    log(INFO, "Testing securecookie applicability with " + test_uri);
+    util.log(util.INFO, "Testing securecookie applicability with " + test_uri);
     var potentiallyApplicable = this.potentiallyApplicableRulesets(domain);
     for (let ruleset of potentiallyApplicable) {
       if (!ruleset.active) {
         continue;
       }
       if (ruleset.apply(test_uri)) {
-        log(INFO, "Cookie domain could be secured.");
+        util.log(util.INFO, "Cookie domain could be secured.");
         this.cookieHostCache.set(domain, true);
         return true;
       }
     }
-    log(INFO, "Cookie domain could NOT be secured.");
+    util.log(util.INFO, "Cookie domain could NOT be secured.");
     this.cookieHostCache.set(domain, false);
     return false;
   },
@@ -487,7 +694,15 @@ RuleSets.prototype = {
   }
 };
 
-// Export for HTTPS Rewriter if applicable.
-if (typeof exports != 'undefined') {
-  exports.RuleSets = RuleSets;
-}
+Object.assign(exports, {
+  nullIterable,
+  settings,
+  trivial_rule_to,
+  trivial_rule_from_c,
+  Exclusion,
+  Rule,
+  RuleSet,
+  RuleSets
+});
+
+})(typeof exports == 'undefined' ? require.scopes.rules = {} : exports);

@@ -83,12 +83,14 @@ class UrlComparisonThread(threading.Thread):
 		threading.Thread.__init__(self)
 
 	def run(self):
-		while not self.taskQueue.empty():
+		while True:
 			try:
 				self.processTask(self.taskQueue.get())
 				self.taskQueue.task_done()
 			except Exception, e:
 				logging.exception(e)
+                        if self.taskQueue.empty():
+                            break
 
 	def processTask(self, task):
 		problems = []
@@ -128,11 +130,18 @@ class UrlComparisonThread(threading.Thread):
 		logging.debug("Fetching plain page %s", plainUrl)
 		# If we get an exception (e.g. connection refused,
 		# connection timeout) on the plain page, don't treat
-		# that as a failure.
+		# that as a failure (except DNS resolution errors)
 		plainRcode, plainPage = None, None
 		try:
 			plainRcode, plainPage = fetcherPlain.fetchHtml(plainUrl)
 		except Exception, e:
+			errno, message = e
+			if errno == 6:
+				message = "Fetch error: %s => %s: %s" % (
+					plainUrl, transformedUrl, e)
+				self.queue_result("error", "fetch-error %s"% e, ruleFname, plainUrl, https_url=transformedUrl)
+				return message
+
 			logging.debug("Non-fatal fetch error for plain page %s: %s" % (plainUrl, e))
 
 		# Compare HTTP return codes - if original page returned 2xx,
@@ -288,6 +297,9 @@ def cli():
 	checkCoverage = False
 	if config.has_option("rulesets", "check_coverage"):
 		checkCoverage = config.getboolean("rulesets", "check_coverage")
+	checkTargetValidity = False
+	if config.has_option("rulesets", "check_target_validity"):
+		checkTargetValidity = config.getboolean("rulesets", "check_target_validity")
 	checkNonmatchGroups = False
 	if config.has_option("rulesets", "check_nonmatch_groups"):
 		checkNonmatchGroups = config.getboolean("rulesets", "check_nonmatch_groups")
@@ -295,12 +307,16 @@ def cli():
 	if config.has_option("rulesets", "check_test_formatting"):
 		checkTestFormatting = config.getboolean("rulesets", "check_test_formatting")
 	certdir = config.get("certificates", "basedir")
-	if config.has_option("rulesets", "skiplist"):
+	if config.has_option("rulesets", "skiplist") and config.has_option("rulesets", "skipfield"):
 		skiplist = config.get("rulesets", "skiplist")
+		skipfield = config.get("rulesets", "skipfield")
 		with open(skiplist) as f:
+			f.readline()
 			for line in f:
-				fileHash = line.split(" ")[0]
-				skipdict[binascii.unhexlify(fileHash)] = 1
+				splitLine = line.split(",")
+				fileHash = splitLine[0]
+				if splitLine[int(skipfield)] == "1":
+					skipdict[binascii.unhexlify(fileHash)] = 1
 
 	threadCount = config.getint("http", "threads")
 	httpEnabled = True
@@ -335,6 +351,7 @@ def cli():
 	
 	rulesets = []
 	coverageProblemsExist = False
+	targetValidityProblemExist = False
 	nonmatchGroupProblemsExist = False
 	testFormattingProblemsExist = False
 	for xmlFname in xmlFnames:
@@ -356,6 +373,12 @@ def cli():
 			problems = ruleset.getCoverageProblems()
 			for problem in problems:
 				coverageProblemsExist = True
+				logging.error(problem)
+		if checkTargetValidity:
+			logging.debug("Checking target validity for '%s'." % ruleset.name)
+			problems = ruleset.getTargetValidityProblems()
+			for problem in problems:
+				targetValidityProblemExist = True
 				logging.error(problem)
 		if checkNonmatchGroups:
 			logging.debug("Checking non-match groups for '%s'." % ruleset.name)
@@ -408,6 +431,11 @@ def cli():
 		testedUrlPairCount = 0
 		config.getboolean("debug", "exit_after_dump")
 
+		for i in range(threadCount):
+			t = UrlComparisonThread(taskQueue, metric, thresholdDistance, autoDisable, resQueue)
+			t.setDaemon(True)
+			t.start()
+
 		# set of main pages to test
 		mainPages = set(urlList)
 		# If list of URLs to test/scan was not defined, use the test URL extraction
@@ -426,11 +454,6 @@ def cli():
 				task = ComparisonTask(testUrls, fetcherPlain, fetcher, ruleset)
 				taskQueue.put(task)
 
-		for i in range(threadCount):
-			t = UrlComparisonThread(taskQueue, metric, thresholdDistance, autoDisable, resQueue)
-			t.setDaemon(True)
-			t.start()
-
 		taskQueue.join()
 		logging.info("Finished in %.2f seconds. Loaded rulesets: %d, URL pairs: %d.",
 			time.time() - startTime, len(xmlFnames), testedUrlPairCount)
@@ -438,6 +461,9 @@ def cli():
 			json_output(resQueue, args.json_file, problems)
 	if checkCoverage:
 		if coverageProblemsExist:
+			return 1 # exit with error code
+	if checkTargetValidity:
+		if targetValidityProblemExist:
 			return 1 # exit with error code
 	if checkNonmatchGroups:
 		if nonmatchGroupProblemsExist:

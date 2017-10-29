@@ -1,4 +1,5 @@
-HTTPS Everywhere [![Build Status](https://travis-ci.org/EFForg/https-everywhere.svg?branch=master)](https://travis-ci.org/EFForg/https-everywhere)
+[HTTPS Everywhere](https://www.eff.org/https-everywhere) [![Build Status](https://travis-ci.org/EFForg/https-everywhere.svg?branch=master)](https://travis-ci.org/EFForg/https-everywhere)
+[![Coverage Status](https://coveralls.io/repos/github/EFForg/https-everywhere/badge.svg?branch=master)](https://coveralls.io/github/EFForg/https-everywhere?branch=master)
 ================
 
 Getting Started
@@ -66,7 +67,7 @@ Important directories you might want to know about
 
     test/                     The tests live here
 
-    util/                     Various utilities
+    utils/                    Various utilities
 
 Hacking on the Source Code
 --------------------------

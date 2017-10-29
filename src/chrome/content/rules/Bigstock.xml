@@ -1,41 +1,55 @@
 <!--
-	CDN buckets:
+	No working URL known:
+		static.bigstockphoto.com
+		ssl.bigstockimages.com
 
-		- static.bigstockphoto.com.edgesuite.net
+	Invalid certificate:
+		p.bigstockphoto.com
+			<test url="http://p.bigstockphoto.com\/aNu3ntp8TsmenTiR0wcn_34291184.jpg" />
+		static0.bigstockphoto.com
+			<test url="http://static0.bigstockphoto.com/thumbs/7/6/1/large1500/16724738.jpg" />
+		static1.bigstockphoto.com
+			<test url="http://static1.bigstockphoto.com/thumbs/7/6/1/large1500/16724738.jpg" />
+		static2.bigstockphoto.com
+			<test url="http://static2.bigstockphoto.com/thumbs/7/6/1/large1500/16724738.jpg" />
+		static3.bigstockphoto.com
+			<test url="http://static3.bigstockphoto.com/thumbs/7/6/1/large1500/16724738.jpg" />
+		static4.bigstockphoto.com
+			<test url="http://static4.bigstockphoto.com/thumbs/7/6/1/large1500/16724738.jpg" />
+		static5.bigstockphoto.com
+			<test url="http://static5.bigstockphoto.com/thumbs/7/6/1/large1500/16724738.jpg" />
+		static6.bigstockphoto.com
+			<test url="http://static6.bigstockphoto.com/thumbs/7/6/1/large1500/16724738.jpg" />
+		static7.bigstockphoto.com
+			<test url="http://static7.bigstockphoto.com/thumbs/7/6/1/large1500/16724738.jpg" />	
+		static8.bigstockphoto.com
+			<test url="http://static8.bigstockphoto.com/thumbs/7/6/1/large1500/16724738.jpg" />
+		static9.bigstockphoto.com
+			<test url="http://static9.bigstockphoto.com/thumbs/7/6/1/large1500/16724738.jpg" />
+		t5.bigstockimages.com
 
-		- static2.bigstockphoto.com.edgesuite.net
-
-			- static[2-9].bigstockphoto.com
-
-
-	Problematic domains:
-
-		- help.bigstockphoto.com	(redirects to http; mismatched, CN: *.zendesk.com)
-		- static.bigstockphoto.com	(akamai)
-
-
-	Some pages redirect to http.
+	Redirect to http:
+		blog.bigstockphoto.com
 
 -->
-<ruleset name="Bigstock (partial)">
+<ruleset name="Bigstock">
+
+	<target host="bigstockphoto.com" />
+	<target host="www.bigstockphoto.com" />
+		<exclusion pattern="^http://www\.bigstockphoto\.com/blog/" />
+			<test url="http://www.bigstockphoto.com/blog//" />
+	<target host="affiliate.bigstockphoto.com" />
+	<target host="affiliates.bigstockphoto.com" />
+	<target host="api.bigstockphoto.com" />
+	<target host="free.bigstockphoto.com" />
+	<target host="help.bigstockphoto.com" />
 
 	<target host="bigstockimages.com" />
-	<target host="*.bigstockimages.com" />
-	<target host="bigstockphoto.com" />
-	<target host="*.bigstockphoto.com" />
-		<exclusion pattern="^http://(?:www\.)?bigstockphoto\.com/(?!(?:cart|login|subscribe)(?:$|\?|/)|css/|files/|images/|javascript/|js_translation/|serverside/login\.php|thumbs/)" />
-
+	<target host="www.bigstockimages.com" />
 
 	<securecookie host="^\.bigstockimages\.com$" name=".+" />
 
-
-	<rule from="^http://(www\.)?bigstockimages\.com/"
-		to="https://$1bigstockimages.com/" />
-
-	<rule from="^http://(?:static\d*\.|(www\.))?bigstockphoto\.com/"
-		to="https://$1bigstockphoto.com/" />
-
-	<rule from="^http://help\.bigstockphoto\.com/(generated|system)/"
-		to="https://assets.zendesk.com/$1/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

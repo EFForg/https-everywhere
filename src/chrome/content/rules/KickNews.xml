@@ -1,38 +1,71 @@
 <!--
-	Problematic domains:
+	Non-functional hosts in *.kicknews.com
+		Timeout was reached:
+			 - s03.kicknews.com
+			 - s04.kicknews.com
 
-		- (www.)kicknews.co.uk	(blank page, valid cert)
+		SSL peer certificate was not OK:
+			 - blog.kicknews.com
+
+		Incomplete certificate chain error:
+			 - direct.kicknews.com
+			 - s01.kicknews.com
+			 - s02.kicknews.com
+
+		Mixed content blocking (MCB) triggered:
+			 - m.kicknews.com
 
 
-	Fully covered domains:
+	Non-functional hosts *arsenalnews.net
+		SSL peer certificate was not OK:
+			 - www.ipv6.arsenalnews.net
 
-		- (www.)arsenalnews.net
-		- (www.)kicknews.co.uk	(→ www.kicknews.com)
-		- (www.)kicknews.com
-		- (www.)kicknews.net
+		Incomplete certificate chain error:
+			 - beta.arsenalnews.net
+			 - m.beta.arsenalnews.net
+			 - direct.arsenalnews.net
+			 - s01.arsenalnews.net
+
+		Mixed content blocking (MCB) triggered:
+			 - m.arsenalnews.net
+
+
+	Non-functional hosts in *kicknews.net
+		SSL connect error:
+			 - dev.m.kicknews.net
+
+		Incomplete certificate chain error:
+			 - direct.kicknews.net
+			 - link.kicknews.net
+
+
+	Non-functional hosts in *kicknews.co.uk
+		SSL connect error:
+			 - stats.kicknews.co.uk
 
 -->
-<ruleset name="KickNews">
+<ruleset name="KickNews (partial)">
+	<!-- *kicknews.com -->
+	<target host="kicknews.com" />
+	<target host="www.kicknews.com" />
 
+	<!-- *arsenalnews.net -->
 	<target host="arsenalnews.net" />
-	<!--
-		*s for cross-domain cookies.
-						-->
-	<target host="*.arsenalnews.net" />
-	<target host="kicknews.*" />
+	<target host="www.arsenalnews.net" />
+	<target host="ipv6.arsenalnews.net" />
+
+	<!-- *kicknews.net -->
+	<target host="kicknews.net" />
+	<target host="www.kicknews.net" />
+	<target host="blog.kicknews.net" />
+	<target host="dev.kicknews.net" />
+	<target host="m.kicknews.net" />
+
+	<!-- *kicknews.co.uk -->
 	<target host="kicknews.co.uk" />
 	<target host="www.kicknews.co.uk" />
-	<target host="*.kicknews.com" />
-	<target host="*.kicknews.net" />
 
+	<securecookie host=".+" name=".+" />
 
-	<securecookie host="^(?:.*\.)?(?:arsenal|kick)news\.(?:com|net)$" name=".+" />
-
-
-	<rule from="^http://(www\.)?(arsenal|kick)news\.net/"
-		to="https://$1$2news.net/" />
-
-	<rule from="^http://(?:www\.)?kicknews\.co(?:\.uk|com)/"
-		to="https://www.kicknews.com/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

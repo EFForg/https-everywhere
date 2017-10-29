@@ -16,7 +16,6 @@ APP_NAME=https-everywhere
 #  ./makexpi.sh 0.2.3.development.2
 
 cd "`dirname $0`"
-RULESETS_JSON=pkg/rulesets.json
 ANDROID_APP_ID=org.mozilla.firefox
 VERSION=`echo $1 | cut -d "-" -f 2`
 
@@ -57,24 +56,6 @@ fi
 # Clean up obsolete ruleset databases, just in case they still exist.
 rm -f src/chrome/content/rules/default.rulesets src/defaults/rulesets.sqlite
 
-# Only generate the ruleset database if any rulesets have changed. Tried
-# implementing this with make, but make is very slow with 15k+ input files.
-needs_update() {
-  find src/chrome/content/rules/ -newer $RULESETS_JSON |\
-    grep -q .
-}
-if [ ! -f "$RULESETS_JSON" ] || needs_update ; then
-  # This is an optimization to get the OS reading the rulesets into RAM ASAP;
-  # it's useful on machines with slow disk seek times; doing several of these
-  # at once allows the IO subsystem to seek more efficiently.
-  for firstchar in `echo {a..z} {A..Z} {0..9}` ; do
-    # Those cover everything but it wouldn't matter if they didn't
-    nohup cat src/chrome/content/rules/"$firstchar"*.xml >/dev/null 2>/dev/null &
-  done
-  echo "Generating ruleset DB"
-  python2.7 ./utils/make-json.py
-fi
-
 # =============== BEGIN VALIDATION ================
 # Unless we're in a hurry, validate the ruleset library & locales
 
@@ -84,7 +65,6 @@ die() {
 }
 
 bash utils/validate.sh
-cp pkg/rulesets.json src/chrome/content/rulesets.json
 
 # The name/version of the XPI we're building comes from src/install.rdf
 XPI_NAME="pkg/$APP_NAME-`grep em:version src/install.rdf | sed -e 's/[<>]/	/g' | cut -f3`"
@@ -101,7 +81,29 @@ fi
 # Prepare packages suitable for uploading to EFF and AMO, respectively.
 [ -d pkg ] || mkdir pkg
 rsync -aL --delete --delete-excluded --exclude /chrome/content/rules src/ pkg/xpi-eff
-cp -a translations/* pkg/xpi-eff/chrome/locale/
+
+# START: The next lines are for embedded WebExtensions, and can be deleted after the full transition to WebExtensions
+[ -d pkg/xpi-eff/webextension ] || mkdir pkg/xpi-eff/webextension
+rsync -aL --delete chromium/ pkg/xpi-eff/webextension/
+
+mkdir pkg/xpi-eff/webextension/_locales/
+python2.7 utils/chromium-translations.py translations/ pkg/xpi-eff/webextension/_locales/
+python2.7 utils/chromium-translations.py src/chrome/locale/ pkg/xpi-eff/webextension/_locales/
+
+cd pkg/xpi-eff/webextension
+do_not_ship="*.py *.xml icon.jpg"
+rm -f $do_not_ship
+cd ../../..
+
+rm -rf pkg/xpi-eff/chrome/content/rulesets.json
+rm -rf pkg/xpi-eff/chrome/locale
+
+mkdir pkg/xpi-eff/webextension/rules/
+. ./utils/merge-rulesets.sh || exit 1
+
+cp src/$RULESETS pkg/xpi-eff/webextension/rules/default.rulesets
+# END
+
 rsync -a --delete pkg/xpi-eff/ pkg/xpi-amo
 # The AMO version of the package cannot contain the updateKey or updateURL tags.
 # Also, it has a different id than the eff-hosted version, because Firefox now
@@ -137,3 +139,4 @@ if [ -n "$BRANCH" ]; then
   cp $SUBDIR/${XPI_NAME}-eff.xpi $SUBDIR/${XPI_NAME}-amo.xpi pkg
   rm -rf $SUBDIR
 fi
+echo ${XPI_NAME}-eff.xpi

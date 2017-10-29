@@ -1,0 +1,102 @@
+<!--
+	Secure connection failed:
+		- registrierung.bernina.com
+		- sk.bernina.com
+		- www.youngfashion.bernina.com
+
+	mismatch:
+		- 3series.bernina.com
+		- 5series.bernina.com
+		- bsr.bernina.com
+		- ca.bernina.com
+		- ch.bernina.com
+		- challenge.bernina.com
+		- de.bernina.com
+		- dk.bernina.com
+		- es.bernina.com
+		- factory.bernina.com
+		- fr.bernina.com
+		- in.bernina.com
+		- nz.bernina.com
+		- shop.bernina.com
+		- survey.bernina.com
+		- us.bernina.com
+
+		- bernina-chur.ch
+		- bernina-lausanne.ch
+		- bernina-lugano.ch
+		- bernina-mels.ch
+		- bernina-solothurn.ch
+		- bernina-wil.ch
+		- bernina-zürich.ch
+
+	self-signed:
+		- (www\.)?bernina-zuerich.ch
+
+	No working URL known:
+		- secure.bernina.com (403)
+
+	Different content:
+		- adfs.bernina.com (https://adfs.bernina.com/adfs/portal/logo/logo.png)
+-->
+<ruleset name="Bernina">
+	<target host="bernina.com"/>
+	<target host="www.bernina.com"/>
+	<target host="blog.bernina.com"/>
+	<target host="checkout.bernina.com"/>
+	<target host="newsletter.bernina.com"/>
+	<target host="registration.bernina.com"/>
+	<target host="service.bernina.com"/>
+	<target host="sm.bernina.com"/>
+	<target host="weallsew.bernina.com"/>
+	<target host="webmail.bernina.com"/>
+
+	<!-- too many redirects for fetch tests -->
+	<exclusion pattern="^http://bernina\.com/$"/>
+	<exclusion pattern="^http://www\.bernina\.com/$"/>
+	<test url="http://bernina.com/Bernina/img/r-logo-bernina.svg"/>
+	<test url="http://www.bernina.com/Bernina/img/r-logo-bernina.svg"/>
+
+	<target host="bernina-chur.ch"/>
+	<target host="www.bernina-chur.ch"/>
+	<target host="bernina-lausanne.ch"/>
+	<target host="www.bernina-lausanne.ch"/>
+	<target host="bernina-lugano.ch"/>
+	<target host="www.bernina-lugano.ch"/>
+	<target host="bernina-mels.ch"/>
+	<target host="www.bernina-mels.ch"/>
+	<target host="bernina-solothurn.ch"/>
+	<target host="www.bernina-solothurn.ch"/>
+	<target host="bernina-wil.ch"/>
+	<target host="www.bernina-wil.ch"/>
+	<target host="bernina-zuerich.ch"/>
+	<target host="www.bernina-zuerich.ch"/>
+
+	<!-- punycode to solve unicode problems in tests -->
+	<target host="xn--bernina-zrich-4ob.ch"/>
+	<target host="www.xn--bernina-zrich-4ob.ch"/>
+
+	<!-- cert only matches www -->
+	<rule from="^http://bernina-chur\.ch/"
+		to="https://www.bernina-chur.ch/"/>
+	<rule from="^http://bernina-lausanne\.ch/"
+		to="https://www.bernina-lausanne.ch/"/>
+	<rule from="^http://bernina-lugano\.ch/"
+		to="https://www.bernina-lugano.ch/"/>
+	<rule from="^http://bernina-mels\.ch/"
+		to="https://www.bernina-mels.ch/"/>
+	<rule from="^http://bernina-solothurn\.ch/"
+		to="https://www.bernina-solothurn.ch/"/>
+	<rule from="^http://bernina-wil\.ch/"
+		to="https://www.bernina-wil.ch/"/>
+	<rule from="^http://xn--bernina-zrich-4ob\.ch/"
+		to="https://www.xn--bernina-zrich-4ob.ch/"/>
+
+	<!-- cert only matches www.bernina-zürich.ch
+	page shows broken frame, so we just redirect it -->
+	<rule from="^http://(www\.)?bernina-zuerich\.ch/"
+		to="https://www.xn--bernina-zrich-4ob.ch/"/>
+
+	<rule from="^http:"
+		to="https:"/>
+</ruleset>

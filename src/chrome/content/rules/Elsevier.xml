@@ -17,131 +17,46 @@
 	CDN buckets:
 
 		- elseviercdn.squizltd.netdna-cdn.com
-
-			- cdn.elsevier.com
-			- -ssl doesn't exist
+		- cdn.elsevier.com
 
 
-	Nonfunctional hosts in *elsevier.com:
+	Invalid certificate:
+		www.ethics.elservier.com
+		res.journals.elsevier.com
+		cdn.elservier.com
+		developers.elsevier.com
+		www.ees.elsevier.com
 
-		- www.ethics *
-		- res.journals
-		- reprints *
-
-	* Refused
-
-
-	Problematic hosts in *elsevier.com:
-
-		- cdn		(404, mismatched, CN: *.netdna-ssl.com)
-		- dev ²
-		- developers ³
-		- (www.)?ees ⁴
-		- support	(Redirect destination mismatched)
-
-	² Mixed css
-	³ Mismatched
-	⁴ Expired
-
-
-	Partially covered hosts on *elsevier.com:
-
-		- dev ¹
-		- (www.)?developers ²	(^ → www)
-
-	¹ Avoiding MCB
-	² Some paths redirect to http
-
-
-	Fully covered hosts in *elsevier.com:
-
-		- (www.)?
-		- api
-		- help
-		- linkinghub
-		- support	(→ help.elsevier.com)
-
-
-	Insecure cookies are set for these hosts:
-
-		- evolve.elsevier.com
-		- help.elsevier.com
-
-
-	Mixed content:
-
-		- css on dev from getbootstrap.com ¹
-
-		- Images, on:
-
-			- ees.elsevier.com from $self
-			- linkinghub.elsevier.com from www.sciencedirect.com
-			- linkinghub.elsevier.com from www2.us.elsevierhealth.com
-
-	¹ Unsecurable <= refused
+	Refused:
+		reprints.elsevier.com
 
 -->
 <ruleset name="Elsevier.com (partial)">
 
-	<!--	Direct rewrites:
-				-->
 	<target host="elsevier.com" />
+	<target host="www.elsevier.com" />
 	<target host="acw.elsevier.com" />
 	<target host="api.elsevier.com" />
 	<target host="auth.elsevier.com" />
 	<target host="covers.elsevier.com" />
 	<target host="dev.elsevier.com" />
+	<target host="developers.elsevier.com" />
 	<target host="www.developers.elsevier.com" />
-	<!--target host="ees.elsevier.com" /-->
-	<!--target host="www.ees.elsevier.com" /-->
+	<target host="ees.elsevier.com" />
+	<target host="www.ees.elsevier.com" />
 	<target host="evolve.elsevier.com" />
 	<target host="help.elsevier.com" />
 	<target host="linkinghub.elsevier.com" />
 	<target host="pa.elsevier.com" />
-	<target host="www.elsevier.com" />
-
-	<!--	Complications:
-				-->
-	<target host="developers.elsevier.com" />
 	<target host="support.elsevier.com" />
 
-		<!--	Avoid valid MCB:
-						-->
-		<exclusion pattern="^http://dev\.elsevier\.com/+(?!css/|img/)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://dev.elsevier.com/myapikey.html" />
-			<test url="http://dev.elsevier.com//myapikey.html" />
-			<test url="http://dev.elsevier.com/release_notes.html" />
-
-			<!--	-ve:
-					-->
-			<test url="http://dev.elsevier.com/css/lavish-bootstrap.css" />
-			<test url="http://dev.elsevier.com/img/logo_Elsevier.gif" />
-
-		<!--	Redirects to http:
-						-->
-		<exclusion pattern="^http://www\.developers\.elsevier\.com/action/" />
-
-			<!--	+ve:
-					-->
-			<test url="http://www.developers.elsevier.com/action/devprojects" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^evolve\.elsevier\.com$" name="^AWSELB$" /-->
-	<!--securecookie host="^help\.elsevier\.com$" name="^(cp_session|theme)$" /-->
-
-	<securecookie host=".*\.elsevier\.com$" name=".+" />
-
+	<securecookie host=".+" name=".+" />
 
 	<rule from="^http://developers\.elsevier\.com/"
 		to="https://www.developers.elsevier.com/" />
 
-	<rule from="^http://support\.elsevier\.com/"
-		to="https://help.elsevier.com/" />
+	<rule from="^http://www\.ees\.elsevier\.com/"
+		to="https://ees.elsevier.com/" />
 
 	<rule from="^http:"
 		to="https:" />

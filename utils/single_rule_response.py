@@ -89,8 +89,6 @@ if __name__ == "__main__":
     seen = []
     for rule in tree.xpath('/ruleset/rule'):
         to = rule.get('to')
-        if rule.get('downgrade') or to in seen:
-            continue
         if back_ref.search(to):
             continue
         if not test_response_no_redirect(to):

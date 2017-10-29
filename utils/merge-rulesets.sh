@@ -7,3 +7,6 @@
 python2.7 ./utils/merge-rulesets.py
 
 RULESETS=chrome/content/rules/default.rulesets
+
+# We make default.rulesets at build time, but it shouldn't have a variable timestamp.
+touch -r src/install.rdf src/$RULESETS

@@ -3,139 +3,73 @@
 
 	For other ZeniMax media coverage, see ZeniMax-Media.xml.
 
-
-	CDN buckets:
-
-		- d1ys1uetzexz61.cloudfront.net
-			- cdnstatic.bethsoft.com
-
-		- d1bjnur3wbumt5.cloudfront.net
-			- cdn.bethsoft.com
-
-		- d3o0v0yx1apq2.cloudfront.net
-			- content.bethsoft.com
-
-
-	Nonfunctional domains:
-
-		- geck.bethsoft.com	(shows login page)
-
-
-	Fully covered domains:
-
-		- *.bethsoft.com:
-
-			- cdn
-			- cdnstatic
-			- content
-			- fallout
-			- store
-
-
-	Partially covered subdomains:
-
-		- (www.) *
-		- bgs *
-		- forums *
-		- support *
-
-	* Avoiding false/broken MCB, rest handled in Bethsoft.com-falsemixed.xml
-
-
-	Observed cookie domains:
-
-		- ^
-		- .
-		- .bgs *
-		- fallout
-		- .fallout *
-		- .forums *
-		- store
-		- .store
-		- .support *
-
-	* Just tracking cookies
-
-
 	Mixed content:
 
 		- Scripts, on:
 
-			- bgs from cloud.github.com *
-			- bgs from ajax.googleapis.com *
-			- bgs from use.typekit.com *
 			- forums from static.zenimax.com *
-			- support from cdnstatic *
-			- www from cdn *
-			- www from use.typekit.com *
-
-		- css, on:
-
-			- store from cdnstatic *
-			- store from use.typekit.com *
-			- www from cdn *
 
 		- Images, on:
 
-			- fallout from cdnstatic *
 			- forums from cdnstatic *
 			- forums from static.zenimax.com *
-			- support from cdnstatic *
-			- support from content *
-			- www from cdnstatic *
-			- www from content *
 
-
-		- Web bugs, on:
-
-			- fallout from switch.atdmt.com *
-			- fallout from b.scorecardresearch.com *
-			- fallout from bp.specificclick.net *
-			- www from w.sharethis.com *
 
 	* Secured by us 
 
+	Mixed content (secured in Bethsoft.com-falsemixed.xml):
+		adam.bethsoft.com
+		be3showcase.bethsoft.com
+		doom.bethsoft.com
+		eulas.bethsoft.com
+		forums.bethsoft.com
+		manuals.bethsoft.com
+		patches.bethsoft.com
+		wolfforums.bethsoft.com
 
-	NB: We secure all resources, and thus
-	-falsemixed should be merged for Ffx 24.
+	Invalid certificate:
+		aide.bethsoft.com
+		aiuto.bethsoft.com
+		ayuda.bethsoft.com
+		download.bethsoft.com
+		help.bethsoft.com
+		hilfe.bethsoft.com
+		ihra.bethsoft.com
+		jobs.bethsoft.com
+		rage.bethsoft.com
+		static.bethsoft.com
+		support.bethsoft.com
+		wet.bethsoft.com
+		wolfenstein.bethsoft.com
+
+	Refused:
+		anzbe3showcase.bethsoft.com
+
+	No working URL known:
+		content.bethsoft.com
+		facebook.bethsoft.com
+		meet.bethsoft.com
 
 -->
-<ruleset name="Bethsoft.com (partial)">
+<ruleset name="Bethsoft.com">
 
 	<target host="bethsoft.com" />
-	<target host="*.bethsoft.com" />
-		<exclusion pattern="^http://geck\." />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://(?:www\.)?bethsoft\.com/(?!assets/|css/|favicon\.ico)" />
-		<exclusion pattern="^http://bgs\.bethsoft\.com/(?![\w-]+\.css|favicon\.ico|images/)" />
-		<exclusion pattern="^http://forums\.bethsoft\.com/(?!cache/|favicon\.ico|public/|uploads/)" />
-		<exclusion pattern="^http://support\.bethsoft\.com/(?!assets/|favicon\.ico|themes/)" />
+	<target host="www.bethsoft.com" />
+	<target host="bgs.bethsoft.com" />
+	<target host="cdn.bethsoft.com" />
+		<test url="http://cdn.bethsoft.com/quake/dopa.rar" />
+	<target host="cdnstatic.bethsoft.com" />
+		<test url="http://cdnstatic.bethsoft.com/bethblog.com/wp-content/uploads/2013/02/Rage%20Tool%20Kit%20FAQ.pdf" />
+	<target host="fallout.bethsoft.com" />
+	<target host="geck.bethsoft.com" />
+	<target host="insiders.bethsoft.com" />
+	<target host="playtest.bethsoft.com" />
+	<target host="press.bethsoft.com" />
+	<target host="store.bethsoft.com" />
 		
+	<securecookie host=".+" name=".+" />
 
-	<!--securecookie host="^\.bethsoft\.com$" name="^(main_modtids|main_session_id|__unam|__utm\w)$" /-->
-	<!--
-		Uncomment this when -falsemixed.xml is merged back:
-									-->
-	<!--securecookie host="^(?:.*\.)?bethsoft\.com$" name=".+" /-->
-	<!--
-		Must avoid forums cookies while separate:
-							-->
-	<securecookie host="^\.bethsoft\.com$" name="__u\w+$" />
-	<securecookie host=".+\.bethsoft\.com$" name=".+" />
-
-
-	<rule from="^http://cdn\.bethsoft\.com/"
-		to="https://d1bjnur3wbumt5.cloudfront.net/" />
-
-	<rule from="^http://cdnstatic\.bethsoft\.com/"
-		to="https://d1ys1uetzexz61.cloudfront.net/" />
-
-	<rule from="^http://content\.bethsoft\.com/"
-		to="https://d3o0v0yx1apq2.cloudfront.net/" />
-
-	<rule from="^http://(\w+\.)?bethsoft\.com/"
-		to="https://$1bethsoft.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

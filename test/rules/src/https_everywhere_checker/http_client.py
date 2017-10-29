@@ -306,6 +306,8 @@ class HTTPFetcher(object):
 			buf = cStringIO.StringIO()
 			headerBuf = cStringIO.StringIO()
 			
+			urlParts = urlparse.urlparse(url)
+			
 			c = pycurl.Curl()
 			c.setopt(c.URL, url)
 			c.setopt(c.WRITEFUNCTION, buf.write)
@@ -320,9 +322,13 @@ class HTTPFetcher(object):
 			c.setopt(c.CAPATH, platformPath)
 			if options.userAgent:
 				c.setopt(c.USERAGENT, options.userAgent)
+			# Sending this extra header is necessary for weird edge cases.  See https://github.com/EFForg/https-everywhere/pull/10944
+			c.setopt(c.HTTPHEADER, ['X-Extra-Header: true'])
 			c.setopt(c.SSLVERSION, options.sslVersion)
 			c.setopt(c.VERBOSE, options.curlVerbose)
 			c.setopt(c.SSL_CIPHER_LIST, options.cipherList)
+			if urlParts.hostname[-6:] == '.onion':
+				c.setopt(c.PROXY, 'socks5h://127.0.0.1:9050')
 			c.perform()
 			
 			bufValue = buf.getvalue()
@@ -338,7 +344,8 @@ class HTTPFetcher(object):
 	
 	def fetchHtml(self, url):
 		"""Fetch HTML from given http/https URL. Return codes 301, 302,
-		303, 307 are followed, URLs rewritten using HTTPS Everywhere rules.
+		303, 307, and 308 are followed, URLs rewritten using HTTPS
+		Everywhere rules.
 		
 		@param url: string URL of http(s) resource
 		@returns: tuple (httpResponseCode, htmlData)
@@ -376,7 +383,7 @@ class HTTPFetcher(object):
 			#shitty HTTP header parsing
 			if httpCode == 0:
 				raise HTTPFetcherError("Pycurl fetch failed for '%s'" % newUrl)
-			elif httpCode in (301, 302, 303, 307):
+			elif httpCode in (301, 302, 303, 307, 308):
 				location = None
 				for piece in headerStr.split('\n'):
 					if piece.lower().startswith('location:'):

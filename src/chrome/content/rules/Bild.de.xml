@@ -12,7 +12,6 @@
 	Nonfunctional subdomains:
 
 		^ ¹
-		- bilder ²
 		- epaper ³
 		- impressum ¹
 		- wetter ⁴
@@ -30,14 +29,12 @@
 
 	* Works; mismatched, CN: www.fagms.net
 
-
 	Partially covered subdomains:
 
 		- email *	(→ www.fagms.net)
 
 	* Embeds css from an unsecurable domain, namely www.bild.de.
 	  The rest, causing valid MCB, is handled in Bild.de-mixedcontent.xml.
-
 
 	Mixed content:
 
@@ -46,7 +43,6 @@
 		- Images, on email from:
 
 			- $self ²
-			- bilder ¹
 
 	¹ Unsecurable
 	² Secured by us
@@ -54,24 +50,23 @@
 -->
 <ruleset name="Bild.de (partial)">
 
-	<target host="*.bild.de" />
-		<!--
-			Avoid valid MCB:
-						-->
-		<!--exclusion pattern="^http://email\.bild\.de/+host/" /-->
-
+	<target host="bilder.bild.de" />
+	<target host="don.bild.de" />
+	<target host="email.bild.de" />
+	<target host="json.bild.de" />
+	<target host="offer.bild.de" />
+	<target host="pixel.bild.de" />
+	<target host="rem-track.bild.de" />
 
 	<!--	Server secures:
 				-->
-	<!--securecookie host="^don\.bild\.de$" name=".+" /-->
-
-
-	<rule from="^http://(don|offer)\.bild\.de/"
-		to="https://$1.bild.de/" />
+	<securecookie host="^don\.bild\.de$" name=".+" />
 
 	<!--	Appears to behave exactly the same:
 							-->
 	<rule from="^http://email\.bild\.de/(?!/*host/)"
 		to="https://www.fagms.net/" />
+
+	<rule from="^http:" to="https:"/>
 
 </ruleset>

@@ -101,7 +101,3 @@ You can add more details, like a link to a bug report, in the comments for the f
 Some rulesets may trigger active mixed content (i.e. scripts loaded over HTTP instead of HTTPS). This type of mixed content is blocked in both [Chrome](https://trac.torproject.org/projects/tor/ticket/6975) and Firefox, before HTTPS Everywhere has a chance to rewrite the URLs to an HTTPS version. This generally breaks the site. However, the Tor Browser doesn&apos;t block mixed content, in order to allow HTTPS Everywhere to try and rewrite the URLs to an HTTPS version.
 
 To enable a rule only on platforms that allow mixed content (currently only the Tor Browser), you can add a `platform="mixedcontent"` attribute to the ruleset element.
-
-#### [HTTPS->HTTP downgrade rules](#https-http-downgrade-rules)
-
-By default, HTTPS Everywhere will refuse to allow rules that would downgrade a URL from HTTPS to HTTP. Occasionally, this is necessary because the extension rewrites a page to HTTPS, and that page contains relative links to resources which do not exist on the HTTPS part of the site. This is very rare, especially because these resources will typically be blocked by [Mixed Content Blocking](#mixed-content-blocking-mcb). If it necessary, you can add a `downgrade="1"` attribute to the rule to make it easier to audit the ruleset library for such rules.

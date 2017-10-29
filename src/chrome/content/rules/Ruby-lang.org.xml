@@ -1,28 +1,43 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *.ruby-lang.org:
 
-		- doc *
+		ᵐ doc (redirects to docs)
+		ᵐ redmine (mirrors bugs)
 
-	* Reset
+	h: http redirect
+	m: certificate mismatch
+	r: connection refused
+	s: self-signed certificate
+	t: timeout on https
 
-
-	Fully covered subdomains:
-
-		- (www.)
-		- bugs
-		- redmine
-
+	See also Ruby-doc.org.xml
 -->
-<ruleset name="ruby-lang.org (partial)">
+<ruleset name="ruby-lang.org">
 
 	<target host="ruby-lang.org" />
-	<target host="bugs.ruby-lang.org"/>
-	<target host="redmine.ruby-lang.org"/>
-	<target host="www.ruby-lang.org"/>
+	<target host="*.ruby-lang.org" />
+
+	<test url="http://www.ruby-lang.org/"/>
+	<test url="http://bugs.ruby-lang.org/"/>
+	<test url="http://cache.ruby-lang.org/"/>
+	<test url="http://doc.ruby-lang.org/"/>
+	<test url="http://docs.ruby-lang.org/"/>
+	<test url="http://ftp.ruby-lang.org/"/>
+	<test url="http://lists.ruby-lang.org/"/>
+	<test url="http://redmine.ruby-lang.org/"/>
+	<test url="http://svn.ruby-lang.org/"/>
 
 
 	<securecookie host="^bugs\.ruby-lang\.org$" name=".+" />
 
+
+	<rule from="^http://ruby-lang\.org/"
+		to="https://www.ruby-lang.org/" />
+
+	<rule from="^http://doc\.ruby-lang\.org/"
+		to="https://docs.ruby-lang.org/" />
+	<rule from="^http://redmine\.ruby-lang\.org/"
+		to="https://bugs.ruby-lang.org/" />
 
 	<rule from="^http:"
 		to="https:" />
