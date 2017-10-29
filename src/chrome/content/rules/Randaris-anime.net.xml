@@ -1,0 +1,29 @@
+<ruleset name="Randaris-anime.net">
+	<target host="randaris-anime.net" />
+	<target host="www.randaris-anime.net" />
+
+	<!-- This pages contain Mixed Content, and is rewritten to http by default -->
+	<exclusion pattern="^http://(?:\w+\.)?randaris-anime\.net/serie/episode/" />
+
+	<!-- This page has AJAX calls to the http version -->
+	<exclusion pattern="^http://(?:\w+\.)?randaris-anime\.net/beta" />
+
+	<!-- The chat does not work with https -->
+	<exclusion pattern="^http://(?:\w+\.)?randaris-anime\.net/chat" />
+
+	<!-- The api in general also seems to be http only -->
+	<exclusion pattern="^http://(?:\w+\.)?randaris-anime\.net/api" />
+	<exclusion pattern="^http://(?:\w+\.)?randaris-anime\.net/experimental/activities" />
+
+	<exclusion pattern="^http://(?:\w+\.)?randaris-anime\.net/fonts" />
+
+	<rule from="^http:" to="https:" />
+
+	<!-- rewrite to https -->
+	<test url="http://randaris-anime.net" />
+	<test url="http://randaris-anime.net/members/login" />
+	<test url="http://randaris-anime.net/serie/detail/1817/naruto" />
+
+	<!-- should not rewrite to https because of Mixed Content -->
+	<test url="http://randaris-anime.net/serie/episode/naruto-episode/1/1817/de-sub#video" />
+</ruleset>
