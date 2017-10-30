@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
 
-# Build an HTTPS Everywhere .crx Chromium extension (for Chromium 17+)
+# Build an HTTPS Everywhere .crx & .xpi extension
 #
 # To build the current state of the tree:
 #
-#     ./makecrx.sh #
+#     ./make.sh
+#
 # To build a particular tagged release:
 #
-#     ./makecrx.sh <version number>
+#     ./make.sh <version number>
 #
 # eg:
 #
-#     ./makecrx.sh chrome-2012.1.26
+#     ./make.sh 2017.8.15
 #
 # Note that .crx files must be signed; this script makes you a
 # "dummy-chromium.pem" private key for you to sign your own local releases,
@@ -20,7 +21,7 @@
 
 cd $(dirname $0)
 
-if [ -n "$1" ]; then
+if [ -n "$1" -a "$1" != "--remove-update-channel" ]; then
   BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
   SUBDIR=checkout
   [ -d $SUBDIR ] || mkdir $SUBDIR
@@ -32,10 +33,12 @@ fi
 
 VERSION=`python2.7 -c "import json ; print(json.loads(open('chromium/manifest.json').read())['version'])"`
 
-echo "Building chrome version" $VERSION
+echo "Building version" $VERSION
 
 [ -d pkg ] || mkdir -p pkg
 [ -e pkg/crx ] && rm -rf pkg/crx
+[ -e pkg/xpi-amo ] && rm -rf pkg/xpi-amo
+[ -e pkg/xpi-eff ] && rm -rf pkg/xpi-eff
 
 # Clean up obsolete ruleset databases, just in case they still exist.
 rm -f src/chrome/content/rules/default.rulesets src/defaults/rulesets.sqlite
@@ -60,22 +63,39 @@ cp src/$RULESETS pkg/crx/rules/default.rulesets
 
 sed -i -e "s/VERSION/$VERSION/g" pkg/crx/manifest.json
 
-python2.7 -c "import json; m=json.loads(open('pkg/crx/manifest.json').read()); e=m['author']; m['author']={'email': e}; del m['applications']; open('pkg/crx/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+cp -a pkg/crx pkg/xpi-amo
+cp -a pkg/crx pkg/xpi-eff
+cp -a src/META-INF pkg/xpi-amo
+cp -a src/META-INF pkg/xpi-eff
 
-#sed -i -e "s/VERSION/$VERSION/g" pkg/crx/updates.xml
-#sed -e "s/VERSION/$VERSION/g" pkg/updates-master.xml > pkg/crx/updates.xml
+# Remove the 'applications' manifest key from the crx version of the extension and change the 'author' string to a hash
+python2.7 -c "import json; m=json.loads(open('pkg/crx/manifest.json').read()); e=m['author']; m['author']={'email': e}; del m['applications']; open('pkg/crx/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+# Remove the 'update_url' manifest key from the xpi version of the extension delivered to AMO
+python2.7 -c "import json; m=json.loads(open('pkg/xpi-amo/manifest.json').read()); del m['applications']['gecko']['update_url']; open('pkg/xpi-amo/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+
+# If the --remove-update-channel flag is set, ensure the extension is unable to update
+if [ "$1" == "--remove-update-channel" -o "$2" == "--remove-update-channel" ]; then
+  echo "Flag --remove-update-channel specified.  Removing the XPI extensions' ability to update."
+  python2.7 -c "import json; m=json.loads(open('pkg/xpi-amo/manifest.json').read()); m['applications']['gecko']['update_url'] = 'data:text/plain,'; open('pkg/xpi-amo/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+  python2.7 -c "import json; m=json.loads(open('pkg/xpi-eff/manifest.json').read()); m['applications']['gecko']['update_url'] = 'data:text/plain,'; open('pkg/xpi-eff/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+fi
 
 if [ -n "$BRANCH" ] ; then
   crx="pkg/https-everywhere-$VERSION.crx"
+  xpi_amo="pkg/https-everywhere-$VERSION-amo.xpi"
+  xpi_eff="pkg/https-everywhere-$VERSION-eff.xpi"
   key=../dummy-chromium.pem
 else
   crx="pkg/https-everywhere-$VERSION~pre.crx"
+  xpi_amo="pkg/https-everywhere-$VERSION~pre-amo.xpi"
+  xpi_eff="pkg/https-everywhere-$VERSION~pre-eff.xpi"
   key=dummy-chromium.pem
 fi
 if ! [ -f "$key" ] ; then
   echo "Making a dummy signing key for local build purposes"
   openssl genrsa 2048 > "$key"
 fi
+
 
 ## Based on https://code.google.com/chrome/extensions/crx.html
 
@@ -117,6 +137,37 @@ fi
   echo "$crmagic_hex $version_hex $pub_len_hex $sig_len_hex" | $sed -e 's/\s//g' -e 's/\([0-9A-F]\{2\}\)/\\\\\\x\1/gI' | xargs printf
   cat "$pub" "$sig" "$zip"
 ) > "$crx"
+
+
+
+# now zip up the xpi AMO dir
+name=pkg/xpi-amo
+dir=pkg/xpi-amo
+zip="$name.zip"
+
+cwd=$(pwd -P)
+(cd "$dir" && ../../utils/create_xpi.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
+echo >&2 "AMO xpi package has sha1sum: `sha1sum "$cwd/$zip"`"
+
+cp $zip $xpi_amo
+
+
+
+# now zip up the xpi EFF dir
+name=pkg/xpi-eff
+dir=pkg/xpi-eff
+zip="$name.zip"
+
+cwd=$(pwd -P)
+(cd "$dir" && ../../utils/create_xpi.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
+echo >&2 "EFF xpi package has sha1sum: `sha1sum "$cwd/$zip"`"
+
+cp $zip $xpi_eff
+
+
+
+bash utils/android-push.sh "$xpi_eff"
+
 #rm -rf pkg/crx
 
 #python2.7 githubhelper.py $VERSION
@@ -129,10 +180,17 @@ fi
 
 echo >&2 "Total included rules: `find src/chrome/content/rules -name "*.xml" | wc -l`"
 echo >&2 "Rules disabled by default: `find src/chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
-echo >&2 "Created $crx"
+
+# send the following to stdout so scripts can parse it
+# see test/selenium/shim.py
+echo "Created $xpi_amo"
+echo "Created $xpi_eff"
+echo "Created $crx"
+
 if [ -n "$BRANCH" ]; then
   cd ..
   cp $SUBDIR/$crx pkg
+  cp $SUBDIR/$xpi_amo pkg
+  cp $SUBDIR/$xpi_eff pkg
   rm -rf $SUBDIR
 fi
-echo "$crx" # send to stdout so scripts can parse it
