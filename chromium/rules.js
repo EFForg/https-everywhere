@@ -537,8 +537,8 @@ RuleSets.prototype = {
       new Set());
 
     // Ensure host is well-formed (RFC 1035)
-    if (host.length > 255 || host.indexOf("..") != -1) {
-      util.log(util.WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
+    if (host.length <= 0 || host.length > 255 || host.indexOf("..") != -1) {
+      util.log(util.WARN, "Malformed host passed to potentiallyApplicableRulesets: " + host);
       return nullIterable;
     }
 
