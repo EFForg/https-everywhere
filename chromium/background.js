@@ -329,8 +329,8 @@ function onBeforeRequest(details) {
 // Map of which values for the `type' enum denote active vs passive content.
 // https://developer.chrome.com/extensions/webRequest.html#event-onBeforeRequest
 const mixedContentTypes = {
-  object: true, other: true, script: true, stylesheet: true, sub_frame: true, xmlhttprequest: true,
-  image: false, main_frame: false
+  object: 1, other: 1, script: 1, stylesheet: 1, sub_frame: 1, xmlhttprequest: 1,
+  image: 0, main_frame: 0
 };
 
 /**
@@ -347,7 +347,7 @@ const mixedContentTypes = {
 function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritten_url) {
   let rw = rewritten_url ? "rw" : "nrw";
 
-  let active_content = true;
+  let active_content = 1;
   if (mixedContentTypes.hasOwnProperty(type)) {
     active_content = mixedContentTypes[type];
   } else {
