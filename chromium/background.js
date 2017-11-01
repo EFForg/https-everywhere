@@ -643,7 +643,9 @@ function destroy_caches() {
 
 Object.assign(exports, {
   all_rules,
-  urlBlacklist
+  urlBlacklist,
+  sortSwitchPlanner,
+  switchPlannerInfo
 });
 
 })(typeof exports == 'undefined' ? require.scopes.background = {} : exports);
