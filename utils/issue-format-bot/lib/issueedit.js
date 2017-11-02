@@ -20,6 +20,13 @@ module.exports = function(robot, alexa) {
       return;
     }
 
+    const createdAt = new Date(context.payload.issue.created_at);
+    // September 25th, 2017
+    if (createdAt.getFullYear() <= 2017 && createdAt.getMonth() <= 8 && createdAt.getDate() <= 25) {
+      robot.log('Ignoring event for a legacy, pre-bot issue.');
+      return;
+    }
+
     const data = parse(context.payload.issue.body);
 
     // Check if the data is problematic
