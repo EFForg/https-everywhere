@@ -7,6 +7,9 @@ const parse = require('./parse'),
   labeler = require('./labeler'),
   _ = require('lodash');
 
+// We do this outside the event handler to avoid setting up and tearing down this object each time a hook is received
+const botStartDate = new Date('2018-09-25');
+
 // TODO make this share more with newissue.js?
 
 module.exports = function(robot, alexa) {
@@ -21,8 +24,7 @@ module.exports = function(robot, alexa) {
     }
 
     const createdAt = new Date(context.payload.issue.created_at);
-    // September 25th, 2017
-    if (createdAt.getFullYear() <= 2017 && createdAt.getMonth() <= 8 && createdAt.getDate() <= 25) {
+    if (createdAt <= botStartDate) {
       robot.log('Ignoring event for a legacy, pre-bot issue.');
       return;
     }
