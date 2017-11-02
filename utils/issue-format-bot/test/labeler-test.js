@@ -37,7 +37,7 @@ function resetSpies(context) {
 }
 
 function addLabelsCalledOnce(err, context) {
-  assert.ok(context.github.issues.addLabels.calledOnce);
+  assert.isTrue(context.github.issues.addLabels.calledOnce);
 }
 
 function assertWhichLabel(label) {

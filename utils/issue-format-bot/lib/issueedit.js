@@ -7,6 +7,9 @@ const parse = require('./parse'),
   labeler = require('./labeler'),
   _ = require('lodash');
 
+// We do this outside the event handler to avoid setting up and tearing down this object each time a hook is received
+const botStartDate = new Date('2018-09-25');
+
 // TODO make this share more with newissue.js?
 
 module.exports = function(robot, alexa) {
@@ -17,6 +20,12 @@ module.exports = function(robot, alexa) {
     // I can't really tell if GitHub will ever send us something like this, honestly... but bettter safe than sorry.
     if (_.has(context.payload.issue, 'pull_request')) {
       robot.log('Issue is a Pull Request; aborting.');
+      return;
+    }
+
+    const createdAt = new Date(context.payload.issue.created_at);
+    if (createdAt <= botStartDate) {
+      robot.log('Ignoring event for a legacy, pre-bot issue.');
       return;
     }
 
