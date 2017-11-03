@@ -1,3 +1,39 @@
+# Table of Contents
+
+* [Welcome!](#welcome)
+    * [HTTPS Everywhere Source Code Layout](#https-everywhere-source-code-layout)
+    * [Submitting Changes](#submitting-changes)
+* [Contributing Rulesets](#contributing-rulesets)
+    * [General Info](#general-info)
+    * [New Rulesets](#new-rulesets)
+    * [Minimum Requirements for a Ruleset PR](#minimum-requirements-for-a-ruleset-pr)
+    * [Testing](#testing)
+    * [Ruleset Style Guide](#ruleset-style-guide)
+        * [Motivation](#motivation)
+        * [Indentation &amp; Misc Stylistic Conventions](#indentation--misc-stylistic-conventions)
+        * [Wildcards in Targets](#wildcards-in-targets)
+            * [Left-Wildcards](#left-wildcards)
+            * [Edge-Case: Right-Wildcards](#edge-case-right-wildcards)
+        * [Complicated Regex in Rules](#complicated-regex-in-rules)
+        * [Enumerating Subdomains](#enumerating-subdomains)
+        * [Target Ordering](#target-ordering)
+        * [Rule Ordering](#rule-ordering)
+        * [Non-working hosts](#non-working-hosts)
+        * [Ruleset Names](#ruleset-names)
+            * [Filenames](#filenames)
+        * [Cross-referencing Rulesets](#cross-referencing-rulesets)
+        * [Regex Conventions](#regex-conventions)
+        * [Snapping Redirects](#snapping-redirects)
+        * [Example: Ruleset before style guidelines are applied](#example-ruleset-before-style-guidelines-are-applied)
+        * [Example: Ruleset after style guidelines are applied, with test URLs](#example-ruleset-after-style-guidelines-are-applied-with-test-urls)
+    * [Removal of Rules](#removal-of-rules)
+        * [Regular Rules](#regular-rules)
+        * [HSTS Preloaded Rules](#hsts-preloaded-rules)
+* [Contributing Code](#contributing-code)
+* [Contributing Translations](#contributing-translations)
+
+* * *
+
 # Welcome!
 
 Welcome, and thank you for your interest in contributing to HTTPS Everywhere! HTTPS Everywhere depends on the open source community for its continued success, so any contribution is appreciated.

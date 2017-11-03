@@ -1,4 +1,5 @@
 [HTTPS Everywhere](https://www.eff.org/https-everywhere) [![Build Status](https://travis-ci.org/EFForg/https-everywhere.svg?branch=master)](https://travis-ci.org/EFForg/https-everywhere)
+[![Coverage Status](https://coveralls.io/repos/github/EFForg/https-everywhere/badge.svg?branch=master)](https://coveralls.io/github/EFForg/https-everywhere?branch=master)
 ================
 
 Getting Started
@@ -28,13 +29,9 @@ Run the latest code and rulesets in a standalone Tor Browser profile:
 
     bash test/tor path_to_tor_browser.tar.xz
 
-Build the Firefox extension as a .xpi package:
+Build the Firefox (.xpi) & Chromium (.crx) extensions:
 
-    bash makexpi.sh
-
-Build the Chromium extension as a .crx package:
-
-    bash makecrx.sh
+    bash make.sh
 
 Both of the build commands store their output under pkg/.
 

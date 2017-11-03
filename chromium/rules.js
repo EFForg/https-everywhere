@@ -1,19 +1,8 @@
-/* globals global: false */
 "use strict";
 
 (function(exports) {
 
-// Stubs so this runs under nodejs. They get overwritten later by util.js
-if (typeof util == 'undefined' || typeof global != 'undefined') {
-  Object.assign(global, {
-    util: {
-      DBUG: 2,
-      INFO: 3,
-      WARN: 5,
-      log: ()=>{},
-    }
-  });
-}
+const util = require('./util');
 
 let settings = {
   enableMixedRulesets: false,
@@ -25,6 +14,19 @@ const trivial_rule_to = "https:";
 const trivial_rule_from_c = new RegExp("^http:");
 const trivial_cookie_name_c = new RegExp(".*");
 const trivial_cookie_host_c = new RegExp(".*");
+
+// Empty iterable singleton to reduce memory usage
+const nullIterable = Object.create(null, {
+  [Symbol.iterator]: {
+    value: function* () {
+      // do nothing
+    }
+  },
+
+  size: {
+    value: 0
+  },
+});
 
 /**
  * A single rule
@@ -186,7 +188,7 @@ RuleSet.prototype = {
  * @param ruleActiveStates default state for rules
  * @constructor
  */
-function RuleSets(ruleActiveStates) {
+function RuleSets() {
   // Load rules into structure
   this.targets = new Map();
 
@@ -197,11 +199,29 @@ function RuleSets(ruleActiveStates) {
   this.cookieHostCache = new Map();
 
   // A hash of rule name -> active status (true/false).
-  this.ruleActiveStates = ruleActiveStates;
+  this.ruleActiveStates = {};
+
+  // The key to retrieve user rules from the storage api
+  this.USER_RULE_KEY = 'userRules';
+
+  return this;
 }
 
 
 RuleSets.prototype = {
+
+  /**
+   * Load packaged rulesets, and rulesets in browser storage
+   * @param store object from store.js
+   */
+  loadFromBrowserStorage: async function(store) {
+    this.store = store;
+    this.ruleActiveStates = await this.store.get_promise('ruleActiveStates', {});
+    this.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
+    this.loadStoredUserRules();
+    await this.addStoredCustomRulesets();
+  },
+
   /**
    * Iterate through data XML and load rulesets
    */
@@ -250,7 +270,7 @@ RuleSets.prototype = {
 
     // Read user prefs
     if (rule_set.name in this.ruleActiveStates) {
-      rule_set.active = (this.ruleActiveStates[rule_set.name] == "true");
+      rule_set.active = this.ruleActiveStates[rule_set.name];
     }
 
     var rules = ruletag["rule"];
@@ -312,7 +332,7 @@ RuleSets.prototype = {
     // TODO: maybe promote this rule?
     this.targets.get(params.host).push(new_rule_set);
     if (new_rule_set.name in this.ruleActiveStates) {
-      new_rule_set.active = (this.ruleActiveStates[new_rule_set.name] == "true");
+      new_rule_set.active = this.ruleActiveStates[new_rule_set.name];
     }
     util.log(util.INFO, 'done adding rule');
     return true;
@@ -339,6 +359,92 @@ RuleSets.prototype = {
 
     util.log(util.INFO, 'done removing rule');
     return true;
+  },
+
+  /**
+  * Retrieve stored user rules from storage api
+  **/
+  getStoredUserRules: async function() {
+    return await this.store.get_promise(this.USER_RULE_KEY, []);
+  },
+
+  /**
+  * Load all stored user rules into this RuleSet object
+  */
+  loadStoredUserRules: async function() {
+    const user_rules = await this.getStoredUserRules();
+    for (let user_rule of user_rules) {
+      this.addUserRule(user_rule);
+    }
+    util.log(util.INFO, 'loaded ' + user_rules.length + ' stored user rules');
+  },
+
+  /**
+  * Adds a new user rule
+  * @param params: params defining the rule
+  * @param cb: Callback to call after success/fail
+  * */
+  addNewRuleAndStore: async function(params) {
+    if (this.addUserRule(params)) {
+      // If we successfully added the user rule, save it in the storage
+      // api so it's automatically applied when the extension is
+      // reloaded.
+      let userRules = await this.getStoredUserRules();
+      // TODO: there's a race condition here, if this code is ever executed from multiple
+      // client windows in different event loops.
+      userRules.push(params);
+      // TODO: can we exceed the max size for storage?
+      await this.store.set_promise(this.USER_RULE_KEY, userRules);
+    }
+  },
+
+  /**
+  * Removes a user rule
+  * @param ruleset: the ruleset to remove
+  * */
+  removeRuleAndStore: async function(ruleset) {
+    if (this.removeUserRule(ruleset)) {
+      // If we successfully removed the user rule, remove it in local storage too
+      let userRules = await this.getStoredUserRules();
+      userRules = userRules.filter(r =>
+        !(r.host == ruleset.name &&
+          r.redirectTo == ruleset.rules[0].to)
+      );
+      await this.store.set_promise(this.USER_RULE_KEY, userRules);
+    }
+  },
+
+  addStoredCustomRulesets: function(){
+    return new Promise(resolve => {
+      this.store.get({
+        legacy_custom_rulesets: [],
+        debugging_rulesets: ""
+      }, item => {
+        this.loadCustomRulesets(item.legacy_custom_rulesets);
+        this.loadCustomRuleset("<root>" + item.debugging_rulesets + "</root>");
+        resolve();
+      });
+    });
+  },
+
+  // Load in the legacy custom rulesets, if any
+  loadCustomRulesets: function(legacy_custom_rulesets){
+    for(let legacy_custom_ruleset of legacy_custom_rulesets){
+      this.loadCustomRuleset(legacy_custom_ruleset);
+    }
+  },
+
+  loadCustomRuleset: function(ruleset_string){
+    this.addFromXml((new DOMParser()).parseFromString(ruleset_string, 'text/xml'));
+  },
+
+  setRuleActiveState: async function(ruleset_name, active){
+    if (active == undefined) {
+      delete this.ruleActiveStates[ruleset_name];
+    } else {
+      this.ruleActiveStates[ruleset_name] = active;
+    }
+    await this.store.set_promise('ruleActiveStates', this.ruleActiveStates);
   },
 
   /**
@@ -416,55 +522,62 @@ RuleSets.prototype = {
    */
   potentiallyApplicableRulesets: function(host) {
     // Have we cached this result? If so, return it!
-    var cached_item = this.ruleCache.get(host);
-    if (cached_item !== undefined) {
-      util.log(util.DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.length);
+    if (this.ruleCache.has(host)) {
+      let cached_item = this.ruleCache.get(host);
+      util.log(util.DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.size);
       return cached_item;
+    } else {
+      util.log(util.DBUG, "Ruleset cache miss for " + host);
     }
-    util.log(util.DBUG, "Ruleset cache miss for " + host);
 
-    var results = [];
-    if (this.targets.has(host)) {
-      // Copy the host targets so we don't modify them.
-      results = results.concat(this.targets.get(host));
-    }
+    // Let's begin search
+    // Copy the host targsts so we don't modify them.
+    let results = (this.targets.has(host) ?
+      new Set([...this.targets.get(host)]) :
+      new Set());
 
     // Ensure host is well-formed (RFC 1035)
-    if (host.indexOf("..") != -1 || host.length > 255) {
-      util.log(util.WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
-      return null;
+    if (host.length <= 0 || host.length > 255 || host.indexOf("..") != -1) {
+      util.log(util.WARN, "Malformed host passed to potentiallyApplicableRulesets: " + host);
+      return nullIterable;
     }
 
     // Replace each portion of the domain with a * in turn
-    var segmented = host.split(".");
-    for (let i=0; i < segmented.length; i++) {
+    let segmented = host.split(".");
+    for (let i = 0; i < segmented.length; i++) {
       let tmp = segmented[i];
       segmented[i] = "*";
-      results = results.concat(this.targets.get(segmented.join(".")));
+
+      results = (this.targets.has(segmented.join(".")) ?
+        new Set([...results, ...this.targets.get(segmented.join("."))]) :
+        results);
+
       segmented[i] = tmp;
     }
+
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
-    for (var i = 2; i <= segmented.length - 2; ++i) {
-      var t = "*." + segmented.slice(i,segmented.length).join(".");
-      results = results.concat(this.targets.get(t));
+    for (let i = 2; i <= segmented.length - 2; i++) {
+      let t = "*." + segmented.slice(i, segmented.length).join(".");
+
+      results = (this.targets.has(t) ?
+        new Set([...results, ...this.targets.get(t)]) :
+        results);
     }
 
     // Clean the results list, which may contain duplicates or undefined entries
-    var resultSet = new Set(results);
-    resultSet.delete(undefined);
+    results.delete(undefined);
 
     util.log(util.DBUG,"Applicable rules for " + host + ":");
-    if (resultSet.size == 0) {
+    if (results.size == 0) {
       util.log(util.DBUG, "  None");
+      results = nullIterable;
     } else {
-      for (let target of resultSet.values()) {
-        util.log(util.DBUG, "  " + target.name);
-      }
+      results.forEach(result => util.log(util.DBUG, "  " + result.name));
     }
 
     // Insert results into the ruleset cache
-    this.ruleCache.set(host, resultSet);
+    this.ruleCache.set(host, results);
 
     // Cap the size of the cache. (Limit chosen somewhat arbitrarily)
     if (this.ruleCache.size > 1000) {
@@ -472,7 +585,7 @@ RuleSets.prototype = {
       this.ruleCache.delete(this.ruleCache.keys().next().value);
     }
 
-    return resultSet;
+    return results;
   },
 
   /**
@@ -582,8 +695,14 @@ RuleSets.prototype = {
 };
 
 Object.assign(exports, {
+  nullIterable,
   settings,
-  RuleSets,
+  trivial_rule_to,
+  trivial_rule_from_c,
+  Exclusion,
+  Rule,
+  RuleSet,
+  RuleSets
 });
 
-})(typeof exports == 'undefined' ? window.rules = {} : exports);
+})(typeof exports == 'undefined' ? require.scopes.rules = {} : exports);

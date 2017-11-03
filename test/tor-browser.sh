@@ -37,10 +37,10 @@ echo 'pref("extensions.https_everywhere.LogLevel", 0);' >> $TBB_LOCALIZED_DIRECT
 # Remove the prebundled HTTPSE
 rm -rf $HTTPSE_INSTALL_XPI
 
-# Build the XPI to run all the validations in makexpi.sh, and to ensure that
+# Build the XPI to run all the validations in make.sh, and to ensure that
 # we test what is actually getting built.
-./makexpi.sh
-XPI_NAME="`ls -tr pkg/*-eff.xpi | tail -1`"
+./make.sh
+XPI_NAME="`ls -tr pkg/https-everywhere-20*.xpi | tail -1`"
 
 # Install into our fresh Tor Browser
 cp -a $XPI_NAME $HTTPSE_INSTALL_XPI

@@ -2,62 +2,25 @@
 
 (function(exports) {
 
-/**
- * Load a file packaged with the extension
- *
- * @param url: a relative URL to local file
- */
-function loadExtensionFile(url, returnType) {
-  var xhr = new XMLHttpRequest();
-  // Use blocking XHR to ensure everything is loaded by the time
-  // we return.
-  xhr.open("GET", chrome.extension.getURL(url), false);
-  xhr.send(null);
-  // Get file contents
-  if (xhr.readyState != 4) {
-    return;
-  }
-  if (returnType === 'xml') {
-    return xhr.responseXML;
-  }
-  if (returnType === 'json') {
-    return JSON.parse(xhr.responseText);
-  }
-  return xhr.responseText;
+const rules = require('./rules'),
+  store = require('./store'),
+  incognito = require('./incognito'),
+  util = require('./util');
+
+
+let all_rules = new rules.RuleSets();
+
+async function initialize() {
+  await store.initialize();
+  await store.performMigrations();
+  await initializeStoredGlobals();
+  await all_rules.loadFromBrowserStorage(store);
+  await incognito.onIncognitoDestruction(destroy_caches);
+
+  // Send a message to the embedded webextension bootstrap.js to get settings to import
+  chrome.runtime.sendMessage("import-legacy-data", import_settings);
 }
-
-
-// Rules are loaded here
-var all_rules, ls;
-try{
-  ls = localStorage;
-} catch(e) {
-  ls = {setItem: () => {}, getItem: () => {}};
-}
-all_rules = new rules.RuleSets(ls);
-
-// Allow users to enable `platform="mixedcontent"` rulesets
-store.get({enableMixedRulesets: false}, function(item) {
-  rules.settings.enableMixedRulesets = item.enableMixedRulesets;
-  all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
-});
-
-// Load in the legacy custom rulesets, if any
-function load_legacy_custom_rulesets(legacy_custom_rulesets){
-  for(let legacy_custom_ruleset of legacy_custom_rulesets){
-    all_rules.addFromXml((new DOMParser()).parseFromString(legacy_custom_ruleset, 'text/xml'));
-  }
-}
-
-var USER_RULE_KEY = 'userRules';
-// Records which tabId's are active in the HTTPS Switch Planner (see
-// devtools-panel.js).
-var switchPlannerEnabledFor = {};
-// Detailed information recorded when the HTTPS Switch Planner is active.
-// Structure is:
-//   switchPlannerInfo[tabId]["rw"/"nrw"][resource_host][active_content][url];
-// rw / nrw stand for "rewritten" versus "not rewritten"
-var switchPlannerInfo = {};
+initialize();
 
 /**
  * Load preferences. Structure is:
@@ -71,23 +34,27 @@ var httpNowhereOn = false;
 var showCounter = true;
 var isExtensionEnabled = true;
 
-var initializeStoredGlobals = () => {
-  store.get({
-    httpNowhere: false,
-    showCounter: true,
-    globalEnabled: true,
-    legacy_custom_rulesets: []
-  }, function(item) {
-    httpNowhereOn = item.httpNowhere;
-    showCounter = item.showCounter;
-    isExtensionEnabled = item.globalEnabled;
-    updateState();
-    load_legacy_custom_rulesets(item.legacy_custom_rulesets);
+function initializeStoredGlobals(){
+  return new Promise(resolve => {
+    store.get({
+      httpNowhere: false,
+      showCounter: true,
+      globalEnabled: true,
+      enableMixedRulesets: false
+    }, function(item) {
+      httpNowhereOn = item.httpNowhere;
+      showCounter = item.showCounter;
+      isExtensionEnabled = item.globalEnabled;
+      updateState();
+
+      rules.settings.enableMixedRulesets = item.enableMixedRulesets;
+
+      resolve();
+    });
   });
 }
-initializeStoredGlobals();
 
-chrome.storage.onChanged.addListener(function(changes, areaName) {
+chrome.storage.onChanged.addListener(async function(changes, areaName) {
   if (areaName === 'sync' || areaName === 'local') {
     if ('httpNowhere' in changes) {
       httpNowhereOn = changes.httpNowhere.newValue;
@@ -100,6 +67,11 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
     if ('globalEnabled' in changes) {
       isExtensionEnabled = changes.globalEnabled.newValue;
       updateState();
+    }
+    if ('debugging_rulesets' in changes) {
+      const r = new rules.RuleSets();
+      await r.loadFromBrowserStorage(store);
+      Object.assign(all_rules, r);
     }
   }
 });
@@ -118,32 +90,14 @@ chrome.webNavigation.onCompleted.addListener(function() {
   updateState();
 });
 
-/**
-* Load stored user rules
- **/
-var getStoredUserRules = function() {
-  var oldUserRuleString = ls.getItem(USER_RULE_KEY);
-  var oldUserRules = [];
-  if (oldUserRuleString) {
-    oldUserRules = JSON.parse(oldUserRuleString);
-  }
-  return oldUserRules;
-};
-var wr = chrome.webRequest;
-
-/**
- * Load all stored user rules
- */
-var loadStoredUserRules = function() {
-  var rules = getStoredUserRules();
-  var i;
-  for (let rule of rules) {
-    all_rules.addUserRule(rule);
-  }
-  util.log(util.INFO, 'loaded ' + i + ' stored user rules');
-};
-
-loadStoredUserRules();
+// Records which tabId's are active in the HTTPS Switch Planner (see
+// devtools-panel.js).
+var switchPlannerEnabledFor = {};
+// Detailed information recorded when the HTTPS Switch Planner is active.
+// Structure is:
+//   switchPlannerInfo[tabId]["rw"/"nrw"][resource_host][active_content][url];
+// rw / nrw stand for "rewritten" versus "not rewritten"
+var switchPlannerInfo = {};
 
 function getActiveRulesetCount(id) {
   const applied = activeRulesets.getRulesets(id);
@@ -182,68 +136,35 @@ function updateState () {
     iconState = 'blocking';
   }
 
-  chrome.browserAction.setIcon({
-    path: {
-      38: 'icons/icon-' + iconState + '-38.png'
-    }
-  });
+  if ('setIcon' in chrome.browserAction) {
+    chrome.browserAction.setIcon({
+      path: {
+        38: 'icons/icon-' + iconState + '-38.png'
+      }
+    });
+  }
 
   chrome.browserAction.setTitle({
-    title: 'HTTPS Everywhere' + (iconState === 'active') ? '' : ' (' + iconState + ')'
+    title: 'HTTPS Everywhere' + ((iconState === 'active') ? '' : ' (' + iconState + ')')
   });
 
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     if (!tabs || tabs.length === 0) {
       return;
     }
+    const tabId = tabs[0].id;
+    const activeCount = getActiveRulesetCount(tabId);
 
-    const activeCount = getActiveRulesetCount(tabs[0].id);
-
-    chrome.browserAction.setBadgeBackgroundColor({ color: '#666666' });
+    if ('setBadgeBackgroundColor' in chrome.browserAction) {
+      chrome.browserAction.setBadgeBackgroundColor({ color: '#666666', tabId });
+    }
 
     const showBadge = activeCount > 0 && isExtensionEnabled && showCounter;
 
-    chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '', tabId: tabs[0].id });
+    if ('setBadgeText' in chrome.browserAction) {
+      chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '', tabId });
+    }
   });
-}
-
-/**
- * Adds a new user rule
- * @param params: params defining the rule
- * @param cb: Callback to call after success/fail
- * */
-var addNewRule = function(params, cb) {
-  if (all_rules.addUserRule(params)) {
-    // If we successfully added the user rule, save it in local
-    // storage so it's automatically applied when the extension is
-    // reloaded.
-    var oldUserRules = getStoredUserRules();
-    // TODO: there's a race condition here, if this code is ever executed from multiple
-    // client windows in different event loops.
-    oldUserRules.push(params);
-    // TODO: can we exceed the max size for storage?
-    ls.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules));
-    cb(true);
-  } else {
-    cb(false);
-  }
-};
-
-/**
- * Removes a user rule
- * @param ruleset: the ruleset to remove
- * */
-var removeRule = function(ruleset) {
-  if (all_rules.removeUserRule(ruleset)) {
-    // If we successfully removed the user rule, remove it in local storage too
-    var userRules = getStoredUserRules();
-    userRules = userRules.filter(r =>
-      !(r.host == ruleset.name &&
-        r.redirectTo == ruleset.rules[0].to &&
-        String(RegExp(r.urlMatcher)) == String(ruleset.rules[0].from_c))
-    );
-    ls.setItem(USER_RULE_KEY, JSON.stringify(userRules));
-  }
 }
 
 /**
@@ -419,15 +340,10 @@ function onBeforeRequest(details) {
 
 // Map of which values for the `type' enum denote active vs passive content.
 // https://developer.chrome.com/extensions/webRequest.html#event-onBeforeRequest
-var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1};
-
-// We consider sub_frame to be passive even though it can contain JS or flash.
-// This is because code running in the sub_frame cannot access the main frame's
-// content, by same-origin policy. This is true even if the sub_frame is on the
-// same domain but different protocol - i.e. HTTP while the parent is HTTPS -
-// because same-origin policy includes the protocol. This also mimics Chrome's
-// UI treatment of insecure subframes.
-var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
+const mixedContentTypes = {
+  object: 1, other: 1, script: 1, stylesheet: 1, sub_frame: 1, xmlhttprequest: 1,
+  image: 0, main_frame: 0
+};
 
 /**
  * Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
@@ -441,18 +357,13 @@ var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
  * @param rewritten_url: The url rewritten to
  * */
 function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritten_url) {
-  var rw = "rw";
-  if (rewritten_url == null)
-    rw = "nrw";
+  let rw = rewritten_url ? "rw" : "nrw";
 
-  var active_content = 0;
-  if (activeTypes[type]) {
-    active_content = 1;
-  } else if (passiveTypes[type]) {
-    active_content = 0;
+  let active_content = 1;
+  if (mixedContentTypes.hasOwnProperty(type)) {
+    active_content = mixedContentTypes[type];
   } else {
     util.log(util.WARN, "Unknown type from onBeforeRequest details: `" + type + "', assuming active");
-    active_content = 1;
   }
 
   if (!switchPlannerInfo[tab_id]) {
@@ -580,17 +491,17 @@ function onErrorOccurred(details) {
 
 // Registers the handler for requests
 // See: https://github.com/EFForg/https-everywhere/issues/10039
-wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"]);
+chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"]);
 
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
-wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
+chrome.webRequest.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
 
 // Cleanup redirectCounter if neccessary
-wr.onCompleted.addListener(onCompleted, {urls: ["*://*/*"]});
+chrome.webRequest.onCompleted.addListener(onCompleted, {urls: ["*://*/*"]});
 
 // Cleanup redirectCounter if neccessary
-wr.onErrorOccurred.addListener(onErrorOccurred, {urls: ["*://*/*"]})
+chrome.webRequest.onErrorOccurred.addListener(onErrorOccurred, {urls: ["*://*/*"]})
 
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking.
 chrome.cookies.onChanged.addListener(onCookieChanged);
@@ -658,14 +569,20 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   } else if (message.type == "set_ruleset_active_status") {
     var ruleset = activeRulesets.getRulesets(message.object.tab_id)[message.object.name];
     ruleset.active = message.object.active;
-    sendResponse(true);
+    if (ruleset.default_state == message.object.active) {
+      message.object.active = undefined;
+    }
+    all_rules.setRuleActiveState(message.object.name, message.object.active).then(() => {
+      sendResponse(true);
+    });
+    return true;
   } else if (message.type == "add_new_rule") {
-    addNewRule(message.object, function() {
+    all_rules.addNewRuleAndStore(message.object).then(() => {
       sendResponse(true);
     });
     return true;
   } else if (message.type == "remove_rule") {
-    removeRule(message.object);
+    all_rules.removeRuleAndStore(message.object);
   } else if (message.type == "import_settings") {
     // This is used when importing settings from the options ui
     import_settings(message.object).then(() => {
@@ -674,25 +591,17 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   }
 });
 
-// Send a message to the embedded webextension bootstrap.js to get settings to import
-chrome.runtime.sendMessage("import-legacy-data", import_settings);
-
 /**
  * Import extension settings (custom rulesets, ruleset toggles, globals) from an object
  * @param settings the settings object
  */
 async function import_settings(settings) {
   if (settings && settings.changed) {
+    let ruleActiveStates = {};
     // Load all the ruleset toggles into memory and store
     for (const ruleset_name in settings.rule_toggle) {
-      ls[ruleset_name] = settings.rule_toggle[ruleset_name];
+      ruleActiveStates[ruleset_name] = (settings.rule_toggle[ruleset_name] == "true");
     }
-
-    all_rules = new rules.RuleSets(ls);
-    all_rules.addFromJson(loadExtensionFile('rules/default.rulesets', 'json'));
-
-    // Load custom rulesets
-    load_legacy_custom_rulesets(settings.custom_rulesets);
 
     // Save settings
     await new Promise(resolve => {
@@ -700,16 +609,33 @@ async function import_settings(settings) {
         legacy_custom_rulesets: settings.custom_rulesets,
         httpNowhere: settings.prefs.http_nowhere_enabled,
         showCounter: settings.prefs.show_counter,
-        globalEnabled: settings.prefs.global_enabled
+        globalEnabled: settings.prefs.global_enabled,
+        ruleActiveStates
       }, resolve);
     });
+
+    Object.assign(all_rules, new rules.RuleSets());
+    await all_rules.loadFromBrowserStorage(store);
+
   }
+}
+
+/**
+ * Clear any cache/ blacklist we have.
+ */
+function destroy_caches() {
+  util.log(util.DBUG, "Destroying caches.");
+  all_rules.cookieHostCache.clear();
+  all_rules.ruleCache.clear();
+  rules.settings.domainBlacklist.clear();
+  urlBlacklist.clear();
 }
 
 Object.assign(exports, {
   all_rules,
-  initializeStoredGlobals,
   urlBlacklist,
+  sortSwitchPlanner,
+  switchPlannerInfo
 });
 
-})(typeof exports == 'undefined' ? window.background = {} : exports);
+})(typeof exports == 'undefined' ? require.scopes.background = {} : exports);

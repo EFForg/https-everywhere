@@ -6,7 +6,7 @@
 //
 // Usage:
 //  cd https-everywhere
-//  ./makecrx.sh # to build default.rulesets
+//  ./make.sh # to build default.rulesets
 //  cd rewriter
 //  (install node and npm)
 //  npm install
@@ -95,9 +95,8 @@ function processFile(filename) {
 function loadRuleSets() {
   console.log("Loading rules...");
   var fileContents = fs.readFileSync(path.join(__dirname, '../pkg/crx/rules/default.rulesets'), 'utf8');
-  var xml = new DOMParser().parseFromString(fileContents, 'text/xml');
   ruleSets = new rules.RuleSets({});
-  ruleSets.addFromXml(xml);
+  ruleSets.addFromJson(JSON.parse(fileContents));
 }
 
 function usage() {
