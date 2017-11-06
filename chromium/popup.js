@@ -52,9 +52,7 @@ function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
   // checkbox
   var checkbox = document.createElement("input");
   checkbox.type = "checkbox";
-  if (ruleset.active) {
-    checkbox.setAttribute("checked", "");
-  }
+  checkbox.checked = ruleset.active;
   checkbox.onchange = function() {
     toggleRuleLine(checkbox, ruleset, tab_id);
   };
