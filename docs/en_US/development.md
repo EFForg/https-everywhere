@@ -7,7 +7,7 @@
 - **Translations:** If you would like to help translate HTTPS Everywhere into another language, you can do that [through Transifex](https://www.transifex.com/otf/torproject/).
 - **Bug tracker:** Use the [GitHub issue tracker](https://github.com/EFForg/https-everywhere/issues/) or the [Tor Project issue tracker](https://trac.torproject.org/projects/tor/report/19). For the Tor Project issue tracker, you can make an account or use the anonymous one — "cypherpunks"/"writecode". You won't see replies unless you put an email address in the CC field. Bugs that are caused by rulesets should be tagged "httpse-ruleset-bug", and can be viewed [in this report](https://trac.torproject.org/projects/tor/report/48).
 - **Mailing lists:** The [https-everywhere](https://lists.eff.org/mailman/listinfo/https-everywhere) list ([archives](https://lists.eff.org/pipermail/https-everywhere/)) is for discussing the project as a whole; the [https-everywhere-rules](https://lists.eff.org/mailman/listinfo/https-everywhere-rules) mailing list ([archives](https://lists.eff.org/pipermail/https-everywhere-rules)) is for discussing the [rulesets](https://www.eff.org/https-everywhere/rulesets) and their contents, including patches and git pull requests.
-- **IRC:** `#https-everywhere` on `irc.oftc.net`. If you ask a question, be sure to stay in the channel — someone may reply a few hours or a few days later.
+- **IRC:** `#https-everywhere` on `irc.oftc.net`; if you don't have an IRC client application already installed, you can [use this webchat interface](https://webchat.oftc.net/?channels=#https-everywhere). If you ask a question, be sure to stay in the channel — someone may reply a few hours or a few days later.
 
 ### Testing and contributing changes to the source code
 
