@@ -226,22 +226,14 @@ function onBeforeRequest(details) {
   const uri = new URL(details.url);
 
   // Should the request be canceled?
-  var shouldCancel = (
-    httpNowhereOn &&
-    uri.protocol === 'http:' &&
-    !/\.onion$/.test(uri.hostname) &&
-    !/^localhost$/.test(uri.hostname) &&
-    !/^127(\.[0-9]{1,3}){3}$/.test(uri.hostname) &&
-    !/^0\.0\.0\.0$/.test(uri.hostname)
-  );
+  const shouldCancel = httpNowhereOn &&
+    !uri.protocol === 'https:' &&
+    !uri.hostname.slice(-6) === '.onion' &&
+    !uri.hostname === 'localhost' &&
+    !/^127(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9]{1,2})){3}$/.test(uri.hostname);
 
-  // Normalise hosts such as "www.example.com."
-  var canonical_host = uri.hostname;
-  if (canonical_host.charAt(canonical_host.length - 1) == ".") {
-    while (canonical_host.charAt(canonical_host.length - 1) == ".")
-      canonical_host = canonical_host.slice(0,-1);
-    uri.hostname = canonical_host;
-  }
+  // Normalise hosts such as "www.example.com." or ".www.example.com"
+  uri.hostname = uri.hostname.replace(/^\.+|\.+$/g, '');
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
@@ -309,7 +301,7 @@ function onBeforeRequest(details) {
   if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== "https:") {
     writeToSwitchPlanner(details.type,
       details.tabId,
-      canonical_host,
+      uri.hostname,
       details.url,
       newuristr);
   }
