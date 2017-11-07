@@ -231,9 +231,7 @@ function onBeforeRequest(details) {
     !uri.hostname.slice(-6) === '.onion' &&
     !uri.hostname === 'localhost' &&
     !/^127(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9]{1,2})){3}$/.test(uri.hostname) &&
-    !uri.hostname === '0.0.0.0' &&
-    !uri.hostname === '[::1]' &&
-    !uri.hostname === '[::]';
+    !uri.hostname === '[::1]';
 
   // Normalise hosts such as "www.example.com."
   var canonical_host = uri.hostname;
