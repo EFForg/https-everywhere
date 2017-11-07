@@ -226,14 +226,14 @@ function onBeforeRequest(details) {
   const uri = new URL(details.url);
 
   // Should the request be canceled?
-  var shouldCancel = (
-    httpNowhereOn &&
-    uri.protocol === 'http:' &&
-    !/\.onion$/.test(uri.hostname) &&
-    !/^localhost$/.test(uri.hostname) &&
-    !/^127(\.[0-9]{1,3}){3}$/.test(uri.hostname) &&
-    !/^0\.0\.0\.0$/.test(uri.hostname)
-  );
+  var shouldCancel = httpNowhereOn &&
+    !uri.protocol === 'https:' &&
+    !uri.hostname.slice(-6) === '.onion' &&
+    !uri.hostname === 'localhost' &&
+    !uri.hostname === '[::1]' &&
+    !/^127(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9]{1,2})){3}$/.test(uri.hostname) &&
+    !uri.hostname === '[::]' &&
+    !uri.hostname === '0.0.0.0';
 
   // Normalise hosts such as "www.example.com."
   var canonical_host = uri.hostname;
