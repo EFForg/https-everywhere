@@ -12,7 +12,7 @@ for(let update_channel of update_channels){
     "jwk",
     update_channel.jwk,
     {
-      name: "RSASSA-PSS",
+      name: "RSA-PSS",
       hash: {name: "SHA-256"},
     },
     false,
@@ -109,7 +109,7 @@ function verifyAndStoreNewRulesets(new_rulesets, update_channel){
     imported_keys[update_channel.name].then(publicKey => {
       window.crypto.subtle.verify(
         {
-          name: "RSASSA-PKCS1-v1_5",
+          name: "RSA-PSS",
         },
         publicKey,
         new_rulesets.signature_byte_array.buffer,
