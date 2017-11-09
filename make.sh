@@ -41,7 +41,7 @@ echo "Building version" $VERSION
 [ -e pkg/xpi-eff ] && rm -rf pkg/xpi-eff
 
 # Clean up obsolete ruleset databases, just in case they still exist.
-rm -f src/chrome/content/rules/default.rulesets src/defaults/rulesets.sqlite
+rm -f src/chrome/content/rules/default_rulesets.json src/defaults/rulesets.sqlite
 
 sed -e "s/VERSION/$VERSION/g" chromium/updates-master.xml > chromium/updates.xml
 
@@ -59,7 +59,7 @@ cd ../..
 
 . ./utils/merge-rulesets.sh || exit 1
 
-cp src/$RULESETS pkg/crx/rules/default.rulesets
+cp src/$RULESETS pkg/crx/rules/default_rulesets.json
 
 sed -i -e "s/VERSION/$VERSION/g" pkg/crx/manifest.json
 

@@ -155,7 +155,7 @@ for filename in filenames:
     xml_parser = etree.XMLParser(remove_blank_text=True)
 
     basename = filename.split(os.path.sep)[-1]
-    if basename == '00README' or basename == 'make-trivial-rule' or basename == 'default.rulesets':
+    if basename == '00README' or basename == 'make-trivial-rule' or basename == 'default_rulesets.json':
         continue
 
     try:
