@@ -16,9 +16,6 @@ async function initialize() {
   await initializeStoredGlobals();
   await all_rules.loadFromBrowserStorage(store);
   await incognito.onIncognitoDestruction(destroy_caches);
-
-  // Send a message to the embedded webextension bootstrap.js to get settings to import
-  chrome.runtime.sendMessage("import-legacy-data", import_settings);
 }
 initialize();
 
