@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.7
 
-# Merge all the .xml rulesets into a single "default.rulesets" file -- this
+# Merge all the .xml rulesets into a single "default_rulesets.json" file -- this
 # prevents inodes from wasting disk space, but more importantly, this works
 # around the fact that zip does not perform well on a pile of small files.
 
@@ -31,7 +31,7 @@ parser.add_argument("--source_dir", default="src/chrome/content/rules")
 args = parser.parse_args()
 
 # output filename, pointed to the merged ruleset
-ofn = os.path.join(args.source_dir, "default.rulesets")
+ofn = os.path.join(args.source_dir, "default_rulesets.json")
 
 # XML Ruleset Files
 files = map(normalize, glob.glob(os.path.join(args.source_dir, "*.xml")))
@@ -83,7 +83,7 @@ for filename in sorted(files):
 
 	library.append(ruleset);
 
-# Write to default.rulesets
+# Write to default_rulesets.json
 print(" * Writing JSON library to %s" % ofn)
 outfile = open(ofn, "w")
 outfile.write(json.dumps(library))

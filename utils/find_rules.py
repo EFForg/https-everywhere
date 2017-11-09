@@ -12,7 +12,7 @@ to the secure version if it exists, or it returns None.  Here is a
 sample:
 
   >>> import find_rules
-  >>> replacer = find_rules.FindRules("/path/to/default.rulesets")
+  >>> replacer = find_rules.FindRules("/path/to/default_rulesets.json")
   >>> replacer.find("http://en.wikipedia.org/")
   'https://en.wikipedia.org/'
   >>> replacer.find("http://en.wikipedi.org/") # With a typo
