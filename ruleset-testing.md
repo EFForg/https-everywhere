@@ -27,10 +27,6 @@ characters increases the complexity of the regex (usually increasing the variety
 of URLs it can match), we require correspondingly more test URLs to ensure good
 coverage.
 
-TODO: We'd like to also require that there be at least three test URLs for every
-target host with a left-side wildcard, and at least ten test URLs for each
-target host with a right-side wildcard. But this is not yet implemented.
-
 # Example:
 ```xml
 <ruleset name="example.com">
