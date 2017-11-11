@@ -201,8 +201,10 @@ function RuleSets() {
   // A hash of rule name -> active status (true/false).
   this.ruleActiveStates = {};
 
-  // The key to retrieve user rules from localStorage
+  // The key to retrieve user rules from the storage api
   this.USER_RULE_KEY = 'userRules';
+
+  return this;
 }
 
 
@@ -214,7 +216,7 @@ RuleSets.prototype = {
    */
   loadFromBrowserStorage: async function(store) {
     this.store = store;
-    this.ruleActiveStates = store.localStorage;
+    this.ruleActiveStates = await this.store.get_promise('ruleActiveStates', {});
     this.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
     this.loadStoredUserRules();
     await this.addStoredCustomRulesets();
@@ -268,7 +270,7 @@ RuleSets.prototype = {
 
     // Read user prefs
     if (rule_set.name in this.ruleActiveStates) {
-      rule_set.active = (this.ruleActiveStates[rule_set.name] == "true");
+      rule_set.active = this.ruleActiveStates[rule_set.name];
     }
 
     var rules = ruletag["rule"];
@@ -330,7 +332,7 @@ RuleSets.prototype = {
     // TODO: maybe promote this rule?
     this.targets.get(params.host).push(new_rule_set);
     if (new_rule_set.name in this.ruleActiveStates) {
-      new_rule_set.active = (this.ruleActiveStates[new_rule_set.name] == "true");
+      new_rule_set.active = this.ruleActiveStates[new_rule_set.name];
     }
     util.log(util.INFO, 'done adding rule');
     return true;
@@ -360,22 +362,17 @@ RuleSets.prototype = {
   },
 
   /**
-  * Retrieve stored user rules from localStorage
+  * Retrieve stored user rules from storage api
   **/
-  getStoredUserRules: function() {
-    const oldUserRuleString = this.store.localStorage.getItem(this.USER_RULE_KEY);
-    let oldUserRules = [];
-    if (oldUserRuleString) {
-      oldUserRules = JSON.parse(oldUserRuleString);
-    }
-    return oldUserRules;
+  getStoredUserRules: async function() {
+    return await this.store.get_promise(this.USER_RULE_KEY, []);
   },
 
   /**
   * Load all stored user rules into this RuleSet object
   */
-  loadStoredUserRules: function() {
-    const user_rules = this.getStoredUserRules();
+  loadStoredUserRules: async function() {
+    const user_rules = await this.getStoredUserRules();
     for (let user_rule of user_rules) {
       this.addUserRule(user_rule);
     }
@@ -387,17 +384,17 @@ RuleSets.prototype = {
   * @param params: params defining the rule
   * @param cb: Callback to call after success/fail
   * */
-  addNewRuleAndStore: function(params) {
+  addNewRuleAndStore: async function(params) {
     if (this.addUserRule(params)) {
-      // If we successfully added the user rule, save it in local
-      // storage so it's automatically applied when the extension is
+      // If we successfully added the user rule, save it in the storage
+      // api so it's automatically applied when the extension is
       // reloaded.
-      var oldUserRules = this.getStoredUserRules();
+      let userRules = await this.getStoredUserRules();
       // TODO: there's a race condition here, if this code is ever executed from multiple
       // client windows in different event loops.
-      oldUserRules.push(params);
+      userRules.push(params);
       // TODO: can we exceed the max size for storage?
-      this.store.localStorage.setItem(this.USER_RULE_KEY, JSON.stringify(oldUserRules));
+      await this.store.set_promise(this.USER_RULE_KEY, userRules);
     }
   },
 
@@ -405,15 +402,15 @@ RuleSets.prototype = {
   * Removes a user rule
   * @param ruleset: the ruleset to remove
   * */
-  removeRuleAndStore: function(ruleset) {
+  removeRuleAndStore: async function(ruleset) {
     if (this.removeUserRule(ruleset)) {
       // If we successfully removed the user rule, remove it in local storage too
-      var userRules = this.getStoredUserRules();
+      let userRules = await this.getStoredUserRules();
       userRules = userRules.filter(r =>
         !(r.host == ruleset.name &&
           r.redirectTo == ruleset.rules[0].to)
       );
-      this.store.localStorage.setItem(this.USER_RULE_KEY, JSON.stringify(userRules));
+      await this.store.set_promise(this.USER_RULE_KEY, userRules);
     }
   },
 
@@ -439,6 +436,15 @@ RuleSets.prototype = {
 
   loadCustomRuleset: function(ruleset_string){
     this.addFromXml((new DOMParser()).parseFromString(ruleset_string, 'text/xml'));
+  },
+
+  setRuleActiveState: async function(ruleset_name, active){
+    if (active == undefined) {
+      delete this.ruleActiveStates[ruleset_name];
+    } else {
+      this.ruleActiveStates[ruleset_name] = active;
+    }
+    await this.store.set_promise('ruleActiveStates', this.ruleActiveStates);
   },
 
   /**
@@ -531,8 +537,8 @@ RuleSets.prototype = {
       new Set());
 
     // Ensure host is well-formed (RFC 1035)
-    if (host.length > 255 || host.indexOf("..") != -1) {
-      util.log(util.WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
+    if (host.length <= 0 || host.length > 255 || host.indexOf("..") != -1) {
+      util.log(util.WARN, "Malformed host passed to potentiallyApplicableRulesets: " + host);
       return nullIterable;
     }
 

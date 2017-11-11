@@ -12,12 +12,10 @@ let all_rules = new rules.RuleSets();
 
 async function initialize() {
   await store.initialize();
+  await store.performMigrations();
   await initializeStoredGlobals();
   await all_rules.loadFromBrowserStorage(store);
   await incognito.onIncognitoDestruction(destroy_caches);
-
-  // Send a message to the embedded webextension bootstrap.js to get settings to import
-  chrome.runtime.sendMessage("import-legacy-data", import_settings);
 }
 initialize();
 
@@ -165,6 +163,16 @@ function updateState () {
     }
   });
 }
+
+/**
+ * The following allows fennec to interact with the popup ui
+ * */
+chrome.browserAction.onClicked.addListener(e => {
+  const url = chrome.extension.getURL("popup.html?tabId=" + e.id);
+  chrome.tabs.create({
+    url
+  });
+});
 
 /**
  * Adds a listener for removed tabs
@@ -339,15 +347,10 @@ function onBeforeRequest(details) {
 
 // Map of which values for the `type' enum denote active vs passive content.
 // https://developer.chrome.com/extensions/webRequest.html#event-onBeforeRequest
-var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1};
-
-// We consider sub_frame to be passive even though it can contain JS or flash.
-// This is because code running in the sub_frame cannot access the main frame's
-// content, by same-origin policy. This is true even if the sub_frame is on the
-// same domain but different protocol - i.e. HTTP while the parent is HTTPS -
-// because same-origin policy includes the protocol. This also mimics Chrome's
-// UI treatment of insecure subframes.
-var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
+const mixedContentTypes = {
+  object: 1, other: 1, script: 1, stylesheet: 1, sub_frame: 1, xmlhttprequest: 1,
+  image: 0, main_frame: 0
+};
 
 /**
  * Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
@@ -361,18 +364,13 @@ var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
  * @param rewritten_url: The url rewritten to
  * */
 function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritten_url) {
-  var rw = "rw";
-  if (rewritten_url == null)
-    rw = "nrw";
+  let rw = rewritten_url ? "rw" : "nrw";
 
-  var active_content = 0;
-  if (activeTypes[type]) {
-    active_content = 1;
-  } else if (passiveTypes[type]) {
-    active_content = 0;
+  let active_content = 1;
+  if (mixedContentTypes.hasOwnProperty(type)) {
+    active_content = mixedContentTypes[type];
   } else {
     util.log(util.WARN, "Unknown type from onBeforeRequest details: `" + type + "', assuming active");
-    active_content = 1;
   }
 
   if (!switchPlannerInfo[tab_id]) {
@@ -578,10 +576,17 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   } else if (message.type == "set_ruleset_active_status") {
     var ruleset = activeRulesets.getRulesets(message.object.tab_id)[message.object.name];
     ruleset.active = message.object.active;
-    sendResponse(true);
+    if (ruleset.default_state == message.object.active) {
+      message.object.active = undefined;
+    }
+    all_rules.setRuleActiveState(message.object.name, message.object.active).then(() => {
+      sendResponse(true);
+    });
+    return true;
   } else if (message.type == "add_new_rule") {
-    all_rules.addNewRuleAndStore(message.object);
-    sendResponse(true);
+    all_rules.addNewRuleAndStore(message.object).then(() => {
+      sendResponse(true);
+    });
     return true;
   } else if (message.type == "remove_rule") {
     all_rules.removeRuleAndStore(message.object);
@@ -599,9 +604,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
  */
 async function import_settings(settings) {
   if (settings && settings.changed) {
+    let ruleActiveStates = {};
     // Load all the ruleset toggles into memory and store
     for (const ruleset_name in settings.rule_toggle) {
-      store.localStorage[ruleset_name] = settings.rule_toggle[ruleset_name];
+      ruleActiveStates[ruleset_name] = (settings.rule_toggle[ruleset_name] == "true");
     }
 
     // Save settings
@@ -610,7 +616,8 @@ async function import_settings(settings) {
         legacy_custom_rulesets: settings.custom_rulesets,
         httpNowhere: settings.prefs.http_nowhere_enabled,
         showCounter: settings.prefs.show_counter,
-        globalEnabled: settings.prefs.global_enabled
+        globalEnabled: settings.prefs.global_enabled,
+        ruleActiveStates
       }, resolve);
     });
 
@@ -633,7 +640,9 @@ function destroy_caches() {
 
 Object.assign(exports, {
   all_rules,
-  urlBlacklist
+  urlBlacklist,
+  sortSwitchPlanner,
+  switchPlannerInfo
 });
 
 })(typeof exports == 'undefined' ? require.scopes.background = {} : exports);
