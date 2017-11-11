@@ -5,25 +5,26 @@ still work. In order for that tester to work we need input URLs. We have
 additional testing in place to ensure that all rulesets have a sufficient number
 of test URLs to test them thoroughly.
 
-Goal: 100% coverage of all targets and all branches of all regexes in each ruleset.
+Goal: 100% coverage of all targets and all branches of all regexes in each
+ruleset.
 
 Each ruleset has a number of "implicit" test URLs based on the target hosts. For
 each target host e.g. `example.com`, there is an implicit test URL of
-`http://example.com/`. Exception: target hosts that contain a wildcard ("`*`") do
-not create an implicit test URL.
+`http://example.com/`. Exception: target hosts that contain a wildcard ("`*`")
+do not create an implicit test URL.
 
 Additional test URLs can be added with the new `<test>` tag in the XML, e.g.
 `<test url="http://example.com/complex-page" >`.
 
-Test URLs will be matched against the regexes in each `<rule>` and `<exclusion>`. A
-test URL can only match against one `<rule>` and one `<exclusion>`. Once all the
-test URLs have been matched up, we count the number of test URLs matching each
-`<rule>` and each `<exclusion>`, and make sure the count meets the minimum number.
-The minimum number of test URLs for each `<rule>` or `<exclusion>` is one plus the
-number of '`*`', '`+`', '`?`', or '`|`' characters in the regex. Since each of these
-characters increases the complexity of the regex (usually increasing the variety
-of URLs it can match), we require correspondingly more test URLs to ensure good
-coverage.
+Test URLs will be matched against the regexes in each `<rule>` and
+`<exclusion>`. A test URL can only match against one `<rule>` and one
+`<exclusion>`. Once all the test URLs have been matched up, we count the number
+of test URLs matching each `<rule>` and each `<exclusion>`, and make sure the
+count meets the minimum number.  The minimum number of test URLs for each
+`<rule>` or `<exclusion>` is one plus the number of '`*`', '`+`', '`?`', or
+'`|`' characters in the regex. Since each of these characters increases the
+complexity of the regex (usually increasing the variety of URLs it can match),
+we require correspondingly more test URLs to ensure good coverage.
 
 # Example:
 ```xml
@@ -40,9 +41,9 @@ coverage.
 ```
 This ruleset has one implicit test URL from a target host
 ("`http://example.com/`"). The other target host has a wildcard, so creates no
-implicit test URL. There's a single rule. That rule contains a '`+`' and a '`?`', so
-it requires a total of three matching test URLs. We add the necessary test URLs
-using explicit `<test>` tags.
+implicit test URL. There's a single rule. That rule contains a '`+`' and a
+'`?`', so it requires a total of three matching test URLs. We add the necessary
+test URLs using explicit `<test>` tags.
 
 # Testing and Continuous Build
 
