@@ -1,10 +1,9 @@
+/* global sendMessage */
+
 "use strict";
 
-var backgroundPage = chrome.extension.getBackgroundPage();
 var stableRules = null;
 var unstableRules = null;
-var hostReg = /.*\/\/[^$/]*\//;
-var storage = backgroundPage.storage;
 
 function e(id) {
   return document.getElementById(id);
@@ -15,18 +14,24 @@ function e(id) {
  * @param checkbox checkbox being clicked
  * @param ruleset the ruleset tied tot he checkbox
  */
-function toggleRuleLine(checkbox, ruleset) {
-  ruleset.active = checkbox.checked;
+function toggleRuleLine(checkbox, ruleset, tab_id) {
+  var ruleset_active = checkbox.checked;
+  var set_ruleset = {
+    active: ruleset_active,
+    name: ruleset.name,
+    tab_id: tab_id
+  };
 
-  if (ruleset.active != ruleset.default_state) {
-    localStorage[ruleset.name] = ruleset.active;
-  } else {
-    delete localStorage[ruleset.name];
-    // purge the name from the cache so that this unchecking is persistent.
-    backgroundPage.all_rules.ruleCache.delete(ruleset.name);
-  }
-  // Now reload the selected tab of the current window.
-  chrome.tabs.reload();
+  sendMessage("set_ruleset_active_status", set_ruleset, function(){
+
+    if (ruleset_active == ruleset.default_state) {
+      // purge the name from the cache so that this unchecking is persistent.
+      sendMessage("delete_from_ruleset_cache", ruleset.name);
+    }
+
+    // Now reload the selected tab of the current window.
+    chrome.tabs.reload();
+  });
 }
 
 /**
@@ -34,7 +39,7 @@ function toggleRuleLine(checkbox, ruleset) {
  * @param ruleset the ruleset to build the line for
  * @returns {*}
  */
-function appendRuleLineToListDiv(ruleset, list_div) {
+function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
 
   // parent block for line
   var line = document.createElement("div");
@@ -46,30 +51,11 @@ function appendRuleLineToListDiv(ruleset, list_div) {
   // checkbox
   var checkbox = document.createElement("input");
   checkbox.type = "checkbox";
-  if (ruleset.active) {
-    checkbox.setAttribute("checked", "");
-  }
-  checkbox.onchange = function(ev) {
-    toggleRuleLine(checkbox, ruleset);
+  checkbox.checked = ruleset.active;
+  checkbox.onchange = function() {
+    toggleRuleLine(checkbox, ruleset, tab_id);
   };
   label.appendChild(checkbox);
-
-  // favicon (from chrome's cache)
-  var favicon = document.createElement("img");
-  favicon.className = "favicon";
-  favicon.src = "chrome://favicon/";
-  for (let rule of ruleset.rules) {
-    var host = hostReg.exec(rule.to);
-    if (host) {
-      favicon.src += host[0];
-      break;
-    }
-  }
-  var xhr = new XMLHttpRequest();
-  try {
-    xhr.open("GET", favicon.src, true);
-    label.appendChild(favicon);
-  } catch (e) {}
 
   // label text
   var text = document.createElement("span");
@@ -85,7 +71,7 @@ function appendRuleLineToListDiv(ruleset, list_div) {
     line.appendChild(remove);
 
     remove.addEventListener("click", function(){
-      backgroundPage.removeRule(ruleset);
+      sendMessage("remove_rule", ruleset);
       list_div.removeChild(line);
     });
   }
@@ -97,54 +83,65 @@ function appendRuleLineToListDiv(ruleset, list_div) {
   list_div.appendChild(line);
 }
 
+function showHttpNowhereUI() {
+  // Set up checkbox for HTTP nowhere mode
+  getOption_('httpNowhere', false, function(item) {
+    if (item.httpNowhere) {
+      e('http-nowhere-checkbox').checked = true;
+    }
+    show(e('HttpNowhere'));
+  });
+};
+
 // Change the UI to reflect extension enabled/disabled
 function updateEnabledDisabledUI() {
-  document.getElementById('onoffswitch').checked = backgroundPage.isExtensionEnabled;
-  // Hide or show the rules sections
-  if (backgroundPage.isExtensionEnabled) {
-    document.body.className = ""
-  } else {
-    document.body.className = "disabled"
-  }
-  backgroundPage.updateState();
+  getOption_('globalEnabled', true, function(item) {
+    document.getElementById('onoffswitch').checked = item.globalEnabled;
+    show(e('disableButton'));
+    // Hide or show the rules sections
+    if (item.globalEnabled) {
+      document.body.className = ""
+      showHttpNowhereUI()
+    } else {
+      document.body.className = "disabled"
+    }
+  });
 }
 
 // Toggle extension enabled/disabled status
 function toggleEnabledDisabled() {
-  if (backgroundPage.isExtensionEnabled) {
-    // User wants to disable us
-    backgroundPage.isExtensionEnabled = false;
-  } else {
-    // User wants to enable us
-    backgroundPage.isExtensionEnabled = true;
+  var extension_toggle_effect = function(){
+    updateEnabledDisabledUI();
+    // The extension state changed, so reload this tab.
+    chrome.tabs.reload();
+    window.close();
   }
-  updateEnabledDisabledUI();
-  // The extension state changed, so reload this tab.
-  chrome.tabs.reload();
-  window.close();
+
+  getOption_('globalEnabled', true, function(item) {
+    setOption_('globalEnabled', !item.globalEnabled, extension_toggle_effect);
+  });
+
 }
 
 /**
  * Create the list of rules for a specific tab
  * @param tabArray
  */
-function gotTab(tabArray) {
-  var activeTab = tabArray[0];
-  var rulesets = backgroundPage.activeRulesets.getRulesets(activeTab.id);
-
-  for (var r in rulesets) {
-    var listDiv = stableRules;
-    if (!rulesets[r].default_state) {
-      listDiv = unstableRules;
+function gotTab(activeTab) {
+  sendMessage("get_active_rulesets", activeTab.id, function(rulesets){
+    for (var r in rulesets) {
+      var listDiv = stableRules;
+      if (!rulesets[r].default_state) {
+        listDiv = unstableRules;
+      }
+      appendRuleLineToListDiv(rulesets[r], listDiv, activeTab.id);
+      listDiv.style.display = 'block';
     }
-    appendRuleLineToListDiv(rulesets[r], listDiv);
-    listDiv.style.position = "static";
-    listDiv.style.visibility = "visible";
-  }
-  // Only show the "Add a rule" link if we're on an HTTPS page
-  if (/^https:/.test(activeTab.url)) {
-    show(e("add-rule-link"));
-  }
+    // Only show the "Add a rule" link if we're on an HTTPS page
+    if (/^https:/.test(activeTab.url)) {
+      show(e("add-rule-link"));
+    }
+  });
 }
 
 /**
@@ -153,35 +150,19 @@ function gotTab(tabArray) {
 document.addEventListener("DOMContentLoaded", function () {
   stableRules = document.getElementById("StableRules");
   unstableRules = document.getElementById("UnstableRules");
-  chrome.tabs.query({ active: true, currentWindow: true }, gotTab);
+  getTab(gotTab);
 
   // Set up the enabled/disabled switch & hide/show rules
   updateEnabledDisabledUI();
   document.getElementById('onoffswitch').addEventListener('click', toggleEnabledDisabled);
+  e('http-nowhere-checkbox').addEventListener('click', toggleHttpNowhere, false);
 
   // Print the extension's current version.
   var the_manifest = chrome.runtime.getManifest();
   var version_info = document.getElementById('current-version');
   version_info.innerText = the_manifest.version;
 
-  // Set up toggle checkbox for HTTP nowhere mode
-  getOption_('httpNowhere', false, function(item) {
-    var httpNowhereCheckbox = document.getElementById('http-nowhere-checkbox');
-    httpNowhereCheckbox.addEventListener('click', toggleHttpNowhere, false);
-    var httpNowhereEnabled = item.httpNowhere;
-    if (httpNowhereEnabled) {
-      httpNowhereCheckbox.setAttribute('checked', '');
-    }
-  });
-
-  // auto-translate all elements with i18n attributes
-  var elem = document.querySelectorAll("[i18n]");
-  for (let el of elem) {
-    el.innerHTML = chrome.i18n.getMessage(el.getAttribute("i18n"));
-  }
-
-  // other translations
-  e("aboutTitle").setAttribute("title", chrome.i18n.getMessage("about_title"));
+  e("aboutTitle").title = chrome.i18n.getMessage("about_title");
   e("add-rule-link").addEventListener("click", addManualRule);
 });
 
@@ -202,28 +183,27 @@ function show(elem) {
  * Handles the manual addition of rules
  */
 function addManualRule() {
-  chrome.tabs.query({ active: true, currentWindow: true }, function(tab) {
+  getTab(function(tab) {
     hide(e("add-rule-link"));
     show(e("add-new-rule-div"));
-    var newUrl = document.createElement('a');
-    newUrl.href = tab[0].url;
-    newUrl.protocol = "https:";
-    e("new-rule-host").value = newUrl.host;
-    var oldUrl = document.createElement('a');
-    oldUrl.href = tab[0].url;
-    oldUrl.protocol = "http:";
-    var oldMatcher = "^" + escapeForRegex(oldUrl.protocol + "//" + oldUrl.host+ "/");
-    e("new-rule-regex").value = oldMatcher;
-    var redirectPath = newUrl.protocol + "//" + newUrl.host + "/";
-    e("new-rule-redirect").value = redirectPath;
-    e("new-rule-name").value = "Manual rule for " + oldUrl.host;
+
+    const url = new URL(tab.url);
+
+    e("new-rule-host").value = url.host;
+
+    const escapedHost = escapeForRegex(url.host);
+
+    e("new-rule-regex").value = `^http://${escapedHost}/`;
+    e("new-rule-redirect").value = `https://${url.host}/`;
+    e("new-rule-name").value = "Manual rule for " + url.host;
+
     e("add-new-rule-button").addEventListener("click", function() {
-      var params = {
+      const params = {
         host : e("new-rule-host").value,
         redirectTo : e("new-rule-redirect").value,
         urlMatcher : e("new-rule-regex").value
       };
-      backgroundPage.addNewRule(params, function() {
+      sendMessage("add_new_rule", params, function() {
         location.reload();
       });
     });
@@ -232,10 +212,12 @@ function addManualRule() {
       show(e("add-rule-link"));
       hide(e("add-new-rule-div"));
     });
+
     e("new-rule-show-advanced-link").addEventListener("click", function() {
       show(e("new-rule-advanced"));
       hide(e("new-rule-regular-text"));
     });
+
     e("new-rule-hide-advanced-link").addEventListener("click", function() {
       hide(e("new-rule-advanced"));
       show(e("new-rule-regular-text"));
@@ -252,11 +234,20 @@ function toggleHttpNowhere() {
 function getOption_(opt, defaultOpt, callback) {
   var details = {};
   details[opt] = defaultOpt;
-  return storage.get(details, callback);
+  sendMessage("get_option", details, callback);
 }
 
-function setOption_(opt, value) {
+function setOption_(opt, value, callback) {
   var details = {};
   details[opt] = value;
-  return storage.set(details);
+  sendMessage("set_option", details, callback);
+}
+
+function getTab(callback) {
+  let url = new URL(window.location.href);
+  if (url.searchParams.has('tabId')) {
+    let parentId = Number(url.searchParams.get('tabId'));
+    return chrome.tabs.get(parentId, callback);
+  }
+  chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => callback(tabs[0]));
 }

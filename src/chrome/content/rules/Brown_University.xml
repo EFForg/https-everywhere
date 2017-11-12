@@ -1,10 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://dl.lib.brown.edu/ => https://dl.lib.brown.edu/: (51, "SSL: no alternative certificate subject name matches target host name 'dl.lib.brown.edu'")
-
-	Brown University
-
 
 	Nonfunctional subdomains:
 
@@ -17,17 +11,15 @@ Fetch error: http://dl.lib.brown.edu/ => https://dl.lib.brown.edu/: (51, "SSL: n
 	Problematic subdomains:
 
 		- www.research *
+		- dl.lib +
 
 	* Cert only matches ^foo
+	+ Redirects to library.brown.edu
 
 -->
-<ruleset name="Brown.edu (partial)" default_off='failed ruleset test'>
-
-	<!--	Direct rewrites:
-				-->
+<ruleset name="Brown.edu (partial)" >
 	<target host="brown.edu" />
 	<target host="blogs.brown.edu" />
-	<target host="dl.lib.brown.edu" />
 	<target host="library.brown.edu" />
 	<target host="news.brown.edu" />
 	<target host="research.brown.edu" />
@@ -39,6 +31,7 @@ Fetch error: http://dl.lib.brown.edu/ => https://dl.lib.brown.edu/: (51, "SSL: n
 	<!--	Complications:
 				-->
 	<target host="www.research.brown.edu" />
+	<target host="dl.lib.brown.edu" />
 
 
 	<securecookie host=".+\.brown\.edu$" name=".+" />
@@ -46,6 +39,9 @@ Fetch error: http://dl.lib.brown.edu/ => https://dl.lib.brown.edu/: (51, "SSL: n
 
 	<rule from="^http://www\.research\.brown\.edu/"
 		to="https://research.brown.edu/" />
+
+	<rule from="^http://dl\.lib\.brown\.edu/"
+		to="https://library.brown.edu/" />
 
 	<rule from="^http:"
 		to="https:" />

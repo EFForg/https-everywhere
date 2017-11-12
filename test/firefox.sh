@@ -14,18 +14,15 @@ fi
 
 source utils/mktemp.sh
 
-# dummy Jetpack addon that contains tests
-TEST_ADDON_PATH=./test/firefox/
-
 # We'll create a Firefox profile here and install HTTPS Everywhere into it.
 PROFILE_DIRECTORY="$(mktemp -d)"
 trap 'rm -r "$PROFILE_DIRECTORY"' EXIT
 HTTPSE_INSTALL_DIRECTORY=$PROFILE_DIRECTORY/extensions/https-everywhere-eff@eff.org
 
-# Build the XPI to run all the validations in makexpi.sh, and to ensure that
+# Build the XPI to run all the validations in make.sh, and to ensure that
 # we test what is actually getting built.
-./makexpi.sh
-XPI_NAME="`ls -tr pkg/*-eff.xpi | tail -1`"
+./make.sh
+XPI_NAME="`ls -tr pkg/https-everywhere-20*.xpi | tail -1`"
 
 # Set up a skeleton profile and then install into it.
 # The skeleton contains a few files required to trick Firefox into thinking
@@ -38,10 +35,6 @@ die() {
   exit 1
 }
 
-if [ ! -f "addon-sdk/bin/activate" ]; then
-  die "Addon SDK not available. Run git submodule update."
-fi
-
 if [ ! -d "$HTTPSE_INSTALL_DIRECTORY" ]; then
   die "Firefox profile does not have HTTPS Everywhere installed"
 fi
@@ -50,17 +43,6 @@ fi
 if [ -z "$XVFB_RUN" -a -n "$(which xvfb-run)" ]; then
   XVFB_RUN=xvfb-run
 fi
-
-# Activate the Firefox Addon SDK.
-pushd addon-sdk
-source bin/activate
-popd
-
-if ! type cfx > /dev/null; then
-  die "Addon SDK failed to activiate."
-fi
-
-pushd $TEST_ADDON_PATH
 
 # If you just want to run Firefox with the latest code:
 if [ "$1" == "--justrun" ]; then
@@ -73,14 +55,11 @@ if [ "$1" == "--justrun" ]; then
   fi
 else
   echo "running tests"
+
+  PATH=/home/user/geckodriver:$PATH
   if [ -n "$FIREFOX" ]; then
-    $XVFB_RUN cfx test -b $FIREFOX --profiledir="$PROFILE_DIRECTORY" --verbose
+    $XVFB_RUN python2.7 test/script.py Firefox "$PROFILE_DIRECTORY" $FIREFOX
   else
-    $XVFB_RUN cfx test --profiledir="$PROFILE_DIRECTORY" --verbose
+    $XVFB_RUN python2.7 test/script.py Firefox "$PROFILE_DIRECTORY"
   fi
 fi
-
-popd
-
-shasum=$(openssl sha -sha256 "$XPI_NAME")
-echo -e "Git commit `git rev-parse HEAD`\n$shasum"

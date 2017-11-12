@@ -1,6 +1,8 @@
+from tldextract import tldextract
 from urlparse import urlparse
 
 import regex
+import socket
 
 class Rule(object):
 	"""Represents one from->to rule element."""
@@ -179,16 +181,126 @@ class Ruleset(object):
 				self.determine_test_application_run = True
 		return self.test_application_problems
 
+	def getTargetValidityProblems(self):
+		"""Verify that each target has a valid TLD in order to prevent problematic rewrite
+			 as stated in EFForg/https-everywhere/issues/10877. In particular, 
+			 right-wildcard target are ignored from this test.
+
+			 Returns an array of strings reporting any coverage problems if they exist,
+			 or empty list if coverage is sufficient.
+			 """
+		problems = self._determineTestApplication()
+
+		# Next, make sure each target has a valid TLD and doesn't overlap with others
+		for target in self.targets:
+			# If it's a wildcard, check which other targets it covers
+			if '*' in target:
+				target_re = regex.escape(target)
+
+				if target_re.startswith(r'\*'):
+					target_re = target_re[2:]
+				else:
+					target_re = r'\A' + target_re
+
+				target_re = regex.compile(target_re.replace(r'\*', r'[^.]*') + r'\Z')
+
+				others = [other for other in self.targets if other != target and target_re.search(other)]
+
+				if others:
+						problems.append("%s: Target '%s' also covers %s" % (self.filename, target, others))
+
+			# Ignore right-wildcard targets for TLD checks
+			if target.endswith(".*"):
+				continue
+
+			# Ignore if target is an ipv4 address
+			try:
+				socket.inet_aton(target)
+				continue
+			except:
+				pass
+
+			# Ignore if target is an ipv6 address
+			try:
+				socket.inet_pton(socket.AF_INET6, target)
+				continue
+			except:
+				pass
+				
+			# Extract TLD from target if possible
+			res = tldextract.extract(target)
+			if res.suffix == "":
+				problems.append("%s: Target '%s' missing eTLD" % (self.filename, target))
+			elif res.domain == "":
+				problems.append("%s: Target '%s' containing entire eTLD" % (self.filename, target))
+				
+		return problems
+
 	def getCoverageProblems(self):
-		"""Verify that each rule and each exclusion has the right number of tests
-			 that applies to it. TODO: Also check that each target has the right
+		"""Verify that each target, rule and exclusion has the right number of tests
+			 that applies to it. Also check that each target has the right
 			 number of tests. In particular left-wildcard targets should have at least
 			 three tests. Right-wildcard targets should have at least ten tests.
 
 			 Returns an array of strings reporting any coverage problems if they exist,
 			 or empty list if coverage is sufficient.
 			 """
-		problems = self._determineTestApplication()
+		self._determineTestApplication()
+		problems = []
+
+		# First, check each target has the right number of tests
+		myTestTargets = []
+
+		# Only take tests which are not excluded into account
+		for test in self.tests:
+			if not self.excludes(test.url):
+				urlParts = urlparse(test.url)
+				hostname = urlParts.hostname
+				myTestTargets.append(hostname)
+
+		for target in self.targets:
+			actual_count = 0
+			needed_count = 1
+
+			if target.startswith("*."):
+				needed_count = 3
+
+			if target.endswith(".*"):
+				needed_count = 10
+
+			# non-wildcard target always have a implicit test url, if is it not excluded
+			if not "*" in target and not self.excludes(("http://%s/" % target)):
+				continue
+
+			# According to the logic in rules.js available at
+			# EFForg/https-everywhere/blob/07fe9bd51456cc963c2d99e327f3183e032374ee/chromium/rules.js#L404
+			# 
+			pattern = target.replace('.', '\.') # .replace('*', '.+')
+
+			# `*.example.com` matches `bar.example.com` and `foo.bar.example.com` etc.
+			if pattern[0] == '*':
+				pattern = pattern.replace('*', '.+')
+
+			# however, `example.*` match `example.com` but not `example.co.uk`
+			if pattern[-1] == '*':
+				pattern = pattern.replace('*', '[^\.]+')
+
+			# `www.*.example.com` match `www.image.example.com` but not `www.ssl.image.example.com`
+			pattern = pattern.replace('*', '[^\.]+')
+
+			pattern = '^' + pattern + '$'
+
+			for test in myTestTargets:
+				if regex.search(pattern, test) is not None:
+					actual_count += 1
+
+					if not actual_count < needed_count:
+						break
+
+			if actual_count < needed_count:
+					problems.append("%s: Not enough tests (%d vs %d) for %s" % (
+									self.filename, actual_count, needed_count, target))
+
 		# Next, make sure each rule or exclusion has sufficient tests.
 		for rule in self.rules:
 			needed_count = 1 + len(regex.findall("[+*?|]", rule.fromPattern))

@@ -1,25 +1,26 @@
 <!--
-	Other Weibo coverage:	
+	Other Weibo coverage:
 		Weibo.cn.xml
 		Weibo.com-mixedcontent.xml
 		WeiboPay.com.xml
 
 	Insecure cookies are set for these domains and hosts:
-		- .weibo.com
-		- game.weibo.com
-		- sg2.game.weibo.com
-		- yahoo.tw.weibo.com
+		.weibo.com
+		game.weibo.com
+		sg2.game.weibo.com
+		yahoo.tw.weibo.com
 
-	Different http/https content:
-		s.weibo.com
+	Expired:
+		vdisk.weibo.com
 
 	MCB:
-		chart.weibo.com
-		e.weibo.com
+		chart.weibo.com		( Too many redirects )
 		game.weibo.com
-		widget.weibo.com	( find test in help.sina.com.cn )
+		gouwu.weibo.com
+		s.weibo.com
 
 	Invalid certificate:
+		www.weibo.com	( Mismatched by some strange CDNs. Equal to ^.)
 		app.weibo.com
 		book.weibo.com
 		static.book.weibo.com
@@ -33,13 +34,10 @@
 		service.weibo.com
 		vgirl.weibo.com
 		x.weibo.com
-
-	Redirect to http:
-		^
-		www.weibo.com
-		vdisk.weibo.com
 -->
 <ruleset name="Weibo.com">
+	<target host="weibo.com" />
+	<target host="www.weibo.com" />
 	<target host="api.weibo.com" />
 		<exclusion pattern="http://api\.weibo\.com/chat/" />
 		<test url="http://api.weibo.com/chat/#/main" />
@@ -49,19 +47,16 @@
 		<test url="http://upload.api.weibo.com/2/statuses/upload.json" />
 	<target host="captcha.weibo.com" />
 		<test url="http://captcha.weibo.com/static/js/patternLock.min.js" />
+	<target host="e.weibo.com" />
 	<target host="passport.weibo.com" />
 	<target host="security.weibo.com" />
 		<test url="http://security.weibo.com/app/js/v1/apps/account/jQuery1.7.1.js" />
 	<target host="yahoo.tw.weibo.com" />
+	<target host="widget.weibo.com" />
 
-	<target host="weibo.com" />
-	<exclusion pattern="^http://weibo\.com/(?!tv/)" />
-		<test url="http://weibo.com/a/hot/7542113473402881_1.html" />
+	<securecookie host=".+" name=".+" />
 
-		<test url="http://weibo.com/tv/tech" />
-		<test url="http://weibo.com/tv/v/FdJhLrpL7" />
-	
-	<securecookie host="^(upload\.api|yahoo\.tw)\.weibo\.com$" name=".+" />
+	<rule from="^http://www\.weibo\.com/" to="https://weibo.com/" />
 
 	<rule from="^http:" to="https:" />
 </ruleset>

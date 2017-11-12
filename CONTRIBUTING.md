@@ -1,10 +1,46 @@
+# Table of Contents
+
+* [Welcome!](#welcome)
+    * [HTTPS Everywhere Source Code Layout](#https-everywhere-source-code-layout)
+    * [Submitting Changes](#submitting-changes)
+* [Contributing Rulesets](#contributing-rulesets)
+    * [General Info](#general-info)
+    * [New Rulesets](#new-rulesets)
+    * [Minimum Requirements for a Ruleset PR](#minimum-requirements-for-a-ruleset-pr)
+    * [Testing](#testing)
+    * [Ruleset Style Guide](#ruleset-style-guide)
+        * [Motivation](#motivation)
+        * [Indentation &amp; Misc Stylistic Conventions](#indentation--misc-stylistic-conventions)
+        * [Wildcards in Targets](#wildcards-in-targets)
+            * [Left-Wildcards](#left-wildcards)
+            * [Edge-Case: Right-Wildcards](#edge-case-right-wildcards)
+        * [Complicated Regex in Rules](#complicated-regex-in-rules)
+        * [Enumerating Subdomains](#enumerating-subdomains)
+        * [Target Ordering](#target-ordering)
+        * [Rule Ordering](#rule-ordering)
+        * [Non-working hosts](#non-working-hosts)
+        * [Ruleset Names](#ruleset-names)
+            * [Filenames](#filenames)
+        * [Cross-referencing Rulesets](#cross-referencing-rulesets)
+        * [Regex Conventions](#regex-conventions)
+        * [Snapping Redirects](#snapping-redirects)
+        * [Example: Ruleset before style guidelines are applied](#example-ruleset-before-style-guidelines-are-applied)
+        * [Example: Ruleset after style guidelines are applied, with test URLs](#example-ruleset-after-style-guidelines-are-applied-with-test-urls)
+    * [Removal of Rules](#removal-of-rules)
+        * [Regular Rules](#regular-rules)
+        * [HSTS Preloaded Rules](#hsts-preloaded-rules)
+* [Contributing Code](#contributing-code)
+* [Contributing Translations](#contributing-translations)
+
+* * *
+
 # Welcome!
 
 Welcome, and thank you for your interest in contributing to HTTPS Everywhere! HTTPS Everywhere depends on the open source community for its continued success, so any contribution is appreciated.
 
 One of the things that makes it easy to contribute to HTTPS Everywhere is that you don't have to be a coder to contribute. That's because HTTPS Everywhere's most important component is the list of rules that tell it when it can request a website over HTTPS. These rules are just XML files that contain regular expressions, so if you can write XML and simple regexes, you can help us add rules and increase HTTPS Everywhere's coverage. No coding skills necessary!
 
-If you want to have the greatest impact, however, you can help be a ruleset maintainer. Ruleset maintainers are volunteers who examine rulesets contributed by others and work with them to ensure that these rulesets work properly and are styled correctly before they're merged in. While we currently have a couple of extremely dedicated and extremely proficient ruleset maintainers, the backlog of sites to add to HTTPS Everywhere just keeps growing, and they need help! If this sounds interesting to you, please contact us at https-everywhere-rules-owner [at] eff &lt;dot&gt; org.
+If you want to have the greatest impact, however, you can help be a ruleset maintainer. Ruleset maintainers are trusted volunteers who examine rulesets contributed by others and work with them to ensure that these rulesets work properly and are styled correctly before they're merged in. While we currently have a couple of extremely dedicated and extremely proficient ruleset maintainers, the backlog of sites to add to HTTPS Everywhere just keeps growing, and they need help! If you would like to volunteer to become one, the best thing to do is to build trust in your work by monitoring the repository, contributing pull requests, and commenting on issues that interest you. Then you can contact us at https-everywhere-rules-owner [at] eff &lt;dot&gt; org expressing your interest in helping out.
 
 If you get stuck we have two publicly-archived mailing lists: the https-everywhere list (https://lists.eff.org/mailman/listinfo/https-everywhere) is for discussing the project as a whole, and the https-everywhere-rulesets list (https://lists.eff.org/mailman/listinfo/https-everywhere-rules) is for discussing the `rulesets` and their contents, including patches and git pull requests.
 
@@ -19,7 +55,7 @@ There are several main areas of development on HTTPS Everywhere: the rulesets, t
 
 The rulesets can be found in the [`rules`](rules) top-level path and include all the rules for redirecting individual sites to HTTPS.  These are written in XML. If you want to get started contributing to HTTPS Everywhere, we recommend starting here.
 
-The core codebase consists of the code that performs the redirects, the UI, logging code, the decentralized SSL observatory code, and ruleset loading, and is written in JavaScript. It is divided into two separate extensions.  One is based on the `XPCOM` API used by Mozilla Firefox (soon to be deprecated, located in the [`src`](src) top-level path), and the other is based on the `WebExtensions` API (located in [`chromium`](chromium)), first developed in Google's Chromium browser.
+The core codebase consists of the code that performs the redirects, the UI, logging code, and ruleset loading.  This encompasses all code delivered with the extension itself that is *not* a ruleset.  It is written in JavaScript, using the `WebExtensions` API (located in [`chromium`](chromium)) on all supported browsers.  In Firefox, this extension is wrapped in a thin `XPCOM` layer for the purposes of migrating settings, located in [`src`](src), which will soon be deprecated.
 
 The utilities ([`utils`](utils) top-level path) include scripts that build the extension, sanitize and perform normalization on rulesets, simplify rules, and help label GitHub issues.  Historically, these utilities have been written in Python.  Many of the newer utilities are written in JavaScript, and are meant to be run in node.  Some of the wrappers for these utilities are in shell scripts.
 
@@ -76,7 +112,7 @@ This would create `Example.com.xml`, which you could then take a look at and edi
 
 ## Minimum Requirements for a Ruleset PR
 
-There are several volunteers to HTTPS Everywhere who have graciously dedicated their time to look at the `ruleset` contributions and work with contributors to ensure quality of the pull requests before merging.  It is typical for there to be several back-and-fourth communications with these `ruleset` maintainers before a PR is in a good shape to merge.  Please be patient and respectful, the maintainers are donating their time for no benefit other than the satisfaction of making the web more secure.  They are under no obligation to merge your request, and may reject it if it is impossible to ensure quality.
+There are several volunteers to HTTPS Everywhere who have graciously dedicated their time to look at the `ruleset` contributions and work with contributors to ensure quality of the pull requests before merging.  It is typical for there to be several back-and-forth communications with these `ruleset` maintainers before a PR is in a good shape to merge.  Please be patient and respectful, the maintainers are donating their time for no benefit other than the satisfaction of making the web more secure.  They are under no obligation to merge your request, and may reject it if it is impossible to ensure quality.  You can identify these volunteers by looking for the "Collaborator" identifier in their comments on HTTPS Everywhere issues and pull requests.
 
 In the back-and-fourth process of getting the `ruleset` in good shape, there may be many commits made.  It is this project's convention to squash-and-merge these commits into a single commit before merging into the project.  If your commits are cryptographically signed, we may ask you to squash the commits yourself in order to preserve this signature.  Otherwise, we may squash them ourselves before merging.
 
@@ -312,7 +348,9 @@ Officially supported browsers:
 - Firefox ESR
 - Chromium Stable
 
-We also informally support Opera browser, but do not have tooling around testing Opera.  Firefox ESR is supported because this is what the Tor Browser, which includes HTTPS Everywhere, is built upon.  For the test commands, refer to [README.md](README.md).
+We also informally support Opera browser, but do not have tooling around testing Opera.  Firefox ESR is supported because this is what the [Tor Browser](https://www.torproject.org/projects/torbrowser.html.en), which includes HTTPS Everywhere, is built upon.  For the test commands, refer to [README.md](README.md).
+
+The current extension maintainer is @Hainish.  You can tag him for PRs which involve the core codebase.
 
 Several of our utilities and our full test suite is written in Python.  Eventually we would like the whole codebase to be standardized as JavaScript.  If you are so inclined, it would be helpful to rewrite the tooling and tests into JavaScript while maintaining the functionality.
 

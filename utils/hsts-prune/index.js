@@ -41,7 +41,7 @@ const firefox_version_fetch = version_url => {
   return cb => {
     https.get(version_url, res => {
       cb(null, res.headers.location
-         .match(/firefox-(.*).tar.*/)[1].replace(/\./g, "_"));
+        .match(/firefox-(.*).tar.*/)[1].replace(/\./g, "_"));
     });
   };
 };
@@ -71,6 +71,9 @@ const parse_include = include_url => {
       })
       .pipe(split())
       .on('data', line => {
+        line = line.replace(new RegExp('^([^,]+), 1'), ' \"$1\", true ');
+        line = line.replace(new RegExp('^([^,]+), 0'), ' \"$1\", false ');
+
         let regex_res = line.match(regex)
         if(regex_res){
           hsts[regex_res[1]] = Boolean(regex_res[2])
@@ -142,7 +145,7 @@ const check_header_directives = (check_domain, cb) => {
         max_age = Number(max_age_match[1]);
       }
       cb(null,
-          preload && include_subdomains && max_age >= 10886400);
+        preload && include_subdomains && max_age >= 10886400);
       sent_callback = true;
     } else {
       cb(null, false);
@@ -193,38 +196,38 @@ function remove_target_from_xml(source, target) {
 
 const files =
   read_dir(rules_dir)
-  .tap(rules => {
-    bar = new ProgressBar(':bar', { total: rules.length, stream: process.stdout });
-  })
-  .sequence()
-  .filter(name => {
-    if(rulesets_changed){
-      return ~rulesets_changed.indexOf(name);
-    } else {
-      return name.endsWith('.xml');
-    }
-  });
+    .tap(rules => {
+      bar = new ProgressBar(':bar', { total: rules.length, stream: process.stdout });
+    })
+    .sequence()
+    .filter(name => {
+      if(rulesets_changed){
+        return ~rulesets_changed.indexOf(name);
+      } else {
+        return name.endsWith('.xml');
+      }
+    });
 
 const sources =
   files.fork()
-  .map(name => read_file(`${rules_dir}/${name}`, 'utf-8'))
-  .parallel(10);
+    .map(name => read_file(`${rules_dir}/${name}`, 'utf-8'))
+    .parallel(10);
 
 const rules =
   sources.fork()
-  .flatMap(parse_xml)
-  .errors((err, push) => {
-    push(null, { err });
-  })
-  .zip(files.fork())
-  .map(([ { ruleset, err }, name ]) => {
-    if (err) {
-      err.message += ` (${name})`;
-      this.emit('error', err);
-    } else {
-      return ruleset;
-    }
-  });
+    .flatMap(parse_xml)
+    .errors((err, push) => {
+      push(null, { err });
+    })
+    .zip(files.fork())
+    .map(([ { ruleset, err }, name ]) => {
+      if (err) {
+        err.message += ` (${name})`;
+        this.emit('error', err);
+      } else {
+        return ruleset;
+      }
+    });
 
 // This async call determines the current versions of the supported browsers
 
@@ -236,7 +239,7 @@ async.parallel({
   versions.esr_major = versions.esr.replace(/_.*/, "");
 
   let stable_url = `https://hg.mozilla.org/releases/mozilla-release/raw-file/FIREFOX_${versions.stable}_RELEASE/security/manager/ssl/nsSTSPreloadList.inc`;
-  let dev_url = `https://hg.mozilla.org/releases/mozilla-aurora/raw-file/tip/security/manager/ssl/nsSTSPreloadList.inc`;
+  let dev_url = `https://hg.mozilla.org/releases/mozilla-beta/raw-file/tip/security/manager/ssl/nsSTSPreloadList.inc`;
   let esr_url = `https://hg.mozilla.org/releases/mozilla-esr${versions.esr_major}/raw-file/FIREFOX_${versions.esr}_RELEASE/security/manager/ssl/nsSTSPreloadList.inc`;
   let chromium_url = `https://chromium.googlesource.com/chromium/src.git/+/${versions.chromium}/net/http/transport_security_state_static.json?format=TEXT`;
 
@@ -246,7 +249,7 @@ async.parallel({
   async.parallel({
     esr: parse_include(esr_url),
     dev: parse_include(dev_url),
-    stable: parse_include(esr_url),
+    stable: parse_include(stable_url),
     chromium: parse_json(chromium_url)
   }, (err, structs) => {
 

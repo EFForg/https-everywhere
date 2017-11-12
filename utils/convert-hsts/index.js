@@ -17,59 +17,59 @@ _(push => {
     push(null, _.nil);
   });
 })
-.flatMap(_)
-.pipe(_.pipeline(
-  base64.decode(),
-  _.split(),
-  _.filter(line => !/^\s*\/\//.test(line)),
-  JSONStream.parse('entries.*')
-))
-.reduce({
-  xml: xmlBuilder.create('rulesetlibrary'),
-  rulesets: new Map(),
-  greedyInclusions: '(?!)',
-  potentialExclusions: new Map()
-}, (acc, { name, mode = '', include_subdomains = false }) => {
-  if (mode === 'force-https') {
-    const ruleset = acc.xml.ele('ruleset', { name });
-    acc.rulesets.set(name, ruleset);
-    ruleset.ele('target', {
-      host: name
-    });
-    if (include_subdomains) {
-      acc.greedyInclusions += `|${hostToRegex(name)}`;
+  .flatMap(_)
+  .pipe(_.pipeline(
+    base64.decode(),
+    _.split(),
+    _.filter(line => !/^\s*\/\//.test(line)),
+    JSONStream.parse('entries.*')
+  ))
+  .reduce({
+    xml: xmlBuilder.create('rulesetlibrary'),
+    rulesets: new Map(),
+    greedyInclusions: '(?!)',
+    potentialExclusions: new Map()
+  }, (acc, { name, mode = '', include_subdomains = false }) => {
+    if (mode === 'force-https') {
+      const ruleset = acc.xml.ele('ruleset', { name });
+      acc.rulesets.set(name, ruleset);
       ruleset.ele('target', {
-        host: `*.${name}`
-      });
-    }
-    ruleset.ele('rule', {
-      from: '^http:',
-      to: 'https:'
-    });
-  } else {
-    acc.potentialExclusions.set(name, include_subdomains);
-  }
-  return acc;
-})
-.map(acc => {
-  const regexp = new RegExp(`\.(${acc.greedyInclusions})$`);
-  for (const [ name, include_subdomains ] of acc.potentialExclusions) {
-    const match = name.match(regexp);
-    if (match) {
-      const ruleset = acc.rulesets.get(match[1]);
-      ruleset.ele('exclusion', {
-        pattern: `^http://${include_subdomains ? '(?:[\\w-]+\\.)*' : ''}${hostToRegex(name)}/`
-      });
-      ruleset.ele('test', {
-        url: `http://${name}/`
+        host: name
       });
       if (include_subdomains) {
-        ruleset.ele('test', {
-          url: `http://host-part.${name}/`
+        acc.greedyInclusions += `|${hostToRegex(name)}`;
+        ruleset.ele('target', {
+          host: `*.${name}`
         });
       }
+      ruleset.ele('rule', {
+        from: '^http:',
+        to: 'https:'
+      });
+    } else {
+      acc.potentialExclusions.set(name, include_subdomains);
     }
-  }
-  return acc.xml.end({ pretty: true });
-})
-.pipe(fs.createWriteStream(`${__dirname}/hsts.xml`));
+    return acc;
+  })
+  .map(acc => {
+    const regexp = new RegExp(`\.(${acc.greedyInclusions})$`);
+    for (const [ name, include_subdomains ] of acc.potentialExclusions) {
+      const match = name.match(regexp);
+      if (match) {
+        const ruleset = acc.rulesets.get(match[1]);
+        ruleset.ele('exclusion', {
+          pattern: `^http://${include_subdomains ? '(?:[\\w-]+\\.)*' : ''}${hostToRegex(name)}/`
+        });
+        ruleset.ele('test', {
+          url: `http://${name}/`
+        });
+        if (include_subdomains) {
+          ruleset.ele('test', {
+            url: `http://host-part.${name}/`
+          });
+        }
+      }
+    }
+    return acc.xml.end({ pretty: true });
+  })
+  .pipe(fs.createWriteStream(`${__dirname}/hsts.xml`));

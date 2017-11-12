@@ -1,93 +1,39 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://smetrics.skype.com/ => https://smetrics.skype.com/: (6, 'Could not resolve host: smetrics.skype.com')
-Fetch error: http://metrics.skype.com/ => https://smetrics.skype.com/: (6, 'Could not resolve host: smetrics.skype.com')
 
 	For other Microsoft coverage, see Microsoft.xml.
 
 
-	CDN buckets:
+	Nonfunctional hosts in *.skype.com:
 
-		- download-akm.skype.com.edgesuite.com
-			- download.skype.com
-			- download-akm.skype.com
+		- beta.skype.com (r)
+		- shop.skype.com (r)
 
-
-	Nonfunctional subdomains:
-
-		- downloads *
-		- downloads-akm *
-		- mystatus
-		- shop
-
-	* 503, akamai
-
-
-	Problematic domains:
-
-		- ^ ¹
-		- beta ¹
-		- blogs.skype.com	(wordpress)
-		- metrics.skype.com	(mismatched, CN: *.d2.sc.omtrdc.net)
-
-	¹ Refused
-
-
-	Fully covered hosts in *skype.com:
-
-		- (www.)?	(^ → www)
-		- beta		(→ go.skype.com)
-		- go
-		- login
-		- metrics	(→ smetrics.skype.com)
-		- secure
-		- smetrics
-		- support
-
-
-	Insecure cookies are set for these domains:
-
-		- .skype.com
+	h: http redirect
+	m: certificate mismatch
+	r: connection refused
+	s: self-signed certificate
+	t: timeout on https
 
 -->
-<ruleset name="Skype.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Skype.com">
 
-	<!--	Direct rewrites:
-				-->
-	<!--target host="blogs.skype.com" /-->
+	<target host="skype.com" />
+	<target host="www.skype.com" />
+	<target host="blogs.skype.com" />
+	<target host="download.skype.com" />
+	<target host="downloads.skype.com" />
 	<target host="go.skype.com" />
 	<target host="login.skype.com" />
 	<target host="secure.skype.com" />
-	<target host="smetrics.skype.com" />
+	<target host="static.skype.com" />
 	<target host="support.skype.com" />
-	<target host="www.skype.com" />
 
-	<!--	Complications:
-				-->
-	<target host="skype.com" />
-	<target host="beta.skype.com" />
-	<target host="metrics.skype.com" />
+	<test url="http://download.skype.com/favicon.ico" />
+	<test url="http://downloads.skype.com/favicon.ico" />
 
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="\.skype\.com$" name="^(SC|frmrgtpe|s_vi)$" /-->
+	<securecookie host=".+" name=".+" />
 
-	<securecookie host=".*\.skype\.com$" name=".+" />
-
-
-	<rule from="^http://skype\.com/"
-		to="https://www.skype.com/" />
-
-	<!--	Redirect keeps path, args,
-		and forward slash:
-					-->
-	<rule from="^http://beta\.skype\.com/"
-		to="https://go.skype.com/api/v1/domainRedirect/beta.skype.com/" />
-
-	<rule from="^http://metrics\.skype\.com/"
-		to="https://smetrics.skype.com/" />
 
 	<rule from="^http:"
 		to="https:" />

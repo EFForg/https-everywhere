@@ -1,50 +1,26 @@
 
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://www.asciinema.org/ => https://www.asciinema.org/: (51, "SSL: no alternative certificate subject name matches target host name 'www.asciinema.org'")
-
-	CDN buckets:
-
-		- asciinema-blog.herokuapp.com
-
-			- blog
-
-
-	Problematic subdomains:
-
-		- blog *
-
-	* Works; mismatched, CN: *.herokuapp.com
+	Invalid certificate:
+		www.asciinema.org
+		blog.asciinema.org
 
 -->
-<ruleset name="Asciinema.org (partial)" default_off='failed ruleset test'>
+<ruleset name="Asciinema.org (partial)">
 
 	<target host="asciinema.org" />
-	<target host="blog.asciinema.org" />
 	<target host="www.asciinema.org" />
-		<!--
-			Avoid user-visible paths:
-							-->
-		<exclusion pattern="^http://blog\.asciinema\.org/+(?!css/|img/)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://blog.asciinema.org//" />
-			<test url="http://blog.asciinema.org/index.xml" />
-			<test url="http://blog.asciinema.org/post/persona/" />
-
-			<!--	-ve:
-					-->
-			<test url="http://blog.asciinema.org/css/site.css" />
-
+	<target host="blog.asciinema.org" />
+	<target host="staging.asciinema.org" />
 
 	<!--	Some of, but not all, secured by server:
 							-->
 	<securecookie host="^asciinema\.org$" name=".+" />
 
-
 	<rule from="^http://blog\.asciinema\.org/"
 		to="https://asciinema-blog.herokuapp.com/" />
+
+	<rule from="^http://www\.asciinema\.org/"
+		to="https://asciinema.org/" />
 
 	<rule from="^http:"
 		to="https:" />

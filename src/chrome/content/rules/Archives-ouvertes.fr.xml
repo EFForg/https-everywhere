@@ -1,48 +1,33 @@
-<!--
-	Problematic subdomains:
-
-		- ^ ¹
-		- www ²
-
-	¹ Cert only matches *.archives-ouvertes.fr
-	² Shows another domain
-
-
-	Fully covered subdomains:
-
-		- (www.)?	(→ hal)
-		- api
-		- aurehal
-		- aurehal-preprod
-		- hal
-		- hal-\w+ *
-		- halshs
-		- medihal
-		- pastel
-		- tel
-
-	* Per-institution domains
-
--->
 <ruleset name="Archives-ouvertes.fr">
 
 	<target host="archives-ouvertes.fr" />
 	<target host="*.archives-ouvertes.fr" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^tel\.archives-ouvertes\.fr$" name="^PHPSESSID$" /-->
+		<test url="http://www.archives-ouvertes.fr/" />
+		<test url="http://api.archives-ouvertes.fr/" />
+		<test url="http://aurehal.archives-ouvertes.fr/" />
+		<test url="http://aurehal-preprod.archives-ouvertes.fr/" />
+		<test url="http://cel.archives-ouvertes.fr/" />
+		<test url="http://cv.archives-ouvertes.fr/" />
+		<test url="http://doc.archives-ouvertes.fr/" />
+		<test url="http://hal.archives-ouvertes.fr/" />
+		<test url="http://halshs.archives-ouvertes.fr/" />
+		<test url="http://medihal.archives-ouvertes.fr/" />
+		<test url="http://pastel.archives-ouvertes.fr/" />
+		<test url="http://tel.archives-ouvertes.fr/" />
+		<test url="http://telearn.archives-ouvertes.fr/" />
+	
+		<!-- Per-institution subdomains -->
+		<test url="http://hal-ens.archives-ouvertes.fr/" />
+		<test url="http://hal-pasteur.archives-ouvertes.fr/" />
+		<test url="http://hal-pjse.archives-ouvertes.fr/" />
+		<test url="http://hal-supelec.archives-ouvertes.fr/" />
 
 	<securecookie host="^tel\.archives-ouvertes\.fr$" name=".+" />
 
+	<rule from="^http://archives-ouvertes\.fr/"
+		to="https://archives-ouvertes.fr/" />
 
-	<!--	Redirect keeps path and args:
-						-->
-	<rule from="^http://(?:www\.)?archives-ouvertes\.fr/+"
-		to="https://hal.archives-ouvertes.fr/" />
-
-	<rule from="^http://(api|aurehal|aurehal-preprod|hal|hal-\w+|halshs|pastel|tel)\.archives-ouvertes\.fr/"
+	<rule from="^http://(api|aurehal|aurehal-preprod|cel|cv|doc|hal|hal-\w+|halshs|medihal|pastel|tel|telearn|www)\.archives-ouvertes\.fr/"
 		to="https://$1.archives-ouvertes.fr/" />
 
 </ruleset>
