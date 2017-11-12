@@ -348,7 +348,7 @@ Officially supported browsers:
 - Firefox ESR
 - Chromium Stable
 
-We also informally support Opera browser, but do not have tooling around testing Opera.  Firefox ESR is supported because this is what the Tor Browser, which includes HTTPS Everywhere, is built upon.  For the test commands, refer to [README.md](README.md).
+We also informally support Opera browser, but do not have tooling around testing Opera.  Firefox ESR is supported because this is what the [Tor Browser](https://www.torproject.org/projects/torbrowser.html.en), which includes HTTPS Everywhere, is built upon.  For the test commands, refer to [README.md](README.md).
 
 The current extension maintainer is @Hainish.  You can tag him for PRs which involve the core codebase.
 
