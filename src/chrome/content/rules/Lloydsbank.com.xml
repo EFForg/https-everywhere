@@ -1,59 +1,14 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://secure.lloydsbank.com/ => https://secure.lloydsbank.com/: Too many redirects while fetching 'https://secure.lloydsbank.com/'
+	Dropped:
+		- infotools
 
-	Nonfunctional hosts in *lloydsbank.com:
-
-		- ib ˡ
-		- wealth ᵃ
-
-	ᵃ Shows islandscommercial.lloydsbank.com
-	ˡ Redirect loop from ArcError.html
-
-
-	Problematic hosts in *lloydsbank.com:
-
-		- infotools ᵐ
-		- toolbox ᶜ
-
-	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
-	ᵐ Mismatched
-
-
-	These altnames do not exist:
-
-		- test.mycarfinance.lloydsbank.com
-
-
-	Insecure cookies are set for these hosts: ᶜ
-
-		- choicerewards.lloydsbank.com
-		- commercialbanking.lloydsbank.com
-		- community.lloydsbank.com
-		- international.lloydsbank.com
-		- islands.lloydsbank.com
-		- islandscommercial.lloydsbank.com
-		- mycarfinance.lloydsbank.com
-		- www.mycarfinance.lloydsbank.com
-		- resources.lloydsbank.com
-
-	ᶜ See https://owasp.org/index.php/SecureFlag
-
-
-	Mixed content:
-
-		- Images on resources from commercialbanking.lloydsbank.com ˢ
-		- Bug on islands, islandscommercial from ad.doubleclick.net
-
-	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
-
+	Incomplete certificate chain:
+		- lloydslink.online
 -->
-<ruleset name="Lloydsbank.com (partial)" default_off='failed ruleset test'>
 
-	<!--	Direct rewrites:
-				-->
+<ruleset name="Lloydsbank.com (partial)">
 	<target host="lloydsbank.com" />
+	<target host="www.lloydsbank.com" />
 	<target host="choicerewards.lloydsbank.com" />
 	<target host="commercialbanking.lloydsbank.com" />
 	<target host="community.lloydsbank.com" />
@@ -62,42 +17,17 @@ Fetch error: http://secure.lloydsbank.com/ => https://secure.lloydsbank.com/: To
 	<target host="islandscommercial.lloydsbank.com" />
 	<target host="mycarfinance.lloydsbank.com" />
 	<target host="www.mycarfinance.lloydsbank.com" />
-	<target host="lloydslink.online.lloydsbank.com" />
 	<target host="request.lloydsbank.com" />
 	<target host="resources.lloydsbank.com" />
 	<target host="secure.lloydsbank.com" />
-	<!--target host="toolbox.lloydsbank.com" /-->
-	<target host="www.lloydsbank.com" />
+	<target host="toolbox.lloydsbank.com" />
 
-		<!--	$ 503s, so:
-					-->
-		<test url="http://request.lloydsbank.com/Player/sterling.aspx?CampaignId=3003333&amp;LiquidAccountId=36921&amp;InitialiseScript=True&amp;PlayerEnvironment=popup&amp;ShowPageName=True&amp;DiallerConfigId=3644&amp;BootstrapTemplate=LloydsWealthPublic" />
+	<securecookie host=".+" name=".+" />
 
-		<!--	Mixed images:
-					-->
-		<!--test url="http://resources.lloydsbank.com/economics-and-market-insight/" /-->
+	<rule from="^http:" to="https:" />
 
-	<!--	Complications:
-				-->
-	<target host="infotools.lloydsbank.com" />
+	<test url="http://secure.lloydsbank.com/online_forms/contact_us/enquiry/form.asp" />
 
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^choicerewards\.lloydsbank\.com$" name="^BNI_persistence$" /-->
-	<!--securecookie host="^(?:commercialbanking|resources)\.lloydsbank\.com$" name="^(?:ASP\.NET_SessionId|EktAnalytics|EktGUID|ecm)$" /-->
-	<!--securecookie host="^community\.lloydsbank\.com$" name="^(?:ASP\.NET_SessionId|EktGUID|ecm)$" /-->
-	<!--securecookie host="^(?:international|islands|islandscommercial)\.lloydsbank\.com$" name="^(?:\.ASPXAUTH|ASP\.NET_SessionId|EktAnalytics|EktGUID|ecm|ecmSecure)$" /-->
-	<!--securecookie host="^(?:www\.)?mycarfinance\.lloydsbank\.com$" name="^(?:collections|jnAccel)$$" /-->
-
-	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
-	<securecookie host="^\w" name="." />
-
-
-	<rule from="^http://infotools\.lloydsbank\.com/"
-		to="https://international.lloydsbank.com/" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<!-- / redirects to HTTP which in turn is refused -->
+	<exclusion pattern="http://secure\.lloydsbank\.com/" />
 </ruleset>

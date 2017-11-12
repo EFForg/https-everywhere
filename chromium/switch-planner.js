@@ -1,27 +1,29 @@
-window.onload = function() {
-  var backgroundPage = chrome.extension.getBackgroundPage(); 
+"use strict";
+
+document.addEventListener("DOMContentLoaded", () => {
+  const background = chrome.extension.getBackgroundPage().require('./background');
   var tab = document.location.search.match(/tab=([^&]*)/)[1];
   var content = document.getElementById("content");
 
   var nrw_text_div = document.createElement("div");
   nrw_text_div.innerText = "Unrewritten HTTP resources loaded from this tab (enable HTTPS on these domains and add them to HTTPS Everywhere):"
   var nrw_div = switchPlannerDetailsHtmlSection(
-    backgroundPage.sortSwitchPlanner(tab, "nrw"),
-    backgroundPage.switchPlannerInfo[tab]["nrw"]
+    background.sortSwitchPlanner(tab, "nrw"),
+    background.switchPlannerInfo[tab]["nrw"]
   );
   var rw_text_div = document.createElement("div");
   rw_text_div.style.marginTop = "20px";
   rw_text_div.innerText = "Resources rewritten successfully from this tab (update these in your source code):"
   var rw_div = switchPlannerDetailsHtmlSection(
-    backgroundPage.sortSwitchPlanner(tab, "rw"),
-    backgroundPage.switchPlannerInfo[tab]["rw"]
+    background.sortSwitchPlanner(tab, "rw"),
+    background.switchPlannerInfo[tab]["rw"]
   );
 
   content.appendChild(nrw_text_div);
   content.appendChild(nrw_div);
   content.appendChild(rw_text_div);
   content.appendChild(rw_div);
-};
+});
 
 /**
  * Generate the detailed html fot the switch planner, by section
@@ -48,7 +50,7 @@ function switchPlannerDetailsHtmlSection(asset_host_list, link_keys) {
     if (activeCount > 0) {
       var active_div = document.createElement("div");
       active_div.appendChild(document.createTextNode(activeCount + " active"));
-      for(link of linksFromKeys(link_keys[host][1])){
+      for (const link of linksFromKeys(link_keys[host][1])) {
         active_div.appendChild(link);
       }
       div.appendChild(active_div);
@@ -56,7 +58,7 @@ function switchPlannerDetailsHtmlSection(asset_host_list, link_keys) {
     if (passiveCount > 0) {
       var passive_div = document.createElement("div");
       passive_div.appendChild(document.createTextNode(passiveCount + " passive"));
-      for(link of linksFromKeys(link_keys[host][0])){
+      for (const link of linksFromKeys(link_keys[host][0])) {
         passive_div.appendChild(link);
       }
       div.appendChild(passive_div);

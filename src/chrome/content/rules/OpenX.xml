@@ -1,168 +1,77 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://openx.com/blog/ => https://openx.com/blog/: (28, 'Connection timed out after 20001 milliseconds')
-Fetch error: http://openx.com/documentation/ => https://openx.com/documentation/: (28, 'Connection timed out after 20001 milliseconds')
-Non-2xx HTTP code: http://welcome.openx.com/rs/745-BUQ-779/images/The_Mobile_Programmatic_Playbook_Edit_%281%29.pdf (200) => https://na-sjl.marketo.com/rs/745-BUQ-779/images/The_Mobile_Programmatic_Playbook_Edit_%281%29.pdf (403)
+	Other OpenX.com related rulesets:
+		+ Advertisers-OpenX.com.xml
+		+ Fhserve.com.xml
+		+ JumpTime.com.xml
+		+ Liftdna.com.xml
+		+ OpenX.net.xml
+		+ OpenX.org.xml
+		+ OpenX_Enterprise.com.xml
+		+ OpenX_ad_exchange.com.xml
+		+ Served_by_OpenX.com.xml
+		+ openxmarket.asia.xml
 
-	For rules covering resources which do not secure
-	mixed content, see openx.com-resources.xml.
+	Non-functional hosts
+		Couldn't connect to server:
+		- de.openx.com
+		- go.openx.com
+		- uk.openx.com
 
-	Other OpenX rulesets:
-
-		- Advertisers-OpenX.com.xml
-		- Fhserve.com.xml
-		- JumpTime.com.xml
-		- Liftdna.com.xml
-		- OpenX.net.xml
-		- OpenX.org.xml
-		- OpenX_ad_exchange.com.xml
-		- OpenX_Enterprise.com.xml
-		- openxmarket.asia.xml
-		- Served_by_OpenX.com.xml
-
-
-	CDN buckets:
-
-		- i.cdn.openx.com.edgesuite.net
-		- i.xx.openx.com.edgesuite.net
-
-
-	Nonfunctional hosts in openx.com:
-
-		- ac **
-		- support *
-		- uk-ac **
-
-	* Shows blog.openx.org
-	** 504, Akamai
-
-
-	Problematic hosts in *openx.com:
-
-		- i.cdn *
-		- community ᶜ
-		- i.xx *
-
-	* Works, akamai
-	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
-
-
-	Insecure cookies are set for these hosts: ᶜ
-
+		Timeout was reached:
 		- openx.com
+		- uk-ac.openx.com
+
+		SSL peer certificate was not OK:
+		- i.cdn.openx.com
+		- optimizedby.openx.com
+		- prod-d.openx.com
+		- i.psa-ads.openx.com
+		- psa-d.openx.com
+		- psa-i.openx.com
+		- tracking.openx.com
+		- uk-market.openx.com
+		- us-market.openx.com
+		- welcome.openx.com
+		- i.xx.openx.com
+
+		Peer certificate cannot be authenticated with given CA certificates:
+		- stats.openx.com
+		- support.openx.com
+
+		Incomplete certificate chain error:
 		- community.openx.com
-		- www.openx.com
+		- www.community.openx.com
+		- orange-ac.openx.com
+		- peeps.openx.com
+		- staging.openx.com
+		- xfer.openx.com
 
-	ᶜ See https://owasp.org/index.php/SecureFlag
+		Self-signed certificate chain error:
+		- currency-service.openx.com
 
-
-	Mixed content:
-
-		- Images, on:
-
-			- ^ from 37vqjr47r2xf2msyvh42d2z1app.wpengine.netdna-cdn.com
-
-		- Ads / bugs, on:
-
-			- ^ from www.google.com ˢ
-			- ^ from ox-d.buyer.openxadexchange.com ˢ
-			- ^ from ox-d.openxadexchange.com ˢ
-
-	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
-
+		Status code mismatch:
+		- cdn.platform.dev.openx.com
+		- cdn.platform.qa.openx.com
 -->
-<ruleset name="OpenX.com (partial)" default_off='failed ruleset test'>
-
-	<!--	Direct rewrites:
-				-->
+<ruleset name="OpenX.com">
 	<target host="openx.com" />
-	<target host="ssl-i.cdn.openx.com" />
-	<!--target host="community.openx.com" /-->
-	<target host="i-cdn.openx.com" />
-	<target host="docs.openx.com" />
-	<target host="lift.openx.com" />
-	<target host="pc.openx.com" />
-	<target host="sso.openx.com" />
 	<target host="www.openx.com" />
+	<target host="cci-graphs.openx.com" />
+	<target host="ssl-i.cdn.openx.com" />
+	<target host="docs.openx.com" />
+	<target host="i-cdn.openx.com" />
+	<target host="m-sso.openx.com" />
+	<target host="origin-cdn.openx.com" />
+	<target host="cdn.platform.openx.com" />
+	<target host="selfservice.openx.com" />
+	<target host="sso.openx.com" />
+	<target host="post.update.openx.com" />
+	<target host="s.update.openx.com" />
 	<target host="ssl-i.xx.openx.com" />
 
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://openx\.com/(?:$|(?:about|careers|events|investors|legal/privacypolicy|media-center|mobile|newsletter)/?$)" /-->
-		<!--
-			Exceptions:
-					-->
-		<!--exclusion pattern="^http://(?:www\.)?openx\.com/(?!/*(?:(?:blog|documentation)(?:$|[?/])|wp-content/|wp-includes/))" /-->
-		<!--
-			Reduce non-Tor distinguishability:
-								-->
-		<exclusion pattern="^http://(?:www\.)?openx\.com/(?!/*(?:blog|documentation)(?:$|[?/]))" />
+	<rule from="^http://openx\.com/" 
+			to="https://www.openx.com/" />
 
-			<!--	+ve:
-					-->
-			<test url="http://openx.com/about/" />
-			<test url="http://openx.com/careers/" />
-			<test url="http://openx.com/events/" />
-			<test url="http://openx.com/investors/" />
-			<test url="http://openx.com/legal/privacypolicy/" />
-			<!--
-			<test url="http://openx.com/media-center/" />
-			<test url="http://openx.com/mobile/" />
-			<test url="http://openx.com/newsletter/" />
-			-->
-
-			<!--	-ve:
-					-->
-			<test url="http://openx.com/blog/" />
-			<test url="http://openx.com/documentation/" />
-			<!--
-			<test url="http://openx.com/wp-content/themes/OpenX/css/additional_styles_new.css" />
-			-->
-
-	<!--	Complications:
-				-->
-	<target host="welcome.openx.com" />
-
-		<!--exclusion pattern="^http://welcome\.openx\.com/(?!/*(?:cs|image|r)s/)" /-->
-		<!--
-			Reduce non-Tor distinguishability:
-								-->
-		<exclusion pattern="^http://welcome\.openx\.com/(?!/*rs/.+\.pdf(?:$|\?))" />
-
-			<!--	+ve:
-					-->
-			<test url="http://welcome.openx.com/AdNetworks_vs_AdExchanges.html" />
-			<test url="http://welcome.openx.com/AdWeekXII_lp.html" />
-			<test url="http://welcome.openx.com/General_lpv2.html" />
-			<test url="http://welcome.openx.com/MWC-in-barcelona.html" />
-			<test url="http://welcome.openx.com/breakfree" />
-			<test url="http://welcome.openx.com/index.php/email/emailWebview" />
-
-			<!--	-ve:
-					-->
-			<!--
-			<test url="http://welcome.openx.com/css/mktLPSupportCompat.css" />
-			-->
-			<test url="http://welcome.openx.com/rs/745-BUQ-779/images/The_Mobile_Programmatic_Playbook_Edit_%281%29.pdf" />
-			<!--
-			<test url="http://welcome.openx.com/rs/openx/images/fb.jpg" />
-			-->
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^(?:www\.)?openx\.com$" name="^X-Mapping-" /-->
-	<!--securecookie host="^community\.openx\.com$" name="^JSESSIONID$" /-->
-
-	<!--securecookie host="^\.openx\.com$" name="^(_mkto_trk|__utm\w)$" /-->
-	<securecookie host="^(?:i-cdn|lift|sso|d\.tradex)?\.openx\.com$" name="." />
-
-
-	<rule from="^http://welcome\.openx\.com/"
-		to="https://na-sjl.marketo.com/" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" 
+			to="https:" />
 </ruleset>

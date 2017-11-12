@@ -1,84 +1,49 @@
 
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://devfaq.kaywa.com/ => https://devfaq.kaywa.com/: (6, 'Could not resolve host: devfaq.kaywa.com')
-
-	For problematic rules, see Kaywa-problematic.xml.
-
-
-	Nonfunctional hosts in *kaywa.com:
-
-		- (www.)? ¹
-		- id ¹
-		- mobile ¹
-		- qrfree ¹
-		- reader ²
-
-	¹ 401
-	² Redirects to photo.kaywa.biz
-
 
 	Problematic hosts in *kaywa.com:
 
-		- photo ᵐ ᵘ
+		- ^ ¹
+		- www ¹
+		- datamatrix ¹
+		- id ¹
+		- int-stats ¹
+		- qr ¹
+		- qrfree ¹
+		- reader ¹
+		- scanvenger ¹
+		- support ¹
 		- tee ¹
 
-	¹ 401, preemptable redirect
-	ᵐ Mismatched
-	ᵘ Untrusted root
-
-
-	Insecure cookies are set for these hosts: ᶜ
-
-		- devfaq.kaywa.com
-		- faq.kaywa.com
-		- qrcode.kaywa.com
-
-	ᶜ See https://owasp.org/index.php/SecureFlag
-
-
-	Mixed content:
-
-		- Image, on:
-
-			- blog from $self ˢ
-			- devfaq, faq from devfaq.kaywa.com ˢ
-			- devdaq, faq from qrcode.kaywa.com ˢ
-
-		- favicons on devdaq, faq from devfaq.kaywa.com ˢ
-
-	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+	¹ 401 over https
 
 -->
-<ruleset name="Kaywa.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Kaywa.com (partial)" platform="mixedcontent">
 
-	<!--	Direct rewrites:
-				-->
+	<target host="kaywa.com" />
+	<target host="www.kaywa.com" />
+	<target host="akira.kaywa.com" />
+	<target host="aquila.kaywa.com" />
 	<target host="blog.kaywa.com" />
-	<target host="devfaq.kaywa.com" />
+	<target host="contact.kaywa.com" />
+	<target host="coupon.kaywa.com" />
 	<target host="faq.kaywa.com" />
+	<target host="kawasaki.kaywa.com" />
+	<target host="mx.kaywa.com" />
+	<target host="ns1.kaywa.com" />
+	<target host="photo.kaywa.com" />
 	<target host="qrcode.kaywa.com" />
-
-	<!--	Complications:
-				-->
 	<target host="tee.kaywa.com" />
+	<target host="ticket.kaywa.com" />
+	<target host="toshiro.kaywa.com" />
 
+	<securecookie host="^\w" name=".+" />
+	
+	<rule from="^http://(www\.)?kaywa\.com/"
+		to="https://qrcode.kaywa.com/" />
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^(?:dev)?faq\.kaywa\.com$" name="^_icl_current_language$" /-->
-	<!--securecookie host="^qrcode\.kaywa\.com$" name="^PHPSESSID$" /-->
-
-	<securecookie host="^\w" name="." />
-
-
-	<!--	Redirect keeps path and args,
-		but not forward slash:
-					-->
-	<rule from="^http://tee\.kaywa\.com/+"
-		to="https://www.charen.ch/" />
-
-		<test url="http://tee.kaywa.com/index.htm" />
+	<rule from="^http://tee\.kaywa\.com/"
+		to="https://charen.ch/" />
 
 	<rule from="^http:"
 		to="https:" />

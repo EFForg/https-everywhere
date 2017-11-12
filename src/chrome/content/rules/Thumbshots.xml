@@ -1,20 +1,43 @@
+<!--
+	thumbshots.net mismatched and 503 over http
+
+	thumbshots.org mismatched and redirects to thumbshots.com
+
+	thumbshots.com redirects to http on some pages
+
+	Invalid certificate:
+		www.ranking.thumbshots.com
+		open.thumbshots.org
+
+-->
 <ruleset name="Thumbshots (partial)">
 
-	<target host="thumbshots.*"/>
-	<target host="*.thumbshots.com"/>
-	<target host="*.thumbshots.net"/>
-	<target host="*.thumbshots.org"/>
+	<target host="thumbshots.com" />
+	<target host="www.thumbshots.com" />
+		<!-- Exclude implicit test url from tests -->
+		<exclusion pattern="^http://(www\.)?thumbshots.com/$" />
+	<target host="images.thumbshots.com" />
+		<test url="http://images.thumbshots.com/image.aspx?cid=yyy&#x26;url=xxx" />
+	<target host="learn.thumbshots.com" />
+	<target host="open.thumbshots.com" />
+		<test url="http://open.thumbshots.com/attribution.png" />
+	<target host="ranking.thumbshots.com" />
+	<target host="simple.thumbshots.com" />
 
-	<rule from="^http://thumbshots\.com/"
-		to="https://thumbshots.com/"/>
+	<target host="thumbshots.org" />
+	<target host="www.thumbshots.org" />
+		<!-- Exclude implicit test url from tests -->
+		<exclusion pattern="^http://(www\.)?thumbshots.org/$" />
 
-	<rule from="^http://(www\.)?thumbshots\.(?:com|net)/(admin/|DesktopModules/|images/|[pP]ortals/|register\.aspx|SecureLogin|Telerik\.Web\.UI\.WebResource\.axd)"
-		to="https://$1thumbshots.com/$2"/>
+	<rule from="^http://(www\.)?thumbshots\.(com|org)/(DesktopModules/|[pP]ortals/)"
+		to="https://$1thumbshots.com/$3"/>
+	
+		<test url="http://www.thumbshots.com/portals/0/Images/IncreaseTraffic.png" />
+		<test url="http://www.thumbshots.com/portals/0/Images/BBCLogo.png" />
+		<test url="http://www.thumbshots.com/Portals/0/favicon.ico" />
+		<test url="http://www.thumbshots.com/DesktopModules/Blog/Trackback.aspx" />
 
-	<rule from="^http://(www\.)?thumbshots\.org/"
-		to="https://$1thumbshots.com/"/>
-
-	<rule from="^http://open\.thumbshots\.(?:com|org)/"
-		to="https://open.thumbshots.com/"/>
+	<rule from="^http://(images|learn|open|ranking|simple)\.thumbshots\.com/"
+		to="https://$1.thumbshots.com/" />
 
 </ruleset>

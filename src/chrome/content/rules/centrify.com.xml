@@ -1,37 +1,16 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://info.centrify.com/css/mktLPSupportCompat.css (200) => https://na-sjg.marketo.com/css/mktLPSupportCompat.css (403)
-Non-2xx HTTP code: http://info.centrify.com/rs/Centrify/images/centrify-master-logo.png (200) => https://na-sjg.marketo.com/rs/Centrify/images/centrify-master-logo.png (403)
-
-	CDN buckets:
-
-		- d1bymqnf4zi2cz.cloudfront.net	← edge
-		- centrifyblogs.wpengine.com	← blog
-
 
 	Nonfunctional hosts in *centrify.com:
 
-		- blog ᵂ ʰ
 		- community ʳ
-		- feeds ᶠ
-		- info ᴹ
-		- otps.my ʰ
 
-	ᴹ Marketo / shows another domain
-	ᵂ WP Engine
-	ᶠ FeedBurner / handshake fails
-	ʰ Redirects to http
 	ʳ Refused
 
 
 	Problematic hosts in *centrify.com:
 
-		- ^ ʳ
-		- edge ᵐ	(Cloudfront)
 		- uptime ᵐ	(StatusPage.io)
 
-	ʳ Refused
 	ᵐ Mismatched
 
 
@@ -49,85 +28,31 @@ Non-2xx HTTP code: http://info.centrify.com/rs/Centrify/images/centrify-master-l
 	ˢ Secured by us
 
 -->
-<ruleset name="Centrify.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Centrify.com">
 
-	<!--	Direct rewrites:
-				-->
+	<target host="centrify.com" />
+	<target host="www.centrify.com" />
+	<target host="blog.centrify.com" />
 	<target host="cloud.centrify.com" />
+	<target host="developer.centrify.com" />
 	<target host="docs.centrify.com" />
+	<target host="edge.centrify.com" />
 	<target host="emea.centrify.com" />
+	<target host="info.centrify.com" />
 	<target host="kibble.centrify.com" />
 	<target host="dmu.my.centrify.com" />
+	<target host="otps.my.centrify.com" />
 	<target host="partners.centrify.com" />
-	<target host="www.centrify.com" />
-
-	<!--	Complications:
-				-->
-	<target host="centrify.com" />
-	<target host="edge.centrify.com" />
-	<target host="feeds.centrify.com" />
-	<target host="info.centrify.com" />
 	<target host="uptime.centrify.com" />
 
 		<!--	Mixed css from fonts.googleapis.com:
 								-->
 		<!--test url="http://kibble.centrify.com/vfslow/lib/docs/adminref/cloudhelp/SupportedDevices.html" /-->
 
-		<!--	Sets cookie without Secure:
-							-->
-		<!--test url="http://www.centrify.com/express/identity-service-form/" /-->
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.(?:partners|www)\.centrify\.com$" name="^ARRAffinity$" /-->
-	<!--securecookie host="^www\.centrify\.com$" name="^__RequestVerificationToken$" /-->
-
-	<securecookie host="^\." name="^(?:_gat?|ARRAffinity)$" />
-	<securecookie host="^(?!info\.)\w" name="." />
-
-
-	<rule from="^http://centrify\.com/"
-		to="https://www.centrify.com/" />
-
-	<rule from="^http://edge\.centrify\.com/"
-		to="https://d1bymqnf4zi2cz.cloudfront.net/" />
-
-		<test url="http://edge.centrify.com/products/cloud-service/ProxyDownload/" />
-
-	<rule from="^http://feeds\.centrify\.com/"
-		to="https://feeds.feedburner.com/" />
-
-	<!--	Redirect drops forward slash and args:
-							-->
-	<rule from="^http://info\.centrify\.com/+(?:\?.*)?$"
-		to="https://www.centrify.com/" />
-
-	<rule from="^http://info\.centrify\.com/"
-		to="https://na-sjg.marketo.com/" />
-
-		<exclusion pattern="^http://info\.centrify\.com/+(?!$|\?|css/|images/|rs/)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://info.centrify.com/700-334.Alliance.151028.GoogleSFExecEvent.html" />
-			<test url="http://info.centrify.com/700-381.Field.StarWarsPremiereEvent-BurlingtonMA_Page-Registration.html" />
-			<test url="http://info.centrify.com/700-382.Field.StarWarsPremiereEvent-PhoenixAZ_Page-Registration.html" />
-			<test url="http://info.centrify.com/700-383.Field.StarWarsPremiereEvent-TorontoON_Page-Registration.html" />
-			<test url="http://info.centrify.com/BoxWorksHappyHour.html" />
-			<test url="http://info.centrify.com/EMEA-TechnicalWorkshops2014.html" />
-			<test url="http://info.centrify.com/mobile-authentication-services-program-application.html" />
-			<test url="http://info.centrify.com/salescontact.html" />
-
-			<!--	-ve:
-					-->
-			<test url="http://info.centrify.com/?foo" />
-			<test url="http://info.centrify.com/?bar" />
-			<test url="http://info.centrify.com/css/mktLPSupportCompat.css" />
-			<test url="http://info.centrify.com/rs/Centrify/images/centrify-master-logo.png" />
+	<securecookie host=".+" name=".+" />
 
 	<rule from="^http://uptime\.centrify\.com/"
-		to="https://cetrify.statuspage.io/" />
+		to="https://centrify.statuspage.io/" />
 
 	<rule from="^http:"
 		to="https:" />

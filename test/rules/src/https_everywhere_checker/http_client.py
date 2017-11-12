@@ -306,6 +306,8 @@ class HTTPFetcher(object):
 			buf = cStringIO.StringIO()
 			headerBuf = cStringIO.StringIO()
 			
+			urlParts = urlparse.urlparse(url)
+			
 			c = pycurl.Curl()
 			c.setopt(c.URL, url)
 			c.setopt(c.WRITEFUNCTION, buf.write)
@@ -325,6 +327,8 @@ class HTTPFetcher(object):
 			c.setopt(c.SSLVERSION, options.sslVersion)
 			c.setopt(c.VERBOSE, options.curlVerbose)
 			c.setopt(c.SSL_CIPHER_LIST, options.cipherList)
+			if urlParts.hostname[-6:] == '.onion':
+				c.setopt(c.PROXY, 'socks5h://127.0.0.1:9050')
 			c.perform()
 			
 			bufValue = buf.getvalue()
