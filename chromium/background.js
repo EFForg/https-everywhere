@@ -227,13 +227,18 @@ var redirectCounter = new Map();
 function onBeforeRequest(details) {
   // If HTTPSe has been disabled by the user, return immediately.
   if (!isExtensionEnabled) {
-    return;
+    return ;
   }
 
-  const uri = new URL(details.url);
+  // If not HTTP(s) requests, return immediately.
+  if (!/^https?:/.test(details.url)) {
+    return ;
+  }
+
+  let uri = new URL(details.url);
 
   // Should the request be canceled?
-  var shouldCancel = (
+  const shouldCancel = (
     httpNowhereOn &&
     uri.protocol === 'http:' &&
     !/\.onion$/.test(uri.hostname) &&
@@ -242,32 +247,32 @@ function onBeforeRequest(details) {
     !/^0\.0\.0\.0$/.test(uri.hostname)
   );
 
-  // Normalise hosts such as "www.example.com."
-  var canonical_host = uri.hostname;
-  if (canonical_host.charAt(canonical_host.length - 1) == ".") {
-    while (canonical_host.charAt(canonical_host.length - 1) == ".")
-      canonical_host = canonical_host.slice(0,-1);
+  // Normalize hosts with tailing dots, e.g. "www.example.com."
+  let canonical_host = uri.hostname;
+
+  while (canonical_host.charAt(canonical_host.length - 1) == ".") {
+    canonical_host = canonical_host.slice(0, -1);
     uri.hostname = canonical_host;
   }
 
-  // If there is a username / password, put them aside during the ruleset
-  // analysis process
-  var using_credentials_in_url = false;
-  let tmp_user;
-  let tmp_pass;
-  if (uri.password || uri.username) {
-    using_credentials_in_url = true;
-    tmp_user = uri.username;
-    tmp_pass = uri.password;
+  // If there is a username/ password, put them aside
+  // during the ruleset analysis process
+  const using_credentials_in_url = (uri.username || uri.password);
+  const tmp_user = uri.username;
+  const tmp_pass = uri.password;
+
+  if (using_credentials_in_url) {
     uri.username = '';
     uri.password = '';
   }
 
-  var canonical_url = uri.href;
-  if (details.url != canonical_url && !using_credentials_in_url) {
-    util.log(util.INFO, "Original url " + details.url +
-        " changed before processing to " + canonical_url);
+  let canonical_url = uri.href;
+
+  // Hide credentials in url while logging the url normalization
+  if (details.url != canonical_url) {
+    util.log(util.INFO, "Normalized original url before processing to" + canonical_url);
   }
+
   if (urlBlacklist.has(canonical_url)) {
     return {cancel: shouldCancel};
   }
@@ -281,9 +286,8 @@ function onBeforeRequest(details) {
   if (redirectCounter.get(details.requestId) >= 8) {
     util.log(util.NOTE, "Redirect counter hit for " + canonical_url);
     urlBlacklist.add(canonical_url);
-    var hostname = uri.hostname;
-    rules.settings.domainBlacklist.add(hostname);
-    util.log(util.WARN, "Domain blacklisted " + hostname);
+    rules.settings.domainBlacklist.add(canonical_host);
+    util.log(util.WARN, "Domain blacklisted " + canonical_host);
     return {cancel: shouldCancel};
   }
 
