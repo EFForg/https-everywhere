@@ -1,0 +1,33 @@
+<!--
+	Nonfunctional hosts in *.eskimi.com:
+		- business.eskimi.com (m)
+		- games.eskimi.com (m)
+		- music.eskimi.com (r)
+
+	h: http redirect
+	m: certificate mismatch
+	r: connection refused
+	s: self-signed certificate
+	t: timeout on https
+
+	Wildcard DNS and cert. Users get their own subdomain.
+-->
+<ruleset name="Eskimi.com">
+	<target host="eskimi.com" />
+	<target host="*.eskimi.com" />
+
+	<test url="http://www.eskimi.com/" />
+	<test url="http://bar.eskimi.com/" />
+	<test url="http://ecc.eskimi.com/" />
+	<test url="http://foo.eskimi.com/" />
+	<test url="http://m.eskimi.com/" />
+
+	<exclusion pattern="http://business\.eskimi\.com/" />
+	<exclusion pattern="http://games\.eskimi\.com/" />
+	<exclusion pattern="http://music\.eskimi\.com/" />
+	<test url="http://business.eskimi.com/" />
+	<test url="http://games.eskimi.com/" />
+	<test url="http://music.eskimi.com/" />
+
+	<rule from="^http:" to="https:" />
+</ruleset>
