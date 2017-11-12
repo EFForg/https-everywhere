@@ -230,10 +230,17 @@ function onBeforeRequest(details) {
     return;
   }
 
-  const uri = new URL(details.url);
+  let uri = new URL(details.url);
+
+  // Normalise hosts with tailing dots, e.g. "www.example.com."
+  let canonical_host = uri.hostname;
+  while (canonical_host.charAt(canonical_host.length - 1) == ".") {
+    canonical_host = canonical_host.slice(0, -1);
+    uri.hostname = canonical_host;
+  }
 
   // Should the request be canceled?
-  var shouldCancel = (
+  const shouldCancel = (
     httpNowhereOn &&
     uri.protocol === 'http:' &&
     !/\.onion$/.test(uri.hostname) &&
@@ -242,17 +249,9 @@ function onBeforeRequest(details) {
     !/^0\.0\.0\.0$/.test(uri.hostname)
   );
 
-  // Normalise hosts such as "www.example.com."
-  var canonical_host = uri.hostname;
-  if (canonical_host.charAt(canonical_host.length - 1) == ".") {
-    while (canonical_host.charAt(canonical_host.length - 1) == ".")
-      canonical_host = canonical_host.slice(0,-1);
-    uri.hostname = canonical_host;
-  }
-
   // If there is a username / password, put them aside during the ruleset
   // analysis process
-  var using_credentials_in_url = false;
+  let using_credentials_in_url = false;
   let tmp_user;
   let tmp_pass;
   if (uri.password || uri.username) {
@@ -276,14 +275,13 @@ function onBeforeRequest(details) {
     activeRulesets.removeTab(details.tabId);
   }
 
-  var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
+  var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(canonical_host);
 
   if (redirectCounter.get(details.requestId) >= 8) {
     util.log(util.NOTE, "Redirect counter hit for " + canonical_url);
     urlBlacklist.add(canonical_url);
-    var hostname = uri.hostname;
-    rules.settings.domainBlacklist.add(hostname);
-    util.log(util.WARN, "Domain blacklisted " + hostname);
+    rules.settings.domainBlacklist.add(canonical_host);
+    util.log(util.WARN, "Domain blacklisted " + canonical_host);
     return {cancel: shouldCancel};
   }
 
