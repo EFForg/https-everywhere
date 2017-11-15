@@ -358,7 +358,13 @@ Several of our utilities and our full test suite is written in Python.  Eventual
 
 # Contributing Translations
 
-HTTPS Everywhere translations are handled through Transifex.  The easiest way to help with translations is to [create a Transifex account](https://www.transifex.com/signup/) if you don't already have one.  Then log into your account and click "Explore", then search for "Tor Project", and click on The Tor Project.  Then choose the language you plan to translate into, click on the name of that language, and then click "Join team" and "Go" to accept joining the translation team for your language.
+HTTPS Everywhere translations are handled through Transifex.  The easiest way to help with translations is to:
+
+1. [Create a Transifex account](https://www.transifex.com/signup/), if you don't already have one
+2. Go to [the Tor Project page](https://www.transifex.com/otf/torproject/)
+3. Click "Join team"
+4. Select the language that you would like to join
+4. Click "Join" to request to join the translation team for your language
 
 Then, in the Tor Project resources list, find and click the link for the file
 
