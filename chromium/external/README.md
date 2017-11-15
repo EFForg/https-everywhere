@@ -37,6 +37,6 @@ uglifyjs \
 
 ```bash
 uglifycss \
-  --output codemirror-5.31.0.min.css
+  --output codemirror-5.31.0.min.css \
   codemirror-5.31.0/lib/codemirror.css
 ```
