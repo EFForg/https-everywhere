@@ -27,7 +27,7 @@ Run the latest code and rulesets in a standalone Chromium profile:
 
 Run the latest code and rulesets in a standalone Tor Browser profile:
 
-    bash test/tor path_to_tor_browser.tar.xz
+    bash test/tor-browser.sh path_to_tor_browser.tar.xz
 
 Build the Firefox (.xpi) & Chromium (.crx) extensions:
 
