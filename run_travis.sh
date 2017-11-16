@@ -1,9 +1,9 @@
 #!/bin/bash
 set -x
-toplevel=$(git rev-parse --show-toplevel)
-testdir=${toplevel}/test/selenium
-linter=${toplevel}/utils/eslint/node_modules/.bin/eslint
-srcdir=${toplevel}/chromium
+toplevel="$(git rev-parse --show-toplevel)"
+testdir="${toplevel}/test/selenium"
+srcdir="${toplevel}/chromium"
+linter="${toplevel}/utils/eslint/node_modules/.bin/eslint --ignore-path ${srcdir}/.eslintignore"
 
 
 function run_lint {

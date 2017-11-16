@@ -1,37 +1,44 @@
-/* global sendMessage */
+/* global sendMessage, CodeMirror */
 
 "use strict";
 
-const debugging_rulesets_textarea = document.getElementById("debugging-rulesets");
-const changed = document.getElementById("changed");
-const default_title = "Debugging Rulesets";
-const unsaved_title = "* Debugging Rulesets";
+const savedTextElement = document.getElementById("saved-text");
+const unsavedTextElement = document.getElementById("unsaved-text");
+const savedTitle = "Debugging Rulesets";
+const unsavedTitle = "* Debugging Rulesets";
 
-debugging_rulesets_textarea.addEventListener("input", debugging_rulesets_changed);
-document.getElementById("debugging-rulesets-form").addEventListener("submit", save_debugging_rulesets);
+document.title = savedTitle;
 
-document.title = default_title;
+const cm = CodeMirror.fromTextArea(
+  document.getElementById("codemirror-textarea"),
+  {
+    mode: "xml",
+    theme: "default main saved"
+  }
+);
 
+let valueHasChanged = false;
 sendMessage("get_option", { debugging_rulesets: "" }, item => {
-  debugging_rulesets_textarea.value = item.debugging_rulesets;
-  debugging_rulesets_textarea.style.display = "block";
+  cm.setValue(item.debugging_rulesets);
+  cm.on("change", cm => {
+    if (!(valueHasChanged)) {
+      valueHasChanged = true;
+      document.title = unsavedTitle;
+      cm.setOption("theme", "default main unsaved");
+      unsavedTextElement.style.visibility = "visible";
+    }
+  });
 });
 
-function save_debugging_rulesets(e){
+document.getElementById("save-button").addEventListener("click", e => {
   e.preventDefault();
-  sendMessage("set_option", { debugging_rulesets: debugging_rulesets_textarea.value }, () => {
-    const saved = document.getElementById("saved");
-    saved.style.display = "block";
-    setTimeout(() => { saved.style.display = "none" }, 1000);
+  sendMessage("set_option", { debugging_rulesets: cm.getValue() }, () => {
+    savedTextElement.style.display = "block";
+    setTimeout(() => { savedTextElement.style.display = "none" }, 1000);
 
-    document.title = default_title;
-    debugging_rulesets_textarea.className = "";
-    changed.style.visibility = "hidden";
+    valueHasChanged = false;
+    document.title = savedTitle;
+    cm.setOption("theme", "default main saved");
+    unsavedTextElement.style.visibility = "hidden";
   });
-}
-
-function debugging_rulesets_changed(){
-  debugging_rulesets_textarea.className = "unsaved";
-  document.title = unsaved_title;
-  changed.style.visibility = "visible";
-}
+});
