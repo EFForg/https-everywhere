@@ -137,10 +137,8 @@ function gotTab(activeTab) {
       appendRuleLineToListDiv(rulesets[r], listDiv, activeTab.id);
       listDiv.style.display = 'block';
     }
-    // Only show the "Add a rule" link if we're on an HTTPS page
-    if (/^https:/.test(activeTab.url)) {
-      show(e("add-rule-link"));
-    }
+
+    show(e("add-rule-link"));
   });
 }
 
