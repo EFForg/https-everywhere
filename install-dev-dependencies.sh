@@ -1,13 +1,30 @@
-#!/bin/bash -ex
+#!/bin/bash
 # Install packages that are necessary and/or useful to build and debug
 # HTTPS Everywhere
-set -o errexit -o xtrace
+set -o errexit
+
+if [ "$1" != "--no-prompt" ]; then
+  echo
+  echo "Warning: Installing the development dependencies for HTTPS Everywhere"
+  echo "may alter your system, installing requirements both within the package"
+  echo "management system and also external binaries."
+  echo
+  echo -n "Are you sure you want to continue? [Y/n]: "
+  read CONTINUE
+  CONTINUE=`echo $CONTINUE | xargs | head -c 1 | awk '{print tolower($0)}'`
+  if [ "$CONTINUE" != "y" ]; then
+    exit
+  fi
+  echo
+fi
 
 if [ $UID != 0 ]; then
   SUDO_SHIM=sudo
 fi
 
 if type apt-get >/dev/null ; then
+  $SUDO_SHIM apt-get update
+  $SUDO_SHIM apt-get install -y lsb-release
   BROWSERS="firefox chromium-browser"
   CHROMEDRIVER="chromium-chromedriver"
   if [[ "$(lsb_release -is)" == "Debian" ]]; then
@@ -18,7 +35,7 @@ if type apt-get >/dev/null ; then
     CHROMEDRIVER="chromedriver"
   fi
   # In Debian, `python-` is assumed to be python 2.7, no need to specify - dkg
-  $SUDO_SHIM apt-get install libxml2-dev libxml2-utils libxslt1-dev \
+  $SUDO_SHIM apt-get install -y libxml2-dev libxml2-utils libxslt1-dev \
     python-dev $BROWSERS zip sqlite3 python-pip libcurl4-openssl-dev xvfb \
     libssl-dev git curl $CHROMEDRIVER
   if ! type geckodriver >/dev/null; then
@@ -29,6 +46,9 @@ if type apt-get >/dev/null ; then
     $SUDO_SHIM chown root /usr/bin/geckodriver
     $SUDO_SHIM chmod 755 /usr/bin/geckodriver
   fi
+  if [ ! -f /usr/lib/chromium/chromedriver ] && [ -f `which chromedriver` ]; then
+    ln -s `which chromedriver` /usr/lib/chromium/chromedriver
+  fi
 elif type brew >/dev/null ; then
   brew list python &>/dev/null || brew install python
   brew install libxml2 gnu-sed chromedriver
@@ -36,9 +56,9 @@ elif type brew >/dev/null ; then
     echo '/usr/local/bin not found in $PATH, please add it.'
   fi
 elif type dnf >/dev/null ; then
-  $SUDO_SHIM dnf install firefox gcc git libcurl-devel libxml2-devel \
+  $SUDO_SHIM dnf install -y firefox gcc git libcurl-devel libxml2-devel \
     libxslt-devel python-devel redhat-rpm-config xorg-x11-server-Xvfb which \
-    findutils procps openssl chromium GConf2
+    findutils procps openssl openssl-devel chromium GConf2 rsync
   if ! type chromedriver >/dev/null; then
     if [ "`uname -m`" == "x86_64" ]; then
       ARCH=64
@@ -65,7 +85,7 @@ elif type dnf >/dev/null ; then
   if [ ! -f /var/lib/dbus/machine-id ]; then
     $SUDO_SHIM sh -c 'dbus-uuidgen > /var/lib/dbus/machine-id'
   fi
-  export PYCURL_SSL_LIBRARY=nss
+  export PYCURL_SSL_LIBRARY=openssl
 fi
 
 # Get the addon SDK submodule and rule checker
