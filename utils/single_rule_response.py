@@ -1,6 +1,7 @@
 #!/usr/bin/env python2.7
 
-import sys, os, re
+import sys
+import re
 from functools import partial
 
 try:

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import binascii
-import collections
 import argparse
 import json
 import glob
