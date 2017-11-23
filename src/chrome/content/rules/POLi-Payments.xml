@@ -1,27 +1,8 @@
 <!--
+
 	Non-functional subdomains:
-		- polipayments.com
-			- status.apac	(m)
-			- autodiscover	(r)
-			- www.polipayments.comwww	(m)
-			- dd	(m)
-			- demo.dev	(m)
-			- consoles.dev1	(m)
-			- email	(m)
-			- forum	(m)
-			- jenkinsr2	(m)
-			- news	(m)
-			- play	(m)
-			- merchantapi.rega-staging	(m)
-			- www.stg1	(m)
-			- www.systemcheck	(m)
-			- systemscheck	(m)
-			- test	(m)
-			- consoles.test01	(m)
-			- www.merchant.test01	(m)
-			- ww.w	(m)
-			- whatever	(m)
-			- ww2w	(m)
+
+		- polipaymentdeveloper.com	(m)
 
 		- paywithpoli.com	(t)
 			- www	(t)
@@ -41,47 +22,32 @@
 
 		- polipay.co.nz	(m)
 			- blog	(m)
-			- merchants	(s)
-			- www.merchants	(s)
-			- transact	(s)
-			- www.transact	(s)
-		
+			- merchants	(i)
+			- www.merchants	(i)
+			- transact	(i)
+			- www.transact	(i)
+
 	h: http redirect
+	i: invalid certificate chain
 	m: certificate mismatch
 	r: connection refused
 	s: self-signed certificate
-	t: timeout on https			
+	t: timeout on https
+
+
 -->
 <ruleset name="POLi Payments">
 
 	<target host="polipayments.com" />
 	<target host="www.polipayments.com" />
-	
+
+	<target host="polipaymentdeveloper.com" />
+	<target host="www.polipaymentdeveloper.com" />
+
 	<target host="apac.paywithpoli.com" />
 	<target host="ads.apac.paywithpoli.com" />
-	<target host="anz.apac.paywithpoli.com" />
 	<target host="api.apac.paywithpoli.com" />
-	<target host="bankwest.apac.paywithpoli.com" />
-	<target host="commbank.apac.paywithpoli.com" />
-	<target host="cons.apac.paywithpoli.com" />
-	<target host="consoleapi-ext.apac.paywithpoli.com" />
 	<target host="consoles.apac.paywithpoli.com" />
-	<target host="facebook.apac.paywithpoli.com" />
-	<target host="ibankrouter.apac.paywithpoli.com" />
-	<target host="merchantapi.apac.paywithpoli.com" />
-	<target host="nab.apac.paywithpoli.com" />
-	<target host="news.apac.paywithpoli.com" />
-	<target host="nz00100.apac.paywithpoli.com" />
-	<target host="nz00101.apac.paywithpoli.com" />
-	<target host="nz00300.apac.paywithpoli.com" />
-	<target host="nz00600.apac.paywithpoli.com" />
-	<target host="oceana.apac.paywithpoli.com" />
-	<target host="poliapi.apac.paywithpoli.com" />
-	<target host="publicapi.apac.paywithpoli.com" />
-	<target host="reportapi-ext.apac.paywithpoli.com" />
-	<target host="resources.apac.paywithpoli.com" />
-	<target host="rs.apac.paywithpoli.com" />
-	<target host="signup.apac.paywithpoli.com" />
 	<target host="status.apac.paywithpoli.com" />
 	<target host="transaction.apac.paywithpoli.com" />
 	<target host="txn.apac.paywithpoli.com" />
@@ -89,15 +55,19 @@
 	<target host="polipay.co.nz" />
 	<target host="www.polipay.co.nz" />
 
-  	<securecookie host="^(www\.)?polipayments\.com$" name=".+" />
-  	<securecookie host="^.*\.paywithpoli\.com$" name=".+" />
-  	<securecookie host="^www\.polipay\.co\.nz$" name=".+" />
+	<securecookie host="^(www\.)?polipayments\.com$" name=".+" />
+	<securecookie host="^www\.polipaymentdeveloper\.com$" name=".+" />
+	<securecookie host="^.*\.apac\.paywithpoli\.com$" name=".+" />
+	<securecookie host="^www\.polipay\.co\.nz$" name=".+" />
+
+	<!-- certificate mismatch-->
+	<rule from="^http://polipaymentdeveloper\.com/"
+		to="https://www.polipaymentdeveloper.com/" />
 
 	<!-- certificate mismatch-->
 	<rule from="^http://polipay\.co\.nz/"
 		to="https://www.polipay.co.nz/" />
-		
+
 	<rule from="^http:"
 		to="https:" />
-
 </ruleset>
