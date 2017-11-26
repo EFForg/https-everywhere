@@ -144,7 +144,7 @@ Use double quotes (`"`, not `'`).
 
 #### Left-Wildcards
 
-Avoid using the left-wildcard (`<target host='*.example.com' />`) unless you intend to rewrite all or nearly all subdomains.  If it can be demonstrated that there is comprehensive HTTPS coverage for subdomains, left-wildcards may be appropriate.  Many rules today specify a left-wildcard target, but the rewrite rules only rewrite an explicit list of hostnames.
+Avoid using the left-wildcard (`<target host="*.example.com" />`) unless you intend to rewrite all or nearly all subdomains.  If it can be demonstrated that there is comprehensive HTTPS coverage for subdomains, left-wildcards may be appropriate.  Many rules today specify a left-wildcard target, but the rewrite rules only rewrite an explicit list of hostnames.
 
 Instead, prefer listing explicit target hosts and a single rewrite from `"^http:"` to `"^https:"`. This saves you time as a ruleset author because each explicit target host automatically creates an implicit test URL, reducing the need to add your own test URLs. These also make it easier for someone reading the ruleset to figure out which subdomains are covered.
 
@@ -152,7 +152,7 @@ If you know all subdomains of a given domain support HTTPS, go ahead and use a l
 
 #### Edge-Case: Right-Wildcards
 
-Right-wildcards (`<target host='account.google.*' />`) are highly discouraged.  Only use them in edge-cases where other solutions are unruly.
+Right-wildcards (`<target host="account.google.*" />`) are highly discouraged.  Only use them in edge-cases where other solutions are unruly.
 
 Example:
 
