@@ -13,7 +13,9 @@ http://example.com/. Exception: target hosts that contain a wildcard ("*") do
 not create an implicit test URL.
 
 Additional test URLs can be added with the new &lt;test&gt; tag in the XML, e.g.
-&lt;test url="http://example.com/complex-page"&gt;.
+```xml
+<test url="http://example.com/complex-page" />.
+```
 
 Test URLs will be matched against the regexes in each &lt;rule&gt; and &lt;exclusion&gt;. A
 test URL can only match against one &lt;rule&gt; and one &lt;exclusion&gt;. Once all the
