@@ -1,8 +1,11 @@
 <!--
 	Non-functional subdomains:
-		- atlas		(connection refused)
 
-	¹ Hostname mismatch
+  		- atlas	(connection refused)
+		- faktenfinder (status 503)
+		- blog (certificate mismatch)
+		- klima (certificate mismatch, self-signed)
+		- origin (self-signed)
 
 	Insecure cookies are set for these domains:
 
@@ -27,13 +30,20 @@
 
 -->
 <ruleset name="tagesschau.de (partial)">
-	<target host=       "tagesschau.de"/>
-	<target host=    "www.tagesschau.de"/>
-	<target host= "karten.tagesschau.de"/>
-	<target host=  "media.tagesschau.de"/>
-	<target host=   "meta.tagesschau.de"/>
-	<target host=   "wahl.tagesschau.de"/>
-	<target host= "wetter.tagesschau.de"/>
+	<target host=               "tagesschau.de"/>
+	<target host=           "www.tagesschau.de"/>
+	<target host=        "karten.tagesschau.de"/>
+	<target host=         "media.tagesschau.de"/>
+	<target host="download.media.tagesschau.de"/>
+		<test url="http://download.media.tagesschau.de/video/2017/1127/TV-20171127-2021-1301.h264.mp4" />
+	<target host=          "meta.tagesschau.de"/>
+	<target host=       "service.tagesschau.de"/>
+		<test url="http://service.tagesschau.de/novi/" />
+	<target host=          "wahl.tagesschau.de"/>
+	<target host=        "wetter.tagesschau.de"/>
+	<target host=             "tagesschau24.de"/>
+	<target host=         "www.tagesschau24.de"/>
+	<target host=    "programm.tagesschau24.de"/>
 
 
 	<!--	Not secured by server:
@@ -46,7 +56,11 @@
 		to="https://www.tagesschau.de/"/>
 
 		<test url="http://www.tagesschau.de/" />
-
+	
+	<!-- "301 Moved Permanently", safe to redirect -->
+	<rule from="^http://(www\.)tagesschau24\.de/"
+		to="https://www.tagesschau.de/"/>
+	
 	<rule from="^http:" 
     		to="https:" />
 </ruleset>
