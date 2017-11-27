@@ -14,7 +14,7 @@ each target host e.g. `example.com`, there is an implicit test URL of
 do not create an implicit test URL.
 
 Additional test URLs can be added with the new `<test>` tag in the XML, e.g.
-`<test url="http://example.com/complex-page" >`.
+`<test url="http://example.com/complex-page" />`.
 
 Test URLs will be matched against the regexes in each `<rule>` and
 `<exclusion>`. A test URL can only match against one `<rule>` and one
