@@ -1,5 +1,4 @@
 from util import ExtensionTestCase
-from time import sleep
 
 class OptionsTest(ExtensionTestCase):
     def load_options(self):

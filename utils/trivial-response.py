@@ -1,6 +1,8 @@
 #!/usr/bin/env python2.7
 
-import sys, os, re, subprocess
+import sys
+import os
+import subprocess
 from time import sleep
 
 try:

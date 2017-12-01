@@ -11,8 +11,6 @@ import argparse
 import glob
 import json
 import os
-import subprocess
-import sys
 import unicodedata
 import xml.etree.ElementTree
 

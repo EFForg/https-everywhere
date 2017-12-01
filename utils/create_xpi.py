@@ -10,7 +10,6 @@ Usage: python create_xpi.py -x <exclusions> -n <name of zipped file> <directory>
 import argparse
 import glob
 import os
-import sys
 import zipfile_deterministic as zipfile
 
 parser = argparse.ArgumentParser(

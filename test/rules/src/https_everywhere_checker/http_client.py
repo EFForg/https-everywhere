@@ -1,10 +1,8 @@
-import os
 import sys
 import logging
 import pycurl
 import urlparse
 import cStringIO
-import regex
 import cPickle
 import tempfile
 import traceback

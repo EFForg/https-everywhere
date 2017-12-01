@@ -27,7 +27,6 @@ python2.7 https-everywhere-checker/src/https_everywhere_checker/check_rules.py \
 """
 
 import exrex
-import lxml
 from lxml import etree
 import sys
 
