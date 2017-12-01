@@ -25,12 +25,6 @@ Fetch error: http://foxnews.ramp.com/ => https://foxnews.ramp.com/: (6, 'Could n
 	** 403, akamai
 
 
-	Problematic domains:
-
-		- www.fbnstatic.com *
-		- ureport.foxnews.com		(works; mismatched, CN: *.filemobile.com)
-
-
 	Fully covered domains:
 
 		- global.fncstatic.com
@@ -38,41 +32,18 @@ Fetch error: http://foxnews.ramp.com/ => https://foxnews.ramp.com/: (6, 'Could n
 -->
 <ruleset name="Fox News (partial)" default_off='failed ruleset test'>
 
-	<target host="www.fbnstatic.com" />
 	<target host="global.fncstatic.com" />
 		<!--
 			- css:	503
 			- js: 404
-					-->
-		<exclusion pattern="^http://(?:www\.fbn|global\.fnc)static\.com/static/(?:.+/)?(?:j|cs)s/" />
-	<target host="*.foxbusiness.com" />
+		-->
+		<exclusion pattern="^http://global\.fncstatic\.com/static/(?:.+/)?(?:j|cs)s/" />
+	
 	<target host="*.foxnews.com" />
-	<target host="facebook.foxnewsinsider.com" />
+		<exclusion pattern="^http://(?:www\.|latino\.|magazine\.|nation\.|radio\.)?foxnews\.com/" />
+	
 	<target host="foxnews.ramp.com" />
 
-
-	<rule from="^http://www\.fbnstatic\.com/"
-		to="https://a57.foxnews.com/$1static.com/" />
-
-	<rule from="^http://global\.fncstatic\.com/"
-		to="https://global.fncstatic.com/" />
-
-	<rule from="^http://(beta\.)?video\.foxbusiness\.com/"
-		to="https://$1video.foxbusiness.com/" />
-
-	<rule from="^http://(a57|ads|video\.(?:imag|insider|latino|ureport)|live|video|beta\.video(?:\.latino)?)\.foxnews\.com/"
-		to="https://$1.foxnews.com/" />
-
-	<rule from="^http://metrics\.foxnews\.com/"
-		to="https://foxnews.112.2o7.net/" />
-
-	<rule from="^http://uereport\.foxnews\.com/services/"
-		to="https://filemobile.com/services/" />
-
-	<rule from="^http://facebook\.foxnewsinsider\.com/"
-		to="https://facebook.foxnewsinsider.com/" />
-
-	<rule from="^http://foxnews\.ramp\.com/"
-		to="https://foxnews.ramp.com/" />
+	<rule from="^http:" to="https:" />
 
 </ruleset>
