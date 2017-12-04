@@ -20,10 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelector("#import-settings").addEventListener("change", () => {
     const file = event.target.files[0];
     const reader = new FileReader();
-    reader.onload = event => {
+    reader.addEventListener("load", event => {
       json_data = event.target.result;
       import_button.disabled = false;
-    };
+    });
 
     reader.readAsText(file);
   });
