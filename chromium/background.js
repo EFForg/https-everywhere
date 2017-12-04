@@ -240,14 +240,13 @@ function onBeforeRequest(details) {
   }
 
   // Should the request be canceled?
-  const shouldCancel = (
-    httpNowhereOn &&
+  const shouldCancel = httpNowhereOn &&
     uri.protocol === 'http:' &&
-    !/\.onion$/.test(canonical_host) &&
-    !/^localhost$/.test(canonical_host) &&
+    uri.hostname.slice(-6) !== '.onion' &&
+    uri.hostname !== 'localhost' &&
     !/^127(\.[0-9]{1,3}){3}$/.test(canonical_host) &&
-    !/^0\.0\.0\.0$/.test(canonical_host)
-  );
+    !/^0\.0\.0\.0$/.test(canonical_host) &&
+    uri.hostname !== '[::1]';
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
