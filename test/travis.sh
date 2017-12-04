@@ -41,8 +41,7 @@ if [ "$TEST" == "rules" ]; then
   docker run --rm -ti -v $(pwd):/opt httpse python utils/ruleset_filenames_validate.py
   docker run --rm -ti -v $(pwd):/opt httpse bash -c "utils/validate.sh"
   docker run --rm -ti -v $(pwd):/opt httpse bash -c "test/rules.sh"
-  docker run --rm -ti -v $(pwd):/opt node bash -c "cd /opt && node utils/normalize-securecookie.js"
-  [ `git diff --name-only $RULESETFOLDER | wc -l` -eq 0 ]
+  docker run --rm -ti -v $(pwd):/opt httpse python utils/normalize-securecookie.py
 fi
 
 if [ "$TEST" == "fetch" ]; then
