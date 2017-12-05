@@ -3,6 +3,7 @@
 * [Welcome!](#welcome)
     * [HTTPS Everywhere Source Code Layout](#https-everywhere-source-code-layout)
     * [Submitting Changes](#submitting-changes)
+    * [Pull Requests from Deleted Accounts](#pull-requests-from-deleted-accounts)
 * [Contributing Rulesets](#contributing-rulesets)
     * [General Info](#general-info)
     * [New Rulesets](#new-rulesets)
@@ -66,6 +67,18 @@ Tests are performed in headless browsers and located in the [`test`](test) top-l
 To submit changes, open a pull request from our [GitHub repository](https://github.com/efforg/https-everywhere).
 
 HTTPS Everywhere is maintained by a limited set of staff and volunteers.  Please be mindful that we may take a while before we're able to review your contributions.
+
+## Pull Requests from Deleted Accounts
+
+Sometimes a contributor will delete their GitHub account after submitting a pull request. For example, maybe for privacy reasons a contributor has made a temporary, "throwaway" GitHub account, and they delete their account after submitting their pull request. The pull request will then appear to be submitted by the GitHub @ghost account.
+
+These @ghost pull requests can cause problems for HTTPS Everywhere maintainers:
+
+* If a maintainer isn't clear about something in the pull request, the original contributor isn't available to answer questions.
+* If a maintainer wants something updated, the contributor isn't available to do that.
+* We want to avoid including updates from contributors who have withdrawn permission for us to use their work. If a contributor deletes their GitHub account, it's not clear whether they have withdrawn their permission.
+
+We ask that if you want to delete your GitHub account, you either close your HTTPS Everywhere pull requests before you delete your account, or wait to delete your account until we merge your pull requests. Otherwise, maintainers are free to close @ghost pull requests without any comment.
 
 * * *
 
