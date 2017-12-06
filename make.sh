@@ -69,7 +69,7 @@ cp -a src/META-INF pkg/xpi-amo
 cp -a src/META-INF pkg/xpi-eff
 
 # Remove the 'applications' manifest key from the crx version of the extension and change the 'author' string to a hash
-python2.7 -c "import json; m=json.loads(open('pkg/crx/manifest.json').read()); e=m['author']; m['author']={'email': e}; del m['applications']; open('pkg/crx/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+python2.7 -c "import json; m=json.loads(open('pkg/crx/manifest.json').read()); m['author']={'email': 'eff.software.projects@gmail.com'}; del m['applications']; open('pkg/crx/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
 # Remove the 'update_url' manifest key from the xpi version of the extension delivered to AMO
 python2.7 -c "import json; m=json.loads(open('pkg/xpi-amo/manifest.json').read()); del m['applications']['gecko']['update_url']; m['applications']['gecko']['id'] = 'https-everywhere@eff.org'; open('pkg/xpi-amo/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
 
