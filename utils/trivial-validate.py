@@ -13,7 +13,7 @@ parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
     description="Ruleset validation script.")
 parser.add_argument('--quiet', action="store_true",
-    default=True, help="Suppress debug output."
+    default=False, help="Suppress debug output."
     )
 
 args = parser.parse_args()
