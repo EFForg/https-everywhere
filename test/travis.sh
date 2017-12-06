@@ -40,7 +40,7 @@ if [ "$TEST" == "rules" ]; then
   echo >&2 "Performing comprehensive coverage test."
   docker run --rm -ti -v $(pwd):/opt httpse python utils/ruleset_filenames_validate.py
   docker run --rm -ti -v $(pwd):/opt httpse python utils/validate.py
-  docker run --rm -ti -v $(pwd):/opt httpse python utils/trivial-validate.py
+  docker run --rm -ti -v $(pwd):/opt httpse python utils/trivial-validate.py --quiet
   docker run --rm -ti -v $(pwd):/opt httpse bash -c "test/rules.sh"
   docker run --rm -ti -v $(pwd):/opt node bash -c "cd /opt && node utils/normalize-securecookie.js"
   [ `git diff --name-only $RULESETFOLDER | wc -l` -eq 0 ]
