@@ -39,9 +39,9 @@ if type apt-get >/dev/null ; then
     python-dev $BROWSERS zip sqlite3 python-pip libcurl4-openssl-dev xvfb \
     libssl-dev git curl $CHROMEDRIVER
   if ! type geckodriver >/dev/null; then
-    curl -LO "https://github.com/mozilla/geckodriver/releases/download/v0.16.1/geckodriver-v0.16.1-linux64.tar.gz"
-    tar -zxvf "geckodriver-v0.16.1-linux64.tar.gz"
-    rm -f "geckodriver-v0.16.1-linux64.tar.gz"
+    curl -LO "https://github.com/mozilla/geckodriver/releases/download/v0.17.0/geckodriver-v0.17.0-linux64.tar.gz"
+    tar -zxvf "geckodriver-v0.17.0-linux64.tar.gz"
+    rm -f "geckodriver-v0.17.0-linux64.tar.gz"
     $SUDO_SHIM mv geckodriver /usr/bin/geckodriver
     $SUDO_SHIM chown root /usr/bin/geckodriver
     $SUDO_SHIM chmod 755 /usr/bin/geckodriver
@@ -73,9 +73,9 @@ elif type dnf >/dev/null ; then
     $SUDO_SHIM chmod 755 /usr/bin/chromedriver
   fi
   if ! type geckodriver >/dev/null; then
-    curl -LO "https://github.com/mozilla/geckodriver/releases/download/v0.16.1/geckodriver-v0.16.1-macos.tar.gz"
-    tar -zxvf "geckodriver-v0.16.1-macos.tar.gz"
-    rm -f "geckodriver-v0.16.1-macos.tar.gz"
+    curl -LO "https://github.com/mozilla/geckodriver/releases/download/v0.17.0/geckodriver-v0.17.0-macos.tar.gz"
+    tar -zxvf "geckodriver-v0.17.0-macos.tar.gz"
+    rm -f "geckodriver-v0.17.0-macos.tar.gz"
     $SUDO_SHIM mv geckodriver /usr/bin/geckodriver
     $SUDO_SHIM chown root /usr/bin/geckodriver
     $SUDO_SHIM chmod 755 /usr/bin/geckodriver
