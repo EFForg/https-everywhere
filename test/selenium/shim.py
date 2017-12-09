@@ -68,8 +68,7 @@ def install_ext_on_ff(driver, extension_path):
     included in Selenium. See https://github.com/SeleniumHQ/selenium/issues/4215
     '''
     command = 'addonInstall'
-    driver.command_executor._commands[command] = ('POST', '/session/$sessionId/moz/addon/install')
-    driver.execute(command, params={'path': extension_path, 'temporary': True})
+    driver.install_addon(extension_path, temporary = True)
     time.sleep(2)
 
 
