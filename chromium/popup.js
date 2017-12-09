@@ -89,7 +89,7 @@ function showHttpNowhereUI() {
     if (item.httpNowhere) {
       e('http-nowhere-checkbox').checked = true;
     }
-    show(e('HttpNowhere'));
+    e('HttpNowhere').style.visibility = "visible";
   });
 };
 
@@ -97,7 +97,7 @@ function showHttpNowhereUI() {
 function updateEnabledDisabledUI() {
   getOption_('globalEnabled', true, function(item) {
     document.getElementById('onoffswitch').checked = item.globalEnabled;
-    show(e('disableButton'));
+    e('disableButton').style.visibility = "visible";
     // Hide or show the rules sections
     if (item.globalEnabled) {
       document.body.className = ""
