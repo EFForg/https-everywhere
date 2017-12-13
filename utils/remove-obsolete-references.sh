@@ -25,7 +25,7 @@ FILES=`egrep -l '^\s*[-|+]\s*([^ ]*\.xml)\s*$' *.xml`
 while read FILE; do
     # List of referenced rulesets
     REFS=`sed -n 's/^\s*[-|+]\s*\([^ ]*\.xml\)\s*$/\1/gp' "$FILE"`
-    
+
     while read REF; do
         if [ ! -f "$REF" ]; then
             echo >&2 "ERROR src/chrome/content/rules/$FILE: Dangling reference to $REF"
