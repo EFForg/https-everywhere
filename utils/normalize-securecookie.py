@@ -33,7 +33,7 @@ parser.add_argument("--source_dir", default="src/chrome/content/rules")
 args = parser.parse_args()
 
 # Exit code
-exitWithNonZero = False
+exit_with_non_zero = False
 
 # XML ruleset files
 filenames = map(normalize_fn, glob.glob(os.path.join(args.source_dir, "*.xml")))
@@ -52,7 +52,7 @@ for filename in filenames:
         if should_normalize_securecookie(host, name):
             print ("ERROR %s: contains wildcard securecookies "\
                     "which can be normalized." % filename)
-            exitWithNonZero = True
+            exit_with_non_zero = True
             break
 
-exit(0) if not exitWithNonZero else exit(1)
+exit(0) if not exit_with_non_zero else exit(1)
