@@ -10,10 +10,9 @@ let settings = {
 };
 
 // To reduce memory usage for the numerous rules/cookies with trivial rules
-const trivial_rule_to = "https:";
-const trivial_rule_from_c = new RegExp("^http:");
-const trivial_cookie_name_c = new RegExp(".*");
-const trivial_cookie_host_c = new RegExp(".*");
+const trivial_rule_from_c = /^http:/;
+const trivial_rule_to = 'https:';
+const trivial_cookie_rule_c = /.+/;
 
 // Empty iterable singleton to reduce memory usage
 const nullIterable = Object.create(null, {
@@ -62,16 +61,16 @@ function Exclusion(pattern) {
  * @constructor
  */
 function CookieRule(host, cookiename) {
-  if (host === ".*" || host === ".+" || host === ".") {
+  if (host === '.+') {
     // Some cookie rules trivially match any host.
-    this.host_c = trivial_cookie_host_c;
+    this.host_c = trivial_cookie_rule_c;
   } else {
     this.host_c = new RegExp(host);
   }
 
-  if (cookiename === ".*" || cookiename === ".+" || cookiename === ".") {
+  if (cookiename === '.+') {
     // About 50% of cookie rules trivially match any name.
-    this.name_c = trivial_cookie_name_c;
+    this.name_c = trivial_cookie_rule_c;
   } else {
     this.name_c = new RegExp(cookiename);
   }
