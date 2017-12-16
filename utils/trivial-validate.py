@@ -150,6 +150,8 @@ xpath_host = etree.XPath("/ruleset/target/@host")
 xpath_from = etree.XPath("/ruleset/rule/@from")
 xpath_to = etree.XPath("/ruleset/rule/@to")
 
+print("Complicated validation & assertions of rulesets using utils/trivial-validate.py begins...")
+
 host_counter = Counter()
 for filename in filenames:
     xml_parser = etree.XMLParser(remove_blank_text=True)
@@ -200,4 +202,10 @@ for (host, platform), count in host_counter.most_common():
         failure = 1
         fail("%s failed: %s" % (host, is_valid_target_host.__doc__))
 
+if failure != 0:
+    message = "Complicated validation & assertions of rulesets using utils/trivial-validate.py failed."
+else:
+    message = "Complicated validation & assertions of rulesets using utils/trivial-validate.py succeeded."
+
+print(message)
 sys.exit(failure)
