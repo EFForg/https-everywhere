@@ -1,4 +1,5 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 
 import argparse
 import glob
@@ -7,14 +8,6 @@ import unicodedata
 
 from lxml import etree
 
-def normalize(f):
-    """
-    OSX and Linux filesystems encode composite characters differently in
-    filenames. We should normalize to NFC: https://unicode.org/reports/tr15/
-    """
-    f = unicodedata.normalize("NFC", unicode(f, "utf-8")).encode("utf-8")
-    return f
-
 # commandline arguments parsing (nobody use it, though)
 parser = argparse.ArgumentParser(description="Validate rulesets against relaxng.xml")
 parser.add_argument("--source_dir", default="src/chrome/content/rules")
@@ -22,7 +15,7 @@ parser.add_argument("--source_dir", default="src/chrome/content/rules")
 args = parser.parse_args()
 
 # XML ruleset files
-files = map(normalize, glob.glob(os.path.join(args.source_dir, "*.xml")))
+files = glob.glob(os.path.join(args.source_dir, "*.xml"))
 
 # read the schema file
 relaxng_doc = etree.parse('utils/relaxng.xml')
@@ -38,9 +31,7 @@ for filename in sorted(files):
     if not relaxng.validate(tree):
         exit_code = 1
         e = relaxng.error_log.last_error
-        print("%s %s:%s:%s: %s" % (e.level_name, e.filename, e.line, e.column, e.message))
-
-
+        print(("%s %s:%s:%s: %s" % (e.level_name, e.filename, e.line, e.column, e.message)))
 
 if exit_code == 0:
     message = "Validation of rulesets against utils/relaxng.xml succeeded."
