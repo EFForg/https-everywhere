@@ -55,12 +55,12 @@ Important directories you might want to know about
     chromium/external         External dependencies
     chromium/test             Unit tests
 
+    rules/                    Symbolic link to src/chrome/content/rules
+
     src/chrome/content/rules  Ruleset files live here
 
     test/                     Travis unit test source code live here
     
-    rules/                    Symbolic link to src/chrome/content/rules
-
     utils/                    Various utilities (includes some Travis test source)
 
 Hacking on the Source Code
