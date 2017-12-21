@@ -17,8 +17,10 @@ else
 fi 
 
 # Fetch the current GitHub version of HTTPS-E to compare to its master
-git remote add upstream-for-travis https://github.com/EFForg/https-everywhere.git
-trap 'git remote remove upstream-for-travis' EXIT
+if [ git ls-remote upstream-for-travis ]; then
+  git remote add upstream-for-travis https://github.com/EFForg/https-everywhere.git
+  trap 'git remote remove upstream-for-travis' EXIT
+fi
 
 if [ "$TRAVIS" ]; then
   git fetch --depth=50 upstream-for-travis master
