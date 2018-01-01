@@ -194,9 +194,6 @@ function RuleSets() {
   // A cache for potentiallyApplicableRulesets
   this.ruleCache = new Map();
 
-  // A cache for cookie hostnames.
-  this.cookieHostCache = new Map();
-
   // A hash of rule name -> active status (true/false).
   this.ruleActiveStates = {};
 
@@ -593,19 +590,24 @@ RuleSets.prototype = {
    * @returns {*} ruleset or null
    */
   shouldSecureCookie: function(cookie) {
-    var hostname = cookie.domain;
+    // FIXME: This is known for unsatisfactory heuristic, see
+    // https://github.com/EFForg/https-everywhere/issues/13762
+    let hostname = cookie.domain;
+
     // cookie domain scopes can start with .
-    while (hostname.charAt(0) == ".") {
+    while (hostname && hostname.charAt(0) == ".") {
       hostname = hostname.slice(1);
     }
 
-    if (!this.safeToSecureCookie(hostname)) {
+    // If a domain is known to be problematic, do not secure its cookies.
+    if (settings.domainBlacklist.has(hostname)) {
+      util.log(util.INFO, "cookie for " + hostname + " blacklisted");
       return null;
     }
 
     var potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
     for (let ruleset of potentiallyApplicable) {
-      if (ruleset.cookierules !== null && ruleset.active) {
+      if (ruleset.active && ruleset.cookierules !== null) {
         for (let cookierules of ruleset.cookierules) {
           var cr = cookierules;
           if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
@@ -615,64 +617,6 @@ RuleSets.prototype = {
       }
     }
     return null;
-  },
-
-  /**
-   * Check if it is secure to secure the cookie (=patch the secure flag in).
-   * @param domain The domain of the cookie
-   * @returns {*} true or false
-   */
-  safeToSecureCookie: function(domain) {
-    // Check if the domain might be being served over HTTP.  If so, it isn't
-    // safe to secure a cookie!  We can't always know this for sure because
-    // observing cookie-changed doesn't give us enough context to know the
-    // full origin URI.
-
-    // First, if there are any redirect loops on this domain, don't secure
-    // cookies.  XXX This is not a very satisfactory heuristic.  Sometimes we
-    // would want to secure the cookie anyway, because the URLs that loop are
-    // not authenticated or not important.  Also by the time the loop has been
-    // observed and the domain blacklisted, a cookie might already have been
-    // flagged as secure.
-
-    if (settings.domainBlacklist.has(domain)) {
-      util.log(util.INFO, "cookies for " + domain + "blacklisted");
-      return false;
-    }
-    var cached_item = this.cookieHostCache.get(domain);
-    if (cached_item !== undefined) {
-      util.log(util.DBUG, "Cookie host cache hit for " + domain);
-      return cached_item;
-    }
-    util.log(util.DBUG, "Cookie host cache miss for " + domain);
-
-    // If we passed that test, make up a random URL on the domain, and see if
-    // we would HTTPSify that.
-
-    var nonce_path = "/" + Math.random().toString();
-    var test_uri = "http://" + domain + nonce_path + nonce_path;
-
-    // Cap the size of the cookie cache (limit chosen somewhat arbitrarily)
-    if (this.cookieHostCache.size > 250) {
-      // Map.prototype.keys() returns keys in insertion order, so this is a FIFO.
-      this.cookieHostCache.delete(this.cookieHostCache.keys().next().value);
-    }
-
-    util.log(util.INFO, "Testing securecookie applicability with " + test_uri);
-    var potentiallyApplicable = this.potentiallyApplicableRulesets(domain);
-    for (let ruleset of potentiallyApplicable) {
-      if (!ruleset.active) {
-        continue;
-      }
-      if (ruleset.apply(test_uri)) {
-        util.log(util.INFO, "Cookie domain could be secured.");
-        this.cookieHostCache.set(domain, true);
-        return true;
-      }
-    }
-    util.log(util.INFO, "Cookie domain could NOT be secured.");
-    this.cookieHostCache.set(domain, false);
-    return false;
   },
 
   /**
