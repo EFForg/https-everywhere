@@ -1,41 +1,25 @@
 <!--
-	Nonfunctional subdomains:
-
-		- (www.)	(503; self-signed, CN: api.ci.merproject.org)
-
-
-	Problematic subdomains:
-
-		- api.ci *
-		- review *
-
-	* Works, self-signed
-
-
-	Partially covered subdomains:
-
-		- review	(→ code.google.com)
-
-
-	Fully covered subdomains:
-
-		- bugs
-		- build
-		- wiki
+	Invalid certificate:
+		merproject.org
+		www.merproject.org
+		gitweb.merproject.org
+		img.merproject.org
+		repo.merproject.org
 
 -->
 <ruleset name="Mer Project.org (partial)">
 
-	<target host="*.merproject.org" />
-
+	<target host="api.merproject.org" />
+	<target host="bugs.merproject.org" />
+	<target host="build.merproject.org" />
+	<target host="git.merproject.org" />
+	<target host="wiki.merproject.org" />
+	<target host="webhook.merproject.org" />
+		<test url="http://webhook.merproject.org/webhook/admin/login/" />
 
 	<securecookie host="^(?:bugs|build|wiki)\.merproject\.org$" name=".+" />
 
-
-	<rule from="^http://(bugs|build|wiki)\.merproject\.org/"
-		to="https://$1.merproject.org/" />
-
-	<rule from="^http://review\.merproject\.org/(?:\?.*)?$"
-		to="https://code.google.com/p/gerrit/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
