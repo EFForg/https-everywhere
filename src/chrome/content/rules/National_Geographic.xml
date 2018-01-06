@@ -1,9 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://nationalgeographic.com/ => https://www-s.nationalgeographic.com/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
-	For problematic rules, see National_Geographic.com-problematic.xml.
-
-
 	CDN buckets:
 
 		- nationalgeographic.com.112.2o7.net
@@ -51,10 +46,10 @@ Fetch error: http://nationalgeographic.com/ => https://www-s.nationalgeographic.
 
 		nationalgeographic.com subdomains:
 
+			- channel
 			- dotcom-media *
 			- environment *
 			- images *
-			- kids *
 			- metric	(2o7.net)
 			- news *
 			- photography *
@@ -70,33 +65,25 @@ Fetch error: http://nationalgeographic.com/ => https://www-s.nationalgeographic.
 
 	Partially covered subdomains:
 
-		- (www.)	(→ www-s)
-		- kids		(→ akamai, avoiding user-visible paths)
 		- news		(→ akamai, some paths 404)
 		- mshop *
 		- shop *
+		- events
 
 	* Some pages redirect to http
 
 
 	Fully covered subdomains:
 
-		- channel
 		- dotcom-media	(→ akamai)
-		- donate
 		- genographic
 		- images	(→ akamai)
-		- media-channel
+		- kids
 		- media-members
 		- media-mmdb
 		- media-yourshot
 		- members
-		- metric	(→ nationalgeographic-com.112.2o7.net)
-		- metrics
 		- mmdb
-		- natgeotv
-		- stage.natgeotv
-		- www-s
 
 
 	Mixed content:
@@ -117,38 +104,28 @@ Fetch error: http://nationalgeographic.com/ => https://www-s.nationalgeographic.
 	* Secured by us
 
 -->
-<ruleset name="National Geographic (partial)">
-
-	<target host="nationalgeographic.com" />
-	<target host="*.nationalgeographic.com" />
-		<!--
-			404 when rewritten:
-						-->
-		<!--exclusion pattern="^http://news\.nationalgeographic\.com/(images/|news/ax/|news/images/)" /-->
-		<!--
-			Some pages redirect to http:
-							-->
-		<!--exclusion pattern="^http://mshop\.nationalgeographic\.com/(?!favicon\.ico|html/|images/|javascript/|ngs/m/myaccount/login\.jsp|omniture/)" /-->
-		<!--exclusion pattern="^http://shop\.nationalgeographic\.com/(?!css/|favicon\.ico|html/|images/|javascript/|ngs/myaccount/login\.jsp|omniture/|pwr/)" /-->
-		<exclusion pattern="^http://m?shop\.nationalgeographic\.com/(?!css/|favicon\.ico|html/|images/|javascript/|ngs/(?:m/)?myaccount/login\.jsp|omniture/|pwr/)" />
-
+<ruleset name="National Geographic">
+	
+	<target host="www.nationalgeographic.com" />
+	<target host="archive.nationalgeographic.com" />
+	<target host="events.nationalgeographic.com" />
+	<target host="genographic.nationalgeographic.com" />
+	<target host="kids.nationalgeographic.com" />
+	<target host="media-members.nationalgeographic.com" />
+	<target host="media-mmdb.nationalgeographic.com" />
+	<target host="media-yourshot.nationalgeographic.com" />
+	<target host="members.nationalgeographic.com" />
+	<target host="mmdb.nationalgeographic.com" />
+	<target host="news.nationalgeographic.com" />
+	<target host="press.nationalgeographic.com" />
+	<target host="shop.nationalgeographic.com" />
 
 	<!--	Tracking cookies:
 					-->
 	<securecookie host="^\.nationalgeographic\.com$" name="^(?:gpv_p\d+|s_\w+|__utm)\w$" />
 	<securecookie host="^donate\.nationalgeographic\.com$" name=".+" />
 
-
-	<!--	$ is linked to from the footer of channel ("HOME"). Rewriting
-		$ to www-s saves us from having to use a downgrade rule:
-										-->
-	<rule from="^https?://(?:www\.)?nationalgeographic\.com/($|\?|leaderboard/quiz/)"
-		to="https://www-s.nationalgeographic.com/$1" />
-
-	<rule from="^http://(channel|donate|genographic|media-(?:channel|members|mmdb|yourshot)|members|metrics|mmdb|m?shop|(?:stage\.)?natgeotv|www-s)\.nationalgeographic\.com/"
-		to="https://$1.nationalgeographic.com/" />
-
-	<rule from="^http://metric\.nationalgeographic\.com/"
-		to="https://nationalgeographic-com.112.2o7.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
