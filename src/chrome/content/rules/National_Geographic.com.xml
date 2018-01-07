@@ -10,16 +10,25 @@
 	
 	Mixed content:
 
-		- archive
+		- archive (Example: https://archive.nationalgeographic.com/?iid=133596#folio=CV1)
 		- intelligenttravel		
 		- news
 		- press
 		- video
 
+	No working URL known:
+		- media-yourshot
+	
+	Time out:
+		- nationalgeographic.com *
+
+	* Standard rule times out over HTTPS, new rule redirects to https://www.nationalgeographic.com/
+
 -->
 <ruleset name="National Geographic">
 
 	<target host="www.nationalgeographic.com" />
+	<target host="nationalgeographic.com" />
 	<target host="events.nationalgeographic.com" />
 	<target host="genographic.nationalgeographic.com" />
 	<target host="kids.nationalgeographic.com" />
@@ -27,7 +36,6 @@
 		<test url="http://media-members.nationalgeographic.com/static-media/img/favicon.ico" />
 	<target host="media-mmdb.nationalgeographic.com" />
 		<test url="http://media-mmdb.nationalgeographic.com/static-media/img/favicon.ico" />
-	<target host="media-yourshot.nationalgeographic.com" />
 	<target host="members.nationalgeographic.com" />
 	<target host="mmdb.nationalgeographic.com" />
 	<target host="news.nationalgeographic.com" />
@@ -36,7 +44,10 @@
 
 	<!--	Tracking cookies:
 					-->
-	<securecookie host="^\.nationalgeographic\.com$" name="^(?:gpv_p\d+|s_\w+|__utm)\w$" />
+	<securecookie host="^\.nationalgeographic\.com$" name="^(gpv_p\d+|s_\w+|__utm)?\w$" />
+	
+	<rule from="^http://nationalgeographic.com/"
+		to="https://www.nationalgeographic.com/" />
 
 	<rule from="^http:"
 		to="https:" />
