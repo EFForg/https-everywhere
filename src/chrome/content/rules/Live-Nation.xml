@@ -1,97 +1,79 @@
 <!--
 	Other Live Nation rulesets:
-
 		- GETMEIN.com.xml
 		- Ticketmaster.xml
 		- TicketsNow.xml
 
+	Non-functional hosts
+		Couldn't connect to server:
+		- livenation.asia
+		- livenation.com.au
+		- livenation.com
+		- livenationinternational.com
+		- www.livenationinternational.com
+		- livenation.cz
+		- livenation.de
+		- livenation.dk
+		- livenation.fi
+		- livenation.fr
+		- livenation.hu
+		- livenation.no
+		- livenation.se
+		- livenation.co.uk
 
-	buckets:
+		Timeout was reached:
+		- livenation.ae
+		- ads.livenation.com
+		- livenation.es
+		- livenation.it
+		- livenation.co.jp
+		- livenation.kr
+		- livenation.nl
+		- livenation.pl
 
-		a248.e.akamai.net/f/248/905/10m/media.livenationinternational.com/
-		- s3.amazonaws.com/lntv-beta/
-		- s3.amazonaws.com/lntv/
-		- assets.livenation.com.edgesuite.net
+		SSL peer certificate was not OK:
+		- livenation.be
+		- www.livenation.be
+		- livenationentertainment.com
+		- www.livenationentertainment.com
 
+		Secure connection redirects to plaintext:
+		- concerts.livenation.com
 
-	Nonfunctional domains:
-
-		- www.livenation.be		(reset)
-		- media.livenation.co.uk	(shows "UNSUBSCRIBE INFORMATION", akamai)
-		- assets.livenation.com		(503, akamai)
-		- media.livenationinternational.com	(akamai, few paths work)
-
-
-	Problematic domains:
-
-		- ads.livenation.com			(works; mismatched, CN: de.ticketmaster.com)
-		- onenation.livenation.com		(works, akamai)
-
-
-	Partially covered domains:
-
-		- (www.)livenation.com			(at least some pages redirect to http)
-
-
-	Fully covered domains:
-
-		- secure.getmein.com
-		- (www1?.)livenation.ae
-		- (www1?.)livenation.asia
-		- fr.livenation.be
-		- www1.fr.livenation.be
-		- nl.livenation.be
-		- www1.nl.livenation.be
-		- (www1?.)livenation.co.jp
-		- (www1?.)livenation.co.uk
-		- ads.livenation.com		(→ de.ticketmaster.com)
-		- (www1?.)livenation.com.au
-		- (www1?.)livenation.cz
-		- (www1?.)livenation.dk
-		- (www1?.)livenation.es
-		- (www1?.)livenation.fi
-		- (www1?.)livenation.fr
-		- (www1?.)livenation.hu
-		- (www1?.)livenation.it
-		- (www.)livenation.kr
-		- (www1?.)livenation.nl
-		- (www1?.)livenation.no
-		- (www1?.)livenation.pl
-		- (www1?.)livenation.se
-
+		Mixed content blocking (MCB) triggered:
+		- onenation.livenation.com
 -->
-<ruleset name="Live Nation Entertainment (partial)" platform="mixedcontent">
+<ruleset name="Live Nation Entertainment (partial)">
+	<target host="www.livenation.ae" />
+	<target host="www.livenation.asia" />
+	<target host="www.livenation.com.au" />
 
-	<target host="livenation.*" />
-	<target host="www.livenation.*" />
-	<target host="www1.livenation.*" />
-	<target host="*.livenation.be" />
-	<target host="livenation.co.*" />
-	<target host="www.livenation.co.*" />
-	<target host="www1.livenation.co.*" />
-	<target host="concerts.livenation.com" />
-	<target host="livenation.com.au" />
-	<target host="*.livenation.com.au" />
-	<!--target host="media.livenationinternational.com" /-->
+	<target host="livenation.com" />
+	<target host="www.livenation.com" />
+	<target host="assets.livenation.com" />
+	<target host="identity.livenation.com" />
+	<target host="media.livenation.com" />
 
+	<target host="www.livenation.cz" />
+	<target host="www.livenation.de" />
+	<target host="www.livenation.dk" />
+	<target host="www.livenation.es" />
+	<target host="www.livenation.fi" />
+	<target host="www.livenation.fr" />
+	<target host="www.livenation.hu" />
+	<target host="www.livenation.it" />
+	<target host="www.livenation.co.jp" />
+	<target host="www.livenation.kr" />
+	<target host="www.livenation.nl" />
+	<target host="www.livenation.no" />
+	<target host="www.livenation.pl" />
+	<target host="www.livenation.se" />
+	<target host="www.livenation.co.uk" />
 
-	<securecookie host="^www1?\.(?:fr\.|nl\.)?livenation\.(?:\w\w|co\.jp|co\.uk|com\.au)" name=".+" />
+	<rule from="^http://livenation\.com/"
+			to="https://www.livenation.com/" />
 
-
-	<rule from="^http://(?:www(1)?\.)?livenation\.(ae|asia|co\.jp|co\.uk|com\.au|cz|dk|es|fi|fr|hu|it|kr|nl|no|pl|se)/"
-		to="https://www$1.livenation.$2/" />
-
-	<rule from="^http://(www1\.)?(fr|nl)\.livenation\.be/"
-		to="https://$1$2.livenation.be/" />
-
-	<rule from="^http://(?:www\.)?livenation\.com/(favicon-ln\.ico|ln/)"
-		to="https://www.livenation.com/$1" />
-
-	<rule from="^http://ads\.livenation\.com/"
-		to="https://de.livenation.com/" />
-
-	<rule from="^http://concerts\.livenation\.com/(?!$|concerts)"
-		to="https://concerts.livenation.com/" />
-
-
+	<rule from="^http:" 
+			to="https:" />
 </ruleset>
+
