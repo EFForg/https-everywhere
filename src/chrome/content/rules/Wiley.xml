@@ -1,39 +1,30 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://sp.onlinelibrary.wiley.com/ (200) => https://sp.onlinelibrary.wiley.com/ (403)
+	Refused:
+		wiley.com
+		bcs.wiley.com
 
-	Nonfunctional subdomains:
+	Invalid certificate:
+		*.onlinelibrary.wiley.com
 
-		- bcs		(no https)
-		- eu *
-		- eu.he *
-		- he-cda *
-		- www *
-
-	* Times out
-
-
-	Problematic subdomains:
-
-		- hesupport	(times out)
-		- higheredbcs	(works; mismatched, CN: onlinelibrary)
+	No working URL known:
+		media.wiley.com
+		sp.onlinelibrary.wiley.com
 
 -->
 <ruleset name="Wiley (partial)">
 
-	<target host="wiley.com"/>
-	<target host="*.wiley.com"/>
-
+	<target host="wiley.com" />
+	<target host="www.wiley.com" /><!-- MCB from ad domains -->
+	<target host="eu.wiley.com" />
+	<target host="eu.he.wiley.com" />
+	<target host="he-cda.wiley.com" />
+	<target host="higheredbcs.wiley.com" />
+	<target host="hub.wiley.com" />
+	<target host="olabout.wiley.com" />
+	<target host="onlinelibrarystatic.wiley.com" />
+		<test url="http://onlinelibrarystatic.wiley.com/central/prf/UKsprf.pdf" />
 
 	<securecookie host="^sp\.onlinelibrary\.wiley\.com$" name=".+" />
-
-
-	<rule from="^http://(?:www\.)?wiley\.com/(?:remcover\.cg|WileyRemoteAPI/Cover\.rap)i\?isbn=(\d{8})(\w\w)"
-		to="https://media.wiley.com/product_data/coverImage/$2/$1/$1$2.jpg" />
-
-	<rule from="^http://hesupport\.wiley\.com/(?:\?.*)?$"
-		to="https://higheredwiley.custhelp.com/" />
 
 	<!--	Where there's only one atom, it's Wiley's internal ID for a publication
 		Where there are two atoms:
@@ -41,8 +32,13 @@ Non-2xx HTTP code: http://sp.onlinelibrary.wiley.com/ (200) => https://sp.online
 			- 2nd atom: 2nd half of DOI OR ISSN		-->
 	<rule from="^http://onlinelibrary\.wiley\.com/store/([\d\.]+)(/[^/]+)?/asset/"
 		to="https://onlinelibrarystatic.wiley.com/store/$1$2/asset/"/>
+	
+		<test url="http://onlinelibrary.wiley.com/store/10.1111/mee3.2018.9.issue-1/asset/cover.gif?v=1&amp;s=cbf961667445cc1c0e8bf00beb16c9b59475e514" />
 
-	<rule from="^http://(images|sp\.onlinelibrary|onlinelibrarystatic)\.wiley\.com/"
-		to="https://$1.wiley.com/"/>
+	<rule from="^http://wiley\.com/"
+		to="https://www.wiley.com/" />
+
+	<rule from="^http://(www|eu|eu\.he|he-cda|higheredbcs|hub|olabout|onlinelibrarystatic)\.wiley\.com/"
+		to="https://$1.wiley.com/" />
 
 </ruleset>
