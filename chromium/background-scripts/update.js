@@ -3,7 +3,7 @@
 (function(exports) {
 
 // how often we should check for new rulesets
-let periodicity = 10;
+const periodicity = 10;
 
 // jwk key loaded from keys.js
 let imported_keys = {};
@@ -22,16 +22,16 @@ for(let update_channel of update_channels){
 
 
 // Get an object stored in localstorage
-var getStoredLocalObject = object_key => {
+function getStoredLocalObject(object_key){
   return new Promise(resolve => {
     chrome.storage.local.get(object_key, root => {
       resolve(root[object_key]);
     });
   });
-};
+}
 
-// Get an object stored in localstorage
-var setStoredLocalObject = (object_key, object_value) => {
+// Set an object stored in localstorage
+function setStoredLocalObject(object_key, object_value){
   return new Promise(resolve => {
     var object = {};
     object[object_key] = object_value;
@@ -39,22 +39,22 @@ var setStoredLocalObject = (object_key, object_value) => {
       resolve();
     });
   });
-};
+}
 
 // Determine the time until we should check for new rulesets
 async function timeToNextCheck() {
-  let last_checked = await getStoredLocalObject('last-checked');
+  const last_checked = await getStoredLocalObject('last-checked');
   if(last_checked === undefined) {
     return 0;
   } else {
-    let current_timestamp = Date.now() / 1000;
-    let secs_since_last_checked = current_timestamp - last_checked;
+    const current_timestamp = Date.now() / 1000;
+    const secs_since_last_checked = current_timestamp - last_checked;
     return Math.max(0, periodicity - secs_since_last_checked);
   }
 }
 
 // Generic ajax promise
-let xhr_promise = url => {
+function xhr_promise(url){
   return new Promise((resolve, reject) => {
     let xhr = new XMLHttpRequest();
     xhr.open("GET", url);
@@ -139,15 +139,15 @@ async function applyStoredRulesets(){
   let rulesets_promises = [];
   for(let update_channel of update_channels){
     rulesets_promises.push(new Promise(resolve => {
-      let key = 'rulesets: ' + update_channel.name
+      const key = 'rulesets: ' + update_channel.name
       chrome.storage.local.get(key, root => {
         if(root[key]){
           util.log(util.NOTE, update_channel.name + ': Applying stored rulesets.');
 
-          let rulesets_gz = window.atob(root[key]);
-          let rulesets_byte_array = pako.inflate(rulesets_gz);
-          let rulesets = new TextDecoder("utf-8").decode(rulesets_byte_array);
-          let rulesets_json = JSON.parse(rulesets);
+          const rulesets_gz = window.atob(root[key]);
+          const rulesets_byte_array = pako.inflate(rulesets_gz);
+          const rulesets = new TextDecoder("utf-8").decode(rulesets_byte_array);
+          const rulesets_json = JSON.parse(rulesets);
 
           resolve(rulesets_json);
         } else {
@@ -157,7 +157,7 @@ async function applyStoredRulesets(){
     }));
   }
 
-  let rulesets_jsons = await Promise.all(rulesets_promises);
+  const rulesets_jsons = await Promise.all(rulesets_promises);
   if(rulesets_jsons.join("").length > 0){
     Object.assign(background.all_rules, new rules.RuleSets(background.ls));
     for(let rulesets_json of rulesets_jsons){
@@ -191,7 +191,7 @@ async function storeUpdateObjects() {
 async function performCheck() {
   util.log(util.NOTE, 'Checking for new rulesets.');
 
-  let current_timestamp = Date.now() / 1000;
+  const current_timestamp = Date.now() / 1000;
   setStoredLocalObject('last-checked', current_timestamp);
 
   let num_updates = 0;
@@ -215,7 +215,7 @@ async function performCheck() {
 
 
 async function setUpRulesetsTimer(){
-  let time_to_next_check = await timeToNextCheck();
+  const time_to_next_check = await timeToNextCheck();
 
   setTimeout(() => {
     performCheck();
