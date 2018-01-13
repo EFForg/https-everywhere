@@ -14,10 +14,16 @@ async function initialize() {
   await store.initialize();
   await store.performMigrations();
   await initializeStoredGlobals();
-  await all_rules.loadFromBrowserStorage(store);
+  await initializeAllRules();
   await incognito.onIncognitoDestruction(destroy_caches);
 }
 initialize();
+
+async function initializeAllRules() {
+  const r = new rules.RuleSets();
+  await r.loadFromBrowserStorage(store);
+  Object.assign(all_rules, r);
+}
 
 /**
  * Load preferences. Structure is:
@@ -66,9 +72,7 @@ chrome.storage.onChanged.addListener(async function(changes, areaName) {
       updateState();
     }
     if ('debugging_rulesets' in changes) {
-      const r = new rules.RuleSets();
-      await r.loadFromBrowserStorage(store);
-      Object.assign(all_rules, r);
+      initializeAllRules();
     }
   }
 });
@@ -618,9 +622,7 @@ async function import_settings(settings) {
       }, resolve);
     });
 
-    Object.assign(all_rules, new rules.RuleSets());
-    await all_rules.loadFromBrowserStorage(store);
-
+    initializeAllRules();
   }
 }
 
