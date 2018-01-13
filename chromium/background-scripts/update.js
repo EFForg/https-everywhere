@@ -2,7 +2,8 @@
 
 (function(exports) {
 
-const store = require('./store');
+const util = require('./util');
+let store;
 
 // how often we should check for new rulesets
 const periodicity = 10;
@@ -25,13 +26,13 @@ for(let update_channel of update_channels){
 
 // Determine the time until we should check for new rulesets
 async function timeToNextCheck() {
-  const last_checked = await store.get_promise('last-checked');
-  if(last_checked === undefined) {
-    return 0;
-  } else {
+  const last_checked = await store.get_promise('last-checked', false);
+  if(last_checked) {
     const current_timestamp = Date.now() / 1000;
     const secs_since_last_checked = current_timestamp - last_checked;
     return Math.max(0, periodicity - secs_since_last_checked);
+  } else {
+    return 0;
   }
 }
 
@@ -55,8 +56,7 @@ async function checkForNewRulesets(update_channel) {
 
   let timestamp_promise = xhr_promise(update_channel.update_path_prefix + "/rulesets-timestamp");
   let rulesets_timestamp = Number(await timestamp_promise);
-
-  if((await store.get_promise('rulesets-timestamp: ' + update_channel.name) || 0) < rulesets_timestamp){
+  if((await store.get_promise('rulesets-timestamp: ' + update_channel.name, 0)) < rulesets_timestamp){
     return rulesets_timestamp;
   } else {
     return false;
@@ -117,7 +117,7 @@ function verifyAndStoreNewRulesets(new_rulesets, update_channel){
 }
 
 // Base64 decode, unzip, and apply the rulesets we have stored.
-async function applyStoredRulesets(){
+async function applyStoredRulesets(rulesets_obj){
   let rulesets_promises = [];
   for(let update_channel of update_channels){
     rulesets_promises.push(new Promise(resolve => {
@@ -141,16 +141,16 @@ async function applyStoredRulesets(){
 
   const rulesets_jsons = await Promise.all(rulesets_promises);
   if(rulesets_jsons.join("").length > 0){
-    Object.assign(background.all_rules, new rules.RuleSets(background.ls));
     for(let rulesets_json of rulesets_jsons){
-      background.all_rules.addFromJson(rulesets_json);
+      rulesets_obj.addFromJson(rulesets_json);
     }
-    background.loadStoredUserRules();
+  } else {
+    rulesets_obj.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
   }
 }
 
 // basic workflow for periodic checks
-async function performCheck() {
+async function performCheck(cb) {
   util.log(util.NOTE, 'Checking for new rulesets.');
 
   const current_timestamp = Date.now() / 1000;
@@ -171,22 +171,25 @@ async function performCheck() {
     }
   }
   if(num_updates > 0){
-    applyStoredRulesets();
+    cb();
   }
 };
 
 
-async function setUpRulesetsTimer(){
+async function initialize(store_param, cb){
+  store = store_param;
+
   const time_to_next_check = await timeToNextCheck();
 
   setTimeout(() => {
-    performCheck();
-    setInterval(performCheck, periodicity * 1000);
+    performCheck(cb);
+    setInterval(() => { performCheck(cb); }, periodicity * 1000);
   }, time_to_next_check * 1000);
 }
 
+Object.assign(exports, {
+  applyStoredRulesets,
+  initialize
+});
 
-applyStoredRulesets();
-setUpRulesetsTimer();
-
-})(typeof exports == 'undefined' ? window.update = {} : exports);
+})(typeof exports == 'undefined' ? require.scopes.update = {} : exports);

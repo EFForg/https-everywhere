@@ -5,7 +5,8 @@
 const rules = require('./rules'),
   store = require('./store'),
   incognito = require('./incognito'),
-  util = require('./util');
+  util = require('./util'),
+  update = require('./update');
 
 
 let all_rules = new rules.RuleSets();
@@ -14,6 +15,7 @@ async function initialize() {
   await store.initialize();
   await store.performMigrations();
   await initializeStoredGlobals();
+  await update.initialize(store, initializeAllRules);
   await all_rules.loadFromBrowserStorage(store);
   await incognito.onIncognitoDestruction(destroy_caches);
 }

@@ -1,5 +1,3 @@
-(function(exports) {
-
 const update_channels = [{
   name: "EFF Full Rulesets",
   jwk: {
@@ -9,6 +7,3 @@ const update_channels = [{
   },
   update_path_prefix: "http://localhost:8000"
 }];
-
-Object.assign(exports, update_channels);
-})(typeof exports == 'undefined' ? window.update_channels = [] : exports);
