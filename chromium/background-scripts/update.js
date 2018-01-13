@@ -26,7 +26,7 @@ for(let update_channel of update_channels){
 
 // Determine the time until we should check for new rulesets
 async function timeToNextCheck() {
-  const last_checked = await store.get_promise('last-checked', false);
+  const last_checked = await store.local.get_promise('last-checked', false);
   if(last_checked) {
     const current_timestamp = Date.now() / 1000;
     const secs_since_last_checked = current_timestamp - last_checked;
@@ -56,7 +56,7 @@ async function checkForNewRulesets(update_channel) {
 
   let timestamp_promise = xhr_promise(update_channel.update_path_prefix + "/rulesets-timestamp");
   let rulesets_timestamp = Number(await timestamp_promise);
-  if((await store.get_promise('rulesets-timestamp: ' + update_channel.name, 0)) < rulesets_timestamp){
+  if((await store.local.get_promise('rulesets-timestamp: ' + update_channel.name, 0)) < rulesets_timestamp){
     return rulesets_timestamp;
   } else {
     return false;
@@ -66,7 +66,7 @@ async function checkForNewRulesets(update_channel) {
 // Download and return new rulesets
 async function getNewRulesets(rulesets_timestamp, update_channel) {
 
-  store.set_promise('rulesets-timestamp: ' + update_channel.name, rulesets_timestamp);
+  store.local.set_promise('rulesets-timestamp: ' + update_channel.name, rulesets_timestamp);
 
   let signature_promise = xhr_promise(update_channel.update_path_prefix + "/rulesets-signature.sha256.base64");
   let rulesets_promise = xhr_promise(update_channel.update_path_prefix + "/default.rulesets.gz.base64");
@@ -100,7 +100,7 @@ function verifyAndStoreNewRulesets(new_rulesets, update_channel){
       .then(async isvalid => {
         if(isvalid) {
           util.log(util.NOTE, update_channel.name + ': Downloaded ruleset signature checks out.  Storing rulesets.');
-          await store.set_promise('rulesets: ' + update_channel.name, new_rulesets.rulesets_gz_base64);
+          await store.local.set_promise('rulesets: ' + update_channel.name, new_rulesets.rulesets_gz_base64);
           resolve(true);
         } else {
           reject('Downloaded ruleset signature is invalid.  Aborting.');
@@ -122,7 +122,7 @@ async function applyStoredRulesets(rulesets_obj){
   for(let update_channel of update_channels){
     rulesets_promises.push(new Promise(resolve => {
       const key = 'rulesets: ' + update_channel.name
-      store.get(key, root => {
+      chrome.storage.local.get(key, root => {
         if(root[key]){
           util.log(util.NOTE, update_channel.name + ': Applying stored rulesets.');
 
@@ -154,7 +154,7 @@ async function performCheck(cb) {
   util.log(util.NOTE, 'Checking for new rulesets.');
 
   const current_timestamp = Date.now() / 1000;
-  store.set_promise('last-checked', current_timestamp);
+  store.local.set_promise('last-checked', current_timestamp);
 
   let num_updates = 0;
   for(let update_channel of update_channels){
