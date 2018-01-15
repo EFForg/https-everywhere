@@ -179,6 +179,37 @@ class Ruleset(object):
 					self.test_application_problems.append("%s: No rule or exclusion applies to test URL %s" % (
 						self.filename, test.url))
 				self.determine_test_application_run = True
+
+			for test in self.tests:
+				urlParts = urlparse(test.url)
+				hostname = urlParts.hostname
+				ok = False
+
+				if not ok and hostname in self.targets:
+					ok = True
+
+				if not ok:
+					parts = hostname.split('.')
+
+					for i in range(len(parts)):
+						tmp = parts[i]
+						parts[i] = '*'
+
+						if '.'.join(parts) in self.targets:
+							ok = True
+							break
+
+						if '.'.join(parts[i:len(parts)]) in self.targets:
+							ok = True
+							break
+
+						parts[i] = tmp
+
+				if not ok:
+					self.test_application_problems.append("%s: No target applies to test URL %s" % (
+						self.filename, test.url))
+
+				self.determine_test_application_run = True
 		return self.test_application_problems
 
 	def getTargetValidityProblems(self):
