@@ -14,7 +14,7 @@ async function initialize() {
   await store.initialize();
   await store.performMigrations();
   await initializeStoredGlobals();
-  await initializeAllRules();
+  await all_rules.loadFromBrowserStorage(store);
   await incognito.onIncognitoDestruction(destroy_caches);
 }
 initialize();
