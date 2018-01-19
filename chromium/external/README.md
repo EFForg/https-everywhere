@@ -40,3 +40,14 @@ uglifycss \
   --output codemirror-5.31.0.min.css \
   codemirror-5.31.0/lib/codemirror.css
 ```
+## Pako 1.0.5
+
+```
+$ npm install pako@1.0.5
+```
+
+### pako_inflate.min.js
+
+```
+$ cp node_modules/pako/dist/pako_inflate.js pako-1.0.5/pako_inflate.min.js
+```
