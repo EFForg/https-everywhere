@@ -28,7 +28,10 @@ else
   git fetch upstream-for-travis master
 fi
 
-COMMON_BASE_COMMIT=`git merge-base upstream-for-travis/master HEAD`
+if [ -z "$COMMON_BASE_COMMIT" ]; then
+  COMMON_BASE_COMMIT=`git merge-base upstream-for-travis/master HEAD`
+fi
+
 CHANGED_FILES=`git diff --name-only $COMMON_BASE_COMMIT | grep -v $RULESET_FOLDER`
 
 EXIT_CODE=0
