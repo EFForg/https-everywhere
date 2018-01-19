@@ -32,7 +32,7 @@ if [ -z "$COMMON_BASE_COMMIT" ]; then
   COMMON_BASE_COMMIT=`git merge-base upstream-for-travis/master HEAD`
 fi
 
-CHANGED_FILES=`git diff --name-only $COMMON_BASE_COMMIT | grep -v $RULESET_FOLDER`
+CHANGED_FILES=`git diff --name-only $COMMON_BASE_COMMIT | grep -v $RULESET_FOLDER | grep '.xml'`
 
 EXIT_CODE=0
 
