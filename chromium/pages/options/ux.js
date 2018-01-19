@@ -31,11 +31,16 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelector("form").addEventListener("submit", import_json);
 
   const showCounter = document.getElementById("showCounter");
+  const autoUpdateRulesets = document.getElementById("autoUpdateRulesets");
 
-  sendMessage("get_option", { showCounter: true }, item => {
+  sendMessage("get_option", { showCounter: true, autoUpdateRulesets: true }, item => {
     showCounter.checked = item.showCounter;
+    autoUpdateRulesets.checked = item.autoUpdateRulesets;
     showCounter.addEventListener("change", () => {
       sendMessage("set_option", { showCounter: showCounter.checked });
+    });
+    autoUpdateRulesets.addEventListener("change", () => {
+      sendMessage("set_option", { autoUpdateRulesets: autoUpdateRulesets.checked });
     });
   });
 

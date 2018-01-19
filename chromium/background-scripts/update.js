@@ -3,7 +3,8 @@
 (function(exports) {
 
 const util = require('./util');
-let store;
+let store,
+  background_callback;
 
 // how often we should check for new rulesets
 const periodicity = 10;
@@ -150,7 +151,7 @@ async function applyStoredRulesets(rulesets_obj){
 }
 
 // basic workflow for periodic checks
-async function performCheck(cb) {
+async function performCheck() {
   util.log(util.NOTE, 'Checking for new rulesets.');
 
   const current_timestamp = Date.now() / 1000;
@@ -171,20 +172,50 @@ async function performCheck(cb) {
     }
   }
   if(num_updates > 0){
-    cb();
+    background_callback();
   }
 };
 
+chrome.storage.onChanged.addListener(async function(changes, areaName) {
+  if (areaName === 'sync' || areaName === 'local') {
+    if ('autoUpdateRulesets' in changes) {
+      if (changes.autoUpdateRulesets.newValue) {
+        await createTimer();
+      } else {
+        destroyTimer();
+      }
+    }
+  }
+});
+
+let initialCheck,
+  subsequentChecks;
+
+async function createTimer(){
+  const time_to_next_check = await timeToNextCheck();
+
+  initialCheck = setTimeout(() => {
+    performCheck();
+    subsequentChecks = setInterval(performCheck, periodicity * 1000);
+  }, time_to_next_check * 1000);
+}
+
+function destroyTimer(){
+  if (initialCheck) {
+    clearTimeout(initialCheck);
+  }
+  if (subsequentChecks) {
+    clearInterval(subsequentChecks);
+  }
+}
 
 async function initialize(store_param, cb){
   store = store_param;
+  background_callback = cb;
 
-  const time_to_next_check = await timeToNextCheck();
-
-  setTimeout(() => {
-    performCheck(cb);
-    setInterval(() => { performCheck(cb); }, periodicity * 1000);
-  }, time_to_next_check * 1000);
+  if (await store.get_promise('autoUpdateRulesets', true)) {
+    await createTimer();
+  }
 }
 
 Object.assign(exports, {
