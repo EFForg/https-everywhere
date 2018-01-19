@@ -16,14 +16,14 @@ async function initialize() {
   await store.performMigrations();
   await initializeStoredGlobals();
   await update.initialize(store, initializeAllRules);
-  await all_rules.loadFromBrowserStorage(store);
+  await all_rules.loadFromBrowserStorage(store, update.applyStoredRulesets);
   await incognito.onIncognitoDestruction(destroy_caches);
 }
 initialize();
 
 async function initializeAllRules() {
   const r = new rules.RuleSets();
-  await r.loadFromBrowserStorage(store);
+  await r.loadFromBrowserStorage(store, update.applyStoredRulesets);
   Object.assign(all_rules, r);
 }
 

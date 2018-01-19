@@ -2,8 +2,7 @@
 
 (function(exports) {
 
-const util = require('./util'),
-  update = require('./update');
+const util = require('./util');
 
 let settings = {
   enableMixedRulesets: false,
@@ -214,10 +213,10 @@ RuleSets.prototype = {
    * Load packaged rulesets, and rulesets in browser storage
    * @param store object from store.js
    */
-  loadFromBrowserStorage: async function(store) {
+  loadFromBrowserStorage: async function(store, applyStoredFunc) {
     this.store = store;
     this.ruleActiveStates = await this.store.get_promise('ruleActiveStates', {});
-    await update.applyStoredRulesets(this);
+    await applyStoredFunc(this);
     this.loadStoredUserRules();
     await this.addStoredCustomRulesets();
   },
