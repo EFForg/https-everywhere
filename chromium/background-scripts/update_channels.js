@@ -1,3 +1,7 @@
+/* exported update_channels */
+
+"use strict";
+
 const update_channels = [{
   name: "EFF Full Rulesets",
   jwk: {

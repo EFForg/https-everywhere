@@ -1,3 +1,6 @@
+/* global update_channels */
+/* global pako */
+
 "use strict";
 
 (function(exports) {
@@ -39,7 +42,7 @@ async function timeToNextCheck() {
 
 // Generic ajax promise
 function xhr_promise(url){
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     let xhr = new XMLHttpRequest();
     xhr.open("GET", url);
     xhr.onreadystatechange = function(){
@@ -97,8 +100,7 @@ function verifyAndStoreNewRulesets(new_rulesets, update_channel){
         publicKey,
         new_rulesets.signature_byte_array.buffer,
         new_rulesets.rulesets_byte_array.buffer
-      )
-      .then(async isvalid => {
+      ).then(async isvalid => {
         if(isvalid) {
           util.log(util.NOTE, update_channel.name + ': Downloaded ruleset signature checks out.  Storing rulesets.');
           await store.local.set_promise('rulesets: ' + update_channel.name, new_rulesets.rulesets_gz_base64);
@@ -106,12 +108,10 @@ function verifyAndStoreNewRulesets(new_rulesets, update_channel){
         } else {
           reject('Downloaded ruleset signature is invalid.  Aborting.');
         }
-      })
-      .catch(err => {
+      }).catch(() => {
         reject('Downloaded ruleset signature could not be verified.  Aborting.');
       });
-    })
-    .catch(err => {
+    }).catch(() => {
       reject('Downloaded ruleset signature could not be verified.  Aborting.');
     });
   });
