@@ -13,10 +13,16 @@
 	<target host="m.tutti.ch" />
 
 	<!-- product pages on desktop redirect to http -->
-	<exclusion pattern="http://www\.tutti\.ch/[\w/-]+\d{3,}\.htm$" />
+	<exclusion pattern="^http://www\.tutti\.ch/[\w/-]+\d{3,}\.htm$" />
 	<test url="http://www.tutti.ch/bern/kleidung-accessoires/schuhe-fuer-damen/angebote/nike-schuhe_11448617.htm" />
 	<test url="http://www.tutti.ch/neuchatel/livres/romans/offres/juste-avant-l-orage_3288278.htm" />
 	<test url="http://www.tutti.ch/tessin-fr/maison/electromenager-ustensiles/offres/climatizzatore_11448580.htm" />
+
+	<!-- CORS issue https://github.com/EFForg/https-everywhere/issues/13953 -->
+	<exclusion pattern="^http://www\.tutti\.ch/ajax/" />
+	<exclusion pattern="^http://www\.tutti\.ch/get_marked$" />
+	<test url="http://www.tutti.ch/ajax/phoneview" />
+	<test url="http://www.tutti.ch/get_marked" />
 
 	<rule from="^http:" to="https:" />
 </ruleset>
