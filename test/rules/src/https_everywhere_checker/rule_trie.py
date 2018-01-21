@@ -77,7 +77,7 @@ class DomainNode(object):
 		if domain == "":
 			return self.rulesets
 		
-		applicableRules = set()
+		applicableRules = []
 		
 		# Wildcard node can expand to any number of subdomains per
 		# HTE rulesets, if it's at least 3-rd level domain.
@@ -90,7 +90,7 @@ class DomainNode(object):
 		# Currently there should be no targets with wildcard in the
 		# middle in HTE rules, like bla.*.something.tld
 		if self.depth >= 3 and self.subDomain == "*":
-			applicableRules.update(self.rulesets)
+			applicableRules.extends(self.rulesets)
 		
 		#make sure domain is in ASCII - either "plain old domain" or
 		#punycode-encoded IDN domain
@@ -112,9 +112,9 @@ class DomainNode(object):
 		#we need to consider direct matches as well as wildcard matches so
 		#that match for things like "bla.google.*" work
 		if ruleChild:
-			applicableRules.update(ruleChild.matchingRulesets(subLevelDomain))
+			applicableRules.extends(ruleChild.matchingRulesets(subLevelDomain))
 		if wildcardChild:
-			applicableRules.update(wildcardChild.matchingRulesets(subLevelDomain))
+			applicableRules.extends(wildcardChild.matchingRulesets(subLevelDomain))
 			
 		return applicableRules
 	
