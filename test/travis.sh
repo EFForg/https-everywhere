@@ -48,6 +48,8 @@ fi
 if [ "$TEST" == "fetch" ]; then
   echo >&2 "Testing test URLs in all changed rulesets."
   # --privileged is required here for miredo to create a network tunnel
+  sudo echo '{"ipv6":true,"fixed-cidr-v6":"2001:db8:1::/64"}' | sudo tee /etc/docker/daemon.json
+  sudo service docker restart
   docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" --privileged httpse bash -c "service miredo start && service tor start && test/fetch.sh"
 fi
 
