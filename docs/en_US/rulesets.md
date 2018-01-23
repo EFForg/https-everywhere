@@ -13,7 +13,7 @@ A `ruleset` is an [XML](http://www.xml.com/pub/a/98/10/guide0.html?page=2) file 
 
         <rule from="^http:"
                 to="https:" />
-</ruleset>
+</ruleset> 
 ```
 
 The `target` tag specifies which web sites the ruleset applies to. The `rule` tag specifies how URLs on those web sites should be rewritten. This rule says that any URLs on `rabbitmq.com` and `www.rabbitmq.com` should be modified by replacing "http:" with "https:".
@@ -73,7 +73,7 @@ The "host" parameter is a regexp specifying which domains should have their cook
 
 #### [Testing](#testing)
 
-We use an [automated checker](https://github.com/hiviah/https-everywhere-checker) to run some basic tests on all rulesets. This is described in more detail in our [Ruleset Testing](https://github.com/EFForg/https-everywhere/blob/master/ruleset-testing.md) document, but in short there are two parts: Your ruleset must have enough test URLs to cover all the various types of URL covered by your rules. And each of those test URLs must load, both before rewriting and after rewriting. Every target host tag generates an implicit test URL unless it contains a wildcard. You can add additional test URLs manually using the `<test url="..."/>` tag. The test URLs you add this way should be real pages loaded from the site, or real images, CSS, and Javascript if you have rules that specifically affect those resources.
+We use an [automated checker](https://github.com/hiviah/https-everywhere-checker) to run some basic tests on all rulesets. This is described in more detail in our [Ruleset Testing](https://github.com/EFForg/https-everywhere/blob/master/ruleset-testing.md) document, but in short there are two parts: Your ruleset must have enough test URLs to cover all the various types of URL covered by your rules. And each of those test URLs must load, both before rewriting and after rewriting. Every target host tag generates an implicit test URL unless it contains a wildcard. You can add additional test URLs manually using the `<test url="..."/>` tag. The test URLs you add this way should be real pages loaded from the site, or real images, CSS, and Javascript if you have rules that specifically affect those resources. 
 
 You can test rulesets in the browser using a hidden debugging page, but please be aware that this approach should only be used for debugging purposes and should not be used for setting up personal custom rules. You can access the hidden debugging page this way:
 
