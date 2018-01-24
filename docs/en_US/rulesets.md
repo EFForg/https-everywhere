@@ -75,7 +75,12 @@ The "host" parameter is a regexp specifying which domains should have their cook
 
 We use an [automated checker](https://github.com/hiviah/https-everywhere-checker) to run some basic tests on all rulesets. This is described in more detail in our [Ruleset Testing](https://github.com/EFForg/https-everywhere/blob/master/ruleset-testing.md) document, but in short there are two parts: Your ruleset must have enough test URLs to cover all the various types of URL covered by your rules. And each of those test URLs must load, both before rewriting and after rewriting. Every target host tag generates an implicit test URL unless it contains a wildcard. You can add additional test URLs manually using the `<test url="..."/>` tag. The test URLs you add this way should be real pages loaded from the site, or real images, CSS, and Javascript if you have rules that specifically affect those resources. 
 
-You should also manually test your ruleset by placing it in the `HTTPSEverywhereUserRules/` subdirectory in [your Firefox profile directory](http://kb.mozillazine.org/Profile_folder_-_Firefox), and then restarting Firefox. While using the rule, check for messages in the Firefox Error Console to see if there are any issues with the way the site supports HTTPS.
+You can test rulesets in the browser using a hidden debugging page, but please be aware that this approach should only be used for debugging purposes and should not be used for setting up personal custom rules. You can access the hidden debugging page this way:
+
+* Firefox: `about:addons` > HTTPS Everywhere preferences > click under `General Settings` > press <kbd>Ctrl-Z</kbd>
+* Chromium/Chrome: `chrome://extensions/` > HTTPS Everywhere options > click under `General Settings` > press <kbd>Ctrl-Z</kbd>
+
+You might need to disable popup blocking for the page to appear. Once you have loaded the page, you might find it convenient to bookmark it for later use.
 
 If you&apos;ve tested your rule and are sure it would be of use to the world at large, submit it as a [pull request](https://help.github.com/articles/using-pull-requests/) on our [GitHub repository](https://github.com/EFForg/https-everywhere/) or send it to the rulesets mailing list at `https-everywhere-rules AT eff.org`. Please be aware that this is a public and publicly-archived mailing list.
 
