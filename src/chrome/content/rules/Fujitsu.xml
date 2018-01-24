@@ -1,42 +1,41 @@
 <!--
 	Nonfunctional jp paths:
-
 		- _jptoppromotion/jad/banner.png
 
--->
-<ruleset name="Fujitsu (partial)" platform="mixedcontent">
+	Redirects to HTTP:
+		- azby.fmworld.net
 
-	<target host="fmworld.net" />
-	<target host="*.fmworld.net" />
+	Invalid certificate:
+		- img.jp.fujitsu.com
+
+-->
+<ruleset name="Fujitsu">
+	
+	<target host="fujitsu.com" />
+	<target host="www.fujitsu.com" />
 	<target host="jp.fujitsu.com" />
-	<target host="img.jp.fujitsu.com" />
-		<exclusion pattern="^http://(?:img\.)?jp\.fujitsu\.com/imgv4/jp/" />
+	<target host="fmworld.net" />
+	<target host="www.fmworld.net" />
 	<target host="fujitsu-webmart.com" />
 	<target host="www.fujitsu-webmart.com" />
-	<!--	* for cross-subdomain cookie.	-->
-	<target host="*.www.fujitsu-webmart.com" />
-
 
 	<securecookie host="^.*\.fmworld\.net$" name=".+" />
 	<securecookie host="^.*\.fujitsu-webmart\.com$" name=".+" />
 
+	<!-- Page normally redirects to https://www.fujitsu.com/jp/, does not
+	redirect properly with standard rule -->
+	<rule from="^http://(www\.)?jp.fujitsu\.com/"
+		to="https://www.fujitsu.com/jp/" />
 
-	<!--	Cert only matches www.	-->
-	<rule from="^http://(?:www\.)?fmworld\.net/"
+	<!-- Cert only matches www.	-->
+	<rule from="^http://(www\.)?fmworld\.net/"
 		to="https://www.fmworld.net/" />
 
-	<rule from="^http://azby\.fmworld\.net/"
-		to="https://azby.fmworld.net/" />
-
-	<!--	img 404s	-->
-	<rule from="^http://img\.jp\.fujitsu\.com/"
-		to="https://jp.fujitsu.com/" />
-
-	<rule from="^http://jp\.fujitsu\.com/(cgi-bin|cssv4|imgv[34])/"
-		to="https://jp.fujitsu.com/$1/" />
-
-	<!--	Cert only matches www.	-->
-	<rule from="^http://(?:www\.)?fujitsu-webmart\.com/"
+	<!-- Cert only matches www.	-->
+	<rule from="^http://(www\.)?fujitsu-webmart\.com/"
 		to="https://www.fujitsu-webmart.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
