@@ -13,7 +13,7 @@ A `ruleset` is an [XML](http://www.xml.com/pub/a/98/10/guide0.html?page=2) file 
 
         <rule from="^http:"
                 to="https:" />
-</ruleset> 
+</ruleset>
 ```
 
 The `target` tag specifies which web sites the ruleset applies to. The `rule` tag specifies how URLs on those web sites should be rewritten. This rule says that any URLs on `rabbitmq.com` and `www.rabbitmq.com` should be modified by replacing "http:" with "https:".
@@ -80,7 +80,7 @@ You can test rulesets in the browser using a hidden debugging page, but please b
 * Firefox: `about:addons` > HTTPS Everywhere preferences > click under `General Settings` > press <kbd>Ctrl-Z</kbd>
 * Chromium/Chrome: `chrome://extensions/` > HTTPS Everywhere options > click under `General Settings` > press <kbd>Ctrl-Z</kbd>
 
-You might need to disable popup blocking for the page to appear. Once you have you loaded the page, you might find it convenient to bookmark it for later use.
+You might need to disable popup blocking for the page to appear. Once you have loaded the page, you might find it convenient to bookmark it for later use.
 
 If you&apos;ve tested your rule and are sure it would be of use to the world at large, submit it as a [pull request](https://help.github.com/articles/using-pull-requests/) on our [GitHub repository](https://github.com/EFForg/https-everywhere/) or send it to the rulesets mailing list at `https-everywhere-rules AT eff.org`. Please be aware that this is a public and publicly-archived mailing list.
 
@@ -96,7 +96,7 @@ Sometimes rulesets are useful or interesting, but cause problems that make them 
 <ruleset name="Amazon (buggy)" default_off="breaks site">
    <target host="www.amazon.*" />
    <target host="amazon.*" />
-</ruleset>
+</ruleset> 
 ```
 
 You can add more details, like a link to a bug report, in the comments for the file.
