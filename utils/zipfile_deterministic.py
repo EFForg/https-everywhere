@@ -1146,10 +1146,14 @@ class ZipFile:
         """
         file_dict = {}
         for root,subfolders,files in os.walk(directory):
-            for fi in files:
-                filename = os.path.join(root, fi)
-                if filename not in exclusions:
-                    file_dict.update({standardize_filename(filename): filename})
+            path_fragments = root.split(os.sep)
+            path_nested = [os.path.join(*path_fragments[:x + 1]) for x, _ in enumerate(path_fragments)]
+
+            if not set(path_nested) & set(exclusions):
+                for fi in files:
+                    filename = os.path.join(root, fi)
+                    if filename not in exclusions:
+                        file_dict.update({standardize_filename(filename): filename})
         for new_filename, old_filename in sorted(file_dict.items()):
             self.write(old_filename, compress_type=compress_type, date_time=date_time)
 
