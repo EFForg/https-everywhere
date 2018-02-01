@@ -1,12 +1,7 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://ophirum.spiegel.de/ => https://ophirum.spiegel.de/: (51, "SSL: no alternative certificate subject name matches target host name 'ophirum.spiegel.de'")
-
 	Other Spiegel Group rulesets:
 
 		- Spiegel-QC.xml
-
 
 	CDN buckets:
 
@@ -15,29 +10,23 @@ Fetch error: http://ophirum.spiegel.de/ => https://ophirum.spiegel.de/: (51, "SS
 			- cdn
 			- cdn[1-4]
 
-
 	Nonfunctional subdomains:
-
+	
 		- orange *
-		- tvprogramm ¹
-		- werkstattvergleich ²
-		- wetter	(cert: plesk; shows default Parallels Plesk page)
-
+		- m.eurojackpot ¹
+		- wissen ²
+		
 	* Shows www.spiegelgruppe.de
 	¹ Refused
-	² Redirects to hudson.fairgarage.de
-
+	² Redirects to www.spiegel.de
 
 	Problematic hosts in spiegel.de:
 
 		- forum *
 		- shop *
-		- tippspiel ²
 		- wissen *
 
 	* Mismatched
-	² Server sends no certificate chain, see https://whatsmychaincert.com
-
 
 	Insecure cookies are set for these domains and hosts:
 
@@ -45,8 +34,20 @@ Fetch error: http://ophirum.spiegel.de/ => https://ophirum.spiegel.de/: (51, "SS
 		- abo.spiegel.de
 		- count.spiegel.de
 		- magazin.spiegel.de
-		- ophirum.spiegel.de
-
+		
+	Mixed-Content:
+	personalmarkt.spiegel.de
+	tippspiel.spiegel.de	
+		
+	Invalid certificate:
+	akademie.spiegel.de
+	eurojackpot.spiegel.de
+	gutenberg.spiegel.de
+	ophirum.spiegel.de
+	seniorenportal.spiegel.de
+	tvprogramm.spiegel.de
+	werkstattvergleich.spiegel.de
+	wetter.spiegel.de
 -->
 <ruleset name="Spiegel.de (partial)" default_off='failed ruleset test'>
 
@@ -55,9 +56,9 @@ Fetch error: http://ophirum.spiegel.de/ => https://ophirum.spiegel.de/: (51, "SS
 	<target host="spiegel.de" />
 	<target host="abo.spiegel.de" />
 	<target host="count.spiegel.de" />
+	<target host="daily.spiegel.de" />
+	<target host="gutscheine.spiegel.de" />
 	<target host="magazin.spiegel.de" />
-	<target host="ophirum.spiegel.de" />
-	<!--target host="tippspiel.spiegel.de" /-->
 	<target host="www.spiegel.de" />
 
 	<!--	Complications:
@@ -69,9 +70,6 @@ Fetch error: http://ophirum.spiegel.de/ => https://ophirum.spiegel.de/: (51, "SS
 	<target host="cdn4.spiegel.de" />
 	<target host="shop.spiegel.de" />
 
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://tippspiel\.spiegel\.de/$" /-->
 		<!--
 			Exceptions:
 					-->
@@ -117,9 +115,8 @@ Fetch error: http://ophirum.spiegel.de/ => https://ophirum.spiegel.de/: (51, "SS
 	<!--securecookie host="^abo\.spiegel\.de$" name="^aboshop-common$" /-->
 	<!--securecookie host="^count\.spiegel\.de$" name="^NETMIND_SID$" /-->
 	<!--securecookie host="^magazin\.spiegel\.de$" name="^BIGipServer[\w~-]+$" /-->
-	<!--securecookie host="^ophirum\.spiegel\.de$" name="^PHPSESSID$" /-->
 
-	<securecookie host="^(?:abo|count|magazin|ophirum)\.spiegel\.de$" name=".+" />
+	<securecookie host="^(?:abo|count|magazin)\.spiegel\.de$" name=".+" />
 
 
 	<!--	- Cert only matches www
@@ -149,8 +146,7 @@ Fetch error: http://ophirum.spiegel.de/ => https://ophirum.spiegel.de/: (51, "SS
 		<test url="http://shop.spiegel.de/shop/action/quickSearch?foo" />
 		<test url="http://shop.spiegel.de/shop/action/quickSearch?bar" />
 
-	<rule from="^http:"
-		to="https:" />
+	<rule from="^http:" to="https:" />
 	
 
 </ruleset>
