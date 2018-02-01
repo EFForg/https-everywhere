@@ -41,7 +41,8 @@ if [ "$TEST" == "rules" ]; then
   docker run --rm -ti -v $(pwd):/opt httpse python utils/ruleset_filenames_validate.py
   docker run --rm -ti -v $(pwd):/opt -e RULESETFOLDER="$RULESETFOLDER" -e COMMON_BASE_COMMIT="$COMMON_BASE_COMMIT" httpse bash -c "utils/check-ruleset-path.sh"
   docker run --rm -ti -v $(pwd):/opt httpse bash -c "utils/remove-obsolete-references.sh"
-  docker run --rm -ti -v $(pwd):/opt httpse bash -c "utils/validate.sh"
+  docker run --rm -ti -v $(pwd):/opt httpse python utils/validate.py
+  docker run --rm -ti -v $(pwd):/opt httpse python utils/trivial-validate.py --quiet
   docker run --rm -ti -v $(pwd):/opt httpse bash -c "test/rules.sh"
   docker run --rm -ti -v $(pwd):/opt httpse python utils/normalize-securecookie.py
 fi
