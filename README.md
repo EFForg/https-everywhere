@@ -50,20 +50,18 @@ This is the source tree for HTTPS Everywhere for Firefox and Chrome.
 
 Important directories you might want to know about
 
-    src/                      The Firefox source
+    
+    chromium/                 WebExtension source code (for Firefox & Chromium/chrome)
+    chromium/external         External dependencies
+    chromium/test             Unit tests
 
-    chromium/                 The Chromium/Chrome source
-                              (not to be confused with Firefox browser "chrome" or UI)
+    rules/                    Symbolic link to src/chrome/content/rules
 
-    src/components            |
-    src/chrome/content        | Firefox JavaScript and XUL code
-    src/chrome/content/code   |
+    src/chrome/content/rules  Ruleset files live here
 
-    src/chrome/content/rules  The rulesets live here
-
-    test/                     The tests live here
-
-    utils/                    Various utilities
+    test/                     Travis unit test source code live here
+    
+    utils/                    Various utilities (includes some Travis test source)
 
 Hacking on the Source Code
 --------------------------

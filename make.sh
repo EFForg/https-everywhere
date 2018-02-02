@@ -57,9 +57,9 @@ do_not_ship="*.py *.xml"
 rm -f $do_not_ship
 cd ../..
 
-. ./utils/merge-rulesets.sh || exit 1
+python2.7 ./utils/merge-rulesets.py || exit 1
 
-cp src/$RULESETS pkg/crx/rules/default.rulesets
+cp src/chrome/content/rules/default.rulesets pkg/crx/rules/default.rulesets
 
 sed -i -e "s/VERSION/$VERSION/g" pkg/crx/manifest.json
 
@@ -68,8 +68,9 @@ cp -a pkg/crx pkg/xpi-eff
 cp -a src/META-INF pkg/xpi-amo
 cp -a src/META-INF pkg/xpi-eff
 
-# Remove the 'applications' manifest key from the crx version of the extension and change the 'author' string to a hash
-python2.7 -c "import json; m=json.loads(open('pkg/crx/manifest.json').read()); m['author']={'email': 'eff.software.projects@gmail.com'}; del m['applications']; open('pkg/crx/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+# Remove the 'applications' manifest key from the crx version of the extension, change the 'author' string to a hash, and add the "update_url" manifest key
+# "update_url" needs to be present to avoid problems reported in https://bugs.chromium.org/p/chromium/issues/detail?id=805755
+python2.7 -c "import json; m=json.loads(open('pkg/crx/manifest.json').read()); m['author']={'email': 'eff.software.projects@gmail.com'}; del m['applications']; m['update_url'] = 'https://clients2.google.com/service/update2/crx'; open('pkg/crx/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
 # Remove the 'update_url' manifest key from the xpi version of the extension delivered to AMO
 python2.7 -c "import json; m=json.loads(open('pkg/xpi-amo/manifest.json').read()); del m['applications']['gecko']['update_url']; m['applications']['gecko']['id'] = 'https-everywhere@eff.org'; open('pkg/xpi-amo/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
 
@@ -108,7 +109,8 @@ trap 'rm -f "$pub" "$sig" "$zip"' EXIT
 
 # zip up the crx dir
 cwd=$(pwd -P)
-(cd "$dir" && ../../utils/create_xpi.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
+(cd "$dir" && ../../utils/create_zip.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
+echo >&2 "CWS crx package has sha1sum: `sha1sum "$cwd/$zip"`"
 
 # signature
 openssl sha1 -sha1 -binary -sign "$key" < "$zip" > "$sig"
@@ -146,7 +148,7 @@ dir=pkg/xpi-amo
 zip="$name.zip"
 
 cwd=$(pwd -P)
-(cd "$dir" && ../../utils/create_xpi.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
+(cd "$dir" && ../../utils/create_zip.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
 echo >&2 "AMO xpi package has sha1sum: `sha1sum "$cwd/$zip"`"
 
 cp $zip $xpi_amo
@@ -159,7 +161,7 @@ dir=pkg/xpi-eff
 zip="$name.zip"
 
 cwd=$(pwd -P)
-(cd "$dir" && ../../utils/create_xpi.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
+(cd "$dir" && ../../utils/create_zip.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
 echo >&2 "EFF xpi package has sha1sum: `sha1sum "$cwd/$zip"`"
 
 cp $zip $xpi_eff

@@ -55,7 +55,7 @@ There are several main areas of development on HTTPS Everywhere: the rulesets, t
 
 The rulesets can be found in the [`rules`](rules) top-level path and include all the rules for redirecting individual sites to HTTPS.  These are written in XML. If you want to get started contributing to HTTPS Everywhere, we recommend starting here.
 
-The core codebase consists of the code that performs the redirects, the UI, logging code, and ruleset loading.  This encompasses all code delivered with the extension itself that is *not* a ruleset.  It is written in JavaScript, using the `WebExtensions` API (located in [`chromium`](chromium)) on all supported browsers.  In Firefox, this extension is wrapped in a thin `XPCOM` layer for the purposes of migrating settings, located in [`src`](src), which will soon be deprecated.
+The core codebase consists of the code that performs the redirects, the UI, logging code, and ruleset loading.  This encompasses all code delivered with the extension itself that is *not* a ruleset.  It is written in JavaScript, using the `WebExtensions` API (located in [`chromium`](chromium)).
 
 The utilities ([`utils`](utils) top-level path) include scripts that build the extension, sanitize and perform normalization on rulesets, simplify rules, and help label GitHub issues.  Historically, these utilities have been written in Python.  Many of the newer utilities are written in JavaScript, and are meant to be run in node.  Some of the wrappers for these utilities are in shell scripts.
 

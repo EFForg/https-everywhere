@@ -1,71 +1,28 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://epayments.aylesburyvaledc.gov.uk/ => https://epayments.aylesburyvaledc.gov.uk/: (28, 'Connection timed out after 20000 milliseconds')
-
-	Aylesbury Vale District Council
-
 	For other UK government coverage, see GOV.UK.xml.
 
+	Non-functional hosts
+		Timeout was reached:
+		- epayments.aylesburyvaledc.gov.uk
 
-	Nonfunctional hosts in *aylesburyvaledc.gov.uk:
+		Peer certificate cannot be authenticated with given CA certificates:
+		- propertysearch.aylesburyvaledc.gov.uk
 
-		- democracy ⁴
-		- propertysearch *
-		- wam ᵃ
-
-	* 400
-	⁴ 404
-	ᵃ Shows publicaccess.aylesburyvaledc.gov.uk
-
-
-	Problematic hosts in *aylesburyvaledc.gov.uk:
-
-		- account ⁵
-
-	⁵ $ 500s
-
-
-	These altnames do not exist:
-
-		- aylesburyvaledc.gov.uk
-
-	
-	Insecure cookies are set for these hosts:
-
-		- llportal.aylesburyvaledc.gov.uk
-
+		Incomplete certificate chain error:
+		- democracy.aylesburyvaledc.gov.uk
+		- payments.aylesburyvaledc.gov.uk
 -->
-<ruleset name="Aylesbury Vale DC.gov.uk (partial)" default_off='failed ruleset test'>
-
-	<!--	Direct rewrites:
-				-->
-	<target host="eforms.aylesburyvaledc.gov.uk" />
-	<target host="epayments.aylesburyvaledc.gov.uk" />
-	<target host="llportal.aylesburyvaledc.gov.uk" />
-	<target host="publicaccess.aylesburyvaledc.gov.uk" />
+<ruleset name="Aylesbury Vale DC.gov.uk (partial)">
+	<target host="aylesburyvaledc.gov.uk" />
 	<target host="www.aylesburyvaledc.gov.uk" />
-
-	<!--	Complications:
-				-->
 	<target host="account.aylesburyvaledc.gov.uk" />
+		<exclusion pattern="http://account\.aylesburyvaledc\.gov\.uk/$" />
+		<test url="http://account.aylesburyvaledc.gov.uk/business/Login" />
+	<target host="llportal.aylesburyvaledc.gov.uk" />
+	<target host="eforms.aylesburyvaledc.gov.uk" />
+	<target host="jobs.aylesburyvaledc.gov.uk" />
+	<target host="publicaccess.aylesburyvaledc.gov.uk" />
+	<target host="wam.aylesburyvaledc.gov.uk" />
 
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^llportal\.aylesburyvaledc\.gov\.uk$" name="^SSRV_AUTHENTICATION$" /-->
-
-	<securecookie host="^\w" name=".+" />
-
-
-	<!--	Redirect keeps args but not forward slash:
-								-->
-	<rule from="^http://account\.aylesburyvaledc\.gov\.uk/+(?=$|\?)"
-		to="https://account.aylesburyvaledc.gov.uk/business/" />
-
-		<test url="http://account.aylesburyvaledc.gov.uk/?" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
