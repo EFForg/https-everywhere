@@ -94,20 +94,6 @@
 -->
 <ruleset name="AmazonWebServices">
 
-	<target host="fls-eu.amazon.co.uk" />
-
-	<target host="aws.amazon.com" />
-	<target host="forums.aws.amazon.com" />
-	<target host="status.aws.amazon.com" />
-	<target host="docs.aws.amazon.com" />
-	<target host="aws-portal.amazon.com" />
-	<target host="fls-eu.amazon.com" />
-	<target host="fls-na.amazon.com" />
-	<target host="images.amazon.com" />
-	<target host="images-jp.amazon.com" />
-	<target host="webservices.amazon.com" />
-			<test url="http://webservices.amazon.com/scratchpad/index.html" />
-
 	<target host="*.amazonaws.com" />
 		<!--
 			Bloody forced redirection:
@@ -124,11 +110,6 @@
 			Breaks premiumbeat.com preview player
 							-->
 		<exclusion pattern="^http://s3\.amazonaws\.com/pb_(sfx_)?previews/" />
-
-		<!-- Implicit test URL for this host gets 404 when rewritten, but resources
-				 other than / work. -->
-		<exclusion pattern="^http://ec\.images-amazon\.com/$" />
-		<test url="http://ec.images-amazon.com/" />
 
 		<!--
 			https://trac.torproject.org/projects/tor/ticket/7857
@@ -148,21 +129,6 @@
 							-->
 		<exclusion pattern="^http://darkskysatellite(?:maps)?\.s3\.amazonaws\.com/" />
 
-	<target host="amazonwebservices.com" />
-	<target host="*.amazonwebservices.com" />
-	<target host="*.images-amazon.com" />
-
-	<!-- Zeitgeist MP3 player https://trac.torproject.org/projects/tor/ticket/7594 -->
-	<exclusion pattern="^http://g-ecx\.images-amazon\.com/.*(?:[mM][pP]3|zeitgeist|digital/music)" />
-		<test url="http://g-ecx.images-amazon.com/images/G/02/zeitgeist/mp3player/sprites-mp3-preview-player-sm-a._V192561915_.gif" />
-		<test url="http://g-ecx.images-amazon.com/images/G/02/zeitgeist/mp3player/swf/zgMp3Player-1.0._V212273708_.swf" />
-		<test url="http://g-ecx.images-amazon.com/images/G/02/zeitgeist/mp3player/mp3-preview-widget-top-rt-corner._V192561915_.gif" />
-		<test url="http://g-ecx.images-amazon.com/images/G/02/zeitgeist/mp3player/dmusic-chart-sprites-1.0._V192561914_.gif" />
-		<test url="http://g-ecx.images-amazon.com/images/G/02/zeitgeist/mp3player/mp3-preview-widget-top-left-corner._V192561912_.gif" />
-	<!-- https://trac.torproject.org/projects/tor/ticket/7539 -->
-	<exclusion pattern="^http://ecx\.images-amazon\.com/" />
-
-	<target host="*.ssl-images-amazon.com" />
 
 
 	<!--	Forced redirects:
@@ -179,12 +145,6 @@
 	<rule from="^http://cms\.kiva\.org\.s3\.amazonaws\.com/"
 		to="https://s3-us-west-1.amazonaws.com/cms.kiva.org/" />
 
-	<rule from="^http://fls-eu\.amazon\.co\.uk/"
-		to="https://fls-eu.amazon.co.uk/" />
-
-	<rule from="^http://((?:docs|forums|status)\.aws|aws|aws-portal|fls-eu|fls-na|webservices)\.amazon\.com/"
-		to="https://$1.amazon.com/" />
-
 	<rule from="^http://s3(?:-website)?(-ap-(?:nor|sou)theast-1|-eu-central-\d|-(?:eu|us)-west-\d|-external-\d|-sa-east-1)?\.amazonaws\.com/"
 		to="https://s3$1.amazonaws.com/" />
 
@@ -192,11 +152,6 @@
 		<test url="http://s3.amazonaws.com/assets.offerpop.com/jive/images/offerpop_logo.png" />
 		<!--test url="http://s3-eu-west-1.amazonaws.com/nusdigital/image/images/19253/original/footer-shape.png" /-->
 		<!--test url="http://s3-us-west-2.amazonaws.com/formget/images/login-logo.png" /-->
-
-	<rule from="^http://static-course-assets\.s3\.amazonaws\.com/"
-		to="https://static-course-assets.s3.amazonaws.com/" />
-		<test url="http://static-course-assets.s3.amazonaws.com/ITE50ENU/common-ext/styles/images/landing.png" />
-
 
 	<!--	Test failures were misinterpreted. .+-website-.+ no longer works, rest (seemingly) works.
 														-->
@@ -213,6 +168,7 @@
 		<!--test url="http://lawfare.s3-us-west-2.amazonaws.com/staging/styles/thumbnail/s3/pictures/picture-87-1431626511.jpg" /-->
 		<test url="http://tastylounge-prod.s3-external-1.amazonaws.com/" />
 		<test url="http://gestaoja.s3-sa-east-1.amazonaws.com/" />
+		<test url="http://static-course-assets.s3.amazonaws.com/ITE50ENU/common-ext/styles/images/landing.png" />
 		<!--test url="http://swyokohama.s3-website-ap-northeast-1.amazonaws.com/" /-->
 		<!--test url="http://keithsbucket.s3-website-ap-southeast-1.amazonaws.com/" /-->
 		<!--test url="http://grime.s3-website-eu-west-1.amazonaws.com/" /-->
@@ -252,21 +208,6 @@
 	<rule from="^http://s3-website-us-east-1\.amazonaws\.com/"
 		to="https://s3.amazonaws.com/" />
 
-	<rule from="^http://(?:www\.)?amazonwebservices\.com/"
-		to="https://aws.amazon.com/" />
-
-	<rule from="^http://developer\.amazonwebservices\.com/"
-		to="https://developer.amazonwebservices.com/" />
-
-	<rule from="^http://media\.amazonwebservices\.com/"
-		to="https://s3.amazonaws.com/awsmedia/" />
-
-	<rule from="^http://(?:(?:ec[5x]|g-ecx)\.images-)amazon\.com/"
-		to="https://d1ge0kk1l5kms0.cloudfront.net/" />
-
-	<rule from="^http://(?:(?:ec[1-8x]|z-ak)\.images-|images(?:-jp)?\.)amazon\.com/"
-		to="https://images-na.ssl-images-amazon.com/" />
-
 		<!--
 			Exclusions for Amazon's Zeitgeist MP3 Player:
 
@@ -277,13 +218,6 @@
 		copied the crazy pattern from the rule above.
 									-->
 		<exclusion pattern="^http://amazon-zg\.s3\.amazonaws\.com/" />
-		<exclusion pattern="^http://[^@:/]+images[^@:/]+/images/G/01/zeitgeist/mp3player" />
-			<test url="http://images-na.ssl-images-amazon.com/images/G/01/zeitgeist/mp3player/swf/zgMp3Player-1.0._V212274098_.swf" />
-			<test url="http://ec2.images-amazon.com/images/G/01/zeitgeist/mp3player/swf/zgMp3Player-1.0._V212274098_.swf" />
-			<test url="http://ec1.images-amazon.com/images/G/01/zeitgeist/mp3player/swf/zgMp3Player-1.0._V212274098_.swf" />
-
-	<rule from="^http://images-(eu|fe|na)\.ssl-images-amazon\.com/"
-		to="https://images-$1.ssl-images-amazon.com/" />
 
 
 	<test url="http://dis.images.s3.amazonaws.com/" />
@@ -302,27 +236,6 @@
 	<test url="http://s3-website-us-west-1.amazonaws.com/" />
 	<test url="http://s3-website-sa-east-1.amazonaws.com/" />
 	<test url="http://s3-website-us-east-1.amazonaws.com/" />
-	<test url="http://amazonwebservices.com/" />
-	<test url="http://www.amazonwebservices.com/" />
-	<test url="http://developer.amazonwebservices.com/" />
-	<test url="http://media.amazonwebservices.com/" />
-	<test url="http://ec5.images-amazon.com/" />
-	<test url="http://ecx.images-amazon.com/" />
-	<test url="http://g-ecx.images-amazon.com/" />
-	<test url="http://ec1.images-amazon.com/" />
-	<test url="http://ec2.images-amazon.com/" />
-	<test url="http://ec3.images-amazon.com/" />
-	<test url="http://ec4.images-amazon.com/" />
-	<test url="http://ec5.images-amazon.com/" />
-	<test url="http://ec6.images-amazon.com/" />
-	<test url="http://ec8.images-amazon.com/" />
-	<test url="http://ecx.images-amazon.com/" />
-	<test url="http://z-ak.images-amazon.com/" />
-	<test url="http://images.amazon.com/" />
-	<test url="http://images-jp.amazon.com/" />
-	<test url="http://images-eu.ssl-images-amazon.com/" />
-	<test url="http://images-fe.ssl-images-amazon.com/" />
-	<test url="http://images-na.ssl-images-amazon.com/" />
 	<test url="http://static.via.me.s3.amazonaws.com/" />
 	<test url="http://img.wired.co.uk.s3.amazonaws.com/" />
 	<test url="http://s3.sandbaguk.com.s3.amazonaws.com/" />
@@ -335,7 +248,6 @@
 	<test url="http://charts-datawrapper.s3.amazonaws.com/" />
 	<test url="http://darkskysatellite.s3.amazonaws.com/" />
 	<test url="http://darkskysatellitemaps.s3.amazonaws.com/" />
-	<test url="http://ecx.images-amazon.com/" />
 	<test url="http://amazon-zg.s3.amazonaws.com/" />
 	<test url="http://s3.amazonaws.com/pb_previews/" />
 	<test url="http://s3.amazonaws.com/pb_sfx_previews/" />
