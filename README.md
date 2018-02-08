@@ -9,7 +9,7 @@ Get the packages you need and install a git hook to run tests before push:
 
     bash install-dev-dependencies.sh
 
-Run all the tests:
+Run the test coverage and browser tests:
 
     bash test.sh
 
@@ -50,7 +50,7 @@ This is the source tree for HTTPS Everywhere for Firefox and Chrome.
 
 Important directories you might want to know about
 
-    
+
     chromium/                 WebExtension source code (for Firefox & Chromium/chrome)
     chromium/external         External dependencies
     chromium/test             Unit tests
@@ -60,7 +60,7 @@ Important directories you might want to know about
     src/chrome/content/rules  Ruleset files live here
 
     test/                     Travis unit test source code live here
-    
+
     utils/                    Various utilities (includes some Travis test source)
 
 Hacking on the Source Code
