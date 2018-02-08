@@ -29,14 +29,13 @@ function run_selenium {
   ENABLE_XVFB=1 py.test -v --capture=no ${testdir} # autodiscover and run the tests
 }
 
-if [ "$INFO" == "lint" ]; then
+if [ "$TEST" == "lint" ]; then
     echo "running lint tests"
     run_lint
-elif [ "$INFO" == "unittests" ]; then
+elif [ "$TEST" == "unittests" ]; then
     echo "Running unittests"
     run_unittests
-elif [ "$INFO" == "rules" ] || [ "$INFO" == "fetch" ] || [ "$INFO" == "preloaded" ]; then
-    export TEST=${INFO}
+elif [ "$TEST" == "rules" ] || [ "$TEST" == "fetch" ] || [ "$TEST" == "preloaded" ]; then
     ${toplevel}/test/travis.sh # run old travis tests
 else
     case $BROWSER in
@@ -49,7 +48,7 @@ else
         run_selenium
         ;;
       *)
-        echo "bad INFO variable, got $INFO"
+        echo "bad TEST variable, got $TEST"
         exit 1
         ;;
     esac
