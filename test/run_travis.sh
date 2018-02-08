@@ -35,7 +35,7 @@ if [ "$TEST" == "lint" ]; then
 elif [ "$TEST" == "unittests" ]; then
     echo "Running unittests"
     run_unittests
-elif [ "$TEST" == "rules" ] || [ "$TEST" == "fetch" ] || [ "$TEST" == "preloaded" ]; then
+elif [ "$TEST" == "validations" ] || [ "$TEST" == "fetch" ] || [ "$TEST" == "preloaded" ]; then
 
     # Folder paths, relative to parent
     RULESETFOLDER="${toplevel}/src/chrome/content/rules"
@@ -72,9 +72,9 @@ elif [ "$TEST" == "rules" ] || [ "$TEST" == "fetch" ] || [ "$TEST" == "preloaded
     # At this point, if anything fails, the test should fail
     set -e
 
-    if [ "$TEST" == "rules" ]; then
-      echo >&2 "Performing validations on rules."
-      docker run --rm -ti -v $(pwd):/opt -e RULESETFOLDER="$RULESETFOLDER" -e COMMON_BASE_COMMIT="$COMMON_BASE_COMMIT" httpse bash -c "test/rules.sh"
+    if [ "$TEST" == "validations" ]; then
+      echo >&2 "Performing validations on rulesets."
+      docker run --rm -ti -v $(pwd):/opt -e RULESETFOLDER="$RULESETFOLDER" -e COMMON_BASE_COMMIT="$COMMON_BASE_COMMIT" httpse bash -c "test/validations.sh"
     fi
 
     if [ "$TEST" == "fetch" ]; then

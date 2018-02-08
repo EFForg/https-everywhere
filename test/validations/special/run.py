@@ -37,7 +37,7 @@ thispath = os.path.dirname(os.path.realpath(__file__))
 with open(thispath + '/duplicate-whitelist.txt') as duplicate_fh:
     duplicate_allowed_list = [x.rstrip('\n') for x in duplicate_fh.readlines()]
 
-filenames = glob.glob(thispath + '/../src/chrome/content/rules/*')
+filenames = glob.glob(thispath + '/../../../src/chrome/content/rules/*')
 
 def test_bad_regexp(tree, rulename, from_attrib, to):
     # Rules with invalid regular expressions.
@@ -150,7 +150,7 @@ xpath_host = etree.XPath("/ruleset/target/@host")
 xpath_from = etree.XPath("/ruleset/rule/@from")
 xpath_to = etree.XPath("/ruleset/rule/@to")
 
-print("Complex validations & assertions of rulesets using utils/trivial-validate.py begins...")
+print("Complex validations & assertions of rulesets using test/validations/special/run.py begins...")
 
 host_counter = Counter()
 for filename in filenames:
@@ -203,9 +203,9 @@ for (host, platform), count in host_counter.most_common():
         fail("%s failed: %s" % (host, is_valid_target_host.__doc__))
 
 if failure > 0:
-    print("Complex validations & assertions of rulesets using utils/trivial-validate.py failed.")
+    print("Complex validations & assertions of rulesets using test/validations/special/run.py failed.")
 else:
-    print("Complex validations & assertions of rulesets using utils/trivial-validate.py succeeded.")
+    print("Complex validations & assertions of rulesets using test/validations/special/run.py succeeded.")
 
 
 sys.exit(failure)
