@@ -1,10 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3.6
 # -*- encoding: utf-8 -*-
 
 import argparse
 import glob
 import os
-import unicodedata
 
 from lxml import etree
 
@@ -31,7 +30,7 @@ for filename in sorted(files):
     if not relaxng.validate(tree):
         exit_code = 1
         e = relaxng.error_log.last_error
-        print(("%s %s:%s:%s: %s" % (e.level_name, e.filename, e.line, e.column, e.message)))
+        print("{} {}:{}:{}: {}".format(e.level_name, e.filename, e.line, e.column, e.message))
 
 if exit_code == 0:
     message = "Validation of rulesets against relaxng schema.xml succeeded."
