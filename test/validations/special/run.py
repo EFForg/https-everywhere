@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.6
 
 import glob
 import argparse
@@ -163,7 +163,7 @@ for filename in filenames:
     try:
         tree = etree.parse(filename, xml_parser)
     except Exception as oops:
-        print("%s failed XML validity: %s\n" % (filename, oops))
+        print("{} failed XML validity: {}\n".format(filename, oops))
         sys.exit(1)
 
     if not xpath_ruleset(tree):
