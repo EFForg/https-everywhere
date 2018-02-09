@@ -30,6 +30,7 @@
         * [Regular Rules](#regular-rules)
         * [HSTS Preloaded Rules](#hsts-preloaded-rules)
 * [Contributing Code](#contributing-code)
+* [Contributing Documentation](#contributing-documentation)
 * [Contributing Translations](#contributing-translations)
 
 * * *
@@ -353,6 +354,12 @@ We also informally support Opera browser, but do not have tooling around testing
 The current extension maintainer is @Hainish.  You can tag him for PRs which involve the core codebase.
 
 Several of our utilities and our full test suite is written in Python.  Eventually we would like the whole codebase to be standardized as JavaScript.  If you are so inclined, it would be helpful to rewrite the tooling and tests into JavaScript while maintaining the functionality.
+
+* * *
+
+# Contributing Documentation
+
+Standalone documentation should be written in [Markdown](https://en.wikipedia.org/wiki/Markdown) that follows the [Google style guide](https://github.com/google/styleguide/blob/gh-pages/docguide/style.md). If you are updating existing documentation that does not follow the Google style guide, then you should follow the style of the file you are updating.
 
 * * *
 
