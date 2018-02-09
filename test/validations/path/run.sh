@@ -2,7 +2,7 @@
 
 RULESETFOLDER=src/chrome/content/rules
 
-FILES=`find . | grep -v $RULESETFOLDER | grep '\.xml$'`
+FILES=`git grep --name-only . | grep -v $RULESETFOLDER | grep '\.xml$'`
 
 EXIT_CODE=0
 
