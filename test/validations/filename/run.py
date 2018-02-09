@@ -1,5 +1,5 @@
-#!/usr/bin/env python2.7
-# 
+#!/usr/bin/env python3.6
+#
 # Validates and provides a generator for ruleset filenames
 #
 
@@ -18,7 +18,7 @@ def validate_filenames():
     most_common_entry = counted_lowercase_names.most_common(1)[0]
     if most_common_entry[1] > 1:
         dupe_filename = re.compile(re.escape(most_common_entry[0]), re.IGNORECASE)
-        print("%s failed case-insensitivity testing." % filter(dupe_filename.match, filenames))
+        print("{} failed case-insensitivity testing.".format(list(filter(dupe_filename.match, filenames))))
         print("Rules exist with identical case-insensitive names, which breaks some filesystems.")
         sys.exit(1)
 
@@ -28,10 +28,10 @@ def validate_filenames():
             continue
 
         if " " in fi:
-            print("%s failed validity: Rule filenames cannot contain spaces" % (fi))
+            print("{} failed validity: Rule filenames cannot contain spaces".format(fi))
             sys.exit(1)
         if not fi.endswith('.xml'):
-            print("%s failed validity: Rule filenames must end in .xml" % (fi))
+            print("{} failed validity: Rule filenames must end in .xml".format(fi))
             sys.exit(1)
 
         yield fi
