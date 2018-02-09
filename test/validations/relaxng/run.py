@@ -9,7 +9,7 @@ import unicodedata
 from lxml import etree
 
 # commandline arguments parsing (nobody use it, though)
-parser = argparse.ArgumentParser(description="Validate rulesets against relaxng.xml")
+parser = argparse.ArgumentParser(description="Validate rulesets against relaxng schema.xml")
 parser.add_argument("--source_dir", default="src/chrome/content/rules")
 
 args = parser.parse_args()
@@ -18,12 +18,12 @@ args = parser.parse_args()
 files = glob.glob(os.path.join(args.source_dir, "*.xml"))
 
 # read the schema file
-relaxng_doc = etree.parse('utils/relaxng.xml')
+relaxng_doc = etree.parse('test/validations/relaxng/schema.xml')
 relaxng = etree.RelaxNG(relaxng_doc)
 
 exit_code = 0
 
-print("Validation of rulesets against utils/relaxng.xml begins...")
+print("Validation of rulesets against relaxng schema.xml begins...")
 
 for filename in sorted(files):
     tree = etree.parse(filename)
@@ -34,13 +34,13 @@ for filename in sorted(files):
         print(("%s %s:%s:%s: %s" % (e.level_name, e.filename, e.line, e.column, e.message)))
 
 if exit_code == 0:
-    message = "Validation of rulesets against utils/relaxng.xml succeeded."
+    message = "Validation of rulesets against relaxng schema.xml succeeded."
 else:
     message = "\nTwo very common reasons for this are the following:\n" \
               " - missing caret (^) in 'from' attribute: it should be \"^http:\" and not \"http:\"\n" \
               " - missing trailing slashes in 'from' or 'to' when specifying full hostnames: \n" \
               "   it should be \"https://eff.org/\" and not \"https://eff.org\"\n\n" \
-              "Validation of rulesets against utils/relaxng.xml failed."
+              "Validation of rulesets against relaxng schema.xml failed."
 
 print(message)
 exit(exit_code)

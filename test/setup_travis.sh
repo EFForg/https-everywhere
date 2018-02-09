@@ -46,7 +46,7 @@ function setup_docker {
   docker build -t httpse .
 }
 
-case $INFO in
+case $TEST in
   *chrome*)
     setup_chrome
     browser_setup
@@ -61,13 +61,13 @@ case $INFO in
   *unittests*)
     setup_unittests
     ;;
-  *rules*|*fetch*)
+  *validations*|*fetch*)
     setup_docker
     ;;
   *preloaded*)
     ;;
   *)
-    echo "bad INFO variable, got $INFO"
+    echo "bad TEST variable, got $TEST"
     exit 1
     ;;
 esac

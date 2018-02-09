@@ -148,7 +148,7 @@ Avoid using the left-wildcard (`<target host="*.example.com" />`) unless you int
 
 Instead, prefer listing explicit target hosts and a single rewrite from `"^http:"` to `"^https:"`. This saves you time as a ruleset author because each explicit target host automatically creates an implicit test URL, reducing the need to add your own test URLs. These also make it easier for someone reading the ruleset to figure out which subdomains are covered.
 
-If you know all subdomains of a given domain support HTTPS, go ahead and use a left-wildcard, along with a plain rewrite from `"^http:"` to `"^https:"`. Make sure to add a bunch of test URLs for the more important subdomains. 
+If you know all subdomains of a given domain support HTTPS, go ahead and use a left-wildcard, along with a plain rewrite from `"^http:"` to `"^https:"`. Make sure to add a bunch of test URLs for the more important subdomains.
 
 #### Edge-Case: Right-Wildcards
 
@@ -334,7 +334,7 @@ In `utils` we have a tool called `hsts-prune` which removes `targets` from rules
 Every new pull request automatically has the `hsts-prune` utility applied to it as part of the continual integration process.  If a new PR introduces a `target` which is preloaded, it will fail the CI test suite.  See:
 
 - `.travis.yml`
-- `test/travis.sh`
+- `test/run_travis.sh`
 
 * * *
 

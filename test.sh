@@ -14,6 +14,6 @@ else
     git rev-parse && cd "$(git rev-parse --show-toplevel)"
 fi
 
-./test/rules.sh
+./test/validations.sh
 ./test/firefox.sh $@
 ./test/chromium.sh $@
