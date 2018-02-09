@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -ex
 # Perform validations on rulesets.
 
 utils/remove-obsolete-references.sh

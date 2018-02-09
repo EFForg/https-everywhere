@@ -59,4 +59,4 @@ To run the tests locally, first install the development dependencies:
 
 To test a specific ruleset:
 
-    ./fetch-test.sh rules/Example.xml
+    test/manual.sh rules/Example.xml

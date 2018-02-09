@@ -61,7 +61,7 @@ case $TEST in
   *unittests*)
     setup_unittests
     ;;
-  *rules*|*fetch*)
+  *validations*|*fetch*)
     setup_docker
     ;;
   *preloaded*)

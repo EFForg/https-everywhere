@@ -74,7 +74,7 @@ elif [ "$TEST" == "validations" ] || [ "$TEST" == "fetch" ] || [ "$TEST" == "pre
 
     if [ "$TEST" == "validations" ]; then
       echo >&2 "Performing validations on rulesets."
-      docker run --rm -ti -v $(pwd):/opt -e RULESETFOLDER="$RULESETFOLDER" -e COMMON_BASE_COMMIT="$COMMON_BASE_COMMIT" httpse bash -c "test/validations.sh"
+      docker run --rm -ti -v $(pwd):/opt httpse bash -c "test/validations.sh"
     fi
 
     if [ "$TEST" == "fetch" ]; then

@@ -9,7 +9,7 @@ Get the packages you need and install a git hook to run tests before push:
 
     bash install-dev-dependencies.sh
 
-Run the test coverage and browser tests:
+Run the ruleset validations and browser tests:
 
     bash test.sh
 
