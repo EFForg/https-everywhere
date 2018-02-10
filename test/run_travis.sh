@@ -38,7 +38,7 @@ elif [ "$TEST" == "unittests" ]; then
 elif [ "$TEST" == "validations" ] || [ "$TEST" == "fetch" ] || [ "$TEST" == "preloaded" ]; then
 
     # Folder paths, relative to parent
-    RULESETFOLDER="${toplevel}/src/chrome/content/rules"
+    RULESETFOLDER="src/chrome/content/rules"
 
     # Go to git repo root; taken from ../test.sh. Note that
     # $GIT_DIR is .git in this case.
