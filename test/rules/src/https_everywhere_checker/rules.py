@@ -378,7 +378,7 @@ class Ruleset(object):
 		for rule in self.rules:
 			for test in rule.tests:
 				parsed_url = urlparse(test.url)
-				if parsed_url.path == '':
+				if not parsed_url.path.endswith('/'):
 					problems.append("%s: Test url lacks a trailing /: %s" % (
 						self.filename, test.url))
 		return problems
