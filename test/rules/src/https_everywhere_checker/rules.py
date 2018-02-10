@@ -375,12 +375,11 @@ class Ruleset(object):
 		"""Verify that tests are formatted properly.  This ensures that no test url
 			will lack a '/' in the path."""
 		problems = []
-		for rule in self.rules:
-			for test in rule.tests:
-				parsed_url = urlparse(test.url)
-				if parsed_url.path == '':
-					problems.append("%s: Test url lacks a trailing /: %s" % (
-						self.filename, test.url))
+		for test in rule.tests:
+			parsed_url = urlparse(test.url)
+			if parsed_url.path == '':
+				problems.append("%s: Test url lacks a trailing /: %s" % (
+					self.filename, test.url))
 		return problems
 
 	def whatApplies(self, url):
