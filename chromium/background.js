@@ -497,10 +497,24 @@ function onErrorOccurred(details) {
   }
 }
 
+/**
+ * handle webrequest.onHeadersReceived, insert upgrade-insecure-requests directive
+ * @param details details for the chrome.webRequest (see chrome doc)
+ */
+function onHeadersReceived(details) {
+  if (httpNowhereOn) {
+    const upgradeInsecureRequests = {
+      name: 'Content-Security-Policy',
+      value: 'upgrade-insecure-requests'
+    }
+    details.responseHeaders.push(upgradeInsecureRequests);
+  }
+  return {responseHeaders: details.responseHeaders};
+}
+
 // Registers the handler for requests
 // See: https://github.com/EFForg/https-everywhere/issues/10039
 chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"]);
-
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
 chrome.webRequest.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
@@ -511,8 +525,12 @@ chrome.webRequest.onCompleted.addListener(onCompleted, {urls: ["*://*/*"]});
 // Cleanup redirectCounter if neccessary
 chrome.webRequest.onErrorOccurred.addListener(onErrorOccurred, {urls: ["*://*/*"]})
 
+// Insert upgrade-insecure-requests directive in httpNowhere mode
+chrome.webRequest.onHeadersReceived.addListener(onHeadersReceived, {urls: ["https://*/*"]}, ["blocking", "responseHeaders"]);
+
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking.
 chrome.cookies.onChanged.addListener(onCookieChanged);
+
 
 /**
  * disable switch Planner
