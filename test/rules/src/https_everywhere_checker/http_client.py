@@ -195,37 +195,36 @@ class HTTPFetcher(object):
 		return urlparse.urlunparse(parts)
 		
 	def absolutizeUrl(self, base, url):
-		"""Returns absolutized URL in respect to base URL as per
-		RFC 3986. If url is already absolute (with scheme), return url.
+		"""
+		Construct a full ("absolute") URL by combining a "base URL" (base)
+		with another URL (url) as per RFC 3986.
 		
 		@param base: base URL of original document
 		@param url: URL to be resolved against base URL
 		"""
-		#urljoin fails for some of the abnormal examples in section 5.4.2
-		#of RFC 3986 if there are too many ./ or ../
-		#See http://bugs.python.org/issue3647
-		resolved = urlparse.urljoin(base, url)
-		resolvedParsed = urlparse.urlparse(resolved)
-		path = resolvedParsed.path
-		
-		#covers corner cases like "g:h" relative URL
-		if path == "" or not path.startswith("/"):
-			return resolved
-		
-		#strip any leading ./ or ../
-		pathParts = path[1:].split("/")
-		while len(pathParts) > 0 and pathParts[0] in (".", ".."):
-			pathParts = pathParts[1:]
-		
-		if len(pathParts) > 0:
-			newPath = "/" + "/".join(pathParts)
-		else:
-			newPath = "/"
-			
-		#replace old path and unparse into URL
-		urlParts = resolvedParsed[0:2] + (newPath,) + resolvedParsed[3:6]
-		newUrl = urlparse.urlunparse(urlParts)
-		
+
+		# urljoin fails for some of the abnormal examples in section 5.4.2
+		# of RFC 3986 if there are too many ./ or ../
+		# See https://bugs.python.org/issue3647
+		joinedUrl = urlparse.urljoin(base, url)
+		joinedUrlParts = urlparse.urlparse(joinedUrl)
+
+		# Strip any leading ./ and ../
+		path = joinedUrlParts.path
+		if path[:1] == '/':
+			segments = path.split('/')
+			while '.' in segments:
+				segments.remove('.')
+			while '..' in segments:
+				segments.remove('..')
+			joinedUrlParts = joinedUrlParts._replace(path='/'.join(segments))
+
+		# Non-trivial rewrites do not work without a trailing '/'
+		# See https://github.com/EFForg/https-everywhere/issues/14365
+		if path == "":
+			joinedUrlParts = joinedUrlParts._replace(path='/')
+
+		newUrl = urlparse.urlunparse(joinedUrlParts)
 		return newUrl
 		
 	@staticmethod
