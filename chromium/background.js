@@ -502,7 +502,7 @@ function onErrorOccurred(details) {
  * @param details details for the chrome.webRequest (see chrome doc)
  */
 function onHeadersReceived(details) {
-  if (httpNowhereOn) {
+  if (isExtensionEnabled && httpNowhereOn) {
     const upgradeInsecureRequests = {
       name: 'Content-Security-Policy',
       value: 'upgrade-insecure-requests'
