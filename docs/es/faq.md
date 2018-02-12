@@ -2,24 +2,24 @@
 
 Esta página responde a las preguntas más frecuentes sobre el proyecto de la EFF [HTTPS Everywhere](https://www.eff.org/https-everywhere) "HTTPS en todos lados". Si no encuentra la respuesta a su pregunta, puede intentar con los recursos [enumerados aquí](https://www.eff.org/https-everywhere/development).
 
-- [¿Qué pasa si HTTPS Everywhere rompe algún sitio que uso?](#what-if-https-everywhere-breaks-some-site-that-i-use)
-- [¿Por qué HTTPS Everywhere me impide unirme a la red del hotel/escuela u otra red inalámbrica?](#why-is-https-everywhere-preventing-me-from-joining-this-hotelschoolother-wireless-network)
-- [¿Habrá una versión de HTTPS Everywhere para IE, Safari o algún otro navegador?](#will-there-be-a-version-of-https-everywhere-for-ie-safari-or-some-other-browser)
-- [¿Por qué utilizar una lista blanca de sitios que admiten HTTPS? ¿Por qué no pueden intentar utilizar HTTPS para cada sitio, y sólo volver a HTTP si no está disponible?](#why-use-a-whitelist-of-sites-that-support-https-why-cant-you-try-to-use-https-for-every-last-site-and-only-fall-back-to-http-if-it-isnt-available)
-- [¿Cómo puedo eliminar o mover el botón HTTPS Everywhere de la barra de herramientas?](#how-do-i-get-rid-ofmove-the-https-everywhere-button-in-the-toolbar)
-- [¿Cuándo me protege HTTPS Everywhere? ¿Cuándo no me protege?](#when-does-https-everywhere-protect-me-when-does-it-not-protect-me)
-- [¿De qué me protege HTTPS Everywhere?](#what-does-https-everywhere-protect-me-against)
-- [¿Cómo obtengo soporte para un sitio adicional en HTTPS Everywhere?](#how-do-i-get-support-for-an-additional-site-in-https-everywhere)
-- [¿Qué pasa si el sitio no admite HTTPS, o si sólo lo admite para algunas actividades, como introducir información de la tarjeta de crédito?](#what-if-the-site-doesnt-support-https-or-only-supports-it-for-some-activities-like-entering-credit-card-information)
-- [¿No es más caro o lento para un sitio usar HTTPS en comparación con HTTP normal?](#isnt-it-more-expensive-or-slower-for-a-site-to-support-https-compared-to-regular-http)
-- [¿Por qué debría usar HTTPS Everywhere en lugar de simplemente teclear https:// al principio del nombre de un sitio?](#why-should-i-use-https-everywhere-instead-of-just-typing-https-at-the-beginning-of-site-names)
-- [¿Por qué HTTPS Everywhere incluye reglas para sitios como PayPal que ya requieren HTTPS en todas sus páginas?](#why-does-https-everywhere-include-rules-for-sites-like-paypal-that-already-require-https-on-all-their-pages)
-- [¿Qué significan los diferentes colores de las reglas en el menú de la barra de herramientas en Firefox?](#what-do-the-different-colors-for-rulesets-in-the-firefox-toolbar-menu-mean)
-- [¿Qué significan los diferentes colores del icono de HTTPS Everywhere?](#what-do-the-different-colors-of-the-https-everywhere-icon-mean)
-- [Tengo un problema al instalar la extensión del navegador.](#im-having-a-problem-installing-the-browser-extension.)
-- [¿Cómo desinstalo/elimino HTTPS Everywhere?](#how-do-i-uninstallremove-https-everywhere)
-- [¿Cómo agrego mi propio sitio a HTTPS Everywhere?](#how-do-i-add-my-own-site-to-https-everywhere)
-- [¿Puedo ayudar a traducir HTTPS Everywhere a mi propio idioma?](#can-i-help-translate-https-everywhere-into-my-own-language)
+*   [¿Qué pasa si HTTPS Everywhere rompe algún sitio que uso?](#what-if-https-everywhere-breaks-some-site-that-i-use)
+*   [¿Por qué HTTPS Everywhere me impide unirme a la red del hotel/escuela u otra red inalámbrica?](#why-is-https-everywhere-preventing-me-from-joining-this-hotelschoolother-wireless-network)
+*   [¿Habrá una versión de HTTPS Everywhere para IE, Safari o algún otro navegador?](#will-there-be-a-version-of-https-everywhere-for-ie-safari-or-some-other-browser)
+*   [¿Por qué utilizar una lista blanca de sitios que admiten HTTPS? ¿Por qué no pueden intentar utilizar HTTPS para cada sitio, y sólo volver a HTTP si no está disponible?](#why-use-a-whitelist-of-sites-that-support-https-why-cant-you-try-to-use-https-for-every-last-site-and-only-fall-back-to-http-if-it-isnt-available)
+*   [¿Cómo puedo eliminar o mover el botón HTTPS Everywhere de la barra de herramientas?](#how-do-i-get-rid-ofmove-the-https-everywhere-button-in-the-toolbar)
+*   [¿Cuándo me protege HTTPS Everywhere? ¿Cuándo no me protege?](#when-does-https-everywhere-protect-me-when-does-it-not-protect-me)
+*   [¿De qué me protege HTTPS Everywhere?](#what-does-https-everywhere-protect-me-against)
+*   [¿Cómo obtengo soporte para un sitio adicional en HTTPS Everywhere?](#how-do-i-get-support-for-an-additional-site-in-https-everywhere)
+*   [¿Qué pasa si el sitio no admite HTTPS, o si sólo lo admite para algunas actividades, como introducir información de la tarjeta de crédito?](#what-if-the-site-doesnt-support-https-or-only-supports-it-for-some-activities-like-entering-credit-card-information)
+*   [¿No es más caro o lento para un sitio usar HTTPS en comparación con HTTP normal?](#isnt-it-more-expensive-or-slower-for-a-site-to-support-https-compared-to-regular-http)
+*   [¿Por qué debría usar HTTPS Everywhere en lugar de simplemente teclear https:// al principio del nombre de un sitio?](#why-should-i-use-https-everywhere-instead-of-just-typing-https-at-the-beginning-of-site-names)
+*   [¿Por qué HTTPS Everywhere incluye reglas para sitios como PayPal que ya requieren HTTPS en todas sus páginas?](#why-does-https-everywhere-include-rules-for-sites-like-paypal-that-already-require-https-on-all-their-pages)
+*   [¿Qué significan los diferentes colores de las reglas en el menú de la barra de herramientas en Firefox?](#what-do-the-different-colors-for-rulesets-in-the-firefox-toolbar-menu-mean)
+*   [¿Qué significan los diferentes colores del icono de HTTPS Everywhere?](#what-do-the-different-colors-of-the-https-everywhere-icon-mean)
+*   [Tengo un problema al instalar la extensión del navegador.](#im-having-a-problem-installing-the-browser-extension.)
+*   [¿Cómo desinstalo/elimino HTTPS Everywhere?](#how-do-i-uninstallremove-https-everywhere)
+*   [¿Cómo agrego mi propio sitio a HTTPS Everywhere?](#how-do-i-add-my-own-site-to-https-everywhere)
+*   [¿Puedo ayudar a traducir HTTPS Everywhere a mi propio idioma?](#can-i-help-translate-https-everywhere-into-my-own-language)
 
 ### [¿Qué pasa si HTTPS Everywhere rompe algún sitio que uso?](#what-if-https-everywhere-breaks-some-site-that-i-use)
 
@@ -125,9 +125,9 @@ En Chrome: haga clic en el botón de menú situado en la parte superior derecha 
 
 Estamos contentos de que desee que su sitio en HTTPS Everywhere! Sin embargo, recuerde que no todos los que visitan su sitio tienen instalada nuestra extensión. Si administra un sitio web, puede configurarlo para que use de forma predeterminada HTTPS para todos, no solo para los usuarios de HTTPS Everywhere. Y es menos trabajo! Los pasos que usted debe tomar, en orden, son:
 
-1. Configure un [redireccionamiento](https://www.sslshopper.com/apache-redirect-http-to-https.html) de HTTP a HTTPS en su sitio.
-2. [Agregue el header "Strict-Transport-Security" (HSTS) en su sitio.](https://raymii.org/s/tutorials/HTTP_Strict_Transport_Security_for_Apache_NGINX_and_Lighttpd.html)
-3. [Agregue su sitio a la lista de precarga de HSTS.](https://hstspreload.appspot.com/)
+1.  Configure un [redireccionamiento](https://www.sslshopper.com/apache-redirect-http-to-https.html) de HTTP a HTTPS en su sitio.
+2.  [Agregue el header "Strict-Transport-Security" (HSTS) en su sitio.](https://raymii.org/s/tutorials/HTTP_Strict_Transport_Security_for_Apache_NGINX_and_Lighttpd.html)
+3.  [Agregue su sitio a la lista de precarga de HSTS.](https://hstspreload.appspot.com/)
 
 Estos pasos le darán a su sitio una protección mucho mejor que añadirlo a HTTPS Everywhere. En términos generales, una vez que haya terminado, no es necesario agregar su sitio a HTTPS Everywhere. Sin embargo, si lo aún desea, siga las [instrucciones sobre escribir conjuntos de reglas](https://eff.org/https-everywhere/rulesets), e indique que usted es el autor del sitio cuando solicite un "pull request".
 
