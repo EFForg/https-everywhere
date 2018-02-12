@@ -156,10 +156,10 @@ be aware that this approach should only be used for debugging purposes and
 should not be used for setting up personal custom rules. You can access the
 hidden debugging page this way:
 
-*   Firefox: `about:addons` > HTTPS Everywhere preferences > click under `General
-  Settings` > press <kbd>Ctrl-Z</kbd>
+*   Firefox: `about:addons` > HTTPS Everywhere preferences > click under
+    `General Settings` > press <kbd>Ctrl-Z</kbd>
 *   Chromium/Chrome: `chrome://extensions/` > HTTPS Everywhere options > click
-  under `General Settings` > press <kbd>Ctrl-Z</kbd>
+    under `General Settings` > press <kbd>Ctrl-Z</kbd>
 
 You might need to disable popup blocking for the page to appear. Once you have
 loaded the page, you might find it convenient to bookmark it for later use.

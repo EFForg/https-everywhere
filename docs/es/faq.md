@@ -212,7 +212,9 @@ máquinas adicionales ni hardware especial. En nuestras máquinas frontend de
 producción, SSL/TLS representa menos del 1% de la carga del CPU, menos de 10KB
 de memoria por conexión y menos del 2% de la sobrecarga de red".
 
-Solía ser caro comprar un certificado para el uso de HTTPS, pero ahora se puede obtener de forma gratuita en [Let's Encrypt](https://letsencrypt.org/) de igual manera.
+Solía ser caro comprar un certificado para el uso de HTTPS, pero ahora se puede
+obtener de forma gratuita en [Let's Encrypt](https://letsencrypt.org/) de igual
+manera.
 
 ### [¿Por qué debría usar HTTPS Everywhere en lugar de simplemente teclear https:// al principio del nombre de un sitio?](#why-should-i-use-https-everywhere-instead-of-just-typing-https-at-the-beginning-of-site-names)
 

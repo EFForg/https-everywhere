@@ -79,9 +79,9 @@ Once you've tested your changes, you can submit them for review via any of the
 following:
 
 *   Open a pull request at
-  [https://github.com/EFForg/https-everywhere](https://github.com/EFForg/https-everywhere).
+    [https://github.com/EFForg/https-everywhere](https://github.com/EFForg/https-everywhere).
 *   Email https-everywhere-rules@eff.org to tell us about your changes. You can
-  use the following command to create a patch file: `git format-patch`
+    use the following command to create a patch file: `git format-patch`
 
 ### A quick HOWTO on working with Git
 
