@@ -58,8 +58,8 @@ else
 
   PATH=/home/user/geckodriver:$PATH
   if [ -n "$FIREFOX" ]; then
-    $XVFB_RUN python2.7 test/script.py Firefox "$PROFILE_DIRECTORY" $FIREFOX
+    $XVFB_RUN python3.6 test/script.py Firefox "$PROFILE_DIRECTORY" $FIREFOX
   else
-    $XVFB_RUN python2.7 test/script.py Firefox "$PROFILE_DIRECTORY"
+    $XVFB_RUN python3.6 test/script.py Firefox "$PROFILE_DIRECTORY"
   fi
 fi

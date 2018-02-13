@@ -25,7 +25,7 @@ if [ "$1" == "--justrun" ]; then
 
 	PROFILE_DIRECTORY="$(mktemp -d)"
 	trap 'rm -r "$PROFILE_DIRECTORY"' EXIT
-	
+
 	# Chromium package name is 'chromium' in Debian 7 (wheezy) and other distros like Arch
 	BROWSER="chromium-browser"
 	which $BROWSER || BROWSER="chromium"
@@ -37,5 +37,5 @@ else
 	./make.sh
 	echo "running tests"
 	CRX_NAME="`ls -tr pkg/*.crx | tail -1`"
-	$XVFB_RUN python2.7 test/script.py Chrome $CRX_NAME
+	$XVFB_RUN python3.6 test/script.py Chrome $CRX_NAME
 fi
