@@ -503,6 +503,20 @@ function onErrorOccurred(details) {
  */
 function onHeadersReceived(details) {
   if (isExtensionEnabled && httpNowhereOn) {
+    for (const idx in details.responseHeaders) {
+      if (details.responseHeaders[idx].name.match(/Content-Security-Policy/i)) {
+        // Existing CSP headers found
+        const value = details.responseHeaders[idx].value;
+
+        // Prepend if no upgrade-insecure-requests directive exists
+        if (!value.match(/upgrade-insecure-requests/i)) {
+          details.responseHeaders[idx].value = "upgrade-insecure-requests; " + value;
+        }
+        return {responseHeaders: details.responseHeaders};
+      }
+    }
+
+    // CSP headers not found
     const upgradeInsecureRequests = {
       name: 'Content-Security-Policy',
       value: 'upgrade-insecure-requests'
