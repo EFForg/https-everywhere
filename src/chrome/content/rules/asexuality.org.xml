@@ -1,10 +1,28 @@
 <!--
+	Other asexuality.org rulesets:
+		asexuality.org_login.xml
+
 	Certificate mismatch:
 		ru.asexuality.org
+
+	Sept 2017: Due to mixedcontent issues, the forum part of the site, located at "/en/", can only be redirected to HTTPS
+	in mixedcontent-friendly browsers, which is handled by this ruleset. The other ruleset attempts to secure as much as
+	possible in all browsers without breaking the site, such as redirecting the target URL for the forum's login form to
+	HTTPS as well as the non-forum part of the site.
 -->
-<ruleset name="Asexuality.org">
+<ruleset name="Asexuality.org (forums)" platform="mixedcontent">
 	<target host="asexuality.org" />
 	<target host="www.asexuality.org" />
+		<test url="http://www.asexuality.org/en/forum/87-site-info-center/" />
+		<!-- Clicking page numbers triggers Uncaught DOMException only when on HTTPS. -->
+		<test url="http://www.asexuality.org/en/topic/19982-the-aven-terms-of-service-tos/" />
+		<!-- Clicking page numbers triggers Uncaught DOMException only when on HTTPS. -->
+		<test url="http://www.asexuality.org/en/search/" />
+		<!-- Clicking on "Search By Author" then typing anything in the Search By Author
+			textbox triggers active mixed content blocking only when on HTTPS. -->
+		<test url="http://www.asexuality.org/en/search/?q=test&#x26;author=test" />
+		<!-- Clicking "More search options" then "Search Content" triggers Uncaught
+			DOMException only when on HTTPS. -->
 
 	<securecookie host="^www\.asexuality\.org$" name=".+" />
 

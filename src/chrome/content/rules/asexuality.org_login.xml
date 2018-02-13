@@ -1,0 +1,35 @@
+<!--
+	Other asexuality.org rulesets:
+		asexuality.org.xml
+
+	Certificate mismatch:
+		ru.asexuality.org
+
+	Sept 2017: This ruleset has 2 functions. First, it redirects the non-forum part of the site, located at "/",
+	to HTTPS in all browsers. The forum is located at "/en/". Second, it redirects the target URLs for the forum's
+	account registration and login forms to HTTPS in all browsers. Due to mixedcontent issues, the rest of the
+	forum can't be redirected to HTTPS except in mixedcontent-friendly browsers, which is handled by the other
+	ruleset file.
+-->
+<ruleset name="Asexuality.org (partial)">
+	<target host="asexuality.org" />
+		<test url="http://asexuality.org/en/login/" />
+		<test url="http://asexuality.org/en/register/" />
+		<test url="http://asexuality.org/?q=about.html" />
+		<test url="http://asexuality.org/?q=contact.html" />
+	<target host="www.asexuality.org" />
+		<test url="http://www.asexuality.org/en/login/" />
+		<test url="http://www.asexuality.org/en/register/" />
+		<test url="http://www.asexuality.org/?q=about.html" />
+		<test url="http://www.asexuality.org/?q=contact.html" />
+
+	<rule from="^http://(www\.)?asexuality\.org/en/login"
+			to="https://www.asexuality.org/en/login/" />
+		<!-- Secure the login form target URL. -->
+	<rule from="^http://(www\.)?asexuality\.org/en/register"
+			to="https://www.asexuality.org/en/register/" />
+		<!-- Secure the signup form target URL. -->
+	<rule from="^http://(www\.)?asexuality\.org/($|\?q=)"
+		  	to="https://$1asexuality.org/$2" />
+		<!-- Secure the non-forum part of the site. -->
+</ruleset>
