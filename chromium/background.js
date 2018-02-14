@@ -507,7 +507,7 @@ function onHeadersReceived(details) {
     // See https://github.com/EFForg/https-everywhere/pull/14600#discussion_r168072480
     const uri = new URL(details.url);
     if (uri.hostname.slice(-6) == '.onion') {
-      return {responseHeaders: details.responseHeaders};
+      return {};
     }
 
     for (const idx in details.responseHeaders) {
@@ -518,8 +518,9 @@ function onHeadersReceived(details) {
         // Prepend if no upgrade-insecure-requests directive exists
         if (!value.match(/upgrade-insecure-requests/i)) {
           details.responseHeaders[idx].value = "upgrade-insecure-requests; " + value;
+          return {responseHeaders: details.responseHeaders};
         }
-        return {responseHeaders: details.responseHeaders};
+        return {};
       }
     }
 
@@ -529,8 +530,9 @@ function onHeadersReceived(details) {
       value: 'upgrade-insecure-requests'
     }
     details.responseHeaders.push(upgradeInsecureRequests);
+    return {responseHeaders: details.responseHeaders};
   }
-  return {responseHeaders: details.responseHeaders};
+  return {};
 }
 
 // Registers the handler for requests
