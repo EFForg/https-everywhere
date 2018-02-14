@@ -503,6 +503,13 @@ function onErrorOccurred(details) {
  */
 function onHeadersReceived(details) {
   if (isExtensionEnabled && httpNowhereOn) {
+    // Do not upgrade the .onion requests in HTTP Nowhere Mode,
+    // See https://github.com/EFForg/https-everywhere/pull/14600#discussion_r168072480
+    const uri = new URL(details.url);
+    if (uri.hostname.slice(-6) == '.onion') {
+      return {responseHeaders: details.responseHeaders};
+    }
+
     for (const idx in details.responseHeaders) {
       if (details.responseHeaders[idx].name.match(/Content-Security-Policy/i)) {
         // Existing CSP headers found
