@@ -91,7 +91,7 @@ module.exports = function(robot, alexa) {
     } else {
       // Submit a comment telling them what the issues were
       let comment = 'Thanks for editing!\n\n';
-      comment += 'I\'m sorry, but I still couldn\'t to understand your submission. ';
+      comment += 'I\'m sorry, but I still couldn\'t understand your submission. ';
       comment += 'Here are the problems I ran into this time:\n\n';
       problems.forEach(problem => comment += ` * ${problem}\n`);
       comment += '\nIf you edit your issue again, I\'ll try again and report back if I have problems again.';
