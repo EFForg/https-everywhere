@@ -8,7 +8,7 @@ const parse = require('./parse'),
   _ = require('lodash');
 
 // We do this outside the event handler to avoid setting up and tearing down this object each time a hook is received
-const botStartDate = new Date('2018-09-25');
+const botStartDate = new Date('2017-09-25');
 
 // TODO make this share more with newissue.js?
 
