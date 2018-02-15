@@ -383,3 +383,8 @@ and choose "Translate now" to enter the translation interface.
 
 * * *
 
+# Ghost pull requests
+
+HTTPS Everywhere maintainers do not normally close PRs without explaining why. However, if a GitHub user [deletes their GitHub account](https://help.github.com/articles/deleting-your-user-account/) after submitting a PR, the PR's ownership transfers to the [Ghost user (@ghost)](https://github.com/ghost). Feedback on these PRs typically goes unanswered, so our maintainers reserve the right to close @ghost PRs without comment.
+
+* * *
