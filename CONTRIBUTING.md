@@ -363,6 +363,14 @@ Standalone documentation should be written in [Markdown](https://en.wikipedia.or
 
 * * *
 
+# Pull Requests from Deleted Accounts
+
+Sometimes a contributor will [delete their GitHub account](https://help.github.com/articles/deleting-your-user-account/) after submitting a pull request, resulting in the pull request being associated with the [Ghost user (@ghost)](https://github.com/ghost).  These @ghost pull requests can cause problems for HTTPS Everywhere maintainers, leaving questions unanswered and closing off the possibility of receiving maintainer feedback to solicit clarification or request changes.
+
+We ask that if you want to delete your GitHub account, you either close your HTTPS Everywhere pull requests before you delete your account, or wait to delete your account until we merge your pull requests. Otherwise, maintainers are free to close @ghost pull requests without any comment.
+
+* * *
+
 # Contributing Translations
 
 HTTPS Everywhere translations are handled through Transifex.  The easiest way to help with translations is to [create a Transifex account](https://www.transifex.com/signup/) if you don't already have one.  Then log into your account and click "Explore", then search for "Tor Project", and click on The Tor Project.  Then choose the language you plan to translate into, click on the name of that language, and then click "Join team" and "Go" to accept joining the translation team for your language.
