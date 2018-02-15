@@ -8,7 +8,7 @@ const parse = require('./parse'),
   _ = require('lodash');
 
 // We do this outside the event handler to avoid setting up and tearing down this object each time a hook is received
-const botStartDate = new Date('2018-09-25');
+const botStartDate = new Date('2017-09-25');
 
 // TODO make this share more with newissue.js?
 
@@ -91,7 +91,7 @@ module.exports = function(robot, alexa) {
     } else {
       // Submit a comment telling them what the issues were
       let comment = 'Thanks for editing!\n\n';
-      comment += 'I\'m sorry, but I still couldn\'t to understand your submission. ';
+      comment += 'I\'m sorry, but I still couldn\'t understand your submission. ';
       comment += 'Here are the problems I ran into this time:\n\n';
       problems.forEach(problem => comment += ` * ${problem}\n`);
       comment += '\nIf you edit your issue again, I\'ll try again and report back if I have problems again.';
