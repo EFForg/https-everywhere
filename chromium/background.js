@@ -497,10 +497,47 @@ function onErrorOccurred(details) {
   }
 }
 
+/**
+ * handle webrequest.onHeadersReceived, insert upgrade-insecure-requests directive
+ * @param details details for the chrome.webRequest (see chrome doc)
+ */
+function onHeadersReceived(details) {
+  if (isExtensionEnabled && httpNowhereOn) {
+    // Do not upgrade the .onion requests in HTTP Nowhere Mode,
+    // See https://github.com/EFForg/https-everywhere/pull/14600#discussion_r168072480
+    const uri = new URL(details.url);
+    if (uri.hostname.slice(-6) == '.onion') {
+      return {};
+    }
+
+    for (const idx in details.responseHeaders) {
+      if (details.responseHeaders[idx].name.match(/Content-Security-Policy/i)) {
+        // Existing CSP headers found
+        const value = details.responseHeaders[idx].value;
+
+        // Prepend if no upgrade-insecure-requests directive exists
+        if (!value.match(/upgrade-insecure-requests/i)) {
+          details.responseHeaders[idx].value = "upgrade-insecure-requests; " + value;
+          return {responseHeaders: details.responseHeaders};
+        }
+        return {};
+      }
+    }
+
+    // CSP headers not found
+    const upgradeInsecureRequests = {
+      name: 'Content-Security-Policy',
+      value: 'upgrade-insecure-requests'
+    }
+    details.responseHeaders.push(upgradeInsecureRequests);
+    return {responseHeaders: details.responseHeaders};
+  }
+  return {};
+}
+
 // Registers the handler for requests
 // See: https://github.com/EFForg/https-everywhere/issues/10039
 chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"]);
-
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
 chrome.webRequest.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
@@ -511,8 +548,12 @@ chrome.webRequest.onCompleted.addListener(onCompleted, {urls: ["*://*/*"]});
 // Cleanup redirectCounter if neccessary
 chrome.webRequest.onErrorOccurred.addListener(onErrorOccurred, {urls: ["*://*/*"]})
 
+// Insert upgrade-insecure-requests directive in httpNowhere mode
+chrome.webRequest.onHeadersReceived.addListener(onHeadersReceived, {urls: ["https://*/*"]}, ["blocking", "responseHeaders"]);
+
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking.
 chrome.cookies.onChanged.addListener(onCookieChanged);
+
 
 /**
  * disable switch Planner
