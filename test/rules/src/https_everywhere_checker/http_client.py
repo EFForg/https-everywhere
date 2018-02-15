@@ -217,15 +217,22 @@ class HTTPFetcher(object):
 				segments.remove('.')
 			while '..' in segments:
 				segments.remove('..')
-			joinedUrlParts = joinedUrlParts._replace(path='/'.join(segments))
+			path = '/'.join(segments)
 
 		# Non-trivial rewrites do not work without a trailing '/'
 		# See https://github.com/EFForg/https-everywhere/issues/14365
-		if path == "":
-			joinedUrlParts = joinedUrlParts._replace(path='/')
+		if path == '':
+			path = '/'
 
-		newUrl = urlparse.urlunparse(joinedUrlParts)
-		return newUrl
+		joinedUrlParts = urlparse.ParseResult(
+			joinedUrlParts.scheme,
+			joinedUrlParts.netloc,
+			path,
+			joinedUrlParts.params,
+			joinedUrlParts.query,
+			joinedUrlParts.fragment,
+		)
+		return joinedUrlParts.geturl()
 		
 	@staticmethod
 	def _doFetch(url, options, platformPath):
