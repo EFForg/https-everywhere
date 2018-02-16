@@ -1,50 +1,27 @@
 <!--
-	CDN buckets:
+	Different content http/https:
+		where2getit.com
+		www.where2getit.cil
 
-		- br-w2gi.s3.amazonaws.com
+	Invalid certificate:
+		blog.where2getit.com
 
+	Mixed content:
+		direct.where2getit.com
+		hosted.where2getit.com
 
-	Nonfunctional subdomains:
-
-		- ^	(shows direct; mismatched, CN: direct.where2getit.com)
-		- blog	(http reply)
-		- www	(no https)
-
-
-	Problematic subdomains:
-
-		- mobile	(mismatched, CN: hosted.where2getit.com)
-		- static	(times out)
-
-
-	Partially covered subdomains:
-
-		- mobile	(→ hosted)
-		- static	(→ hosted)
-
-
-	Fully covered subdomains:
-
-		- direct
-		- hosted
-		- ignite
+	Refused:
+		static.where2getit.com
 
 -->
-<ruleset name="Where 2 Get It (partial)">
+<ruleset name="Where2GetIt.com (partial)">
 
-	<target host="*.where2getit.com" />
+	<target host="ignite.where2getit.com" />
+	<target host="mobile.where2getit.com" />
 
+	<securecookie host="^ignite\.where2getit\.com$" name=".+" />
 
-	<securecookie host="^\.(?:hosted|ignite)\.where2getit\.com$" name=".+" />
-
-
-	<rule from="^http://(direct|hosted|ignite)\.where2getit\.com/"
-		to="https://$1.where2getit.com/" />
-
-	<rule from="^http://mobile\.where2getit\.com/([\w-]+)/(images|javascript)/"
-		to="https://hosted.where2getit.com/$1/$2/" />
-
-	<rule from="^http://static\.where2getit\.com/w2gi/"
-		to="https://hosted.where2getit.com/w2gi/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
