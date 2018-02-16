@@ -1,8 +1,8 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.6
 
 # This python utility check for wildcard securecookies which
-# can be normalized, warn and exit with non-zero when such 
-# rulesets exist. 
+# can be normalized, warn and exit with non-zero when such
+# rulesets exist.
 
 # This is create in attempt to fix the issues on
 # https://github.com/EFForg/https-everywhere/pull/13840
@@ -16,10 +16,10 @@ import xml.etree.ElementTree
 
 def normalize_fn(fn):
     """
-    OSX and Linux filesystems encode composite characters differently in 
+    OSX and Linux filesystems encode composite characters differently in
     filenames. We should normalize to NFC: https://unicode.org/reports/tr15/
     """
-    fn = unicodedata.normalize("NFC", unicode(fn, "utf-8")).encode()
+    fn = unicodedata.normalize("NFC", fn)
     return fn
 
 def should_normalize_securecookie(host, name):
@@ -50,8 +50,8 @@ for filename in filenames:
         name = branch.attrib["name"]
 
         if should_normalize_securecookie(host, name):
-            print ("ERROR %s: contains wildcard securecookies "\
-                    "which can be normalized." % filename)
+            print ("ERROR {}: contains wildcard securecookies "\
+                    "which can be normalized.".format(filename))
             exit_with_non_zero = True
             break
 

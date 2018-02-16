@@ -49,8 +49,8 @@ if sys.argv[1] == "Chrome":
         error = e.__str__()
 
         if "executable needs to be in PATH" in e.__str__():
-            print "ChromeDriver isn't installed. Check test/chromium/README.md " \
-                "for instructions on how to install ChromeDriver"
+            print("ChromeDriver isn't installed. Check test/chromium/README.md " \
+                "for instructions on how to install ChromeDriver")
 
             sys.exit(2)
         else:
@@ -68,8 +68,8 @@ if sys.argv[1] == "Firefox":
         error = e.__str__()
 
         if "executable needs to be in PATH" in e.__str__():
-            print "GeckoDriver isn't installed. Check test/firefox/README.md " \
-                "for instructions on how to install GeckoDriver"
+            print("GeckoDriver isn't installed. Check test/firefox/README.md " \
+                "for instructions on how to install GeckoDriver")
 
             sys.exit(2)
         else:
@@ -78,18 +78,18 @@ if sys.argv[1] == "Firefox":
     # Allow the extension time to load
     time.sleep(1)
 
-print ''
+print('')
 
 driver.get('http://freerangekitten.com')
 
 test_failed = False
 if driver.current_url.startswith('https'):
-    print bcolors.OKGREEN + sys.argv[1] + ": HTTP to HTTPS redirection successful" + bcolors.ENDC
+    print(bcolors.OKGREEN + sys.argv[1] + ": HTTP to HTTPS redirection successful" + bcolors.ENDC)
 elif driver.current_url.startswith('http'):
-    print bcolors.FAIL + sys.argv[1] + ": HTTP to HTTPS redirection failed" + bcolors.ENDC
+    print(bcolors.FAIL + sys.argv[1] + ": HTTP to HTTPS redirection failed" + bcolors.ENDC)
     test_failed = True
 
-print ''
+print('')
 
 driver.quit()
 
