@@ -1,4 +1,5 @@
-This file comes from the [curl source repository](https://github.com/curl/curl).
+This file comes from the [curl source
+repository](https://github.com/curl/curl).
 
 To update the certificate bundle used in the Continuous Integration tests, run:
 
