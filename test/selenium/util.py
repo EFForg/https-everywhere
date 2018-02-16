@@ -81,7 +81,7 @@ class ExtensionTestCase(unittest.TestCase):
           chrome.tabs.create({url: '%s'}, function(tab) {
             setTimeout(
               () => chrome.tabs.create({url: '%s' + '?tabId=' + String(tab.id)}, done),
-              250
+              500
             );
           });
         })(arguments[0]);
