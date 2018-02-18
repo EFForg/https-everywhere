@@ -128,15 +128,17 @@ function toggleEnabledDisabled() {
  * @param tabArray
  */
 function gotTab(activeTab) {
-  sendMessage("get_active_rulesets", activeTab.id, function(rulesets){
-    for (var r in rulesets) {
-      var listDiv = stableRules;
-      if (!rulesets[r].default_state) {
+  sendMessage("get_active_rulesets", activeTab.id, function(rulesets) {
+    for (const ruleset of rulesets) {
+      let listDiv = stableRules;
+
+      if (!ruleset.default_state) {
         listDiv = unstableRules;
       }
-      appendRuleLineToListDiv(rulesets[r], listDiv, activeTab.id);
+      appendRuleLineToListDiv(ruleset, listDiv, activeTab.id);
       listDiv.style.display = 'block';
     }
+
     // Only show the "Add a rule" link if we're on an HTTPS page
     if (/^https:/.test(activeTab.url)) {
       show(e("add-rule-link"));
