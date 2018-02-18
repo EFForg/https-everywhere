@@ -177,6 +177,14 @@ class Ruleset(object):
                  off that rule or exclusion.  Return any coverage problems."""
         if not self.determine_test_application_run:
             self.test_application_problems = []
+
+            # check for duplicated test urls
+            if len(self.tests) != len(set(self.tests)):
+                for test in self.tests:
+                    if self.tests.count(test) > 1:
+                        self.test_application_problems.append("%s: Duplicated test URL found %s" % (
+                            self.filename, test.url))
+
             for test in self.tests:
                 applies = self.whatApplies(test.url)
                 if applies:
