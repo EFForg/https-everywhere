@@ -80,6 +80,12 @@ class Test(object):
         """
         self.url = url
 
+    def __eq__(test1, test2):
+        return test1.__hash__() == test2.__hash__()
+
+    def __hash__(self):
+        return self.url.__hash__()
+
 
 class Ruleset(object):
     """Represents one XML ruleset file."""
