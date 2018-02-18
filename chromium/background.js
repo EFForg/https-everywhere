@@ -184,10 +184,10 @@ AppliedRulesets.prototype = {
       for (const item of rulesets) {
         if (item.name == ruleset.name) {
           return ;
-        }
-
-        if (item.name < ruleset.name) {
+        } else if (item.name < ruleset.name) {
           insertIndex++;
+        } else {
+          break;
         }
       }
       rulesets.splice(insertIndex, 0, ruleset);
