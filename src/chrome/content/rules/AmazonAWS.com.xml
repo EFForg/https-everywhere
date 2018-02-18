@@ -1,59 +1,5 @@
 <!--
-	For rules that break image zoom, see AmazonWebServices-breakzoom.xml.
-
 	For other Amazon coverage, see Amazon.xml.
-
-
-	CDN buckets:
-
-		- ec7.images-amazon.com.cdn20.com
-
-			- ec7.images-amazon.com
-
-		- ec4.images-amazon.chinacache.net
-
-			- ec4.images-amazon.com
-
-		- d1ge0kk1l5kms0.cloudfront.net
-
-			- ec[5x].images-amazon.com
-			- g-ecx.images-amazon.com
-
-		- d36cz9buwru1tt.cloudfront.net
-		- s3.amazonaws.com/awsmedia/
-		- s3.amazonaws.com/rodica-work/
-		- images-(eu|fe|na).ssl-images-amazon.com.edgekey.net
-
-		- ecx.images-amazon.com.c.footprint.net
-
-			- images.amazon.com
-			- images-jp.amazon.com
-			- rcm-images.amazon.com
-
-		- ec2.images-amazon.com.edgesuite.net
-
-			- ec2.images.amazon.com
-
-		- ec8.images-amazon.com.edgesuite.net
-
-			- ec8.images-amazon.com
-
-		- ec3.images-amazon.com.c.footprint.net
-
-			- ec[13].images-amazon.com
-
-		- g-ecx.images-amazon.com.c.footprint.net
-
-			- g-images.amazon.com
-
-		- z-ecx.images-amazon.com.edgesuite.net
-
-			- z-ak.images-amazon.com
-
-		- amazonrtl.vo.llnwd.net
-
-			- ec6.images-amazon.com
-
 
 	Nonfunctional domains:
 
@@ -62,34 +8,9 @@
 
 	Problematic domains:
 
-		- z-ak.images-amazon.com			(503, akamai)
 		- (.+.)s3-website-eu-west-1.amazonaws.com
 		- (.+.)s3-website-us-east-1.amazonaws.com
 
-
-	Fully covered domains:
-
-		- forums.aws.amazon.com
-		- images-jp.amazon.com				(→ images-na.ssl-images-amazon.com)
-		- g-images.amazon.com				(→ d1ge0kk1l5kms0.cloudfront.net)
-		- webservices.amazon.com
-
-		- amazonaws.com subdomains:
-
-			- (.+.)s3
-			- (.+.)s3-ap-northeast-1
-			- (.+.)s3-ap-southeast-1
-			- (.+.)s3-external-[123]
-			- s3-eu-central-1
-			- (.+.)s3-eu-west-1
-			- (.+.)s3-sa-east-1
-			- (.+.)s3-us-west-1
-			- (.+.)s3-us-west-2
-			- (.+.)s3-website-eu-west-1		(→ s3-eu-west-1)
-			- (.+.)s3-website-us-east-1		(→ s3)
-
-		- g-ecx.images-amazon.com			(→ d1ge0kk1l5kms0.cloudfront.net)
-		- z-ak.images-amazon.com
 
 -->
 <ruleset name="AmazonWebServices">
@@ -128,7 +49,19 @@
 			Breaks forecast.io radar images
 							-->
 		<exclusion pattern="^http://darkskysatellite(?:maps)?\.s3\.amazonaws\.com/" />
+		<!--
+			Breaks wishtv.com and videos on many websites:
 
+				https://github.com/EFForg/https-everywhere/issues/4510
+				https://github.com/EFForg/https-everywhere/issues/14655
+
+				tests:
+					http://thefreethoughtproject.com/red-light-robin-hood-hero-risks-years-jail-free-citizens-unlawful-red-light-cameras/
+					http://www.wsbtv.com/news/local/north-fulton-county/1-dead-in-attempted-robbery-at-buckhead-jewelry-store/389269261
+					http://sacramento.cbslocal.com/2016/07/06/california-gun-law-changes-have-advocates-up-in-arms/
+		-->
+		<exclusion pattern="^http://anvato-api-config\.s3\.amazonaws.com/" />
+			<test url="http://anvato-api-config.s3.amazonaws.com/anvacks/anvato_mcp_lin_web_prod_4c36fbfd4d8d8ecae6488656e21ac6d1ac972749.json" />
 
 
 	<!--	Forced redirects:
@@ -220,8 +153,6 @@
 		<exclusion pattern="^http://amazon-zg\.s3\.amazonaws\.com/" />
 
 
-	<test url="http://dis.images.s3.amazonaws.com/" />
-	<test url="http://dis.resized.images.s3.amazonaws.com/" />
 	<test url="http://cms.kiva.org.s3.amazonaws.com/" />
 	<test url="http://s3.amazonaws.com/" />
 	<test url="http://s3-ap-northeast-1.amazonaws.com/" />
