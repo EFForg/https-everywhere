@@ -166,6 +166,7 @@ chrome.browserAction.onClicked.addListener(e => {
  */
 function AppliedRulesets() {
   this.active_tab_rules = new Map();
+  this.active_tab_main_frames = new Map();
 
   let that = this;
   if (chrome.tabs) {
@@ -176,24 +177,38 @@ function AppliedRulesets() {
 }
 
 AppliedRulesets.prototype = {
-  addRulesetToTab: function(tabId, ruleset) {
+  addRulesetToTab: function(tabId, type, ruleset) {
+    if (!this.active_tab_main_frames.has(tabId)) {
+      this.active_tab_main_frames.set(tabId, false);
+    }
+
+    // always show main_frame ruleset on the top
+    if (type == "main_frame") {
+      this.active_tab_main_frames.set(tabId, true);
+      this.active_tab_rules.set(tabId, [ruleset,]);
+      return ;
+    }
+
     if (this.active_tab_rules.has(tabId)) {
       let rulesets = this.active_tab_rules.get(tabId);
       let insertIndex = 0;
 
+      const ruleset_name = ruleset.name.toLowerCase();
+
       for (const item of rulesets) {
-        if (item.name == ruleset.name) {
+        const item_name = item.name.toLowerCase();
+
+        if (item_name == ruleset_name) {
           return ;
-        } else if (item.name < ruleset.name) {
+        } else if (insertIndex == 0 && this.active_tab_main_frames.get(tabId)) {
+          insertIndex = 1;
+        } else if (item_name < ruleset_name) {
           insertIndex++;
-        } else {
-          break;
         }
       }
       rulesets.splice(insertIndex, 0, ruleset);
     } else {
-      this.active_tab_rules.set(tabId, []);
-      this.addRulesetToTab(tabId, ruleset);
+      this.active_tab_rules.set(tabId, [ruleset,]);
     }
   },
 
@@ -207,6 +222,7 @@ AppliedRulesets.prototype = {
 
   removeTab: function(tabId) {
     this.active_tab_rules.delete(tabId);
+    this.active_tab_main_frames.delete(tabId);
   },
 
   getActiveRulesetCount: function (tabId) {
@@ -300,7 +316,7 @@ function onBeforeRequest(details) {
   var newuristr = null;
 
   for (let ruleset of potentiallyApplicable) {
-    appliedRulesets.addRulesetToTab(details.tabId, ruleset);
+    appliedRulesets.addRulesetToTab(details.tabId, details.type, ruleset);
     if (ruleset.active && !newuristr) {
       newuristr = ruleset.apply(canonical_url);
     }
