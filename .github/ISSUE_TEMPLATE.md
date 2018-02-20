@@ -9,6 +9,7 @@
 [//]: # (Leave in the line that best describes the issue you are reporting.)
 
 Type: ruleset issue
+Type: ruleset enhancement
 Type: new ruleset
 Type: code issue
 Type: feature request
