@@ -8,8 +8,6 @@ module.exports = function label(context, data, alexa) {
   const alexaPosition = alexa.data.indexOf(data.domain);
   const labels = [];
 
-  // TODO remove existing labels in case of edits
-
   if (alexaPosition === -1) {
     return;
   } else if (alexaPosition < 100) {
