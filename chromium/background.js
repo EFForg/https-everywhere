@@ -100,25 +100,6 @@ var switchPlannerEnabledFor = {};
 // rw / nrw stand for "rewritten" versus "not rewritten"
 var switchPlannerInfo = {};
 
-function getActiveRulesetCount(id) {
-  const applied = activeRulesets.getRulesets(id);
-
-  if (!applied)
-  {
-    return 0;
-  }
-
-  let activeCount = 0;
-
-  for (const key in applied) {
-    if (applied[key].active) {
-      activeCount++;
-    }
-  }
-
-  return activeCount;
-}
-
 /**
  * Set the icon color correctly
  * active: extension is enabled.
@@ -154,7 +135,7 @@ function updateState () {
       return;
     }
     const tabId = tabs[0].id;
-    const activeCount = getActiveRulesetCount(tabId);
+    const activeCount = appliedRulesets.getActiveRulesetCount(tabId);
 
     if ('setBadgeBackgroundColor' in chrome.browserAction) {
       chrome.browserAction.setBadgeBackgroundColor({ color: '#666666', tabId });
@@ -178,13 +159,16 @@ chrome.browserAction.onClicked.addListener(e => {
   });
 });
 
-/**
- * Adds a listener for removed tabs
- * */
-function AppliedRulesets() {
-  this.active_tab_rules = {};
 
-  var that = this;
+
+/**
+ * Add a listener for removed tabs
+ */
+function AppliedRulesets() {
+  this.active_tab_rules = new Map();
+  this.active_tab_main_frames = new Map();
+
+  let that = this;
   if (chrome.tabs) {
     chrome.tabs.onRemoved.addListener(function(tabId) {
       that.removeTab(tabId);
@@ -193,29 +177,70 @@ function AppliedRulesets() {
 }
 
 AppliedRulesets.prototype = {
-  addRulesetToTab: function(tabId, ruleset) {
-    if (tabId in this.active_tab_rules) {
-      this.active_tab_rules[tabId][ruleset.name] = ruleset;
+  addRulesetToTab: function(tabId, type, ruleset) {
+    if (!this.active_tab_main_frames.has(tabId)) {
+      this.active_tab_main_frames.set(tabId, false);
+    }
+
+    // always show main_frame ruleset on the top
+    if (type == "main_frame") {
+      this.active_tab_main_frames.set(tabId, true);
+      this.active_tab_rules.set(tabId, [ruleset,]);
+      return ;
+    }
+
+    if (this.active_tab_rules.has(tabId)) {
+      let rulesets = this.active_tab_rules.get(tabId);
+      let insertIndex = 0;
+
+      const ruleset_name = ruleset.name.toLowerCase();
+
+      for (const item of rulesets) {
+        const item_name = item.name.toLowerCase();
+
+        if (item_name == ruleset_name) {
+          return ;
+        } else if (insertIndex == 0 && this.active_tab_main_frames.get(tabId)) {
+          insertIndex = 1;
+        } else if (item_name < ruleset_name) {
+          insertIndex++;
+        }
+      }
+      rulesets.splice(insertIndex, 0, ruleset);
     } else {
-      this.active_tab_rules[tabId] = {};
-      this.active_tab_rules[tabId][ruleset.name] = ruleset;
+      this.active_tab_rules.set(tabId, [ruleset,]);
     }
   },
 
   getRulesets: function(tabId) {
-    if (tabId in this.active_tab_rules) {
-      return this.active_tab_rules[tabId];
+    if (this.active_tab_rules.has(tabId)) {
+      return this.active_tab_rules.get(tabId);
+    } else {
+      return null;
     }
-    return null;
   },
 
   removeTab: function(tabId) {
-    delete this.active_tab_rules[tabId];
+    this.active_tab_rules.delete(tabId);
+    this.active_tab_main_frames.delete(tabId);
+  },
+
+  getActiveRulesetCount: function (tabId) {
+    let activeCount = 0;
+
+    const rulesets = this.getRulesets(tabId);
+    if (rulesets) {
+      for (const ruleset of rulesets) {
+        if (ruleset.active) {
+          activeCount++;
+        }
+      }
+    }
+    return activeCount;
   }
 };
 
-// FIXME: change this name
-var activeRulesets = new AppliedRulesets();
+var appliedRulesets = new AppliedRulesets();
 
 var urlBlacklist = new Set();
 
@@ -275,7 +300,7 @@ function onBeforeRequest(details) {
   }
 
   if (details.type == "main_frame") {
-    activeRulesets.removeTab(details.tabId);
+    appliedRulesets.removeTab(details.tabId);
   }
 
   var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(canonical_host);
@@ -291,7 +316,7 @@ function onBeforeRequest(details) {
   var newuristr = null;
 
   for (let ruleset of potentiallyApplicable) {
-    activeRulesets.addRulesetToTab(details.tabId, ruleset);
+    appliedRulesets.addRulesetToTab(details.tabId, details.type, ruleset);
     if (ruleset.active && !newuristr) {
       newuristr = ruleset.apply(canonical_url);
     }
@@ -614,13 +639,20 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   } else if (message.type == "delete_from_ruleset_cache") {
     all_rules.ruleCache.delete(message.object);
   } else if (message.type == "get_active_rulesets") {
-    sendResponse(activeRulesets.getRulesets(message.object));
+    sendResponse(appliedRulesets.getRulesets(message.object));
   } else if (message.type == "set_ruleset_active_status") {
-    var ruleset = activeRulesets.getRulesets(message.object.tab_id)[message.object.name];
-    ruleset.active = message.object.active;
-    if (ruleset.default_state == message.object.active) {
-      message.object.active = undefined;
+    let rulesets = appliedRulesets.getRulesets(message.object.tab_id);
+
+    for (let ruleset of rulesets) {
+      if (ruleset.name == message.object.name) {
+        ruleset.active = message.object.active;
+        if (ruleset.default_state == message.object.active) {
+          message.object.active = undefined;
+        }
+        break;
+      }
     }
+
     all_rules.setRuleActiveState(message.object.name, message.object.active).then(() => {
       sendResponse(true);
     });
