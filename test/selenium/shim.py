@@ -37,7 +37,7 @@ def get_browser_type(string):
     for t in BROWSER_TYPES:
         if t in string:
             return t
-    raise ValueError("couldn't get browser type from %s" % string)
+    raise ValueError("couldn't get browser type from {}".format(string))
 
 
 def get_browser_name(string):
@@ -47,7 +47,7 @@ def get_browser_name(string):
         for bn in BROWSER_NAMES:
             if string in bn and unix_which(bn, silent=True):
                 return os.path.basename(unix_which(bn))
-        raise ValueError('Could not get browser name from %s' % string)
+        raise ValueError('Could not get browser name from {}'.format(string))
 
 
 def build_crx():
@@ -101,21 +101,20 @@ class Shim:
             self.browser_path = unix_which(bname)
             self.browser_type = browser
         else:
-            raise ValueError("could not infer BROWSER from %s" % browser)
+            raise ValueError("could not infer BROWSER from {}".format(browser))
 
         self.extension_path = self.get_ext_path()
         self._set_specifics()
-        print('\nUsing browser path: %s \nwith browser type: %s \nand extension path: %s' %
-              (self.browser_path, self.browser_type, self.extension_path))
+        print('\nUsing browser path: {} \nwith browser type: {} \nand extension path: {}'.format(self.browser_path, self.browser_type, self.extension_path))
         self._set_urls(self.base_url)
 
     def _set_specifics(self):
         self._specifics = self._specifics or {
             'chrome': Specifics(self.chrome_manager,
-                                'chrome-extension://%s/' % self.chrome_info['extension_id'],
+                                'chrome-extension://{}/'.format(self.chrome_info['extension_id']),
                                 self.chrome_info),
             'firefox': Specifics(self.firefox_manager,
-                                 'moz-extension://%s/' % self.firefox_info['uuid'],
+                                 'moz-extension://{}/'.format(self.firefox_info['uuid']),
                                  self.firefox_info)}
         self.manager, self.base_url, self.info = self._specifics[self.browser_type]
 
@@ -166,8 +165,7 @@ class Shim:
     def firefox_manager(self):
         ffp = webdriver.FirefoxProfile()
         # make extension id constant across runs
-        ffp.set_preference('extensions.webextensions.uuids', '{"%s": "%s"}' %
-                           (self.info['extension_id'], self.info['uuid']))
+        ffp.set_preference('extensions.webextensions.uuids', '{"{}": "{}"}'.format(self.info['extension_id'], self.info['uuid']))
 
         driver = webdriver.Firefox(firefox_profile=ffp, firefox_binary=self.browser_path)
         install_ext_on_ff(driver, self.extension_path)
