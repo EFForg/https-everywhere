@@ -2,7 +2,7 @@
 # They are not (yet) guarranteed to be "proper metrics" in calculus sense.
 
 from lxml import etree
-from cStringIO import StringIO
+from io import StringIO
 
 import struct
 import bsdiff4 as bsdiff
@@ -77,13 +77,13 @@ class MarkupMetric(Metric):
         """
         # this isinstance test is in lxml tutorial, dunno how else to skip comments
         children = [child for child in list(
-            elem) if isinstance(child.tag, basestring)]
+            elem) if isinstance(child.tag, str)]
         thisElem = tagToCharMap[elem.tag]
 
         if children:
             childrenMap = [self.mapTree(child, tagToCharMap)
                            for child in children]
-            return thisElem + u'(' + "".join(childrenMap) + u')'
+            return thisElem + '(' + "".join(childrenMap) + ')'
         else:
             return thisElem
 

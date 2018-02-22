@@ -1,5 +1,5 @@
 from tldextract import tldextract
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 import regex
 import socket
@@ -33,7 +33,7 @@ class Rule(object):
         return self.fromRe.search(url) is not None
 
     def __repr__(self):
-        return "<Rule from '%s' to '%s'>" % (self.fromRe.pattern, self.toPattern)
+        return "<Rule from '{}' to '{}'>".format(self.fromRe.pattern, self.toPattern)
 
     def __str__(self):
         return self.__repr__()
@@ -68,7 +68,7 @@ class Exclusion(object):
         return self.exclusionRe.search(url) is not None
 
     def __repr__(self):
-        return "<Exclusion pattern '%s'>" % (self.exclusionPattern)
+        return "<Exclusion pattern '{}'>".format(self.exclusionPattern)
 
 
 class Test(object):
@@ -85,11 +85,10 @@ class Ruleset(object):
     """Represents one XML ruleset file."""
 
     # extracts value of first attribute in list as a string
-    def _strAttr(attrList): return unicode(attrList[0])
+    def _strAttr(attrList): return attrList[0]
 
-    # extract attribute value and decode to ASCII with IDN punycode encoding
-    def _idnAttrs(attrList): return tuple(
-        unicode(attr).encode("idna") for attr in attrList)
+    # extract attribute value
+    def _targetAttrs(attrList): return tuple(attr for attr in attrList)
 
     # convert each etree Element of list into Rule
     def _rulesConvert(elemList): return [Rule(elem) for elem in elemList]
@@ -108,7 +107,7 @@ class Ruleset(object):
         ("name",	"@name", 		_strAttr),
         ("platform",	"@platform", 		_strAttr),
         ("defaultOff",	"@default_off", 	_strAttr),
-        ("targets",	"target/@host",		_idnAttrs),
+        ("targets",	"target/@host",		_targetAttrs),
         ("rules",	"rule", 		_rulesConvert),
         ("exclusions",	"exclusion", 		_exclusionConvert),
         ("tests",	"test", 		_testConvert),
@@ -159,7 +158,7 @@ class Ruleset(object):
                 newUrl = rule.apply(url)
                 if url != newUrl:
                     return newUrl  # only one rewrite
-            except Exception, e:
+            except Exception as e:
                 raise Exception(e.__str__() + " " + rule.fromPattern)
 
         return url  # nothing rewritten
@@ -170,7 +169,7 @@ class Ruleset(object):
         for target in self.targets:
             if '*' in target:
                 continue
-            self.tests.append(Test("http://%s/" % target))
+            self.tests.append(Test("http://{}/".format(target)))
 
     def _determineTestApplication(self):
         """Match each test against a rule or exclusion if possible, and hang them
@@ -182,7 +181,7 @@ class Ruleset(object):
                 if applies:
                     applies.tests.append(test)
                 else:
-                    self.test_application_problems.append("%s: No rule or exclusion applies to test URL %s" % (
+                    self.test_application_problems.append("{}: No rule or exclusion applies to test URL {}".format(
                         self.filename, test.url))
 
             for test in self.tests:
@@ -209,7 +208,7 @@ class Ruleset(object):
                         parts[i] = tmp
 
                 if not isCovered:
-                    self.test_application_problems.append("%s: No target applies to test URL %s" % (
+                    self.test_application_problems.append("{}: No target applies to test URL {}".format(
                         self.filename, test.url))
 
             self.determine_test_application_run = True
@@ -217,7 +216,7 @@ class Ruleset(object):
 
     def getTargetValidityProblems(self):
         """Verify that each target has a valid TLD in order to prevent problematic rewrite
-                 as stated in EFForg/https-everywhere/issues/10877. In particular, 
+                 as stated in EFForg/https-everywhere/issues/10877. In particular,
                  right-wildcard target are ignored from this test.
 
                  Returns an array of strings reporting any coverage problems if they exist,
@@ -243,8 +242,7 @@ class Ruleset(object):
                           target and target_re.search(other)]
 
                 if others:
-                    problems.append("%s: Target '%s' also covers %s" %
-                                    (self.filename, target, others))
+                    problems.append("{}: Target '{}' also covers {}".format(self.filename, target, others))
 
             # Ignore right-wildcard targets for TLD checks
             if target.endswith(".*"):
@@ -267,10 +265,9 @@ class Ruleset(object):
             # Extract TLD from target if possible
             res = tldextract.extract(target)
             if res.suffix == "":
-                problems.append("%s: Target '%s' missing eTLD" %
-                                (self.filename, target))
+                problems.append("{}: Target '{}' missing eTLD".format(self.filename, target))
             elif res.domain == "":
-                problems.append("%s: Target '%s' containing entire eTLD" % (
+                problems.append("{}: Target '{}' containing entire eTLD".format(
                     self.filename, target))
 
         return problems
@@ -308,7 +305,7 @@ class Ruleset(object):
                 needed_count = 10
 
             # non-wildcard target always have a implicit test url, if is it not excluded
-            if not "*" in target and not self.excludes(("http://%s/" % target)):
+            if not "*" in target and not self.excludes(("http://{}/".format(target))):
                 continue
 
             # According to the logic in rules.js available at
@@ -337,7 +334,7 @@ class Ruleset(object):
                         break
 
             if actual_count < needed_count:
-                problems.append("%s: Not enough tests (%d vs %d) for %s" % (
+                problems.append("{}: Not enough tests ({} vs {}) for {}".format(
                     self.filename, actual_count, needed_count, target))
 
         # Next, make sure each rule or exclusion has sufficient tests.
@@ -357,7 +354,7 @@ class Ruleset(object):
                 len(regex.findall("\\?", rule.fromPattern))
             actual_count = len(rule.tests)
             if actual_count < needed_count:
-                problems.append("%s: Not enough tests (%d vs %s) for %s" % (
+                problems.append("{}: Not enough tests ({} vs {}) for {}".format(
                     self.filename, actual_count, needed_count, rule))
                 pass
         for exclusion in self.exclusions:
@@ -369,7 +366,7 @@ class Ruleset(object):
                 len(regex.findall("\\?", rule.fromPattern))
             actual_count = len(exclusion.tests)
             if actual_count < needed_count:
-                problems.append("%s: Not enough tests (%d vs %s) for %s" % (
+                problems.append("{}: Not enough tests ({} vs {}) for {}".format(
                     self.filename, actual_count, needed_count, exclusion))
         return problems
 
@@ -379,13 +376,13 @@ class Ruleset(object):
         self._determineTestApplication()
         problems = []
         for rule in self.rules:
-            test_urls = map(lambda test: test.url, rule.tests)
+            test_urls = [test.url for test in rule.tests]
             for test in rule.tests:
                 try:
                     replacement_url = rule.apply(test.url)
-                except Exception, e:
+                except Exception as e:
                     if ~e.message.index("invalid group reference"):
-                        problems.append("%s: Rules include non-matched groups in replacement for url: %s" % (
+                        problems.append("{}: Rules include non-matched groups in replacement for url: {}".format(
                             self.filename, test.url))
         return problems
 
@@ -397,7 +394,7 @@ class Ruleset(object):
             for test in rule.tests:
                 parsed_url = urlparse(test.url)
                 if parsed_url.path == '':
-                    problems.append("%s: Test url lacks a trailing /: %s" % (
+                    problems.append("{}: Test url lacks a trailing /: {}".format(
                         self.filename, test.url))
         return problems
 
@@ -410,7 +407,7 @@ class Ruleset(object):
                 return rule
 
     def __repr__(self):
-        return "<Ruleset(name=%s, platform=%s)>" % (repr(self.name), repr(self.platform))
+        return "<Ruleset(name={}, platform={})>".format(repr(self.name), repr(self.platform))
 
     def __str__(self):
         return self.__repr__()
