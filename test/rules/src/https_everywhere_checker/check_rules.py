@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3.6
 
 import binascii
 import argparse
@@ -7,13 +7,13 @@ import glob
 import hashlib
 import logging
 import os
-import Queue
+import queue
 import re
 import sys
 import threading
 import time
 
-from ConfigParser import SafeConfigParser
+from configparser import SafeConfigParser
 
 from lxml import etree
 
@@ -32,7 +32,7 @@ def convertLoglevel(levelString):
     try:
         return getattr(logging, levelString.upper())
     except AttributeError:
-        raise ValueError("No such loglevel - %s" % levelString)
+        raise ValueError("No such loglevel - {}".format(levelString))
 
 
 def getMetricClass(metricType):
@@ -46,7 +46,7 @@ def getMetricClass(metricType):
     }
 
     if metricType not in metricMap:
-        raise ValueError("Metric type '%s' is not known" % metricType)
+        raise ValueError("Metric type '{}' is not known".format(metricType))
 
     return metricMap[metricType]
 
@@ -89,7 +89,7 @@ class UrlComparisonThread(threading.Thread):
             try:
                 self.processTask(self.taskQueue.get())
                 self.taskQueue.task_done()
-            except Exception, e:
+            except Exception as e:
                 logging.exception(e)
             if self.taskQueue.empty():
                 break
@@ -102,7 +102,7 @@ class UrlComparisonThread(threading.Thread):
                 problems.append(result)
         if problems:
             for problem in problems:
-                logging.error("%s: %s" % (task.ruleFname, problem))
+                logging.error("{}: {}".format(task.ruleFname, problem))
             if self.autoDisable:
                 disableRuleset(task.ruleset, problems)
 
@@ -126,35 +126,35 @@ class UrlComparisonThread(threading.Thread):
         self.resQueue.put(res)
 
     def fetchUrl(self, plainUrl, transformedUrl, fetcherPlain, fetcherRewriting, ruleFname):
-        logging.debug("=**= Start %s => %s ****", plainUrl, transformedUrl)
-        logging.debug("Fetching transformed page %s", transformedUrl)
+        logging.debug("=**= Start {} => {} ****".format(plainUrl, transformedUrl))
+        logging.debug("Fetching transformed page {}".format(transformedUrl))
         transformedRcode, transformedPage = fetcherRewriting.fetchHtml(
             transformedUrl)
-        logging.debug("Fetching plain page %s", plainUrl)
+        logging.debug("Fetching plain page {}".format(plainUrl))
         # If we get an exception (e.g. connection refused,
         # connection timeout) on the plain page, don't treat
         # that as a failure (except DNS resolution errors)
         plainRcode, plainPage = None, None
         try:
             plainRcode, plainPage = fetcherPlain.fetchHtml(plainUrl)
-        except Exception, e:
-            errno, message = e
+        except Exception as e:
+            errno, message = e.args
             if errno == 6:
-                message = "Fetch error: %s => %s: %s" % (
+                message = "Fetch error: {} => {}: {}".format(
                     plainUrl, transformedUrl, e)
-                self.queue_result("error", "fetch-error %s" %
-                                  e, ruleFname, plainUrl, https_url=transformedUrl)
+                self.queue_result("error", "fetch-error {}".format(e),
+                                  ruleFname, plainUrl, https_url=transformedUrl)
                 return message
 
             logging.debug(
-                "Non-fatal fetch error for plain page %s: %s" % (plainUrl, e))
+                "Non-fatal fetch error for plain page {}: {}".format(plainUrl, e))
 
         # Compare HTTP return codes - if original page returned 2xx,
         # but the transformed didn't, consider it an error in ruleset
         # (note this is not symmetric, we don't care if orig page is broken).
         # We don't handle 1xx codes for now.
         if plainRcode and plainRcode//100 == 2 and transformedRcode//100 != 2:
-            message = "Non-2xx HTTP code: %s (%d) => %s (%d)" % (
+            message = "Non-2xx HTTP code: {} ({}) => {} ({})".format(
                 plainUrl, plainRcode, transformedUrl, transformedRcode)
             self.queue_result("error", "non-2xx http code",
                               ruleFname, plainUrl, https_url=transformedUrl)
@@ -169,11 +169,11 @@ class UrlComparisonThread(threading.Thread):
         if plainPage:
             distance = self.metric.distanceNormed(plainPage, transformedPage)
 
-            logging.debug("==== D: %0.4f; %s (%d) -> %s (%d) =====",
-                          distance, plainUrl, len(plainPage), transformedUrl, len(transformedPage))
+            logging.debug("==== D: {:.4f}; {} ({}) -> {} ({}) =====".format(
+                          distance, plainUrl, len(plainPage), transformedUrl, len(transformedPage)))
             if distance >= self.thresholdDistance:
-                logging.info("Big distance %0.4f: %s (%d) -> %s (%d). Rulefile: %s =====",
-                             distance, plainUrl, len(plainPage), transformedUrl, len(transformedPage), ruleFname)
+                logging.info("Big distance {:.4f}: {} ({}) -> {} ({}). Rulefile: {} =====".format(
+                             distance, plainUrl, len(plainPage), transformedUrl, len(transformedPage), ruleFname))
 
         self.queue_result("success", "", ruleFname, plainUrl)
 
@@ -184,9 +184,9 @@ class UrlComparisonThread(threading.Thread):
 
         try:
             transformedUrl = task.ruleset.apply(plainUrl)
-        except Exception, e:
+        except Exception as e:
             self.queue_result("regex_error", str(e), ruleFname, plainUrl)
-            logging.error("%s: Regex Error %s" % (ruleFname, str(e)))
+            logging.error("{}: Regex Error {}".format(ruleFname, str(e)))
             return
 
         try:
@@ -198,22 +198,22 @@ class UrlComparisonThread(threading.Thread):
             try:
                 message = self.fetchUrl(
                     plainUrl, transformedUrl, fetcherPlain, fetcherRewriting, ruleFname)
-            except Exception, e:
-                message = "Fetch error: %s => %s: %s" % (
+            except Exception as e:
+                message = "Fetch error: {} => {}: {}".format(
                     plainUrl, transformedUrl, e)
-                self.queue_result("error", "fetch-error %s" %
-                                  e, ruleFname, plainUrl, https_url=transformedUrl)
+                self.queue_result("error", "fetch-error {}".format(e),
+                                  ruleFname, plainUrl, https_url=transformedUrl)
                 logging.debug(message)
 
         finally:
-            logging.info("Finished comparing %s -> %s. Rulefile: %s.",
-                         plainUrl, transformedUrl, ruleFname)
+            logging.info("Finished comparing {} -> {}. Rulefile: {}.".format(
+                         plainUrl, transformedUrl, ruleFname))
 
         return message
 
 
 def disableRuleset(ruleset, problems):
-    logging.info("Disabling ruleset %s", ruleset.filename)
+    logging.info("Disabling ruleset {}".format(ruleset.filename))
     contents = open(ruleset.filename).read()
     # Don't bother to disable rulesets that are already disabled
     if re.search("\bdefault_off=", contents):
@@ -231,8 +231,8 @@ def disableRuleset(ruleset, problems):
     problemStatement = ("""
 <!--
 Disabled by https-everywhere-checker because:
-%s
-""" % "\n".join(problems))
+{}
+""".format("\n".join(problems)))
     contents = re.sub("^<!--", problemStatement, contents)
     with open(ruleset.filename, "w") as f:
         f.write(contents)
@@ -247,7 +247,7 @@ skipdict = {}
 
 def skipFile(filename):
     hasher = hashlib.new('sha256')
-    hasher.update(open(filename).read())
+    hasher.update(open(filename, 'rb').read())
     if hasher.digest() in skipdict:
         return True
     else:
@@ -273,7 +273,7 @@ def json_output(resQueue, json_file, problems):
             data[result_val].append(res)
 
             res = resQueue.get_nowait()
-    except Queue.Empty:
+    except queue.Empty:
         pass  # Got everything
 
     data["coverage"] = problems
@@ -350,7 +350,7 @@ def cli():
     certdirFiles = glob.glob(os.path.join(certdir, "*"))
     havePlatforms = set([os.path.basename(fname)
                          for fname in certdirFiles if os.path.isdir(fname)])
-    logging.debug("Loaded certificate platforms: %s", ",".join(havePlatforms))
+    logging.debug("Loaded certificate platforms: {}".format(",".join(havePlatforms)))
     if "default" not in havePlatforms:
         raise RuntimeError(
             "Platform 'default' is missing from certificate directories")
@@ -380,41 +380,38 @@ def cli():
     nonmatchGroupProblemsExist = False
     testFormattingProblemsExist = False
     for xmlFname in xmlFnames:
-        logging.debug("Parsing %s", xmlFname)
+        logging.debug("Parsing {}".format(xmlFname))
         if skipFile(xmlFname):
             logging.debug(
-                "Skipping rule file '%s', matches skiplist." % xmlFname)
+                "Skipping rule file '{}', matches skiplist.".format(xmlFname))
             continue
 
-        try:
-            ruleset = Ruleset(etree.parse(file(xmlFname)).getroot(), xmlFname)
-        except Exception, e:
-            logging.error("Exception parsing %s: %s" % (xmlFname, e))
+        ruleset = Ruleset(etree.parse(open(xmlFname, "rb")).getroot(), xmlFname)
         if ruleset.defaultOff and not includeDefaultOff:
-            logging.debug("Skipping rule '%s', reason: %s",
-                          ruleset.name, ruleset.defaultOff)
+            logging.debug("Skipping rule '{}', reason: {}".format(
+                          ruleset.name, ruleset.defaultOff))
             continue
         # Check whether ruleset coverage by tests was sufficient.
         if checkCoverage:
-            logging.debug("Checking coverage for '%s'." % ruleset.name)
+            logging.debug("Checking coverage for '{}'.".format(ruleset.name))
             problems = ruleset.getCoverageProblems()
             for problem in problems:
                 coverageProblemsExist = True
                 logging.error(problem)
         if checkTargetValidity:
-            logging.debug("Checking target validity for '%s'." % ruleset.name)
+            logging.debug("Checking target validity for '{}'.".format(ruleset.name))
             problems = ruleset.getTargetValidityProblems()
             for problem in problems:
                 targetValidityProblemExist = True
                 logging.error(problem)
         if checkNonmatchGroups:
-            logging.debug("Checking non-match groups for '%s'." % ruleset.name)
+            logging.debug("Checking non-match groups for '{}'.".format(ruleset.name))
             problems = ruleset.getNonmatchGroupProblems()
             for problem in problems:
                 nonmatchGroupProblemsExist = True
                 logging.error(problem)
         if checkTestFormatting:
-            logging.debug("Checking test formatting for '%s'." % ruleset.name)
+            logging.debug("Checking test formatting for '{}'.".format(ruleset.name))
             problems = ruleset.getTestFormattingProblems()
             for problem in problems:
                 testFormattingProblemsExist = True
@@ -429,7 +426,7 @@ def cli():
         if graphvizFile == "-":
             graph.dot()
         else:
-            with file(graphvizFile, "w") as gvFd:
+            with open(graphvizFile, "w") as gvFd:
                 graph.dot(gvFd)
         if exitAfterDump:
             sys.exit(0)
@@ -450,12 +447,12 @@ def cli():
 
     urlList = []
     if config.has_option("http", "url_list"):
-        with file(config.get("http", "url_list")) as urlFile:
+        with open(config.get("http", "url_list")) as urlFile:
             urlList = [line.rstrip() for line in urlFile.readlines()]
 
     if httpEnabled:
-        taskQueue = Queue.Queue(1000)
-        resQueue = Queue.Queue()
+        taskQueue = queue.Queue(1000)
+        resQueue = queue.Queue()
         startTime = time.time()
         testedUrlPairCount = 0
         config.getboolean("debug", "exit_after_dump")
@@ -480,13 +477,13 @@ def cli():
                     else:
                         # TODO: We should fetch the non-rewritten exclusion URLs to make
                         # sure they still exist.
-                        logging.debug("Skipping excluded URL %s", test.url)
+                        logging.debug("Skipping excluded URL {}".format(test.url))
                 task = ComparisonTask(testUrls, fetcherPlain, fetcher, ruleset)
                 taskQueue.put(task)
 
         taskQueue.join()
-        logging.info("Finished in %.2f seconds. Loaded rulesets: %d, URL pairs: %d.",
-                     time.time() - startTime, len(xmlFnames), testedUrlPairCount)
+        logging.info("Finished in {:.2f} seconds. Loaded rulesets: {}, URL pairs: {}.".format(
+                     time.time() - startTime, len(xmlFnames), testedUrlPairCount))
         if args.json_file:
             json_output(resQueue, args.json_file, problems)
     if checkCoverage:
