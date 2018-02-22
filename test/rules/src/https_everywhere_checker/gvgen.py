@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.6
 # -*- coding: utf-8 -*-
 # $Id: gvgen.py 10440 2007-10-23 15:17:33Z toady $
 """
@@ -122,14 +122,14 @@ class GvGen:
                 d = self.getEdge(dst)
                 s['to'].append(d['id'])
             except:
-                print "/* (newLink): Cannot get the destination edge */"
+                print("/* (newLink): Cannot get the destination edge */")
 
         except:
-            print "/* (newLink): Cannot get the source edge */"
+            print("/* (newLink): Cannot get the source edge */")
 
     def debug(self):
         for e in self.__edges:
-            print "element = " + str(e)
+            print("element = " + str(e))
 
     def collectLeaves(self, parentid):
         """
@@ -198,13 +198,13 @@ class GvGen:
             e = self.getEdge(eid)
             if self.__has_children(eid):
                 for s in self.__default_style:
-                    properties += "%s=\"%s\";\n" % (str(s[0]), str(s[1]))
+                    properties += "{}=\"{}\";\n".format(str(s[0]), str(s[1]))
             else:
                 # Build the properties string for edge
                 applied_style = 1
                 properties = "["
                 for s in self.__default_style:
-                    properties += "%s=\"%s\"," % (str(s[0]), str(s[1]))
+                    properties += "{}=\"{}\",".format(str(s[0]), str(s[1]))
                 if not props:
                     properties = properties[:-1]
                     properties += "]"
@@ -218,13 +218,13 @@ class GvGen:
 
             if self.__has_children(eid):
                 for s in self.__styles[stylename]:
-                    properties += "%s=\"%s\";\n" % (str(s[0]), str(s[1]))
+                    properties += "{}=\"{}\";\n".format(str(s[0]), str(s[1]))
             else:
                 # Build the properties string for edge
                 applied_style = 1
                 properties = "["
                 for s in self.__styles[stylename]:
-                    properties += "%s=\"%s\"," % (str(s[0]), str(s[1]))
+                    properties += "{}=\"{}\",".format(str(s[0]), str(s[1]))
                 if not props:
                     properties = properties[:-1]
                     properties += "]"
@@ -237,7 +237,7 @@ class GvGen:
             if props:
                 for k in props.keys():
                     val = props[k]
-                    properties += "%s=\"%s\";\n" % (str(k), str(val))
+                    properties += "{}=\"{}\";\n".format(str(k), str(val))
         else:
             # Build the properties string for edge
             if props:
@@ -245,7 +245,7 @@ class GvGen:
                     properties = "["
                 for k in props.keys():
                     val = props[k]
-                    properties += "%s=\"%s\"," % (str(k), str(val))
+                    properties += "{}=\"{}\",".format(str(k), str(val))
                 # We delete the last ','
                 properties = properties[:-1]
                 properties += "]"
@@ -268,10 +268,10 @@ class GvGen:
 
     def tree_debug(self, level, eid, children):
         if children:
-            print "(level:%d) Eid:%d has children (%s)" % (
-                level, eid, str(children))
+            print("(level:{}) Eid:{} has children ({})".format(
+                level, eid, str(children)))
         else:
-            print "Eid:"+str(eid)+" has no children"
+            print("Eid:"+str(eid)+" has no children")
 
     def tree(self, level, eid, children):
         """
@@ -280,7 +280,7 @@ class GvGen:
         """
         e = self.getEdge(eid)
         if debug:
-            print "/* Grabed edge = %s*/" % str(e)
+            print("/* Grabed edge = {}*/".format(str(e)))
 
         if e['lock'] == 1:			  # The edge is locked, nothing should be printed
             return
@@ -291,10 +291,10 @@ class GvGen:
 
         if children:
             self.fd.write(level * self.padding_str)
-            self.fd.write(self.padding_str + "subgraph cluster%d {\n" % eid)
+            self.fd.write(self.padding_str + "subgraph cluster{} {\n".format(eid))
             properties = self.propertiesAsStringGet(eid, props)
             self.fd.write(level * self.padding_str)
-            self.fd.write(self.padding_str + "%s" % properties)
+            self.fd.write(self.padding_str + "{}".format(properties))
             self.__opened_braces.append([eid, level])
         else:
 
@@ -309,8 +309,8 @@ class GvGen:
                 last_level = 0
 
             if debug:
-                print "/* e[parent] = %s, last_cluster = %d, last_level = %d, opened_braces: %s */" % (
-                    str(e['parent']), last_cluster, last_level, str(self.__opened_braces))
+                print("/* e[parent] = {}, last_cluster = {}, last_level = {}, opened_braces: {} */".format(
+                    str(e['parent']), last_cluster, last_level, str(self.__opened_braces)))
 
             # Write children/parent with properties
             if e['parent']:
@@ -322,15 +322,14 @@ class GvGen:
                             # We browse any property to build a string
                             self.fd.write(last_level * self.padding_str)
                             self.fd.write(self.padding_str +
-                                          "edge%d %s;\n" % (eid, properties))
+                                          "edge{} {};\n".format(eid, properties))
                         else:
                             self.fd.write(last_level * self.padding_str)
                             self.fd.write(self.padding_str + "}\n")
                             self.__opened_braces.pop()
                 else:
                     self.fd.write(level * self.padding_str)
-                    self.fd.write(self.padding_str + "edge%d %s;\n" %
-                                  (eid, properties))
+                    self.fd.write(self.padding_str + "edge{} {};\n".format(eid, properties))
                     cl = self.collectUnlockedLeaves(e['parent'])
                     for leaf in cl:
                         l = self.getEdge(leaf)
@@ -338,14 +337,13 @@ class GvGen:
                         properties = self.propertiesAsStringGet(leaf, props)
                         self.fd.write(last_level * self.padding_str)
                         self.fd.write(
-                            self.padding_str + self.padding_str + "edge%d %s;\n" % (leaf, properties))
+                            self.padding_str + self.padding_str + "edge{} {};\n".format(leaf, properties))
                         self.lockEdge(leaf)
 
                     self.fd.write(level * self.padding_str + "}\n")
                     self.__opened_braces.pop()
             else:
-                self.fd.write(self.padding_str + "edge%d %s;\n" %
-                              (eid, properties))
+                self.fd.write(self.padding_str + "edge{} {};\n".format(eid, properties))
 
     def browse(self, eid, cb):
         """
@@ -376,7 +374,7 @@ class GvGen:
             children = self.__has_children(to)
             if children:
                 raise Exception("Cannot link to a parent")
-            self.fd.write("edge%d->edge%d;\n" % (eid, to))
+            self.fd.write("edge{}->edge{};\n".format(eid, to))
 
     def dot(self, fd=stdout):
         """
@@ -408,15 +406,15 @@ class GvGen:
     # Begin: Backward API compatibility (with gvglue)
     #
     def properties_style_add(self, stylename, key, val):
-        print "/* Warning, use of deprecated function (properties_style_add). Please use 'styleAppend' now */"
+        print("/* Warning, use of deprecated function (properties_style_add). Please use 'styleAppend' now */")
         self.styleAppend(stylename, key, val)
 
     def properties_style_apply(self, stylename, eid):
-        print "/* Warning, use of deprecated function (properties_style_apply). Please use 'styleApply' now */"
+        print("/* Warning, use of deprecated function (properties_style_apply). Please use 'styleApply' now */")
         self.styleApply(stylename, eid)
 
     def finish(self, fd=stdout):
-        print "/* Warning, use of deprecated function (finish). Please use 'dot' now */"
+        print("/* Warning, use of deprecated function (finish). Please use 'dot' now */")
         self.dot(fd)
 
 

@@ -1,9 +1,9 @@
 import sys
 import logging
 import pycurl
-import urlparse
-import cStringIO
-import cPickle
+import urllib.parse
+import io
+import pickle
 import tempfile
 import traceback
 import subprocess
@@ -78,7 +78,7 @@ class FetchOptions(object):
                 self.sslVersion = getattr(pycurl, 'SSLVERSION_' + versionStr)
             except AttributeError:
                 raise ValueError(
-                    "SSL version '%s' specified in config is unsupported." % versionStr)
+                    "SSL version '{}' specified in config is unsupported.".format(versionStr))
         if config.has_option("http", "static_ca_path"):
             self.staticCAPath = config.get("http", "static_ca_path")
 
@@ -181,7 +181,7 @@ class ErrorSanitizer():
             if m:
                 return replacement
 
-        return "Fetcher subprocess error: %s\n%s" % (shortError, errorStr)
+        return "Fetcher subprocess error: {}\n{}".format(shortError, errorStr)
 
 
 class HTTPFetcher(object):
@@ -203,18 +203,6 @@ class HTTPFetcher(object):
         self.options = fetchOptions
         self.ruleTrie = ruleTrie
 
-    def idnEncodedUrl(self, url):
-        """Encodes URL so that IDN domains are punycode-escaped. Has no
-        effect on plain old ASCII domain names.
-        """
-        p = urlparse.urlparse(url)
-        netloc = isinstance(
-            p.netloc, unicode) and p.netloc or p.netloc.decode("utf-8")
-        newNetloc = netloc.encode("idna")
-        parts = list(p)
-        parts[1] = newNetloc
-        return urlparse.urlunparse(parts)
-
     def absolutizeUrl(self, base, url):
         """
         Construct a full ("absolute") URL by combining a "base URL" (base)
@@ -227,8 +215,8 @@ class HTTPFetcher(object):
         # urljoin fails for some of the abnormal examples in section 5.4.2
         # of RFC 3986 if there are too many ./ or ../
         # See https://bugs.python.org/issue3647
-        joinedUrl = urlparse.urljoin(base, url)
-        joinedUrlParts = urlparse.urlparse(joinedUrl)
+        joinedUrl = urllib.parse.urljoin(base, url)
+        joinedUrlParts = urllib.parse.urlparse(joinedUrl)
 
         # Strip any leading ./ and ../
         path = joinedUrlParts.path
@@ -245,7 +233,7 @@ class HTTPFetcher(object):
         if path == '':
             path = '/'
 
-        joinedUrlParts = urlparse.ParseResult(
+        joinedUrlParts = urllib.parse.ParseResult(
             joinedUrlParts.scheme,
             joinedUrlParts.netloc,
             path,
@@ -283,7 +271,6 @@ class HTTPFetcher(object):
         # reason it was a hog on CPU and RAM (maybe due to the queues?)
         # Also, logging module didn't play along nicely.
         args = [sys.executable, '-c', trampoline]
-        #logging.debug("Spawning subprocess with args %s", args)
         p = subprocess.Popen(args, stdin=subprocess.PIPE,
                              stdout=subprocess.PIPE,	stderr=subprocess.PIPE)
 
@@ -294,18 +281,18 @@ class HTTPFetcher(object):
         #
         # Doc page for subprocess says "don't use communicate() with big
         # or unlimited data", but doesn't say what is the alternative
-        (outData, errData) = p.communicate(cPickle.dumps(inArgs))
+        (outData, errData) = p.communicate(pickle.dumps(inArgs))
         exitCode = p.wait()
 
         if exitCode != 0:
             raise HTTPFetcherError(
-                "Subprocess failed with exit code %d" % exitCode)
+                "Subprocess failed with exit code {}".format(exitCode))
 
         #logging.debug("Subprocess finished OK")
-        unpickled = cPickle.loads(outData)
+        unpickled = pickle.loads(outData)
         if not isinstance(unpickled, FetcherOutArgs):
-            raise HTTPFetcherError("Unexpected datatype received from subprocess: %s" %
-                                   type(unpickled))
+            raise HTTPFetcherError("Unexpected datatype received from subprocess: {}".format(
+                                   type(unpickled)))
         if unpickled.errorStr:  # chained exception tracebacks are bit ugly/long
             assert unpickled.shortError is not None
             raise HTTPFetcherError(ErrorSanitizer().fetcher(
@@ -325,10 +312,10 @@ class HTTPFetcher(object):
         @throws: anything PyCURL can throw (SSL error, timeout, etc.)
         """
         try:
-            buf = cStringIO.StringIO()
-            headerBuf = cStringIO.StringIO()
+            buf = io.BytesIO()
+            headerBuf = io.BytesIO()
 
-            urlParts = urlparse.urlparse(url)
+            urlParts = urllib.parse.urlparse(url)
 
             c = pycurl.Curl()
             c.setopt(c.URL, url)
@@ -354,7 +341,7 @@ class HTTPFetcher(object):
             c.perform()
 
             bufValue = buf.getvalue()
-            headerStr = headerBuf.getvalue()
+            headerStr = headerBuf.getvalue().decode('utf-8')
             httpCode = c.getinfo(pycurl.HTTP_CODE)
         finally:
             buf.close()
@@ -389,7 +376,6 @@ class HTTPFetcher(object):
         # handle 301/302 redirects while also rewriting them with HTE rules
         # limit redirect depth
         for depth in range(options.redirectDepth):
-            newUrl = self.idnEncodedUrl(newUrl)
             seenUrls.add(newUrl)
 
             # override platform path detected from ruleset files
@@ -404,7 +390,7 @@ class HTTPFetcher(object):
 
             # shitty HTTP header parsing
             if httpCode == 0:
-                raise HTTPFetcherError("Pycurl fetch failed for '%s'" % newUrl)
+                raise HTTPFetcherError("Pycurl fetch failed for '{}'".format(newUrl))
             elif httpCode in (301, 302, 303, 307, 308):
                 location = None
                 for piece in headerStr.split('\n'):
@@ -412,10 +398,10 @@ class HTTPFetcher(object):
                         location = piece[len('location:'):].strip()
                 if location is None:
                     raise HTTPFetcherError(
-                        "Redirect for '%s' missing location header" % newUrl)
+                        "Redirect for '{}' missing location header".format(newUrl))
 
                 location = self.absolutizeUrl(newUrl, location)
-                logging.debug("Following redirect %s => %s", newUrl, location)
+                logging.debug("Following redirect {} => {}".format(newUrl, location))
 
                 if self.ruleTrie:
                     ruleMatch = self.ruleTrie.transformUrl(location)
@@ -434,7 +420,7 @@ class HTTPFetcher(object):
 
                     if newUrl != location:
                         logging.debug(
-                            "Redirect rewritten: %s => %s", location, newUrl)
+                            "Redirect rewritten: {} => {}".format(location, newUrl))
                 else:
                     newUrl = location
 
@@ -442,23 +428,23 @@ class HTTPFetcher(object):
 
             return (httpCode, bufValue)
 
-        raise HTTPFetcherError("Too many redirects while fetching '%s'" % url)
+        raise HTTPFetcherError("Too many redirects while fetching '{}'".format(url))
 
 
 def subprocessFetch():
     """
-    Used for invocation in fetcher subprocess. Reads cPickled FetcherInArgs
+    Used for invocation in fetcher subprocess. Reads pickled FetcherInArgs
     from stdin and write FetcherOutArgs to stdout. Implementation of the
     subprocess URL fetch.
     """
     outArgs = None
 
     try:
-        inArgs = cPickle.load(sys.stdin)
+        inArgs = pickle.load(sys.stdin)
         inArgs.check()
         outArgs = HTTPFetcher.staticFetch(
             inArgs.url, inArgs.options, inArgs.platformPath)
-    except BaseException, e:  # this will trap KeyboardInterrupt as well
+    except BaseException as e:  # this will trap KeyboardInterrupt as well
         errorStr = traceback.format_exc()
         shortError = str(e)
         outArgs = FetcherOutArgs(errorStr=errorStr, shortError=shortError)
@@ -470,6 +456,6 @@ def subprocessFetch():
         outArgs = FetcherOutArgs(errorStr=errorStr, shortError=shortError)
 
     try:
-        cPickle.dump(outArgs, sys.stdout)
+        pickle.dump(outArgs, sys.stdout)
     except:
-        cPickle.dump(None, sys.stdout)  # catch-all case
+        pickle.dump(None, sys.stdout)  # catch-all case

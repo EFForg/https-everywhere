@@ -1,4 +1,4 @@
-import urlparse
+import urllib.parse
 import os.path
 from gvgen import GvGen
 
@@ -94,12 +94,6 @@ class DomainNode(object):
         if self.depth >= 3 and self.subDomain == "*":
             applicableRules.update(self.rulesets)
 
-        # make sure domain is in ASCII - either "plain old domain" or
-        # punycode-encoded IDN domain
-        if not isinstance(domain, unicode):
-            domain = domain.decode("utf-8")
-        domain = domain.encode("idna")
-
         parts = domain.rsplit(".", 1)
 
         if len(parts) == 1:  # direct match on children
@@ -123,8 +117,8 @@ class DomainNode(object):
 
     def prettyPrint(self, offset=0):
         """Pretty print for debugging"""
-        print " "*offset,
-        print unicode(self)
+        print(" "*offset,)
+        print(self)
         for child in self.children.values():
             child.prettyPrint(offset+3)
 
@@ -162,10 +156,10 @@ class DomainNode(object):
             graph.newLink(self.gvNode, rulesetGvNode)
 
     def __str__(self):
-        return "<DomainNode for '%s', rulesets: %s>" % (self.subDomain, self.rulesets)
+        return "<DomainNode for '{}', rulesets: {}>".format(self.subDomain, self.rulesets)
 
     def __repr__(self):
-        return "<DomainNode for '%s>" % (self.subDomain,)
+        return "<DomainNode for '{}>".format(self.subDomain,)
 
 
 class RuleMatch(object):
@@ -223,7 +217,7 @@ class RuleTrie(object):
     def acceptedScheme(self, url):
         """Returns True iff the scheme in URL is accepted (http, https).
         """
-        parsed = urlparse.urlparse(url)
+        parsed = urllib.parse.urlparse(url)
         return parsed.scheme in ("http", "https")
 
     def transformUrl(self, url):
@@ -234,10 +228,9 @@ class RuleTrie(object):
         @returns: RuleMatch with tranformed URL and ruleset that applied
         @throws: RuleTransformError if scheme is wrong (e.g. file:///)
         """
-        parsed = urlparse.urlparse(url)
+        parsed = urllib.parse.urlparse(url)
         if parsed.scheme not in ("http", "https"):
-            raise RuleTransformError("Unknown scheme '%s' in '%s'" %
-                                     (parsed.scheme, url))
+            raise RuleTransformError("Unknown scheme '{}' in '{}'".format(parsed.scheme, url))
 
         fqdn = parsed.netloc.lower()
         matching = self.matchingRulesets(fqdn)
