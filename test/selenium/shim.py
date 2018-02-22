@@ -165,7 +165,7 @@ class Shim:
     def firefox_manager(self):
         ffp = webdriver.FirefoxProfile()
         # make extension id constant across runs
-        ffp.set_preference('extensions.webextensions.uuids', '{"{}": "{}"}'.format(self.info['extension_id'], self.info['uuid']))
+        ffp.set_preference('extensions.webextensions.uuids', '{{"{}": "{}"}}'.format(self.info['extension_id'], self.info['uuid']))
 
         driver = webdriver.Firefox(firefox_profile=ffp, firefox_binary=self.browser_path)
         install_ext_on_ff(driver, self.extension_path)
