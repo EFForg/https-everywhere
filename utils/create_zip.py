@@ -4,7 +4,7 @@
 # Author: Yan Zhu, yan@mit.edu
 
 """
-Usage: python create_zip.py -x <exclusions> -n <name of zipped file> <directory>
+Usage: python3.6 create_zip.py -x <exclusions> -n <name of zipped file> <directory>
 """
 
 import argparse
