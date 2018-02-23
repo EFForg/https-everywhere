@@ -4,7 +4,7 @@
 #
 # This script may be executed as `python3.6 script.py [directory of CRX]`
 #
-# The script is compatible with Python 2. Python 3 is not tested.
+# The script is compatible with Python 3.6.
 # Selenium, WebDriver and Google Chrome (or Chromium) must be installed
 # in order for the script to run successfully. A desktop version
 # of linux is required for the script to run correctly as well.
