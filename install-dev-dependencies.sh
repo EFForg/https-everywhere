@@ -92,12 +92,12 @@ git submodule init
 git submodule update
 
 # Install Python packages
-pip install --user --no-allow-insecure --no-allow-external -r requirements.txt
+pip3 install --user --no-allow-insecure --no-allow-external -r requirements.txt
 cd test/rules
-pip install --user -r requirements.txt
+pip3 install --user -r requirements.txt
 cd -
 cd test/chromium
-pip install --user -r requirements.txt
+pip3 install --user -r requirements.txt
 cd -
 
 # Install git hook to run tests before pushing.
