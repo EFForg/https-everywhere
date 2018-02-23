@@ -57,7 +57,7 @@ do_not_ship="*.py *.xml"
 rm -f $do_not_ship
 cd ../..
 
-python2.7 ./utils/merge-rulesets.py || exit 1
+python3.6 ./utils/merge-rulesets.py || exit 1
 
 cp src/chrome/content/rules/default.rulesets pkg/crx/rules/default.rulesets
 
