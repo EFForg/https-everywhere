@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.6
 from datetime import date
 import json
 
@@ -6,7 +6,7 @@ import json
 # Set the version in manifest.json to one based on today's date.
 
 t = date.today()
-version = `t.year` +'.'+ `t.month` +'.'+ `t.day`
+version = repr(t.year) +'.'+ repr(t.month) +'.'+ repr(t.day)
 
 f = open('chromium/manifest.json')
 manifest = json.loads(f.read())
