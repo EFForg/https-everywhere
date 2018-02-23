@@ -2,7 +2,7 @@
 #
 # Run Selenium tests for HTTPS Everywhere
 #
-# This script may be executed as `python script.py [directory of CRX]`
+# This script may be executed as `python3.6 script.py [directory of CRX]`
 #
 # The script is compatible with Python 2. Python 3 is not tested.
 # Selenium, WebDriver and Google Chrome (or Chromium) must be installed
