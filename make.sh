@@ -51,8 +51,8 @@ rsync -aL ../../chromium/ ./
 # Turn the Firefox translations into the appropriate Chrome format:
 rm -rf _locales/
 mkdir _locales/
-python2.7 ../../utils/chromium-translations.py ../../translations/ _locales/
-python2.7 ../../utils/chromium-translations.py ../../src/chrome/locale/ _locales/
+python3.6 ../../utils/chromium-translations.py ../../translations/ _locales/
+python3.6 ../../utils/chromium-translations.py ../../src/chrome/locale/ _locales/
 do_not_ship="*.py *.xml"
 rm -f $do_not_ship
 cd ../..
