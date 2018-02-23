@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.6
 """
 Given two directories, copy Firefox-style https-everywhere.dtd translations from
 the first directory into appropriately-named Chromium-style messages.json
@@ -16,7 +16,7 @@ message_regex = re.compile("<!ENTITY https-everywhere\.([\w.-]+) \"(.*?)\">")
 
 def convert(locale):
   target_messages = {}
-  with open(os.path.join(source_dir, locale, "https-everywhere.dtd")) as f:
+  with open(os.path.join(source_dir, locale, "https-everywhere.dtd"), 'r', encoding='utf-8') as f:
     for line in f:
       m = message_regex.search(line)
       if m:
