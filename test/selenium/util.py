@@ -78,7 +78,7 @@ class ExtensionTestCase(unittest.TestCase):
     def load_popup_for(self, url='about:blank'):
         create_url_and_popup_js_str = '''
         (function(done) {{
-          chrome.tabs.create({{url: '{}'}, function(tab) {{
+          chrome.tabs.create({{url: '{}'}}, function(tab) {{
             setTimeout(
               () => chrome.tabs.create({{url: '{}' + '?tabId=' + String(tab.id)}}, done),
               500
