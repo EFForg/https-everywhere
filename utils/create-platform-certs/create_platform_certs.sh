@@ -23,6 +23,4 @@ python "${SPLIT_COMBINED_CERT_FILE_EXEC}" "${COMBINED_CERT_FILE}" "${SPLIT_CERT_
 
 rm "${COMBINED_CERT_FILE}"
 
-c_rehash "${SPLIT_CERT_DIR}"
-
 git add "${SPLIT_CERT_DIR}"
