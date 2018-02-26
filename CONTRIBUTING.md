@@ -104,7 +104,7 @@ Some `rulesets` have the attribute `platform="mixedcontent"`.  These `rulesets` 
 
 ## New Rulesets
 
-If you want to create new `rulesets` to submit to us, we expect them to be in the `src/chrome/content/rules` directory. That directory also contains a useful script, `make-trivial-rule`, to create a simple `ruleset` for a specified domain. There is also a script called `utils/trivial-validate.py`, to check all the pending `rulesets` for several common errors and oversights. For example, if you wanted to make a `ruleset` for the `example.com` domain, you could run:
+If you want to create new `rulesets` to submit to us, we expect them to be in the `src/chrome/content/rules` directory. That directory also contains a useful script, `make-trivial-rule`, to create a simple `ruleset` for a specified domain. There is also a script in `test/validations/special/run.py`, to check all the pending `rulesets` for several common errors and oversights. For example, if you wanted to make a `ruleset` for the `example.com` domain, you could run:
 ```
 cd src/chrome/content/rules
 bash ./make-trivial-rule example.com

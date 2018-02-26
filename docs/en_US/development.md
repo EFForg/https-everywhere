@@ -42,9 +42,9 @@ HTTP to HTTPS. You can read more about how to write these rules
 If you want to create new rules to submit to us, we expect them to be in the
 src/chrome/content/rules directory. That directory also contains a useful
 script, make-trivial-rule, to create a simple rule for a specified domain.
-There is also a script called trivial-validate.py, to check all the pending
-rules for several common errors and oversights. For example, if you wanted to
-make a rule for the example.com domain, you could run
+There is also a script in test/validations/special/run.py, to check all the
+pending rules for several common errors and oversights. For example, if you
+wanted to make a rule for the example.com domain, you could run
 
     bash ./make-trivial-rule example.com
 
