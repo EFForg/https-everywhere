@@ -174,28 +174,28 @@ it.
 Here is a brief list of recommendations for choosing secure protocols
 and cipher suites in an SSL deployment:
 
-  - Disable support for SSLv2, SSLv3, and TLS 1.0.
-  - Support TLS 1.1 and 1.2.
-  - Disable NULL, aNULL, and eNULL ciphersuites, which do not offer both
+*   Disable support for SSLv2, SSLv3, and TLS 1.0.
+*   Support TLS 1.1 and 1.2.
+*   Disable NULL, aNULL, and eNULL ciphersuites, which do not offer both
     encryption and authentication.
-  - Use private keys that are at least as secure as a 2048-bit RSA key.
-  - Prefer ciphersuites that include **ephemeral Diffie-Hellman key
+*   Use private keys that are at least as secure as a 2048-bit RSA key.
+*   Prefer ciphersuites that include **ephemeral Diffie-Hellman key
     exchange**. These offer the important property of [Perfect Forward
     Secrecy](https://www.eff.org/deeplinks/2013/08/pushing-perfect-forward-secrecy-important-web-privacy-protection),
     which prevents decryption of past web traffic if your SSL private
     key is compromised in the future.
-  - Disable ciphersuites with keys sizes smaller than 128 bits for
+*   Disable ciphersuites with keys sizes smaller than 128 bits for
     encryption.
-  - Disable ciphersuites that use MD5 for hashing. SHA-1 is also
+*   Disable ciphersuites that use MD5 for hashing. SHA-1 is also
     discouraged but may be required for compatibility with TLS 1.0 and
     SSLv3.
-  - Disable ciphersuites that use RC4 for encryption. AES-CBC is
+*   Disable ciphersuites that use RC4 for encryption. AES-CBC is
     preferable to RC4 but vulnerable to the
     [BEAST](https://www.imperialviolet.org/2011/09/23/chromeandbeast.html)
     attack. Thus, AES-GCM is often recommended.
-  - Disable TLS compression in order to prevent the [CRIME
+*   Disable TLS compression in order to prevent the [CRIME
     attack](https://en.wikipedia.org/wiki/CRIME_%28security_exploit%29).
-  - Only support secure TLS renegotiations compliant with
+*   Only support secure TLS renegotiations compliant with
     [RFC 5746](http://www.ietf.org/rfc/rfc5746.txt), or disable TLS
     renegotiations entirely.
 
