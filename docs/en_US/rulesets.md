@@ -197,6 +197,39 @@ element, with a value explaining why the rule is off.
 You can add more details, like a link to a bug report, in the comments for the
 file.
 
+### Disabling a ruleset on some platforms
+
+Sometimes bugs on a platform may mean that a ruleset should be off by
+default on that platform only. For instance, [this
+bug](https://trac.torproject.org/projects/tor/ticket/5196) caused us to
+temporarily disable the Google Translate rules on Chromium and Chrome.
+This can be achieved with the "platform" attribute:
+
+```xml
+<ruleset name="Google Translate" platform="firefox">
+	<target host="translate.googleapis.com"/>
+	<target host="translate.google.com"/>
+
+	<rule from="^http://translate\.googleapis\.com/"
+	    to="https://translate.googleapis.com/"/>
+	<rule from="^http://translate\.google\.com/translate_a/element\.js"
+	    to="https://translate.google.com/translate_a/element.js"/>
+</ruleset>
+```
+
+Platform is a space-delimited list of platforms on which the ruleset
+works. Currently anticipated values are "firefox", "chromium",
+"mixedcontent", "cacert" and "ipsca". The "mixedcontent" value is
+important, and should be used for sites that render badly in Chrome
+because that browser [blocks HTTP content from loading in HTTPS
+pages](https://trac.torproject.org/projects/tor/ticket/6975) by default.
+If the platform attribute is present, but does not match the current
+platform, the ruleset will be treated as off-by-default.
+
+**Update (12/12/13)**: Firefox 23+ has enabled mixed content blocking by
+default. As a result, many rules that were previously labeled "firefox"
+should now be labeled "mixedcontent."
+
 #### [Mixed Content Blocking (MCB)](#mixed-content-blocking-mcb)
 
 Some rulesets may trigger active mixed content (i.e. scripts loaded over HTTP
