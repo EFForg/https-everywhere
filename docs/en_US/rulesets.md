@@ -205,14 +205,17 @@ bug](https://trac.torproject.org/projects/tor/ticket/5196) caused us to
 temporarily disable the Google Translate rules on Chromium and Chrome.
 This can be achieved with the "platform" attribute:
 
-    <ruleset name="Google Translate" platform="firefox">
-    <target host="translate.googleapis.com"/>
-    <target host="translate.google.com"/>
-    <rule from="^http://translate\.googleapis\.com/"
-            to="https://translate.googleapis.com/"/>
-    <rule from="^http://translate\.google\.com/translate_a/element\.js"
-            to="https://translate.google.com/translate_a/element.js"/>
-    </ruleset>
+```xml
+<ruleset name="Google Translate" platform="firefox">
+	<target host="translate.googleapis.com"/>
+	<target host="translate.google.com"/>
+
+	<rule from="^http://translate\.googleapis\.com/"
+	    to="https://translate.googleapis.com/"/>
+	<rule from="^http://translate\.google\.com/translate_a/element\.js"
+	    to="https://translate.google.com/translate_a/element.js"/>
+</ruleset>
+```
 
 Platform is a space-delimited list of platforms on which the ruleset
 works. Currently anticipated values are "firefox", "chromium",
