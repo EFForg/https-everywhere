@@ -329,6 +329,10 @@ class HTTPFetcher(object):
             #c.setopt(c.SSL_VERIFYPEER, 0)
             #c.setopt(c.SSL_VERIFYHOST, 0)
             c.setopt(c.CAPATH, platformPath)
+            # We want to check against only the above path, but unfortunately
+            # curl will not function properly unless *some* valid certificate
+            # is provided for CURLOPT_CAINFO. This can not be set to null...
+            c.setopt(c.CAINFO, 'test/rules/platform_certs/null.pem')
             if options.userAgent:
                 c.setopt(c.USERAGENT, options.userAgent)
             # Sending this extra header is necessary for weird edge cases.  See https://github.com/EFForg/https-everywhere/pull/10944
