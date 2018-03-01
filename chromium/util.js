@@ -59,6 +59,7 @@ Object.assign(exports, {
   INFO,
   NOTE,
   WARN,
+  NONE,
   log,
   loadExtensionFile
 });
