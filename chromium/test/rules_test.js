@@ -2,6 +2,9 @@
 
 const assert = require('chai').assert,
   rules = require('../rules');
+  utils = require('../utils');
+
+utils.DEFAULT_LOG_LEVEL = utils.NONE;
 
 const Exclusion = rules.Exclusion,
   Rule = rules.Rule,
