@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -xe
 
 GIT_REPO_TOP_LEVEL="$(git rev-parse --show-toplevel)"
 
@@ -18,6 +18,8 @@ git rm -r -f -q "${SPLIT_CERT_DIR}"
 perl "${MK_CA_BUNDLE_PL_EXEC}" -n "${COMBINED_CERT_FILE}"
 
 python3.6 "${SPLIT_COMBINED_CERT_FILE_EXEC}" "${COMBINED_CERT_FILE}" "${SPLIT_CERT_DIR}"
+
+c_rehash "${SPLIT_CERT_DIR}" > /dev/null
 
 rm "${COMBINED_CERT_FILE}"
 
