@@ -1,7 +1,7 @@
 'use strict'
 
 const assert = require('chai').assert,
-  rules = require('../rules');
+  rules = require('../rules'),
   utils = require('../utils');
 
 // disable logging here.
