@@ -2,10 +2,10 @@
 
 const assert = require('chai').assert,
   rules = require('../rules'),
-  utils = require('../utils');
+  util = require('../util');
 
 // disable logging here.
-utils.DEFAULT_LOG_LEVEL = utils.NONE;
+util.DEFAULT_LOG_LEVEL = util.NONE;
 
 const Exclusion = rules.Exclusion,
   Rule = rules.Rule,
