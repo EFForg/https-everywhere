@@ -2,6 +2,7 @@
 
 import binascii
 import argparse
+import copy
 import json
 import glob
 import hashlib
@@ -56,10 +57,10 @@ class ComparisonTask(object):
              associated with a single ruleset.
     """
 
-    def __init__(self, urls, fetcherPlain, fetcherRewriting, ruleset):
+    def __init__(self, urls, fetcherPlain, fetchersRewriting, ruleset):
         self.urls = urls
         self.fetcherPlain = fetcherPlain
-        self.fetcherRewriting = fetcherRewriting
+        self.fetchersRewriting = fetchersRewriting
         self.ruleset = ruleset
         self.ruleFname = ruleset.filename
 
@@ -179,7 +180,7 @@ class UrlComparisonThread(threading.Thread):
 
     def processUrl(self, plainUrl, task):
         fetcherPlain = task.fetcherPlain
-        fetcherRewriting = task.fetcherRewriting
+        fetchersRewriting = task.fetchersRewriting
         ruleFname = task.ruleFname
 
         try:
@@ -189,25 +190,24 @@ class UrlComparisonThread(threading.Thread):
             logging.error("{}: Regex Error {}".format(ruleFname, str(e)))
             return
 
-        try:
-            message = self.fetchUrl(
-                plainUrl, transformedUrl, fetcherPlain, fetcherRewriting, ruleFname)
-
-        except:
-            # Try once more before sending an error result
+        fetchersFailed = 0
+        for fetcherRewriting in fetchersRewriting:
             try:
                 message = self.fetchUrl(
                     plainUrl, transformedUrl, fetcherPlain, fetcherRewriting, ruleFname)
-            except Exception as e:
-                message = "Fetch error: {} => {}: {}".format(
-                    plainUrl, transformedUrl, e)
-                self.queue_result("error", "fetch-error {}".format(e),
-                                  ruleFname, plainUrl, https_url=transformedUrl)
-                logging.debug(message)
+                break
 
-        finally:
-            logging.info("Finished comparing {} -> {}. Rulefile: {}.".format(
-                         plainUrl, transformedUrl, ruleFname))
+            except Exception as e:
+                fetchersFailed += 1
+                if fetchersFailed == len(fetchersRewriting):
+                    message = "Fetch error: {} => {}: {}".format(
+                        plainUrl, transformedUrl, e)
+                    self.queue_result("error", "fetch-error {}".format(e),
+                                    ruleFname, plainUrl, https_url=transformedUrl)
+                    logging.debug(message)
+
+        logging.info("Finished comparing {} -> {}. Rulefile: {}.".format(
+                    plainUrl, transformedUrl, ruleFname))
 
         return message
 
@@ -346,15 +346,6 @@ def cli():
     if config.has_option("http", "enabled"):
         httpEnabled = config.getboolean("http", "enabled")
 
-    # get all platform dirs, make sure "default" is among them
-    certdirFiles = glob.glob(os.path.join(certdir, "*"))
-    havePlatforms = set([os.path.basename(fname)
-                         for fname in certdirFiles if os.path.isdir(fname)])
-    logging.debug("Loaded certificate platforms: {}".format(",".join(havePlatforms)))
-    if "default" not in havePlatforms:
-        raise RuntimeError(
-            "Platform 'default' is missing from certificate directories")
-
     metricName = config.get("thresholds", "metric")
     thresholdDistance = config.getfloat("thresholds", "max_distance")
     metricClass = getMetricClass(metricName)
@@ -431,17 +422,17 @@ def cli():
         if exitAfterDump:
             sys.exit(0)
     fetchOptions = http_client.FetchOptions(config)
-    fetcherMap = dict()  # maps platform to fetcher
+    fetchers = list()
+
+    # Ensure "default" is in the platform dirs
+    if not os.path.isdir(os.path.join(certdir, "default")):
+        raise RuntimeError(
+            "Platform 'default' is missing from certificate directories")
 
     platforms = http_client.CertificatePlatforms(
         os.path.join(certdir, "default"))
-    for platform in havePlatforms:
-        # adding "default" again won't break things
-        platforms.addPlatform(platform, os.path.join(certdir, platform))
-        fetcher = http_client.HTTPFetcher(
-            platform, platforms, fetchOptions, trie)
-        fetcherMap[platform] = fetcher
-
+    fetchers.append(http_client.HTTPFetcher(
+        "default", platforms, fetchOptions, trie))
     # fetches pages with unrewritten URLs
     fetcherPlain = http_client.HTTPFetcher("default", platforms, fetchOptions)
 
@@ -469,6 +460,13 @@ def cli():
         # methods built into the Ruleset implementation.
         if not urlList:
             for ruleset in rulesets:
+                if ruleset.platform != "default" and os.path.isdir(os.path.join(certdir, ruleset.platform)):
+                    theseFetchers = copy.deepcopy(fetchers)
+                    platforms.addPlatform(ruleset.platform, os.path.join(certdir, ruleset.platform))
+                    theseFetchers.append(http_client.HTTPFetcher(
+                        ruleset.platform, platforms, fetchOptions, trie))
+                else:
+                    theseFetchers = fetchers
                 testUrls = []
                 for test in ruleset.tests:
                     if not ruleset.excludes(test.url):
@@ -478,7 +476,7 @@ def cli():
                         # TODO: We should fetch the non-rewritten exclusion URLs to make
                         # sure they still exist.
                         logging.debug("Skipping excluded URL {}".format(test.url))
-                task = ComparisonTask(testUrls, fetcherPlain, fetcher, ruleset)
+                task = ComparisonTask(testUrls, fetcherPlain, theseFetchers, ruleset)
                 taskQueue.put(task)
 
         taskQueue.join()
