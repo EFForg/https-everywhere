@@ -14,7 +14,7 @@ var WARN = 5;
 // (Developers can just type DEFAULT_LOG_LEVEL=VERB in the console)
 var DEFAULT_LOG_LEVEL = NOTE;
 console.log("Hey developer! Want to see more verbose logging?");
-console.log("Type this into the console: DEFAULT_LOG_LEVEL=VERB");
+console.log("Type this into the console: require.scopes.util.setDefaultLogLevel(require.scopes.util.VERB);");
 console.log("Accepted levels are VERB, DBUG, INFO, NOTE and WARN, default is NOTE");
 
 function log(level, str) {
@@ -26,6 +26,14 @@ function log(level, str) {
       console.log(str);
     }
   }
+}
+
+function setDefaultLogLevel(level) {
+  DEFAULT_LOG_LEVEL = level;
+}
+
+function getDefaultLogLevel() {
+  return DEFAULT_LOG_LEVEL;
 }
 
 /**
@@ -59,6 +67,8 @@ Object.assign(exports, {
   NOTE,
   WARN,
   log,
+  setDefaultLogLevel,
+  getDefaultLogLevel,
   loadExtensionFile
 });
 
