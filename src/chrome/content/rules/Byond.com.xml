@@ -1,0 +1,24 @@
+<!-- 
+	notes: 
+		http byond.com redirects to www.byond.com
+		https byond.com 404's.
+		https www.byond.com redirects to secure.byond.co
+		http(s) www.secure.byond.com and secure.www.byond.com 404s
+		http secure.byond.com redirects to https
+		/play/ subfolder breaks because of ajax and js that have to load from http (all links to this directory already downgrade)
+		Most links specify http in the url.
+-->
+<ruleset name="byond.com">
+	<target host="byond.com" />
+	<target host="www.byond.com" />
+	<target host="secure.byond.com" />
+	
+	<exclusion pattern="^http://(www\.)?byond\.com/play/" />
+		<test url="http://byond.com/play/" />
+		<test url="http://www.byond.com/play/" />
+	
+	<rule from="^http://byond\.com/" to="https://www.byond.com/" />
+	
+	<rule from="^http:" to="https:" />
+	
+</ruleset>
