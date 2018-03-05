@@ -32,6 +32,7 @@
 * [Contributing Code](#contributing-code)
 * [Contributing Documentation](#contributing-documentation)
 * [Contributing Translations](#contributing-translations)
+* [Triaging Issues](#triaging-issues-)
 
 * * *
 
@@ -383,3 +384,8 @@ and choose "Translate now" to enter the translation interface.
 
 * * *
 
+# Triaging Issues [![Open Source Helpers](https://www.codetriage.com/efforg/https-everywhere/badges/users.svg)](https://www.codetriage.com/efforg/https-everywhere)
+
+You can triage issues which may include reproducing bug reports or asking for vital information, such as version numbers or reproduction instructions. If you would like to start triaging issues, one easy way to get started is to [subscribe to https-everywhere on CodeTriage](https://www.codetriage.com/efforg/https-everywhere).
+
+* * *
