@@ -180,24 +180,18 @@ for filename in filenames:
             failure = 1
             fail("%s failed test: %s" % (filename, test.__doc__))
 
-    platform_list = xpath_ruleset_platform(tree)
-    if len(platform_list) == 0:
-        platform = ''
-    else:
-        platform = platform_list[0]
-
     targets = xpath_host(tree)
     for target in targets:
-        host_counter.update([(target, platform)])
+        host_counter.update([target])
 
 
-for (host, platform), count in host_counter.most_common():
+for host, count in host_counter.most_common():
     if count > 1:
         if host in duplicate_allowed_list:
-            warn("Whitelisted hostname %s with platform '%s' shows up in %d different rulesets." % (host, platform, count))
+            warn("Whitelisted hostname %s shows up in %d different rulesets." % (host, count))
         else:
             failure = 1
-            fail("Hostname %s with platform '%s' shows up in %d different rulesets." % (host, platform, count))
+            fail("Hostname %s shows up in %d different rulesets." % (host, count))
     if not is_valid_target_host(host):
         failure = 1
         fail("%s failed: %s" % (host, is_valid_target_host.__doc__))
