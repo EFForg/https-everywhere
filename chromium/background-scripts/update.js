@@ -67,6 +67,19 @@ async function checkForNewRulesets(update_channel) {
   }
 }
 
+// Retrieve the timestamp for when a stored ruleset bundle was published
+async function getRulesetTimestamps(){
+  let timestamp_promises = [];
+  for(let update_channel of update_channels){
+    timestamp_promises.push(new Promise(async resolve => {
+      let timestamp = await store.local.get_promise('rulesets-stored-timestamp: ' + update_channel.name, 0);
+      resolve([update_channel.name, timestamp]);
+    }));
+  }
+  let timestamps = await Promise.all(timestamp_promises);
+  return timestamps;
+}
+
 // Download and return new rulesets
 async function getNewRulesets(rulesets_timestamp, update_channel) {
 
@@ -165,6 +178,7 @@ async function performCheck() {
       let new_rulesets = await getNewRulesets(new_rulesets_timestamp, update_channel);
       try{
         await verifyAndStoreNewRulesets(new_rulesets, update_channel);
+        store.local.set_promise('rulesets-stored-timestamp: ' + update_channel.name, new_rulesets_timestamp);
         num_updates++;
       } catch(err) {
         util.log(util.WARN, update_channel.name + ': ' + err);
@@ -220,7 +234,8 @@ async function initialize(store_param, cb){
 
 Object.assign(exports, {
   applyStoredRulesets,
-  initialize
+  initialize,
+  getRulesetTimestamps
 });
 
 })(typeof exports == 'undefined' ? require.scopes.update = {} : exports);

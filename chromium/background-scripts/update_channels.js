@@ -3,7 +3,7 @@
 "use strict";
 
 const update_channels = [{
-  name: "EFF Full Rulesets",
+  name: "EFF (Full)",
   jwk: {
     kty: "RSA",
     e: "AQAB",

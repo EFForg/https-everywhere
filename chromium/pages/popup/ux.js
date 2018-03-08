@@ -166,6 +166,20 @@ document.addEventListener("DOMContentLoaded", function () {
   var version_info = document.getElementById('current-version');
   version_info.innerText = the_manifest.version;
 
+  let rulesets_versions = document.getElementById('rulesets-versions');
+  sendMessage("get_ruleset_timestamps", null, timestamps => {
+    for(let [update_channel, timestamp] of timestamps){
+      if(timestamp > 0){
+        let ruleset_date = new Date(timestamp * 1000);
+        let ruleset_string = ruleset_date.getUTCFullYear() + "." + (ruleset_date.getUTCMonth() + 1) + "." + ruleset_date.getUTCDate();
+
+        let timestamp_span = document.createElement("span");
+        timestamp_span.className = "rulesets-version";
+        timestamp_span.innerText = chrome.i18n.getMessage("about_rulesets_version") + update_channel + ": " + ruleset_string;
+        rulesets_versions.appendChild(timestamp_span);
+      }
+    }
+  });
   e("aboutTitle").title = chrome.i18n.getMessage("about_title");
   e("add-rule-link").addEventListener("click", addManualRule);
 });

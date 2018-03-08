@@ -671,6 +671,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     import_settings(message.object).then(() => {
       sendResponse(true);
     });
+  } else if (message.type == "get_ruleset_timestamps") {
+    update.getRulesetTimestamps().then(timestamps => sendResponse(timestamps));
+    return true;
   }
 });
 
