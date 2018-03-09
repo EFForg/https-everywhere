@@ -2,6 +2,6 @@
 
 chrome.devtools.panels.create("HTTPS Everywhere",
   "/icons/icon-active-38.png",
-  "/devtools/panel.html",
+  "/pages/devtools/panel.html",
   function() { }
 );

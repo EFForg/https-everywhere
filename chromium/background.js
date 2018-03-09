@@ -92,7 +92,7 @@ chrome.webNavigation.onCompleted.addListener(function() {
 });
 
 // Records which tabId's are active in the HTTPS Switch Planner (see
-// devtools/panel-ux.js).
+// pages/devtools/panel-ux.js).
 var switchPlannerEnabledFor = {};
 // Detailed information recorded when the HTTPS Switch Planner is active.
 // Structure is:
@@ -153,7 +153,7 @@ function updateState () {
  * The following allows fennec to interact with the popup ui
  * */
 chrome.browserAction.onClicked.addListener(e => {
-  const url = chrome.extension.getURL("popup.html?tabId=" + e.id);
+  const url = chrome.extension.getURL("/pages/popup/index.html?tabId=" + e.id);
   chrome.tabs.create({
     url
   });

@@ -121,7 +121,7 @@ window.onload = function() {
   });
 
   e("SwitchPlannerDetailsLink").addEventListener("click", function() {
-    window.open("/switch-planner/index.html?tab=" + chrome.devtools.inspectedWindow.tabId);
+    window.open("/pages/switch-planner/index.html?tab=" + chrome.devtools.inspectedWindow.tabId);
   });
   // Since this is rendered in a devtools console, we have to make clicks on the
   // link open a new window.
