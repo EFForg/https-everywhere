@@ -255,7 +255,7 @@ RuleSets.prototype = {
     }
 
     // If a ruleset declares a platform, and we don't match it, treat it as
-    // off-by-default. In practice, this excludes "mixedcontent" & "cacert" rules.
+    // off-by-default. In practice, this excludes "mixedcontent" rules.
     var platform = ruletag["platform"]
     if (platform) {
       default_state = false;
