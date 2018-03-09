@@ -92,7 +92,7 @@ chrome.webNavigation.onCompleted.addListener(function() {
 });
 
 // Records which tabId's are active in the HTTPS Switch Planner (see
-// devtools-panel.js).
+// devtools/panel-ux.js).
 var switchPlannerEnabledFor = {};
 // Detailed information recorded when the HTTPS Switch Planner is active.
 // Structure is:
