@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.onkeydown = function(evt) {
     evt = evt || window.event;
     if (evt.ctrlKey && evt.keyCode == 90) {
-      window.open("debugging-rulesets/index.html");
+      window.open("/debugging-rulesets/index.html");
     }
   };
 });
