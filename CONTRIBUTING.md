@@ -164,8 +164,6 @@ Where they must be used, please add a comment to the `ruleset` explaining why.
 
 Avoid regexes with long strings of subdomains, e.g. `<rule from="^http://(foo|bar|baz|bananas).example.com" />`. These are hard to read and maintain, and are usually better expressed with a longer list of target hosts, plus a plain rewrite from `"^http:"` to `"^https:"`.
 
-You may find it helpful to use [RegExr](https://regexr.com/) to improve and test your regular expressions.
-
 In general, avoid using open-ended regex in rules.  In certain cases, open-ended regex may be the most elegant solution.  But carefully consider if there are other options.
 
 Examples:
