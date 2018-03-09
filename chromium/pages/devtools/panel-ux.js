@@ -107,7 +107,7 @@ window.onload = function() {
   // Open a connection to the background page. Right now this is only used
   // by the background page so it knows when the devtools pane has closed.
   // We don't receive messages from the background page currently, though that
-  // may be a future improvement. Sending messages to the background page doesn't 
+  // may be a future improvement. Sending messages to the background page doesn't
   // require an existing connection.
   chrome.runtime.connect({ name: "devtools-page" });
 
@@ -121,7 +121,7 @@ window.onload = function() {
   });
 
   e("SwitchPlannerDetailsLink").addEventListener("click", function() {
-    window.open("switch-planner.html?tab=" + chrome.devtools.inspectedWindow.tabId);
+    window.open("/pages/switch-planner/index.html?tab=" + chrome.devtools.inspectedWindow.tabId);
   });
   // Since this is rendered in a devtools console, we have to make clicks on the
   // link open a new window.

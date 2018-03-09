@@ -66,7 +66,7 @@ function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
 
   if(ruleset.note == "user rule") {
     var remove = document.createElement("img");
-    remove.src = chrome.extension.getURL("remove.png");
+    remove.src = chrome.extension.getURL("images/remove.png");
     remove.className = "remove";
     line.appendChild(remove);
 
