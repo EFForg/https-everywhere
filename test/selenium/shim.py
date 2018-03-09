@@ -121,8 +121,8 @@ class Shim:
     def _set_urls(self, base_url):
         self.base_url = base_url
         self.bg_url = base_url + "_generated_background_page.html"
-        self.popup_url = base_url + "popup.html"
-        self.options_url = base_url + "options.html"
+        self.popup_url = base_url + "pages/popup/index.html"
+        self.options_url = base_url + "pages/options/index.html"
 
     def get_ext_path(self):
         if self.browser_type == 'chrome':
