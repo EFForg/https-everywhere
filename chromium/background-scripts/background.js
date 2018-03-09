@@ -121,7 +121,7 @@ function updateState () {
   if ('setIcon' in chrome.browserAction) {
     chrome.browserAction.setIcon({
       path: {
-        38: 'icons/icon-' + iconState + '-38.png'
+        38: 'images/icons/icon-' + iconState + '-38.png'
       }
     });
   }
