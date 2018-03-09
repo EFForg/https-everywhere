@@ -115,7 +115,7 @@ This would create `Example.com.xml`, which you could then take a look at and edi
 
 There are several volunteers to HTTPS Everywhere who have graciously dedicated their time to look at the `ruleset` contributions and work with contributors to ensure quality of the pull requests before merging.  It is typical for there to be several back-and-forth communications with these `ruleset` maintainers before a PR is in a good shape to merge.  Please be patient and respectful, the maintainers are donating their time for no benefit other than the satisfaction of making the web more secure.  They are under no obligation to merge your request, and may reject it if it is impossible to ensure quality.  You can identify these volunteers by looking for the "Collaborator" identifier in their comments on HTTPS Everywhere issues and pull requests.
 
-In the back-and-fourth process of getting the `ruleset` in good shape, there may be many commits made.  It is this project's convention to squash-and-merge these commits into a single commit before merging into the project.  If your commits are cryptographically signed, we may ask you to squash the commits yourself in order to preserve this signature.  Otherwise, we may squash them ourselves before merging.
+In the back-and-forth process of getting the `ruleset` in good shape, there may be many commits made.  It is this project's convention to squash-and-merge these commits into a single commit before merging into the project.  If your commits are cryptographically signed, we may ask you to squash the commits yourself in order to preserve this signature.  Otherwise, we may squash them ourselves before merging.
 
 We prefer small, granular changes to the rulesets.  Not only are these easier to test and review, this results in cleaner commits.
 
@@ -349,7 +349,7 @@ Officially supported browsers:
 - Firefox ESR
 - Chromium Stable
 
-We also informally support Opera browser, but do not have tooling around testing Opera.  Firefox ESR is supported because this is what the [Tor Browser](https://www.torproject.org/projects/torbrowser.html.en), which includes HTTPS Everywhere, is built upon.  For the test commands, refer to [README.md](README.md).
+We also informally support the Opera browser, but do not have tooling around testing Opera.  Firefox ESR is supported because this is what the [Tor Browser](https://www.torproject.org/projects/torbrowser.html.en), which includes HTTPS Everywhere, is built upon.  For the test commands, refer to [README.md](README.md).
 
 The current extension maintainer is @Hainish.  You can tag him for PRs which involve the core codebase.
 
@@ -382,4 +382,3 @@ Then, in the Tor Project resources list, find and click the link for the file
 and choose "Translate now" to enter the translation interface.
 
 * * *
-
