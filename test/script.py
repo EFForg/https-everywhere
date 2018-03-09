@@ -35,11 +35,9 @@ if sys.argv[1] == "Chrome":
     # Find the path to chromedriver
     chromedriver_path = "chromedriver"
     if sys.platform.startswith("linux"):
-        if 'Ubuntu' in platform.linux_distribution():
+        if 'Ubuntu' in platform.uname().version:
             chromedriver_path = "/usr/lib/chromium-browser/chromedriver"
-        elif 'debian' in platform.linux_distribution():
-            #Debian is lowercase when platform.linux_distribution() is used.
-            #This is not a mistake.
+        elif 'Debian' in platform.uname().version:
             chromedriver_path = "/usr/lib/chromium/chromedriver"
 
     try:
