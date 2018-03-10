@@ -57,7 +57,7 @@ elif type brew >/dev/null ; then
 elif type dnf >/dev/null ; then
   $SUDO_SHIM dnf install -y firefox gcc git libcurl-devel libxml2-devel \
     libxslt-devel python-devel redhat-rpm-config xorg-x11-server-Xvfb which \
-    findutils procps openssl openssl-devel chromium GConf2 rsync
+    findutils procps openssl openssl-devel chromium GConf2
   if ! type chromedriver >/dev/null; then
     if [ "`uname -m`" == "x86_64" ]; then
       ARCH=64
