@@ -35,10 +35,14 @@ if sys.argv[1] == "Chrome":
     # Find the path to chromedriver
     chromedriver_path = "chromedriver"
     if sys.platform.startswith("linux"):
-        if 'Ubuntu' in platform.uname().version:
-            chromedriver_path = "/usr/lib/chromium-browser/chromedriver"
-        elif 'Debian' in platform.uname().version:
-            chromedriver_path = "/usr/lib/chromium/chromedriver"
+        locations = (
+            "/usr/lib/chromium-browser/chromedriver",
+            "/usr/lib/chromium/chromedriver",
+        )
+        for location in locations:
+            if os.path.isfile(location):
+                chromedriver_path = location
+                break
 
     try:
         # First argument is optional, if not specified will search path.
