@@ -10,7 +10,7 @@
 # of linux is required for the script to run correctly as well.
 # Otherwise, use pyvirtualdisplay.
 
-import sys, os, platform, time
+import sys, os, time
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
