@@ -5,13 +5,12 @@
 
 if [ -n "$GIT_DIR" ]
 then
-    # $GIT_DIR is set, so we're running as a hook.
-    cd $GIT_DIR
+  # $GIT_DIR is set, so we're running as a hook.
+  cd $GIT_DIR
 else
-    # Git command exists? Cool, let's CD to the right place.
-    git rev-parse && cd "$(git rev-parse --show-toplevel)"
+  # Git command exists? Cool, let's CD to the right place.
+  git rev-parse && cd "$(git rev-parse --show-toplevel)"
 fi
-
 
 source utils/mktemp.sh
 
@@ -49,8 +48,8 @@ if [ ! -f "$HTTPSE_INSTALL_XPI" ]; then
   die "Tor Browser does not have HTTPS Everywhere installed"
 fi
 
-echo "running tor browser"
+echo "Running Tor Browser"
 $TBB_LOCALIZED_DIRECTORY/Browser/start-tor-browser --verbose ${@:2}
 
-shasum=$(openssl sha -sha256 "$XPI_NAME")
+shasum=$(openssl sha256 "$XPI_NAME")
 echo -e "Git commit `git rev-parse HEAD`\n$shasum"
