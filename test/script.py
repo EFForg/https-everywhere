@@ -10,7 +10,7 @@
 # of linux is required for the script to run correctly as well.
 # Otherwise, use pyvirtualdisplay.
 
-import sys, os, platform, time
+import sys, os, time
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
@@ -35,12 +35,14 @@ if sys.argv[1] == "Chrome":
     # Find the path to chromedriver
     chromedriver_path = "chromedriver"
     if sys.platform.startswith("linux"):
-        if 'Ubuntu' in platform.linux_distribution():
-            chromedriver_path = "/usr/lib/chromium-browser/chromedriver"
-        elif 'debian' in platform.linux_distribution():
-            #Debian is lowercase when platform.linux_distribution() is used.
-            #This is not a mistake.
-            chromedriver_path = "/usr/lib/chromium/chromedriver"
+        locations = (
+            "/usr/lib/chromium-browser/chromedriver",
+            "/usr/lib/chromium/chromedriver",
+        )
+        for location in locations:
+            if os.path.isfile(location):
+                chromedriver_path = location
+                break
 
     try:
         # First argument is optional, if not specified will search path.
