@@ -58,8 +58,8 @@ async function performMigrations() {
 
 function setStorage(store) {
   Object.assign(exports, {
-    get: store.get,
-    set: store.set,
+    get: store.get.bind(store),
+    set: store.set.bind(store),
     get_promise,
     set_promise
   });
