@@ -1,10 +1,10 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.6
 
 # Uses the Python zip implementation to create deterministic zip's
 # Author: Yan Zhu, yan@mit.edu
 
 """
-Usage: python create_zip.py -x <exclusions> -n <name of zipped file> <directory>
+Usage: python3.6 create_zip.py -x <exclusions> -n <name of zipped file> <directory>
 """
 
 import argparse
@@ -35,7 +35,7 @@ os.chdir(args.directory)
 exclusions = []
 for line in f:
     exclusions.extend(glob.glob(line.strip()))
-exclusions = map(lambda x: './'+x, exclusions)
+exclusions = list(map(lambda x: './'+x, exclusions))
 
 createdZipFile.write_from_directory(".", exclusions, compress_type=compress)
 createdZipFile.close()

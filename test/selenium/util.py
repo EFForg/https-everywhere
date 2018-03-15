@@ -69,24 +69,24 @@ class ExtensionTestCase(unittest.TestCase):
                 return self.driver.refresh()
         if open_url:
             return self.driver.get(target)
-        raise ValueError('Target (%s) not found in current urls' % (target,))
+        raise ValueError('Target ({}) not found in current urls'.format(target))
 
     def get_variable(self, name):
-        return self.driver.execute_script('return %s;' % name)
+        return self.driver.execute_script('return {};'.format(name))
 
     @contextmanager
     def load_popup_for(self, url='about:blank'):
         create_url_and_popup_js_str = '''
-        (function(done) {
-          chrome.tabs.create({url: '%s'}, function(tab) {
+        (function(done) {{
+          chrome.tabs.create({{url: '{}'}}, function(tab) {{
             setTimeout(
-              () => chrome.tabs.create({url: '%s' + '?tabId=' + String(tab.id)}, done),
-              250
+              () => chrome.tabs.create({{url: '{}' + '?tabId=' + String(tab.id)}}, done),
+              500
             );
-          });
-        })(arguments[0]);
+          }});
+        }})(arguments[0]);
         '''
-        script = create_url_and_popup_js_str % (url, self.shim.popup_url)
+        script = create_url_and_popup_js_str.format(url, self.shim.popup_url)
 
         self.driver.get(self.shim.bg_url)
         time.sleep(0.5)

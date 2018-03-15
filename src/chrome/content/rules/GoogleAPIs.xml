@@ -79,6 +79,7 @@
 	<target host="imasdk.googleapis.com" />
 	<target host="maps.googleapis.com" />
 	<target host="www.googleapis.com" />
+	<target host="commondatastorage.googleapis.com" />
 	<target host="*.commondatastorage.googleapis.com" />
 	<target host="*.storage.googleapis.com" />
 	<target host="storage.googleapis.com" />
@@ -100,6 +101,12 @@
 			-->
 	<exclusion pattern="^http://www\.gstatic\.com/ddos-viz/attacks\.json" />
 		<test url="http://www.gstatic.com/ddos-viz/attacks.json" />
+	<!--	Causes CORS issues on http://www.codeskulptor.org/ (try saving
+		current file). See https://github.com/EFForg/https-everywhere/issues/1828
+			-->
+	<exclusion pattern="^http://codeskulptor-user\d+\.commondatastorage\.googleapis\.com/" />
+		<test url="http://codeskulptor-user44.commondatastorage.googleapis.com/user44_0LxgCGWCjo_0.py" />
+		<test url="http://codeskulptor-user301.commondatastorage.googleapis.com/user301_nVlSk7alrk_0.py" />
 
 	<rule from="^http://(?:www\.)?gmodules\.com/ig/images/"
 		to="https://www.google.com/ig/images/" />
@@ -115,12 +122,14 @@
 		<test url="http://imasdk.googleapis.com/" />
 		<test url="http://maps.googleapis.com/maps/ms?hl=da&amp;ie=UTF8&amp;msa=0&amp;msid=213981917930555964408.00044f8886ceeef1c1b88&amp;source=embed&amp;ll=55.432276,9.439402&amp;spn=0.017045,0.043774&amp;z=14" />
 
-	<rule from="^http://([^@:\./]+\.)?(commondata)?storage\.googleapis\.com/"
+	<rule from="^http://([\w-]+\.)?(commondata)?storage\.googleapis\.com/"
 		to="https://$1$2storage.googleapis.com/" />
-		<test url="http://storage.googleapis.com/" />
-		<test url="http://commondatastorage.googleapis.com/" />
 		<test url="http://chromedriver.storage.googleapis.com/" />
+		<test url="http://fiber.storage.googleapis.com/channels/guide/kansascity.pdf" />
 		<test url="http://patentimages.storage.googleapis.com/" />
+		<test url="http://bookmarc-binders.commondatastorage.googleapis.com/allegion/Allegion%202014%20Residential%20Product%20Catalogue%20Regent%20Series%20Knobs%20Levers_0114.pdf" />
+		<test url="http://bookmarc-binders.commondatastorage.googleapis.com/danpalon/Danpalon%20Architectural%20Catalogue.pdf" />
+		<test url="http://ckannet-storage.commondatastorage.googleapis.com/2014-07-06T23:24:20.852Z/vol-1-no-2-paper-2-owusu-dankwa-prosper.pdf" />
 
 	<!--	There is an interesting question about whether we should
 		append &strip=1 to all cache URLs.  This causes them to load

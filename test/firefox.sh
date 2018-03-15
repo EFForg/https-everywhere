@@ -27,7 +27,7 @@ XPI_NAME="`ls -tr pkg/https-everywhere-20*.xpi | tail -1`"
 # Set up a skeleton profile and then install into it.
 # The skeleton contains a few files required to trick Firefox into thinking
 # that the extension was fully installed rather than just unpacked.
-rsync -a test/firefox/test_profile_skeleton/ $PROFILE_DIRECTORY
+cp -a test/firefox/test_profile_skeleton/* $PROFILE_DIRECTORY
 unzip -qd $HTTPSE_INSTALL_DIRECTORY $XPI_NAME
 
 die() {
@@ -58,8 +58,8 @@ else
 
   PATH=/home/user/geckodriver:$PATH
   if [ -n "$FIREFOX" ]; then
-    $XVFB_RUN python2.7 test/script.py Firefox "$PROFILE_DIRECTORY" $FIREFOX
+    $XVFB_RUN python3.6 test/script.py Firefox "$PROFILE_DIRECTORY" $FIREFOX
   else
-    $XVFB_RUN python2.7 test/script.py Firefox "$PROFILE_DIRECTORY"
+    $XVFB_RUN python3.6 test/script.py Firefox "$PROFILE_DIRECTORY"
   fi
 fi

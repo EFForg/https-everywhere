@@ -53,11 +53,10 @@ Submitting changes to any ruleset that does not meet the coverage requirements
 will break the build. This means that even fixes of existing rules may require
 additional work to bring them up to snuff.
 
-To run the tests locally, you'll need the https-everywhere-checker, which is now
-a submodule of https-everywhere. To set it up, run:
+To run the tests locally, first install the development dependencies:
 
     ./install-dev-dependencies.sh
 
 To test a specific ruleset:
 
-    ./fetch-test.sh rules/Example.xml
+    test/manual.sh rules/Example.xml

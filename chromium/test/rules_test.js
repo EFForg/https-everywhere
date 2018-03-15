@@ -1,7 +1,7 @@
 'use strict'
 
 const assert = require('chai').assert,
-  rules = require('../rules');
+  rules = require('../background-scripts/rules');
 
 const Exclusion = rules.Exclusion,
   Rule = rules.Rule,

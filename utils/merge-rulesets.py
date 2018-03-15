@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.6
 
 # Merge all the .xml rulesets into a single "default.rulesets" file -- this
 # prevents inodes from wasting disk space, but more importantly, this works
@@ -19,7 +19,7 @@ def normalize(f):
 	OSX and Linux filesystems encode composite characters differently in
 	filenames. We should normalize to NFC: http://unicode.org/reports/tr15/
 	"""
-	f = unicodedata.normalize("NFC", unicode(f, "utf-8")).encode("utf-8")
+	f = unicodedata.normalize("NFC", f)
 	return f
 
 # commandline arguments parsing (nobody use it, though)
@@ -46,12 +46,12 @@ print(" * Parsing XML ruleset and constructing JSON library...")
 for filename in sorted(files):
 	tree = xml.etree.ElementTree.parse(filename)
 	root = tree.getroot()
-	
+
 	ruleset = {}
 
 	for attr in root.attrib:
 		ruleset[attr] = root.attrib[attr]
-	
+
 	for child in root:
 		if child.tag in ["target", "rule", "securecookie", "exclusion"]:
 			if child.tag not in ruleset:
