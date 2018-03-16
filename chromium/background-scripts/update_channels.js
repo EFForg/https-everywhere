@@ -2,7 +2,7 @@
 
 "use strict";
 
-const update_channels = [{
+var update_channels = [{
   name: "EFF (Full)",
   jwk: {
     kty: "RSA",

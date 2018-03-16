@@ -1,5 +1,10 @@
 "use strict";
 
+// Determine if we're in the tests.  If so, define some necessary components.
+if(typeof(window) == "undefined"){
+  var chrome = require("sinon-chrome");
+}
+
 (function(exports) {
 
 var VERB = 1;

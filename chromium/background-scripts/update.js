@@ -1,7 +1,26 @@
 /* global update_channels */
 /* global pako */
+/* global __dirname */
 
 "use strict";
+
+// Determine if we're in the tests.  If so, define some necessary components.
+if(typeof(window) == "undefined"){
+  const fs = require('fs');
+  const WebCrypto = require("node-webcrypto-ossl"),
+    atob = require("atob"),
+    encoding = require('text-encoding');
+
+  var window = {
+    crypto: new WebCrypto(),
+    atob
+  };
+
+  var update_channels = Function(fs.readFileSync(__dirname + '/update_channels.js').toString() + "return update_channels;")(),
+    pako = Function(fs.readFileSync(__dirname + '/../external/pako-1.0.5/pako_inflate.min.js').toString() + "return pako;")(),
+    TextDecoder = encoding.TextDecoder,
+    chrome = require("sinon-chrome");
+}
 
 (function(exports) {
 
