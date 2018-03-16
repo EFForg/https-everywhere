@@ -24,6 +24,6 @@ echo 'Paste in the data from the QR code, then type Ctrl-D:'
 cat | tr -d '\n' > $2/rulesets-signature.sha256.base64
 
 base64 -d $2/rulesets-signature.sha256.base64 > $SIGNED_SHA256SUM
-openssl dgst -sha256 -verify $1 -signature $SIGNED_SHA256SUM $2/default.rulesets.gz.base64
+openssl dgst -sha256 -sigopt rsa_padding_mode:pss -sigopt rsa_pss_saltlen:32 -verify $1 -signature $SIGNED_SHA256SUM $2/default.rulesets.gz.base64
 
 date +%s > $2/rulesets-timestamp
