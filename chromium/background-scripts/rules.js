@@ -216,7 +216,11 @@ RuleSets.prototype = {
   loadFromBrowserStorage: async function(store) {
     this.store = store;
     this.ruleActiveStates = await this.store.get_promise('ruleActiveStates', {});
-    this.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
+
+    await util.loadExtensionFile('rules/default.rulesets', 'json')
+      .then(ruleJson => this.addFromJson(ruleJson))
+      .catch(error => util.log(util.WARN, 'Error loading extension file: ' + error));
+
     this.loadStoredUserRules();
     await this.addStoredCustomRulesets();
   },
