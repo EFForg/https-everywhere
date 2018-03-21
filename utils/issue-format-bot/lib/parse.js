@@ -13,7 +13,7 @@ const strip = require('strip-markdown'),
   decode = (new Entities()).decode;
 
 // XXX should type validation be moved to the validator module?
-const validTypes = ['ruleset issue', 'ruleset enhancement', 'new ruleset', 'code issue', 'feature request', 'other'];
+const validTypes = ['ruleset issue', 'new ruleset', 'code issue', 'feature request', 'other'];
 
 // XXX the Error API in this module is pretty funky and could use a better design
 
