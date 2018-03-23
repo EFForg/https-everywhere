@@ -11,8 +11,9 @@ fi
 RULESETS_FILE=rules/default.rulesets
 
 mkdir -p $2
-cat $RULESETS_FILE | gzip -nc > $2/default.rulesets.gz
+TIMESTAMP=`date +%s`
+echo "{ \"timestamp\": $TIMESTAMP, \"rulesets\":" "`cat $RULESETS_FILE`" "}" | tr -d '\n' | gzip -nc > $2/default.rulesets.$TIMESTAMP.gz
 
-openssl dgst -sha256 -sigopt rsa_padding_mode:pss -sigopt rsa_pss_saltlen:32 -sign $1 -out $2/rulesets-signature.sha256 $2/default.rulesets.gz
+openssl dgst -sha256 -sigopt rsa_padding_mode:pss -sigopt rsa_pss_saltlen:32 -sign $1 -out $2/rulesets-signature.$TIMESTAMP.sha256 $2/default.rulesets.$TIMESTAMP.gz
 
-date +%s > $2/rulesets-timestamp
+echo $TIMESTAMP > $2/latest-rulesets-timestamp

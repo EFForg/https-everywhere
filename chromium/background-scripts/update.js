@@ -78,7 +78,7 @@ function xhr_promise(url){
 
 // Check for new rulesets. If found, return the timestamp. If not, return false
 async function checkForNewRulesets(update_channel) {
-  let timestamp_result = await fetch(update_channel.update_path_prefix + "/rulesets-timestamp");
+  let timestamp_result = await fetch(update_channel.update_path_prefix + "/latest-rulesets-timestamp");
   if(timestamp_result.status == 200) {
     let rulesets_timestamp = Number(await timestamp_result.text());
 
@@ -107,8 +107,8 @@ async function getNewRulesets(rulesets_timestamp, update_channel) {
 
   store.local.set_promise('rulesets-timestamp: ' + update_channel.name, rulesets_timestamp);
 
-  let signature_promise = fetch(update_channel.update_path_prefix + "/rulesets-signature.sha256");
-  let rulesets_promise = fetch(update_channel.update_path_prefix + "/default.rulesets.gz");
+  let signature_promise = fetch(update_channel.update_path_prefix + "/rulesets-signature." + rulesets_timestamp + ".sha256");
+  let rulesets_promise = fetch(update_channel.update_path_prefix + "/default.rulesets." + rulesets_timestamp + ".gz");
 
   let responses = await Promise.all([
     signature_promise,
@@ -129,7 +129,7 @@ async function getNewRulesets(rulesets_timestamp, update_channel) {
 // Returns a promise which verifies that the rulesets have a valid EFF
 // signature, and if so, stores them and returns true.
 // Otherwise, it throws an exception.
-function verifyAndStoreNewRulesets(new_rulesets, update_channel){
+function verifyAndStoreNewRulesets(new_rulesets, rulesets_timestamp, update_channel){
   return new Promise((resolve, reject) => {
     imported_keys[update_channel.name].then(publicKey => {
       window.crypto.subtle.verify(
@@ -143,8 +143,18 @@ function verifyAndStoreNewRulesets(new_rulesets, update_channel){
       ).then(async isvalid => {
         if(isvalid) {
           util.log(util.NOTE, update_channel.name + ': Downloaded ruleset signature checks out.  Storing rulesets.');
-          await store.local.set_promise('rulesets: ' + update_channel.name, window.btoa(util.ArrayBufferToString(new_rulesets.rulesets_array_buffer)));
-          resolve(true);
+
+          const rulesets_gz = util.ArrayBufferToString(new_rulesets.rulesets_array_buffer);
+          const rulesets_byte_array = pako.inflate(rulesets_gz);
+          const rulesets = new TextDecoder("utf-8").decode(rulesets_byte_array);
+          const rulesets_json = JSON.parse(rulesets);
+
+          if(rulesets_json.timestamp != rulesets_timestamp){
+            reject('Downloaded ruleset had an incorrect timestamp.  This may be an attempted downgrade attack.  Aborting.');
+          } else {
+            await store.local.set_promise('rulesets: ' + update_channel.name, window.btoa(rulesets_gz));
+            resolve(true);
+          }
         } else {
           reject('Downloaded ruleset signature is invalid.  Aborting.');
         }
@@ -183,7 +193,7 @@ async function applyStoredRulesets(rulesets_obj){
   const rulesets_jsons = await Promise.all(rulesets_promises);
   if(rulesets_jsons.join("").length > 0){
     for(let rulesets_json of rulesets_jsons){
-      rulesets_obj.addFromJson(rulesets_json);
+      rulesets_obj.addFromJson(rulesets_json.rulesets);
     }
   } else {
     rulesets_obj.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
@@ -204,7 +214,7 @@ async function performCheck() {
       util.log(util.NOTE, update_channel.name + ': A new ruleset bundle has been released.  Downloading now.');
       let new_rulesets = await getNewRulesets(new_rulesets_timestamp, update_channel);
       try{
-        await verifyAndStoreNewRulesets(new_rulesets, update_channel);
+        await verifyAndStoreNewRulesets(new_rulesets, new_rulesets_timestamp, update_channel);
         store.local.set_promise('rulesets-stored-timestamp: ' + update_channel.name, new_rulesets_timestamp);
         num_updates++;
       } catch(err) {
