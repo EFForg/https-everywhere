@@ -9,11 +9,13 @@ if(typeof(window) == "undefined"){
   const fs = require('fs');
   const WebCrypto = require("node-webcrypto-ossl"),
     atob = require("atob"),
+    btoa = require("btoa"),
     encoding = require('text-encoding');
 
   var window = {
     crypto: new WebCrypto(),
-    atob
+    atob,
+    btoa
   };
 
   var update_channels = Function(fs.readFileSync(__dirname + '/update_channels.js').toString() + "return update_channels;")(),
@@ -76,14 +78,15 @@ function xhr_promise(url){
 
 // Check for new rulesets. If found, return the timestamp. If not, return false
 async function checkForNewRulesets(update_channel) {
+  let timestamp_result = await fetch(update_channel.update_path_prefix + "/rulesets-timestamp");
+  if(timestamp_result.status == 200) {
+    let rulesets_timestamp = Number(await timestamp_result.text());
 
-  let timestamp_promise = xhr_promise(update_channel.update_path_prefix + "/rulesets-timestamp");
-  let rulesets_timestamp = Number(await timestamp_promise);
-  if((await store.local.get_promise('rulesets-timestamp: ' + update_channel.name, 0)) < rulesets_timestamp){
-    return rulesets_timestamp;
-  } else {
-    return false;
+    if((await store.local.get_promise('rulesets-timestamp: ' + update_channel.name, 0)) < rulesets_timestamp){
+      return rulesets_timestamp;
+    }
   }
+  return false;
 }
 
 // Retrieve the timestamp for when a stored ruleset bundle was published
@@ -104,18 +107,22 @@ async function getNewRulesets(rulesets_timestamp, update_channel) {
 
   store.local.set_promise('rulesets-timestamp: ' + update_channel.name, rulesets_timestamp);
 
-  let signature_promise = xhr_promise(update_channel.update_path_prefix + "/rulesets-signature.sha256.base64");
-  let rulesets_promise = xhr_promise(update_channel.update_path_prefix + "/default.rulesets.gz.base64");
+  let signature_promise = fetch(update_channel.update_path_prefix + "/rulesets-signature.sha256");
+  let rulesets_promise = fetch(update_channel.update_path_prefix + "/default.rulesets.gz");
 
-  let resolutions = await Promise.all([
+  let responses = await Promise.all([
     signature_promise,
     rulesets_promise
   ]);
 
+  let resolutions = await Promise.all([
+    util.slurp(responses[0]),
+    util.slurp(responses[1])
+  ]);
+
   return {
-    signature_byte_array: util.base64ToUint8Array(resolutions[0]),
-    rulesets_byte_array: util.stringToUint8Array(resolutions[1]),
-    rulesets_gz_base64: resolutions[1]
+    signature_array_buffer: resolutions[0],
+    rulesets_array_buffer: resolutions[1]
   };
 }
 
@@ -131,12 +138,12 @@ function verifyAndStoreNewRulesets(new_rulesets, update_channel){
           saltLength: 32
         },
         publicKey,
-        new_rulesets.signature_byte_array.buffer,
-        new_rulesets.rulesets_byte_array.buffer
+        new_rulesets.signature_array_buffer,
+        new_rulesets.rulesets_array_buffer
       ).then(async isvalid => {
         if(isvalid) {
           util.log(util.NOTE, update_channel.name + ': Downloaded ruleset signature checks out.  Storing rulesets.');
-          await store.local.set_promise('rulesets: ' + update_channel.name, new_rulesets.rulesets_gz_base64);
+          await store.local.set_promise('rulesets: ' + update_channel.name, window.btoa(util.ArrayBufferToString(new_rulesets.rulesets_array_buffer)));
           resolve(true);
         } else {
           reject('Downloaded ruleset signature is invalid.  Aborting.');
@@ -150,7 +157,7 @@ function verifyAndStoreNewRulesets(new_rulesets, update_channel){
   });
 }
 
-// Base64 decode, unzip, and apply the rulesets we have stored.
+// Unzip and apply the rulesets we have stored.
 async function applyStoredRulesets(rulesets_obj){
   let rulesets_promises = [];
   for(let update_channel of update_channels){

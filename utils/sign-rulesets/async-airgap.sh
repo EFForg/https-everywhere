@@ -18,6 +18,6 @@ trap 'rm $SIGNED_SHA256SUM_BASE64_QR' EXIT
 
 echo $2 | xxd -r -p | openssl pkeyutl -sign -inkey $1 -pkeyopt digest:sha256 -pkeyopt rsa_padding_mode:pss -pkeyopt rsa_pss_saltlen:32 -out $SIGNED_SHA256SUM
 
-echo $SIGNED_SHA256SUM
+cat $SIGNED_SHA256SUM | base64
 cat $SIGNED_SHA256SUM | base64 | qrencode -o $SIGNED_SHA256SUM_BASE64_QR
 eog $SIGNED_SHA256SUM_BASE64_QR 2>/dev/null

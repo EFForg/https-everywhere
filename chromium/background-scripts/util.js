@@ -1,10 +1,5 @@
 "use strict";
 
-// Determine if we're in the tests.  If so, define some necessary components.
-if(typeof(window) == "undefined"){
-  var chrome = require("sinon-chrome");
-}
-
 (function(exports) {
 
 var VERB = 1;
@@ -66,28 +61,34 @@ function loadExtensionFile(url, returnType) {
 }
 
 /**
- * Convert a string to ArrayBuffer
+ * Convert an ArrayBuffer to string
  *
- * @param string: a string to convert
+ * @param array: an ArrayBuffer to convert
  */
-function stringToUint8Array(string) {
-  let len = string.length;
-  let bytes = new Uint8Array(len);
+function ArrayBufferToString(ab) {
+  let array = new Uint8Array(ab);
+  let string = "";
 
-  for (let i = 0; i < len; i++) {
-    bytes[i] = string.charCodeAt(i);
+  for (let byte of array){
+    string += String.fromCharCode(byte);
   }
 
-  return bytes;
+  return string;
 }
 
 /**
- * Convert a base64 string to ArrayBuffer
+ * Return the entire contents of a fetch response object
  *
- * @param base64: a base64 string to convert
+ * @param response: fetch response to read from
+ * @return a promise which resolves to an ArrayBuffer of the fetch response contents
  */
-function base64ToUint8Array(base64) {
-  return stringToUint8Array(window.atob(base64));
+function slurp(response) {
+  return new Promise(res => {
+    let reader = new FileReader();
+    reader.addEventListener("loadend", () => res(reader.result));
+
+    response.blob().then(blob => reader.readAsArrayBuffer(blob));
+  });
 }
 
 Object.assign(exports, {
@@ -100,8 +101,8 @@ Object.assign(exports, {
   setDefaultLogLevel,
   getDefaultLogLevel,
   loadExtensionFile,
-  stringToUint8Array,
-  base64ToUint8Array
+  ArrayBufferToString,
+  slurp
 });
 
 })(typeof exports == 'undefined' ? require.scopes.util = {} : exports);
