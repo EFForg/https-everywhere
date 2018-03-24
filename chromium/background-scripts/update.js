@@ -61,21 +61,6 @@ async function timeToNextCheck() {
   }
 }
 
-// Generic ajax promise
-function xhr_promise(url){
-  return new Promise((resolve) => {
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET", url);
-    xhr.onreadystatechange = function(){
-      if(this.readyState == 4 && this.status == 200) {
-        resolve(this.response);
-      }
-    }
-    xhr.responseType = "text";
-    xhr.send(null);
-  });
-}
-
 // Check for new rulesets. If found, return the timestamp. If not, return false
 async function checkForNewRulesets(update_channel) {
   let timestamp_result = await fetch(update_channel.update_path_prefix + "/latest-rulesets-timestamp");
