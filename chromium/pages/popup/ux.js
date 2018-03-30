@@ -171,11 +171,11 @@ document.addEventListener("DOMContentLoaded", function () {
     for(let [update_channel, timestamp] of timestamps){
       if(timestamp > 0){
         let ruleset_date = new Date(timestamp * 1000);
-        let ruleset_string = ruleset_date.getUTCFullYear() + "." + (ruleset_date.getUTCMonth() + 1) + "." + ruleset_date.getUTCDate();
+        let ruleset_version_string = ruleset_date.getUTCFullYear() + "." + (ruleset_date.getUTCMonth() + 1) + "." + ruleset_date.getUTCDate();
 
         let timestamp_span = document.createElement("span");
         timestamp_span.className = "rulesets-version";
-        timestamp_span.innerText = chrome.i18n.getMessage("about_rulesets_version") + update_channel + ": " + ruleset_string;
+        timestamp_span.innerText = chrome.i18n.getMessage("about_rulesets_version") + update_channel + ": " + ruleset_version_string;
         rulesets_versions.appendChild(timestamp_span);
       }
     }

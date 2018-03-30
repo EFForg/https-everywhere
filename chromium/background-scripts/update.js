@@ -135,19 +135,19 @@ function verifyAndStoreNewRulesets(new_rulesets, rulesets_timestamp, update_chan
           const rulesets_json = JSON.parse(rulesets);
 
           if(rulesets_json.timestamp != rulesets_timestamp){
-            reject('Downloaded ruleset had an incorrect timestamp.  This may be an attempted downgrade attack.  Aborting.');
+            reject(update_channel.name + ': Downloaded ruleset had an incorrect timestamp.  This may be an attempted downgrade attack.  Aborting.');
           } else {
             await store.local.set_promise('rulesets: ' + update_channel.name, window.btoa(rulesets_gz));
             resolve(true);
           }
         } else {
-          reject('Downloaded ruleset signature is invalid.  Aborting.');
+          reject(update_channel.name + ': Downloaded ruleset signature is invalid.  Aborting.');
         }
       }).catch(() => {
-        reject('Downloaded ruleset signature could not be verified.  Aborting.');
+        reject(update_channel.name + ': Downloaded ruleset signature could not be verified.  Aborting.');
       });
     }).catch(() => {
-      reject('Downloaded ruleset signature could not be verified.  Aborting.');
+      reject(update_channel.name + ': Could not import key.  Aborting.');
     });
   });
 }
