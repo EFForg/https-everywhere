@@ -1,47 +1,59 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://dracokraft.enjin.com/ => https://dracokraft.enjin.com/: Too many redirects while fetching 'https://dracokraft.enjin.com/'
+	IMPORTANT INFORMATION:
 
-	CDN buckets:
-		- s3.amazonaws.com/files.enjin.com/
+	Sites, developed by the public, created on the Enjin Network have the ability to force
+	HTTP or HTTPS themselves. If they enable HTTPS, the site will automatically force a
+	HTTPS connection. You cannot add a rule to force HTTPS for sites that specifically
+	request to force the HTTP protocol, doing so will cause a redirect loop
+	(between the HTTP and HTTPS protocols) to occur.
 
-		- d2umfjgc9kwn9b.cloudfront.net
-			- assets-cloud.enjin.com
+	This functionality may be altered in the near future to ensure all sites use HTTPS and proxy
+	insecure material (such as scripts, stylesheets and images) through a HTTPS-enabled proxy.
 -->
-<ruleset name="Enjin" platform="mixedcontent" default_off='failed ruleset test'>
+
+<ruleset name="Enjin" platform="mixedcontent">
+	<!-- Enjin Network -->
 	<target host="enjin.com" />
-	<target host="*.enjin.com" />
-	<target host="resources.guild-hosting.net" />
-	
-	<test url="http://www.enjin.com/" />
-	<test url="http://assets-cloud.enjin.com/" />
-	<test url="http://support.enjin.com/" />
-	<test url="http://files.enjin.com/" />
-	<test url="http://townywarriorsmc.enjin.com/" />
-	<test url="http://www.townywarriorsmc.enjin.com/" />
-	<test url="http://dracokraft.enjin.com/" />
-	<test url="http://www.dracokraft.enjin.com/" />
+	<target host="www.enjin.com" />
+	<target host="support.enjin.com" />
+	<target host="id.enjin.com" />
+	<target host="api.enjin.com" />
 
-	<!--	Guild subdomains set wildcard cookies. In
-		order to secure them, we'd have to target
-		each and every guild's subdomain...
-							-->
-	<securecookie host="^(?:.*\.)?enjin\.com$" name=".+" />
+	<!-- Enjin Coin -->
+	<target host="enjincoin.io" />
+	<target host="www.enjincoin.io" />
 
-	<rule from="^http://assets-cloud\.enjin\.com/"
-		to="https://d2umfjgc9kwn9b.cloudfront.net/" />
+	<!-- Enjin Wallet  -->
+	<target host="enjinwallet.io" />
+	<target host="www.enjinwallet.io" />
 
-	<rule from="^http://files\.enjin\.com/"
-		to="https://s3.amazonaws.com/files.enjin.com/" />
+	<!-- EnjinX -->
+	<target host="enjinx.io" />
+	<target host="www.enjinx.io" />
+	<target host="api.enjinx.io" />
 
-	<!--	Guilds have unique subdomains.
-						-->
-	<rule from="^http://(www\.)?([\w-]+\.)?enjin\.com/"
-		to="https://$2enjin.com/" />
+	<!-- Efinity -->
+	<target host="efinity.io" />
+	<target host="www.efinity.io" />
 
-	<!--	CN: *.enjin.com
-				-->
-	<rule from="^http://resources\.guild-hosting\.net/"
-		to="https://resources.enjin.com/" />
+	<!--
+		CDN Rules:
+			- CDNs serve mismatching certificates. Thus, should use a different URL to properly support HTTPS.
+	-->
+	<target host="assets-cloud.enjin.com" />
+	<target host="files-cloud.enjin.com" />
+	<target host="images-cloud.enjin.com" />
+	<target host="assets.enjin.com" />
+	<target host="files.enjin.com" />
+	<target host="images.enjin.com" />
+
+	<test url="http://assets-cloud.enjin.com/ext/test.html" />
+	<test url="http://assets.enjin.com/ext/test.html" />
+	<test url="http://files-cloud.enjin.com/ext/test.html" />
+	<test url="http://files.enjin.com/ext/test.html" />
+	<test url="http://images-cloud.enjin.com/ext/test.html" />
+	<test url="http://images.enjin.com/ext/test.html" />
+
+	<rule from="^http://(files|assets|images)\.enjin\.com/" to="https://s3.amazonaws.com/$1.enjin.com/" />
+	<rule from="^http:" to="https:" />
 </ruleset>
