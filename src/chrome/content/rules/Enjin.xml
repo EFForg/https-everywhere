@@ -12,7 +12,6 @@
 -->
 
 <ruleset name="Enjin" platform="mixedcontent">
-
 	<!-- Enjin Network -->
 	<target host="enjin.com" />
 	<target host="www.enjin.com" />
@@ -20,37 +19,27 @@
 	<target host="id.enjin.com" />
 	<target host="api.enjin.com" />
 
-	<rule from="^http://enjin\.com/" to="https://enjin.com/" />
-	<rule from="^http://(www|support|id|api)\.enjin\.com/" to="https://$1.enjin.com/" />
-
 	<!-- Enjin Coin -->
 	<target host="enjincoin.io" />
 	<target host="www.enjincoin.io" />
 
-	<rule from="^http://([\w-]+\.)?enjincoin\.io/" to="https://$1enjincoin.io/" />
-
 	<!-- Enjin Wallet  -->
 	<target host="enjinwallet.io" />
 	<target host="www.enjinwallet.io" />
-
-	<rule from="^http://([\w-]+\.)?enjinwallet\.io/" to="https://$1enjinwallet.io/" />
 
 	<!-- EnjinX -->
 	<target host="enjinx.io" />
 	<target host="www.enjinx.io" />
 	<target host="api.enjinx.io" />
 
-	<test url="http://api.enjinx.io/" />
-
-	<rule from="^http://([\w-]+\.)?enjinx\.io/" to="https://$1enjinx.io/" />
-
 	<!-- Efinity -->
 	<target host="efinity.io" />
 	<target host="www.efinity.io" />
 
-	<rule from="^http://([\w-]+\.)?efinity\.io/" to="https://$1efinity.io/" />
-
-	<!-- CDN Rules -->
+	<!--
+		CDN Rules:
+			- CDNs serve mismatching certificates. Thus, should use a different URL to properly support HTTPS.
+	-->
 	<target host="assets-cloud.enjin.com" />
 	<target host="files-cloud.enjin.com" />
 	<target host="images-cloud.enjin.com" />
@@ -58,7 +47,13 @@
 	<target host="files.enjin.com" />
 	<target host="images.enjin.com" />
 
-	<rule from="^http://(assets-cloud|files-cloud|images-cloud)\.enjin\.com/" to="https://$1.enjin.com/" />
-	<rule from="^http://(files|assets|images)\.enjin\.com/" to="https://s3.amazonaws.com/$1.enjin.com/" />
+	<test url="http://assets-cloud.enjin.com/ext/test.html" />
+	<test url="http://assets.enjin.com/ext/test.html" />
+	<test url="http://files-cloud.enjin.com/ext/test.html" />
+	<test url="http://files.enjin.com/ext/test.html" />
+	<test url="http://images-cloud.enjin.com/ext/test.html" />
+	<test url="http://images.enjin.com/ext/test.html" />
 
+	<rule from="^http://(files|assets|images)\.enjin\.com/" to="https://s3.amazonaws.com/$1.enjin.com/" />
+	<rule from="^http:" to="https:" />
 </ruleset>
