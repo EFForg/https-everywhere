@@ -31,7 +31,7 @@ let store,
   background_callback;
 
 // how often we should check for new rulesets
-const periodicity = 7200;
+const periodicity = 172800;
 
 // jwk key loaded from keys.js
 let imported_keys = {};
