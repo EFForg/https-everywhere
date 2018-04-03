@@ -213,10 +213,10 @@ RuleSets.prototype = {
    * Load packaged rulesets, and rulesets in browser storage
    * @param store object from store.js
    */
-  loadFromBrowserStorage: async function(store) {
+  loadFromBrowserStorage: async function(store, applyStoredFunc) {
     this.store = store;
     this.ruleActiveStates = await this.store.get_promise('ruleActiveStates', {});
-    this.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
+    await applyStoredFunc(this);
     this.loadStoredUserRules();
     await this.addStoredCustomRulesets();
   },

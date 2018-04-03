@@ -60,6 +60,37 @@ function loadExtensionFile(url, returnType) {
   return xhr.responseText;
 }
 
+/**
+ * Convert an ArrayBuffer to string
+ *
+ * @param array: an ArrayBuffer to convert
+ */
+function ArrayBufferToString(ab) {
+  let array = new Uint8Array(ab);
+  let string = "";
+
+  for (let byte of array){
+    string += String.fromCharCode(byte);
+  }
+
+  return string;
+}
+
+/**
+ * Return the entire contents of a fetch response object
+ *
+ * @param response: fetch response to read from
+ * @return a promise which resolves to an ArrayBuffer of the fetch response contents
+ */
+function slurp(response) {
+  return new Promise(res => {
+    let reader = new FileReader();
+    reader.addEventListener("loadend", () => res(reader.result));
+
+    response.blob().then(blob => reader.readAsArrayBuffer(blob));
+  });
+}
+
 Object.assign(exports, {
   VERB,
   DBUG,
@@ -69,7 +100,9 @@ Object.assign(exports, {
   log,
   setDefaultLogLevel,
   getDefaultLogLevel,
-  loadExtensionFile
+  loadExtensionFile,
+  ArrayBufferToString,
+  slurp
 });
 
 })(typeof exports == 'undefined' ? require.scopes.util = {} : exports);

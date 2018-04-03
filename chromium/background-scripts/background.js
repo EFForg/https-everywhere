@@ -5,7 +5,8 @@
 const rules = require('./rules'),
   store = require('./store'),
   incognito = require('./incognito'),
-  util = require('./util');
+  util = require('./util'),
+  update = require('./update');
 
 
 let all_rules = new rules.RuleSets();
@@ -14,14 +15,15 @@ async function initialize() {
   await store.initialize();
   await store.performMigrations();
   await initializeStoredGlobals();
-  await all_rules.loadFromBrowserStorage(store);
+  await update.initialize(store, initializeAllRules);
+  await all_rules.loadFromBrowserStorage(store, update.applyStoredRulesets);
   await incognito.onIncognitoDestruction(destroy_caches);
 }
 initialize();
 
 async function initializeAllRules() {
   const r = new rules.RuleSets();
-  await r.loadFromBrowserStorage(store);
+  await r.loadFromBrowserStorage(store, update.applyStoredRulesets);
   Object.assign(all_rules, r);
 }
 
@@ -669,6 +671,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     import_settings(message.object).then(() => {
       sendResponse(true);
     });
+  } else if (message.type == "get_ruleset_timestamps") {
+    update.getRulesetTimestamps().then(timestamps => sendResponse(timestamps));
+    return true;
   }
 });
 
