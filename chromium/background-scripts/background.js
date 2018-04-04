@@ -73,6 +73,11 @@ chrome.storage.onChanged.addListener(async function(changes, areaName) {
       isExtensionEnabled = changes.globalEnabled.newValue;
       updateState();
     }
+    if ('enableMixedRulesets' in changes) {
+      // Don't require users to restart the browsers
+      rules.settings.enableMixedRulesets = changes.enableMixedRulesets.newValue;
+      initializeAllRules();
+    }
     if ('debugging_rulesets' in changes) {
       initializeAllRules();
     }
