@@ -32,16 +32,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const showCounter = document.getElementById("showCounter");
   const autoUpdateRulesets = document.getElementById("autoUpdateRulesets");
+  const enableMixedRulesets = document.getElementById("enableMixedRulesets");
 
-  sendMessage("get_option", { showCounter: true, autoUpdateRulesets: true }, item => {
+  const defaultOptions = {
+    showCounter: true,
+    autoUpdateRulesets: true,
+    enableMixedRulesets: false,
+  };
+
+  sendMessage("get_option", defaultOptions, item => {
     showCounter.checked = item.showCounter;
     autoUpdateRulesets.checked = item.autoUpdateRulesets;
+    enableMixedRulesets.checked = item.enableMixedRulesets;
+
     showCounter.addEventListener("change", () => {
       sendMessage("set_option", { showCounter: showCounter.checked });
     });
+
     autoUpdateRulesets.addEventListener("change", () => {
       sendMessage("set_option", { autoUpdateRulesets: autoUpdateRulesets.checked });
     });
+
+    enableMixedRulesets.addEventListener("change", () => {
+      sendMessage("set_option", { enableMixedRulesets: enableMixedRulesets.checked });
+    })
   });
 
   document.onkeydown = function(evt) {
