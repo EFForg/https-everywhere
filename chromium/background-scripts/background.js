@@ -269,10 +269,8 @@ function onBeforeRequest(details) {
   let uri = new URL(details.url);
 
   // Normalise hosts with tailing dots, e.g. "www.example.com."
-  let canonical_host = uri.hostname;
-  while (canonical_host.charAt(canonical_host.length - 1) == ".") {
-    canonical_host = canonical_host.slice(0, -1);
-    uri.hostname = canonical_host;
+  while (uri.hostname[uri.hostname.length - 1] === '.') {
+    uri.hostname = uri.hostname.slice(0, -1);
   }
 
   // Should the request be canceled?
@@ -280,8 +278,8 @@ function onBeforeRequest(details) {
     uri.protocol === 'http:' &&
     uri.hostname.slice(-6) !== '.onion' &&
     uri.hostname !== 'localhost' &&
-    !/^127(\.[0-9]{1,3}){3}$/.test(canonical_host) &&
-    !/^0\.0\.0\.0$/.test(canonical_host) &&
+    !/^127(\.[0-9]{1,3}){3}$/.test(uri.hostname) &&
+    uri.hostname !== '0.0.0.0' &&
     uri.hostname !== '[::1]';
 
   // If there is a username / password, put them aside during the ruleset
@@ -297,12 +295,11 @@ function onBeforeRequest(details) {
     uri.password = '';
   }
 
-  var canonical_url = uri.href;
-  if (details.url != canonical_url && !using_credentials_in_url) {
+  if (details.url != uri.href && !using_credentials_in_url) {
     util.log(util.INFO, "Original url " + details.url +
-        " changed before processing to " + canonical_url);
+        " changed before processing to " + uri.href);
   }
-  if (urlBlacklist.has(canonical_url)) {
+  if (urlBlacklist.has(uri.href)) {
     return {cancel: shouldCancel};
   }
 
@@ -310,13 +307,13 @@ function onBeforeRequest(details) {
     appliedRulesets.removeTab(details.tabId);
   }
 
-  var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(canonical_host);
+  var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
 
   if (redirectCounter.get(details.requestId) >= 8) {
-    util.log(util.NOTE, "Redirect counter hit for " + canonical_url);
-    urlBlacklist.add(canonical_url);
-    rules.settings.domainBlacklist.add(canonical_host);
-    util.log(util.WARN, "Domain blacklisted " + canonical_host);
+    util.log(util.NOTE, "Redirect counter hit for " + uri.href);
+    urlBlacklist.add(uri.href);
+    rules.settings.domainBlacklist.add(uri.hostname);
+    util.log(util.WARN, "Domain blacklisted " + uri.hostname);
     return {cancel: shouldCancel};
   }
 
@@ -325,7 +322,7 @@ function onBeforeRequest(details) {
   for (let ruleset of potentiallyApplicable) {
     appliedRulesets.addRulesetToTab(details.tabId, details.type, ruleset);
     if (ruleset.active && !newuristr) {
-      newuristr = ruleset.apply(canonical_url);
+      newuristr = ruleset.apply(uri.href);
     }
   }
 
@@ -337,10 +334,10 @@ function onBeforeRequest(details) {
       uri_with_credentials.password = tmp_pass;
       newuristr = uri_with_credentials.href;
     } else {
-      const canonical_url_with_credentials = new URL(canonical_url);
-      canonical_url_with_credentials.username = tmp_user;
-      canonical_url_with_credentials.password = tmp_pass;
-      canonical_url = canonical_url_with_credentials.href;
+      const url_with_credentials = new URL(uri.href);
+      url_with_credentials.username = tmp_user;
+      url_with_credentials.password = tmp_pass;
+      uri.href = url_with_credentials.href;
     }
   }
 
@@ -349,7 +346,7 @@ function onBeforeRequest(details) {
   if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== "https:") {
     writeToSwitchPlanner(details.type,
       details.tabId,
-      canonical_host,
+      uri.hostname,
       details.url,
       newuristr);
   }
@@ -359,7 +356,7 @@ function onBeforeRequest(details) {
     // failing.
     if (shouldCancel) {
       if (!newuristr) {
-        return {redirectUrl: canonical_url.replace(/^http:/, "https:")};
+        return {redirectUrl: uri.href.replace(/^http:/, "https:")};
       } else {
         return {redirectUrl: newuristr.replace(/^http:/, "https:")};
       }
