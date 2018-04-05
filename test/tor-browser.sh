@@ -51,5 +51,5 @@ fi
 echo "Running Tor Browser"
 $TBB_LOCALIZED_DIRECTORY/Browser/start-tor-browser --verbose ${@:2}
 
-shasum=$(openssl sha256 "$XPI_NAME")
+shasum=$(openssl dgst -sha256 "$XPI_NAME")
 echo -e "Git commit `git rev-parse HEAD`\n$shasum"
