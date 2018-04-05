@@ -21,7 +21,7 @@
 
 cd $(dirname $0)
 
-if [ -n "$1" -a "$1" != "--remove-update-channel" ]; then
+if [ -n "$1" -a "$1" != "--remove-extension-update" -a "$1" != "--remove-update-channels" ]; then
   BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
   SUBDIR=checkout
   [ -d $SUBDIR ] || mkdir $SUBDIR
@@ -74,11 +74,19 @@ python3.6 -c "import json; m=json.loads(open('pkg/crx/manifest.json').read()); m
 # Remove the 'update_url' manifest key from the xpi version of the extension delivered to AMO
 python3.6 -c "import json; m=json.loads(open('pkg/xpi-amo/manifest.json').read()); del m['applications']['gecko']['update_url']; m['applications']['gecko']['id'] = 'https-everywhere@eff.org'; open('pkg/xpi-amo/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
 
-# If the --remove-update-channel flag is set, ensure the extension is unable to update
-if [ "$1" == "--remove-update-channel" -o "$2" == "--remove-update-channel" ]; then
-  echo "Flag --remove-update-channel specified.  Removing the XPI extensions' ability to update."
+# If the --remove-extension-update flag is set, ensure the extension is unable to update
+if [ "$1" == "--remove-extension-update" -o "$2" == "--remove-extension-update" -o "$3" == "--remove-extension-update" ]; then
+  echo "Flag --remove-extension-update specified.  Removing the XPI extensions' ability to update."
   python3.6 -c "import json; m=json.loads(open('pkg/xpi-amo/manifest.json').read()); m['applications']['gecko']['update_url'] = 'data:text/plain,'; open('pkg/xpi-amo/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
   python3.6 -c "import json; m=json.loads(open('pkg/xpi-eff/manifest.json').read()); m['applications']['gecko']['update_url'] = 'data:text/plain,'; open('pkg/xpi-eff/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+fi
+
+# If the --remove-update-channels flag is set, remove all out-of-band update channels
+if [ "$1" == "--remove-update-channels" -o "$2" == "--remove-update-channels" -o "$3" == "--remove-update-channels" ]; then
+  echo "Flag --remove-update-channels specified.  Removing all out-of-band update channels."
+  echo "update_channels = [];" >> pkg/crx/background-scripts/update_channels.js
+  echo "update_channels = [];" >> pkg/xpi-amo/background-scripts/update_channels.js
+  echo "update_channels = [];" >> pkg/xpi-eff/background-scripts/update_channels.js
 fi
 
 if [ -n "$BRANCH" ] ; then
