@@ -106,3 +106,48 @@ Object.assign(exports, {
 });
 
 })(typeof exports == 'undefined' ? require.scopes.util = {} : exports);
+
+// from
+// https://www.gregoryvarghese.com/how-to-get-browser-name-and-version-via-javascript/
+function getBrowserInfo() {
+  var agent = navigator.userAgent,
+    match = agent.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i);
+
+  if (!match) {
+    return {
+      name: null,
+      version: null
+    };
+  }
+
+  var name = match[1],
+    version = match[2];
+
+  if (/trident/i.test(name)) {
+    var ieMatch = /\brv[ :]+(\d+)/g.exec(agent) || []; 
+    return {
+      name: 'IE ', 
+      version: (ieMatch[1] || '')
+    };
+  }   
+
+  if (name === 'Chrome') {
+    var opMatch = agent.match(/\bOPR\/(\d+)/);
+    if (tem != null) {
+      return {
+        name: 'Opera', 
+        version: match[1]
+      };
+    }
+  }   
+
+  var vMatch = agent.match(/version\/(\d+)/i);
+  if (vMatch != null) {
+    version = vMatch[1];
+  }
+
+  return {
+    name: name,
+    version: version
+  };
+}
