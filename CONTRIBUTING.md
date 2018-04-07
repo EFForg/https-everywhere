@@ -58,7 +58,7 @@ The rulesets can be found in the [`rules`](rules) top-level path and include all
 
 The core codebase consists of the code that performs the redirects, the UI, logging code, and ruleset loading.  This encompasses all code delivered with the extension itself that is *not* a ruleset.  It is written in JavaScript, using the `WebExtensions` API (located in [`chromium`](chromium)).
 
-The utilities ([`utils`](utils) top-level path) include scripts that build the extension, sanitize and perform normalization on rulesets, simplify rules, and help label GitHub issues.  Historically, these utilities have been written in Python.  Many of the newer utilities are written in JavaScript, and are meant to be run in node.  Some of the wrappers for these utilities are in shell scripts.
+The utilities ([`utils`](utils) top-level path) include scripts that build the extension, sanitize and perform normalization on rulesets, simplify rules, and help label GitHub issues.  Historically, these utilities have been written in Python.  Many of the newer utilities are written in JavaScript, and are meant to be run in node.  Some of the wrappers for these utilities are written in shell scripts.
 
 Tests are performed in headless browsers and located in the [`test`](test) top-level path.  These are written in Python, and some of the wrappers for these tests are in shell scripts.
 
