@@ -101,8 +101,8 @@ async function getNewRulesets(rulesets_timestamp, update_channel) {
   ]);
 
   let resolutions = await Promise.all([
-    util.slurp(responses[0]),
-    util.slurp(responses[1])
+    responses[0].arrayBuffer(),
+    responses[1].arrayBuffer()
   ]);
 
   return {
