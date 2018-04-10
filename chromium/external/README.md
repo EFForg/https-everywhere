@@ -51,3 +51,16 @@ $ npm install pako@1.0.5
 ```
 $ cp node_modules/pako/dist/pako_inflate.js pako-1.0.5/pako_inflate.min.js
 ```
+
+## Bowser 1.9.3
+
+```bash
+curl -L -o bowser.js https://github.com/lancedikson/bowser/releases/download/1.9.3/bowser.js
+
+openssl dgst -sha256 bowser.js
+# SHA256(bowser.js)= 0de3decea68d298502b5db3ea16524840ac3e5185108d6071625e38c0732b0c1
+
+npm install uglify-js@3.1.9
+
+uglifyjs --compress --mangle --comments '/copyright"|"license/i' --output bowser.min.js bowser.js
+```
