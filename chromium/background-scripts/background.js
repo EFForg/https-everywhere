@@ -326,8 +326,7 @@ function onBeforeRequest(details) {
   var upgradeToSecure = false;
   var newuristr = null;
   // check rewritten URIs against the trivially upgraded URI
-  var trivialUpgradeUri = canonical_url.replace(rules.trivial_rule_from_c,
-                                                rules.trivial_rule_to);
+  var trivialUpgradeUri = canonical_url.replace(/^http:/, "https:");
 
   for (let ruleset of potentiallyApplicable) {
     appliedRulesets.addRulesetToTab(details.tabId, details.type, ruleset);
@@ -381,7 +380,7 @@ function onBeforeRequest(details) {
     }
   }
 
-  if (upgradeToSecure && getBrowserInfo().name == 'Firefox' && getBrowserInfo().version >= 59) {
+  if (upgradeToSecure && bowser.firefox && bowser.version >= 59) {
     return {upgradeToSecure: true};
   } else if (newuristr) {
     return {redirectUrl: newuristr};
