@@ -61,22 +61,6 @@ function loadExtensionFile(url, returnType) {
 }
 
 /**
- * Convert an ArrayBuffer to string
- *
- * @param array: an ArrayBuffer to convert
- */
-function ArrayBufferToString(ab) {
-  let array = new Uint8Array(ab);
-  let string = "";
-
-  for (let byte of array){
-    string += String.fromCharCode(byte);
-  }
-
-  return string;
-}
-
-/**
  * Return the entire contents of a fetch response object
  *
  * @param response: fetch response to read from
@@ -101,7 +85,6 @@ Object.assign(exports, {
   setDefaultLogLevel,
   getDefaultLogLevel,
   loadExtensionFile,
-  ArrayBufferToString,
   slurp
 });
 
