@@ -1,3 +1,5 @@
+/* global bowser */
+
 "use strict";
 
 (function(exports) {
