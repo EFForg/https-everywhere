@@ -52,7 +52,7 @@ $ npm install pako@1.0.5
 $ cp node_modules/pako/dist/pako_inflate.js pako-1.0.5/pako_inflate.min.js
 ```
 
-### Bowser 1.9.3
+## Bowser 1.9.3
 
 ```bash
 curl -L -o bowser.js https://github.com/lancedikson/bowser/releases/download/1.9.3/bowser.js
