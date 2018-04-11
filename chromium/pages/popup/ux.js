@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let timestamp_span = document.createElement("span");
         timestamp_span.className = "rulesets-version";
-        timestamp_span.innerText = chrome.i18n.getMessage("about_rulesets_version") + update_channel + ": " + ruleset_version_string;
+        timestamp_span.innerText = chrome.i18n.getMessage("about_rulesets_version") + " " + update_channel + ": " + ruleset_version_string;
         rulesets_versions.appendChild(timestamp_span);
       }
     }
