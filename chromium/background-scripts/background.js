@@ -462,17 +462,29 @@ function sortSwitchPlanner(tab_id, rewritten) {
 function onCookieChanged(changeInfo) {
   if (!changeInfo.removed && !changeInfo.cookie.secure && isExtensionEnabled) {
     if (all_rules.shouldSecureCookie(changeInfo.cookie)) {
-      var cookie = {name:changeInfo.cookie.name,
+      let cookie = {
+        name:changeInfo.cookie.name,
         value:changeInfo.cookie.value,
         path:changeInfo.cookie.path,
         httpOnly:changeInfo.cookie.httpOnly,
         expirationDate:changeInfo.cookie.expirationDate,
         storeId:changeInfo.cookie.storeId,
-        secure: true};
+        secure: true
+      };
 
       // Host-only cookies don't set the domain field.
       if (!changeInfo.cookie.hostOnly) {
         cookie.domain = changeInfo.cookie.domain;
+      }
+
+      // Chromium cookie sameSite status, see https://tools.ietf.org/html/draft-west-first-party-cookies
+      if (changeInfo.cookie.sameSite) {
+        cookie.sameSite = changeInfo.cookie.sameSite;
+      }
+
+      // Firefox first-party isolation
+      if (changeInfo.cookie.firstPartyDomain) {
+        cookie.firstPartyDomain = changeInfo.cookie.firstPartyDomain;
       }
 
       // The cookie API is magical -- we must recreate the URL from the domain and path.
