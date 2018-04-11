@@ -81,7 +81,7 @@ class Test(object):
         self.url = url
 
     def __eq__(test1, test2):
-        return test1.__hash__() == test2.__hash__()
+        return test1.url == test2.url
 
     def __hash__(self):
         return self.url.__hash__()
