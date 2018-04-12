@@ -186,6 +186,7 @@ class Ruleset(object):
 
             # check for duplicated test urls
             if len(self.tests) != len(set(self.tests)):
+                uniqueTests = set(self.tests)
                 for test in self.tests:
                     if self.tests.count(test) > 1:
                         self.test_application_problems.append("%s: Duplicated test URL found %s" % (
