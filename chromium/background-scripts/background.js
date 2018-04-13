@@ -306,6 +306,8 @@ function onBeforeRequest(details) {
     return {cancel: shouldCancel};
   }
 
+  // if the request is for the main (top-level) frame of a tab, remove the
+  // ruleset for that tab
   if (details.type == "main_frame") {
     appliedRulesets.removeTab(details.tabId);
   }
@@ -320,12 +322,21 @@ function onBeforeRequest(details) {
     return {cancel: shouldCancel};
   }
 
+  // whether to use mozilla's upgradeToSecure BlockingResponse if available
+  var upgradeToSecure = false;
   var newuristr = null;
+  // check rewritten URIs against the trivially upgraded URI
+  var trivialUpgradeUri = canonical_url.replace(rules.trivial_rule_from_c,
+                                                rules.trivial_rule_to);
 
   for (let ruleset of potentiallyApplicable) {
     appliedRulesets.addRulesetToTab(details.tabId, details.type, ruleset);
     if (ruleset.active && !newuristr) {
       newuristr = ruleset.apply(canonical_url);
+      // for now, only upgradeToSecure for trivial rulesets
+      if (newuristr == trivialUpgradeUri) {
+        upgradeToSecure = true;
+      }
     }
   }
 
@@ -358,19 +369,21 @@ function onBeforeRequest(details) {
     // If loading a main frame, try the HTTPS version as an alternative to
     // failing.
     if (shouldCancel) {
+      upgradeToSecure = true;
       if (!newuristr) {
-        return {redirectUrl: canonical_url.replace(/^http:/, "https:")};
+        newuristr = canonical_url.replace(/^http:/, "https:");
       } else {
-        return {redirectUrl: newuristr.replace(/^http:/, "https:")};
+        newuristr = newuristr.replace(/^http:/, "https:");
       }
-    }
-    if (newuristr && newuristr.substring(0, 5) === "http:") {
+    } else if (newuristr && newuristr.substring(0, 5) === "http:") {
       // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
       return {cancel: true};
     }
   }
 
-  if (newuristr) {
+  if (upgradeToSecure && getBrowserInfo().name == 'Firefox' && getBrowserInfo().version >= 59) {
+    return {upgradeToSecure: true};
+  } else if (newuristr) {
     return {redirectUrl: newuristr};
   } else {
     return {cancel: shouldCancel};
