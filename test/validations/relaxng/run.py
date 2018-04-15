@@ -46,7 +46,7 @@ for filename in sorted(files):
     # TODO: remove this when the whitelist is empty
     basename = os.path.basename(filename)
     if basename in whitelist:
-        with open(filename, "r", encoding="utf-8") as fp:
+        with open(filename, "rb") as fp:
             if hashlib.sha256(fp.read()).hexdigest() == whitelist[basename]:
                 continue
 
