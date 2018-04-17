@@ -80,6 +80,11 @@ class Test(object):
         """
         self.url = url
 
+    def __eq__(test1, test2):
+        return test1.url == test2.url
+
+    def __hash__(self):
+        return self.url.__hash__()
 
 class Ruleset(object):
     """Represents one XML ruleset file."""
@@ -176,6 +181,14 @@ class Ruleset(object):
                  off that rule or exclusion.  Return any coverage problems."""
         if not self.determine_test_application_run:
             self.test_application_problems = []
+
+            # check for duplicated test urls
+            if len(self.tests) != len(set(self.tests)):
+                for test in set(self.tests):
+                    if self.tests.count(test) > 1:
+                        self.test_application_problems.append("%s: Duplicated test URL found %s" % (
+                            self.filename, test.url))
+
             for test in self.tests:
                 applies = self.whatApplies(test.url)
                 if applies:
