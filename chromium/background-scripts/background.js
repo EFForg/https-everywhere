@@ -60,12 +60,12 @@ function initializeStoredGlobals(){
   });
 }
 
-var upgradeToSecureAvailable;
+let upgradeToSecureAvailable;
 
 function getUpgradeToSecureAvailable() {
   if (typeof browser !== 'undefined') {
     return browser.runtime.getBrowserInfo().then(function(info) {
-      var version = info.version.match(/^(\d+)/)[1];
+      let version = info.version.match(/^(\d+)/)[1];
       if (info.name == "Firefox" && version >= 59) {
         upgradeToSecureAvailable = true;
       } else {
@@ -344,10 +344,10 @@ function onBeforeRequest(details) {
   }
 
   // whether to use mozilla's upgradeToSecure BlockingResponse if available
-  var upgradeToSecure = false;
+  let upgradeToSecure = false;
   var newuristr = null;
   // check rewritten URIs against the trivially upgraded URI
-  var trivialUpgradeUri = canonical_url.replace(/^http:/, "https:");
+  let trivialUpgradeUri = canonical_url.replace(/^http:/, "https:");
 
   for (let ruleset of potentiallyApplicable) {
     appliedRulesets.addRulesetToTab(details.tabId, details.type, ruleset);
