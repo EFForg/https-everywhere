@@ -15,6 +15,7 @@ async function initialize() {
   await store.initialize();
   await store.performMigrations();
   await initializeStoredGlobals();
+  await getUpgradeToSecureAvailable();
   await update.initialize(store, initializeAllRules);
   await all_rules.loadFromBrowserStorage(store, update.applyStoredRulesets);
   await incognito.onIncognitoDestruction(destroy_caches);
@@ -57,6 +58,26 @@ function initializeStoredGlobals(){
       resolve();
     });
   });
+}
+
+let upgradeToSecureAvailable;
+
+function getUpgradeToSecureAvailable() {
+  if (typeof browser !== 'undefined') {
+    return browser.runtime.getBrowserInfo().then(function(info) {
+      let version = info.version.match(/^(\d+)/)[1];
+      if (info.name == "Firefox" && version >= 59) {
+        upgradeToSecureAvailable = true;
+      } else {
+        upgradeToSecureAvailable = false;
+      }
+    });
+  } else {
+    return new Promise(resolve => {
+      upgradeToSecureAvailable = false;
+      resolve();
+    });
+  }
 }
 
 chrome.storage.onChanged.addListener(async function(changes, areaName) {
@@ -276,6 +297,8 @@ function onBeforeRequest(details) {
   }
 
   // Should the request be canceled?
+  // true if the URL is a http:// connection to a remote canonical host, and not
+  // a tor hidden service
   const shouldCancel = httpNowhereOn &&
     uri.protocol === 'http:' &&
     uri.hostname.slice(-6) !== '.onion' &&
@@ -320,12 +343,20 @@ function onBeforeRequest(details) {
     return {cancel: shouldCancel};
   }
 
+  // whether to use mozilla's upgradeToSecure BlockingResponse if available
+  let upgradeToSecure = false;
   var newuristr = null;
+  // check rewritten URIs against the trivially upgraded URI
+  let trivialUpgradeUri = canonical_url.replace(/^http:/, "https:");
 
   for (let ruleset of potentiallyApplicable) {
     appliedRulesets.addRulesetToTab(details.tabId, details.type, ruleset);
     if (ruleset.active && !newuristr) {
       newuristr = ruleset.apply(canonical_url);
+      // only use upgradeToSecure for trivial rulesets
+      if (newuristr == trivialUpgradeUri) {
+        upgradeToSecure = true;
+      }
     }
   }
 
@@ -358,10 +389,11 @@ function onBeforeRequest(details) {
     // If loading a main frame, try the HTTPS version as an alternative to
     // failing.
     if (shouldCancel) {
+      upgradeToSecure = true;
       if (!newuristr) {
-        return {redirectUrl: canonical_url.replace(/^http:/, "https:")};
+        newuristr = canonical_url.replace(/^http:/, "https:");
       } else {
-        return {redirectUrl: newuristr.replace(/^http:/, "https:")};
+        newuristr = newuristr.replace(/^http:/, "https:");
       }
     }
     if (newuristr && newuristr.substring(0, 5) === "http:") {
@@ -370,9 +402,14 @@ function onBeforeRequest(details) {
     }
   }
 
-  if (newuristr) {
+  if (upgradeToSecureAvailable && upgradeToSecure) {
+    util.log(util.INFO, 'onBeforeRequest returning upgradeToSecure: true');
+    return {upgradeToSecure: true};
+  } else if (newuristr) {
+    util.log(util.INFO, 'onBeforeRequest returning redirectUrl: ' + newuristr);
     return {redirectUrl: newuristr};
   } else {
+    util.log(util.INFO, 'onBeforeRequest returning shouldCancel: ' + shouldCancel);
     return {cancel: shouldCancel};
   }
 }
