@@ -682,7 +682,6 @@ Object.assign(exports, {
   nullIterable,
   settings,
   trivial_rule,
-  Exclusion,
   Rule,
   RuleSet,
   RuleSets

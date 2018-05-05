@@ -34,8 +34,16 @@ describe('rules.js', function() {
   describe('Rule', function() {
     it('constructs trivial rule', function() {
       let rule = new Rule('^http:', 'https:');
-      assert.equal(rule.to, rules.trivial_rule_to);
-      assert.equal(rule.from_c, rules.trivial_rule_from_c);
+      assert.equal(rule.to, rules.trivial_rule.to);
+      assert.equal(rule.from_c, rules.trivial_rule.from_c);
+    });
+  });
+
+  describe('getRule', function() {
+    it('returns trivial rule object', function() {
+      let trivial = rules.trivial_rule;
+      let rule = getRule('^http:', 'https:');
+      assert.equal(rule, trivial);
     });
   });
 
