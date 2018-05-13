@@ -96,7 +96,7 @@ function showHttpNowhereUI() {
 // Change the UI to reflect extension enabled/disabled
 function updateEnabledDisabledUI() {
   getOption_('globalEnabled', true, function(item) {
-    document.getElementById('onoffswitch').checked = item.globalEnabled;
+    e('onoffswitch').checked = item.globalEnabled;
     e('disableButton').style.visibility = "visible";
     // Hide or show the rules sections
     if (item.globalEnabled) {
@@ -110,7 +110,7 @@ function updateEnabledDisabledUI() {
 
 // Toggle extension enabled/disabled status
 function toggleEnabledDisabled() {
-  var extension_toggle_effect = function(){
+  var extension_toggle_effect = function() {
     updateEnabledDisabledUI();
     // The extension state changed, so reload this tab.
     chrome.tabs.reload();
@@ -152,24 +152,24 @@ function gotTab(activeTab) {
  * Fill in content into the popup on load
  */
 document.addEventListener("DOMContentLoaded", function () {
-  stableRules = document.getElementById("StableRules");
-  unstableRules = document.getElementById("UnstableRules");
+  stableRules = e("StableRules");
+  unstableRules = e("UnstableRules");
   getTab(gotTab);
 
   // Set up the enabled/disabled switch & hide/show rules
   updateEnabledDisabledUI();
   e('onoffswitch').addEventListener('click', toggleEnabledDisabled);
   e('http-nowhere-checkbox').addEventListener('click', toggleHttpNowhere, false);
-  e('reset-to-defaults').addEventListener('click', function() {
+  e('reset-to-defaults').addEventListener('click', () => {
     sendMessage("reset_to_defaults");
   });
 
   // Print the extension's current version.
   var the_manifest = chrome.runtime.getManifest();
-  var version_info = document.getElementById('current-version');
+  var version_info = e('current-version');
   version_info.innerText = the_manifest.version;
 
-  let rulesets_versions = document.getElementById('rulesets-versions');
+  let rulesets_versions = e('rulesets-versions');
   sendMessage("get_ruleset_timestamps", null, timestamps => {
     for(let [update_channel, timestamp] of timestamps){
       if(timestamp > 0){
