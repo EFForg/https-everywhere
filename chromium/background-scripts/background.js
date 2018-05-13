@@ -716,11 +716,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   } else if (message.type == "reset_to_defaults") {
     // restore the 'default states' of the rulesets
     store.set_promise('ruleActiveStates', {}).then(() => {
-        // clear the caches such that it becomes stateless
-        destroy_caches();
-        // re-activate all rules according to the new states
-        initializeAllRules();
-      });
+      // clear the caches such that it becomes stateless
+      destroy_caches();
+      // re-activate all rules according to the new states
+      initializeAllRules();
+    });
   } else if (message.type == "add_new_rule") {
     all_rules.addNewRuleAndStore(message.object).then(() => {
       sendResponse(true);
