@@ -720,6 +720,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
       destroy_caches();
       // re-activate all rules according to the new states
       initializeAllRules();
+      // reload tabs when operations completed
+      chrome.tabs.reload();
     });
   } else if (message.type == "add_new_rule") {
     all_rules.addNewRuleAndStore(message.object).then(() => {
