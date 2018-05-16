@@ -70,8 +70,8 @@ vows.describe('issue labeler module').addBatch(setup(
       assert.ifError(err);
     },
     'it adds labels to the issue only once': addLabelsCalledOnce,
-    'the labels were the top-100 and ruleset labels': assertWhichLabels(['top-100', 'ruleset']),
-    'all other labels were removed': assertOtherLabelsRemoved(['top-1k', 'top-10k', 'top-100k', 'top-1m', 'bug', 'enhancement'])
+    'the labels were the top-100 and ruleset labels': assertWhichLabels(['top-100', 'new-ruleset']),
+    'all other labels were removed': assertOtherLabelsRemoved(['top-1k', 'top-10k', 'top-100k', 'top-1m', 'bug', 'enhancement', 'ruleset-bug'])
   }
 )).addBatch(setup(
   'and we pass it an issue in the top 1,000 domains', {
@@ -86,8 +86,8 @@ vows.describe('issue labeler module').addBatch(setup(
       assert.ifError(err);
     },
     'it adds labels to the issue only once': addLabelsCalledOnce,
-    'the labels were the top-1k and ruleset labels': assertWhichLabels(['top-1k', 'ruleset']),
-    'all other labels were removed': assertOtherLabelsRemoved(['top-100', 'top-10k', 'top-100k', 'top-1m', 'bug', 'enhancement'])
+    'the labels were the top-1k and ruleset labels': assertWhichLabels(['top-1k', 'new-ruleset']),
+    'all other labels were removed': assertOtherLabelsRemoved(['top-100', 'top-10k', 'top-100k', 'top-1m', 'bug', 'enhancement', 'ruleset-bug'])
   }
 )).addBatch(setup(
   'and we pass it a codebase issue', {
@@ -102,7 +102,7 @@ vows.describe('issue labeler module').addBatch(setup(
     },
     'it adds labels to the issue only once': addLabelsCalledOnce,
     'the label was the bug label': assertWhichLabels(['bug']),
-    'all other labels were removed': assertOtherLabelsRemoved(['top-100', 'top-1k', 'top-10k', 'top-100k', 'top-1m', 'enhancement', 'ruleset'])
+    'all other labels were removed': assertOtherLabelsRemoved(['top-100', 'top-1k', 'top-10k', 'top-100k', 'top-1m', 'enhancement', 'ruleset-bug', 'new-ruleset'])
   }
 )).addBatch(setup(
   'and we pass it a codebase issue with a domain', {
@@ -117,6 +117,6 @@ vows.describe('issue labeler module').addBatch(setup(
     },
     'it adds labels to the issue only once': addLabelsCalledOnce,
     'the label was the bug label': assertWhichLabels(['bug']),
-    'all other labels were removed': assertOtherLabelsRemoved(['top-100', 'top-1k', 'top-10k', 'top-100k', 'top-1m', 'enhancement', 'ruleset'])
+    'all other labels were removed': assertOtherLabelsRemoved(['top-100', 'top-1k', 'top-10k', 'top-100k', 'top-1m', 'enhancement', 'ruleset-bug', 'new-ruleset'])
   }
 )).export(module);

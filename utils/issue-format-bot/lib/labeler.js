@@ -3,12 +3,12 @@
 'use strict';
 
 const alexaLabels = ['top-100', 'top-1k', 'top-10k', 'top-100k', 'top-1m'];
-const typeLabels = ['bug', 'enhancement', 'ruleset'];
+const typeLabels = ['bug', 'enhancement', 'ruleset-bug', 'new-ruleset'];
 const typeToLabel = {
   'code issue': 'bug',
   'feature request': 'enhancement',
-  'ruleset issue': 'ruleset',
-  'new ruleset': 'ruleset'
+  'ruleset issue': 'ruleset-bug',
+  'new ruleset': 'new-ruleset'
 };
 
 module.exports = function label(context, data, alexa) {
