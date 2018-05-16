@@ -37,16 +37,16 @@ module.exports = function(robot, alexa) {
       let params;
       switch (data.message) {
       case 'invalid type':
-        params = context.issue({body: 'Sorry, I still couldn\'t understand the type of issue you specified. Did you look at the issue template?\n\nPlease try again.'});
+        params = context.issue({body: 'Sorry, I still couldn\'t understand the type of issue you specified. Did you look at the [issue template](https://github.com/EFForg/https-everywhere/blob/master/.github/ISSUE_TEMPLATE.md)?\n\nPlease try again.'});
         return context.github.issues.createComment(params);
       case 'multiple types':
         params = context.issue({body: 'Sorry, but I\'m still seeing more than one type. Can you edit your issue and delete all but one of the types in your issue?'});
         return context.github.issues.createComment(params);
       case 'no type':
-        params = context.issue({body: 'I still don\'t see the type of issue in your description. Can you edit your issue to add this (perhaps referring to the [issue template](https://github.com/EFForg/https-everywhere/blob/master/.github/ISSUE_TEMPLATE.md)?)'});
+        params = context.issue({body: 'I still don\'t see the type of issue in your description. Can you edit your issue to add this information (perhaps referring to the [issue template](https://github.com/EFForg/https-everywhere/blob/master/.github/ISSUE_TEMPLATE.md)?)\n\nAll I need is `Type: <type>` on its own line in the issue body. For example, `Type: new ruleset`. The issue template has a list of types I can understand.'});
         return context.github.issues.createComment(params);
       case 'null description':
-        params = context.issue({body: 'I still don\'t see any text in your description - please edit it to use the issue template. Thank you!'});
+        params = context.issue({body: 'I still don\'t see any text in your description - please edit it to use the [issue template](https://github.com/EFForg/https-everywhere/blob/master/.github/ISSUE_TEMPLATE.md). Thank you!'});
         return context.github.issues.createComment(params);
       default:
         throw data;

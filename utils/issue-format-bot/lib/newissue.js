@@ -32,10 +32,10 @@ module.exports = function(robot, alexa) {
         params = context.issue({body: 'Hello! You seem to have specified more than one type. Can you edit your issue and delete all but one of the types in your issue?'});
         return context.github.issues.createComment(params);
       case 'no type':
-        params = context.issue({body: 'Hey, I couldn\'t find the type of issue in your description. Can you edit your issue to add this (perhaps referring to the [issue template](https://github.com/EFForg/https-everywhere/blob/master/.github/ISSUE_TEMPLATE.md)?)'});
+        params = context.issue({body: 'Hey, I couldn\'t find the type of issue in your description. Can you edit your issue to add this information (perhaps referring to the [issue template](https://github.com/EFForg/https-everywhere/blob/master/.github/ISSUE_TEMPLATE.md)?)\n\nFor this to work I need `Type: <type>` on its own line in the issue body. For example, `Type: new ruleset`. There\'s a list of types I understand in the issue template.'});
         return context.github.issues.createComment(params);
       case 'null description':
-        params = context.issue({body: 'Hi! I can\'t find any text in your description - please edit it to use the issue template.'});
+        params = context.issue({body: 'Hi! I can\'t find any text in your description - please edit it to use the [issue template](https://github.com/EFForg/https-everywhere/blob/master/.github/ISSUE_TEMPLATE.md).'});
         return context.github.issues.createComment(params);
       default:
         throw data;
