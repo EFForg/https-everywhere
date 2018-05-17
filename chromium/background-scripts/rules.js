@@ -684,7 +684,8 @@ Object.assign(exports, {
   trivial_rule,
   Rule,
   RuleSet,
-  RuleSets
+  RuleSets,
+  getRule
 });
 
 })(typeof exports == 'undefined' ? require.scopes.rules = {} : exports);

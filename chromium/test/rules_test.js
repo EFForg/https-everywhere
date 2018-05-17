@@ -3,10 +3,10 @@
 const assert = require('chai').assert,
   rules = require('../background-scripts/rules');
 
-const Exclusion = rules.Exclusion,
-  Rule = rules.Rule,
+const Rule = rules.Rule,
   RuleSet = rules.RuleSet,
-  RuleSets = rules.RuleSets;
+  RuleSets = rules.RuleSets,
+  getRule = rules.getRule;
 
 
 describe('rules.js', function() {
@@ -24,18 +24,11 @@ describe('rules.js', function() {
     });
   });
 
-  describe('Exclusion', function() {
-    it('constructs', function() {
-      let exclusion = new Exclusion(test_str);
-      assert.isTrue(exclusion.pattern_c.test(test_str), true);
-    });
-  });
-
   describe('Rule', function() {
     it('constructs trivial rule', function() {
       let rule = new Rule('^http:', 'https:');
       assert.equal(rule.to, rules.trivial_rule.to);
-      assert.equal(rule.from_c, rules.trivial_rule.from_c);
+      assert.deepEqual(rule.from_c, rules.trivial_rule.from_c);
     });
   });
 
@@ -54,7 +47,7 @@ describe('rules.js', function() {
 
     describe('#apply', function() {
       it('excludes excluded uris', function() {
-        this.ruleset.exclusions = [new Exclusion(test_str)];
+        this.ruleset.exclusions = new RegExp(test_str);
         assert.isNull(this.ruleset.apply(test_str));
       });
 
@@ -81,8 +74,8 @@ describe('rules.js', function() {
       it('not equivalent with different exclusions', function() {
         let rs_a = new RuleSet(...inputs),
           rs_b = new RuleSet(...inputs);
-        rs_a.exclusions = [new Exclusion('foo')];
-        rs_b.exclusions = [new Exclusion('bar')];
+        rs_a.exclusions = new RegExp('foo');
+        rs_b.exclusions = new RegExp('bar');
 
         assert.isFalse(rs_a.isEquivalentTo(rs_b));
       });
