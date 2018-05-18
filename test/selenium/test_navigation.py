@@ -1,3 +1,4 @@
+import time
 import unittest
 
 from util import ExtensionTestCase
@@ -11,13 +12,14 @@ class TestNavigation(ExtensionTestCase):
     def test_redirect(self):
         num_retries = 5
 
-
         for i in range(0, num_retries):
             self.driver.get(kittens_url)
 
             # retry if assertions fail until num_retries reached
             if not self.driver.current_url.startswith('https:') and i > num_retries - 1:
-                self.assertTrue(self.driver.current_url.startswith('https'))
+                self.assertTrue(self.driver.current_url.startswith('https:'))
+	
+            time.sleep(3)
 
         self.assertTrue(self.driver.current_url.startswith('https'))
 
