@@ -60,20 +60,6 @@ function loadExtensionFile(url, returnType) {
   return xhr.responseText;
 }
 
-/**
- * Return the entire contents of a fetch response object
- *
- * @param response: fetch response to read from
- * @return a promise which resolves to an ArrayBuffer of the fetch response contents
- */
-function slurp(response) {
-  return new Promise(res => {
-    let reader = new FileReader();
-    reader.addEventListener("loadend", () => res(reader.result));
-
-    response.blob().then(blob => reader.readAsArrayBuffer(blob));
-  });
-}
 
 Object.assign(exports, {
   VERB,
@@ -84,8 +70,7 @@ Object.assign(exports, {
   log,
   setDefaultLogLevel,
   getDefaultLogLevel,
-  loadExtensionFile,
-  slurp
+  loadExtensionFile
 });
 
 })(typeof exports == 'undefined' ? require.scopes.util = {} : exports);
