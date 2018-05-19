@@ -29,6 +29,19 @@ function generic_get_promise(key, default_val, storage) {
 }
 
 function generic_set_promise(key, value, storage) {
+  return new Promise((resolve, reject) => {
+    storage.set({
+      [key]: value
+    }, () => {
+      if (chrome.runtime.lastError && chrome.runtime.lastError.message) {
+        reject(chrome.runtime.lastError.message);
+      } else {
+        resolve();
+      }
+    })
+  })
+
+
   return new Promise(res => storage.set({[key]: value}, res));
 }
 

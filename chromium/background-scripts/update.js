@@ -137,7 +137,9 @@ function verifyAndStoreNewRulesets(new_rulesets, rulesets_timestamp, update_chan
           if(rulesets_json.timestamp != rulesets_timestamp){
             reject(update_channel.name + ': Downloaded ruleset had an incorrect timestamp.  This may be an attempted downgrade attack.  Aborting.');
           } else {
-            await store.local.set_promise('rulesets: ' + update_channel.name, window.btoa(rulesets_gz));
+            await store.local.set_promise('rulesets: ' + update_channel.name, window.btoa(rulesets_gz)).catch(error => {
+              util.log(util.NOTE, error);
+            });
             resolve(true);
           }
         } else {
