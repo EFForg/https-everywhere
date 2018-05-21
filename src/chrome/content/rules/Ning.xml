@@ -1,127 +1,31 @@
 <!--
 	For rules that cause false/broken MCB, see Ning-falsemixed.xml.
 
-
-	CDN buckets:
-
-		- api.ning.com.edgesuite.net
-
-			- a1564.g.akamai.net
-
-
 	Nonfunctional subdomains:
 
-		- status	(dropped)
+		- *.coll.ning.com (mismatch, host only for tracking)
+		- build (mixed content, secured by us)
+		- cultivate (mixed content, secured by us)
+		- design (mixed content, secured by us)
+		- developer (mixed content, secured by us)
+		- status (timeout)
 
-
-	Problematic subdomains:
-
-		- api		(works, akamai)
-		- static	(503, akamai)
-
-
-	Fully covered subdomains:
-
-		- (www.)
-		- about
-		- api		(→ origin-api)
-		- build
-		- developer
-		- go
-		- help
-		- origin
-		- socialnetworkmain
-		- uk
-
-
-	Partially covered subdomains:
-
-		- creators *
-		- makemodules *
-		- static	(→ per-client subdomains)
-
-	* Avoiding false/broken MCB
-
-
-	Mixed content:
-
-		- Flash:
-
-			- On makemodules from static *
-
-		- Scripts:
-
-			- On creators from creators *
-			- On creators from makemodules *
-			- On creators from static *
-			- On creators from ajax.googleapis.com *
-			- On makemodules from makemodules *
-			- On makemodules from static *
-
-
-		- Frames:
-
-			- On creators from creators *
-			- On makemodules from www *
-
-		- css:
-
-			- On creators from makemodules *
-			- On makemodules from makemodules *
-			- On makemodules from static *
-			- On makemodules from www *
-
-		- Images:
-
-			- On creators from makemodules *
-			- On makemodules from makemodules *
-
-
-		- Web bugs:
-
-			- On creators from www22.glam.com *
-			- On creators from www35t.glam.com *
-			- On makemodules from www.35.glam.com *
-			- On creators from www.scoop.it
-			- On creators from img.scoop.it *
-
-	* Secured by us
-
-
-	NB: We secure all resources, and thus
-	-falsemixed should be merged for Ffx 24.
-
+	Ning has customer specific subdomains (some mixed content)
 -->
-<ruleset name="Ning (partial)">
+<ruleset name="Ning">
 
 	<target host="ning.com" />
-	<target host="*.ning.com" />
-		<!--exclusion pattern="^http://(www\.)?ning\.com/(?!\d\.\d\d\.\d\d(\.\d)?/|(about|blog|help|main)($|/)|payment/|\w+/wp-content/)" /-->
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://creators\.ning\.com/(?!activity/|(?:[\w-]+/)?(?:cs|image)s/|favicon\.ico)" />
-		<exclusion pattern="^http://makemodules\.ning\.com/(?!activity/|colorbox/|(?:[\w-]+/)?(?:css|error|images)/|favicon\.ico|js/|xn/)" />
-		<!--exclusion pattern="^http://status\.ning\.com/" /-->
-		<!--exclusion pattern="^http://uk\.ning\.com/(?!\d\.\d\d\.\d\d(\.\d)?/|favicon\.ico)" /-->
+	<target host="www.ning.com" />
+	<target host="about.ning.com" />
+	<target host="api.ning.com" />
+	<target host="blog.ning.com" />
+	<target host="cdn.ning.com" />
+		<test url="http://cdn.ning.com/wp-content/themes/ning/assets/img/ui/black/s-icons/custom.svg" />
+	<target host="creators.ning.com" />
+	<target host="help.ning.com" />
+	<target host="static.ning.com" />
+		<test url="http://static.ning.com/socialnetworkmain/widgets/index/gfx/Ning_MM_footer_wht.png" />
 
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.ning\.com$" name="^(ning_session|xn_visitor)$" /-->
-
-	<securecookie host=".*\.ning\.com$" name=".+" />
-
-
-	<rule from="^http://((?:about|build|creators|developer|go|help|makemodules|socialnetworkmain|uk|www)\.)?ning\.com/"
-		to="https://$1ning.com/" />
-
-  <!-- origin-api.ning.com now has an invalid cert...
-	<rule from="^http://(?:origin-)?api\.ning\.com/" 
-		to="https://origin-api.ning.com/" /> 
-    -->
-
-	<rule from="^http://static\.ning\.com/([^/]+)/"
-		to="https://$1.ning.com/xn_resources/" />
+	<rule from="^http:" to="https:" />
 
 </ruleset>
