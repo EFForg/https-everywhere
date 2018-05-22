@@ -162,7 +162,9 @@ document.addEventListener("DOMContentLoaded", function () {
   e('http-nowhere-checkbox').addEventListener('click', toggleHttpNowhere, false);
   e('reset-to-defaults').addEventListener('click', () => {
     if (confirm(chrome.i18n.getMessage("prefs_reset_defaults_message"))) {
-      sendMessage("reset_to_defaults");
+      sendMessage("reset_to_defaults", () => {
+        window.close();
+      });
     }
   });
 
