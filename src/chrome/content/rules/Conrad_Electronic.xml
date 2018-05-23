@@ -1,0 +1,128 @@
+<!--
+	Invalid certificate:
+		produktinfo.conrad.com (expired)
+		www.produktinfo.conrad.com (expired, mismatch)
+		m.conrad.at (mismatch)
+  		m.conrad.nl (mismatch)
+  		m.conrad-electronic.nl (mismatch)
+  		m.conrad.pl (mismatch)
+		conrad.sk (mismatch)
+		www.conrad.sk (mismatch)
+		velkoobchod.conrad.sk (mismatch)
+		
+	Redirect to HTTP:
+		www.conrad.be
+		conrad.com
+		www.conrad.com
+		www.conrad.fr
+		www.conrad.it
+		business.conrad.it
+		www.conrad-electronic.co.uk
+
+	Refused:
+		conrad.at (redirect rule as workaround)
+		conrad.be
+		conrad.biz (redirect rule as workaround)
+		biz-conrad.ch (redirect rule as workaround)
+		m.conrad.cz
+		conrad.ch (redirect rule as workaround)
+  		conrad.de(redirect rule as workaround)
+		conrad.fr
+		conrad.hu (redirect rule as workaround)
+		conrad.it
+		conrad.nl (redirect rule as workaround)
+		conrad-electronic.co.uk
+	
+	Status code mismatch:
+		api.conrad.com
+
+	Timeout:
+		m.conrad.biz
+		m.conrad.ch
+		m.biz-conrad.ch
+		m.conrad.de
+-->
+
+<ruleset name="Conrad Electronic (partial)">
+	<target host="conrad.at" />
+	<target host="www.conrad.at" />
+	<target host="business.conrad.at" />
+	<target host="conrad.biz" />
+	<target host="www.conrad.biz" />
+	<target host="biz-conrad.ch" />
+	<target host="www.biz-conrad.ch" />
+	<target host="conrad.ch" />
+	<target host="www.conrad.ch" />
+	<target host="conrad.cz" />
+	<target host="www.conrad.cz" />
+	<target host="velkoobchod.conrad.cz" />
+	<target host="conrad.de" />
+	<target host="www.conrad.de" />
+	<target host="conradelektronik.dk" />
+	<target host="www.conradelektronik.dk" />
+	<target host="m.conradelektronik.dk" />
+	<target host="conrad.hr" />
+	<target host="www.conrad.hr" />
+	<target host="m.conrad.hr" />
+	<target host="conrad.hu" />
+	<target host="www.conrad.hu" />
+	<target host="conrad.nl" />
+	<target host="www.conrad.nl" />
+	<target host="conrad-electronic.nl" />
+	<target host="www.conrad-electronic.nl" />
+	<target host="conrad.pl" />
+	<target host="www.conrad.pl" />
+	<target host="conrad.se" />
+	<target host="www.conrad.se" />
+	<target host="m.conrad.se" />
+	<target host="conrad.si" />
+	<target host="www.conrad.si" />
+	<target host="m.conrad.si" />
+	
+	<!-- status code mismatch - fails test, would work fine otherwise
+	target even uses HSTS -->
+	<!--<target host="api.conrad.com" />-->
+	
+	<target host="asset.conrad.com" />
+	<target host="media.conrad.com" />
+	
+	<!-- rules disabled, certificate expired-->
+	<!-- <target host="produktinfo.conrad.com" />-->
+	<!-- <target host="www.produktinfo.conrad.com" />-->
+	
+	<securecookie host=".+" name=".+" />
+
+    <!-- www.produktinfo.conrad.com is an alias for produktinfo.conrad.com and
+	certificate only matches produktinfo.conrad.com -->
+	<!-- rule disabled, certificate expired-->
+	<!--<rule from="^http://www\.produktinfo\.conrad\.com/"
+		to="https://produktinfo.conrad.com/"/>-->
+
+	<!-- fix sites which refuse connection without www subdomain-->
+	<rule from="^http://conrad\.at/"
+		to="https://www.conrad.at/" />
+	
+	<rule from="^http://conrad\.ch/"
+		to="https://www.conrad.ch/" />	
+		
+	<rule from="^http://biz-conrad\.ch/"
+		to="https://www.biz-conrad.ch/" />
+
+	<rule from="^http://conrad\.biz/"
+		to="https://www.conrad.biz/" />
+	
+	<rule from="^http://conrad\.de/"
+		to="https://www.conrad.de/" />
+
+	<rule from="^http://conrad\.hu/"
+		to="https://www.conrad.hu/" />
+	
+	<rule from="^http://conrad\.nl/"
+		to="https://www.conrad.nl/" />
+	
+	<!-- no redirects to www subdomain for broken m subdomains, the redirects seen
+	without HTTPS might be (or become) User-Agent or viewport dependent -->
+			
+	<rule from="^http:"
+		to="https:" />
+</ruleset>

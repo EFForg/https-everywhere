@@ -1,43 +1,51 @@
 <!--
-	For other Live Nation coverage, see Live-Nation.xml.
+	For other Live Nation coverage, see LiveNation.com.xml
 
+	Non-functional hosts
+		Timeout was reached:
+		- ticketsnow.com
+		- affiliatelinks.ticketsnow.com
+		- affiliates.ticketsnow.com
+		- brokers.ticketsnow.com
+		- chat.ticketsnow.com
+		- mail.ticketsnow.com
+		- race.ticketsnow.com
+		- search.ticketsnow.com
 
-	CDN buckets:
+		SSL peer certificate was not OK:
+		- content.ticketsnow.com
 
-		- content.ticketsnow.com.edgesuite.net
+		Peer certificate cannot be authenticated with given CA certificates:
+		- www1.ticketsnow.com
 
+		Incomplete certificate chain error:
+		- resale.preview.ticketsnow.com
 
-	Problematic subdomains:
+		Self-signed certificate chain error:
+		- m.resale.preview.ticketsnow.com
+		- m.preview1.ticketsnow.com
+		- m.resale.preview1.ticketsnow.com
 
-		- content	(akamai; 504)
+		5xx server error:
+		- identity-dev.ticketsnow.com
 
-
-	Partially covered subdomains:
-
-		- (www.)	(at least some pages redirect to http)
-
-
-	Fully covered subdomains:
-
-		- content
-		- securecontent
-
+		Secure connection redirects to plaintext:
+		- cc.ticketsnow.com
+		- m.ticketsnow.com
+		- m.preview.ticketsnow.com
+		- www.ticketsnow.com
 -->
 <ruleset name="TicketsNow (partial)">
+	<target host="identity.ticketsnow.com" />
+	<target host="content.ticketsnow.com" />
+		<test url="http://content.ticketsnow.com/css/themes/base/jquery.ui.theme.css" />
+		<test url="http://content.ticketsnow.com/graphics/Search/calendarGoButton_hprd.jpg" />
+		<test url="http://content.ticketsnow.com/scripts/master/swfobject.js" />
+	<target host="securecontent.ticketsnow.com" />
 
-	<target host="ticketsnow.com" />
-	<target host="*.ticketsnow.com" />
+	<rule from="^http://content\.ticketsnow\.com/"
+			to="https://securecontent.ticketsnow.com/" />
 
-
-	<rule from="^http://(www\.)?ticketsnow\.com/(UI/)"
-		to="https://$1ticketsnow.com/$2" />
-
-	<!--	myTicketsNow$ redirects to http before myTicketsNow/
-									-->
-	<rule from="^http://(www\.)?ticketsnow\.com/myTicketsNow/?"
-		to="https://$1ticketsnow.com/myTicketsNow/" />
-
-	<rule from="^http://(?:secure)?content\.ticketsnow\.com/"
-		to="https://securecontent.ticketsnow.com/" />
-
+		<rule from="^http:" 
+				to="https:" />
 </ruleset>

@@ -1,101 +1,39 @@
 <!--
-	CDN buckets:
-
-		- cloudinary-a.akamaihd.net
-
-		- d1c4ogak0lt2ja.cloudfront.net
-
-			- demo-res
-
-		- res.cloudinary.com.edgesuite.net
-
-			- res.cloudinary.com
-			- a[1-5].res.cloudinary.com
-
-		- cloudinary.zendesk.com
-
-			- support.cloudinary.com
-
-
-	Problematic subdomains:
-
-		- a[1-5].res *
-		- support	(pages redirect to http; mismatched, CN: *.zendesk.com)
-
-	* Works, akamai
-
-
-	Fully covered subdomains:
-
-		- demo-res	(→ d1c4ogak0lt2ja.cloudfront.net)
-		- res
-		- a[1-5].res	(→ akamai)
-		- res-[1-5]
-		- www
-
+	Non-functional hosts:
+		SSL peer certificate was not OK
+		- info.cloudinary.com
+		- a1.res.cloudinary.com
+		- a2.res.cloudinary.com
+		- a3.res.cloudinary.com
+		- a4.res.cloudinary.com
+		- a5.res.cloudinary.com
 -->
-<ruleset name="Cloudinary.com (partial)">
-
-	<!--	Direct rewrites:
-				-->
+<ruleset name="Cloudinary.com">
 	<target host="cloudinary.com" />
+	<target host="www.cloudinary.com" />
+	<target host="demo-res.cloudinary.com" />
+	<target host="invitationdigital-res.cloudinary.com" />
+	<target host="invitationdigital-res-1.cloudinary.com" />
+	<target host="invitationdigital-res-2.cloudinary.com" />
+	<target host="invitationdigital-res-3.cloudinary.com" />
+	<target host="invitationdigital-res-4.cloudinary.com" />
+	<target host="invitationdigital-res-5.cloudinary.com" />
 	<target host="res.cloudinary.com" />
 	<target host="res-1.cloudinary.com" />
 	<target host="res-2.cloudinary.com" />
 	<target host="res-3.cloudinary.com" />
 	<target host="res-4.cloudinary.com" />
 	<target host="res-5.cloudinary.com" />
-	<target host="www.cloudinary.com" />
-
-	<!--	Complications:
-				-->
-	<target host="demo-res.cloudinary.com" />
-	<!--target host="support.cloudinary.com" /-->
-
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://cloudinary\.com/($|favicon\.ico|signup)" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://cloudinary\.com/(?!/*(?:(?:console|users/login|users/recover_password|users/register)(?:$|[?/])|fonts/|stylesheets/))" />
-
-			<!--	+ve:
-					-->
-			<test url="http://cloudinary.com/blog/delivering_all_your_websites_images_through_a_cdn" />
-			<test url="http://cloudinary.com/contact" />
-			<test url="http://cloudinary.com/cookbook" />
-			<test url="http://cloudinary.com/documentation/api_and_access_identifiers" />
-			<test url="http://cloudinary.com/favicon.ico" />
-			<test url="http://cloudinary.com/features" />
-			<test url="http://cloudinary.com/jobs" />
-			<test url="http://cloudinary.com/pricing" />
-			<test url="http://cloudinary.com/signup" />
-
-			<!--	-ve:
-					-->
-			<test url="http://cloudinary.com/console" />
-			<test url="http://cloudinary.com/stylesheets/g/cloudinary_public.css" />
-			<test url="http://cloudinary.com/users/login" />
-
 		<test url="http://invitationdigital-res.cloudinary.com/image/upload/w_136,q_100,f_auto/amazon_prime_instant_video.png" />
 		<test url="http://invitationdigital-res-1.cloudinary.com/image/upload/w_100,q_70,fl_strip_profile,f_auto/phase_eight_logo.jpg" />
 		<test url="http://invitationdigital-res-2.cloudinary.com/image/upload/w_100,q_70,fl_strip_profile,f_auto/royal_horticultural_society_rhs_logo.jpg" />
 		<test url="http://invitationdigital-res-3.cloudinary.com/image/upload/w_100,q_70,fl_strip_profile,f_auto/feel_unique_logo_3.jpg" />
 		<test url="http://invitationdigital-res-4.cloudinary.com/image/upload/w_100,q_70,fl_strip_profile,f_auto/topman_logo_5.jpg" />
 		<test url="http://invitationdigital-res-5.cloudinary.com/image/upload/w_100,q_70,fl_strip_profile,f_auto/french_connection_logo_3.jpg" />
+	<target host="staging.cloudinary.com" />
+	<target host="status.cloudinary.com" />
+	<target host="support.cloudinary.com" />
+	<target host="webspeedtest.cloudinary.com" />
 
-
-	<!--securecookie host="^cloudinary\.com$" name=".+" /-->
-
-
-	<rule from="^http://demo-res\.cloudinary\.com/"
-		to="https://d1c4ogak0lt2ja.cloudfront.net/" />
-
-	<!--rule from="^http://support\.cloudinary\.com/(generated|system)/"
-		to="https://assets.zendesk.com/$1/" /-->
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

@@ -1,16 +1,35 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://strawpoll.me/ => https://strawpoll.me/: Too many redirects while fetching 'https://strawpoll.me/'
-Fetch error: http://www.strawpoll.me/ => https://www.strawpoll.me/: Too many redirects while fetching 'https://www.strawpoll.me/'
-Fetch error: http://static.strawpoll.me/ => https://static.strawpoll.me/: (6, 'Could not resolve host: static.strawpoll.me')
+	Invalid certificate:
+		support.strawpoll.me (only matches *.zendesk.com and zendesk.com)
 
+	Redirect to HTTP:
+		strawpoll.me (also redirects to www subdomain)
+		www.strawpoll.me (see exceptions in rule below)
 -->
-<ruleset name="Strawpoll.me" default_off='failed ruleset test'>
-	<target host="strawpoll.me" />
-	<target host="www.strawpoll.me" />
-	<target host="static.strawpoll.me" />
 
-	<rule from="^http:"
-		to="https:"/>
+<ruleset name="Strawpoll.me (partial)">
+	<target host="strawpoll.me" />
+		<test url="http://strawpoll.me/1" />
+		<test url="http://strawpoll.me/login" />
+		<test url="http://strawpoll.me/register" />
+		<exclusion pattern="^http://strawpoll\.me/$" />
+	
+	<target host="www.strawpoll.me" />
+		<test url="http://www.strawpoll.me/1" />
+		<test url="http://www.strawpoll.me/login" />
+		<test url="http://www.strawpoll.me/register" />
+		<exclusion pattern="^http://www\.strawpoll\.me/$" />
+
+	<target host="support.strawpoll.me" />
+	
+	<!-- static-strawpoll.cursecdn.com and media-strawpoll.cursecdn.com handled by Curse.xml -->
+
+	<!-- At least polls, login and registration work over HTTPS -->
+	<rule from="^http://(www\.)?strawpoll\.me/([0-9]+|login|register)$"
+		to="https://$1strawpoll.me/$2"/>
+	
+	<!-- https://support.strawpoll.me/ redirects to https://strawpoll.zendesk.com/ -->
+	<rule from="^http://support\.strawpoll\.me/"
+		to="https://strawpoll.zendesk.com/"/>
+
 </ruleset>

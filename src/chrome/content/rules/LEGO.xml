@@ -1,141 +1,60 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://club.lego.com/en-us/join/magazinesubscription => https://club.lego.com/en-us/join/magazinesubscription: (51, "SSL: no alternative certificate subject name matches target host name 'club.lego.com'")
-Fetch error: http://27d.deviantart.net/ => https://27d.deviantart.net/: (35, 'error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure')
-Fetch error: http://aboutus.lego.com/ => https://aboutus.lego.com/: (51, "SSL: no alternative certificate subject name matches target host name 'aboutus.lego.com'")
-Fetch error: http://assets.lego.com/ => https://assets.lego.com/: (51, "SSL: no alternative certificate subject name matches target host name 'assets.lego.com'")
-Fetch error: http://rebrick.lego.com/ => https://rebrick.lego.com/: (51, "SSL: no alternative certificate subject name matches target host name 'rebrick.lego.com'")
+	Nonfunctional hosts in *.lego.com:
+		- aboutus.lego.com (m)
+		- assets.lego.com (m)
+		- cache.lego.com (m)
+		- club.lego.com (m)
+		- community.lego.com (m)
+		- factory.lego.com (m)
+		- ldd.lego.com (m)
+		- learninginstitute.lego.com (m)
+		- rebrick.lego.com (m)
+		- reviews.lego.com (m)
+		- thehobbit.lego.com (m)
+		- service.lego.com (404)
+		- ldd.us.lego.com (m)
+		- thelordoftherings.us.lego.com (m)
 
-	CDN buckets:
+	h: http redirect
+	m: certificate mismatch
+	r: connection refused
+	s: self-signed certificate
+	t: timeout on https
 
-	lego.112.2o7.net/b/ss/legoglobal/
-		- lego.reviews.bazaarvoice.com
-		- cache.lego.com.edgesuite.net
-
-
-	Nonfunctional subdomains:
-
-		- cs *
-		- service **
-		- services **
-		- cs.us *
-		- www * ³
-
-	* 404, mismatched
-	** At least some pages redirect to http
-	³ Not all paths work when rewritten to wwwsecure
-
-
-	Problematic subdomains:
-
-		- cache		Akamai
-		- en-us.kb	(mismatched, CN: *.parature.com)
-		- reviews	Akamai
-
-
-	Partially covered subdomains:
-
-		- club *
-		- education *
-		- shop *
-
-	* Some (most?) pages redirect to http
-
-
-	Insecure cookies are set for these domains:
-
-		- .lego.com
-
+	legocdn.com has a wildcard DNS record.
 -->
-<ruleset name="LEGO.com (partial)" default_off='failed ruleset test'>
+<ruleset name="LEGO.com (partial)">
 
-	<!--	Direct rewrites:
-				-->
 	<target host="lego.com" />
-	<target host="aboutus.lego.com" />
+	<target host="www.lego.com" />
 	<target host="account.lego.com" />
 	<target host="services.account.lego.com" />
 	<target host="account2.lego.com" />
-	<target host="assets.lego.com" />
-	<target host="club.lego.com" />
-	<target host="services.community.lego.com" />
+	<target host="catalogs.lego.com" />
+	<target host="citystudio.lego.com" />
 	<target host="education.lego.com" />
 	<target host="shop.education.lego.com" />
+	<target host="ideas.lego.com" />
+	<target host="jobsearch.lego.com" />
+		<!-- 403 -->
+		<exclusion pattern="^http://jobsearch\.lego\.com/$" />
+		<test url="http://jobsearch.lego.com/sap/bc/webdynpro/sap/" />
+	<target host="lan.lego.com" />
 	<target host="moderation.lego.com" />
-	<target host="rebrick.lego.com" />
+	<target host="ninjagochallenge.lego.com" />
+	<target host="savethecity.lego.com" />
+	<target host="services.lego.com" />
 	<target host="shop.lego.com" />
+	<target host="www.us.lego.com" />
+	<target host="wwwsecure.us.lego.com" />
+	<target host="usaevents.lego.com" />
+	<target host="worldofcreativity.lego.com" />
 	<target host="wwwsecure.lego.com" />
 
-	<!--	Complications:
-				-->
-	<!--target host="www.lego.com" /-->
+	<target host="lc-www-live-s.legocdn.com" />
+	<test url="http://lc-www-live-s.legocdn.com/r/www/r/globalnavigationservices/content/images/lego-logo-menu.svg" />
 
-		<exclusion pattern="^http://club\.lego\.com/(?!en-us/join/magazinesubscription)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://club.lego.com/de-de/" />
-
-			<!--	-ve:
-					-->
-			<test url="http://club.lego.com/en-us/join/magazinesubscription" />
-
-		<exclusion pattern="^http://education\.lego\.com/(?!\w\w-\w\w/[\w-]+/|Design/|WebResource\.axd)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://education.lego.com/downloads/" />
-			<test url="http://education.lego.com/ja-jp" />
-			<test url="http://education.lego.com/ko-kr" />
-			<test url="http://education.lego.com/zh-cn" />
-
-			<!--	-ve:
-					-->
-			<test url="http://education.lego.com/ko-kr/products/" />
-
-		<exclusion pattern="^http://shop.lego.com/(?!VIP/modal/vipLearnMoreModal\.jsp)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://shop.lego.com/VIP" />
-
-			<!--	-ve:
-					-->
-			<test url="http://shop.lego.com/VIP/modal/vipLearnMoreModal.jsp" />
-
-		<!--	Breakage is more extensive than this:
-				https://github.com/EFForg/https-everywhere/issues/2858
-
-			So default-inclusion of www → wwwsecure is disabled in favor of
-			including what we know to work as we find it.
-
-			Exclusions and tests are left as commentary and for future use.
-
-			404:
-				-->
-		<!--exclusion pattern="^http://www\.lego\.com/(?:\w\w-\w\w/bionicle|friends)(?:$|[?/])" /-->
-
-			<!--	+ve:
-					-->
-			<!--test url="http://www.lego.com/en-us/bionicle" /-->
-			<!--test url="http://www.lego.com/en-us/bionicle/" /-->
-			<!--test url="http://www.lego.com/en-us/bionicle/?domainredir=" /-->
-			<!--test url="http://www.lego.com/en-us/bionicle/?domainredir=www.bionicle.com" /-->
-			<!--test url="http://www.lego.com/en-us/friends" /-->
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.lego\.com$" name="^XLB$" /-->
-
-	<securecookie host="^(?:aboutus|account2?|services\.account|assets|rebrick)\.lego\.com$" name=".+" />
-
-
-	<!--rule from="^http://www\.lego\.com/"
-		to="https://wwwsecure.lego.com/" /-->
-
-		<test url="http://27d.deviantart.net/" />
+	<securecookie host=".+" name=".+" />
 
 	<rule from="^http:"
 		to="https:" />

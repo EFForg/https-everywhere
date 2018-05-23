@@ -1,3 +1,40 @@
+# Table of Contents
+
+* [Welcome!](#welcome)
+    * [HTTPS Everywhere Source Code Layout](#https-everywhere-source-code-layout)
+    * [Submitting Changes](#submitting-changes)
+* [Contributing Rulesets](#contributing-rulesets)
+    * [General Info](#general-info)
+    * [New Rulesets](#new-rulesets)
+    * [Minimum Requirements for a Ruleset PR](#minimum-requirements-for-a-ruleset-pr)
+    * [Testing](#testing)
+    * [Ruleset Style Guide](#ruleset-style-guide)
+        * [Motivation](#motivation)
+        * [Indentation &amp; Misc Stylistic Conventions](#indentation--misc-stylistic-conventions)
+        * [Wildcards in Targets](#wildcards-in-targets)
+            * [Left-Wildcards](#left-wildcards)
+            * [Edge-Case: Right-Wildcards](#edge-case-right-wildcards)
+        * [Complicated Regex in Rules](#complicated-regex-in-rules)
+        * [Enumerating Subdomains](#enumerating-subdomains)
+        * [Target Ordering](#target-ordering)
+        * [Rule Ordering](#rule-ordering)
+        * [Non-working hosts](#non-working-hosts)
+        * [Ruleset Names](#ruleset-names)
+            * [Filenames](#filenames)
+        * [Cross-referencing Rulesets](#cross-referencing-rulesets)
+        * [Regex Conventions](#regex-conventions)
+        * [Snapping Redirects](#snapping-redirects)
+        * [Example: Ruleset before style guidelines are applied](#example-ruleset-before-style-guidelines-are-applied)
+        * [Example: Ruleset after style guidelines are applied, with test URLs](#example-ruleset-after-style-guidelines-are-applied-with-test-urls)
+    * [Removal of Rules](#removal-of-rules)
+        * [Regular Rules](#regular-rules)
+        * [HSTS Preloaded Rules](#hsts-preloaded-rules)
+* [Contributing Code](#contributing-code)
+* [Contributing Documentation](#contributing-documentation)
+* [Contributing Translations](#contributing-translations)
+
+* * *
+
 # Welcome!
 
 Welcome, and thank you for your interest in contributing to HTTPS Everywhere! HTTPS Everywhere depends on the open source community for its continued success, so any contribution is appreciated.
@@ -19,7 +56,7 @@ There are several main areas of development on HTTPS Everywhere: the rulesets, t
 
 The rulesets can be found in the [`rules`](rules) top-level path and include all the rules for redirecting individual sites to HTTPS.  These are written in XML. If you want to get started contributing to HTTPS Everywhere, we recommend starting here.
 
-The core codebase consists of the code that performs the redirects, the UI, logging code, and ruleset loading.  This encompasses all code delivered with the extension itself that is *not* a ruleset.  It is written in JavaScript, using the `WebExtensions` API (located in [`chromium`](chromium)) on all supported browsers.  In Firefox, this extension is wrapped in a thin `XPCOM` layer for the purposes of migrating settings, located in [`src`](src), which will soon be deprecated.
+The core codebase consists of the code that performs the redirects, the UI, logging code, and ruleset loading.  This encompasses all code delivered with the extension itself that is *not* a ruleset.  It is written in JavaScript, using the `WebExtensions` API (located in [`chromium`](chromium)).
 
 The utilities ([`utils`](utils) top-level path) include scripts that build the extension, sanitize and perform normalization on rulesets, simplify rules, and help label GitHub issues.  Historically, these utilities have been written in Python.  Many of the newer utilities are written in JavaScript, and are meant to be run in node.  Some of the wrappers for these utilities are in shell scripts.
 
@@ -67,7 +104,7 @@ Some `rulesets` have the attribute `platform="mixedcontent"`.  These `rulesets` 
 
 ## New Rulesets
 
-If you want to create new `rulesets` to submit to us, we expect them to be in the `src/chrome/content/rules` directory. That directory also contains a useful script, `make-trivial-rule`, to create a simple `ruleset` for a specified domain. There is also a script called `utils/trivial-validate.py`, to check all the pending `rulesets` for several common errors and oversights. For example, if you wanted to make a `ruleset` for the `example.com` domain, you could run:
+If you want to create new `rulesets` to submit to us, we expect them to be in the `src/chrome/content/rules` directory. That directory also contains a useful script, `make-trivial-rule`, to create a simple `ruleset` for a specified domain. There is also a script in `test/validations/special/run.py`, to check all the pending `rulesets` for several common errors and oversights. For example, if you wanted to make a `ruleset` for the `example.com` domain, you could run:
 ```
 cd src/chrome/content/rules
 bash ./make-trivial-rule example.com
@@ -78,7 +115,7 @@ This would create `Example.com.xml`, which you could then take a look at and edi
 
 There are several volunteers to HTTPS Everywhere who have graciously dedicated their time to look at the `ruleset` contributions and work with contributors to ensure quality of the pull requests before merging.  It is typical for there to be several back-and-forth communications with these `ruleset` maintainers before a PR is in a good shape to merge.  Please be patient and respectful, the maintainers are donating their time for no benefit other than the satisfaction of making the web more secure.  They are under no obligation to merge your request, and may reject it if it is impossible to ensure quality.  You can identify these volunteers by looking for the "Collaborator" identifier in their comments on HTTPS Everywhere issues and pull requests.
 
-In the back-and-fourth process of getting the `ruleset` in good shape, there may be many commits made.  It is this project's convention to squash-and-merge these commits into a single commit before merging into the project.  If your commits are cryptographically signed, we may ask you to squash the commits yourself in order to preserve this signature.  Otherwise, we may squash them ourselves before merging.
+In the back-and-forth process of getting the `ruleset` in good shape, there may be many commits made.  It is this project's convention to squash-and-merge these commits into a single commit before merging into the project.  If your commits are cryptographically signed, we may ask you to squash the commits yourself in order to preserve this signature.  Otherwise, we may squash them ourselves before merging.
 
 We prefer small, granular changes to the rulesets.  Not only are these easier to test and review, this results in cleaner commits.
 
@@ -108,15 +145,15 @@ Use double quotes (`"`, not `'`).
 
 #### Left-Wildcards
 
-Avoid using the left-wildcard (`<target host='*.example.com' />`) unless you intend to rewrite all or nearly all subdomains.  If it can be demonstrated that there is comprehensive HTTPS coverage for subdomains, left-wildcards may be appropriate.  Many rules today specify a left-wildcard target, but the rewrite rules only rewrite an explicit list of hostnames.
+Avoid using the left-wildcard (`<target host="*.example.com" />`) unless you intend to rewrite all or nearly all subdomains.  If it can be demonstrated that there is comprehensive HTTPS coverage for subdomains, left-wildcards may be appropriate.  Many rules today specify a left-wildcard target, but the rewrite rules only rewrite an explicit list of hostnames.
 
 Instead, prefer listing explicit target hosts and a single rewrite from `"^http:"` to `"^https:"`. This saves you time as a ruleset author because each explicit target host automatically creates an implicit test URL, reducing the need to add your own test URLs. These also make it easier for someone reading the ruleset to figure out which subdomains are covered.
 
-If you know all subdomains of a given domain support HTTPS, go ahead and use a left-wildcard, along with a plain rewrite from `"^http:"` to `"^https:"`. Make sure to add a bunch of test URLs for the more important subdomains. 
+If you know all subdomains of a given domain support HTTPS, go ahead and use a left-wildcard, along with a plain rewrite from `"^http:"` to `"^https:"`. Make sure to add a bunch of test URLs for the more important subdomains.
 
 #### Edge-Case: Right-Wildcards
 
-Right-wildcards (`<target host='account.google.*' />`) are highly discouraged.  Only use them in edge-cases where other solutions are unruly.
+Right-wildcards (`<target host="account.google.*" />`) are highly discouraged.  Only use them in edge-cases where other solutions are unruly.
 
 Example:
 
@@ -298,7 +335,7 @@ In `utils` we have a tool called `hsts-prune` which removes `targets` from rules
 Every new pull request automatically has the `hsts-prune` utility applied to it as part of the continual integration process.  If a new PR introduces a `target` which is preloaded, it will fail the CI test suite.  See:
 
 - `.travis.yml`
-- `test/travis.sh`
+- `test/run_travis.sh`
 
 * * *
 
@@ -312,11 +349,25 @@ Officially supported browsers:
 - Firefox ESR
 - Chromium Stable
 
-We also informally support Opera browser, but do not have tooling around testing Opera.  Firefox ESR is supported because this is what the Tor Browser, which includes HTTPS Everywhere, is built upon.  For the test commands, refer to [README.md](README.md).
+We also informally support the Opera browser, but do not have tooling around testing Opera.  Firefox ESR is supported because this is what the [Tor Browser](https://www.torproject.org/projects/torbrowser.html.en), which includes HTTPS Everywhere, is built upon.  For the test commands, refer to [README.md](README.md).
 
 The current extension maintainer is @Hainish.  You can tag him for PRs which involve the core codebase.
 
 Several of our utilities and our full test suite is written in Python.  Eventually we would like the whole codebase to be standardized as JavaScript.  If you are so inclined, it would be helpful to rewrite the tooling and tests into JavaScript while maintaining the functionality.
+
+* * *
+
+# Contributing Documentation
+
+Standalone documentation should be written in [Markdown](https://en.wikipedia.org/wiki/Markdown) that follows the [Google style guide](https://github.com/google/styleguide/blob/gh-pages/docguide/style.md). If you are updating existing documentation that does not follow the Google style guide, then you should follow the style of the file you are updating.
+
+* * *
+
+# Pull Requests from Deleted Accounts
+
+Sometimes a contributor will [delete their GitHub account](https://help.github.com/articles/deleting-your-user-account/) after submitting a pull request, resulting in the pull request being associated with the [Ghost user (@ghost)](https://github.com/ghost).  These @ghost pull requests can cause problems for HTTPS Everywhere maintainers, leaving questions unanswered and closing off the possibility of receiving maintainer feedback to solicit clarification or request changes.
+
+We ask that if you want to delete your GitHub account, you either close your HTTPS Everywhere pull requests before you delete your account, or wait to delete your account until we merge your pull requests. Otherwise, maintainers are free to close @ghost pull requests without any comment.
 
 * * *
 
@@ -331,4 +382,3 @@ Then, in the Tor Project resources list, find and click the link for the file
 and choose "Translate now" to enter the translation interface.
 
 * * *
-
