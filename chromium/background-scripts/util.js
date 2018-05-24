@@ -60,6 +60,22 @@ function loadExtensionFile(url, returnType) {
   return xhr.responseText;
 }
 
+/**
+ * Convert an ArrayBuffer to string
+ *
+ * @param array: an ArrayBuffer to convert
+ */
+function ArrayBufferToString(ab) {
+  let array = new Uint8Array(ab);
+  let string = "";
+
+  for (let byte of array){
+    string += String.fromCharCode(byte);
+  }
+
+  return string;
+}
+
 
 Object.assign(exports, {
   VERB,
@@ -70,7 +86,8 @@ Object.assign(exports, {
   log,
   setDefaultLogLevel,
   getDefaultLogLevel,
-  loadExtensionFile
+  loadExtensionFile,
+  ArrayBufferToString
 });
 
 })(typeof exports == 'undefined' ? require.scopes.util = {} : exports);

@@ -129,7 +129,7 @@ function verifyAndStoreNewRulesets(new_rulesets, rulesets_timestamp, update_chan
         if(isvalid) {
           util.log(util.NOTE, update_channel.name + ': Downloaded ruleset signature checks out.  Storing rulesets.');
 
-          const rulesets_gz = new Uint8Array(new_rulesets.rulesets_array_buffer);
+          const rulesets_gz = util.ArrayBufferToString(new_rulesets.rulesets_array_buffer);
           const rulesets_byte_array = pako.inflate(rulesets_gz);
           const rulesets = new TextDecoder("utf-8").decode(rulesets_byte_array);
           const rulesets_json = JSON.parse(rulesets);
