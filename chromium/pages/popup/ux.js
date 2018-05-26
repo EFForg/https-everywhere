@@ -8,28 +8,27 @@ function e(id) {
 
 /**
  * Handles rule (de)activation in the popup
- * @param checkbox checkbox being clicked
- * @param ruleset the ruleset tied tot he checkbox
  */
-function toggleRuleLine(checkbox, ruleset, tab_id) {
-  const ruleset_active = checkbox.checked;
-  const set_ruleset = {
-    active: ruleset_active,
-    name: ruleset.name,
-    tab_id: tab_id
-  };
+function toggleRuleLine(event) {
+  if (event.target.matches("input[type=checkbox]")) {
+    chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
+      const set_ruleset = {
+        active: event.target.checked,
+        name: event.target.nextSibling.innerText,
+        tab_id: tabs[0].id,
+      };
 
-  sendMessage("set_ruleset_active_status", set_ruleset, () => {
-
-    if (ruleset_active == ruleset.default_state) {
-      // purge the name from the cache so that this unchecking is persistent.
-      sendMessage("delete_from_ruleset_cache", ruleset.name);
-    }
-
-    // Now reload the selected tab of the current window.
-    chrome.tabs.reload();
-  });
+      sendMessage("set_ruleset_active_status", set_ruleset, () => {
+        // purge the name from the cache so that this unchecking is persistent.
+        sendMessage("delete_from_ruleset_cache", set_ruleset.name, () => {
+          // Now reload the selected tab of the current window.
+          chrome.tabs.reload();
+        });
+      });
+    });
+  }
 }
+
 
 /**
  * Creates rule lines (including checkbox and icon) for the popup
@@ -42,7 +41,7 @@ function appendRulesToListDiv(rulesets, list_div, tab_id) {
   if (rulesets && rulesets.length) {
     // template parent block for each ruleset
     let templateNode = document.createElement("div");
-    templateNode.setAttribute("class", "rule checkbox");
+    templateNode.setAttribute("class", "rule");
 
     // checkbox
     let checkbox = document.createElement("input");
@@ -66,9 +65,6 @@ function appendRulesToListDiv(rulesets, list_div, tab_id) {
 
       checkbox.id = ruleset.name;
       checkbox.checked = ruleset.active;
-      checkbox.addEventListener("change", () => {
-        toggleRuleLine(checkbox, ruleset, tab_id);
-      });
 
       label.htmlFor = ruleset.name;
       label.innerText = ruleset.name;
@@ -89,6 +85,7 @@ function appendRulesToListDiv(rulesets, list_div, tab_id) {
       }
       list_div.appendChild(node);
     }
+    list_div.addEventListener("click", toggleRuleLine);
     show(list_div);
   }
 }
