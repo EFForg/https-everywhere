@@ -2,9 +2,6 @@
 
 "use strict";
 
-var stableRules = null;
-var unstableRules = null;
-
 function e(id) {
   return document.getElementById(id);
 }
@@ -15,14 +12,14 @@ function e(id) {
  * @param ruleset the ruleset tied tot he checkbox
  */
 function toggleRuleLine(checkbox, ruleset, tab_id) {
-  var ruleset_active = checkbox.checked;
-  var set_ruleset = {
+  const ruleset_active = checkbox.checked;
+  const set_ruleset = {
     active: ruleset_active,
     name: ruleset.name,
     tab_id: tab_id
   };
 
-  sendMessage("set_ruleset_active_status", set_ruleset, function(){
+  sendMessage("set_ruleset_active_status", set_ruleset, () => {
 
     if (ruleset_active == ruleset.default_state) {
       // purge the name from the cache so that this unchecking is persistent.
@@ -35,52 +32,65 @@ function toggleRuleLine(checkbox, ruleset, tab_id) {
 }
 
 /**
- * Creates a rule line (including checkbox and icon) for the popup
- * @param ruleset the ruleset to build the line for
+ * Creates rule lines (including checkbox and icon) for the popup
+ * @param rulesets
+ * @param list_div
+ * @param tab_id
  * @returns {*}
  */
-function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
+function appendRulesToListDiv(rulesets, list_div, tab_id) {
+  if (rulesets && rulesets.length) {
+    // template parent block for each ruleset
+    let templateNode = document.createElement("div");
+    templateNode.setAttribute("class", "rule checkbox");
 
-  // parent block for line
-  var line = document.createElement("div");
-  line.className = "rule checkbox";
+    // checkbox
+    let checkbox = document.createElement("input");
+    checkbox.setAttribute("type", "checkbox");
 
-  // label "container"
-  var label = document.createElement("label");
+    // label "container"
+    let label = document.createElement("label");
 
-  // checkbox
-  var checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
-  checkbox.checked = ruleset.active;
-  checkbox.onchange = function() {
-    toggleRuleLine(checkbox, ruleset, tab_id);
-  };
-  label.appendChild(checkbox);
+    // img "remove" button
+    let templateRemove = document.createElement("img");
+    templateRemove.src = chrome.extension.getURL("images/remove.png");
+    templateRemove.className = "remove";
 
-  // label text
-  var text = document.createElement("span");
-  text.innerText = ruleset.name;
-  if (ruleset.note.length) {
-    text.title = ruleset.note;
+    templateNode.appendChild(checkbox);
+    templateNode.appendChild(label);
+
+    for (const ruleset of rulesets) {
+      let node = templateNode.cloneNode(true);
+      let checkbox = node.querySelector("input[type=checkbox]");
+      let label = node.querySelector("label");
+
+      checkbox.id = ruleset.name;
+      checkbox.checked = ruleset.active;
+      checkbox.addEventListener("change", () => {
+        toggleRuleLine(checkbox, ruleset, tab_id);
+      });
+
+      label.htmlFor = ruleset.name;
+      label.innerText = ruleset.name;
+
+      if (ruleset.note && ruleset.note.length) {
+        node.title = ruleset.note;
+
+        if (ruleset.note === "user rule") {
+          let remove = templateRemove.cloneNode(true);
+          node.appendChild(remove);
+
+          remove.addEventListener("click", () => {
+            sendMessage("remove_rule", ruleset, () => {
+              list_div.removeChild(node);
+            });
+          });
+        }
+      }
+      list_div.appendChild(node);
+    }
+    show(list_div);
   }
-
-  if(ruleset.note == "user rule") {
-    var remove = document.createElement("img");
-    remove.src = chrome.extension.getURL("images/remove.png");
-    remove.className = "remove";
-    line.appendChild(remove);
-
-    remove.addEventListener("click", function(){
-      sendMessage("remove_rule", ruleset);
-      list_div.removeChild(line);
-    });
-  }
-
-  label.appendChild(text);
-
-  line.appendChild(label);
-
-  list_div.appendChild(line);
 }
 
 function showHttpNowhereUI() {
@@ -125,20 +135,16 @@ function toggleEnabledDisabled() {
 
 /**
  * Create the list of rules for a specific tab
- * @param tabArray
+ * @param activeTab
  */
 function gotTab(activeTab) {
   sendMessage("get_active_rulesets", activeTab.id, function(rulesets) {
     if (rulesets) {
-      for (const ruleset of rulesets) {
-        let listDiv = stableRules;
+      const stableRules = rulesets.filter(ruleset => ruleset.default_state);
+      const unstableRules = rulesets.filter(ruleset => !ruleset.default_state);
 
-        if (!ruleset.default_state) {
-          listDiv = unstableRules;
-        }
-        appendRuleLineToListDiv(ruleset, listDiv, activeTab.id);
-        listDiv.style.display = 'block';
-      }
+      appendRulesToListDiv(stableRules, e("StableRules"), activeTab.id);
+      appendRulesToListDiv(unstableRules, e("UnstableRules"), activeTab.id);
     }
 
     // Only show the "Add a rule" link if we're on an HTTPS page
@@ -152,8 +158,6 @@ function gotTab(activeTab) {
  * Fill in content into the popup on load
  */
 document.addEventListener("DOMContentLoaded", function () {
-  stableRules = e("StableRules");
-  unstableRules = e("UnstableRules");
   getTab(gotTab);
 
   // Set up the enabled/disabled switch & hide/show rules
