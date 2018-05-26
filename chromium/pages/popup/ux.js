@@ -34,10 +34,9 @@ function toggleRuleLine(event) {
  * Creates rule lines (including checkbox and icon) for the popup
  * @param rulesets
  * @param list_div
- * @param tab_id
  * @returns {*}
  */
-function appendRulesToListDiv(rulesets, list_div, tab_id) {
+function appendRulesToListDiv(rulesets, list_div) {
   if (rulesets && rulesets.length) {
     // template parent block for each ruleset
     let templateNode = document.createElement("div");
@@ -140,8 +139,8 @@ function gotTab(activeTab) {
       const stableRules = rulesets.filter(ruleset => ruleset.default_state);
       const unstableRules = rulesets.filter(ruleset => !ruleset.default_state);
 
-      appendRulesToListDiv(stableRules, e("StableRules"), activeTab.id);
-      appendRulesToListDiv(unstableRules, e("UnstableRules"), activeTab.id);
+      appendRulesToListDiv(stableRules, e("StableRules"));
+      appendRulesToListDiv(unstableRules, e("UnstableRules"));
     }
 
     // Only show the "Add a rule" link if we're on an HTTPS page
@@ -149,6 +148,8 @@ function gotTab(activeTab) {
       show(e("add-rule-link"));
     }
   });
+
+  console.log(activeTab.id);
 }
 
 /**
