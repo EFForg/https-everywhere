@@ -5,7 +5,7 @@ class TestPopup(ExtensionTestCase):
     def test_rule_shown(self):
         url = 'http://freerangekitten.com'
         with self.load_popup_for(url):
-            el = self.query_selector('#StableRules > div > label')
+            el = self.query_selector('#StableRules > div > label > span')
             self.assertTrue(el.text.lower() in url)
 
     def test_disable_enable(self):

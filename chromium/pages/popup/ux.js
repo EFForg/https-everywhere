@@ -39,50 +39,51 @@ function toggleRuleLine(event) {
 function appendRulesToListDiv(rulesets, list_div) {
   if (rulesets && rulesets.length) {
     // template parent block for each ruleset
-    let templateNode = document.createElement("div");
-    templateNode.setAttribute("class", "rule");
-
-    // checkbox
-    let templateCheckbox = document.createElement("input");
-    templateCheckbox.setAttribute("type", "checkbox");
+    let templateLine = document.createElement("div");
+    templateLine.className = "rule checkbox";
 
     // label "container"
     let templateLabel = document.createElement("label");
+
+    // checkbox
+    let templateCheckbox = document.createElement("input");
+    templateCheckbox.type = "checkbox";
+
+    // label text
+    let templateLabelText = document.createElement("span");
 
     // img "remove" button
     let templateRemove = document.createElement("img");
     templateRemove.src = chrome.extension.getURL("images/remove.png");
     templateRemove.className = "remove";
 
-    templateNode.appendChild(templateCheckbox);
-    templateNode.appendChild(templateLabel);
+    templateLabel.appendChild(templateCheckbox);
+    templateLabel.appendChild(templateLabelText);
+    templateLine.appendChild(templateLabel);
 
     for (const ruleset of rulesets) {
-      let node = templateNode.cloneNode(true);
-      let checkbox = node.querySelector("input[type=checkbox]");
-      let label = node.querySelector("label");
+      let line = templateLine.cloneNode(true);
+      let checkbox = line.querySelector("input[type=checkbox]");
+      let text = line.querySelector("span");
 
-      checkbox.id = ruleset.name;
       checkbox.checked = ruleset.active;
-
-      label.htmlFor = ruleset.name;
-      label.innerText = ruleset.name;
+      text.innerText = ruleset.name;
 
       if (ruleset.note && ruleset.note.length) {
-        node.title = ruleset.note;
+        line.title = ruleset.note;
 
         if (ruleset.note === "user rule") {
           let remove = templateRemove.cloneNode(true);
-          node.appendChild(remove);
+          line.appendChild(remove);
 
           remove.addEventListener("click", () => {
             sendMessage("remove_rule", ruleset, () => {
-              list_div.removeChild(node);
+              list_div.removeChild(line);
             });
           });
         }
       }
-      list_div.appendChild(node);
+      list_div.appendChild(line);
     }
     list_div.addEventListener("click", toggleRuleLine);
     show(list_div);
