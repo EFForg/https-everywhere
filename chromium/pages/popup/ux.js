@@ -43,19 +43,19 @@ function appendRulesToListDiv(rulesets, list_div) {
     templateNode.setAttribute("class", "rule");
 
     // checkbox
-    let checkbox = document.createElement("input");
-    checkbox.setAttribute("type", "checkbox");
+    let templateCheckbox = document.createElement("input");
+    templateCheckbox.setAttribute("type", "checkbox");
 
     // label "container"
-    let label = document.createElement("label");
+    let templateLabel = document.createElement("label");
 
     // img "remove" button
     let templateRemove = document.createElement("img");
     templateRemove.src = chrome.extension.getURL("images/remove.png");
     templateRemove.className = "remove";
 
-    templateNode.appendChild(checkbox);
-    templateNode.appendChild(label);
+    templateNode.appendChild(templateCheckbox);
+    templateNode.appendChild(templateLabel);
 
     for (const ruleset of rulesets) {
       let node = templateNode.cloneNode(true);
