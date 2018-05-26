@@ -11,18 +11,18 @@ function e(id) {
  */
 function toggleRuleLine(event) {
   if (event.target.matches("input[type=checkbox]")) {
-    chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
+    getTab(activeTab => {
       const set_ruleset = {
         active: event.target.checked,
         name: event.target.nextSibling.innerText,
-        tab_id: tabs[0].id,
+        tab_id: activeTab.id,
       };
 
       sendMessage("set_ruleset_active_status", set_ruleset, () => {
         // purge the name from the cache so that this unchecking is persistent.
         sendMessage("delete_from_ruleset_cache", set_ruleset.name, () => {
           // Now reload the selected tab of the current window.
-          chrome.tabs.reload();
+          chrome.tabs.reload(set_ruleset.tab_id);
         });
       });
     });
@@ -148,8 +148,6 @@ function gotTab(activeTab) {
       show(e("add-rule-link"));
     }
   });
-
-  console.log(activeTab.id);
 }
 
 /**
