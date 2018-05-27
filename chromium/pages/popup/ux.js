@@ -85,7 +85,6 @@ function appendRulesToListDiv(rulesets, list_div) {
       }
       list_div.appendChild(line);
     }
-    list_div.addEventListener("click", toggleRuleLine);
     show(list_div);
   }
 }
@@ -142,6 +141,9 @@ function gotTab(activeTab) {
 
       appendRulesToListDiv(stableRules, e("StableRules"));
       appendRulesToListDiv(unstableRules, e("UnstableRules"));
+
+      // Add listener to capture the toggle event
+      e("RuleManagement").addEventListener("click", toggleRuleLine);
     }
 
     // Only show the "Add a rule" link if we're on an HTTPS page
