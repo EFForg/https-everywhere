@@ -273,7 +273,7 @@ RuleSets.prototype = {
 
     var exclusions = ruletag["exclusion"];
     if (exclusions != null) {
-      rule_set.exclusions = new RegExp(exclusions)
+      rule_set.exclusions = new RegExp(exclusions.join("|"));
     }
 
     var cookierules = ruletag["securecookie"];
@@ -470,13 +470,12 @@ RuleSets.prototype = {
         rule.getAttribute("to")));
     }
 
-    var exclusions = ruletag.getElementsByTagName("exclusion");
+    var exclusions = Array();
+    for (let exclusion of ruletag.getElementsByTagName("exclusion")) {
+      exclusions.push(exclusion.getAttribute("pattern"));
+    }
     if (exclusions.length > 0) {
-      rule_set.exclusions = new RegExp(
-        exclusions
-          .map(exclusion => exclusion.getAttribute("pattern"))
-          .join("|")
-      );
+      rule_set.exclusions = new RegExp(exclusions.join("|"));
     }
 
     var cookierules = ruletag.getElementsByTagName("securecookie");
@@ -515,7 +514,7 @@ RuleSets.prototype = {
     }
 
     // Let's begin search
-    // Copy the host targsts so we don't modify them.
+    // Copy the host targets so we don't modify them.
     let results = (this.targets.has(host) ?
       new Set([...this.targets.get(host)]) :
       new Set());

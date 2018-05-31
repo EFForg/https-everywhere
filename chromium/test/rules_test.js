@@ -1,7 +1,8 @@
 'use strict'
 
 const assert = require('chai').assert,
-  rules = require('../background-scripts/rules');
+  rules = require('../background-scripts/rules'),
+  DOMParser = require('xmldom').DOMParser;
 
 const Rule = rules.Rule,
   RuleSet = rules.RuleSet,
@@ -103,7 +104,8 @@ describe('rules.js', function() {
         to: "https:",
         from: "^http:"
       }],
-      target: ["freerangekitten.com", "www.freerangekitten.com"]
+      target: ["freerangekitten.com", "www.freerangekitten.com"],
+      exclusion: ["foo", "bar"]
     }];
 
     beforeEach(function() {
@@ -113,8 +115,13 @@ describe('rules.js', function() {
     describe('#addFromJson', function() {
       it('can add a rule', function() {
         this.rsets.addFromJson(rules_json);
-
         assert.isTrue(this.rsets.targets.has('freerangekitten.com'));
+      });
+
+      it('parses exclusions', function() {
+        this.rsets.addFromJson(rules_json);
+        let rs = [...this.rsets.targets.get('freerangekitten.com')][0];
+        assert.strictEqual(rs.exclusions.source, "foo|bar");
       });
     });
 
@@ -126,11 +133,20 @@ describe('rules.js', function() {
         let newuri = this.rsets.rewriteURI('http://' + host + '/', host);
 
         assert.strictEqual(newuri, 'https://' + host + '/', 'protocol changed to https')
-      })
+      });
 
       it('does not rewrite unknown hosts', function() {
         assert.isNull(this.rsets.rewriteURI('http://unknown.com/', 'unknown.com'));
-      })
+      });
+
+      it('does not rewrite excluded URLs', function() {
+        this.rsets.addFromJson(rules_json);
+        assert.isNull(this.rsets.rewriteURI('http://freerangekitten.com/foo', 'freerangekitten.com'));
+        assert.isNull(this.rsets.rewriteURI('http://www.freerangekitten.com/bar', 'freerangekitten.com'));
+
+        let newuri = this.rsets.rewriteURI('http://freerangekitten.com/baz', 'freerangekitten.com');
+        assert.strictEqual(newuri, 'https://freerangekitten.com/baz', 'protocol changed to https');
+      });
     });
 
     describe('#potentiallyApplicableRulesets', function() {
