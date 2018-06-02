@@ -182,7 +182,7 @@ If you're not sure what subdomains might exist, you can install the `Sublist3r` 
 
 Then you can to enumerate the list of subdomains:
 
-    python sublist3r.py -d example.com -e Baidu,Yahoo,Google,Bing,Ask,Netcraft,Virustotal,SSL
+    python sublist3r.py -d example.com
 
 Alternatively, you can iteratively use Google queries and enumerate the list of results like such:
 
