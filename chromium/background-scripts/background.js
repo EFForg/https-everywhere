@@ -579,7 +579,8 @@ function onErrorOccurred(details) {
 }
 
 /**
- * handle webrequest.onHeadersReceived, insert upgrade-insecure-requests directive
+ * handle webrequest.onHeadersReceived, insert upgrade-insecure-requests directive and
+ * rewrite access-control-allow-origin if presented in HTTP Nowhere mode
  * @param details details for the chrome.webRequest (see chrome doc)
  */
 function onHeadersReceived(details) {
@@ -591,27 +592,47 @@ function onHeadersReceived(details) {
       return {};
     }
 
+    let responseHeadersChanged = false;
+    let cspHeaderFound = false;
+
     for (const idx in details.responseHeaders) {
       if (details.responseHeaders[idx].name.match(/Content-Security-Policy/i)) {
         // Existing CSP headers found
+        cspHeaderFound = true;
         const value = details.responseHeaders[idx].value;
 
         // Prepend if no upgrade-insecure-requests directive exists
         if (!value.match(/upgrade-insecure-requests/i)) {
           details.responseHeaders[idx].value = "upgrade-insecure-requests; " + value;
-          return {responseHeaders: details.responseHeaders};
+          responseHeadersChanged = true;
         }
-        return {};
+      }
+
+      if (details.responseHeaders[idx].name.match(/Access-Control-Allow-Origin/i)) {
+        // Existing access-control-allow-origin header found
+        const value = details.responseHeaders[idx].value;
+
+        // If HTTP protocol is used, change it to HTTPS
+        if (value.match(/http:/)) {
+          details.responseHeaders[idx].value = value.replace(/http:/, "https:");
+          responseHeadersChanged = true;
+        }
       }
     }
 
-    // CSP headers not found
-    const upgradeInsecureRequests = {
-      name: 'Content-Security-Policy',
-      value: 'upgrade-insecure-requests'
+    if (!cspHeaderFound) {
+      // CSP headers not found
+      const upgradeInsecureRequests = {
+        name: 'Content-Security-Policy',
+        value: 'upgrade-insecure-requests'
+      }
+      details.responseHeaders.push(upgradeInsecureRequests);
+      responseHeadersChanged = true;
     }
-    details.responseHeaders.push(upgradeInsecureRequests);
-    return {responseHeaders: details.responseHeaders};
+
+    if (responseHeadersChanged) {
+      return {responseHeaders: details.responseHeaders};
+    }
   }
   return {};
 }
