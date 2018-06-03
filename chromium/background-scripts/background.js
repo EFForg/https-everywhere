@@ -614,7 +614,7 @@ function onHeadersReceived(details) {
 
         // If HTTP protocol is used, change it to HTTPS
         if (value.match(/http:/)) {
-          details.responseHeaders[idx].value = value.replace(/http:/, "https:");
+          details.responseHeaders[idx].value = value.replace(/http:/g, "https:");
           responseHeadersChanged = true;
         }
       }
