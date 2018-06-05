@@ -220,7 +220,6 @@ function addManualRule() {
 
     e("new-rule-regex").value = `^http://${escapedHost}/`;
     e("new-rule-redirect").value = `https://${url.host}/`;
-    e("new-rule-name").value = "Manual rule for " + url.host;
 
     e("add-new-rule-button").addEventListener("click", function() {
       const params = {
@@ -236,16 +235,6 @@ function addManualRule() {
     e("cancel-new-rule").addEventListener("click", function() {
       show(e("add-rule-link"));
       hide(e("add-new-rule-div"));
-    });
-
-    e("new-rule-show-advanced-link").addEventListener("click", function() {
-      show(e("new-rule-advanced"));
-      hide(e("new-rule-regular-text"));
-    });
-
-    e("new-rule-hide-advanced-link").addEventListener("click", function() {
-      hide(e("new-rule-advanced"));
-      show(e("new-rule-regular-text"));
     });
   });
 }
