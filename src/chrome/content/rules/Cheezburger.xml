@@ -1,18 +1,10 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://support.cheezburger.com/ (200) => https://cheezburger.support.com/ (404)
-
 	CDN buckets:
-
 		- wac.1ddb.edgecastcdn.net/??1DDB/
-
 			- images.cheezburger.com (mismatched, CN: *.chzbgr.com)
-
 		- cheezburger.freshdesk.com
 
 	As of 2016-04-05, known unprotected subdomains are:
-
 		- advertising	(unbounce.com certificate)
 		- blog		(not listening on https)
 		- corp		(not listening on https)
@@ -25,35 +17,32 @@ Non-2xx HTTP code: http://support.cheezburger.com/ (200) => https://cheezburger.
 	a wildcard certificate, so it's not worth whitelisting them one by one.
 
 	Other related unprotected hosts:
-
 		- knowyourmeme.com
 
-
 	Problematic domains:
-
 		- images.cheezburger.com	(works; mismatched, CN: gp1.wac.edgecastcdn.net)
-		- support.cheezburger.com	(freshdesk)
-
 -->
-<ruleset name="Cheezburger" platform="mixedcontent" default_off='failed ruleset test'>
 
+<ruleset name="Cheezburger" platform="mixedcontent">
+	<!-- cheezburger.com -->
 	<target host="cheezburger.com" />
 	<target host="www.cheezburger.com" />
 	<target host="images.cheezburger.com" />
 	<target host="support.cheezburger.com" />
+
+	<!-- chzbgr.com -->
 	<target host="i.chzbgr.com" />
 	<target host="s.chzbgr.com" />
 	<target host="t.chzbgr.com" />
 
 	<securecookie host="^www\.cheezburger\.com$" name=".+" />
 
-	<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2013-August/001665.html
-							-->
+	<!-- https://lists.eff.org/pipermail/https-everywhere-rules/2013-August/001665.html -->
 	<rule from="^http://images\.cheezburger\.com/"
 		to="https://i.chzbgr.com/" />
 
 	<rule from="^http://support\.cheezburger\.com/"
-		to="https://cheezburger.support.com/" />
+		to="https://cheezburger.freshdesk.com/" />
 
 	<!--	There are some inconsistent redirects between cheezburger.com and
 		www.cheezburger.com. So don't try to enforce either hostname.
@@ -63,5 +52,4 @@ Non-2xx HTTP code: http://support.cheezburger.com/ (200) => https://cheezburger.
 
 	<rule from="^http://(i|s|t)\.chzbgr\.com/"
 		to="https://$1.chzbgr.com/" />
-
 </ruleset>
