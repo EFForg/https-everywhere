@@ -181,7 +181,9 @@ async function applyStoredRulesets(rulesets_obj){
       rulesets_obj.addFromJson(rulesets_json.rulesets);
     }
   } else {
-    rulesets_obj.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
+    await util.loadExtensionFile('rules/default.rulesets', 'json').then(rulesets_json => {
+      rulesets_obj.addFromJson(rulesets_json);
+    });
   }
 }
 
