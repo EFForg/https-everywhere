@@ -183,6 +183,8 @@ async function applyStoredRulesets(rulesets_obj){
   } else {
     await util.loadExtensionFile('rules/default.rulesets', 'json').then(rulesets_json => {
       rulesets_obj.addFromJson(rulesets_json);
+    }).catch(error => {
+      util.log(util.DBUG, `applyStoredRulesets: ${error}`);
     });
   }
 }

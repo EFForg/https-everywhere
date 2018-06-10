@@ -53,7 +53,7 @@ async function loadExtensionFile(url, returnType) {
     } else {
       return response.text();
     }
-  })
+  });
 }
 
 /**
