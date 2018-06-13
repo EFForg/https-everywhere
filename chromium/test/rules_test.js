@@ -1,8 +1,7 @@
 'use strict'
 
 const assert = require('chai').assert,
-  rules = require('../background-scripts/rules'),
-  DOMParser = require('xmldom').DOMParser;
+  rules = require('../background-scripts/rules');
 
 const Rule = rules.Rule,
   RuleSet = rules.RuleSet,
