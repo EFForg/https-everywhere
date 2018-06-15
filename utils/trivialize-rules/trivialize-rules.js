@@ -105,7 +105,7 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
     return;
   }
 
-  let targetRe = new RegExp(`^(?:${targets.map(target => target.replace(/\./g, '\\.').replace(/\*/g, '.*')).join('|')})$`);
+  let targetRe = new RegExp(`^(?:${targets.map(target => target.replace(/^\*\./, '[\\w-]+.').replace(/\./g, '\\.').replace(/\*/g, '.*')).join('|')})$`);
   let domains = new Set();
 
   function isStatic(rule) {
@@ -134,7 +134,7 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
         if (!targetRe.test(host)) {
           unknownDomains.add(host);
         } else if (!secure && port === '80' && path === '*' && url.replace(fromRe, to) === url.replace(/^http:/, 'https:')) {
-          localDomains.add(host);
+          localDomains.add(host.replace(/^PREFIX\./, '*.'));
         } else {
           nonTrivialUrls.add(url);
         }

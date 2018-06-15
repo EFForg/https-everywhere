@@ -13,6 +13,21 @@ function explodeRegExp(re, callback) {
 
     let [first, ...rest] = items;
 
+    if (
+      str.endsWith('://') &&
+      first.repeat &&
+      first.repeat.min <= 1 &&
+      first.repeat.max === Infinity &&
+      first.type === 'charset' &&
+      ((!first.exclude && (first.classes.includes('w') || first.classes.includes('S'))) ||
+        (first.exclude &&
+          first.classes.length === 0 &&
+          first.ranges.length === 0 &&
+          /^[@/:.]*$/.test(first.chars)))
+    ) {
+      return buildUrls(str + 'PREFIX', rest);
+    }
+
     if (first.repeat) {
       let repeat = first.repeat;
       if (repeat.max !== 1) throw new UnsupportedRegExp(first.raw);
@@ -79,7 +94,7 @@ function explodeRegExp(re, callback) {
 
     throw new UnsupportedRegExp(first.raw);
   })('*', parse(re).tree);
-};
+}
 
 module.exports = {
   UnsupportedRegExp,
