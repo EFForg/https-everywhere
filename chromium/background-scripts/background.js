@@ -641,10 +641,10 @@ chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
 chrome.webRequest.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
 
-// Cleanup redirectCounter if neccessary
+// Cleanup redirectCounter if necessary
 chrome.webRequest.onCompleted.addListener(onCompleted, {urls: ["*://*/*"]});
 
-// Cleanup redirectCounter if neccessary
+// Cleanup redirectCounter if necessary
 chrome.webRequest.onErrorOccurred.addListener(onErrorOccurred, {urls: ["*://*/*"]})
 
 // Insert upgrade-insecure-requests directive in httpNowhere mode
