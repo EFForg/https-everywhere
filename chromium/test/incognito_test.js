@@ -2,7 +2,7 @@
 
 const expect = require('chai').expect,
   tu = require('./testing_utils'),
-  incognito = require('../incognito');
+  incognito = require('../background-scripts/incognito');
 
 describe('incognito.js', function() {
   beforeEach(function() {

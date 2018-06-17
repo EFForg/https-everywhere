@@ -1,10 +1,5 @@
 
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://donate.wikimedia.org.uk/ => https://donate.wikimedia.org.uk/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://office.wikimedia.org.uk/ => https://office.wikimedia.org.uk/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://tech.wikimedia.org.uk/ => https://tech.wikimedia.org.uk/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.wikimedia.org.uk/ => https://www.wikimedia.org.uk/: (56, 'SSL read: error:00000000:lib(0):func(0):reason(0), errno 104')
 
 	Wikipedia and other Wikimedia Foundation wikis previously had no real HTTPS support, and
 	URLs had to be rewritten to https://secure.wikimedia.org/$wikitype/$language/ . This is no
@@ -24,17 +19,20 @@ Fetch error: http://www.wikimedia.org.uk/ => https://www.wikimedia.org.uk/: (56,
 
 
 -->
-<ruleset name="Wikimedia" default_off='failed ruleset test'>
+<ruleset name="Wikimedia">
 
 	<target host="enwp.org" />
 	<target host="frwp.org" />
 
-
 	<!-- Wikimedia Tool Labs -->
-	<target host="tools.wmflabs.org" />
-	<target host="accounts.wmflabs.org" />
-	<target host="quarry.wmflabs.org" />
-	<target host="reportcard.wmflabs.org" />
+	<target host="*.wmflabs.org" />
+	<target host="wmflabs.org" />
+		<test url="http://accounts-dev.wmflabs.org/" />
+		<test url="http://tools.wmflabs.org/" />
+		<test url="http://paws.wmflabs.org/" />
+		<test url="http://utrs.wmflabs.org/" />
+		<test url="http://xtools.wmflabs.org/" />
+		<test url="http://en.wikipedia.beta.wmflabs.org/" />
 
 	<!-- Wikimedia chapters that support HTTPS, incomplete list -->
 
@@ -66,20 +64,20 @@ Fetch error: http://www.wikimedia.org.uk/ => https://www.wikimedia.org.uk/: (56,
 
 	<target host="wikimedia.de" />
 	<target host="*.wikimedia.de" />
-		<!-- mixed content issues on blog.wikimedia.de -->
-		<exclusion pattern="^http://blog\.wikimedia\.de/" />
-			<test url="http://blog.wikimedia.de/" />
 		<!-- mismatch on tools.wikimedia.de -->
 		<exclusion pattern="^http://tools\.wikimedia\.de/" />
 			<test url="http://tools.wikimedia.de/" />
+		<!-- incomplete cert chain on civicrm.wikimedia.de -->
+		<exclusion pattern="^http://civicrm\.wikimedia\.de/" /> 
+			<test url="http://civicrm.wikimedia.de/" />
 		<test url="http://www.wikimedia.de/" />
 		<test url="http://spenden.wikimedia.de/" />
 		<test url="http://test.wikimedia.de/" />
-		<test url="http://civicrm.wikimedia.de/" />
 		<test url="http://backend.wikimedia.de/" />
 		<test url="http://ffw.wikimedia.de/" />
 		<test url="http://wke.wikimedia.de/" />
 		<test url="http://redmine.wikimedia.de/" />
+		<test url="http://blog.wikimedia.de/" />
 
 	<target host="wikimedia.es" />
 	<target host="*.wikimedia.es" />
@@ -138,6 +136,9 @@ Fetch error: http://www.wikimedia.org.uk/ => https://www.wikimedia.org.uk/: (56,
 
 	<rule from="^http://wikimedia\.cz/"
 		to="https://www.wikimedia.cz/" />
+	
+	<rule from="^http://www\.wikimedia\.org\.uk/"
+		to="https://wikimedia.org.uk/" />
 
 	<rule from="^http:"
 		to="https:" />

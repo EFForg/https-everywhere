@@ -9,7 +9,7 @@ if [ "$1" != "--no-prompt" ]; then
   echo "may alter your system, installing requirements both within the package"
   echo "management system and also external binaries."
   echo
-  echo -n "Are you sure you want to continue? [Y/n]: "
+  echo -n "Are you sure you want to continue? [y/N]: "
   read CONTINUE
   CONTINUE=`echo $CONTINUE | xargs | head -c 1 | awk '{print tolower($0)}'`
   if [ "$CONTINUE" != "y" ]; then
@@ -34,9 +34,8 @@ if type apt-get >/dev/null ; then
     BROWSERS="iceweasel chromium"
     CHROMEDRIVER="chromedriver"
   fi
-  # In Debian, `python-` is assumed to be python 2.7, no need to specify - dkg
   $SUDO_SHIM apt-get install -y libxml2-dev libxml2-utils libxslt1-dev \
-    python-dev $BROWSERS zip sqlite3 python-pip libcurl4-openssl-dev xvfb \
+    python3.6-dev $BROWSERS zip sqlite3 python3-pip libcurl4-openssl-dev xvfb \
     libssl-dev git curl $CHROMEDRIVER
   if ! type geckodriver >/dev/null; then
     curl -LO "https://github.com/mozilla/geckodriver/releases/download/v0.17.0/geckodriver-v0.17.0-linux64.tar.gz"
@@ -58,7 +57,7 @@ elif type brew >/dev/null ; then
 elif type dnf >/dev/null ; then
   $SUDO_SHIM dnf install -y firefox gcc git libcurl-devel libxml2-devel \
     libxslt-devel python-devel redhat-rpm-config xorg-x11-server-Xvfb which \
-    findutils procps openssl openssl-devel chromium GConf2 rsync
+    findutils procps openssl openssl-devel chromium GConf2
   if ! type chromedriver >/dev/null; then
     if [ "`uname -m`" == "x86_64" ]; then
       ARCH=64
@@ -93,12 +92,12 @@ git submodule init
 git submodule update
 
 # Install Python packages
-pip install --user --no-allow-insecure --no-allow-external -r requirements.txt
+pip3 install --user --no-allow-insecure --no-allow-external -r requirements.txt
 cd test/rules
-pip install --user -r requirements.txt
+pip3 install --user -r requirements.txt
 cd -
 cd test/chromium
-pip install --user -r requirements.txt
+pip3 install --user -r requirements.txt
 cd -
 
 # Install git hook to run tests before pushing.
