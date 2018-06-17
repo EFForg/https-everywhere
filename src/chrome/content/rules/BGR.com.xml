@@ -1,32 +1,56 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://www.bgr.com/ => https://www.bgr.com/: (51, "SSL: no alternative certificate subject name matches target host name 'www.bgr.com'")
+	Connection closed:
+		- mail.bgr.com
 
-	Problematic hosts in *bgr.com:
-
-		- cdn *
-
-	* Wordpress/mismatched
-
+	Invalid certificate:
+		- cdn.bgr.com, equivalent to boygeniusreport.files.wordpress.com
+		- c2.bgr.com, equivalent to boygeniusreport.files.wordpress.com
+		- de.bgr.com, equivalent to bgr.com
+		- www.de.bgr.com, equivalent to bgr.com
+		- m.de.bgr.com, equivalent to bgr.com
+		- image.email.bgr.com
+		- horizon.bgr.com
+		- link.bgr.com
+		- m.bgr.com, equivalent to bgr.com
+		- www.m.bgr.com, equivalent to bgr.com
+		- qa.bgr.com
+		- *.qa.bgr.com
+		- static.bgr.com
+		- store.bgr.com
+		- video-cdn.bgr.com, equivalent to content.jwplatform.com
 -->
-<ruleset name="BGR.com" default_off='failed ruleset test'>
 
-	<!--	Direct rewrites:
-				-->
+<ruleset name="BGR.com">
 	<target host="bgr.com" />
-	<target host="store.bgr.com" />
 	<target host="www.bgr.com" />
-
-	<!--	Complications:
-				-->
+	<target host="academy.bgr.com" />
+	<target host="c2.bgr.com" />
 	<target host="cdn.bgr.com" />
+	<target host="de.bgr.com" />
+	<target host="www.de.bgr.com" />
+	<target host="m.de.bgr.com" />
+	<target host="click.email.bgr.com" />
+	<target host="pages.email.bgr.com" />
+	<target host="view.email.bgr.com" />
+	<target host="m.bgr.com" />
+	<target host="www.m.bgr.com" />
+	<target host="mail.bgr.com" />
+	<target host="video-cdn.bgr.com" />
 
-
-	<rule from="^http://cdn\.bgr\.com/"
+	<rule from="^http://(c2|cdn)\.bgr\.com/"
 		to="https://boygeniusreport.files.wordpress.com/" />
+		<test url="http://c2.bgr.com/2012/08/samsung-internal-memo-jkshin.pdf" />
+		<test url="http://cdn.bgr.com/2012/08/samsung-internal-memo-jkshin.pdf" />
 
-	<rule from="^http:"
-		to="https:" />
+	<rule from="^http://(de|www\.de|m\.de|m|www\.m)\.bgr\.com/"
+		to="https://bgr.com/" />
 
+	<rule from="^http://mail\.bgr\.com/$"
+		to="https://mail.google.com/a/bgr.com" />
+
+	<rule from="^http://video-cdn\.bgr\.com/"
+		to="https://content.jwplatform.com/" />
+		<test url="http://video-cdn.bgr.com/libraries/1fryQI3F.js" />
+
+	<rule from="^http:" to="https:" />
 </ruleset>
