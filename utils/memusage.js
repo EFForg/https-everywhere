@@ -7,7 +7,7 @@ if (typeof gc !== 'function') {
 	throw new Error('Please re-run with `node --expose-gc utils/memusage.js`');
 }
 
-const { RuleSets } = require('../chromium/rules');
+const { RuleSets } = require('../chromium/background-scripts/rules');
 const { readFileSync } = require('fs');
 const json = JSON.parse(readFileSync(`${__dirname}/../rules/default.rulesets`, 'utf-8'));
 
