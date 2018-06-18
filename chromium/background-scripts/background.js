@@ -298,7 +298,7 @@ function onBeforeRequest(details) {
   // true if the URL is a http:// connection to a remote canonical host, and not
   // a tor hidden service
   const shouldCancel = httpNowhereOn &&
-    uri.protocol === 'http:' &&
+    (uri.protocol === 'http:' || uri.protocol === 'ftp:') &&
     uri.hostname.slice(-6) !== '.onion' &&
     uri.hostname !== 'localhost' &&
     !/^127(\.[0-9]{1,3}){3}$/.test(uri.hostname) &&
@@ -393,8 +393,14 @@ function onBeforeRequest(details) {
         newuristr = newuristr.replace(/^http:/, "https:");
       }
     }
-    if (newuristr && newuristr.substring(0, 5) === "http:") {
-      // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
+    if (
+      newuristr &&
+      (
+        newuristr.substring(0, 5) === "http:" ||
+        newuristr.substring(0, 4) === "ftp:"
+      )
+    ) {
+      // Abort early if we're about to redirect to HTTP or FTP in HTTP Nowhere mode
       return {cancel: true};
     }
   }
@@ -636,7 +642,7 @@ function onHeadersReceived(details) {
 
 // Registers the handler for requests
 // See: https://github.com/EFForg/https-everywhere/issues/10039
-chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"]);
+chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*", "ftp://*/*"]}, ["blocking"]);
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
 chrome.webRequest.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
