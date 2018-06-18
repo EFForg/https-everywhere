@@ -1,18 +1,3 @@
-
-<!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://api-yaru.yandex.net/ => https://api-yaru.yandex.net/: (51, "SSL: no alternative certificate subject name matches target host name 'api-yaru.yandex.net'")
-Fetch error: http://browser.yandex.net/ => https://browser.yandex.net/: (6, 'Could not resolve host: browser.yandex.net')
-Fetch error: http://www.browser.yandex.net/ => https://browser.yandex.net/: (6, 'Could not resolve host: browser.yandex.net')
-Fetch error: http://a.captcha.yandex.net/ => https://a.captcha.yandex.net/: (6, 'Could not resolve host: a.captcha.yandex.net')
-Fetch error: http://tv-front.content.yandex.net/ => https://tv-front.content.yandex.net/: (51, "SSL: no alternative certificate subject name matches target host name 'tv-front.content.yandex.net'")
-Fetch error: http://hotels-proxy.yandex.net/ => https://hotels-proxy.yandex.net/: (6, 'Could not resolve host: hotels-proxy.yandex.net')
-Fetch error: http://review-api-external.http.yandex.net/ => https://review-api-external.http.yandex.net/: (6, 'Could not resolve host: review-api-external.http.yandex.net')
-Fetch error: http://mdata.yandex.net/ => https://mdata.yandex.net/: (28, 'Connection timed out after 20001 milliseconds')
-Fetch error: http://xss.yandex.net/ => https://xss.yandex.net/: (7, 'Failed to connect to xss.yandex.net port 443: Connection timed out')
-
--->
-
 <!--
 	For other Yandex coverage, see Yandex.xml.
 
@@ -27,16 +12,21 @@ Fetch error: http://xss.yandex.net/ => https://xss.yandex.net/: (7, 'Failed to c
 
 	Problematic subdomains:
 
-		- (www.)? ²
-		- www.browser ¹
+		- api-yaru ¹
+		- pix.blogs ¹
+		- pix2.blogs ¹
+		- download-cdn ⁴
+		- tv-front.content ¹
 		- direct **
 		- element ²
 		- elements ***
 		- img.encyc *
+		- msoffice.maps ¹
+		- vec.maps ***
 		- vec0[1-4].maps ⁴
 		- static.video ⁵
 
-	¹ 404
+	¹ Invalid certificate
 	² Mismatched
 	** Redirect destination doesn't exist => makes fetch checker complain
 	*** Mismatched cert for redirect destination
@@ -47,14 +37,12 @@ Fetch error: http://xss.yandex.net/ => https://xss.yandex.net/: (7, 'Failed to c
 
 	Fully covered subdomains:
 
-		- (www.)?	(→ yandex.ru)
 		- internetometr.download.cdn
 		- sandbox.api.maps
 		- 0\d.pvec.maps		([1-4])
 
 		- ((www.)?[^.]+|[^.]+.[^.]+): *	(www → ^)
 
-			- api-yaru
 			- awaps
 
 			- avatars
@@ -63,33 +51,21 @@ Fetch error: http://xss.yandex.net/ => https://xss.yandex.net/: (7, 'Failed to c
 
 			- avatars-fast
 			- ba
-			- pix.blogs
-			- pix2.blogs
-			- (www.)?browser
 
 			- captcha
-			- a.captcha
-			- s.captcha
 
 			- cache-ams0[13-6].cdn
 			- cache-default04e.cdn
 			- cache-default05h.cdn
-			- cache-default06f.cdn
-			- download.cdn
-			- kp.cdn
 			- sba.cdn
 
 			- ceviri
-			- tv-front.content
 			- resizer.corba
-			- \d.cs-ellpic
 			- css
 			- disk
 			- downloader
 			- favicon
 			- img-css.friends
-			- hotels-proxy
-			- review-api-external.http
 			- img
 			- img-fotki
 			- img\d-fotki
@@ -100,9 +76,7 @@ Fetch error: http://xss.yandex.net/ => https://xss.yandex.net/: (7, 'Failed to c
 			- audio.lingvo
 			- webattach.mail
 			- mailstatic
-			- msoffice.maps
 			- vec.maps
-			- mdata
 			- money
 			- resizer-mobile.photo
 
@@ -124,7 +98,6 @@ Fetch error: http://xss.yandex.net/ => https://xss.yandex.net/: (7, 'Failed to c
 			- wfarm
 			- wi
 			- wimg
-			- xss
 
 	* Except where excluded below
 
@@ -154,7 +127,7 @@ Fetch error: http://xss.yandex.net/ => https://xss.yandex.net/: (7, 'Failed to c
 	* Secured by us
 
 -->
-<ruleset name="Yandex.net (partial)" default_off='failed ruleset test'>
+<ruleset name="Yandex.net (partial)">
 
 	<target host="yandex.net" />
 	<target host="*.yandex.net" />
@@ -204,56 +177,39 @@ Fetch error: http://xss.yandex.net/ => https://xss.yandex.net/: (7, 'Failed to c
 		<!--
 			Miscellaneous:
 					-->
-		<exclusion pattern="^http://(?:direct|elements?|mobile\.photo|pythonbp)\.yandex\.net/" />
+		<exclusion pattern="^http://(?:api-yaru|direct|elements?|mobile\.photo|pythonbp)\.yandex\.net/" />
 
+			<test url="http://api-yaru.yandex.net/" />
 			<test url="http://direct.yandex.net/" />
 			<test url="http://element.yandex.net/" />
 			<test url="http://elements.yandex.net/" />
 			<test url="http://mobile.photo.yandex.net/" />
 			<test url="http://pythonbp.yandex.net/" />
 
-		<test url="http://api-yaru.yandex.net/" />
 		<test url="http://awaps.yandex.net/" />
 		<test url="http://avatars.yandex.net/" />
 		<test url="http://1.avatars.yandex.net/" />
 		<test url="http://default.avatars.yandex.net/" />
 		<test url="http://avatars-fast.yandex.net/" />
 		<test url="http://ba.yandex.net/" />
-		<test url="http://pix.blogs.yandex.net/" />
-		<test url="http://pix2.blogs.yandex.net/" />
-		<test url="http://browser.yandex.net/" />
-		<test url="http://www.browser.yandex.net/" />
 		<test url="http://captcha.yandex.net/" />
-		<test url="http://a.captcha.yandex.net/" />
-		<test url="http://s.captcha.yandex.net/" />
-		<test url="http://cache-default06f.cdn.yandex.net/" />
-		<test url="http://download.cdn.yandex.net/" />
-		<test url="http://kp.cdn.yandex.net/" />
+		<test url="http://download.cdn.yandex.net/browser/yandex/ru/beta/Yandex.deb" />
 		<test url="http://sba.cdn.yandex.net/" />
 		<test url="http://ceviri.yandex.net/" />
-		<test url="http://tv-front.content.yandex.net/" />
 		<test url="http://resizer.corba.yandex.net/" />
-		<test url="http://1.cs-ellpic.yandex.net/" />
 		<test url="http://css.yandex.net/" />
 		<test url="http://disk.yandex.net/" />
 		<test url="http://downloader.yandex.net/" />
 		<test url="http://favicon.yandex.net/" />
 		<test url="http://img-css.friends.yandex.net/" />
-		<test url="http://hotels-proxy.yandex.net/" />
-		<test url="http://review-api-external.http.yandex.net/" />
 		<test url="http://img.yandex.net/" />
 		<test url="http://img-fotki.yandex.net/" />
-		<test url="http://img1-fotki.yandex.net/" />
-		<test url="http://img.yandex.net/" />
 		<test url="http://img1-fotki.yandex.net/" />
 		<test url="http://imgl.yandex.net/" />
 		<test url="http://st.kp.yandex.net/" />
 		<test url="http://audio.lingvo.yandex.net/" />
 		<test url="http://webattach.mail.yandex.net/" />
 		<test url="http://mailstatic.yandex.net/" />
-		<test url="http://msoffice.maps.yandex.net/" />
-		<test url="http://vec.maps.yandex.net/" />
-		<test url="http://mdata.yandex.net/" />
 		<test url="http://money.yandex.net/" />
 		<test url="http://resizer-mobile.photo.yandex.net/" />
 		<test url="http://api.rasp.yandex.net/" />
@@ -273,22 +229,10 @@ Fetch error: http://xss.yandex.net/ => https://xss.yandex.net/: (7, 'Failed to c
 		<test url="http://wfarm.yandex.net/" />
 		<test url="http://wi.yandex.net/" />
 		<test url="http://wimg.yandex.net/" />
-		<test url="http://xss.yandex.net/" />
-		<test url="http://www.yandex.net/" />
 
 		<test url="http://internetometr.download.cdn.yandex.net/" />
 		<test url="http://sandbox.api.maps.yandex.net/" />
 		<test url="http://01.pvec.maps.yandex.net/" />
-
-
-	<!--	Redirect keeps path, args, but not forward slash:
-								-->
-	<rule from="^http://(?:www\.)?yandex\.net/+"
-		to="https://yandex.ru/" />
-
-			<test url="http://yandex.net//" />
-			<test url="http://yandex.net/favicon.ico" />
-			<test url="http://www.yandex.net//" />
 
 	<rule from="^http://(?:www\.)?([^.]+)\.yandex\.net/"
 		to="https://$1.yandex.net/" />
@@ -304,4 +248,7 @@ Fetch error: http://xss.yandex.net/ => https://xss.yandex.net/: (7, 'Failed to c
 						-->
 	<rule from="^http://([^.]+)\.([^.]+)\.yandex\.net/"
 		to="https://$1.$2.yandex.net/" />
+	
+	<rule from="^http://yandex\.net/"
+		to="https://yandex.ru/" />
 </ruleset>
