@@ -12,7 +12,7 @@ from selenium.common.exceptions import NoSuchWindowException
 
 import shim
 
-SEL_DEFAULT_WAIT_TIMEOUT = 10
+SEL_DEFAULT_WAIT_TIMEOUT = 20
 
 parse_stdout = lambda res: res.strip().decode('utf-8')
 

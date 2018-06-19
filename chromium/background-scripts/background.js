@@ -15,6 +15,7 @@ async function initialize() {
   await store.initialize();
   await store.performMigrations();
   await initializeStoredGlobals();
+  await getUpgradeToSecureAvailable();
   await update.initialize(store, initializeAllRules);
   await all_rules.loadFromBrowserStorage(store, update.applyStoredRulesets);
   await incognito.onIncognitoDestruction(destroy_caches);
@@ -57,6 +58,26 @@ function initializeStoredGlobals(){
       resolve();
     });
   });
+}
+
+let upgradeToSecureAvailable;
+
+function getUpgradeToSecureAvailable() {
+  if (typeof browser !== 'undefined') {
+    return browser.runtime.getBrowserInfo().then(function(info) {
+      let version = info.version.match(/^(\d+)/)[1];
+      if (info.name == "Firefox" && version >= 59) {
+        upgradeToSecureAvailable = true;
+      } else {
+        upgradeToSecureAvailable = false;
+      }
+    });
+  } else {
+    return new Promise(resolve => {
+      upgradeToSecureAvailable = false;
+      resolve();
+    });
+  }
 }
 
 chrome.storage.onChanged.addListener(async function(changes, areaName) {
@@ -269,19 +290,19 @@ function onBeforeRequest(details) {
   let uri = new URL(details.url);
 
   // Normalise hosts with tailing dots, e.g. "www.example.com."
-  let canonical_host = uri.hostname;
-  while (canonical_host.charAt(canonical_host.length - 1) == ".") {
-    canonical_host = canonical_host.slice(0, -1);
-    uri.hostname = canonical_host;
+  while (uri.hostname[uri.hostname.length - 1] === '.') {
+    uri.hostname = uri.hostname.slice(0, -1);
   }
 
   // Should the request be canceled?
+  // true if the URL is a http:// connection to a remote canonical host, and not
+  // a tor hidden service
   const shouldCancel = httpNowhereOn &&
     uri.protocol === 'http:' &&
     uri.hostname.slice(-6) !== '.onion' &&
     uri.hostname !== 'localhost' &&
-    !/^127(\.[0-9]{1,3}){3}$/.test(canonical_host) &&
-    !/^0\.0\.0\.0$/.test(canonical_host) &&
+    !/^127(\.[0-9]{1,3}){3}$/.test(uri.hostname) &&
+    uri.hostname !== '0.0.0.0' &&
     uri.hostname !== '[::1]';
 
   // If there is a username / password, put them aside during the ruleset
@@ -297,12 +318,11 @@ function onBeforeRequest(details) {
     uri.password = '';
   }
 
-  var canonical_url = uri.href;
-  if (details.url != canonical_url && !using_credentials_in_url) {
+  if (details.url != uri.href && !using_credentials_in_url) {
     util.log(util.INFO, "Original url " + details.url +
-        " changed before processing to " + canonical_url);
+        " changed before processing to " + uri.href);
   }
-  if (urlBlacklist.has(canonical_url)) {
+  if (urlBlacklist.has(uri.href)) {
     return {cancel: shouldCancel};
   }
 
@@ -310,22 +330,30 @@ function onBeforeRequest(details) {
     appliedRulesets.removeTab(details.tabId);
   }
 
-  var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(canonical_host);
+  var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
 
   if (redirectCounter.get(details.requestId) >= 8) {
-    util.log(util.NOTE, "Redirect counter hit for " + canonical_url);
-    urlBlacklist.add(canonical_url);
-    rules.settings.domainBlacklist.add(canonical_host);
-    util.log(util.WARN, "Domain blacklisted " + canonical_host);
+    util.log(util.NOTE, "Redirect counter hit for " + uri.href);
+    urlBlacklist.add(uri.href);
+    rules.settings.domainBlacklist.add(uri.hostname);
+    util.log(util.WARN, "Domain blacklisted " + uri.hostname);
     return {cancel: shouldCancel};
   }
 
+  // whether to use mozilla's upgradeToSecure BlockingResponse if available
+  let upgradeToSecure = false;
   var newuristr = null;
+  // check rewritten URIs against the trivially upgraded URI
+  let trivialUpgradeUri = uri.href.replace(/^http:/, "https:");
 
   for (let ruleset of potentiallyApplicable) {
     appliedRulesets.addRulesetToTab(details.tabId, details.type, ruleset);
     if (ruleset.active && !newuristr) {
-      newuristr = ruleset.apply(canonical_url);
+      newuristr = ruleset.apply(uri.href);
+      // only use upgradeToSecure for trivial rulesets
+      if (newuristr == trivialUpgradeUri) {
+        upgradeToSecure = true;
+      }
     }
   }
 
@@ -337,10 +365,10 @@ function onBeforeRequest(details) {
       uri_with_credentials.password = tmp_pass;
       newuristr = uri_with_credentials.href;
     } else {
-      const canonical_url_with_credentials = new URL(canonical_url);
-      canonical_url_with_credentials.username = tmp_user;
-      canonical_url_with_credentials.password = tmp_pass;
-      canonical_url = canonical_url_with_credentials.href;
+      const url_with_credentials = new URL(uri.href);
+      url_with_credentials.username = tmp_user;
+      url_with_credentials.password = tmp_pass;
+      uri.href = url_with_credentials.href;
     }
   }
 
@@ -349,7 +377,7 @@ function onBeforeRequest(details) {
   if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== "https:") {
     writeToSwitchPlanner(details.type,
       details.tabId,
-      canonical_host,
+      uri.hostname,
       details.url,
       newuristr);
   }
@@ -358,10 +386,11 @@ function onBeforeRequest(details) {
     // If loading a main frame, try the HTTPS version as an alternative to
     // failing.
     if (shouldCancel) {
+      upgradeToSecure = true;
       if (!newuristr) {
-        return {redirectUrl: canonical_url.replace(/^http:/, "https:")};
+        newuristr = uri.href.replace(/^http:/, "https:");
       } else {
-        return {redirectUrl: newuristr.replace(/^http:/, "https:")};
+        newuristr = newuristr.replace(/^http:/, "https:");
       }
     }
     if (newuristr && newuristr.substring(0, 5) === "http:") {
@@ -370,9 +399,14 @@ function onBeforeRequest(details) {
     }
   }
 
-  if (newuristr) {
+  if (upgradeToSecureAvailable && upgradeToSecure) {
+    util.log(util.INFO, 'onBeforeRequest returning upgradeToSecure: true');
+    return {upgradeToSecure: true};
+  } else if (newuristr) {
+    util.log(util.INFO, 'onBeforeRequest returning redirectUrl: ' + newuristr);
     return {redirectUrl: newuristr};
   } else {
+    util.log(util.INFO, 'onBeforeRequest returning shouldCancel: ' + shouldCancel);
     return {cancel: shouldCancel};
   }
 }
@@ -542,7 +576,8 @@ function onErrorOccurred(details) {
 }
 
 /**
- * handle webrequest.onHeadersReceived, insert upgrade-insecure-requests directive
+ * handle webrequest.onHeadersReceived, insert upgrade-insecure-requests directive and
+ * rewrite access-control-allow-origin if presented in HTTP Nowhere mode
  * @param details details for the chrome.webRequest (see chrome doc)
  */
 function onHeadersReceived(details) {
@@ -554,27 +589,47 @@ function onHeadersReceived(details) {
       return {};
     }
 
+    let responseHeadersChanged = false;
+    let cspHeaderFound = false;
+
     for (const idx in details.responseHeaders) {
       if (details.responseHeaders[idx].name.match(/Content-Security-Policy/i)) {
         // Existing CSP headers found
+        cspHeaderFound = true;
         const value = details.responseHeaders[idx].value;
 
         // Prepend if no upgrade-insecure-requests directive exists
         if (!value.match(/upgrade-insecure-requests/i)) {
           details.responseHeaders[idx].value = "upgrade-insecure-requests; " + value;
-          return {responseHeaders: details.responseHeaders};
+          responseHeadersChanged = true;
         }
-        return {};
+      }
+
+      if (details.responseHeaders[idx].name.match(/Access-Control-Allow-Origin/i)) {
+        // Existing access-control-allow-origin header found
+        const value = details.responseHeaders[idx].value;
+
+        // If HTTP protocol is used, change it to HTTPS
+        if (value.match(/http:/)) {
+          details.responseHeaders[idx].value = value.replace(/http:/g, "https:");
+          responseHeadersChanged = true;
+        }
       }
     }
 
-    // CSP headers not found
-    const upgradeInsecureRequests = {
-      name: 'Content-Security-Policy',
-      value: 'upgrade-insecure-requests'
+    if (!cspHeaderFound) {
+      // CSP headers not found
+      const upgradeInsecureRequests = {
+        name: 'Content-Security-Policy',
+        value: 'upgrade-insecure-requests'
+      }
+      details.responseHeaders.push(upgradeInsecureRequests);
+      responseHeadersChanged = true;
     }
-    details.responseHeaders.push(upgradeInsecureRequests);
-    return {responseHeaders: details.responseHeaders};
+
+    if (responseHeadersChanged) {
+      return {responseHeaders: details.responseHeaders};
+    }
   }
   return {};
 }
@@ -586,10 +641,10 @@ chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
 chrome.webRequest.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
 
-// Cleanup redirectCounter if neccessary
+// Cleanup redirectCounter if necessary
 chrome.webRequest.onCompleted.addListener(onCompleted, {urls: ["*://*/*"]});
 
-// Cleanup redirectCounter if neccessary
+// Cleanup redirectCounter if necessary
 chrome.webRequest.onErrorOccurred.addListener(onErrorOccurred, {urls: ["*://*/*"]})
 
 // Insert upgrade-insecure-requests directive in httpNowhere mode
@@ -676,6 +731,16 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
       sendResponse(true);
     });
     return true;
+  } else if (message.type == "reset_to_defaults") {
+    // restore the 'default states' of the rulesets
+    store.set_promise('ruleActiveStates', {}).then(() => {
+      // clear the caches such that it becomes stateless
+      destroy_caches();
+      // re-activate all rules according to the new states
+      initializeAllRules();
+      // reload tabs when operations completed
+      chrome.tabs.reload();
+    });
   } else if (message.type == "add_new_rule") {
     all_rules.addNewRuleAndStore(message.object).then(() => {
       sendResponse(true);

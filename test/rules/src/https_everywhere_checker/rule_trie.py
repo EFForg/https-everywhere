@@ -5,7 +5,7 @@ from gvgen import GvGen
 # Rule trie
 #
 # Rule trie is a suffix tree that resolves which rulesets should apply for a
-# given FDQN. FQDN is first tranformed from potential IDN form into punycode
+# given FDQN. FQDN is first transformed from potential IDN form into punycode
 # ASCII. Every node in the tree has a list of rulesets that maps the part of
 # FQDN between dots to list/set of rulesets.
 #
@@ -225,7 +225,7 @@ class RuleTrie(object):
         ruleset matched, resulting RuleMatch object will have None set
         as the matching ruleset.
 
-        @returns: RuleMatch with tranformed URL and ruleset that applied
+        @returns: RuleMatch with transformed URL and ruleset that applied
         @throws: RuleTransformError if scheme is wrong (e.g. file:///)
         """
         parsed = urllib.parse.urlparse(url)

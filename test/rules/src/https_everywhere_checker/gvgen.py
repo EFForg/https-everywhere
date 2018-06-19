@@ -185,14 +185,14 @@ class GvGen:
     def propertiesAsStringGet(self, eid, props):
         """
         Get the properties string according to parent/children
-        props is the properties dictionnary
+        props is the properties dictionary
         """
 
         properties = ""
         applied_style = 0
 
         #
-        # Default style come first, they can then be overriden
+        # Default style come first, they can then be overridden
         #
         if self.__default_style:
             e = self.getEdge(eid)
