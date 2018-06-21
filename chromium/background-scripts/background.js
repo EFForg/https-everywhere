@@ -290,9 +290,8 @@ function onBeforeRequest(details) {
   let uri = new URL(details.url);
 
   // Normalise hosts with tailing dots, e.g. "www.example.com."
-    while (uri.hostname[uri.hostname.length - 1] === '.' && uri.hostname !== '.') {
-      uri.hostname = uri.hostname.slice(0, -1);
-    }
+  while (uri.hostname[uri.hostname.length - 1] === '.' && uri.hostname !== '.') {
+    uri.hostname = uri.hostname.slice(0, -1);
   }
 
   // Should the request be canceled?
