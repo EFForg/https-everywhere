@@ -1,46 +1,26 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://bpt.bz/ => https://www.brownpapertickets.com/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
-Fetch error: http://bpt.me/ => https://www.brownpapertickets.com/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
-Fetch error: http://brownpapertickets.com/ => https://www.brownpapertickets.com/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
+	Non-functional hosts in *.bpt.me
+		Certificate mismatched:
+		- www.bpt.me
 -->
 <ruleset name="Brown Paper Tickets (partial)">
 
-	<target host="bpt.bz"/>
-	<target host="*.bpt.bz"/>
 	<target host="bpt.me"/>
-	<target host="*.bpt.me"/>
+	<target host="www.bpt.me"/>
+	<target host="m.bpt.me"/>
+	
 	<target host="brownpapertickets.com"/>
-	<target host="*.brownpapertickets.com"/>
-		<!--	!work	-->
-		<exclusion pattern="^http://community\."/>
+	<target host="www.brownpapertickets.com"/>
+	<target host="es.brownpapertickets.com" />
+	<target host="fr.brownpapertickets.com" />
+	<target host="stats.brownpapertickets.com" />
 
-  <!-- JS redirection loop :( 
-       https://trac.torproject.org/projects/tor/ticket/6573 -->
-  <exclusion pattern="^http://(?:www\.)?brownpapertickets\.com/event/" />
+	<securecookie host=".+" name=".+" />
 
-	<securecookie host="^m\.bpt\.me$" name=".+" />
-	<securecookie host="^(?:.*\.)?brownpapertickets\.com$" name=".+" />
-
-
-	<!--	this is what the server does, except without https	-->
-	<rule from="^http://(?:www\.)?bpt\.(?:bz|me)/"
-		to="https://www.brownpapertickets.com/"/>
-
-	<!--	cert !valid for bz
-		data identical		-->
-	<rule from="^http://m\.bpt\.(?:bz|me)/"
-		to="https://m.bpt.me/"/>
-
-	<!--	!www: timeout	-->
-	<rule from="^http://brownpapertickets\.com/"
-		to="https://www.brownpapertickets.com/"/>
-
-	<!--	encountered subdomains:
-			- es
-			- fr
-			- stats		-->
-	<rule from="^http://(\w+)\.brownpapertickets\.com/"
-		to="https://$1.brownpapertickets.com/"/>
+	<rule from="^http://www\.bpt\.me/"
+		to="https://bpt.me/" />
+	
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
