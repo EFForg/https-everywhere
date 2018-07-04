@@ -84,9 +84,9 @@ fi
 # If the --remove-update-channels flag is set, remove all out-of-band update channels
 if [ "$1" == "--remove-update-channels" -o "$2" == "--remove-update-channels" -o "$3" == "--remove-update-channels" ]; then
   echo "Flag --remove-update-channels specified.  Removing all out-of-band update channels."
-  echo "update_channels = [];" >> pkg/crx/background-scripts/update_channels.js
-  echo "update_channels = [];" >> pkg/xpi-amo/background-scripts/update_channels.js
-  echo "update_channels = [];" >> pkg/xpi-eff/background-scripts/update_channels.js
+  echo "require.scopes.update_channels.update_channels = [];" >> pkg/crx/background-scripts/update_channels.js
+  echo "require.scopes.update_channels.update_channels = [];" >> pkg/xpi-amo/background-scripts/update_channels.js
+  echo "require.scopes.update_channels.update_channels = [];" >> pkg/xpi-eff/background-scripts/update_channels.js
 fi
 
 if [ -n "$BRANCH" ] ; then
