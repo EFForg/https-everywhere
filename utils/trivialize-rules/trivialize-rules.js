@@ -99,6 +99,7 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
   const fail = createTag('FAIL', chalk.red, console.error);
 
   let targets = ruleset.target.map(target => target.$.host);
+  let securecookies = ruleset.securecookie ? ruleset.securecookie.map(sc => sc.$) : new Array();
   let rules = ruleset.rule.map(rule => rule.$);
 
   if (rules.length === 1 && isTrivial(rules[0])) {
@@ -181,8 +182,43 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
 
   domains = Array.from(domains);
 
+  function isStaticCookie(securecookie) {
+    if (securecookie.host === '.+' && securecookie.name === '.+') {
+      return true;
+    }
+
+    if (!securecookie.host.startsWith('^') || !securecookie.host.endsWith('$')) {
+      return false;
+    }
+
+    let localDomains = new Set();
+
+    try {
+      explodeRegExp(securecookie.host, domain => {
+        if (domain.startsWith('.')) {
+          domain = domain.slice(1);
+        }
+        localDomains.add(domain);
+      });
+    } catch (e) {
+      if (!(e instanceof UnsupportedRegExp)) {
+        throw e;
+      }
+      warn`Unsupported regexp part ${e.message} while traversing securecookie : ${JSON.stringify(securecookie)}`;
+      return false;
+    }
+  
+    for (const domain of localDomains) {
+      if (domains.indexOf(domain) === -1) {
+        warn`Ruleset does not cover target ${domain} for securecookie : ${JSON.stringify(securecookie)}`;
+        return false;
+      }
+    }
+    return true;
+  }
+
   if (domains.slice().sort().join('\n') !== targets.sort().join('\n')) {
-    if (ruleset.securecookie) {
+    if (securecookies.length > 0 && !securecookies.every(isStaticCookie)) {
       return;
     }
 
