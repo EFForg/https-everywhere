@@ -4,7 +4,6 @@ let observer;
 document.addEventListener("DOMContentLoaded", () => {
   const explainer = document.querySelector("[data-i18n=cancel_he_blocking_explainer]");
   observer = new MutationObserver(() => {replaceLink(explainer)});
-  console.log(explainer.innerText.length);
   if (explainer.innerText.length > 0) {
     replaceLink(explainer);
   } else {
