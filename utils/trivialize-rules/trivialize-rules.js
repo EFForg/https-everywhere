@@ -182,6 +182,22 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
 
   domains = Array.from(domains);
 
+  // It is assumed that if all securecookies are static,
+  // they can be safely ignored.
+  //
+  // A securecookie is called to be static either it is a trivial securecookie or ALL
+  // of the following conditions are satisfied:
+  //
+  // 1. securecookie.host match cookie.host from the beginning ^ to the end $.
+  // Otherwise, it might match subdomains/ partial patterns, thus a non-trivial
+  // securecookie.
+  //
+  // 2. securecookie.host will not throw an error when passed to explodeRegExp().
+  // Otherwise, it might match patterns too complicated for our interests.
+  //
+  // 3. Each exploded securecookie.host should be included in ruleset.target/
+  // exploded target. Otherwise, this ruleset is likely problematic itself. It is
+  // dangerous for a rewrite.
   function isStaticCookie(securecookie) {
     if (securecookie.host === '.+' && securecookie.name === '.+') {
       return true;
