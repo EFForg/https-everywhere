@@ -102,6 +102,8 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
   let securecookies = ruleset.securecookie ? ruleset.securecookie.map(sc => sc.$) : new Array();
   let rules = ruleset.rule.map(rule => rule.$);
 
+  let shouldRemoveSecurecookies = false;
+
   if (rules.length === 1 && isTrivial(rules[0])) {
     return;
   }
@@ -208,6 +210,7 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
     }
 
     let localDomains = new Set();
+    let unsupportedDomains = new Set();
 
     try {
       explodeRegExp(securecookie.host, domain => {
@@ -227,15 +230,29 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
     for (const domain of localDomains) {
       if (domains.indexOf(domain) === -1) {
         warn`Ruleset does not cover target ${domain} for securecookie : ${JSON.stringify(securecookie)}`;
-        return false;
+        unsupportedDomains.add(domain);
       }
     }
+
+    if (unsupportedDomains.size > 0) {
+      // all securecookie tags are non effective
+      if (unsupportedDomains.size === localDomains.size) {
+        shouldRemoveSecurecookies = true;
+        return true;
+      }
+      return false;
+    }
+
     return true;
   }
 
   if (domains.slice().sort().join('\n') !== targets.sort().join('\n')) {
     if (securecookies.length > 0 && !securecookies.every(isStaticCookie)) {
       return;
+    }
+
+    if (shouldRemoveSecurecookies) {
+      source = replaceXML(source, 'securecookie', []);
     }
 
     source = replaceXML(source, 'target', domains.map(domain => `<target host="${domain}" />`));
