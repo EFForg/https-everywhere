@@ -187,8 +187,8 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
   // It is assumed that if all securecookies are static,
   // they can be safely ignored.
   //
-  // A securecookie is called to be static either it is a trivial securecookie or ALL
-  // of the following conditions are satisfied:
+  // A securecookie is called to be static either it is a trivial securecookie
+  // or ALL of the following conditions are satisfied:
   //
   // 1. securecookie.host match cookie.host from the beginning ^ to the end $.
   // Otherwise, it might match subdomains/ partial patterns, thus a non-trivial
@@ -198,8 +198,8 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
   // Otherwise, it might match patterns too complicated for our interests.
   //
   // 3. Each exploded securecookie.host should be included in ruleset.target/
-  // exploded target. Otherwise, this ruleset is likely problematic itself. It is
-  // dangerous for a rewrite.
+  // exploded target. Otherwise, this ruleset is likely problematic itself. It
+  // is dangerous for a rewrite.
   function isStaticCookie(securecookie) {
     if (securecookie.host === '.+' && securecookie.name === '.+') {
       return true;
@@ -234,8 +234,20 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
       }
     }
 
+    // For cookies to be covered, there must be at least one rule covering the
+    // same domain. This is guaranteed by safeToSecureCookie(cookie) in rules.js
+    //
+    // Since securecookie.host will only match cookie.domain if there there is
+    // a rule covers cookie.domain. Given the target are trivial, cookie.domain
+    // cannot be anything other than domain.example.com and .domain.example.com
+    // (possibly with more leading dots) for a securecookie rule ever to take
+    // place.
+    //
+    // With condition (1) effective, securecookie.host should explode to either
+    // one of the aforementioned patterns. Otherwise, the securecookie rules
+    // will never be applied. Such dangling securecookie rules can be removed
+    // safely.
     if (unsupportedDomains.size > 0) {
-      // all securecookie tags are non effective
       if (unsupportedDomains.size === localDomains.size) {
         shouldRemoveSecurecookies = true;
         return true;
