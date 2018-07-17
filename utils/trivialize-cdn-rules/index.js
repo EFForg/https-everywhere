@@ -80,12 +80,14 @@ const trivializeGenericRewrites = async (fstat, content, rules) => {
             const ruleRe = `\n([\t ]*)<rule\\s*from=\\s*"${escapeRegExp(rule.from)}"(\\s*)to=\\s*"${escapeRegExp(rule.to)}"\\s*?/>[\t ]*\n`
             const ruleRegex = new RegExp(ruleRe, 'g')
 
-            if (ruleRegex.test(content)) {
+            if (ruleRegex.test(originalContent)) {
               content = content.replace(ruleRegex, `\n$1<rule from="^http://${host.replace(/\./g, '\\.')}/"$2to="https://${host}/" />\n`)
               if (originalContent !== content) {
                 rewrittenAtLeastOnce = true
               }
-            }
+            } else {
+              log('WARN', fstat.filename, `failed to construct RegExp which match rule ${JSON.stringify(rule)}`)
+	    }
             break
           }
         }
