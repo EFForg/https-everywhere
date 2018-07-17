@@ -54,25 +54,37 @@ function explodeRegExp(re, callback) {
       }
 
       case 'charset': {
-        if (first.ranges.length === 1) {
-          let range = first.ranges[0];
+        if (first.excludes) {
+          throw new UnsupportedRegExp(first.raw);
+        }
+
+        for (let cl of first.classes) {
+          if (cl === 'd') {
+            for (let i = '0'; i <= '9'; ++i) {
+              buildUrls(str + i, rest);
+            }
+          } else {
+            throw new UnsupportedRegExp(first.raw);
+          }
+        }
+
+        for (let range of first.ranges) {
           let from = range.charCodeAt(0);
           let to = range.charCodeAt(1);
+
           if (to - from < 10) {
-            // small range, probably won't explode
-            for (; from <= to; from++) {
+            for (; from <= to; ++from) {
               buildUrls(str + String.fromCharCode(from), rest);
             }
-            first.ranges.length = 0;
+          } else {
+            throw new UnsupportedRegExp(first.raw);
           }
         }
-        if (!first.classes.length && !first.exclude && !first.ranges.length) {
-          for (let c of first.chars) {
-            buildUrls(str + c, rest);
-          }
-          return;
+
+        for (const c of first.chars) {
+          buildUrls(str + c, rest);
         }
-        break;
+        return ;
       }
     }
 
