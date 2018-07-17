@@ -36,7 +36,7 @@ const supportedCDNsRegexs = [
   },
   { // 2o7.net
     fromRe: /^\^http(?:s\?)?:\/\/((([\\a-z0-9äö_-]+)\.)*([\\a-z0-9äö-]+))\/$/,
-    toRe: /^https:\/\/[\w-]+\.122\.2o7\.net\/$/
+    toRe: /^https:\/\/[\w-]+\.1[12]2\.2o7\.net\/$/
   },
   { // amazonaws.com
     fromRe: /^\^http(?:s\?)?:\/\/((([\\a-z0-9äö_-]+)\.)*([\\a-z0-9äö-]+))\/$/,
