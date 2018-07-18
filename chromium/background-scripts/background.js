@@ -407,7 +407,7 @@ function onBeforeRequest(details) {
       )
     ) {
       // Abort early if we're about to redirect to HTTP or FTP in HTTP Nowhere mode
-      return {cancel: true};
+      return {redirectUrl: cancelUrl};
     }
   }
 
