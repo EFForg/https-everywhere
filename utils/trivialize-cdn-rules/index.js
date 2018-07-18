@@ -17,14 +17,14 @@ const rulesDir = 'src/chrome/content/rules/'
 const log = (level, filename, message) => {
   switch(level) {
     case 'WARN':
-      console.warn(chalk.yellow(`[${level}]: ${chalk.bold(filename)}: ${message}`));
+      console.warn(chalk.yellow(`[${level}] ${chalk.bold(filename)}: ${message}`));
       break;
     case 'INFO':
-      console.info(chalk.green(`[${level}]: ${chalk.bold(filename)}: ${message}`));
+      console.info(chalk.green(`[${level}] ${chalk.bold(filename)}: ${message}`));
       break;
     case 'FAIL':
     default:
-      console.error(chalk.red(`[${level}]: ${chalk.bold(filename)}: ${message}`));
+      console.error(chalk.red(`[${level}] ${chalk.bold(filename)}: ${message}`));
       break;
   }
 }
@@ -80,11 +80,13 @@ const trivializeGenericRewrites = async (fstat, content, rules) => {
             const ruleRe = `\n([\t ]*)<rule\\s*from=\\s*"${escapeRegExp(rule.from)}"(\\s*)to=\\s*"${escapeRegExp(rule.to)}"\\s*?/>[\t ]*\n`;
             const ruleRegex = new RegExp(ruleRe, 'g');
 
-            if (ruleRegex.test(content)) {
+            if (ruleRegex.test(originalContent)) {
               content = content.replace(ruleRegex, `\n$1<rule from="^http://${host.replace(/\./g, '\\.')}/"$2to="https://${host}/" />\n`)
               if (originalContent != content) {
                 rewrittenAtLeastOnce = true;
               }
+            } else {
+              log('WARN', fstat.filename, `Warning: cannot construct RegExp which match rule ${JSON.stringify(rule)}`);
             }
             break;
           }
