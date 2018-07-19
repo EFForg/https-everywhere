@@ -276,6 +276,12 @@ var urlBlacklist = new Set();
 // TODO: Remove this code if they ever give us a real counter
 var redirectCounter = new Map();
 
+const cancelUrl = chrome.extension.getURL("/pages/cancel/index.html");
+
+function redirectOnCancel(shouldCancel){
+  return shouldCancel ? {redirectUrl: cancelUrl} : {cancel: false};
+}
+
 /**
  * Called before a HTTP(s) request. Does the heavy lifting
  * Cancels the request/redirects it to HTTPS. URL modification happens in here.
@@ -323,7 +329,7 @@ function onBeforeRequest(details) {
         " changed before processing to " + uri.href);
   }
   if (urlBlacklist.has(uri.href)) {
-    return {cancel: shouldCancel};
+    return redirectOnCancel(shouldCancel);
   }
 
   if (details.type == "main_frame") {
@@ -337,7 +343,7 @@ function onBeforeRequest(details) {
     urlBlacklist.add(uri.href);
     rules.settings.domainBlacklist.add(uri.hostname);
     util.log(util.WARN, "Domain blacklisted " + uri.hostname);
-    return {cancel: shouldCancel};
+    return redirectOnCancel(shouldCancel);
   }
 
   // whether to use mozilla's upgradeToSecure BlockingResponse if available
@@ -401,7 +407,7 @@ function onBeforeRequest(details) {
       )
     ) {
       // Abort early if we're about to redirect to HTTP or FTP in HTTP Nowhere mode
-      return {cancel: true};
+      return {redirectUrl: cancelUrl};
     }
   }
 
@@ -413,7 +419,7 @@ function onBeforeRequest(details) {
     return {redirectUrl: newuristr};
   } else {
     util.log(util.INFO, 'onBeforeRequest returning shouldCancel: ' + shouldCancel);
-    return {cancel: shouldCancel};
+    return redirectOnCancel(shouldCancel);
   }
 }
 
