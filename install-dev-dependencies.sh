@@ -92,7 +92,7 @@ git submodule init
 git submodule update
 
 # Install Python packages
-pip3 install --user --no-allow-insecure --no-allow-external -r requirements.txt
+pip3 install --user -r requirements.txt
 cd test/rules
 pip3 install --user -r requirements.txt
 cd -
