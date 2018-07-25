@@ -276,6 +276,12 @@ var urlBlacklist = new Set();
 // TODO: Remove this code if they ever give us a real counter
 var redirectCounter = new Map();
 
+const cancelUrl = chrome.extension.getURL("/pages/cancel/index.html");
+
+function redirectOnCancel(shouldCancel){
+  return shouldCancel ? {redirectUrl: cancelUrl} : {cancel: false};
+}
+
 /**
  * Called before a HTTP(s) request. Does the heavy lifting
  * Cancels the request/redirects it to HTTPS. URL modification happens in here.
@@ -298,7 +304,7 @@ function onBeforeRequest(details) {
   // true if the URL is a http:// connection to a remote canonical host, and not
   // a tor hidden service
   const shouldCancel = httpNowhereOn &&
-    uri.protocol === 'http:' &&
+    (uri.protocol === 'http:' || uri.protocol === 'ftp:') &&
     uri.hostname.slice(-6) !== '.onion' &&
     uri.hostname !== 'localhost' &&
     !/^127(\.[0-9]{1,3}){3}$/.test(uri.hostname) &&
@@ -323,7 +329,7 @@ function onBeforeRequest(details) {
         " changed before processing to " + uri.href);
   }
   if (urlBlacklist.has(uri.href)) {
-    return {cancel: shouldCancel};
+    return redirectOnCancel(shouldCancel);
   }
 
   if (details.type == "main_frame") {
@@ -337,7 +343,7 @@ function onBeforeRequest(details) {
     urlBlacklist.add(uri.href);
     rules.settings.domainBlacklist.add(uri.hostname);
     util.log(util.WARN, "Domain blacklisted " + uri.hostname);
-    return {cancel: shouldCancel};
+    return redirectOnCancel(shouldCancel);
   }
 
   // whether to use mozilla's upgradeToSecure BlockingResponse if available
@@ -393,9 +399,15 @@ function onBeforeRequest(details) {
         newuristr = newuristr.replace(/^http:/, "https:");
       }
     }
-    if (newuristr && newuristr.substring(0, 5) === "http:") {
-      // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
-      return {cancel: true};
+    if (
+      newuristr &&
+      (
+        newuristr.substring(0, 5) === "http:" ||
+        newuristr.substring(0, 4) === "ftp:"
+      )
+    ) {
+      // Abort early if we're about to redirect to HTTP or FTP in HTTP Nowhere mode
+      return {redirectUrl: cancelUrl};
     }
   }
 
@@ -407,7 +419,7 @@ function onBeforeRequest(details) {
     return {redirectUrl: newuristr};
   } else {
     util.log(util.INFO, 'onBeforeRequest returning shouldCancel: ' + shouldCancel);
-    return {cancel: shouldCancel};
+    return redirectOnCancel(shouldCancel);
   }
 }
 
@@ -636,7 +648,7 @@ function onHeadersReceived(details) {
 
 // Registers the handler for requests
 // See: https://github.com/EFForg/https-everywhere/issues/10039
-chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"]);
+chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*", "ftp://*/*"]}, ["blocking"]);
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
 chrome.webRequest.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
