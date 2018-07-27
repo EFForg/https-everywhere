@@ -77,7 +77,10 @@ for filename in sorted(files):
             ruleset["securecookie"].append(sc)
 
         elif child.tag == "exclusion":
-            ruleset["exclusion"].append(child.attrib["pattern"])
+            if len(ruleset["exclusion"]) == 0:
+                ruleset["exclusion"].append(child.attrib["pattern"])
+            else:
+                ruleset["exclusion"][0] = (ruleset["exclusion"][0] + "|" + child.attrib["pattern"])
 
     library.append(ruleset);
 
