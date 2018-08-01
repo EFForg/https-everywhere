@@ -87,7 +87,7 @@ for filename in sorted(files):
 # Write to default.rulesets
 print(" * Writing JSON library to %s" % ofn)
 outfile = open(ofn, "w")
-outfile.write(json.dumps(library))
+outfile.write(json.dumps(library, separators=(",", ":")))
 outfile.close()
 
 # Everything is okay.
