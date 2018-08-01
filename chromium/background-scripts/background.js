@@ -760,43 +760,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     return true;
   } else if (message.type == "remove_rule") {
     all_rules.removeRuleAndStore(message.object);
-  } else if (message.type == "import_settings") {
-    // This is used when importing settings from the options ui
-    import_settings(message.object).then(() => {
-      sendResponse(true);
-    });
   } else if (message.type == "get_ruleset_timestamps") {
     update.getRulesetTimestamps().then(timestamps => sendResponse(timestamps));
     return true;
   }
 });
-
-/**
- * Import extension settings (custom rulesets, ruleset toggles, globals) from an object
- * @param settings the settings object
- */
-async function import_settings(settings) {
-  if (settings && settings.changed) {
-    let ruleActiveStates = {};
-    // Load all the ruleset toggles into memory and store
-    for (const ruleset_name in settings.rule_toggle) {
-      ruleActiveStates[ruleset_name] = (settings.rule_toggle[ruleset_name] == "true");
-    }
-
-    // Save settings
-    await new Promise(resolve => {
-      store.set({
-        legacy_custom_rulesets: settings.custom_rulesets,
-        httpNowhere: settings.prefs.http_nowhere_enabled,
-        showCounter: settings.prefs.show_counter,
-        globalEnabled: settings.prefs.global_enabled,
-        ruleActiveStates
-      }, resolve);
-    });
-
-    initializeAllRules();
-  }
-}
 
 /**
  * Clear any cache/ blacklist we have.
