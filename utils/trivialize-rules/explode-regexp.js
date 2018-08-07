@@ -4,8 +4,8 @@ const { parse } = require('regulex');
 
 class UnsupportedRegExp extends Error {}
 
-function explodeRegExp (re, callback) {
-  (function buildUrls (str, items) {
+function explodeRegExp(re, callback) {
+  (function buildUrls(str, items) {
     if (items.length === 0) {
       callback(str + '*');
       return;
@@ -79,7 +79,7 @@ function explodeRegExp (re, callback) {
 
     throw new UnsupportedRegExp(first.raw);
   })('*', parse(re).tree);
-}
+};
 
 module.exports = {
   UnsupportedRegExp,

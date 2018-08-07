@@ -16,7 +16,7 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
 
 const tagsRegExps = new Map();
 
-function createTagsRegexp (tag) {
+function createTagsRegexp(tag) {
   let re = tagsRegExps.get(tag);
   if (!re) {
     const tagRe = `<${tag}(?:\\s+\\w+=".*?")*\\s*\\/>`;
@@ -26,7 +26,7 @@ function createTagsRegexp (tag) {
   return re;
 }
 
-function replaceXML (source, tag, newXML) {
+function replaceXML(source, tag, newXML) {
   let pos, indent;
   let re = createTagsRegexp(tag);
 
@@ -75,12 +75,12 @@ const rules =
             }
           });
 
-function isTrivial (rule) {
+function isTrivial(rule) {
   return rule.from === '^http:' && rule.to === 'https:';
 }
 
 files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => {
-  function createTag (tagName, colour, print) {
+  function createTag(tagName, colour, print) {
     return (strings, ...values) => {
       let result = `[${tagName}] ${chalk.bold(name)}: ${strings[0]}`;
       for (let i = 1; i < strings.length; i++) {
@@ -103,6 +103,8 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
   let securecookies = ruleset.securecookie ? ruleset.securecookie.map(sc => sc.$) : new Array();
   let rules = ruleset.rule.map(rule => rule.$);
 
+  let shouldRemoveSecurecookies = false;
+
   if (rules.length === 1 && isTrivial(rules[0])) {
     return;
   }
@@ -110,7 +112,7 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
   let targetRe = new RegExp(`^(?:${targets.map(target => target.replace(/\./g, '\\.').replace(/\*/g, '.*')).join('|')})$`);
   let domains = new Set();
 
-  function isStatic (rule) {
+  function isStatic(rule) {
     if (isTrivial(rule)) {
       for (let target of targets) {
         domains.add(target);
@@ -199,7 +201,7 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
   // 3. Each exploded securecookie.host should be included in ruleset.target/
   // exploded target. Otherwise, this ruleset is likely problematic itself. It
   // is dangerous for a rewrite.
-  function isStaticCookie (securecookie) {
+  function isStaticCookie(securecookie) {
     if (securecookie.host === '.+' && securecookie.name === '.+') {
       return [true, false];
     }
@@ -225,7 +227,7 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
       warn`Unsupported regexp part ${e.message} while traversing securecookie : ${JSON.stringify(securecookie)}`;
       return [false, false];
     }
-
+  
     for (const domain of localDomains) {
       if (domains.indexOf(domain) === -1) {
         warn`Ruleset does not cover target ${domain} for securecookie : ${JSON.stringify(securecookie)}`;
@@ -269,17 +271,17 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
         if (shouldRemove) {
           let scReSrc = `\n([\t ]*)<securecookie\\s*host=\\s*"${escapeStringRegexp(securecookie.host)}"(\\s*)name=\\s*"${escapeStringRegexp(securecookie.name)}"\\s*?/>[\t ]*\n`;
           let scRe = new RegExp(scReSrc);
-
+          
           if (scRe && scRe.test(source)) {
             source = source.replace(scRe, '');
           } else {
             fail`Failed to construct regexp which matches securecookie: ${JSON.stringify(securecookie)}`;
-            return;
+            return ;
           }
         }
       } else {
         // Skip this ruleset as it contain non-static securecookies
-        return;
+        return ;
       }
     }
 
@@ -291,6 +293,7 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
   info`trivialized`;
 
   return writeFile(`${rulesDir}/${name}`, source);
+
 })
   .filter(Boolean)
   .parallel(10)
