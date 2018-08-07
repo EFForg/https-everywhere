@@ -9,6 +9,7 @@ const readFile = _.wrapCallback(fs.readFile);
 const writeFile = _.wrapCallback(fs.writeFile);
 const parseXML = _.wrapCallback(require('xml2js').parseString);
 const { explodeRegExp, UnsupportedRegExp } = require('./explode-regexp');
+const escapeStringRegexp = require('escape-string-regexp');
 const chalk = require('chalk');
 
 const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
@@ -202,11 +203,11 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
   // is dangerous for a rewrite.
   function isStaticCookie(securecookie) {
     if (securecookie.host === '.+' && securecookie.name === '.+') {
-      return true;
+      return [true, false];
     }
 
     if (!securecookie.host.startsWith('^') || !securecookie.host.endsWith('$')) {
-      return false;
+      return [false, false];
     }
 
     let localDomains = new Set();
@@ -224,7 +225,7 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
         throw e;
       }
       warn`Unsupported regexp part ${e.message} while traversing securecookie : ${JSON.stringify(securecookie)}`;
-      return false;
+      return [false, false];
     }
   
     for (const domain of localDomains) {
@@ -249,22 +250,39 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
     // safely.
     if (unsupportedDomains.size > 0) {
       if (unsupportedDomains.size === localDomains.size) {
-        shouldRemoveSecurecookies = true;
-        return true;
+        return [true, true];
       }
-      return false;
+      // TODO: Can we remove partial dangling securecookie rules???
+      fail`Tag securecookie ${JSON.stringify(securecookie)} matches ${unsupportedDomains} which are not in targets ${targets}`;
     }
-
-    return true;
+    return [true, false];
   }
 
   if (domains.slice().sort().join('\n') !== targets.sort().join('\n')) {
-    if (securecookies.length > 0 && !securecookies.every(isStaticCookie)) {
-      return;
-    }
+    // For each securecookie rule, check if it is a static securecookie.
+    // If it is non-static, remove the securecookie rule if it contains
+    // dangling rules. This removal is better done one by one to avoid
+    // unwanted side effects.
+    // Else if ALL securecookie rules are static, trivialize the targets.
+    for (const securecookie of securecookies) {
+      let [isStatic, shouldRemove] = isStaticCookie(securecookie);
 
-    if (shouldRemoveSecurecookies) {
-      source = replaceXML(source, 'securecookie', []);
+      if (isStatic) {
+        if (shouldRemove) {
+          let scReSrc = `\n([\t ]*)<securecookie\\s*host=\\s*"${escapeStringRegexp(securecookie.host)}"(\\s*)name=\\s*"${escapeStringRegexp(securecookie.name)}"\\s*?/>[\t ]*\n`;
+          let scRe = new RegExp(scReSrc);
+          
+          if (scRe && scRe.test(source)) {
+            source = source.replace(scRe, '');
+          } else {
+            fail`Failed to construct regexp which matches securecookie: ${JSON.stringify(securecookie)}`;
+            return ;
+          }
+        }
+      } else {
+        // Skip this ruleset as it contain non-static securecookies
+        return ;
+      }
     }
 
     source = replaceXML(source, 'target', domains.map(domain => `<target host="${domain}" />`));
