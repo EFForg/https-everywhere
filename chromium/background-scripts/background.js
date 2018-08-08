@@ -708,9 +708,12 @@ chrome.runtime.onConnect.addListener(function (port) {
             nrw: sortSwitchPlanner(tabId, "nrw"),
             rw: sortSwitchPlanner(tabId, "rw")
           });
+          return true;
         }
       };
-      return responses[message.type]();
+      if (message.type in responses) {
+        return responses[message.type]();
+      }
     });
   }
 });
@@ -735,6 +738,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     },
     get_active_rulesets: () => {
       sendResponse(appliedRulesets.getRulesets(message.object));
+      return true;
     },
     set_ruleset_active_status: () => {
       let rulesets = appliedRulesets.getRulesets(message.object.tab_id);
@@ -780,7 +784,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
       return true;
     }
   };
-  return responses[message.type]();
+  if (message.type in responses) {
+    return responses[message.type]();
+  }
 });
 
 /**
