@@ -695,16 +695,24 @@ chrome.runtime.onConnect.addListener(function (port) {
         disableSwitchPlannerFor(tabId);
       };
 
-      if (message.type === "enable") {
-        enableSwitchPlannerFor(tabId);
-        port.onDisconnect.addListener(disableOnCloseCallback);
-      } else if (message.type === "disable") {
-        disableSwitchPlannerFor(tabId);
-      } else if (message.type === "getHosts") {
-        sendResponse({
-          nrw: sortSwitchPlanner(tabId, "nrw"),
-          rw: sortSwitchPlanner(tabId, "rw")
-        });
+      const responses = {
+        enable: () => {
+          enableSwitchPlannerFor(tabId);
+          port.onDisconnect.addListener(disableOnCloseCallback);
+        },
+        disable: () => {
+          disableSwitchPlannerFor(tabId);
+        },
+        getHosts: () => {
+          sendResponse({
+            nrw: sortSwitchPlanner(tabId, "nrw"),
+            rw: sortSwitchPlanner(tabId, "rw")
+          });
+          return true;
+        }
+      };
+      if (message.type in responses) {
+        return responses[message.type]();
       }
     });
   }
@@ -713,56 +721,71 @@ chrome.runtime.onConnect.addListener(function (port) {
 // This is necessary for communication with the popup in Firefox Private
 // Browsing Mode, see https://bugzilla.mozilla.org/show_bug.cgi?id=1329304
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
-  if (message.type == "get_option") {
-    store.get(message.object, sendResponse);
-    return true;
-  } else if (message.type == "set_option") {
-    store.set(message.object, item => {
-      if (sendResponse) {
-        sendResponse(item);
-      }
-    });
-  } else if (message.type == "delete_from_ruleset_cache") {
-    all_rules.ruleCache.delete(message.object);
-  } else if (message.type == "get_active_rulesets") {
-    sendResponse(appliedRulesets.getRulesets(message.object));
-  } else if (message.type == "set_ruleset_active_status") {
-    let rulesets = appliedRulesets.getRulesets(message.object.tab_id);
-
-    for (let ruleset of rulesets) {
-      if (ruleset.name == message.object.name) {
-        ruleset.active = message.object.active;
-        if (ruleset.default_state == message.object.active) {
-          message.object.active = undefined;
+  const responses = {
+    get_option: () => {
+      store.get(message.object, sendResponse);
+      return true;
+    },
+    set_option: () => {
+      store.set(message.object, item => {
+        if (sendResponse) {
+          sendResponse(item);
         }
-        break;
-      }
-    }
+      });
+    },
+    delete_from_ruleset_cache: () => {
+      all_rules.ruleCache.delete(message.object);
+    },
+    get_active_rulesets: () => {
+      sendResponse(appliedRulesets.getRulesets(message.object));
+      return true;
+    },
+    set_ruleset_active_status: () => {
+      let rulesets = appliedRulesets.getRulesets(message.object.tab_id);
 
-    all_rules.setRuleActiveState(message.object.name, message.object.active).then(() => {
-      sendResponse(true);
-    });
-    return true;
-  } else if (message.type == "reset_to_defaults") {
-    // restore the 'default states' of the rulesets
-    store.set_promise('ruleActiveStates', {}).then(() => {
-      // clear the caches such that it becomes stateless
-      destroy_caches();
-      // re-activate all rules according to the new states
-      initializeAllRules();
-      // reload tabs when operations completed
-      chrome.tabs.reload();
-    });
-  } else if (message.type == "add_new_rule") {
-    all_rules.addNewRuleAndStore(message.object).then(() => {
-      sendResponse(true);
-    });
-    return true;
-  } else if (message.type == "remove_rule") {
-    all_rules.removeRuleAndStore(message.object);
-  } else if (message.type == "get_ruleset_timestamps") {
-    update.getRulesetTimestamps().then(timestamps => sendResponse(timestamps));
-    return true;
+      for (let ruleset of rulesets) {
+        if (ruleset.name == message.object.name) {
+          ruleset.active = message.object.active;
+          if (ruleset.default_state == message.object.active) {
+            message.object.active = undefined;
+          }
+          break;
+        }
+      }
+
+      all_rules.setRuleActiveState(message.object.name, message.object.active).then(() => {
+        sendResponse(true);
+      });
+
+      return true;
+    },
+    reset_to_defaults: () => {
+      // restore the 'default states' of the rulesets
+      store.set_promise('ruleActiveStates', {}).then(() => {
+        // clear the caches such that it becomes stateless
+        destroy_caches();
+        // re-activate all rules according to the new states
+        initializeAllRules();
+        // reload tabs when operations completed
+        chrome.tabs.reload();
+      });
+    },
+    add_new_rule: () => {
+      all_rules.addNewRuleAndStore(message.object).then(() => {
+        sendResponse(true);
+      });
+      return true;
+    },
+    remove_rule: () => {
+      all_rules.removeRuleAndStore(message.object);
+    },
+    get_ruleset_timestamps: () => {
+      update.getRulesetTimestamps().then(timestamps => sendResponse(timestamps));
+      return true;
+    }
+  };
+  if (message.type in responses) {
+    return responses[message.type]();
   }
 });
 
