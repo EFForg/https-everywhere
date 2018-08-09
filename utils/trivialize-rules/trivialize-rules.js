@@ -103,8 +103,6 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
   let securecookies = ruleset.securecookie ? ruleset.securecookie.map(sc => sc.$) : new Array();
   let rules = ruleset.rule.map(rule => rule.$);
 
-  let shouldRemoveSecurecookies = false;
-
   if (rules.length === 1 && isTrivial(rules[0])) {
     return;
   }
@@ -227,7 +225,7 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
       warn`Unsupported regexp part ${e.message} while traversing securecookie : ${JSON.stringify(securecookie)}`;
       return [false, false];
     }
-  
+
     for (const domain of localDomains) {
       if (domains.indexOf(domain) === -1) {
         warn`Ruleset does not cover target ${domain} for securecookie : ${JSON.stringify(securecookie)}`;
@@ -271,17 +269,16 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
         if (shouldRemove) {
           let scReSrc = `\n([\t ]*)<securecookie\\s*host=\\s*"${escapeStringRegexp(securecookie.host)}"(\\s*)name=\\s*"${escapeStringRegexp(securecookie.name)}"\\s*?/>[\t ]*\n`;
           let scRe = new RegExp(scReSrc);
-          
           if (scRe && scRe.test(source)) {
             source = source.replace(scRe, '');
           } else {
             fail`Failed to construct regexp which matches securecookie: ${JSON.stringify(securecookie)}`;
-            return ;
+            return;
           }
         }
       } else {
         // Skip this ruleset as it contain non-static securecookies
-        return ;
+        return;
       }
     }
 
@@ -293,7 +290,6 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
   info`trivialized`;
 
   return writeFile(`${rulesDir}/${name}`, source);
-
 })
   .filter(Boolean)
   .parallel(10)
