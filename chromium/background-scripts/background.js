@@ -6,7 +6,8 @@ const rules = require('./rules'),
   store = require('./store'),
   incognito = require('./incognito'),
   util = require('./util'),
-  update = require('./update');
+  update = require('./update'),
+  { update_channels } = require('./update_channels');
 
 
 let all_rules = new rules.RuleSets();
@@ -781,6 +782,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     },
     get_ruleset_timestamps: () => {
       update.getRulesetTimestamps().then(timestamps => sendResponse(timestamps));
+      return true;
+    },
+    get_update_channels: () => {
+      sendResponse(update_channels);
       return true;
     }
   };
