@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
     update_channel_div.appendChild(update_channel_row_jwk);
     const update_channel_jwk_column_left = document.createElement('div');
     update_channel_jwk_column_left.className = "update-channel-column-left";
-    update_channel_jwk_column_left.innerText = "JWK:"
+    update_channel_jwk_column_left.innerText = "JWK:";
     update_channel_row_jwk.appendChild(update_channel_jwk_column_left);
     const update_channel_jwk_column_right = document.createElement('div');
     update_channel_jwk_column_right.className = "update-channel-column-right";
@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
     update_channel_div.appendChild(update_channel_row_path_prefix);
     const update_channel_path_prefix_column_left = document.createElement('div');
     update_channel_path_prefix_column_left.className = "update-channel-column-left";
-    update_channel_path_prefix_column_left.innerText = "Path Prefix:"
+    update_channel_path_prefix_column_left.innerText = "Path Prefix:";
     update_channel_row_path_prefix.appendChild(update_channel_path_prefix_column_left);
     const update_channel_path_prefix_column_right = document.createElement('div');
     update_channel_path_prefix_column_right.className = "update-channel-column-right";
@@ -130,14 +130,53 @@ document.addEventListener("DOMContentLoaded", () => {
     clearer.className = "clearer";
     update_channel_div.appendChild(clearer);
 
+    update_channel_delete.addEventListener("click", () => {
+      sendMessage("delete_update_channel", update_channel.name, () => {
+        render_update_channels();
+      });
+    });
+
+    update_channel_update.addEventListener("click", () => {
+      sendMessage("update_update_channel", {
+        name: update_channel.name,
+        jwk: JSON.parse(update_channel_jwk.value),
+        update_path_prefix: update_channel_path_prefix.value
+      }, () => {
+        render_update_channels();
+      });
+    });
+
     return update_channel_div;
   }
 
-  sendMessage("get_update_channels", defaultOptions, update_channels => {
-    const update_channels_wrapper = document.getElementById("update-channels-wrapper");
-    for(let update_channel of update_channels){
-      update_channels_wrapper.appendChild(create_update_channel_element(update_channel, true));
+  function render_update_channels(){
+    const update_channels_list = document.getElementById("update-channels-list");
+    while(update_channels_list.firstChild){
+      update_channels_list.removeChild(update_channels_list.firstChild);
     }
+
+    sendMessage("get_pinned_update_channels", null, update_channels => {
+      for(const update_channel of update_channels){
+        update_channels_list.appendChild(create_update_channel_element(update_channel, true));
+      }
+    });
+
+    sendMessage("get_stored_update_channels", null, update_channels => {
+      for(const update_channel of update_channels){
+        update_channels_list.appendChild(create_update_channel_element(update_channel, false));
+      }
+    });
+  }
+  render_update_channels();
+
+  const add_update_channel = document.getElementById("add-update-channel");
+  add_update_channel.addEventListener("click", () => {
+    const update_channel_name_div = document.getElementById("update-channel-name");
+    const update_channel_name = update_channel_name_div.value;
+    update_channel_name_div.value = "";
+    sendMessage("create_update_channel", update_channel_name, () => {
+      render_update_channels();
+    });
   });
 
   document.onkeydown = function(evt) {

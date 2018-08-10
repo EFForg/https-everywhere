@@ -784,9 +784,55 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
       update.getRulesetTimestamps().then(timestamps => sendResponse(timestamps));
       return true;
     },
-    get_update_channels: () => {
+    get_pinned_update_channels: () => {
       sendResponse(update_channels);
       return true;
+    },
+    get_stored_update_channels: () => {
+      store.get({update_channels: []}, item => {
+        sendResponse(item.update_channels);
+      });
+      return true;
+    },
+    create_update_channel: () => {
+
+      store.get({update_channels: []}, item => {
+
+        item.update_channels.push({
+          name: message.object,
+          jwk: {},
+          update_path_prefix: ''
+        });
+
+        store.set({update_channels: item.update_channels}, () => {
+          sendResponse(true);
+        });
+
+      });
+      return true;
+    },
+    delete_update_channel: () => {
+      store.get({update_channels: []}, item => {
+        store.set({update_channels: item.update_channels.filter(update_channel => {
+          return (update_channel.name != message.object);
+        })}, () => {
+          sendResponse(true);
+        });
+      });
+    },
+    update_update_channel: () => {
+      store.get({update_channels: []}, item => {
+        for(let i = 0; i < item.update_channels.length; i++){
+          if(item.update_channels[i].name == message.object.name){
+            item.update_channels[i] = message.object;
+          }
+        }
+
+        store.set({update_channels: item.update_channels}, () => {
+          sendResponse(true);
+        });
+
+      });
     }
   };
   if (message.type in responses) {
