@@ -250,7 +250,6 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
       if (unsupportedDomains.size === localDomains.size) {
         return [true, true];
       }
-      // TODO: Can we remove partial dangling securecookie rules???
       fail`Tag securecookie ${JSON.stringify(securecookie)} matches ${unsupportedDomains} which are not in targets ${targets}`;
     }
     return [true, false];
