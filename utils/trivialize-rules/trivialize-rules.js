@@ -258,9 +258,9 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
 
   if (domains.slice().sort().join('\n') !== targets.sort().join('\n')) {
     // For each securecookie rule, check if it is a static securecookie.
-    // If it is non-static, remove the securecookie rule if it contains
-    // dangling rules. This removal is better done one by one to avoid
-    // unwanted side effects.
+    // If it is non-static, we do not trivialize the ruleset; Otherwise,
+    // we remove the securecookie if it contain only unsupported hosts.
+    // This removal is better done one by one to avoid side effects.
     // Else if ALL securecookie rules are static, trivialize the targets.
     for (const securecookie of securecookies) {
       let [isStatic, shouldRemove] = isStaticCookie(securecookie);
@@ -269,12 +269,7 @@ files.fork().zipAll([ sources.fork(), rules ]).map(([name, source, ruleset]) => 
         if (shouldRemove) {
           let scReSrc = `\n([\t ]*)<securecookie\\s*host=\\s*"${escapeStringRegexp(securecookie.host)}"(\\s*)name=\\s*"${escapeStringRegexp(securecookie.name)}"\\s*?/>[\t ]*\n`;
           let scRe = new RegExp(scReSrc);
-          if (scRe && scRe.test(source)) {
-            source = source.replace(scRe, '');
-          } else {
-            fail`Failed to construct regexp which matches securecookie: ${JSON.stringify(securecookie)}`;
-            return;
-          }
+          source = source.replace(scRe, '');
         }
       } else {
         // Skip this ruleset as it contain non-static securecookies
