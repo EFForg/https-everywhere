@@ -2,6 +2,9 @@
 
 "use strict";
 
+let combined_update_channels;
+const { update_channels } = require('./update_channels');
+
 // Determine if we're in the tests.  If so, define some necessary components.
 if (typeof window === "undefined") {
   var WebCrypto = require("node-webcrypto-ossl"),
@@ -12,11 +15,12 @@ if (typeof window === "undefined") {
     { TextDecoder } = require('text-encoding'),
     chrome = require("sinon-chrome"),
     window = { atob, btoa, chrome, crypto, pako, TextDecoder };
+
+  combined_update_channels = update_channels;
 }
 
 (function(exports) {
 
-const { update_channels } = require('./update_channels');
 const util = require('./util');
 
 let store,
@@ -25,7 +29,6 @@ let store,
 // how often we should check for new rulesets
 const periodicity = 86400;
 
-let combined_update_channels;
 let imported_keys;
 
 // update channels are loaded from `background-scripts/update_channels.js` as well as the storage api
