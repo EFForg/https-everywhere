@@ -79,6 +79,7 @@ async function performMigrations() {
 const local = {
   get: chrome.storage.local.get,
   set: chrome.storage.local.set,
+  remove: chrome.storage.local.remove,
   get_promise: local_get_promise,
   set_promise: local_set_promise
 };
@@ -87,6 +88,7 @@ function setStorage(store) {
   Object.assign(exports, {
     get: store.get.bind(store),
     set: store.set.bind(store),
+    remove: store.remove.bind(store),
     get_promise,
     set_promise,
     local

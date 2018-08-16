@@ -722,6 +722,25 @@ chrome.runtime.onConnect.addListener(function (port) {
 // This is necessary for communication with the popup in Firefox Private
 // Browsing Mode, see https://bugzilla.mozilla.org/show_bug.cgi?id=1329304
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+
+  function get_update_channels_generic(update_channels){
+    let last_updated_promises = [];
+    for(let update_channel of update_channels) {
+      last_updated_promises.push(new Promise(resolve => {
+        store.local.get({['rulesets-timestamp: ' + update_channel.name]: 0}, item => {
+          resolve([update_channel.name, item['rulesets-timestamp: ' + update_channel.name]]);
+        });
+      }));
+    }
+    Promise.all(last_updated_promises).then(results => {
+      const last_updated = results.reduce((obj, item) => {
+        obj[item[0]] = item[1];
+        return obj;
+      }, {});
+      sendResponse({update_channels, last_updated});
+    });
+  }
+
   const responses = {
     get_option: () => {
       store.get(message.object, sendResponse);
@@ -785,18 +804,27 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
       return true;
     },
     get_pinned_update_channels: () => {
-      sendResponse(update_channels);
+      get_update_channels_generic(update_channels);
       return true;
     },
     get_stored_update_channels: () => {
       store.get({update_channels: []}, item => {
-        sendResponse(item.update_channels);
+        get_update_channels_generic(item.update_channels);
       });
       return true;
     },
     create_update_channel: () => {
 
       store.get({update_channels: []}, item => {
+
+        const update_channel_names = update_channels.concat(item.update_channels).reduce((obj, item) => {
+          obj.add(item.name);
+          return obj;
+        }, new Set());
+
+        if(update_channel_names.has(message.object)){
+          return sendResponse(false);
+        }
 
         item.update_channels.push({
           name: message.object,
@@ -816,9 +844,17 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
         store.set({update_channels: item.update_channels.filter(update_channel => {
           return (update_channel.name != message.object);
         })}, () => {
-          sendResponse(true);
+          store.local.remove([
+            'rulesets-timestamp: ' + message.object,
+            'rulesets-stored-timestamp: ' + message.object,
+            'rulesets: ' + message.object
+          ], () => {
+            initializeAllRules();
+            sendResponse(true);
+          });
         });
       });
+      return true;
     },
     update_update_channel: () => {
       store.get({update_channels: []}, item => {
@@ -833,6 +869,13 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
         });
 
       });
+      return true;
+    },
+    get_last_checked: () => {
+      store.local.get({'last-checked': false}, item => {
+        sendResponse(item['last-checked']);
+      });
+      return true;
     }
   };
   if (message.type in responses) {

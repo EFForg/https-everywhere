@@ -59,7 +59,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  function create_update_channel_element(update_channel, pinned){
+  function create_update_channel_element(update_channel, last_updated, pinned){
+    let ruleset_version_string;
+
+    if(last_updated){
+      const ruleset_date = new Date(last_updated * 1000);
+      ruleset_version_string = ruleset_date.getUTCFullYear() + "." + (ruleset_date.getUTCMonth() + 1) + "." + ruleset_date.getUTCDate();
+    } else {
+      ruleset_version_string = "n/a";
+    }
+
     const update_channel_div = document.createElement('div');
     update_channel_div.className = "update-channel";
 
@@ -67,6 +76,10 @@ document.addEventListener("DOMContentLoaded", () => {
     update_channel_name.className = "update-channel-name";
     update_channel_name.innerText = update_channel.name;
     update_channel_div.appendChild(update_channel_name);
+    const update_channel_last_updated = document.createElement('div');
+    update_channel_last_updated.className = "update-channel-last-updated";
+    update_channel_last_updated.innerText = chrome.i18n.getMessage("options_storedRulesetsVersion") + ruleset_version_string;
+    update_channel_name.appendChild(update_channel_last_updated);
 
     const update_channel_row_jwk = document.createElement('div');
     update_channel_row_jwk.className = "update-channel-row-jwk";
@@ -117,13 +130,13 @@ document.addEventListener("DOMContentLoaded", () => {
     update_channel_update.className = "update-channel-update";
     update_channel_update.setAttribute("data-name", update_channel.name);
     update_channel_update.disabled = pinned;
-    update_channel_update.innerText = "Update";
+    update_channel_update.innerText = chrome.i18n.getMessage("options_update");
     update_channel_controls_column_right.appendChild(update_channel_update);
     const update_channel_delete = document.createElement('button');
     update_channel_delete.className = "update-channel-update";
     update_channel_delete.setAttribute("data-name", update_channel.name);
     update_channel_delete.disabled = pinned;
-    update_channel_delete.innerText = "Delete";
+    update_channel_delete.innerText = chrome.i18n.getMessage("options_delete");
     update_channel_controls_column_right.appendChild(update_channel_delete);
 
     const clearer = document.createElement('div');
@@ -155,28 +168,77 @@ document.addEventListener("DOMContentLoaded", () => {
       update_channels_list.removeChild(update_channels_list.firstChild);
     }
 
-    sendMessage("get_pinned_update_channels", null, update_channels => {
-      for(const update_channel of update_channels){
-        update_channels_list.appendChild(create_update_channel_element(update_channel, true));
+    sendMessage("get_pinned_update_channels", null, item => {
+      for(const update_channel of item.update_channels){
+        update_channels_list.appendChild(
+          create_update_channel_element(
+            update_channel,
+            item.last_updated[update_channel.name],
+            true
+          )
+        );
+
       }
     });
 
-    sendMessage("get_stored_update_channels", null, update_channels => {
-      for(const update_channel of update_channels){
-        update_channels_list.appendChild(create_update_channel_element(update_channel, false));
+    sendMessage("get_stored_update_channels", null, item => {
+      for(const update_channel of item.update_channels){
+        update_channels_list.appendChild(
+          create_update_channel_element(
+            update_channel,
+            item.last_updated[update_channel.name],
+            false
+          )
+        );
       }
     });
   }
   render_update_channels();
 
   const add_update_channel = document.getElementById("add-update-channel");
+  const update_channel_name_div = document.getElementById("update-channel-name");
+  const update_channels_error_text = document.getElementById("update-channels-error-text");
+  const update_channels_error = document.getElementById("update-channels-error");
+  update_channel_name_div.setAttribute("placeholder", chrome.i18n.getMessage("options_enterUpdateChannelName"));
+
   add_update_channel.addEventListener("click", () => {
-    const update_channel_name_div = document.getElementById("update-channel-name");
     const update_channel_name = update_channel_name_div.value;
     update_channel_name_div.value = "";
-    sendMessage("create_update_channel", update_channel_name, () => {
-      render_update_channels();
+    sendMessage("create_update_channel", update_channel_name, result => {
+      if(result == true){
+        render_update_channels();
+      } else {
+        update_channels_error_text.innerText = "Error: There already exists an update channel with this name.";
+        update_channels_error.style.display = "block";
+        window.scrollTo(0,0);
+      }
     });
+  });
+
+  const update_channels_error_hide = document.getElementById("update-channels-error-hide");
+  update_channels_error_hide.addEventListener("click", () => {
+    update_channels_error.style.display = "none";
+  });
+
+  const update_channels_last_checked = document.getElementById("update-channels-last-checked");
+  sendMessage("get_last_checked", null, last_checked => {
+    let last_checked_string;
+    if(last_checked){
+      const last_checked_date = new Date(last_checked * 1000);
+      const options = {
+        year: '2-digit',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZoneName: 'short'
+      };
+      const customDateTime = new Intl.DateTimeFormat('default', options).format;
+      last_checked_string = customDateTime(last_checked_date);
+    } else {
+      last_checked_string = chrome.i18n.getMessage("options_updatesLastCheckedNever");
+    }
+    update_channels_last_checked.innerText = chrome.i18n.getMessage("options_updatesLastChecked") + last_checked_string;
   });
 
   document.onkeydown = function(evt) {
