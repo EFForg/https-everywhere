@@ -26,7 +26,7 @@ function run_unittests {
 }
 
 function run_selenium {
-  ENABLE_XVFB=1 py.test -v --capture=no ${testdir} # autodiscover and run the tests
+  ENABLE_XVFB=1 pytest -v --capture=no ${testdir} # autodiscover and run the tests
 }
 
 if [ "$TEST" == "lint" ]; then
