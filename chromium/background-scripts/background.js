@@ -393,9 +393,9 @@ function onBeforeRequest(details) {
     // If loading a main frame, try the HTTPS version as an alternative to
     // failing.
     if (shouldCancel) {
-      upgradeToSecure = true;
       if (!newuristr) {
         newuristr = uri.href.replace(/^http:/, "https:");
+        upgradeToSecure = true;
       } else {
         newuristr = newuristr.replace(/^http:/, "https:");
       }
