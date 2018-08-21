@@ -337,7 +337,7 @@ function onBeforeRequest(details) {
     appliedRulesets.removeTab(details.tabId);
   }
 
-  var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
+  let potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
 
   if (redirectCounter.get(details.requestId) >= 8) {
     util.log(util.NOTE, "Redirect counter hit for " + uri.href);
@@ -349,7 +349,7 @@ function onBeforeRequest(details) {
 
   // whether to use mozilla's upgradeToSecure BlockingResponse if available
   let upgradeToSecure = false;
-  var newuristr = null;
+  let newuristr = null;
 
   for (let ruleset of potentiallyApplicable) {
     appliedRulesets.addRulesetToTab(details.tabId, details.type, ruleset);
