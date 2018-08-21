@@ -350,18 +350,19 @@ function onBeforeRequest(details) {
   // whether to use mozilla's upgradeToSecure BlockingResponse if available
   let upgradeToSecure = false;
   var newuristr = null;
-  // check rewritten URIs against the trivially upgraded URI
-  let trivialUpgradeUri = uri.href.replace(/^http:/, "https:");
 
   for (let ruleset of potentiallyApplicable) {
     appliedRulesets.addRulesetToTab(details.tabId, details.type, ruleset);
     if (ruleset.active && !newuristr) {
       newuristr = ruleset.apply(uri.href);
-      // only use upgradeToSecure for trivial rulesets
-      if (newuristr == trivialUpgradeUri) {
-        upgradeToSecure = true;
-      }
     }
+  }
+
+  // only use upgradeToSecure for trivial rewrites
+  if (upgradeToSecureAvailable && newuristr) {
+    // check rewritten URIs against the trivially upgraded URI
+    const trivialUpgradeUri = uri.href.replace(/^http:/, "https:");
+    upgradeToSecure = (newuristr == trivialUpgradeUri);
   }
 
   // re-insert userpass info which was stripped temporarily
