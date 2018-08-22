@@ -201,18 +201,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const update_channels_error = document.getElementById("update-channels-error");
   update_channel_name_div.setAttribute("placeholder", chrome.i18n.getMessage("options_enterUpdateChannelName"));
 
+  function displayError(text){
+    update_channels_error_text.innerText = text;
+    update_channels_error.style.display = "block";
+    window.scrollTo(0,0);
+  }
+
   add_update_channel.addEventListener("click", () => {
     const update_channel_name = update_channel_name_div.value;
-    update_channel_name_div.value = "";
-    sendMessage("create_update_channel", update_channel_name, result => {
-      if(result == true){
-        render_update_channels();
-      } else {
-        update_channels_error_text.innerText = "Error: There already exists an update channel with this name.";
-        update_channels_error.style.display = "block";
-        window.scrollTo(0,0);
-      }
-    });
+    if(update_channel_name.trim() == ""){
+      displayError("Error: The update channel name is blank.  Please enter another name.");
+    } else {
+      update_channel_name_div.value = "";
+      sendMessage("create_update_channel", update_channel_name, result => {
+        if(result == true){
+          render_update_channels();
+        } else {
+          displayError("Error: There already exists an update channel with this name.");
+        }
+      });
+    }
   });
 
   const update_channels_error_hide = document.getElementById("update-channels-error-hide");
