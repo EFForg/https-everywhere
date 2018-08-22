@@ -19,10 +19,6 @@ function setup_firefox {
     wget -O /tmp/geckodriver.tar.gz ${url}
     sudo tar -xvf /tmp/geckodriver.tar.gz -C /usr/local/bin/
     sudo chmod a+x /usr/local/bin/geckodriver
-
-    # ./make.sh requires xmllint
-    sudo apt-get -qq update
-    sudo apt-get install -y libxml2-utils
 }
 
 function browser_setup {
