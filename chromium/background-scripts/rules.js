@@ -10,8 +10,6 @@ let settings = {
 };
 
 // To reduce memory usage for the numerous rules/cookies with trivial rules
-const trivial_rule_from_c = /^http:/;
-const trivial_rule_to = 'https:';
 const trivial_cookie_rule_c = /.+/;
 
 // Empty iterable singleton to reduce memory usage
@@ -28,30 +26,30 @@ const nullIterable = Object.create(null, {
 });
 
 /**
- * A single rule
+ * Constructs a single rule
  * @param from
  * @param to
  * @constructor
  */
 function Rule(from, to) {
-  if (from === "^http:" && to === "https:") {
-    // This is a trivial rule, rewriting http->https with no complex RegExp.
-    this.to = trivial_rule_to;
-    this.from_c = trivial_rule_from_c;
-  } else {
-    // This is a non-trivial rule.
-    this.to = to;
-    this.from_c = new RegExp(from);
-  }
+  this.from_c = new RegExp(from);
+  this.to = to;
 }
 
+// To reduce memory usage for the numerous rules/cookies with trivial rules
+const trivial_rule = new Rule("^http:", "https:");
+
 /**
- * Regex-Compile a pattern
- * @param pattern The pattern to compile
- * @constructor
+ * Returns a common trivial rule or constructs a new one.
  */
-function Exclusion(pattern) {
-  this.pattern_c = new RegExp(pattern);
+function getRule(from, to) {
+  if (from === "^http:" && to === "https:") {
+    // This is a trivial rule, rewriting http->https with no complex RegExp.
+    return trivial_rule;
+  } else {
+    // This is a non-trivial rule.
+    return new Rule(from, to);
+  }
 }
 
 /**
@@ -102,13 +100,9 @@ RuleSet.prototype = {
   apply: function(urispec) {
     var returl = null;
     // If we're covered by an exclusion, go home
-    if (this.exclusions !== null) {
-      for (let exclusion of this.exclusions) {
-        if (exclusion.pattern_c.test(urispec)) {
-          util.log(util.DBUG, "excluded uri " + urispec);
-          return null;
-        }
-      }
+    if (this.exclusions !== null && this.exclusions.test(urispec)) {
+      util.log(util.DBUG, "excluded uri " + urispec);
+      return null;
     }
 
     // Okay, now find the first rule that triggers
@@ -136,15 +130,15 @@ RuleSet.prototype = {
     }
 
     try {
-      var this_exclusions_length = this.exclusions.length;
+      var this_exclusions_source = this.exclusions.source;
     } catch(e) {
-      var this_exclusions_length = 0;
+      var this_exclusions_source = null;
     }
 
     try {
-      var ruleset_exclusions_length = ruleset.exclusions.length;
+      var ruleset_exclusions_source = ruleset.exclusions.source;
     } catch(e) {
-      var ruleset_exclusions_length = 0;
+      var ruleset_exclusions_source = null;
     }
 
     try {
@@ -159,17 +153,14 @@ RuleSet.prototype = {
       var ruleset_rules_length = 0;
     }
 
-    if(this_exclusions_length != ruleset_exclusions_length ||
-       this_rules_length != ruleset_rules_length) {
+    if(this_rules_length != ruleset_rules_length) {
       return false;
     }
-    if(this_exclusions_length > 0) {
-      for(let x = 0; x < this.exclusions.length; x++){
-        if(this.exclusions[x].pattern_c != ruleset.exclusions[x].pattern_c) {
-          return false;
-        }
-      }
+
+    if (this_exclusions_source != ruleset_exclusions_source) {
+      return false;
     }
+
     if(this_rules_length > 0) {
       for(let x = 0; x < this.rules.length; x++){
         if(this.rules[x].to != ruleset.rules[x].to) {
@@ -177,6 +168,7 @@ RuleSet.prototype = {
         }
       }
     }
+
     return true;
   }
 
@@ -275,20 +267,13 @@ RuleSets.prototype = {
     var rules = ruletag["rule"];
     for (let rule of rules) {
       if (rule["from"] != null && rule["to"] != null) {
-        rule_set.rules.push(new Rule(rule["from"], rule["to"]));
+        rule_set.rules.push(getRule(rule["from"], rule["to"]));
       }
     }
 
     var exclusions = ruletag["exclusion"];
     if (exclusions != null) {
-      for (let exclusion of exclusions) {
-        if (exclusion != null) {
-          if (!rule_set.exclusions) {
-            rule_set.exclusions = [];
-          }
-          rule_set.exclusions.push(new Exclusion(exclusion));
-        }
-      }
+      rule_set.exclusions = new RegExp(exclusions.join("|"));
     }
 
     var cookierules = ruletag["securecookie"];
@@ -322,7 +307,7 @@ RuleSets.prototype = {
   addUserRule : function(params) {
     util.log(util.INFO, 'adding new user rule for ' + JSON.stringify(params));
     var new_rule_set = new RuleSet(params.host, true, "user rule");
-    var new_rule = new Rule(params.urlMatcher, params.redirectTo);
+    var new_rule = getRule(params.urlMatcher, params.redirectTo);
     new_rule_set.rules.push(new_rule);
     if (!this.targets.has(params.host)) {
       this.targets.set(params.host, []);
@@ -481,17 +466,16 @@ RuleSets.prototype = {
 
     var rules = ruletag.getElementsByTagName("rule");
     for (let rule of rules) {
-      rule_set.rules.push(new Rule(rule.getAttribute("from"),
+      rule_set.rules.push(getRule(rule.getAttribute("from"),
         rule.getAttribute("to")));
     }
 
-    var exclusions = ruletag.getElementsByTagName("exclusion");
+    var exclusions = Array();
+    for (let exclusion of ruletag.getElementsByTagName("exclusion")) {
+      exclusions.push(exclusion.getAttribute("pattern"));
+    }
     if (exclusions.length > 0) {
-      rule_set.exclusions = [];
-      for (let exclusion of exclusions) {
-        rule_set.exclusions.push(
-          new Exclusion(exclusion.getAttribute("pattern")));
-      }
+      rule_set.exclusions = new RegExp(exclusions.join("|"));
     }
 
     var cookierules = ruletag.getElementsByTagName("securecookie");
@@ -530,7 +514,7 @@ RuleSets.prototype = {
     }
 
     // Let's begin search
-    // Copy the host targsts so we don't modify them.
+    // Copy the host targets so we don't modify them.
     let results = (this.targets.has(host) ?
       new Set([...this.targets.get(host)]) :
       new Set());
@@ -696,12 +680,11 @@ RuleSets.prototype = {
 Object.assign(exports, {
   nullIterable,
   settings,
-  trivial_rule_to,
-  trivial_rule_from_c,
-  Exclusion,
+  trivial_rule,
   Rule,
   RuleSet,
-  RuleSets
+  RuleSets,
+  getRule
 });
 
 })(typeof exports == 'undefined' ? require.scopes.rules = {} : exports);
