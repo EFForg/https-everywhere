@@ -74,6 +74,7 @@
 
 -->
 <ruleset name="AASTOCKS.com (partial)">
+	<target host="aastocks.com" />
 	<target host="www.aastocks.com" />
 	<test url="http://www.aastocks.com/tc/resources/Images/news/icon_video.png" />
 	<!-- 
@@ -93,6 +94,27 @@
 	<test url="http://www.aastocks.com/en/stocks/quote/detail-quote.aspx?symbol=02822" />
 	<test url="http://www.aastocks.com/en/datafeed/getstockhistory.ashx" />
 
+	<!--
+		Mixed content issues prevent the loading of videos and thumbnails over HTTPS. 
+	-->
+	<exclusion pattern="^http://(www\.)?aastocks\.com/aatv/(sc/)?(category/|hot/|video/|$)" />
+	<test url="http://aastocks.com/aatv/" />
+	<test url="http://aastocks.com/aatv/category/list.aspx" />
+	<test url="http://aastocks.com/aatv/hot/topvideo.aspx" />
+	<test url="http://aastocks.com/aatv/video/611/2" />
+	<test url="http://aastocks.com/aatv/sc/" />
+	<test url="http://aastocks.com/aatv/sc/category/list.aspx" />
+	<test url="http://aastocks.com/aatv/sc/hot/topvideo.aspx" />
+	<test url="http://aastocks.com/aatv/sc/video/624/0" />
+	<test url="http://www.aastocks.com/aatv/" />
+	<test url="http://www.aastocks.com/aatv/category/list.aspx" />
+	<test url="http://www.aastocks.com/aatv/hot/topvideo.aspx" />
+	<test url="http://www.aastocks.com/aatv/video/611/2" />
+	<test url="http://www.aastocks.com/aatv/sc/" />
+	<test url="http://www.aastocks.com/aatv/sc/category/list.aspx" />
+	<test url="http://www.aastocks.com/aatv/sc/hot/topvideo.aspx" />
+	<test url="http://www.aastocks.com/aatv/sc/video/624/0" />
+
 	<target host="accounts.aastocks.com" />
 	<test url="http://accounts.aastocks.com/tc/mainsite/registration.aspx" />
 	
@@ -104,6 +126,13 @@
 	<target host="fcsdata.aastocks.com" />
 	<target host="fctdata.aastocks.com" />
 	<target host="chartdata1.internet.aastocks.com" />
+	<!--
+		On Chromium browers, this will break the dynamic chart due to a
+		missing 'Access-Control-Allow-Origin' header; this do not affect
+		Firefox at the time of testing (Firefox 61+).
+	-->
+	<exclusion pattern="^http://chartdata1\.internet\.aastocks\.com/servlet/iDataServlet/" />
+	<test url="http://chartdata1.internet.aastocks.com/servlet/iDataServlet/getdaily?id=00005.HK&amp;type=24&amp;market=1&amp;level=1&amp;period=21&amp;encoding=utf8" />
 	
 	<target host="hkg.aastocks.com" />
 	<test url="http://hkg.aastocks.com/cms/commentary/commentator_photo_chi_17.jpg" />
