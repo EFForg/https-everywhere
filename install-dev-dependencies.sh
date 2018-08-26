@@ -9,7 +9,7 @@ if [ "$1" != "--no-prompt" ]; then
   echo "may alter your system, installing requirements both within the package"
   echo "management system and also external binaries."
   echo
-  echo -n "Are you sure you want to continue? [Y/n]: "
+  echo -n "Are you sure you want to continue? [y/N]: "
   read CONTINUE
   CONTINUE=`echo $CONTINUE | xargs | head -c 1 | awk '{print tolower($0)}'`
   if [ "$CONTINUE" != "y" ]; then

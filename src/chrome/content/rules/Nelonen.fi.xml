@@ -1,107 +1,15 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://nelonen.fi/ => https://nelonen.fi/: (7, 'Failed to connect to nelonen.fi port 443: Connection refused')
-Fetch error: http://www.nelonen.fi/ => https://www.nelonen.fi/: (7, 'Failed to connect to www.nelonen.fi port 443: Connection refused')
-
-	For rules causing real mixed content, see Nelonen.fi-mixedvideo.xml
-
-
-		- nelonen.spring-tns.net
-
-
-	Mixed content:
-
-		- Scripts:
-
-			- on www from www *
-			- on www from cts.sanoma.fi *
-			- on www from n.sestatic.fi *
-			- on www from nt.sestatic.fi *
-			- on www from rb2.sestatic.fi ***
-			- on www from assets.zendesk.com *
-
-		- css:
-
-			- on www from www *
-			- on www from fonts.googleapis.com *
-
-		- Flash:
-
-			- on www from www.ruutu.fi ***
-
-		- xml:
-
-			- on www from www **
-			- on www from adserver.adtech.de **
-			- on www from gatling.nelonenmedia.fi ***
-
-		- video:
-
-			- on www from www.ruutu.fi ***
-
-		- Images:
-
-			- on www from www *
-			- on www from sandbox.betatesti.com ****
-			- on www from rb3.sestatic.fi ****
-
-		- Web bugs and ads:
-
-			- on www from ad.360yield.com *
-			- on www from creative.360yield.com ***
-			- on www from s1.adform.net *
-			- on www from track.adform.net *
-			- on www from adserver.adtech.de *
-			- on www from aka-cdn-ns.adtech.de *
-			- on www from analytics.sanoma.fi *
-			- on www from is12.snstatic.fi *
-			- on www from anet.tradedoubler.com *
-			- on www from ad.yieldbot.net *
-
-	* Secured by us
-	** Breaks video
-	*** Unsecurable
-	**** Unsecurable, but images don't trigger MCB
-
-
-	NB: We *cannot* merge -mixedvideo because securing
-	adserver.adtech.de xml breaks video streams:
-
-		https://trac.torproject.org/projects/tor/ticket/7670
-
-	However, since we secure all active content
-	aside from that which is on pages under utils/,
-	we should remove platform for Ffx 24.
+	Invalid certificate:
+		gigantti.nelonen.fi
+		kampanjat.nelonen.fi
 
 -->
-<ruleset name="Nelonen.fi (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="Nelonen.fi">
 
 	<target host="nelonen.fi" />
 	<target host="www.nelonen.fi" />
-		<!--
-			Videos subject to adtech.de mixed content:
-									-->
-		<!--exclusion pattern="^http://(www\.)?nelonen\.fi/utils/virheenmaaritys/" /-->
-		<!--
-			These breaks video:
-						-->
-		<exclusion pattern="^http://(?:www\.)?nelonen\.fi/crossdomain\.xml" />
-		<!--exclusion pattern="^http://(www\.)?nelonen\.fi/utils/video_config/geoblock\.php" /-->
-		<!--
-			Exclude everything under utils/ that hasn't been tested wrt to video:
-												-->
-		<exclusion pattern="^http://(?:www\.)?nelonen\.fi/utils/(?!virheenmaaritys/(?:\w+\.jpg|css/|img/|js/|save\.php))" />
-		<!--
-			Uncomment this if other videos turn out to break:
-										-->
-		<!--exclusion pattern="^http://(?:www\.)?nelonen\.fi/(?![\w-]+\.json|adimages/|sites/|utils/)" /-->
 
-
-	<!--	Tracking cookies:
-					-->
-	<securecookie host="^\.nelonen\.fi$" name="^(?:adptset|enzgd|evid1st|evid(?:_ref|_set)?|__utm\w)$" />
-
+	<securecookie host="^\.nelonen\.fi$" name="^(adptset|enzgd|evid1st|evid(_ref|_set)?|__utm\w)$" />
 
 	<rule from="^http:" to="https:" />
 

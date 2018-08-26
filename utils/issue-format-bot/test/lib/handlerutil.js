@@ -143,7 +143,7 @@ function correctNewRuleset(issueText, text) {
 
       assert.isObject(args[0]);
       assert.isArray(args[0].labels);
-      assert.deepEqual(args[0].labels, ['top-100']);
+      assert.deepEqual(args[0].labels.sort(), ['top-100', 'new-ruleset'].sort());
     }
   };
 
