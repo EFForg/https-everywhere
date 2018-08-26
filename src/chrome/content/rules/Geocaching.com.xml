@@ -1,97 +1,42 @@
 <!--
-	For rules causing false/broken MCB, see Geocaching.com-falsemixed.xml.
-
 	For other Groundspeak coverage, see Groundspeak.com.xml.
 
 
-	Problematic hosts in *geocaching.com:
+	Nonfunctional hosts in *.geocaching.com:
 
-		- blog *
+		- status.geocaching.com (t)
 
-	* 403
-
-
-	Fully covered hosts:
-
-		- img
-		- shop
+	h: http redirect
+	m: certificate mismatch
+	r: connection refused
+	s: self-signed certificate
+	t: timeout on https
 
 
 	Insecure cookies are set for these hosts:
 
 		- shop.geocaching.com
 		- www.geocaching.com
-
-
-	Mixed content:
-
-		- Scripts, on:
-
-			- www from d3mo08i005h0zn.cloudfront.net *
-			- www from s.gravatar.com *
-			- www from s0.wp.com *
-
-		- css on www from d3mo08i005h0zn.cloudfront.net *
-		- Images on www from d3mo08i005h0zn.cloudfront.net *
-
-		- Bugs, on:
-
-			- www from static.ak.fbcdn.net *
-			- www from platform.twitter.com *
-			- www from stats.wp.com
-
-	* Secured by us
-
 -->
-<ruleset name="Geocaching.com (partial)">
+<ruleset name="Geocaching.com">
 
-	<!--	Direct rewrites:
-				-->
 	<target host="geocaching.com" />
+	<target host="www.geocaching.com" />
+	<target host="blog.geocaching.com" />
+	<target host="forums.geocaching.com" />
 	<target host="img.geocaching.com" />
 	<target host="shop.geocaching.com" />
-	<target host="www.geocaching.com" />
-
-	<!--	Complications:
-				-->
-	<!--target host="blog.geocaching.com" /-->
-
-		<!--	Avoid broken MCB:
-					-->
-		<exclusion pattern="^http://(?:www\.)?geocaching\.com/blog(?:$|[?/])" />
-
-			<test url="http://geocaching.com/blog" />
-			<test url="http://geocaching.com/blog/" />
-			<test url="http://www.geocaching.com/blog" />
-			<test url="http://www.geocaching.com/blog/" />
-
+	<target host="apidevelopers.geocaching.com" />
+	<target host="payments.geocaching.com" />
+	<target host="newsroom.geocaching.com" />
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^www\.geocaching\.com$" name="^(__RequestVerificationToken|ASP\.NET_SessionId)$" /-->
 	<!--securecookie host="^shop\.geocaching\.com$" name="^(CUSTOMER|CUSTOMER_AUTH|CUSTOMER_INFO|CUSTOMER_SEGMENT_IDS|NEWMESSAGE|frontend)$" /-->
 
-	<securecookie host="^shop\.geocaching\.com$" name=".+" />
+	<securecookie host=".+" name=".+" />
 
-
-	<!--	Redirect keeps path, args,
-		and forward slash:
-					-->
-	<!--rule from="^http://blog\.geocaching\.com/"
-		to="https://www.geocaching.com/blog/" /-->
-
-	<!--	Redirects to http as-is:
-		(drops args)
-					-->
-	<rule from="^http://www\.geocaching\.com/forums/default\.aspx(?:\?.*)?"
-		to="https://forums.groundspeak.com/GC/" />
-
-		<test url="http://www.geocaching.com/forums/default.aspx" />
-		<test url="http://www.geocaching.com/forums/default.aspx?" />
-		<test url="http://www.geocaching.com/forums/default.aspx?f" />
-		<test url="http://www.geocaching.com/forums/default.aspx?o" />
-
-	<rule from="^http:"
-		to="https:" />
+	<rule from="^http:" to="https:" />
 
 </ruleset>
