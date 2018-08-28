@@ -7,6 +7,10 @@
 [//]: #
 [//]: # (Delete all but one of the following "Type" lines.)
 [//]: # (Leave in the line that best describes the issue you are reporting.)
+[//]: #
+[//]: # (If you are submitting a new ruleset, please check the list at)
+[//]: # (https://www.eff.org/https-everywhere/atlas/index.html and the open)
+[//]: # (issues and pull requests to make sure it doesn't already exist.)
 
 Type: ruleset issue
 Type: new ruleset
