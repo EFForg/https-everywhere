@@ -352,9 +352,11 @@ function onBeforeRequest(details) {
   let newuristr = null;
 
   for (let ruleset of potentiallyApplicable) {
-    appliedRulesets.addRulesetToTab(details.tabId, details.type, ruleset);
-    if (ruleset.active && !newuristr) {
-      newuristr = ruleset.apply(uri.href);
+    if (details.url.match(ruleset.scope)) {
+      appliedRulesets.addRulesetToTab(details.tabId, details.type, ruleset);
+      if (ruleset.active && !newuristr) {
+        newuristr = ruleset.apply(uri.href);
+      }
     }
   }
 
