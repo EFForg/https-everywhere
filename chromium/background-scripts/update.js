@@ -74,6 +74,13 @@ async function timeToNextCheck() {
   }
 }
 
+// Check for new rulesets immediately
+async function resetTimer() {
+  await store.local.set_promise('last-checked', false);
+  destroyTimer();
+  await createTimer();
+}
+
 // Check for new rulesets. If found, return the timestamp. If not, return false
 async function checkForNewRulesets(update_channel) {
   let timestamp_result = await fetch(update_channel.update_path_prefix + "/latest-rulesets-timestamp");
@@ -277,7 +284,8 @@ async function initialize(store_param, cb){
 Object.assign(exports, {
   applyStoredRulesets,
   initialize,
-  getRulesetTimestamps
+  getRulesetTimestamps,
+  resetTimer
 });
 
 })(typeof exports == 'undefined' ? require.scopes.update = {} : exports);
