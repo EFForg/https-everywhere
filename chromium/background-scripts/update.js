@@ -74,6 +74,13 @@ async function timeToNextCheck() {
   }
 }
 
+// Check for new rulesets immediately
+async function resetTimer() {
+  await store.local.set_promise('last-checked', false);
+  destroyTimer();
+  await createTimer();
+}
+
 // Check for new rulesets. If found, return the timestamp. If not, return false
 async function checkForNewRulesets(update_channel) {
   let timestamp_result = await fetch(update_channel.update_path_prefix + "/latest-rulesets-timestamp");
@@ -173,10 +180,10 @@ async function applyStoredRulesets(rulesets_obj){
 
           const rulesets_gz = window.atob(root[key]);
           const rulesets_byte_array = pako.inflate(rulesets_gz);
-          const rulesets = new TextDecoder("utf-8").decode(rulesets_byte_array);
-          const rulesets_json = JSON.parse(rulesets);
+          const rulesets_string = new TextDecoder("utf-8").decode(rulesets_byte_array);
+          const rulesets_json = JSON.parse(rulesets_string);
 
-          resolve(rulesets_json);
+          resolve({json: rulesets_json, scope: update_channel.scope});
         } else {
           resolve();
         }
@@ -184,12 +191,15 @@ async function applyStoredRulesets(rulesets_obj){
     }));
   }
 
-  const rulesets_jsons = await Promise.all(rulesets_promises);
-  if(rulesets_jsons.join("").length > 0){
-    for(let rulesets_json of rulesets_jsons){
-      if(typeof(rulesets_json) != 'undefined'){
-        rulesets_obj.addFromJson(rulesets_json.rulesets);
-      }
+  function isNotUndefined(subject){
+    return (typeof subject != 'undefined');
+  }
+
+  const channel_results = (await Promise.all(rulesets_promises)).filter(isNotUndefined);
+
+  if(channel_results.length > 0){
+    for(let channel_result of channel_results){
+      rulesets_obj.addFromJson(channel_result.json.rulesets, channel_result.scope);
     }
   } else {
     rulesets_obj.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
@@ -274,7 +284,8 @@ async function initialize(store_param, cb){
 Object.assign(exports, {
   applyStoredRulesets,
   initialize,
-  getRulesetTimestamps
+  getRulesetTimestamps,
+  resetTimer
 });
 
 })(typeof exports == 'undefined' ? require.scopes.update = {} : exports);

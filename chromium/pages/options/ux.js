@@ -116,6 +116,28 @@ document.addEventListener("DOMContentLoaded", () => {
     update_channel_path_prefix.value = update_channel.update_path_prefix;
     update_channel_path_prefix_column_right.appendChild(update_channel_path_prefix);
 
+    let clearer = document.createElement('div');
+    clearer.className = "clearer";
+    update_channel_div.appendChild(clearer);
+
+    const update_channel_row_scope = document.createElement('div');
+    update_channel_row_scope.className = "update-channel-row-scope";
+    update_channel_div.appendChild(update_channel_row_scope);
+    const update_channel_scope_column_left = document.createElement('div');
+    update_channel_scope_column_left.className = "update-channel-column-left";
+    update_channel_scope_column_left.innerText = "Scope:";
+    update_channel_row_scope.appendChild(update_channel_scope_column_left);
+    const update_channel_scope_column_right = document.createElement('div');
+    update_channel_scope_column_right.className = "update-channel-column-right";
+    update_channel_row_scope.appendChild(update_channel_scope_column_right);
+    const update_channel_scope = document.createElement('input');
+    update_channel_scope.setAttribute("type", "text");
+    update_channel_scope.className = "update-channel-scope";
+    update_channel_scope.setAttribute("data-name", update_channel.name);
+    update_channel_scope.disabled = pinned;
+    update_channel_scope.value = update_channel.scope;
+    update_channel_scope_column_right.appendChild(update_channel_scope);
+
     const update_channel_row_controls = document.createElement('div');
     update_channel_row_controls.className = "update-channel-row-controls";
     update_channel_div.appendChild(update_channel_row_controls);
@@ -139,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
     update_channel_delete.innerText = chrome.i18n.getMessage("options_delete");
     update_channel_controls_column_right.appendChild(update_channel_delete);
 
-    const clearer = document.createElement('div');
+    clearer = document.createElement('div');
     clearer.className = "clearer";
     update_channel_div.appendChild(clearer);
 
@@ -153,7 +175,8 @@ document.addEventListener("DOMContentLoaded", () => {
       sendMessage("update_update_channel", {
         name: update_channel.name,
         jwk: JSON.parse(update_channel_jwk.value),
-        update_path_prefix: update_channel_path_prefix.value
+        update_path_prefix: update_channel_path_prefix.value,
+        scope: update_channel_scope.value
       }, () => {
         render_update_channels();
       });

@@ -352,9 +352,11 @@ function onBeforeRequest(details) {
   let newuristr = null;
 
   for (let ruleset of potentiallyApplicable) {
-    appliedRulesets.addRulesetToTab(details.tabId, details.type, ruleset);
-    if (ruleset.active && !newuristr) {
-      newuristr = ruleset.apply(uri.href);
+    if (details.url.match(ruleset.scope)) {
+      appliedRulesets.addRulesetToTab(details.tabId, details.type, ruleset);
+      if (ruleset.active && !newuristr) {
+        newuristr = ruleset.apply(uri.href);
+      }
     }
   }
 
@@ -830,7 +832,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
         item.update_channels.push({
           name: message.object,
           jwk: {},
-          update_path_prefix: ''
+          update_path_prefix: '',
+          scope: ''
         });
 
         store.set({update_channels: item.update_channels}, () => {
@@ -859,13 +862,23 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     },
     update_update_channel: () => {
       store.get({update_channels: []}, item => {
+        let scope_changed = false;
         for(let i = 0; i < item.update_channels.length; i++){
           if(item.update_channels[i].name == message.object.name){
+            if(item.update_channels[i].scope != message.object.scope){
+              scope_changed = true;
+            }
             item.update_channels[i] = message.object;
           }
         }
 
+        // Ensure that we check for new rulesets from the update channel immediately.
+        // If the scope has changed, make sure that the rulesets are re-initialized.
         store.set({update_channels: item.update_channels}, () => {
+          update.resetTimer();
+          if(scope_changed){
+            initializeAllRules();
+          }
           sendResponse(true);
         });
 

@@ -25,6 +25,17 @@ const nullIterable = Object.create(null, {
   },
 });
 
+/* A map of all scope RegExp objects */
+const scopes = new Map();
+
+/* Returns the scope object from the map for the given scope string */
+function getScope(scope){
+  if (!scopes.has(scope)) {
+    scopes.set(scope, new RegExp(scope));
+  }
+  return scopes.get(scope);
+}
+
 /**
  * Constructs a single rule
  * @param from
@@ -81,13 +92,14 @@ function CookieRule(host, cookiename) {
  * @param note Note will be displayed in popup
  * @constructor
  */
-function RuleSet(set_name, default_state, note) {
+function RuleSet(set_name, default_state, scope, note) {
   this.name = set_name;
   this.rules = [];
   this.exclusions = null;
   this.cookierules = null;
   this.active = default_state;
   this.default_state = default_state;
+  this.scope = scope;
   this.note = note;
 }
 
@@ -216,28 +228,30 @@ RuleSets.prototype = {
   /**
    * Iterate through data XML and load rulesets
    */
-  addFromXml: function(ruleXml) {
-    var sets = ruleXml.getElementsByTagName("ruleset");
-    for (let s of sets) {
+  addFromXml: function(ruleXml, scope) {
+    const scope_obj = getScope(scope);
+    const rulesets = ruleXml.getElementsByTagName("ruleset");
+    for (let ruleset of rulesets) {
       try {
-        this.parseOneXmlRuleset(s);
+        this.parseOneXmlRuleset(ruleset, scope_obj);
       } catch (e) {
         util.log(util.WARN, 'Error processing ruleset:' + e);
       }
     }
   },
 
-  addFromJson: function(ruleJson) {
+  addFromJson: function(ruleJson, scope) {
+    const scope_obj = getScope(scope);
     for (let ruleset of ruleJson) {
       try {
-        this.parseOneJsonRuleset(ruleset);
+        this.parseOneJsonRuleset(ruleset, scope_obj);
       } catch(e) {
         util.log(util.WARN, 'Error processing ruleset:' + e);
       }
     }
   },
 
-  parseOneJsonRuleset: function(ruletag) {
+  parseOneJsonRuleset: function(ruletag, scope) {
     var default_state = true;
     var note = "";
     var default_off = ruletag["default_off"];
@@ -257,7 +271,7 @@ RuleSets.prototype = {
       note += "Platform(s): " + platform + "\n";
     }
 
-    var rule_set = new RuleSet(ruletag["name"], default_state, note.trim());
+    var rule_set = new RuleSet(ruletag["name"], default_state, scope, note.trim());
 
     // Read user prefs
     if (rule_set.name in this.ruleActiveStates) {
@@ -304,9 +318,9 @@ RuleSets.prototype = {
    * @param params
    * @returns {boolean}
    */
-  addUserRule : function(params) {
+  addUserRule : function(params, scope) {
     util.log(util.INFO, 'adding new user rule for ' + JSON.stringify(params));
-    var new_rule_set = new RuleSet(params.host, true, "user rule");
+    var new_rule_set = new RuleSet(params.host, true, scope, "user rule");
     var new_rule = getRule(params.urlMatcher, params.redirectTo);
     new_rule_set.rules.push(new_rule);
     if (!this.targets.has(params.host)) {
@@ -356,9 +370,10 @@ RuleSets.prototype = {
   * Load all stored user rules into this RuleSet object
   */
   loadStoredUserRules: async function() {
+    const scope = getScope();
     const user_rules = await this.getStoredUserRules();
     for (let user_rule of user_rules) {
-      this.addUserRule(user_rule);
+      this.addUserRule(user_rule, scope);
     }
     util.log(util.INFO, 'loaded ' + user_rules.length + ' stored user rules');
   },
@@ -369,7 +384,7 @@ RuleSets.prototype = {
   * @param cb: Callback to call after success/fail
   * */
   addNewRuleAndStore: async function(params) {
-    if (this.addUserRule(params)) {
+    if (this.addUserRule(params, getScope())) {
       // If we successfully added the user rule, save it in the storage
       // api so it's automatically applied when the extension is
       // reloaded.
@@ -435,7 +450,7 @@ RuleSets.prototype = {
    * Does the loading of a ruleset.
    * @param ruletag The whole <ruleset> tag to parse
    */
-  parseOneXmlRuleset: function(ruletag) {
+  parseOneXmlRuleset: function(ruletag, scope) {
     var default_state = true;
     var note = "";
     var default_off = ruletag.getAttribute("default_off");
@@ -457,6 +472,7 @@ RuleSets.prototype = {
 
     var rule_set = new RuleSet(ruletag.getAttribute("name"),
       default_state,
+      scope,
       note.trim());
 
     // Read user prefs
