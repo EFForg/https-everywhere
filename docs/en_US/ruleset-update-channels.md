@@ -63,11 +63,11 @@ There may be additional use cases not enumerated here.  For this to be effective
 3. Publishing those rulesets somewhere
 4. Getting users to use your update channel
 
-We will go through each of these in sequence, but first, you'll want to consider if you want your signing process airgapped or not.  Airgapped signing has the advantage of making it hard for malware to exfiltrate key material and thus forge a signed ruleset update, but it will also make it slightly more difficult to sign.  If you decide on an airgapped signing process, you may want to copy the script [`utils/sign-rulesets/async-airgap.sh`](https://github.com/EFForg/https-everywhere/blob/master/utils/sign-rulesets/async-airgap.sh) to it *before* cutting off networking for the last time.  You may also want to install the `python-qr` code on this machine to easily copy the RSA public key to your development environment, once generated, as well as `qrencode` and `eog` for ease in the signing process.
+We will go through each of these in sequence, but first, you'll want to consider if you want your signing process airgapped or not.  Airgapped signing has the advantage of making it hard for malware to exfiltrate key material and thus forge a signed ruleset update, but it will also make it slightly more difficult to sign.  If you decide on an airgapped signing process, you may want to copy the script [`utils/sign-rulesets/async-airgap.sh`](https://github.com/EFForg/https-everywhere/blob/master/utils/sign-rulesets/async-airgap.sh) to the airgap *before* cutting off networking for the last time.  You may also want to install the `python-qr` code on this machine to easily copy the RSA public key to your development environment, once generated, as well as `qrencode` and `eog` for ease in the signing process.
 
 ### 1. Creating an RSA key and generating a `jwk` object from it
 
-To create an RSA key, issue the following command (either on your development machine or an airgap):
+To create an RSA key, issue the following command (either on your development machine if you are not using an airgapped process, or the airgap if you are):
 
     openssl genrsa -out key.pem 4092
 
@@ -152,7 +152,7 @@ Once you've signed the rulesets successfully, choose a public URL to make these 
 
 ### 4. Getting users to use your update channel
 
-Once you've established an update channel by published your rulesets, you'll want to let your users know how to use them.  From step 1 above, you have a `jwk` object.  You may want to also only allow modification of certain URLs, using the `scope` field.  The `update_path_prefix` field will simply be the public URL that you chose in step 3.
+Once you've established an update channel by publishing your rulesets, you'll want to let your users know how to use them.  From step 1 above, you have a `jwk` object.  You may want to also only allow modification of certain URLs, using the `scope` field.  The `update_path_prefix` field will simply be the public URL that you chose in step 3.
 
 If your users are using a custom build of HTTPS Everywhere (such as in a corporate LAN environment), you can modify [`chromium/background-scripts/update_channels.js`](https://github.com/EFForg/https-everywhere/blob/master/chromium/background-scripts/update_channels.js) to include a new update channel in the same format as the EFF update channel.
 
@@ -175,3 +175,5 @@ You will now see a list of update channels, with `EFF (Full)` being the first.  
 If a new ruleset update is available, after a few seconds you should now see the new ruleset version in the bottom of the extension popup:
 
 ![](my-lan.png)
+
+You can also delete rulesets from the extension options.  Under `Update Channels`, just click `Delete` for the channel you want to delete.  This will immediately remove the rulesets from this update channel.
