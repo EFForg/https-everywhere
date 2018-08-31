@@ -6,17 +6,14 @@
 	CDN buckets:
 		- cng.i.lithium.com
 
-	Nonfunctional domains:
-		- repair.att.com		(times out)
-		- (www.)research.att.com	(prints "this is a test")
-		- savings.att.com
-		- att.uc.att.com		(http & https data differ)
-		- blogs.att.net		(times out)
-		- preview.att.net		(times out)
-		- (www.)attpublicpolicy.com	(shows RHEL default page, CN: localhost.localdomain)
+	Connection refused:
+		- blogs.att.net
+		- preview.att.net
+		- repair.att.com
+		- www.research.att.com
 
-	Problematic domains:
-		- uc.att.com			(works; mismatched, CN: *.sslcert35.com)
+	Invalid certificate:
+		- uc.att.com, equivalent to www.uc.att.com
 -->
 
 <ruleset name="AT&amp;T (partial)">
@@ -34,6 +31,8 @@
 	<target host="networkingexchangeblog.att.com" />
 	<target host="rewardcenter.att.com" />
 	<target host="smb.att.com" />
+	<target host="uc.att.com" />
+	<target host="www.uc.att.com" />
 	<target host="trial.uc.att.com" />
 	<target host="ufix.att.com" />
 	<target host="uversecentral.att.com" />
@@ -50,9 +49,15 @@
 	<target host="2.ecom.attccc.com" />
 	<target host="3.ecom.attccc.com" />
 
+	<!-- attpublicpolicy.com -->
+	<target host="attpublicpolicy.com" />
+	<target host="www.attpublicpolicy.com" />
 
 	<securecookie host="^.*\.att\.com$" name=".+" />
 
+
+	<rule from="^http://uc\.att\.com/"
+		to="https://www.uc.att.com/" />
 
 	<rule from="^http:" to="https:" />
 </ruleset>
