@@ -314,7 +314,7 @@ async.parallel({
           });
         }
 
-        // After building the additonal checks in the form of the
+        // After building the additional checks in the form of the
         // checks array of functions, run the checks in parallel and
         // perform the appropriate actions based on the results.
 

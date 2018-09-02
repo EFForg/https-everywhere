@@ -2,85 +2,91 @@
 
 "use strict";
 
-var stableRules = null;
-var unstableRules = null;
-
 function e(id) {
   return document.getElementById(id);
 }
 
 /**
  * Handles rule (de)activation in the popup
- * @param checkbox checkbox being clicked
- * @param ruleset the ruleset tied tot he checkbox
  */
-function toggleRuleLine(checkbox, ruleset, tab_id) {
-  var ruleset_active = checkbox.checked;
-  var set_ruleset = {
-    active: ruleset_active,
-    name: ruleset.name,
-    tab_id: tab_id
-  };
+function toggleRuleLine(event) {
+  if (event.target.matches("input[type=checkbox]")) {
+    getTab(activeTab => {
+      const set_ruleset = {
+        active: event.target.checked,
+        name: event.target.nextSibling.innerText,
+        tab_id: activeTab.id,
+      };
 
-  sendMessage("set_ruleset_active_status", set_ruleset, function(){
-
-    if (ruleset_active == ruleset.default_state) {
-      // purge the name from the cache so that this unchecking is persistent.
-      sendMessage("delete_from_ruleset_cache", ruleset.name);
-    }
-
-    // Now reload the selected tab of the current window.
-    chrome.tabs.reload();
-  });
-}
-
-/**
- * Creates a rule line (including checkbox and icon) for the popup
- * @param ruleset the ruleset to build the line for
- * @returns {*}
- */
-function appendRuleLineToListDiv(ruleset, list_div, tab_id) {
-
-  // parent block for line
-  var line = document.createElement("div");
-  line.className = "rule checkbox";
-
-  // label "container"
-  var label = document.createElement("label");
-
-  // checkbox
-  var checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
-  checkbox.checked = ruleset.active;
-  checkbox.onchange = function() {
-    toggleRuleLine(checkbox, ruleset, tab_id);
-  };
-  label.appendChild(checkbox);
-
-  // label text
-  var text = document.createElement("span");
-  text.innerText = ruleset.name;
-  if (ruleset.note.length) {
-    text.title = ruleset.note;
-  }
-
-  if(ruleset.note == "user rule") {
-    var remove = document.createElement("img");
-    remove.src = chrome.extension.getURL("images/remove.png");
-    remove.className = "remove";
-    line.appendChild(remove);
-
-    remove.addEventListener("click", function(){
-      sendMessage("remove_rule", ruleset);
-      list_div.removeChild(line);
+      sendMessage("set_ruleset_active_status", set_ruleset, () => {
+        // purge the name from the cache so that this unchecking is persistent.
+        sendMessage("delete_from_ruleset_cache", set_ruleset.name, () => {
+          // Now reload the selected tab of the current window.
+          chrome.tabs.reload(set_ruleset.tab_id);
+        });
+      });
     });
   }
+}
 
-  label.appendChild(text);
 
-  line.appendChild(label);
+/**
+ * Creates rule lines (including checkbox and icon) for the popup
+ * @param rulesets
+ * @param list_div
+ * @returns {*}
+ */
+function appendRulesToListDiv(rulesets, list_div) {
+  if (rulesets && rulesets.length) {
+    // template parent block for each ruleset
+    let templateLine = document.createElement("div");
+    templateLine.className = "rule checkbox";
 
-  list_div.appendChild(line);
+    // label "container"
+    let templateLabel = document.createElement("label");
+
+    // checkbox
+    let templateCheckbox = document.createElement("input");
+    templateCheckbox.type = "checkbox";
+
+    // label text
+    let templateLabelText = document.createElement("span");
+
+    // img "remove" button
+    let templateRemove = document.createElement("img");
+    templateRemove.src = chrome.extension.getURL("images/remove.png");
+    templateRemove.className = "remove";
+
+    templateLabel.appendChild(templateCheckbox);
+    templateLabel.appendChild(templateLabelText);
+    templateLine.appendChild(templateLabel);
+
+    for (const ruleset of rulesets) {
+      let line = templateLine.cloneNode(true);
+      let checkbox = line.querySelector("input[type=checkbox]");
+      let text = line.querySelector("span");
+
+      checkbox.checked = ruleset.active;
+      text.innerText = ruleset.name;
+
+      if (ruleset.note && ruleset.note.length) {
+        line.title = ruleset.note;
+
+        if (ruleset.note === "user rule") {
+          let remove = templateRemove.cloneNode(true);
+          line.appendChild(remove);
+
+          remove.addEventListener("click", () => {
+            sendMessage("remove_rule", ruleset, () => {
+              list_div.removeChild(line);
+            });
+          });
+        }
+      }
+      list_div.appendChild(line);
+    }
+    show(list_div);
+  }
 }
 
 function showHttpNowhereUI() {
@@ -96,7 +102,7 @@ function showHttpNowhereUI() {
 // Change the UI to reflect extension enabled/disabled
 function updateEnabledDisabledUI() {
   getOption_('globalEnabled', true, function(item) {
-    document.getElementById('onoffswitch').checked = item.globalEnabled;
+    e('onoffswitch').checked = item.globalEnabled;
     e('disableButton').style.visibility = "visible";
     // Hide or show the rules sections
     if (item.globalEnabled) {
@@ -110,7 +116,7 @@ function updateEnabledDisabledUI() {
 
 // Toggle extension enabled/disabled status
 function toggleEnabledDisabled() {
-  var extension_toggle_effect = function(){
+  var extension_toggle_effect = function() {
     updateEnabledDisabledUI();
     // The extension state changed, so reload this tab.
     chrome.tabs.reload();
@@ -125,20 +131,19 @@ function toggleEnabledDisabled() {
 
 /**
  * Create the list of rules for a specific tab
- * @param tabArray
+ * @param activeTab
  */
 function gotTab(activeTab) {
   sendMessage("get_active_rulesets", activeTab.id, function(rulesets) {
     if (rulesets) {
-      for (const ruleset of rulesets) {
-        let listDiv = stableRules;
+      const stableRules = rulesets.filter(ruleset => ruleset.default_state);
+      const unstableRules = rulesets.filter(ruleset => !ruleset.default_state);
 
-        if (!ruleset.default_state) {
-          listDiv = unstableRules;
-        }
-        appendRuleLineToListDiv(ruleset, listDiv, activeTab.id);
-        listDiv.style.display = 'block';
-      }
+      appendRulesToListDiv(stableRules, e("StableRules"));
+      appendRulesToListDiv(unstableRules, e("UnstableRules"));
+
+      // Add listener to capture the toggle event
+      e("RuleManagement").addEventListener("click", toggleRuleLine);
     }
 
     // Only show the "Add a rule" link if we're on an HTTPS page
@@ -152,21 +157,26 @@ function gotTab(activeTab) {
  * Fill in content into the popup on load
  */
 document.addEventListener("DOMContentLoaded", function () {
-  stableRules = document.getElementById("StableRules");
-  unstableRules = document.getElementById("UnstableRules");
   getTab(gotTab);
 
   // Set up the enabled/disabled switch & hide/show rules
   updateEnabledDisabledUI();
-  document.getElementById('onoffswitch').addEventListener('click', toggleEnabledDisabled);
+  e('onoffswitch').addEventListener('click', toggleEnabledDisabled);
   e('http-nowhere-checkbox').addEventListener('click', toggleHttpNowhere, false);
+  e('reset-to-defaults').addEventListener('click', () => {
+    if (confirm(chrome.i18n.getMessage("prefs_reset_defaults_message"))) {
+      sendMessage("reset_to_defaults", null, () => {
+        window.close();
+      });
+    }
+  });
 
   // Print the extension's current version.
   var the_manifest = chrome.runtime.getManifest();
-  var version_info = document.getElementById('current-version');
+  var version_info = e('current-version');
   version_info.innerText = the_manifest.version;
 
-  let rulesets_versions = document.getElementById('rulesets-versions');
+  let rulesets_versions = e('rulesets-versions');
   sendMessage("get_ruleset_timestamps", null, timestamps => {
     for(let [update_channel, timestamp] of timestamps){
       if(timestamp > 0){
