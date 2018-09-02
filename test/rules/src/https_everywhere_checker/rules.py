@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 
 import regex
 import socket
+import ipaddress
 
 
 class Rule(object):
@@ -146,7 +147,7 @@ class Ruleset(object):
         self._addTests()
 
     def excludes(self, url):
-        """Returns True iff one of exclusion patterns matches the url."""
+        """Returns True if one of exclusion patterns matches the url."""
         return any((exclusion.matches(url) for exclusion in self.exclusions))
 
     def apply(self, url):
@@ -199,7 +200,7 @@ class Ruleset(object):
 
             for test in self.tests:
                 urlParts = urlparse(test.url)
-                hostname = urlParts.hostname
+                hostname = urlParts.netloc # we want it to include the port number
 
                 isCovered = hostname in self.targets
 
@@ -278,7 +279,10 @@ class Ruleset(object):
             # Extract TLD from target if possible
             res = tldextract.extract(target)
             if res.suffix == "":
-                problems.append("{}: Target '{}' missing eTLD".format(self.filename, target))
+                try:
+                    ipaddress.ip_address(res.domain)
+                except ValueError:
+                    problems.append("{}: Target '{}' missing eTLD".format(self.filename, target))
             elif res.domain == "":
                 problems.append("{}: Target '{}' containing entire eTLD".format(
                     self.filename, target))
@@ -304,7 +308,7 @@ class Ruleset(object):
         for test in self.tests:
             if not self.excludes(test.url):
                 urlParts = urlparse(test.url)
-                hostname = urlParts.hostname
+                hostname = urlParts.netloc
                 myTestTargets.append(hostname)
 
         for target in self.targets:
