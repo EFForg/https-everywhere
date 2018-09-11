@@ -31,8 +31,6 @@ trap 'rm -r "$PROFILE_DIRECTORY"' EXIT
 tar -Jxvf $1 -C $PROFILE_DIRECTORY > /dev/null
 TBB_LOCALIZED_DIRECTORY=`find $PROFILE_DIRECTORY -maxdepth 1 -mindepth 1 -type d`
 HTTPSE_INSTALL_XPI=$TBB_LOCALIZED_DIRECTORY/Browser/TorBrowser/Data/Browser/profile.default/extensions/https-everywhere-eff@eff.org.xpi
-echo 'pref("extensions.https_everywhere.log_to_stdout", true);' >> $TBB_LOCALIZED_DIRECTORY/Browser/TorBrowser/Data/Browser/profile.default/preferences/extension-overrides.js
-echo 'pref("extensions.https_everywhere.LogLevel", 0);' >> $TBB_LOCALIZED_DIRECTORY/Browser/TorBrowser/Data/Browser/profile.default/preferences/extension-overrides.js
 # Remove the prebundled HTTPSE
 rm -rf $HTTPSE_INSTALL_XPI
 
