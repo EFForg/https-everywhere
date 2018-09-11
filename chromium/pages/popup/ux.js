@@ -133,7 +133,7 @@ function toggleEnabledDisabled() {
  * Create the list of rules for a specific tab
  * @param activeTab
  */
-function gotTab(activeTab) {
+function listRules(activeTab) {
   sendMessage("get_active_rulesets", activeTab.id, function(rulesets) {
     if (rulesets) {
       const stableRules = rulesets.filter(ruleset => ruleset.default_state);
@@ -146,9 +146,9 @@ function gotTab(activeTab) {
       e("RuleManagement").addEventListener("click", toggleRuleLine);
     }
 
-    // Only show the "Add a rule" link if we're on an HTTPS page
+    // Only show the "Add a rule" section if we're on an HTTPS page
     if (/^https:/.test(activeTab.url)) {
-      show(e("add-rule-link"));
+      show(e("addRuleSection"));
     }
   });
 }
@@ -157,7 +157,15 @@ function gotTab(activeTab) {
  * Fill in content into the popup on load
  */
 document.addEventListener("DOMContentLoaded", function () {
-  getTab(gotTab);
+  getTab(tab => {
+    const url = new URL(tab.url);
+    sendMessage("check_if_site_disabled", url.host, disabled => {
+      if(!disabled){
+        listRules(tab);
+      }
+      showEnableOrDisable(url, disabled);
+    });
+  });
 
   // Set up the enabled/disabled switch & hide/show rules
   updateEnabledDisabledUI();
@@ -192,6 +200,8 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   e("aboutTitle").title = chrome.i18n.getMessage("about_title");
   e("add-rule-link").addEventListener("click", addManualRule);
+  e("disable-on-this-site").addEventListener("click", disableOnSite);
+  e("enable-on-this-site").addEventListener("click", enableOnSite);
 });
 
 
@@ -205,6 +215,27 @@ function hide(elem) {
 
 function show(elem) {
   elem.style.display = "block";
+}
+
+function showEnableOrDisable(url, disabled) {
+  if (["http:", "https:", "ftp:"].indexOf(url.protocol) != -1) {
+    const disableLink = e("disable-on-this-site");
+    const enableLink = e("enable-on-this-site");
+    const addRuleSection = e("addRuleSection");
+    const resetToDefaults = e('reset-to-defaults');
+    if (disabled) {
+      show(enableLink);
+      hide(disableLink);
+      hide(addRuleSection);
+      hide(resetToDefaults);
+    } else {
+      show(disableLink);
+      hide(enableLink);
+    }
+  } else {
+    const disableEnableSection = e("disableEnableSection");
+    hide(disableEnableSection);
+  }
 }
 
 /**
@@ -250,6 +281,27 @@ function addManualRule() {
       hide(e("new-rule-advanced"));
       show(e("new-rule-regular-text"));
     });
+  });
+}
+
+/**
+ * Disable HTTPS Everywhere on a particular FQDN
+ */
+function disableOnSite() {
+  getTab(function(tab) {
+    const url = new URL(tab.url);
+    sendMessage("disable_on_site", url.host);
+    chrome.tabs.reload(tab.id);
+    window.close();
+  });
+}
+
+function enableOnSite() {
+  getTab(function(tab) {
+    const url = new URL(tab.url);
+    sendMessage("enable_on_site", url.host);
+    chrome.tabs.reload(tab.id);
+    window.close();
   });
 }
 
