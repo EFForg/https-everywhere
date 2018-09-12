@@ -1,12 +1,30 @@
 <!--
 	Warn：https://github.com/EFForg/https-everywhere/pull/5042#issuecomment-234782358
-	
+
+	Mismatched:
+		^
+
+	Timeout:
+		account-img.geekpark.net
+
 	Related:
 		Qbox.me.xml
 -->
+<ruleset name="GeekPark">
+	<target host="geekpark.net" />
+	<target host="www.geekpark.net" />
+	<target host="account.geekpark.net" />
+	<target host="account-img.geekpark.net" />
+	<target host="imgslim.geekpark.net" />
+	<target host="mainssl.geekpark.net" />
 
-<ruleset name="GeekPark (partial)">
-	
+	<rule from="^http://geekpark\.net/"
+		to="https://www.geekpark.net/" />
+
+	<rule from="^http://account-img\.geekpark\.net/"
+		to="https://account.geekpark.net/" />
+		<test url="http://account-img.geekpark.net/uploads/user/avatar/75d06550-3a7b-4019-846e-eb86782b3d9a/160160.jpg" />
+
 	<!--	clouddn and qiniudn only has http, but it equals to main hosts	-->
 	<target host="7mnpep.com2.z0.glb.clouddn.com" />
 	<target host="7mnpep.com2.z0.glb.qiniucdn.com" />
@@ -23,10 +41,13 @@
 
 	<rule from="^http://geekpark-img\.qiniudn\.com/"
 		to="https://dn-geekpark-new.qbox.me/" />
+		<exclusion pattern="^http://geekpark-img\.qiniudn\.com/$" /><!--404: https://travis-ci.org/EFForg/https-everywhere/jobs/427662655#L602-->
 		<test url="http://geekpark-img.qiniudn.com/uploads/reading/seed/6a69221d85271be3194ba7cb76d49340.png" />
 
 	<rule from="^http://gpk-new\.qiniudn\.com/"
 		to="https://dn-geekpark-new.qbox.me/" />
+		<exclusion pattern="^http://gpk-new\.qiniudn\.com/$" /><!--404: https://travis-ci.org/EFForg/https-everywhere/jobs/427633390#L603-->
 		<test url="http://gpk-new.qiniudn.com/assets/application-177c73324f0e5e9780d102790d44fbeb.js" />	
 
+	<rule from="^http:" to="https:" />
 </ruleset>
