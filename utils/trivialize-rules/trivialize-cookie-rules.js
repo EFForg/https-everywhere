@@ -13,7 +13,7 @@ const rulesDir = 'src/chrome/content/rules';
 
 const isTrivial = (securecookie) => {
   return securecookie.host === '.+' && securecookie.name === '.+';
-}
+};
 
 (async () => {
   let readFilePromises = null;
@@ -37,44 +37,44 @@ const isTrivial = (securecookie) => {
             let targets = ruleset.target.map(target => target.$.host);
             let securecookies = ruleset.securecookie ? ruleset.securecookie.map(sc => sc.$) : null;
 
-            if (!(rules && rules.length == 1)) {
-              return ;
+            if (!(rules && rules.length === 1)) {
+              return;
             }
 
-            if (securecookies && securecookies.length == 1 && !isTrivial(securecookies[0])) {
+            if (securecookies && securecookies.length === 1 && !isTrivial(securecookies[0])) {
               let securecookie = securecookies[0];
               if (!securecookie.host.endsWith('$')) {
-                return ;
+                return;
               }
 
               if (!securecookie.host.startsWith('^.+') && !securecookie.host.startsWith('^.*')) {
-                return ;
+                return;
               }
 
               let hostRegex = new RegExp(securecookie.host);
               for (let target of targets) {
                 if (target.includes('.*')) {
-                  return ;
+                  return;
                 }
 
-                target = target.replace('*.', 'www.')
+                target = target.replace('*.', 'www.');
                 if (!hostRegex.test(target)) {
-                  return ;
+                  return;
                 }
               }
 
-              let scReSrc = `\n([\t ]*)<securecookie\\s*host=\\s*"([^\"]+)"(\\s*)name=\\s*"([^\"]+)"\\s*?/>[\t ]*\n`;
+              let scReSrc = `\n([\t ]*)<securecookie\\s*host=\\s*"([^"]+)"(\\s*)name=\\s*"([^"]+)"\\s*?/>[\t ]*\n`;
               let scRe = new RegExp(scReSrc);
               let source = content.replace(scRe, '\n$1<securecookie host=".+"$3name="$4" />\n');
 
               fs.writeFileSync(path.join(rulesDir, filename), source, 'utf8');
             }
-          })
-      })
+          });
+      });
     })
     .catch(error => {
       console.log(error);
-    })
+    });
 
   await Promise.all(readFilePromises)
     .catch(error => {
