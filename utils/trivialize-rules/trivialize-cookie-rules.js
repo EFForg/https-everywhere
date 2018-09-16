@@ -1,5 +1,33 @@
 'use strict';
 
+/**
+ * For future contributors, this script was written to trivialize a special
+ * form of securecookie rules which is equal to trivial securecookie rule
+ * under the current HTTPSe implementation. This allows trivialize-rules.js to
+ * simplify rulesets otherwise impossible due to the lack of support of
+ * unbounded wildcard RegExps in explode-regexp.js (by design).
+ *
+ * As stated in trivialize-rules.js, a securecookie rule works if there is an
+ * existing rule covering the exact same domain.
+ *
+ * In particular, <securecookie host=".*example.com" .../> covers all
+ * subdomains in cookie.host given at least one working rule cover
+ * the same subdomains.
+ *
+ * If there is at least one such rule, for e.g. www.example.com, the mentioned
+ * securecookie rules can be reduced to
+ *     <securecookie host="^\.?www\.example\.com$" .../>
+ * Else, the securecookie rule do not take into effect and thus can be ignored
+ * during the runtime.
+ *
+ * So, regardless of the existence of any rule, for all targets listed in a
+ * ruleset, the securecookie rule can be interpreted as
+ *     <securecookie host=".+" .../>
+ *
+ * For simplicity, this implementation require securecookie#host includes a
+ * tailing $
+ */
+
 let util = require('util');
 let path = require('path');
 let xml2js = require('xml2js');
@@ -47,9 +75,9 @@ const isTrivial = (securecookie) => {
                 return;
               }
 
-              if (!securecookie.host.startsWith('^.+') && 
-	                !securecookie.host.startsWith('^.*') && 
-                  !securecookie.host.startsWith('.+') && 
+              if (!securecookie.host.startsWith('^.+') &&
+                  !securecookie.host.startsWith('^.*') &&
+                  !securecookie.host.startsWith('.+') &&
                   !securecookie.host.startsWith('.*')) {
                 return;
               }
