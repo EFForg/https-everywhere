@@ -1,7 +1,9 @@
 /* exported e */
 /* exported hide */
 /* exported show */
+/* exported sendMessage */
 /* exported getOption_ */
+/* exported setOption_ */
 
 "use strict";
 
@@ -20,6 +22,10 @@ function show(elem) {
   elem.style.display = "block";
 }
 
+function sendMessage(type, object, callback) {
+  chrome.runtime.sendMessage({ type, object }, callback);
+}
+
 /**
 * Get an option from global settings
 * @param {string} opt
@@ -31,4 +37,10 @@ function getOption_(opt, defaultOpt, callback) {
   let details = {};
   details[opt] = defaultOpt;
   sendMessage("get_option", details, callback);
+}
+
+function setOption_(opt, value, callback) {
+  var details = {};
+  details[opt] = value;
+  sendMessage("set_option", details, callback);
 }
