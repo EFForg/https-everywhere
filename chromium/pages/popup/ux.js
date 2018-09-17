@@ -1,10 +1,11 @@
+/* global e */
+/* global hide */
+/* global show */
 /* global sendMessage */
+/* global getOption_ */
+/* global setOption_ */
 
 "use strict";
-
-function e(id) {
-  return document.getElementById(id);
-}
 
 /**
  * Handles rule (de)activation in the popup
@@ -209,14 +210,6 @@ var escapeForRegex = function( value ) {
   return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
 };
 
-function hide(elem) {
-  elem.style.display = "none";
-}
-
-function show(elem) {
-  elem.style.display = "block";
-}
-
 function showEnableOrDisable(url, disabled) {
   if (["http:", "https:", "ftp:"].indexOf(url.protocol) != -1) {
     const disableLink = e("disable-on-this-site");
@@ -309,18 +302,6 @@ function toggleHttpNowhere() {
   getOption_('httpNowhere', false, function(item) {
     setOption_('httpNowhere', !item.httpNowhere);
   });
-}
-
-function getOption_(opt, defaultOpt, callback) {
-  var details = {};
-  details[opt] = defaultOpt;
-  sendMessage("get_option", details, callback);
-}
-
-function setOption_(opt, value, callback) {
-  var details = {};
-  details[opt] = value;
-  sendMessage("set_option", details, callback);
 }
 
 function getTab(callback) {
