@@ -31,7 +31,7 @@ if [ "$1" == "--justrun" ]; then
 	which $BROWSER || BROWSER="chromium"
 	$BROWSER \
 		--user-data-dir="$PROFILE_DIRECTORY" \
-		--load-extension=pkg/crx/ \
+		--load-extension=pkg/crx-cws/ \
 		"$@"
 else
 	./make.sh
