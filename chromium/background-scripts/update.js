@@ -229,7 +229,8 @@ async function performCheck() {
     }
   }
   if(num_updates > 0){
-    background_callback();
+    // await background_callback if it is an async function
+    await background_callback();
   }
 };
 
