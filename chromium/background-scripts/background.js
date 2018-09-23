@@ -10,7 +10,8 @@ const rules = require('./rules'),
   { update_channels } = require('./update_channels');
 
 
-let all_rules = new rules.RuleSets();
+// initialize all_rules via initializeAllRules only, and only once
+let all_rules = null;
 
 async function initialize() {
   await store.initialize();
@@ -18,15 +19,13 @@ async function initialize() {
   await initializeStoredGlobals();
   await getUpgradeToSecureAvailable();
   await update.initialize(store, initializeAllRules);
-  await all_rules.loadFromBrowserStorage(store, update.applyStoredRulesets);
   await incognito.onIncognitoDestruction(destroy_caches);
 }
 initialize();
 
 async function initializeAllRules() {
-  const r = new rules.RuleSets();
-  await r.loadFromBrowserStorage(store, update.applyStoredRulesets);
-  Object.assign(all_rules, r);
+  all_rules = new rules.RuleSets();
+  return all_rules.loadFromBrowserStorage(store, update.applyStoredRulesets);
 }
 
 /**
