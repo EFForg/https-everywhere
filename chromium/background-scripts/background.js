@@ -894,7 +894,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
       return true;
     },
     remove_rule: () => {
-      all_rules.removeRuleAndStore(message.object);
+      all_rules.removeRuleAndStore(message.object). then(() => {
+        sendResponse(true);
+      });
+      return true;
     },
     get_ruleset_timestamps: () => {
       update.getRulesetTimestamps().then(timestamps => sendResponse(timestamps));
