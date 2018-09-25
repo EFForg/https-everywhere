@@ -257,6 +257,9 @@ RuleSets.prototype = {
     var default_off = ruletag["default_off"];
     if (default_off) {
       default_state = false;
+      if (default_off === "user rule") {
+        default_state = true;
+      }
       note += default_off + "\n";
     }
 
@@ -320,18 +323,14 @@ RuleSets.prototype = {
    */
   addUserRule : function(params, scope) {
     util.log(util.INFO, 'adding new user rule for ' + JSON.stringify(params));
-    var new_rule_set = new RuleSet(params.host, true, scope, "user rule");
-    var new_rule = getRule(params.urlMatcher, params.redirectTo);
-    new_rule_set.rules.push(new_rule);
-    if (!this.targets.has(params.host)) {
-      this.targets.set(params.host, []);
+    this.parseOneJsonRuleset(params, scope);
+
+    // clear cache so new rule take effect immediately
+    for (const target of params.target) {
+      this.ruleCache.delete(target);
     }
-    this.ruleCache.delete(params.host);
+
     // TODO: maybe promote this rule?
-    this.targets.get(params.host).push(new_rule_set);
-    if (new_rule_set.name in this.ruleActiveStates) {
-      new_rule_set.active = this.ruleActiveStates[new_rule_set.name];
-    }
     util.log(util.INFO, 'done adding rule');
     return true;
   },
@@ -343,9 +342,13 @@ RuleSets.prototype = {
    */
   removeUserRule: function(ruleset) {
     util.log(util.INFO, 'removing user rule for ' + JSON.stringify(ruleset));
+
+    /**
+     * FIXME: We have to use ruleset.name here because the ruleset itself
+     * carries no information on the target it is applying on. This also
+     * made it impossible for users to set custom ruleset name.
+     */
     this.ruleCache.delete(ruleset.name);
-
-
     var tmp = this.targets.get(ruleset.name).filter(r =>
       !(r.isEquivalentTo(ruleset))
     );
@@ -370,12 +373,11 @@ RuleSets.prototype = {
   * Load all stored user rules into this RuleSet object
   */
   loadStoredUserRules: async function() {
-    const scope = getScope();
-    const user_rules = await this.getStoredUserRules();
-    for (let user_rule of user_rules) {
-      this.addUserRule(user_rule, scope);
-    }
-    util.log(util.INFO, 'loaded ' + user_rules.length + ' stored user rules');
+    return this.getStoredUserRules()
+      .then(userRules => {
+        this.addFromJson(userRules, getScope());
+        util.log(util.INFO, `loaded ${userRules.length} stored user rules`);
+      });
   },
 
   /**
@@ -406,8 +408,8 @@ RuleSets.prototype = {
       // If we successfully removed the user rule, remove it in local storage too
       let userRules = await this.getStoredUserRules();
       userRules = userRules.filter(r =>
-        !(r.host == ruleset.name &&
-          r.redirectTo == ruleset.rules[0].to)
+        !(r.name == ruleset.name &&
+          r.rule[0].to == ruleset.rules[0].to)
       );
       await this.store.set_promise(this.USER_RULE_KEY, userRules);
     }
@@ -456,6 +458,9 @@ RuleSets.prototype = {
     var default_off = ruletag.getAttribute("default_off");
     if (default_off) {
       default_state = false;
+      if (default_off === "user rule") {
+        default_state = true;
+      }
       note += default_off + "\n";
     }
 
