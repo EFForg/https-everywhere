@@ -887,6 +887,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
         chrome.tabs.reload();
       });
     },
+    get_user_rules: () => {
+      store.get_promise(all_rules.USER_RULE_KEY, []).then(userRules => sendResponse(userRules));
+      return true;
+    },
     add_new_rule: () => {
       all_rules.addNewRuleAndStore(message.object).then(() => {
         sendResponse(true);
@@ -894,7 +898,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
       return true;
     },
     remove_rule: () => {
-      all_rules.removeRuleAndStore(message.object). then(() => {
+      all_rules.removeRuleAndStore(message.object).then(() => {
         sendResponse(true);
       });
       return true;

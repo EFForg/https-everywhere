@@ -409,7 +409,7 @@ RuleSets.prototype = {
       let userRules = await this.getStoredUserRules();
       userRules = userRules.filter(r =>
         !(r.name == ruleset.name &&
-          r.rule[0].to == ruleset.rules[0].to)
+          r.rule[0].to == ruleset.rule[0].to)
       );
       await this.store.set_promise(this.USER_RULE_KEY, userRules);
     }
