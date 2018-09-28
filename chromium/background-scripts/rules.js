@@ -221,7 +221,7 @@ RuleSets.prototype = {
     this.store = store;
     this.ruleActiveStates = await this.store.get_promise('ruleActiveStates', {});
     await applyStoredFunc(this);
-    this.loadStoredUserRules();
+    await this.loadStoredUserRules();
     await this.addStoredCustomRulesets();
   },
 
