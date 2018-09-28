@@ -372,7 +372,7 @@ RuleSets.prototype = {
   /**
   * Load all stored user rules into this RuleSet object
   */
-  loadStoredUserRules: async function() {
+  loadStoredUserRules: function() {
     return this.getStoredUserRules()
       .then(userRules => {
         this.addFromJson(userRules, getScope());
