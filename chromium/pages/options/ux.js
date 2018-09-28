@@ -260,9 +260,10 @@ document.addEventListener("DOMContentLoaded", () => {
       user_rule_host.appendChild(remove);
 
       remove.addEventListener("click", () => {
-        sendMessage("remove_rule", userRule, () => {
-          hide( user_rule_host );
-        });
+        // assume the removal is successful and hide ui element
+        hide( user_rule_host );
+        // remove the user rule
+        sendMessage("remove_rule", userRule);
       });
     }
   })

@@ -908,7 +908,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
           return initializeAllRules();
         })
         .then(() => {
-          sendResponse(true);
+          if (sendResponse !== null) {
+            sendResponse(true);
+          }
         })
       return true;
     },
