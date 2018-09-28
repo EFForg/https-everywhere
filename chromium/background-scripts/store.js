@@ -72,28 +72,29 @@ async function performMigrations() {
       await set_promise('ruleActiveStates', ruleActiveStates);
     }
 
-    if (migration_version === 1) {
-      await get_promise(rules.RuleSets().USER_RULE_KEY, [])
-        .then(userRules => {
-          userRules = userRules.map(userRule => {
-            return {
-              name: userRule.host,
-              target: [userRule.host],
-              rule: [{ from: userRule.urlMatcher, to: userRule.redirectTo }],
-              default_off: "user rule"
-            }
-          })
-          return userRules;
-        })
-        .then(userRules => {
-          return set_promise(rules.RuleSets().USER_RULE_KEY, userRules);
-        })
-
-      migration_version = 2;
-      await set_promise('migration_version', migration_version);
-    }
   } catch (e) {
     // do nothing
+  }
+
+  if (migration_version === 1) {
+    await get_promise(rules.RuleSets().USER_RULE_KEY, [])
+      .then(userRules => {
+        userRules = userRules.map(userRule => {
+          return {
+            name: userRule.host,
+            target: [userRule.host],
+            rule: [{ from: userRule.urlMatcher, to: userRule.redirectTo }],
+            default_off: "user rule"
+          }
+        })
+        return userRules;
+      })
+      .then(userRules => {
+        return set_promise(rules.RuleSets().USER_RULE_KEY, userRules);
+      })
+
+    migration_version = 2;
+    await set_promise('migration_version', migration_version);
   }
 }
 
