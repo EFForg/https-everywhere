@@ -340,24 +340,33 @@ RuleSets.prototype = {
    * @param params
    * @returns {boolean}
    */
-  removeUserRule: function(ruleset) {
-    util.log(util.INFO, 'removing user rule for ' + JSON.stringify(ruleset));
-
+  removeUserRule: function(ruleset, src) {
     /**
      * FIXME: We have to use ruleset.name here because the ruleset itself
      * carries no information on the target it is applying on. This also
      * made it impossible for users to set custom ruleset name.
      */
-    this.ruleCache.delete(ruleset.name);
-    var tmp = this.targets.get(ruleset.name).filter(r =>
-      !(r.isEquivalentTo(ruleset))
-    );
-    this.targets.set(ruleset.name, tmp);
+    util.log(util.INFO, 'removing user rule for ' + JSON.stringify(ruleset));
 
-    if (this.targets.get(ruleset.name).length == 0) {
-      this.targets.delete(ruleset.name);
+    // Remove any cache from runtime
+    this.ruleCache.delete(ruleset.name);
+
+    if (src === 'popup') {
+      const tmp = this.targets.get(ruleset.name).filter(r => !r.isEquivalentTo(ruleset))
+      this.targets.set(ruleset.name, tmp);
+
+      if (this.targets.get(ruleset.name).length == 0) {
+        this.targets.delete(ruleset.name);
+      }
     }
 
+    if (src === 'options') {
+      /**
+       * FIXME: There is nothing we can do if the call comes from the
+       * option page because isEquivalentTo cannot work reliably. 
+       * Leave the heavy duties to background.js to call initializeAllRules
+       */
+    }
     util.log(util.INFO, 'done removing rule');
     return true;
   },
@@ -403,14 +412,21 @@ RuleSets.prototype = {
   * Removes a user rule
   * @param ruleset: the ruleset to remove
   * */
-  removeRuleAndStore: async function(ruleset) {
-    if (this.removeUserRule(ruleset)) {
-      // If we successfully removed the user rule, remove it in local storage too
+  removeRuleAndStore: async function(ruleset, src) {
+    if (this.removeUserRule(ruleset, src)) {
       let userRules = await this.getStoredUserRules();
-      userRules = userRules.filter(r =>
-        !(r.name == ruleset.name &&
-          r.rule[0].to == ruleset.rule[0].to)
-      );
+
+      if (src === 'popup') {
+        userRules = userRules.filter(r =>
+          !(r.name === ruleset.name && r.rule[0].to === ruleset.rules[0].to)
+        );
+      }
+
+      if (src === 'options') {
+        userRules = userRules.filter(r =>
+          !(r.name === ruleset.name && r.rule[0].to === ruleset.rule[0].to)
+        );
+      }
       await this.store.set_promise(this.USER_RULE_KEY, userRules);
     }
   },

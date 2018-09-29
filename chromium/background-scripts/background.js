@@ -898,14 +898,16 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
       return true;
     },
     remove_rule: () => {
-      all_rules.removeRuleAndStore(message.object)
+      all_rules.removeRuleAndStore(message.object.ruleset, message.object.src)
         .then(() => {
           /**
            * FIXME: initializeAllRules is needed for calls from the option pages.
            * Since message.object is not of type Ruleset, rules.removeUserRule
            * is not usable...
            */
-          return initializeAllRules();
+          if (message.object.src === 'options') {
+            return initializeAllRules();
+          }
         })
         .then(() => {
           if (sendResponse !== null) {

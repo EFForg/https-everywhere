@@ -78,7 +78,7 @@ function appendRulesToListDiv(rulesets, list_div) {
           line.appendChild(remove);
 
           remove.addEventListener("click", () => {
-            sendMessage("remove_rule", ruleset, () => {
+            sendMessage("remove_rule", { ruleset, src: 'popup' }, () => {
               list_div.removeChild(line);
             });
           });

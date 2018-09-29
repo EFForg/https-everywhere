@@ -263,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // assume the removal is successful and hide ui element
         hide( user_rule_host );
         // remove the user rule
-        sendMessage("remove_rule", userRule);
+        sendMessage("remove_rule", { ruleset: userRule, src: 'options' });
       });
     }
   })
