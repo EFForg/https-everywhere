@@ -76,7 +76,7 @@ async function performMigrations() {
     // do nothing
   }
 
-  if (migration_version < 1) {
+  if (migration_version <= 1) {
     await get_promise(rules.RuleSets().USER_RULE_KEY, [])
       .then(userRules => {
         userRules = userRules.map(userRule => {
