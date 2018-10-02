@@ -136,8 +136,8 @@ python3.6 -c "import json; m=json.loads(open('pkg/xpi-amo/manifest.json').read()
 # If the --remove-extension-update flag is set, ensure the extension is unable to update
 if $REMOVE_EXTENSION_UPDATE; then
   echo "Flag --remove-extension-update specified.  Removing the XPI extensions' ability to update."
-  python3.6 -c "import json; m=json.loads(open('pkg/xpi-amo/manifest.json').read()); m['applications']['gecko']['update_url'] = 'data:text/plain,'; open('pkg/xpi-amo/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
-  python3.6 -c "import json; m=json.loads(open('pkg/xpi-eff/manifest.json').read()); m['applications']['gecko']['update_url'] = 'data:text/plain,'; open('pkg/xpi-eff/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+  python3.6 -c "import json; m=json.loads(open('pkg/xpi-amo/manifest.json').read()); m['applications']['gecko']['update_url'] = 'https://127.0.0.1'; open('pkg/xpi-amo/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+  python3.6 -c "import json; m=json.loads(open('pkg/xpi-eff/manifest.json').read()); m['applications']['gecko']['update_url'] = 'https://127.0.0.1'; open('pkg/xpi-eff/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
 fi
 
 # If the --remove-update-channels flag is set, remove all out-of-band update channels
