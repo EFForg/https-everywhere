@@ -690,6 +690,11 @@ function onHeadersReceived(details) {
     if (uri.hostname.slice(-6) == '.onion') {
       return {};
     }
+   
+    const documentUrl = new URL(details.documentUrl); 
+    if (disabledList.has(documentUrl.hostname)) {
+      return {};
+    }
 
     let responseHeadersChanged = false;
     let cspHeaderFound = false;
