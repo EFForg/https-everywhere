@@ -11,7 +11,10 @@ document.addEventListener("DOMContentLoaded", () => {
   } else {
     observer.observe(explainer, {childList: true});
   }
-  displayURL();
+  const cancelURL = new URL(window.location.href);
+  const originURL = decodeURI(cancelURL.searchParams.get('originURL'));
+  displayURL(originURL);
+  displayWaybackMachineLink(originURL);
 });
 
 function replaceLink(explainer){
@@ -23,9 +26,7 @@ function replaceLink(explainer){
   explainer.innerHTML = explainer.innerHTML.replace(linkText, link.outerHTML);
 }
 
-function displayURL() {
-  const cancelURL = new URL(window.location.href);
-  const originURL = decodeURI(cancelURL.searchParams.get('originURL'));
+function displayURL(originURL) {
   const originURLLink = document.getElementById('originURL');
   originURLLink.innerText = originURL;
 
@@ -35,6 +36,26 @@ function displayURL() {
       sendMessage("disable_on_site", url.host, () => {
         window.location = originURL;
       });
+    }
+  });
+}
+
+function displayWaybackMachineLink(originURL) {
+  const waybackMachineURLLink = document.getElementById("waybackMachineURL");
+  waybackMachineURLLink.innerText = chrome.i18n.getMessage("cancel_he_blocking_internet_archive_link");
+  waybackMachineURLLink.addEventListener("click", async function () {
+    const response = await fetch("https://archive.org/wayback/available?url=" + encodeURI(originURL));
+    const json = await response.json();
+    if (json &&
+        json.archived_snapshots &&
+        json.archived_snapshots.closest &&
+        json.archived_snapshots.closest.available) {
+      // We have a snapshot! Navigate to it.
+      const waybackMachineURL = json.archived_snapshots.closest.url;
+      window.location = new URL(waybackMachineURL);
+    } else {
+      // Page is not in archive; show Wayback Machine "Not Found" page.
+      window.location = new URL("https://web.archive.org/web/*/" + encodeURI(originURL));
     }
   });
 }
