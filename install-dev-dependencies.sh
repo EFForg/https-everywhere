@@ -22,6 +22,7 @@ if [ $UID != 0 ]; then
   SUDO_SHIM=sudo
 fi
 
+# debian based installation
 if type apt-get >/dev/null ; then
   $SUDO_SHIM apt-get update
   $SUDO_SHIM apt-get install -y lsb-release
@@ -48,12 +49,16 @@ if type apt-get >/dev/null ; then
   if [ ! -f /usr/lib/chromium/chromedriver ] && [ -f `which chromedriver` ]; then
     $SUDO_SHIM ln -s `which chromedriver` /usr/lib/chromium/chromedriver
   fi
+
+# macOS installation
 elif type brew >/dev/null ; then
   brew list python &>/dev/null || brew install python
   brew install libxml2 gnu-sed chromedriver
   if ! echo $PATH | grep -ql /usr/local/bin ; then
     echo '/usr/local/bin not found in $PATH, please add it.'
   fi
+
+# distros that use rpm (Fedora, Suse, CentOS) installation
 elif type dnf >/dev/null ; then
   $SUDO_SHIM dnf install -y firefox gcc git libcurl-devel libxml2-devel \
     libxslt-devel python-devel redhat-rpm-config xorg-x11-server-Xvfb which \
