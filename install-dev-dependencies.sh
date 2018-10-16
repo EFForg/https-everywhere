@@ -23,7 +23,7 @@ if [ $UID != 0 ]; then
 fi
 
 # debian based installation
-if type apt-get >/dev/null ; then
+if type apt-get>/dev/null 2>&1;  then
   $SUDO_SHIM apt-get update
   $SUDO_SHIM apt-get install -y lsb-release
   BROWSERS="firefox chromium-browser"
@@ -38,7 +38,7 @@ if type apt-get >/dev/null ; then
   $SUDO_SHIM apt-get install -y libxml2-dev libxml2-utils libxslt1-dev \
     python3.6-dev $BROWSERS zip sqlite3 python3-pip libcurl4-openssl-dev xvfb \
     libssl-dev git curl $CHROMEDRIVER
-  if ! type geckodriver >/dev/null; then
+  if ! type geckodriver >/dev/null 2>&1;  then
     curl -LO "https://github.com/mozilla/geckodriver/releases/download/v0.17.0/geckodriver-v0.17.0-linux64.tar.gz"
     tar -zxvf "geckodriver-v0.17.0-linux64.tar.gz"
     rm -f "geckodriver-v0.17.0-linux64.tar.gz"
@@ -51,7 +51,7 @@ if type apt-get >/dev/null ; then
   fi
 
 # macOS installation
-elif type brew >/dev/null ; then
+elif type brew >/dev/null 2>&1; then
   brew list python &>/dev/null || brew install python
   brew install libxml2 gnu-sed chromedriver
   if ! echo $PATH | grep -ql /usr/local/bin ; then
@@ -59,7 +59,7 @@ elif type brew >/dev/null ; then
   fi
 
 # distros that use rpm (Fedora, Suse, CentOS) installation
-elif type dnf >/dev/null ; then
+elif type dnf >/dev/null 2>&1; then
   $SUDO_SHIM dnf install -y firefox gcc git libcurl-devel libxml2-devel \
     libxslt-devel python-devel redhat-rpm-config xorg-x11-server-Xvfb which \
     findutils procps openssl openssl-devel chromium GConf2
@@ -76,7 +76,7 @@ elif type dnf >/dev/null ; then
     $SUDO_SHIM chown root /usr/bin/chromedriver
     $SUDO_SHIM chmod 755 /usr/bin/chromedriver
   fi
-  if ! type geckodriver >/dev/null; then
+  if ! type geckodriver >/dev/null 2>&1;  then
     curl -LO "https://github.com/mozilla/geckodriver/releases/download/v0.17.0/geckodriver-v0.17.0-macos.tar.gz"
     tar -zxvf "geckodriver-v0.17.0-macos.tar.gz"
     rm -f "geckodriver-v0.17.0-macos.tar.gz"
@@ -90,6 +90,11 @@ elif type dnf >/dev/null ; then
     $SUDO_SHIM sh -c 'dbus-uuidgen > /var/lib/dbus/machine-id'
   fi
   export PYCURL_SSL_LIBRARY=openssl
+else
+    echo \
+    "Your distribuiton isn't supported by this script yet!"\
+    "Please install them manually."
+    exit
 fi
 
 # Get the addon SDK submodule and rule checker
