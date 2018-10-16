@@ -887,6 +887,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
         chrome.tabs.reload();
       });
     },
+    get_user_rules: () => {
+      store.get_promise(all_rules.USER_RULE_KEY, []).then(userRules => sendResponse(userRules));
+      return true;
+    },
     add_new_rule: () => {
       all_rules.addNewRuleAndStore(message.object).then(() => {
         sendResponse(true);
@@ -894,7 +898,23 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
       return true;
     },
     remove_rule: () => {
-      all_rules.removeRuleAndStore(message.object);
+      all_rules.removeRuleAndStore(message.object.ruleset, message.object.src)
+        .then(() => {
+          /**
+           * FIXME: initializeAllRules is needed for calls from the option pages.
+           * Since message.object is not of type Ruleset, rules.removeUserRule
+           * is not usable...
+           */
+          if (message.object.src === 'options') {
+            return initializeAllRules();
+          }
+        })
+        .then(() => {
+          if (sendResponse !== null) {
+            sendResponse(true);
+          }
+        })
+      return true;
     },
     get_ruleset_timestamps: () => {
       update.getRulesetTimestamps().then(timestamps => sendResponse(timestamps));

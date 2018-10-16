@@ -233,6 +233,41 @@ document.addEventListener("DOMContentLoaded", () => {
     window.scrollTo(0,0);
   }
 
+  // Get a list of user Rules
+  sendMessage("get_user_rules", null, userRules => {
+    let user_rules_parent = e("user-rules-wrapper");
+
+    if ( 0 === userRules.length) {
+      hide(user_rules_parent);
+      return ;
+    }
+
+    // img element "remove button"
+    let templateRemove = document.createElement("img");
+    templateRemove.src = chrome.extension.getURL("images/remove.png");
+    templateRemove.className = "remove";
+
+    for (const userRule of userRules) {
+      let user_rule_host = document.createElement("div");
+      let user_rule_name = document.createElement("p");
+      let remove = templateRemove.cloneNode(true);
+
+      user_rule_host.className = "user-rules-list-item";
+      user_rule_name.className = "user-rules-list-item-single"
+      user_rule_name.innerText = userRule.name;
+      user_rule_host.appendChild(user_rule_name);
+      user_rules_parent.appendChild(user_rule_host);
+      user_rule_host.appendChild(remove);
+
+      remove.addEventListener("click", () => {
+        // assume the removal is successful and hide ui element
+        hide( user_rule_host );
+        // remove the user rule
+        sendMessage("remove_rule", { ruleset: userRule, src: 'options' });
+      });
+    }
+  })
+
   // HTTPS Everywhere Sites Disabled section in General Settings module
   getOption_("disabledList", [], function(item) {
     let rule_host_parent = e("disabled-rules-wrapper");
