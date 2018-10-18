@@ -9,7 +9,6 @@
 		- Adobe_Connect.xml
 		- Adobe-Digital-Marketing.xml
 		- Adobe_Exchange.com.xml
-		- Adobe_forms_central.com.xml
 		- Adobe_login.com.xml
 		- Adobetag.com.xml
 		- Acrobat_Users.com.xml
@@ -62,19 +61,16 @@
 		- cem.events	(Shows discoverwem.adobe.com)
 		- forums *
 		- gaming ¹
-		- get2 ⁴
 		- groups **
 		- images.groups ***
 		- html ¹
 		- kb2 ¹
 		- labs ¹
 		- max (redirect to http)
-		- ns ¹
 		- stats ⁶
 		- techlive	(404)
 		- thumbnails.tv ²
 		- webplatform	(Github)
-		- wwwimages ²
 
 	¹ Works, mismatched, CN: www.adobe.com
 	* Blocks Tor users
@@ -89,7 +85,6 @@
 
 		- community ¹
 		- fpdownload ³
-		- ns		(→ www)
 
 	¹ /+[^?] 404s
 	³ crossdomain.xml excluded
@@ -120,7 +115,6 @@
 		- cem.events	(→ www.adobe.com)
 		- forums
 		- get
-		- get2		(→ get)
 		- get3
 		- images.groups	(→ s3.amazonaws.com)
 		- helpx
@@ -136,8 +130,6 @@
 		- tv
 		- thumbnails.tv *
 		- verify
-		- wwwimages *
-		- wwwimages2
 
 	* → akamai
 
@@ -197,12 +189,16 @@
 	<target host="communities.adobe.com" />
 	<target host="creative.adobe.com" />
 	<target host="*.creative.adobe.com" />
+	<test url="http://ap.creative.adobe.com/" />
+	<test url="http://eu.creative.adobe.com/" />
+	<test url="http://us.creative.adobe.com/" />
 	<target host="download.adobe.com" />
 	<target host="www.echosign.adobe.com" />
 	<target host="edex.adobe.com" />
 	<target host="forums.adobe.com" />
 	<target host="fpdownload.adobe.com" />
 	<target host="get.adobe.com" />
+	<target host="get2.adobe.com" />
 	<target host="get3.adobe.com" />
 	<target host="helpx.adobe.com" />
 	<target host="images-tv.adobe.com" />
@@ -215,6 +211,7 @@
 	<target host="tv.adobe.com" />
 	<target host="verify.adobe.com" />
 	<target host="www.adobe.com" />
+	<target host="wwwimages.adobe.com" />
 	<target host="wwwimages2.adobe.com" />
 
 	<!--	Complications:
@@ -223,9 +220,7 @@
 	<target host="cookbooks.adobe.com" />
 	<target host="edexchange.adobe.com" />
 	<target host="cem.events.adobe.com" />
-	<target host="get2.adobe.com" />
 	<target host="images.groups.adobe.com" />
-	<target host="ns.adobe.com" />
 	<target host="stats.adobe.com" />
 	<target host="techlive.adobe.com" />
 
@@ -247,26 +242,6 @@
 
 			<test url="http://fpdownload.adobe.com/crossdomain.xml" />
 			<test url="http://fpdownload.adobe.com/pub/swz/crossdomain.xml" />
-
-		<!--
-			These stylesheets reference resources relative to root:
-										-->
-		<!--exclusion pattern="^http://wwwimages\.adobe.com/www\.adobe\.com/css/labs_import\.css" /-->
-		<!--
-			While these do not:
-						-->
-		<!--exclusion pattern="^http://wwwimages\.adobe.com/www\.adobe\.com/css/(?!assistive|features_test|handheld|print)\.css" /-->
-
-		<exclusion pattern="^http://ns\.adobe\.com/(?!$|xap/)" />
-
-			<test url="http://ns.adobe.com//" />
-			<test url="http://ns.adobe.com/?foo" />
-			<test url="http://ns.adobe.com/foo" />
-
-			<!--	-ve:
-					-->
-			<test url="http://ns.adobe.com/xap/" />
-
 
 	<!--	Not secured by server:
 					-->
@@ -314,17 +289,8 @@
 		<test url="http://cem.events.adobe.com/?" />
 		<test url="http://cem.events.adobe.com//" />
 
-	<rule from="^http://get2\.adobe\.com/"
-		to="https://get.adobe.com/" />
-
 	<rule from="^http://images\.groups\.adobe\.com/"
 		to="https://s3.amazonaws.com/images.groups.adobe.com/" />
-
-	<rule from="^http://ns\.adobe\.com/$"
-		to="https://www.adobe.com/" />
-
-	<rule from="^http://ns\.adobe\.com/xap/"
-		to="https://www.adobe.com/products/xmp/" />
 
 	<rule from="^http://stats\.adobe\.com/"
 		to="https://mxmacromedia.d1.sc.omtrdc.net/" />
@@ -336,13 +302,6 @@
 
 		<test url="http://techlive.adobe.com/?foo" />
 		<test url="http://techlive.adobe.com/foo" />
-
-	<!--	First, rewrite css to www:
-						-->
-	<rule from="^http://wwwimages\.adobe\.com/www\.adobe\.com/css/"
-		to="https://www.adobe.com/css/" />
-
-		<test url="http://wwwimages.adobe.com/www.adobe.com/css/labs_import.css" />
 
 	<rule from="^http:"
 		to="https:" />
