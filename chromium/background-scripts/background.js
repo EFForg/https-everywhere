@@ -659,7 +659,8 @@ function onErrorOccurred(details) {
       details.error.indexOf("SSL received a weak ephemeral Diffie-Hellman key in Server Key Exchange handshake message.") == 0 ||
       details.error.indexOf("The certificate was signed using a signature algorithm that is disabled because it is not secure.") == 0 ||
       details.error.indexOf("Unable to communicate securely with peer: requested domain name does not match the server’s certificate.") == 0 ||
-      details.error.indexOf("Cannot communicate securely with peer: no common encryption algorithm(s).") == 0
+      details.error.indexOf("Cannot communicate securely with peer: no common encryption algorithm(s).") == 0 ||
+      details.error.indexOf("SSL peer has no certificate for the requested DNS name.") == 0
     ))
   {
     let url = new URL(details.url);
