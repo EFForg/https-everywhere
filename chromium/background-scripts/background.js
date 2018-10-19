@@ -977,23 +977,29 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     update_update_channel: () => {
       store.get({update_channels: []}, item => {
         let scope_changed = false;
-        for(let i = 0; i < item.update_channels.length; i++){
-          if(item.update_channels[i].name == message.object.name){
-            if(item.update_channels[i].scope != message.object.scope){
+        item.update_channels = item.update_channels.map(update_channel => {
+          if(update_channel.name == message.object.name){
+            if(update_channel.scope != message.object.scope){
               scope_changed = true;
             }
-            item.update_channels[i] = message.object;
+            update_channel = message.object;
           }
-        }
+          return update_channel;
+        });
 
         // Ensure that we check for new rulesets from the update channel immediately.
         // If the scope has changed, make sure that the rulesets are re-initialized.
         store.set({update_channels: item.update_channels}, () => {
-          update.resetTimer();
-          if(scope_changed){
-            initializeAllRules();
-          }
-          sendResponse(true);
+          // Since loadUpdateChannesKeys is already contained in chrome.storage.onChanged
+          // within update.js, the below call will make it run twice. This is
+          // necesssary to avoid a race condition, see #16673
+          update.loadUpdateChannelsKeys().then(() => {
+            update.resetTimer();
+            if(scope_changed){
+              initializeAllRules();
+            }
+            sendResponse(true);
+          });
         });
 
       });
