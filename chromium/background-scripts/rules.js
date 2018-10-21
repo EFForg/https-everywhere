@@ -540,26 +540,42 @@ RuleSets.prototype = {
    * @param host The host to check
    * @returns {*} (empty) list
    */
-  potentiallyApplicableRulesets: function(host) {
+  potentiallyApplicableRulesets: function* (host) {
     // Have we cached this result? If so, return it!
     if (this.ruleCache.has(host)) {
-      let cached_item = this.ruleCache.get(host);
-      util.log(util.DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.size);
-      return cached_item;
-    } else {
-      util.log(util.DBUG, "Ruleset cache miss for " + host);
+      const rulesets = this.ruleCache.get(host);
+
+      // Have to log here since we might not always reach
+      // the end of this generator
+      util.log(util.DBUG, "Ruleset cache hit for " + host + " items:");
+      if (rulesets.size == 0) {
+        util.log(util.DBUG, "  None");
+      }  else {
+        rulesets.forEach(ruleset => util.log(util.DBUG, "  " + ruleset.name));
+      }
+
+      for (const ruleset of rulesets) {
+        yield ruleset;
+      }
+      return ;
     }
+
+    let results = new Set();
 
     // Let's begin search
     // Copy the host targets so we don't modify them.
-    let results = (this.targets.has(host) ?
-      new Set([...this.targets.get(host)]) :
-      new Set());
+    if (this.targets.has(host)) {
+      const rulesets = this.targets.get(host);
+      for (const ruleset of rulesets) {
+        yield ruleset;
+      }
+      results = new Set([...rulesets]);
+    }
 
     // Ensure host is well-formed (RFC 1035)
     if (host.length <= 0 || host.length > 255 || host.indexOf("..") != -1) {
       util.log(util.WARN, "Malformed host passed to potentiallyApplicableRulesets: " + host);
-      return nullIterable;
+      return ;
     }
 
     // Replace each portion of the domain with a * in turn
@@ -568,32 +584,34 @@ RuleSets.prototype = {
       let tmp = segmented[i];
       segmented[i] = "*";
 
-      results = (this.targets.has(segmented.join(".")) ?
-        new Set([...results, ...this.targets.get(segmented.join("."))]) :
-        results);
-
+      if (this.targets.has(segmented.join("."))) {
+        const rulesets = this.targets.get(segmented.join("."));
+        for (const ruleset of rulesets) {
+          yield ruleset;
+        }
+        results = new Set([...results, ...rulesets]);
+      }
       segmented[i] = tmp;
     }
 
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
     for (let i = 2; i <= segmented.length - 2; i++) {
-      let t = "*." + segmented.slice(i, segmented.length).join(".");
+      let key = "*." + segmented.slice(i, segmented.length).join(".");
 
-      results = (this.targets.has(t) ?
-        new Set([...results, ...this.targets.get(t)]) :
-        results);
+      if (this.targets.has(key)) {
+        const rulesets = this.targets.get(key);
+        for (const ruleset of rulesets) {
+          yield ruleset;
+        }
+        results = new Set([...results, ...rulesets]);
+      }
     }
 
     // Clean the results list, which may contain duplicates or undefined entries
     results.delete(undefined);
-
-    util.log(util.DBUG,"Applicable rules for " + host + ":");
     if (results.size == 0) {
-      util.log(util.DBUG, "  None");
       results = nullIterable;
-    } else {
-      results.forEach(result => util.log(util.DBUG, "  " + result.name));
     }
 
     // Insert results into the ruleset cache
@@ -605,7 +623,7 @@ RuleSets.prototype = {
       this.ruleCache.delete(this.ruleCache.keys().next().value);
     }
 
-    return results;
+    return ;
   },
 
   /**
