@@ -566,10 +566,12 @@ RuleSets.prototype = {
     // Copy the host targets so we don't modify them.
     if (this.targets.has(host)) {
       const rulesets = this.targets.get(host);
-      for (const ruleset of rulesets) {
-        yield ruleset;
+      if (rulesets && rulesets.length) {
+        for (const ruleset of rulesets) {
+          yield ruleset;
+        }
+        results = new Set([...rulesets]);
       }
-      results = new Set([...rulesets]);
     }
 
     // Ensure host is well-formed (RFC 1035)
@@ -586,10 +588,12 @@ RuleSets.prototype = {
 
       if (this.targets.has(segmented.join("."))) {
         const rulesets = this.targets.get(segmented.join("."));
-        for (const ruleset of rulesets) {
-          yield ruleset;
+        if (rulesets && rulesets.length) {
+          for (const ruleset of rulesets) {
+            yield ruleset;
+          }
+          results = new Set([...results, ...rulesets]);
         }
-        results = new Set([...results, ...rulesets]);
       }
       segmented[i] = tmp;
     }
@@ -601,10 +605,12 @@ RuleSets.prototype = {
 
       if (this.targets.has(key)) {
         const rulesets = this.targets.get(key);
-        for (const ruleset of rulesets) {
-          yield ruleset;
+        if (rulesets && rulesets.length) {
+          for (const ruleset of rulesets) {
+            yield ruleset;
+          }
+          results = new Set([...results, ...rulesets]);
         }
-        results = new Set([...results, ...rulesets]);
       }
     }
 
