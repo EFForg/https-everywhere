@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+SOMETHING TERRIBLE
 
 # Build an HTTPS Everywhere .crx & .xpi extension
 #
