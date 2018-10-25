@@ -1,3 +1,8 @@
+---
+name: Feature request
+about: Request a feature to help us improve HTTTP Everywhere
+---
+
 [//]: # (Thank you for reporting an issue to HTTPS Everywhere.)
 [//]: # (We welcome input from users on improving this project.)
 [//]: #
@@ -5,7 +10,7 @@
 [//]: # (You can delete all blank lines and all lines starting)
 [//]: # (with the comment marker, such as this one.)
 
-Type: other
+Type: feature request
 
 [//]: # (Include any other relevant information below. Thank you again for)
 [//]: # (helping to improve HTTPS Everywhere.)
