@@ -12,7 +12,9 @@ function setup_chrome {
 }
 
 function setup_firefox {
-    version=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep tag_name | cut -d '"' -f 4)
+    #version=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep tag_name | cut -d '"' -f 4)
+    # hard-code latest version, since apparently the above `curl` is fucking up in travis
+    version="v0.23.0"
     url="https://github.com/mozilla/geckodriver/releases/download/${version}/geckodriver-${version}-linux64.tar.gz"
     wget -O /tmp/geckodriver.tar.gz ${url}
     sudo tar -xvf /tmp/geckodriver.tar.gz -C /usr/local/bin/
