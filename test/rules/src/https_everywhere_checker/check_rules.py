@@ -99,11 +99,11 @@ class UrlComparisonThread(threading.Thread):
         problems = []
         for url in task.urls:
             result = self.processUrl(url, task)
-            if result:
+            if result[0]:
                 problems.append(result)
         if problems:
             for problem in problems:
-                logging.error("{}: {}".format(task.ruleFname, problem))
+                logging.error("%s: %s" % (task.ruleFname, problem[0]))
             if self.autoDisable:
                 disableRuleset(task.ruleset, problems)
 
@@ -145,7 +145,7 @@ class UrlComparisonThread(threading.Thread):
                     plainUrl, transformedUrl, e)
                 self.queue_result("error", "fetch-error {}".format(e),
                                   ruleFname, plainUrl, https_url=transformedUrl)
-                return message
+                return [message, plainUrl]
 
             logging.debug(
                 "Non-fatal fetch error for plain page {}: {}".format(plainUrl, e))
@@ -209,33 +209,36 @@ class UrlComparisonThread(threading.Thread):
         logging.info("Finished comparing {} -> {}. Rulefile: {}.".format(
                     plainUrl, transformedUrl, ruleFname))
 
-        return message
+        return [message, plainUrl]
 
 
-def disableRuleset(ruleset, problems):
-    logging.info("Disabling ruleset {}".format(ruleset.filename))
-    contents = open(ruleset.filename).read()
-    # Don't bother to disable rulesets that are already disabled
-    if re.search("\bdefault_off=", contents):
-        return
-    contents = re.sub("(<ruleset [^>]*)>",
-                      "\\1 default_off='failed ruleset test'>", contents)
+def disableRuleset(ruleset, problemsRules):
+	problems = [problem[0] for problem in problemsRules]
+	rules = [problem[1] for problem in problemsRules]
+	logging.info("Disabling ruleset %s", ruleset.filename)
+	contents = open(ruleset.filename).read()
+	# Don't bother to disable rulesets that are already disabled
+	if re.search("\bdefault_off=", contents):
+		return
+	for rule in rules:
+		contents = re.sub('<[ \n]*target[ \n]+host[ \n]*=[ \n]*"%s"[ \n]*\/?[ \n]*>' % (rule.split('/')[2]),
+			"", contents);
 
     # Since the problems are going to be inserted into an XML comment, they cannot
-    # contain "--", or they will generate a parse error. Split up all "--" with a
-    # space in the middle.
-    safeProblems = [re.sub('--', '- -', p) for p in problems]
-    # If there's not already a comment section at the beginning, add one.
-    if not re.search("^<!--", contents):
-        contents = "<!--\n-->\n" + contents
-    problemStatement = ("""
+	# contain "--", or they will generate a parse error. Split up all "--" with a
+	# space in the middle.
+	safeProblems = [re.sub('--', '- -', p) for p in problems]
+	# If there's not already a comment section at the beginning, add one.
+	if not re.search("^<!--", contents):
+		contents = "<!--\n-->\n" + contents
+	problemStatement = ("""
 <!--
 Disabled by https-everywhere-checker because:
-{}
-""".format("\n".join(problems)))
-    contents = re.sub("^<!--", problemStatement, contents)
-    with open(ruleset.filename, "w") as f:
-        f.write(contents)
+%s
+""" % "\n".join(problems))
+	contents = re.sub("^<!--", problemStatement, contents)
+	with open(ruleset.filename, "w") as f:
+            f.write(contents)
 
 
 # A dict indexed by binary SHA256 hashes. A ruleset whose hash matches an entry in
