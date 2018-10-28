@@ -22,6 +22,12 @@ if [ $UID != 0 ]; then
   SUDO_SHIM=sudo
 fi
 
+if [ "`uname -m`" == "x86_64" ]; then
+  ARCH=64
+else
+  ARCH=32
+fi
+
 # debian based installation
 if type apt-get>/dev/null 2>&1;  then
   $SUDO_SHIM apt-get update
@@ -39,9 +45,9 @@ if type apt-get>/dev/null 2>&1;  then
     python3.6-dev $BROWSERS zip sqlite3 python3-pip libcurl4-openssl-dev xvfb \
     libssl-dev git curl $CHROMEDRIVER
   if ! type geckodriver >/dev/null 2>&1;  then
-    curl -LO "https://github.com/mozilla/geckodriver/releases/download/v0.17.0/geckodriver-v0.17.0-linux64.tar.gz"
-    tar -zxvf "geckodriver-v0.17.0-linux64.tar.gz"
-    rm -f "geckodriver-v0.17.0-linux64.tar.gz"
+    curl -LO "https://github.com/mozilla/geckodriver/releases/download/v0.17.0/geckodriver-v0.17.0-linux$ARCH.tar.gz"
+    tar -zxvf "geckodriver-v0.17.0-linux$ARCH.tar.gz"
+    rm -f "geckodriver-v0.17.0-linux$ARCH.tar.gz"
     $SUDO_SHIM mv geckodriver /usr/bin/geckodriver
     $SUDO_SHIM chown root /usr/bin/geckodriver
     $SUDO_SHIM chmod 755 /usr/bin/geckodriver
@@ -64,11 +70,6 @@ elif type dnf >/dev/null 2>&1; then
     libxslt-devel python-devel redhat-rpm-config xorg-x11-server-Xvfb which \
     findutils procps openssl openssl-devel chromium GConf2
   if ! type chromedriver >/dev/null; then
-    if [ "`uname -m`" == "x86_64" ]; then
-      ARCH=64
-    else
-      ARCH=32
-    fi
     curl -O "https://chromedriver.storage.googleapis.com/2.23/chromedriver_linux$ARCH.zip"
     unzip "chromedriver_linux$ARCH.zip"
     rm -f "chromedriver_linux$ARCH.zip"
