@@ -93,8 +93,8 @@ elif type dnf >/dev/null 2>&1; then
   export PYCURL_SSL_LIBRARY=openssl
 else
     echo \
-    "Your distribuiton isn't supported by this script yet!"\
-    "Please install them manually."
+    "Your distro isn't supported by this script yet!"\
+    "Please install dependencies manually."
     exit
 fi
 
