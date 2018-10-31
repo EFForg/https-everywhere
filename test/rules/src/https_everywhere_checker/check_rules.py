@@ -232,7 +232,7 @@ def disableRuleset(ruleset, problemRules, urlCount):
         for rule in rules:
             logging.info("Deleting rule %s", rule)
             contents = re.sub('<[ \n]*target[ \n]+host[ \n]*=[ \n]*"%s"[ \n]*\/?[ \n]*>' % (rule.split('/')[2]),
-                "", contents);
+                '<!-- target host="%s" /-->' % (host), contents);
 
     # Since the problems are going to be inserted into an XML comment, they cannot
     # contain "--", or they will generate a parse error. Split up all "--" with a
