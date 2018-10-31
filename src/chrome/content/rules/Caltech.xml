@@ -124,8 +124,16 @@ Fetch error: http://web.caltech.edu/ => https://web.caltech.edu/: (6, 'Could not
 	<target host="webmail.caltech.edu" />
 	<target host="www.caltech.edu" />
 
+	<!--target host="solutions.sciquest.com" /> safe? -->
+
+	<!--	Complications:
+				-->
+	<target host="imss-test-storage.ads.caltech.edu.s3.amazonaws.com" />
+	<target host="www-prod-storage.cloud.caltech.edu.s3.amazonaws.com" />
+
 	<target host="www.access.caltech.edu" />
 	<target host="blackboard.caltech.edu" />
+	<target host="imss-website-storage.cloud.caltech.edu" />
 	<target host="irsecure.caltech.edu" />
 	<target host="moodle.caltech.edu" />
 
@@ -141,6 +149,19 @@ Fetch error: http://web.caltech.edu/ => https://web.caltech.edu/: (6, 'Could not
 	<!--securecookie host="^www\.caltech\.edu$" name="^AWSELB$" /-->
 
 	<securecookie host=".\.caltech\.edu$" name=".+" />
+
+
+	<!--	Handily, this bucket forces redirect from s3.amazonaws.com/foo to foo.s3.amazonaws.com.
+										-->
+	<rule from="^https?://imss-test-storage\.ads\.caltech\.edu\.s3\.amazonaws.com/"
+		to="https://s3-us-west-1.amazonaws.com/imss-test-storage.ads.caltech.edu/" />
+
+		<test url="http://imss-website-storage.cloud.caltech.edu.s3-us-west-1.amazonaws.com/Training%20Guides/Cognos_GA_Query_Studio.pdf" />
+
+	<!--	Ditto.
+			-->
+	<rule from="^https?://www-prod-storage\.cloud\.caltech\.edu\.s3\.amazonaws\.com/"
+		to="https://s3-us-west-1.amazonaws.com/www-prod-storage.cloud.caltech.edu/" />
 
 	<rule from="^http://www\.access\.caltech\.edu/"
 		to="https://access.caltech.edu/" />
