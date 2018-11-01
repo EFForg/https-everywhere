@@ -659,7 +659,8 @@ function onErrorOccurred(details) {
       details.error.indexOf("SSL received a weak ephemeral Diffie-Hellman key in Server Key Exchange handshake message.") == 0 ||
       details.error.indexOf("The certificate was signed using a signature algorithm that is disabled because it is not secure.") == 0 ||
       details.error.indexOf("Unable to communicate securely with peer: requested domain name does not match the server’s certificate.") == 0 ||
-      details.error.indexOf("Cannot communicate securely with peer: no common encryption algorithm(s).") == 0
+      details.error.indexOf("Cannot communicate securely with peer: no common encryption algorithm(s).") == 0 ||
+      details.error.indexOf("SSL peer has no certificate for the requested DNS name.") == 0
     ))
   {
     let url = new URL(details.url);
@@ -887,6 +888,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
         chrome.tabs.reload();
       });
     },
+    get_user_rules: () => {
+      store.get_promise(all_rules.USER_RULE_KEY, []).then(userRules => sendResponse(userRules));
+      return true;
+    },
     add_new_rule: () => {
       all_rules.addNewRuleAndStore(message.object).then(() => {
         sendResponse(true);
@@ -894,7 +899,23 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
       return true;
     },
     remove_rule: () => {
-      all_rules.removeRuleAndStore(message.object);
+      all_rules.removeRuleAndStore(message.object.ruleset, message.object.src)
+        .then(() => {
+          /**
+           * FIXME: initializeAllRules is needed for calls from the option pages.
+           * Since message.object is not of type Ruleset, rules.removeUserRule
+           * is not usable...
+           */
+          if (message.object.src === 'options') {
+            return initializeAllRules();
+          }
+        })
+        .then(() => {
+          if (sendResponse !== null) {
+            sendResponse(true);
+          }
+        })
+      return true;
     },
     get_ruleset_timestamps: () => {
       update.getRulesetTimestamps().then(timestamps => sendResponse(timestamps));
@@ -957,23 +978,29 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     update_update_channel: () => {
       store.get({update_channels: []}, item => {
         let scope_changed = false;
-        for(let i = 0; i < item.update_channels.length; i++){
-          if(item.update_channels[i].name == message.object.name){
-            if(item.update_channels[i].scope != message.object.scope){
+        item.update_channels = item.update_channels.map(update_channel => {
+          if(update_channel.name == message.object.name){
+            if(update_channel.scope != message.object.scope){
               scope_changed = true;
             }
-            item.update_channels[i] = message.object;
+            update_channel = message.object;
           }
-        }
+          return update_channel;
+        });
 
         // Ensure that we check for new rulesets from the update channel immediately.
         // If the scope has changed, make sure that the rulesets are re-initialized.
         store.set({update_channels: item.update_channels}, () => {
-          update.resetTimer();
-          if(scope_changed){
-            initializeAllRules();
-          }
-          sendResponse(true);
+          // Since loadUpdateChannesKeys is already contained in chrome.storage.onChanged
+          // within update.js, the below call will make it run twice. This is
+          // necesssary to avoid a race condition, see #16673
+          update.loadUpdateChannelsKeys().then(() => {
+            update.resetTimer();
+            if(scope_changed){
+              initializeAllRules();
+            }
+            sendResponse(true);
+          });
         });
 
       });

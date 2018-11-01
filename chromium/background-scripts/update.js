@@ -55,6 +55,7 @@ async function loadUpdateChannelsKeys() {
         ["verify"]
       );
       combined_update_channels.push(update_channel);
+      util.log(util.NOTE, update_channel.name + ': Update channel key loaded.');
     } catch(err) {
       util.log(util.WARN, update_channel.name + ': Could not import key.  Aborting.');
     }
@@ -285,7 +286,8 @@ Object.assign(exports, {
   applyStoredRulesets,
   initialize,
   getRulesetTimestamps,
-  resetTimer
+  resetTimer,
+  loadUpdateChannelsKeys
 });
 
 })(typeof exports == 'undefined' ? require.scopes.update = {} : exports);

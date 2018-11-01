@@ -78,7 +78,7 @@ function appendRulesToListDiv(rulesets, list_div) {
           line.appendChild(remove);
 
           remove.addEventListener("click", () => {
-            sendMessage("remove_rule", ruleset, () => {
+            sendMessage("remove_rule", { ruleset, src: 'popup' }, () => {
               list_div.removeChild(line);
             });
           });
@@ -251,9 +251,14 @@ function addManualRule() {
 
     e("add-new-rule-button").addEventListener("click", function() {
       const params = {
-        host : e("new-rule-host").value,
-        redirectTo : e("new-rule-redirect").value,
-        urlMatcher : e("new-rule-regex").value
+        /**
+         * FIXME: the current implementation forbide users setting custom
+         * ruleset names...
+         */
+        name: e("new-rule-host").value,
+        target : [e("new-rule-host").value],
+        rule: [{ to: e("new-rule-redirect").value, from: e("new-rule-regex").value }],
+        default_off: "user rule"
       };
       sendMessage("add_new_rule", params, function() {
         location.reload();
