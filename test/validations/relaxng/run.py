@@ -4,13 +4,14 @@
 import argparse
 import glob
 import hashlib
+import json
 import os
 
 from lxml import etree
 
 parser = argparse.ArgumentParser(description="Validate rulesets against relaxng schema.xml")
 parser.add_argument("--source_dir", default="src/chrome/content/rules")
-parser.add_argument("--https2https_whitelist", default="utils/ruleset-whitelist.csv")
+parser.add_argument("--https2https_whitelist", default="test/validations/relaxng/https2https_whitelist.json")
 
 args = parser.parse_args()
 
@@ -22,14 +23,10 @@ relaxng = etree.RelaxNG(relaxng_doc)
 relaxng_doc_https2https = etree.parse("test/validations/relaxng/schema_https2https.xml")
 relaxng_https2https = etree.RelaxNG(relaxng_doc_https2https)
 
-https2https_whitelist = {}
+https2https_whitelist = None
 
-with open(args.https2https_whitelist) as f:
-    f.readline()
-    for line in f:
-        fileHash, _, _, fileSkip, fileName = line.strip().split(",")
-        if fileSkip == "1":
-            https2https_whitelist[fileName] = fileHash
+with open(args.https2https_whitelist, "r") as file:
+    https2https_whitelist = json.load(file)
 
 exit_code = 0
 
