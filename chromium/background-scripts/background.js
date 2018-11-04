@@ -320,6 +320,14 @@ function onBeforeRequest(details) {
     return;
   }
 
+  // Clear the content shown in the extension popup.
+  // This needed to be done before this listener returns,
+  // otherwise, the extension page might include rulesets
+  // from previous page.
+  if (details.type == "main_frame") {
+    appliedRulesets.removeTab(details.tabId);
+  }
+
   let uri = new URL(details.url);
 
   /**
@@ -387,12 +395,6 @@ function onBeforeRequest(details) {
     return redirectOnCancel(shouldCancel, details.url);
   }
 
-  if (details.type == "main_frame") {
-    appliedRulesets.removeTab(details.tabId);
-  }
-
-  let potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
-
   if (redirectCounter.get(details.requestId) >= 8) {
     util.log(util.NOTE, "Redirect counter hit for " + uri.href);
     urlBlacklist.add(uri.href);
@@ -404,6 +406,8 @@ function onBeforeRequest(details) {
   // whether to use mozilla's upgradeToSecure BlockingResponse if available
   let upgradeToSecure = false;
   let newuristr = null;
+
+  let potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
 
   for (let ruleset of potentiallyApplicable) {
     if (details.url.match(ruleset.scope)) {
