@@ -78,7 +78,9 @@ const isTrivial = (securecookie) => {
               if (!securecookie.host.startsWith('^.+') &&
                   !securecookie.host.startsWith('^.*') &&
                   !securecookie.host.startsWith('.+') &&
-                  !securecookie.host.startsWith('.*')) {
+                  !securecookie.host.startsWith('.*') &&
+                  !securecookie.host.startsWith('^(?:.*\\.)?') &&
+                  !securecookie.host.startsWith('^(?:.+\\.)?')) {
                 return;
               }
 
