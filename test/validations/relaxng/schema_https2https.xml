@@ -1,0 +1,79 @@
+<element xmlns="http://relaxng.org/ns/structure/1.0" name="ruleset" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <attribute name="name" />
+
+  <optional>
+    <attribute name="default_off" />
+  </optional>
+
+  <optional>
+    <attribute name="platform">
+      <data type="string">
+        <param name="pattern">mixedcontent</param>
+      </data>
+    </attribute>
+  </optional>
+
+  <interleave>
+
+    <zeroOrMore>
+      <element name="test">
+        <attribute name="url">
+          <data type="string">
+            <param name="pattern">http[^\\]+</param>
+          </data>
+        </attribute>
+      </element>
+    </zeroOrMore>
+
+    <oneOrMore>
+      <element name="target">
+        <attribute name="host">
+          <data type="string">
+            <param name="pattern">(([a-z0-9äö_-]+|\*)\.)*([a-z0-9äö-]+|\*)</param>
+          </data>
+        </attribute>
+      </element>
+    </oneOrMore>
+
+    <zeroOrMore>
+      <element name="exclusion">
+        <attribute name="pattern" />
+      </element>
+    </zeroOrMore>
+
+    <zeroOrMore>
+      <element name="securecookie">
+        <attribute name="host"/>
+          <data type="string">
+            <param name="pattern">[^/]*</param>
+          </data>
+        <attribute name="name"/>
+      </element>
+    </zeroOrMore>
+
+    <oneOrMore>
+      <element name="rule">
+        <attribute name="from">
+          <data type="string">
+            <!-- The from attribute of a rule must start with a caret.
+                 It also must contain two slashes (separating the protocol from
+                 the hostname), and at least one other slash (terminating the
+                 hostname, and possible beginning a path). Alternatively it can be
+                 the literal string "^http:". -->
+            <param name="pattern">(\^.*//.*/.*|\^http:)</param>
+          </data>
+        </attribute>
+        <attribute name="to">
+          <data type="string">
+            <!-- The to attribute of a rule must not contain spaces or
+                 backslashes. It also must contain at least one slash after the
+                 hostname. Alternatively it can be the literal string "https:"-->
+            <param name="pattern">(https://[^ \\]*/[^ \\]*|https:)</param>
+          </data>
+        </attribute>
+      </element>
+    </oneOrMore>
+
+  </interleave>
+
+</element>
