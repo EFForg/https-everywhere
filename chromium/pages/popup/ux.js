@@ -1,10 +1,11 @@
+/* global e */
+/* global hide */
+/* global show */
 /* global sendMessage */
+/* global getOption_ */
+/* global setOption_ */
 
 "use strict";
-
-function e(id) {
-  return document.getElementById(id);
-}
 
 /**
  * Handles rule (de)activation in the popup
@@ -77,7 +78,7 @@ function appendRulesToListDiv(rulesets, list_div) {
           line.appendChild(remove);
 
           remove.addEventListener("click", () => {
-            sendMessage("remove_rule", ruleset, () => {
+            sendMessage("remove_rule", { ruleset, src: 'popup' }, () => {
               list_div.removeChild(line);
             });
           });
@@ -133,7 +134,7 @@ function toggleEnabledDisabled() {
  * Create the list of rules for a specific tab
  * @param activeTab
  */
-function gotTab(activeTab) {
+function listRules(activeTab) {
   sendMessage("get_active_rulesets", activeTab.id, function(rulesets) {
     if (rulesets) {
       const stableRules = rulesets.filter(ruleset => ruleset.default_state);
@@ -146,9 +147,9 @@ function gotTab(activeTab) {
       e("RuleManagement").addEventListener("click", toggleRuleLine);
     }
 
-    // Only show the "Add a rule" link if we're on an HTTPS page
+    // Only show the "Add a rule" section if we're on an HTTPS page
     if (/^https:/.test(activeTab.url)) {
-      show(e("add-rule-link"));
+      show(e("addRuleSection"));
     }
   });
 }
@@ -157,7 +158,15 @@ function gotTab(activeTab) {
  * Fill in content into the popup on load
  */
 document.addEventListener("DOMContentLoaded", function () {
-  getTab(gotTab);
+  getTab(tab => {
+    const url = new URL(tab.url);
+    sendMessage("check_if_site_disabled", url.host, disabled => {
+      if(!disabled){
+        listRules(tab);
+      }
+      showEnableOrDisable(url, disabled);
+    });
+  });
 
   // Set up the enabled/disabled switch & hide/show rules
   updateEnabledDisabledUI();
@@ -192,6 +201,8 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   e("aboutTitle").title = chrome.i18n.getMessage("about_title");
   e("add-rule-link").addEventListener("click", addManualRule);
+  e("disable-on-this-site").addEventListener("click", disableOnSite);
+  e("enable-on-this-site").addEventListener("click", enableOnSite);
 });
 
 
@@ -199,12 +210,25 @@ var escapeForRegex = function( value ) {
   return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
 };
 
-function hide(elem) {
-  elem.style.display = "none";
-}
-
-function show(elem) {
-  elem.style.display = "block";
+function showEnableOrDisable(url, disabled) {
+  if (["http:", "https:", "ftp:"].indexOf(url.protocol) != -1) {
+    const disableLink = e("disable-on-this-site");
+    const enableLink = e("enable-on-this-site");
+    const addRuleSection = e("addRuleSection");
+    const resetToDefaults = e('reset-to-defaults');
+    if (disabled) {
+      show(enableLink);
+      hide(disableLink);
+      hide(addRuleSection);
+      hide(resetToDefaults);
+    } else {
+      show(disableLink);
+      hide(enableLink);
+    }
+  } else {
+    const disableEnableSection = e("disableEnableSection");
+    hide(disableEnableSection);
+  }
 }
 
 /**
@@ -227,9 +251,14 @@ function addManualRule() {
 
     e("add-new-rule-button").addEventListener("click", function() {
       const params = {
-        host : e("new-rule-host").value,
-        redirectTo : e("new-rule-redirect").value,
-        urlMatcher : e("new-rule-regex").value
+        /**
+         * FIXME: the current implementation forbide users setting custom
+         * ruleset names...
+         */
+        name: e("new-rule-host").value,
+        target : [e("new-rule-host").value],
+        rule: [{ to: e("new-rule-redirect").value, from: e("new-rule-regex").value }],
+        default_off: "user rule"
       };
       sendMessage("add_new_rule", params, function() {
         location.reload();
@@ -253,22 +282,31 @@ function addManualRule() {
   });
 }
 
+/**
+ * Disable HTTPS Everywhere on a particular FQDN
+ */
+function disableOnSite() {
+  getTab(function(tab) {
+    const url = new URL(tab.url);
+    sendMessage("disable_on_site", url.host);
+    chrome.tabs.reload(tab.id);
+    window.close();
+  });
+}
+
+function enableOnSite() {
+  getTab(function(tab) {
+    const url = new URL(tab.url);
+    sendMessage("enable_on_site", url.host);
+    chrome.tabs.reload(tab.id);
+    window.close();
+  });
+}
+
 function toggleHttpNowhere() {
   getOption_('httpNowhere', false, function(item) {
     setOption_('httpNowhere', !item.httpNowhere);
   });
-}
-
-function getOption_(opt, defaultOpt, callback) {
-  var details = {};
-  details[opt] = defaultOpt;
-  sendMessage("get_option", details, callback);
-}
-
-function setOption_(opt, value, callback) {
-  var details = {};
-  details[opt] = value;
-  sendMessage("set_option", details, callback);
 }
 
 function getTab(callback) {

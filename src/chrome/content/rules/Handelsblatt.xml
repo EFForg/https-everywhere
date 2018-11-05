@@ -1,62 +1,65 @@
 <!--
-	CDN buckets:
+	Chain issue, missing intermediate:
+		- veranstaltungen.handelsblatt.com
 
-		- euroforumlb1-1093815010.eu-west-1.elb.amazonaws.com
+	Invalid certificate:
+		- financetoday.handelsblatt.com
+		- ircenter.handelsblatt.com
+		- mailservice.handelsblatt.com
+		- orangenews.handelsblatt.com
+		- staticef1.handelsblatt.com, equivalent to d30no8cbyph8wj.cloudfront.net
+		- staticef2.handelsblatt.com, equivalent to d30no8cbyph8wj.cloudfront.net
 
-			- veranstaltungen
+	Redirects to HTTP:
+		- club.handelsblatt.com
 
-		- d21rxpf5vn0rru.cloudfront.net
-
-			- staticef[12].handelsblatt.com
-
-
-	Problematic subdomains:
-
-		- ^	(refused)
-
-
-	Problematic subdomains:
-
-		- veranstaltungen	(works; mismatched, CN: *.euroforum.com)
-
-
-	Some pages redirect to http
-
+	Wrong redirect:
+		- 360grad.handelsblatt.com
+		- energyawards.handelsblatt.com
 -->
-<ruleset name="Handelsblatt (partial)">
 
+<ruleset name="Handelsblatt">
 	<target host="handelsblatt.com" />
-	<target host="*.handelsblatt.com" />
-
-	<test url="http://abo.handelsblatt.com/" />
-	<test url="http://amp.handelsblatt.com/" />
-	<test url="http://angebot.handelsblatt.com/" />
-	<test url="http://archiv.handelsblatt.com/" />
-	<test url="http://award.handelsblatt.com/" />
-	<test url="http://epaper.handelsblatt.com/" />
-	<test url="http://global.handelsblatt.com/" />
-	<test url="http://global-auth.handelsblatt.com/" />
-	<test url="http://global-static.handelsblatt.com/handelsblatt-global-edition-issue-542_2016-10-24.pdf" />
-	<test url="http://kaufhaus.handelsblatt.com/" />
-	<test url="http://morningbriefing.handelsblatt.com/" />
-	<test url="http://quiz.handelsblatt.com/" />
-	<test url="http://reiseauktion.handelsblatt.com/" />
-	<test url="http://signup.handelsblatt.com/" />
-	<test url="http://staticef1.handelsblatt.com/" />
-	<test url="http://us-wahl.handelsblatt.com/" />
-	<test url="http://www.handelsblatt.com/" />
+	<target host="www.handelsblatt.com" />
+	<target host="abo.handelsblatt.com" />
+	<target host="amp.handelsblatt.com" />
+	<target host="angebot.handelsblatt.com" />
+	<target host="app.handelsblatt.com" />
+	<target host="apps.handelsblatt.com" />
+	<target host="archiv.handelsblatt.com" />
+	<target host="award.handelsblatt.com" />
+	<target host="chinacircle.handelsblatt.com" />
+	<target host="edison.handelsblatt.com" />
+	<target host="epaper.handelsblatt.com" />
+	<target host="finanzen.handelsblatt.com" />
+	<target host="global.handelsblatt.com" />
+	<target host="global-auth.handelsblatt.com" />
+	<target host="global-static.handelsblatt.com" />
+		<test url="http://global-static.handelsblatt.com/handelsblatt-global-edition-issue-542_2016-10-24.pdf" />
+	<target host="kaufhaus.handelsblatt.com" />
+	<target host="magazin.handelsblatt.com" />
+	<target host="morningbriefing.handelsblatt.com" />
+	<target host="morningbriefingmail.handelsblatt.com" />
+	<target host="orange.handelsblatt.com" />
+	<target host="quiz.handelsblatt.com" />
+	<target host="reiseauktion.handelsblatt.com" />
+	<target host="research.handelsblatt.com" />
+	<target host="signup.handelsblatt.com" />
+	<target host="staticef1.handelsblatt.com" />
+	<target host="staticef2.handelsblatt.com" />
+	<target host="themenplanung.handelsblatt.com" />
+	<target host="tool.handelsblatt.com" />
+	<target host="us-wahl.handelsblatt.com" />
 
 
 	<securecookie host="^abo\.handelsblatt\.com$" name=".+" />
 
 
-	<rule from="^http://handelsblatt\.com/" 
-		to="https://handelsblatt.com/"/>	
-
-	<rule from="^http://(abo|amp|angebot|archiv|award|epaper|global|global-auth|global-static|kaufhaus|morningbriefing|quiz|reiseauktion|signup|us-wahl|www)\.handelsblatt\.com/"
-		to="https://$1.handelsblatt.com/" />
-
 	<rule from="^http://staticef[12]\.handelsblatt\.com/"
-		to="https://d21rxpf5vn0rru.cloudfront.net/" />
+		to="https://d30no8cbyph8wj.cloudfront.net/" />
+		<test url="http://staticef1.handelsblatt.com/source/css/ie.css" />
+		<test url="http://staticef2.handelsblatt.com/source/img/1.jpg" />
+
+	<rule from="^http:" to="https:" />
 
 </ruleset>

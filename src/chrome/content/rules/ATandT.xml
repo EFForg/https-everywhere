@@ -1,86 +1,63 @@
 <!--
 	Other AT&T rulesets:
-
 		- BellSouth.xml
 		- Sslcert35.com.xml
 
-
 	CDN buckets:
-
 		- cng.i.lithium.com
 
+	Connection refused:
+		- blogs.att.net
+		- preview.att.net
+		- repair.att.com
+		- www.research.att.com
 
-	Nonfunctional domains:
-
-		- att.com subdomains:
-
-			- repair		(times out)
-			- (www.)research	(prints "this is a test")
-			- savings
-			- att.uc		(http & https data differ)
-
-		- blogs.att.net *
-		- preview.att.net *
-		- (www.)attpublicpolicy.com	(shows RHEL default page, CN: localhost.localdomain)
-
-	* Times out
-
-
-	Problematic domains:
-
-		- att.com subdomains:
-
-			- (www.)business	(reset)
-			- uc			(works; mismatched, CN: *.sslcert35.com)
-
-
-	Fully covered domains:
-
-		- att.com subdomains:
-
-			- (www.)
-			- connect
-			- www.corp
-			- cprodmasx
-			- developer
-			- www.e-access
-			- forums
-			- localization
-			- networkingexchangeblog
-			- rewardcenter
-			- smb
-			- trial.uc
-			- ufix
-			- uversecentral[3]
-			- webhosting
-			- www.wireless
-
-		- [013].ecom.attccc.com
-
+	Invalid certificate:
+		- uc.att.com, equivalent to www.uc.att.com
 -->
+
 <ruleset name="AT&amp;T (partial)">
-
+	<!-- att.com -->
 	<target host="att.com" />
-	<target host="*.att.com" />
-	<target host="*.ecom.attccc.com" />
+	<target host="www.att.com" />
+	<target host="about.att.com" />
+	<target host="business.att.com" />
+	<target host="www.business.att.com" />
+	<target host="www.corp.att.com" />
+	<target host="cprodmasx.att.com" />
+	<target host="developer.att.com" />
+	<target host="www.e-access.att.com" />
+	<target host="forums.att.com" />
+	<target host="localization.att.com" />
+	<target host="networkingexchangeblog.att.com" />
+	<target host="rewardcenter.att.com" />
+	<target host="smb.att.com" />
+	<target host="uc.att.com" />
+	<target host="www.uc.att.com" />
+	<target host="ufix.att.com" />
+	<target host="uversecentral.att.com" />
+	<target host="uversecentral1.att.com" />
+	<target host="uversecentral2.att.com" />
+	<target host="uversecentral3.att.com" />
+	<target host="webhosting.att.com" />
+	<target host="wireless.att.com" />
+	<target host="www.wireless.att.com" />
 
+	<!-- attccc.com -->
+	<target host="0.ecom.attccc.com" />
+	<target host="1.ecom.attccc.com" />
+	<target host="2.ecom.attccc.com" />
+	<target host="3.ecom.attccc.com" />
+
+	<!-- attpublicpolicy.com -->
+	<target host="attpublicpolicy.com" />
+	<target host="www.attpublicpolicy.com" />
 
 	<securecookie host="^.*\.att\.com$" name=".+" />
 
 
-	<rule from="^http://((?:connect|www\.corp|cprodmasx|developer|www\.e-access|forums|localization|networkingexchangeblog|rewardcenter|smb|trial\.uc|ufix|uversecentral\d|webhosting|www\.wireless|www)\.)?att\.com/"
-		to="https://$1att.com/" />
+	<rule from="^http://uc\.att\.com/"
+		to="https://www.uc.att.com/" />
 
-	<rule from="^http://(?:www\.)?business\.att\.com/(?:enterprise/)?(?:\?.*)?$"
-		to="https://www.att.com/gen/landing-pages?pid=9214" />
-
-	<!--	https://wireless redirects to login, while
-		http://wireless redirects like so.
-							-->
-	<rule from="^http://wireless\.att\.com/($|\?)"
-		to="https://www.att.com/shop/wireless/$1" />
-
-	<rule from="^http://(\d)\.ecom\.attccc\.com/"
-		to="https://$1.ecom.attccc.com/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

@@ -20,7 +20,7 @@ var path = require("path"),
   readdirp = require('readdirp'),
   es = require('event-stream'),
 
-  rules = require("../chromium/rules"),
+  rules = require("../../chromium/background-scripts/rules"),
 
   URI = require("urijs");
 
@@ -94,7 +94,7 @@ function processFile(filename) {
  */
 function loadRuleSets() {
   console.log("Loading rules...");
-  var fileContents = fs.readFileSync(path.join(__dirname, '../pkg/crx/rules/default.rulesets'), 'utf8');
+  var fileContents = fs.readFileSync(path.join(__dirname, '../../pkg/crx/rules/default.rulesets'), 'utf8');
   ruleSets = new rules.RuleSets({});
   ruleSets.addFromJson(JSON.parse(fileContents));
 }

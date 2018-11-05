@@ -1,10 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://jetzt.sueddeutsche.de/ => https://jetzt.sueddeutsche.de/: (28, 'Connection timed out after 20000 milliseconds')
-Fetch error: http://stellenmarkt.sueddeutsche.de/ => https://stellenmarkt.sueddeutsche.de/: Too many redirects while fetching 'https://stellenmarkt.sueddeutsche.de/'
-Fetch error: http://www.sueddeutsche.de/favicon.ico => https://www.sueddeutsche.de/favicon.ico: Too many redirects while fetching 'https://www.sueddeutsche.de/favicon.ico'
-
 	For problematic rules, see Suddeutsche_Zeitung-problematic.xml.
 
 
@@ -44,14 +38,16 @@ Fetch error: http://www.sueddeutsche.de/favicon.ico => https://www.sueddeutsche.
 		- anzeigen-buchen.sueddeutsche.de	(Insecure renegotiation
 		- archiv.sueddeutsche.de	(mismatched, CN: *.sz.de)
 		- englisch.sueddeutsche.de	(works, mismatched, CN: www.gymglish.com)
+		- jetzt.sueddeutsche.de		(connection refused)
 		- ladenwelten.sueddeutsche.de		(Mismatched, CN: *.hjr-verlag.de)
 		- maps.sueddeutsche.de			(Mixed active content)
 		- mediadaten.sueddeutsche.de	(mismatched, CN: www.cfmueller.de)
 		- sz-media.sueddeutsche.de		(Mismatched, CN: *.hjr-verlag.de)
+		- stellenmarkt.sueddeutsche.de  (redirect to plain
 		- szshop.sueddeutsche.de		(Mixed active content)
 		- tickets.sueddeutsche.de		(Plaintext reply)
-		- www.sueddeutsche.de			(Mixed active content)
-
+		- www.sueddeutsche.de			(redirect to plain)
+		- ^jetzt.de                     (incomplete tls chain)
 
 	Partially covered domains:
 
@@ -72,7 +68,6 @@ Fetch error: http://www.sueddeutsche.de/favicon.ico => https://www.sueddeutsche.
 		- maerkte
 		- motormarkt
 		- service
-		- stellenmarkt
 		- sz-shop
 		- weiterbildung
 
@@ -107,32 +102,19 @@ Fetch error: http://www.sueddeutsche.de/favicon.ico => https://www.sueddeutsche.
 		- Image on maerkte from www.tripod.de
 
 -->
-<ruleset name="Süddeutsche Zeitung (partial)" default_off='failed ruleset test'>
+<ruleset name="Süddeutsche Zeitung (partial)" >
 
 	<target host="polpix.sueddeutsche.com" />
 	<target host="*.sueddeutsche.de" />
+	<target host="jetzt.de" />
+	<target host="www.jetzt.de" />
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.sueddeutsche\.de$" name="^creid$" /-->
-	<!--securecookie host="^anzeigen-buchen\.sueddeutsche\.de$" name="^startquery$" /-->
-	<!--securecookie host="^archiv\.sueddeutsche\.de$" name="^BIGipServerlb-redirect_80$" /-->
-	<!--securecookie host="^epaper\.sueddeutsche\.de$" name="^(BIGipServerlb-epaper-prod_app|BIGipServerlb-pay_http)$" /-->
-	<!--securecookie host="^id\.sueddeutsche\.de$" name="^(BIGipServerlb-szid_http|szid)$" /-->
-	<!--securecookie host="^ladenwelten\.sueddeutsche\.de$" name="^(BIGipServerlb-hjrnew2_http|PHPSESSID)$" /-->
-	<!--securecookie host="^service\.sueddeutsche\.de$" name="^BIGipServerszosc-app2_http$" /-->
-	<!--securecookie host="^stellenmarkt\.sueddeutsche\.de$" name="^BIGipServerlb-moslive_http$" /-->
-	<!--securecookie host="^sz-media.sueddeutsche.de$" name="^(BIGipServerlb-hjrnew2_http|ID)$" /-->
-	<!--securecookie host="^szshop\.sueddeutsche\.de$" name="^language$" /-->
-	<!--securecookie host="^weiterbildung\.sueddeutsche\.de$" name="^PHPSESSID$" /-->
-	<!--securecookie host="^www\.sueddeutsche\.de$" name="^BIGipServerlb-phpapp_http$" /-->
-
-	<securecookie host="^(?:anzeigen-buchen|epaper|id|service|stellenmarkt|sz-shop|weiterbildung)\.sueddeutsche\.de$" name=".+" />
+	<securecookie host=".+" name=".+" />
 
 	<rule from="^http://polpix\.sueddeutsche\.com/"
 		to="https://www.sueddeutsche.de/" />
 
-	<rule from="^http://(anzeigen(?:-buchen)?|epaper|geoservice|global|id|jetzt|maerkte|(motor|stellen)markt|service|sz-shop|weiterbildung)\.sueddeutsche\.de/"
+	<rule from="^http://(anzeigen(?:-buchen)?|cre-mirror|epaper|geoservice|gfx|global|id|maerkte|media-cdn|(motor|stellen)markt|paybox-ui|service|sz-shop|weiterbildung)\.sueddeutsche\.de/"
 		to="https://$1.sueddeutsche.de/" />
 
 	<rule from="^http://immobilienmarkt\.sueddeutsche\.de/(cms/data/|cms/fileadmin/|cms/uploads/|css/|favicon\.ico|gfx/)"
@@ -144,16 +126,16 @@ Fetch error: http://www.sueddeutsche.de/favicon.ico => https://www.sueddeutsche.
 	<rule from="^http://szshop\.sueddeutsche\.de/(favicon\.ico|out/sz/src/)"
 		to="https://szshop.sueddeutsche.de/$1" /> <!--subdomain can be secured completely but creates false MCB -->
 
-	<rule from="^http://www\.sueddeutsche\.de/favicon\.ico"
-		to="https://www.sueddeutsche.de/favicon.ico" />
+	<rule from="^http://(www\.)?jetzt\.de/"
+		to="https://www.jetzt.de/" />
 
 	<test url="http://anzeigen.sueddeutsche.de/" />
 	<test url="http://anzeigen-buchen.sueddeutsche.de/" />
 	<test url="http://epaper.sueddeutsche.de/" />
 	<test url="http://geoservice.sueddeutsche.de/" />
+	<test url="http://gfx.sueddeutsche.de/" />
 	<test url="http://global.sueddeutsche.de/assets/img/header/sprite_header.png" />
 	<test url="http://id.sueddeutsche.de/" />
-	<test url="http://jetzt.sueddeutsche.de/" />
 
 	<test url="http://immobilienmarkt.sueddeutsche.de/cms/data/images/Teaser-Bild_Maier-Immobilien.jpg" />
 	<test url="http://immobilienmarkt.sueddeutsche.de/cms/fileadmin/Dateien_OIM/interhyp/Interhyp_Logo_solo.jpg" />
@@ -163,15 +145,17 @@ Fetch error: http://www.sueddeutsche.de/favicon.ico => https://www.sueddeutsche.
 	<test url="http://immobilienmarkt.sueddeutsche.de/gfx/white_arrow_dirRight.png" />
 	<test url="http://maps.sueddeutsche.de/css/fonts/SZSans.woff" />
 	<test url="http://maps.sueddeutsche.de/css/fonts.css" />
+	<test url="http://media-cdn.sueddeutsche.de/globalassets/img/unsprited/placeholder_16_9.png" />
+	<test url="http://media-cdn.sueddeutsche.de/globalassets/components/szfonts/fonts/SZSans/SZSans-Bold.woff2" />	
 	<test url="http://motormarkt.sueddeutsche.de/" />
-	<test url="http://stellenmarkt.sueddeutsche.de/" />
 
 	<test url="http://maerkte.sueddeutsche.de/" />
+	<test url="http://paybox-ui.sueddeutsche.de/assets/css/paybox.css" />
 	<test url="http://service.sueddeutsche.de/" />
 	<test url="http://sz-shop.sueddeutsche.de/" />
 	<test url="http://szshop.sueddeutsche.de/favicon.ico" />
 	<test url="http://szshop.sueddeutsche.de/out/sz/src/css/libs/jscrollpane.css" />
 	<test url="http://szshop.sueddeutsche.de/out/sz/src/css/styles.css" />
 	<test url="http://weiterbildung.sueddeutsche.de/" />
-	<test url="http://www.sueddeutsche.de/favicon.ico" />
+	
 </ruleset>

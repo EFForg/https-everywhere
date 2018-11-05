@@ -17,7 +17,8 @@ exports.update_channels = [{
        '6agsuamOyiOtlZiRpEvoNg2ksJMZtwnj5xhBQydkdhMW2ZpHDzcLuZlhJYZL_l3_7wuzRM7vpyA9obP92CpZRFJErGZmFxJC93I4U9-0B0wg' +
        '-sbyMKGJ5j1BWTnibCklDXtWzXtuiz18EgE'
   },
-  update_path_prefix: 'https://www.https-rulesets.org/v1/'
+  update_path_prefix: 'https://www.https-rulesets.org/v1/',
+  scope: ''
 }];
 
 })(typeof exports === 'undefined' ? require.scopes.update_channels = {} : exports);

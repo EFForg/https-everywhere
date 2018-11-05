@@ -1,33 +1,42 @@
 <!--
-	Incomplete cert chain:
-		l.bst.126.net			https://l.bst.126.net/rsc/img/weibo.png
+	502: May avaiable in China, however get 502 errors by Tor.
+		imglf(\d).ph.126.net
+		imgsize.ph.126.net
+		lofter.ph.126.net			Equal to imglf\d+.ph.126.net
 
 	Mismatch:
-		s2.open.126.net			https://s2.open.126.net/ocb/css/style.css
-		img.ph.126.net			Equal to lofter.
-		imglf[0-3].ph.126.net	Equal to lofter.
-		music.ph.126.net		https://music.ph.126.net/ph.js
+		s2.open.126.net				https://s2.open.126.net/ocb/css/style.css
+		img.ph.126.net				Equal to lofter.ph.126.net
+		imglf.ph.126.net
+		music.ph.126.net			https://music.ph.126.net/ph.js
 		file.ws.stu.126.net
+		imglf(\d).nosdn0.126.net	Equal to imglf$1.nosdn.127.net
 
 	Refuse to connect:
-		m10.music.126.net		(Outside China)
+		m10.music.126.net			(Outside China)
 -->
 <ruleset name="126.net">
+	<target host="l.bst.126.net" />
+		<test url="http://l.bst.126.net/rsc/img/weibo.png" />
 	<target host="img3.126.net" />
 		<test url="http://img3.126.net/kaola/150512/js/jquery-1.4.2.js" />
 	<target host="img1.money.126.net" />
 		<test url="http://img1.money.126.net/data/hs/time/today/0000001.json" />
 	<target host="img2.money.126.net" />
+	<target host="d1.music.126.net" />
+	<target host="d2.music.126.net" />
 	<target host="p1.music.126.net" />
 		<test url="http://p1.music.126.net/5QxEuxegyf6w6A8xaH4fwA==/18732379604094419.jpg" />
 	<target host="p2.music.126.net" />
 	<target host="p3.music.126.net" />
 	<target host="p4.music.126.net" />
 	<target host="s1.music.126.net" />
-		<test url="http://s1.music.126.net/download/android/CloudMusic_official_3.8.0_166749.apk" />
+		<!-- too big to test url="http://s1.music.126.net/download/android/CloudMusic_official_3.8.0_166749.apk" /-->
 	<target host="s2.music.126.net" />
 	<target host="s3.music.126.net" />
 	<target host="s4.music.126.net" />
+	<target host="easyread.ph.126.net" />
+		<test url="http://easyread.ph.126.net/0jkjwGfV7I4EJXnYlRBkVg==/7917077456266817441.jpg" />
 	<target host="pimg1.126.net" />
 		<test url="http://pimg1.126.net/silver/product/fams/banner/902d4fad-7b08-4977-8cb4-501d0927811a.jpg" />
 	<target host="cst.stu.126.net" />
@@ -37,29 +46,18 @@
 		<test url="http://file.ws.126.net/3g/client/netease_newsreader_android.apk" />
 	<target host="yuedust.yuedu.126.net" />
 
-	<!--	Complications:	-->
-	<target host="*.ph.126.net" />
-		<test url="http://easyread.ph.126.net/0jkjwGfV7I4EJXnYlRBkVg==/7917077456266817441.jpg" />
-		<test url="http://imglf4.ph.126.net/Hl-5m6FPM6qEZVodyHeJXQ==/6598068123274897199.png" />
-		<test url="http://imglf99.ph.126.net/Hl-5m6FPM6qEZVodyHeJXQ==/6598068123274897199.png" />
-		<test url="http://imglf999.ph.126.net/Xxbx69RhsRMFfTVsEvTxmw==/6631199707099665283.png" />
-		<test url="http://imgsize.ph.126.net/?imgurl=http://lovepicture.nosdn.127.net/-1909745056204601718?imageView_90x90x0x85.net" />
-		<test url="http://lofter.ph.126.net/3ZY1gdaZcahG6CmxojI-ZQ==/5629506131282902209.png" />
-
 	<!--
 		Mismatch:
 		get some img tests on
-		https://sizhisizhi.lofter.com/post/1d69592c_a0f5e04
+		https://renwuzaoxing.lofter.com/
 			-->
-	<rule from="^http://img(lf(0|1|2|3))?\.ph\.126\.net/" to="https://lofter.ph.126.net/" />
-		<test url="http://img.ph.126.net/3ZY1gdaZcahG6CmxojI-ZQ==/5629506131282902209.png" />
-		<test url="http://imglf0.ph.126.net/D61yq3VyoEw7K55pJ8WcBA==/6598261637321193102.png" />
-		<test url="http://imglf1.ph.126.net/-SuPNwU7ZdssmN_A_j_OTw==/6631428405518237572.png" />
-		<test url="http://imglf2.ph.126.net/Hl-5m6FPM6qEZVodyHeJXQ==/6598068123274897199.png" />
-		<test url="http://imglf3.ph.126.net/Hl-5m6FPM6qEZVodyHeJXQ==/6598068123274897199.png" />
 
-	<exclusion pattern="^http://music\.ph\.126\.net/" />
-		<test url="http://music.ph.126.net/ph.js" />
+	<target host="*.nosdn0.126.net" />
+	<rule from="^http://imglf(\d+)\.nosdn0\.126\.net/"
+			to="https://imglf$1.nosdn.127.net/" />
+		<test url="http://imglf3.nosdn0.126.net/img/WFU1VmZJa3UxeFltWTJ4ZDNOZDU4NXRmUFVLR1lXS1gySnpVQ2JObm95VjZjQjNGWVBjU2x3PT0.jpg" />
+		<test url="http://imglf4.nosdn0.126.net/img/WFU1VmZJa3UxeFltWTJ4ZDNOZDU4M2wwT05lSzRHZjZkN2RTOFMxOEFPVGRjTmlQdkRIcDlBPT0.jpg" />
+		<test url="http://imglf6.nosdn0.126.net/img/WFU1VmZJa3UxeFltWTJ4ZDNOZDU4K3VuTEdoMmZZcGJzR2YyMFdidWlsVFBlNWwzMlkzZTFnPT0.jpg" />
 
 	<rule from="^http:" to="https:" />
 </ruleset>

@@ -1,61 +1,38 @@
 <!--
-	CNN.com related ruleset:
+	CNN.com related rulesets:
 		- CNN.net.xml
 		- CNN.io.xml
 
-	Non-functional hosts
-		Couldn't connect to server:
-			 - money.cnn.com
-			 - cgi.money.cnn.com
-			 - jobsearch.money.cnn.com
-			 - portfolio.money.cnn.com
-			 - www.money.cnn.com
-			 - searchapp.cnn.com
-			 - transcripts.cnn.com
-			 - tours.cnn.com
-			 - weather.cnn.com
 
-		SSL connect error:
-			 - commercial.cnn.com
-			 - rss.cnn.com
+	Connection closed:
+		 - rss.cnn.com
 
-		SSL peer certificate was not OK:
-			 - debates.cnn.com
-			 - finance.fortune.cnn.com
-			 - management.fortune.cnn.com
-			 - tech.fortune.cnn.com
-			 - lending.cnn.com
-			 - mexico.cnn.com
-			 - realestate.money.cnn.com
-			 - podcast.cnn.com
-			 - smartlink.cnn.com
+	Connection reset:
+		- smartlink.cnn.com
 
-		Incomplete certificate chain error:
-			 - collection.cnn.com
-			 - static.collection.cnn.com
+	Invalid certificate:
+		 - debates.cnn.com
+		 - finance.fortune.cnn.com
+		 - management.fortune.cnn.com
+		 - tech.fortune.cnn.com
+		 - lending.cnn.com
+		 - mexico.cnn.com, equivalent to cnnespanol.cnn.com
+		 - realestate.money.cnn.com, equivalent to cnnmoney.trulia.com
 
-		Secure connection redirects to plaintext:
-			 - cnnpressroom.blogs.cnn.com
-			 - thecnnfreedomproject.blogs.cnn.com
-			 - buzz.money.cnn.com
+	Redirects to HTTP:
+		 - cnnpressroom.blogs.cnn.com
+		 - thecnnfreedomproject.blogs.cnn.com
+		 - buzz.money.cnn.com
 
-		Mixed content blocking (MCB) tiggered:
-			 - go.cnn.com
-			 - markets.money.cnn.com
-			 	+ http://money.cnn.com/data/world_markets/americas/?iid=H_MKT_QL
-			 - www.preview.cnn.com
-
-		CORS Blocking:
-			 - edition.i.cdn.cnn.com on money.cnn.com
+	Timed out:
+		 - transcripts.cnn.com
 -->
+
 <ruleset name="CNN.com (partial)">
 	<target host="cnn.com" />
 	<target host="www.cnn.com" />
 	<target host="amp.cnn.com" />
 	<target host="arabic.cnn.com" />
-	<target host="cnnespanol.cnn.com" />
-	<target host="edition.cnn.com" />
-	<target host="www.edition.cnn.com" />
 	<target host="i.cdn.cnn.com" />
 		<test url="http://i.cdn.cnn.com/cnn/.e/img/3.0/weather/weatherIcon_01.png" />
 		<test url="http://i.cdn.cnn.com/cnn/.e1mo/img/4.0/logos/logo_cnn_arabic.png" />
@@ -64,8 +41,35 @@
 		<test url="http://i2.cdn.cnn.com/cnnnext/dam/assets/170313100039-04-climate-change-impact-small-11.jpg" />
 		<test url="http://i2.cdn.cnn.com/cnnnext/dam/assets/170409024444-uss-carl-vinson-large-tease.jpg" />
 		<test url="http://i2.cdn.cnn.com/cnnnext/dam/assets/170423103501-france-election-security-eiffel-overlay-tease.jpg" />
+	<target host="cnnespanol.cnn.com" />
+	<target host="collection.cnn.com" />
+	<target host="commercial.cnn.com" />
+	<target host="edition.cnn.com" />
+	<target host="www.edition.cnn.com" />
+	<target host="go.cnn.com" />
+	<target host="mexico.cnn.com" />
+	<target host="money.cnn.com" />
+	<target host="www.money.cnn.com" />
+	<target host="cgi.money.cnn.com" />
+	<target host="jobsearch.money.cnn.com" />
+	<target host="markets.money.cnn.com" />
+	<target host="portfolio.money.cnn.com" />
+	<target host="realestate.money.cnn.com" />
+	<target host="podcast.cnn.com" />
+	<target host="www.preview.cnn.com" />
+	<target host="searchapp.cnn.com" />
+	<target host="tours.cnn.com" />
 	<target host="travel.cnn.com" />
 	<target host="us.cnn.com" />
+	<target host="weather.cnn.com" />
+
+	<!-- Strip path and query -->
+	<rule from="^http://mexico\.cnn\.com/(.*)"
+		to="https://cnnespanol.cnn.com/?redirect=cnnmexico" />
+		<test url="http://mexico.cnn.com/this-gets-stripped" />
+
+	<rule from="^http://realestate\.money\.cnn\.com/"
+		to="https://cnnmoney.trulia.com/" />
 
 	<rule from="^http:" to="https:" />
 </ruleset>
