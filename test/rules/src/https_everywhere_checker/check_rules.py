@@ -232,7 +232,7 @@ def disableRuleset(ruleset, problemRules, urlCount):
         for rule in rules:
             host = rule.split('/')[2]
             logging.info("Disabling target %s", host)
-            contents = re.sub('<[ \n]*target[ \n]+host[ \n]*=[ \n]*"%s"[ \n]*\/?[ \n]*>' % (rule.split('/')[2]),
+            contents = re.sub('<[ \n]*target[ \n]+host[ \n]*=[ \n]*"%s"[ \n]*\/?[ \n]*>' % (host),
                 '<!-- target host="%s" /-->' % (host), contents);
 
     # Since the problems are going to be inserted into an XML comment, they cannot
