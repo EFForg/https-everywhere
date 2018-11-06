@@ -230,7 +230,8 @@ def disableRuleset(ruleset, problemRules, urlCount):
     # If not all targets, just the target
     else:
         for rule in rules:
-            logging.info("Deleting rule %s", rule)
+            host = rule.split('/')[2]
+            logging.info("Disabling target %s", host)
             contents = re.sub('<[ \n]*target[ \n]+host[ \n]*=[ \n]*"%s"[ \n]*\/?[ \n]*>' % (rule.split('/')[2]),
                 '<!-- target host="%s" /-->' % (host), contents);
 
