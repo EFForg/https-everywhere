@@ -103,7 +103,7 @@ class UrlComparisonThread(threading.Thread):
                 problems.append(result)
         if problems:
             for problem in problems:
-                logging.error("%s: %s" % (task.ruleFname, problem[0]))
+                logging.error("{}: {}".format(task.ruleFname, problem[0]))
             if self.autoDisable:
                 urlCount = len(task.urls)
                 disableRuleset(task.ruleset, problems, urlCount)
@@ -224,16 +224,16 @@ def disableRuleset(ruleset, problemRules, urlCount):
 
     # Go ahead and disable rulset if all targets are problematic
     if urlCount == len(problemRules):
-        logging.info("Disabling ruleset %s", ruleset.filename)
+        logging.info("Disabling ruleset {}".format(ruleset.filename))
         contents = re.sub("(<ruleset [^>]*)>",
             "\\1 default_off='failed ruleset test'>", contents);
     # If not all targets, just the target
     else:
         for rule in rules:
             host = rule.split('/')[2]
-            logging.info("Disabling target %s", host)
-            contents = re.sub('<[ \n]*target[ \n]+host[ \n]*=[ \n]*"%s"[ \n]*\/?[ \n]*>' % (host),
-                '<!-- target host="%s" /-->' % (host), contents);
+            logging.info("Disabling target {}".format(host))
+            contents = re.sub('<[ \n]*target[ \n]+host[ \n]*=[ \n]*"{}"[ \n]*\/?[ \n]*>'.format(host),
+                '<!-- target host="{}" /-->'.format(host), contents);
 
     # Since the problems are going to be inserted into an XML comment, they cannot
     # contain "--", or they will generate a parse error. Split up all "--" with a
@@ -245,8 +245,8 @@ def disableRuleset(ruleset, problemRules, urlCount):
     problemStatement = ("""
 <!--
 Disabled by https-everywhere-checker because:
-%s
-""" % "\n".join(problems))
+{}
+""".format("\n".join(problems)))
     contents = re.sub("^<!--", problemStatement, contents)
     with open(ruleset.filename, "w") as f:
             f.write(contents)
