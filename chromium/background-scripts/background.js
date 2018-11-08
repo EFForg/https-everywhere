@@ -406,10 +406,11 @@ function onBeforeRequest(details) {
   let newuristr = null;
 
   for (let ruleset of potentiallyApplicable) {
-    if (details.url.match(ruleset.scope)) {
-      appliedRulesets.addRulesetToTab(details.tabId, details.type, ruleset);
-      if (ruleset.active && !newuristr) {
-        newuristr = ruleset.apply(uri.href);
+    if (ruleset.active && details.url.match(ruleset.scope)) {
+      newuristr = ruleset.apply(uri.href);
+      if (newuristr !== null) {
+        appliedRulesets.addRulesetToTab(details.tabId, details.type, ruleset);
+        break;
       }
     }
   }
