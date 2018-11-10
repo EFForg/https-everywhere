@@ -3,7 +3,6 @@ os: linux
 dist: xenial
 language: python
 python: 3.6
-group: deprecated-2017Q4
 services:
   - docker
 matrix:
@@ -32,6 +31,9 @@ matrix:
         firefox: latest-esr
       env: TEST="firefox esr" BROWSER=firefox
 before_install:
+  # IPv6 https://github.com/travis-ci/travis-ci/issues/8891#issuecomment-353403729
+  - echo '{"ipv6":true,"fixed-cidr-v6":"2001:db8:1::/64"}' | sudo tee /etc/docker/daemon.json
+  - sudo service docker restart
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
 before_script: travis_retry test/setup_travis.sh
