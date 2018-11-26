@@ -330,13 +330,6 @@ function onBeforeRequest(details) {
 
   let uri = new URL(details.url);
 
-  /**
-   * We never wanted to rewrite HTTPS requests
-   */
-  if ('https:' === uri.protocol) {
-    return;
-  }
-
   // Check if a user has disabled HTTPS Everywhere on this site.  We should
   // ensure that all subresources are not run through HTTPS Everywhere as well.
   let firstPartyHost;
