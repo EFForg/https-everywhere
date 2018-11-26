@@ -20,6 +20,7 @@ from lxml import etree
 
 import http_client
 import metrics
+import urllib.parse
 from rules import Ruleset
 from rule_trie import RuleTrie
 
@@ -230,10 +231,10 @@ def disableRuleset(ruleset, problemRules, urlCount):
     # If not all targets, just the target
     else:
         for rule in rules:
-            host = rule.split('/')[2]
-            logging.info("Disabling target {}".format(host))
-            contents = re.sub('<[ \n]*target[ \n]+host[ \n]*=[ \n]*"{}"[ \n]*\/?[ \n]*>'.format(host),
-                '<!-- target host="{}" /-->'.format(host), contents);
+            host = urllib.parse.urlparse(rule)
+            logging.info("Disabling target {}".format(host.netloc))
+            contents = re.sub('<[ \n]*target[ \n]+host[ \n]*=[ \n]*"{}"[ \n]*\/?[ \n]*>'.format(host.netloc),
+                '<!-- target host="{}" /-->'.format(host.netloc), contents);
 
     # Since the problems are going to be inserted into an XML comment, they cannot
     # contain "--", or they will generate a parse error. Split up all "--" with a
@@ -249,7 +250,7 @@ Disabled by https-everywhere-checker because:
 """.format("\n".join(problems)))
     contents = re.sub("^<!--", problemStatement, contents)
     with open(ruleset.filename, "w") as f:
-            f.write(contents)
+        f.write(contents)
 
 
 # A dict indexed by binary SHA256 hashes. A ruleset whose hash matches an entry in
