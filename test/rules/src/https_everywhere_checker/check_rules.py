@@ -147,7 +147,7 @@ class UrlComparisonThread(threading.Thread):
                     plainUrl, transformedUrl, e)
                 self.queue_result("error", "fetch-error {}".format(e),
                                   ruleFname, plainUrl, https_url=transformedUrl)
-                return [message, plainUrl]
+                return message
 
             logging.debug(
                 "Non-fatal fetch error for plain page {}: {}".format(plainUrl, e))
