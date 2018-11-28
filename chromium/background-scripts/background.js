@@ -1027,6 +1027,20 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     check_if_site_disabled: () => {
       sendResponse(disabledList.has(message.object));
       return true;
+    },
+    is_firefox: () => {
+      if(typeof(browser) != "undefined"){
+        browser.runtime.getBrowserInfo().then(function(info) {
+          if (info.name == "Firefox") {
+            sendResponse(true);
+          } else {
+            sendResponse(false);
+          }
+        });
+      } else {
+        sendResponse(false);
+      }
+      return true;
     }
   };
   if (message.type in responses) {

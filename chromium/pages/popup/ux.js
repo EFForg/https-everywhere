@@ -173,11 +173,19 @@ document.addEventListener("DOMContentLoaded", function () {
   e('onoffswitch').addEventListener('click', toggleEnabledDisabled);
   e('http-nowhere-checkbox').addEventListener('click', toggleHttpNowhere, false);
   e('reset-to-defaults').addEventListener('click', () => {
-    if (confirm(chrome.i18n.getMessage("prefs_reset_defaults_message"))) {
-      sendMessage("reset_to_defaults", null, () => {
-        window.close();
-      });
-    }
+    sendMessage("is_firefox", null, is_firefox => {
+      if (is_firefox) {
+        sendMessage("reset_to_defaults", null, () => {
+          window.close();
+        });
+      } else {
+        if (confirm(chrome.i18n.getMessage("prefs_reset_defaults_message"))) {
+          sendMessage("reset_to_defaults", null, () => {
+            window.close();
+          });
+        }
+      }
+    });
   });
 
   // Print the extension's current version.
