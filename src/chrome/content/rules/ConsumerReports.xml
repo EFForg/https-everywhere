@@ -1,7 +1,4 @@
 <!--
-	For rules causing false/broken MCB, see Consumer_Reports.com-falsemixed.xml.
-
-
 	CDN buckets:
 
 		- dffe75s34hxl9.cloudfront.net
@@ -35,39 +32,25 @@
 		- css on web and www from static[1-4].consumerreportscdn.org *
 
 	* Secured by us
-
 -->
-<ruleset name="Consumer Reports (partial)">
 
+<ruleset name="Consumer Reports">
+	<!-- consumerreports.org -->
 	<target host="consumerreports.org" />
+	<target host="www.consumerreports.org" />
 	<target host="custhelp.consumerreports.org" />
 	<target host="ec.consumerreports.org" />
 	<target host="web.consumerreports.org" />
-	<target host="www.consumerreports.org" />
-		<!--
-			Avoid broken MCB:
-						-->
-		<exclusion pattern="^http://(web\.|www\.)?consumerreports\.org/+(?!etc/|favicon\.ico)" />
+
+	<!-- consumerreportscdn.org -->
 	<target host="*.consumerreportscdn.org" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.consumerreports\.org$" name="^(userKeycodes|userReferrer)$" /-->
-	<!--securecookie host="^ec\.consumerreports\.org$" name="^(JSESSIONID|pwipersist)$" /-->
 
 	<securecookie host="^ec\.consumerreports\.org$" name=".+" />
 
+	<rule from="^http://consumerreports\.org/"
+		to="https://consumerreports.org/" />
 
-	<!--	Cert only matches www.
-					-->
-	<rule from="^http://(www\.)?consumerreports\.org/"
-		to="https://www.consumerreports.org/" />
-
-	<rule from="^http://custhelp\.consumerreports\.org/"
-		to="https://custhelp.consumerreports.org/" />
-
-	<rule from="^http://(ec|web)\.consumerreports\.org/"
+	<rule from="^http://(www|custhelp|ec|web)\.consumerreports\.org/"
 		to="https://$1.consumerreports.org/" />
 
 	<rule from="^http://static[1-4]\.consumerreportscdn\.org/"
