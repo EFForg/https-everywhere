@@ -1,9 +1,7 @@
 <!--
 	See Oracle-mismatches.xml for problematic rules.
 
-
 	Other Oracle rulesets:
-
 		- Atgsvcs.com.xml
 		- ATG_Web_Commerce.xml
 		- Compendium.com.xml
@@ -23,14 +21,23 @@
 		- RightNow-clients.xml
 		- RNengage.com.xml
 
-
-	Non-functional hosts in *.oracle.com:
-
-		Connection refused:
+	Connection refused:
 		- oukc.oracle.com
 		- tahiti.oracle.com
 
-		Timeout:
+	Connection reset:
+		- medianetwork.oracle.com
+
+	Invalid certificate:
+		- investor.oracle.com
+		- oracleimg.com
+
+	Redirects to HTTP:
+		- crmondemand.oracle.com
+		- ilearning.oracle.com
+		- japanmediacentre.oracle.com
+
+	Timed out:
 		- blogs-stage.oracle.com
 		- emeajobs.oracle.com
 		- forums-stage.oracle.com
@@ -38,60 +45,32 @@
 		- jdevadf.oracle.com
 		- wikis-stage.oracle.com
 
-		Certificate mismatch:
-		- investor.oracle.com
-
-		Connection reset:
-		- medianetwork.oracle.com
-
-		Redirect to HTTP:
-		- crmondemand.oracle.com
-		- ilearning.oracle.com
-		- japanmediacentre.oracle.com
-
-
-	Non-functional hosts in *.oracleimg.com:
-
-		Certificate mismatched:
-		- oracleimg.com
-
-
 	Partially covered domains:
-
 		- (www.)oracle.com ¹
 		- (www.)oracleimg.com ¹
-
 	¹ Some paths redirect to http
-
 
 	There are probably some data identical across shop and www that could be grabbed for www.
 
 	Mixed content:
-
 		- Script on medianetwork from www.oracleimg.com ¹
-
 		- Images, on:
-
 			- blog from www.eloqua.com
 			- medianetwork from sun.edgeboss.net
 			- medianetwork from www.oracleimg.com ¹
 			- medianetwork from www.oracleimg.com ²
 			- www from $self ¹
-
 		- Web bugs, on:
-
 			- events from dnn506yrbagrg.cloudfront.net ¹
 			- events from consent.truste.com ¹
 			- medianetwork from www.oracleimg.com ¹
-
 	¹ Secured by us
 	² Unsecurable, doesn't trip MCB
-
 -->
+
 <ruleset name="Oracle (partial)">
 
-	<!--	Direct rewrites:
-					-->
+	<!-- Direct rewrites -->
 	<target host="academy.oracle.com" />
 	<target host="acsportal.oracle.com" />
 	<target host="advancedsupport.oracle.com" />
@@ -196,24 +175,17 @@
 	<target host="wikis.oracle.com" />
 	<target host="workforce.oracle.com" />
 	<target host="www-portal-stage.oracle.com" />
-	<target host="www.oracle.com" />
 	<target host="www-stage.oracle.com" />
 	<target host="yum.oracle.com" />
 
+	<!-- Special cases -->
+	<target host="oracle.com" />
+	<target host="www.oracle.com" />
+	<target host="oracleimg.com" />
 	<target host="www.oracleimg.com" />
 
-	<!--	Special cases:
-				-->
-	<target host="oracle.com" />
-	<target host="oracleimg.com" />
-
-		<!--
-			Exceptions:
-					-->
 		<exclusion pattern="^http://www\.oracle(img)?\.com/(?!(\w+/)?assets/|\w+/[^/]+\.(css|gif|jpg|js|png)$|(communities|corporate/careers|javaone|marketingcloud|rightnow)($|[?/]))"/>
-
-			<!--	+ve:
-					-->
+			<!-- +ve -->
 			<test url="http://www.oracle.com/ee/" />
 			<test url="http://www.oracle.com/gr/" />
 			<test url="http://www.oracle.com/index.html" />
@@ -232,8 +204,7 @@
 			<test url="http://www.oracle.com/us/support/index.html" />
 			<test url="http://www.oracle.com/us/syndication/subscribe/index.html" />
 
-			<!--	-ve:
-					-->
+			<!-- -ve -->
 			<test url="http://www.oracle.com/communities" />
 			<test url="http://www.oracle.com/corporate/careers" />
 			<test url="http://www.oracle.com/marketingcloud/products/cross-channel/marketing-to-consumers.html" />
@@ -243,24 +214,17 @@
 			<test url="http://www.oracleimg.com/us/assets/sidebox-background-top.gif" />
 
 	<securecookie host="^(\w+|\.edelivery)\.oracle\.com$" name=".+" />
-	<!--
-		Could we secure any of these safely?
-							-->
+	<!-- Could we secure any of these safely? -->
 	<!--securecookie host="^\.oracle\.com$" name="^(ORA_FND_SESSION_CRMAP\.US\.ORACLE\.COM|ORA_FUSION_PREFS|s_eVar21)$" /-->
-	<!--
-		Tracking cookies
-					-->
+	<!-- Tracking cookies -->
 	<securecookie host="^\." name="^(Order_Marketing(CampaignSuccess|Trigger)|gpw_e24|s_(cc|nr|sq))$" />
-
 
 	<rule from="^http://(www\.)?oracle(img)?\.com/us/(?=[^/]+\.(css|gif|jpg|js|png)$)"
 		to="https://www.oracle$2.com/us/assets/" />
-
 			<test url="http://oracle.com/us/compass-hp-sprite.png" />
 			<test url="http://www.oracle.com/us/compass-hp-sprite.png" />
 			<test url="http://www.oracle.com/us/master-mosaic.css" />
 			<test url="http://www.oracle.com/us/ocom-base-styles.css" />
-
 			<test url="http://oracleimg.com/us/compass-hp-sprite.png" />
 			<test url="http://www.oracleimg.com/us/compass-hp-sprite.png" />
 			<test url="http://www.oracleimg.com/us/f01-bgstrip.png" />
