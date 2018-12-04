@@ -1,58 +1,31 @@
 <!--
-	For other AppNexus coverage, see AppNexus.xml.
+	For other AppNexus coverage, see AppNexus.xml
 
-
-	Problematic hosts in *adnxs.com:
-
-		- cdn ᴬ
-
-	ᴬ Akamai / mismatched
-
-
-	^adnxs.com doesn't exist.
-
-
-	Insecure cookies are set for these domains and hosts: ᶜ
-
+	Insecure cookies are set for these domains and hosts (see https://owasp.org/index.php/SecureFlag):
 		- .adnxs.com
 		- www.adnxs.com
 
-	ᶜ See https://owasp.org/index.php/SecureFlag
-
+	Invalid certificate:
+		- www.adnxs.com
 -->
+
 <ruleset name="Adnxs.com">
+	<target host="cdn.adnxs.com" />
+	<target host="ib.adnxs.com" />
+		<test url="http://ib.adnxs.com/bounce" />
+		<test url="http://ib.adnxs.com/click" />
+		<test url="http://ib.adnxs.com/seg" />
+	<target host="oas-c18.adnxs.com" />
+	<target host="cdn.oas-c18.adnxs.com" />
+	<target host="secure.adnxs.com" />
+		<test url="http://secure.adnxs.com/bounce" />
+		<test url="http://secure.adnxs.com/click" />
+		<test url="http://secure.adnxs.com/pxj" />
 
-	<target host="*.adnxs.com" />
-
-		<exclusion pattern="^http://(?!cdn\.oas-c18\.adnxs\.com/)(?:[^./]+\.){2,}adnxs\.com/" />
-
-			<!--	+ve:
-					-->
-			<test url="http://this.host.adnxs.com/" />
-			<test url="http://exists.not.adnxs.com/" />
-			<test url="http://really.not.adnxs.com/" />
-
-		<test url="http://cdn.adnxs.com/" />
-		<test url="http://ib.adnxs.com/seg?add=&amp;t=" />
-		<test url="http://cdn.oas-c18.adnxs.com/" />
-		<test url="http://secure.adnxs.com/" />
-		<test url="http://secure.adnxs.com/bounce?" />
-		<!--test url="http://secure.adnxs.com/pxj?bidder=&amp;seg=&amp;action=&amp;redir=" /-->
-		<test url="http://www.adnxs.com/" />
-
-
-	<!--	Not secured by server:
-					-->
+	<!-- Not secured by server -->
 	<!--securecookie host="^\.adnxs\.com$" name="^(anj|sess|uuid2)$" /-->
 	<!--securecookie host="^www\.adnxs\.com$" name="^([A-Z]+$|BIGipServer)" /-->
-
 	<securecookie host=".+" name=".+" />
 
-
-	<rule from="^http://cdn\.adnxs\.com/"
-		to="https://secure.adnxs.com/" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

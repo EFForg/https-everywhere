@@ -6,7 +6,8 @@ const rules = require('./rules'),
   store = require('./store'),
   incognito = require('./incognito'),
   util = require('./util'),
-  update = require('./update');
+  update = require('./update'),
+  { update_channels } = require('./update_channels');
 
 
 let all_rules = new rules.RuleSets();
@@ -39,6 +40,7 @@ async function initializeAllRules() {
 var httpNowhereOn = false;
 var showCounter = true;
 var isExtensionEnabled = true;
+let disabledList = new Set();
 
 function initializeStoredGlobals(){
   return new Promise(resolve => {
@@ -46,11 +48,15 @@ function initializeStoredGlobals(){
       httpNowhere: false,
       showCounter: true,
       globalEnabled: true,
-      enableMixedRulesets: false
+      enableMixedRulesets: false,
+      disabledList: [],
     }, function(item) {
       httpNowhereOn = item.httpNowhere;
       showCounter = item.showCounter;
       isExtensionEnabled = item.globalEnabled;
+      for (let disabledSite of item.disabledList) {
+        disabledList.add(disabledSite);
+      }
       updateState();
 
       rules.settings.enableMixedRulesets = item.enableMixedRulesets;
@@ -146,14 +152,6 @@ function updateState () {
     iconState = 'blocking';
   }
 
-  if ('setIcon' in chrome.browserAction) {
-    chrome.browserAction.setIcon({
-      path: {
-        38: 'images/icons/icon-' + iconState + '-38.png'
-      }
-    });
-  }
-
   chrome.browserAction.setTitle({
     title: 'HTTPS Everywhere' + ((iconState === 'active') ? '' : ' (' + iconState + ')')
   });
@@ -163,16 +161,37 @@ function updateState () {
       return;
     }
     const tabId = tabs[0].id;
-    const activeCount = appliedRulesets.getActiveRulesetCount(tabId);
+    const tabUrl = new URL(tabs[0].url);
 
-    if ('setBadgeBackgroundColor' in chrome.browserAction) {
-      chrome.browserAction.setBadgeBackgroundColor({ color: '#666666', tabId });
-    }
+    if (disabledList.has(tabUrl.host) || iconState == "disabled") {
+      if ('setIcon' in chrome.browserAction) {
+        chrome.browserAction.setIcon({
+          path: {
+            38: 'images/icons/icon-disabled-38.png'
+          }
+        });
+      }
+    } else {
 
-    const showBadge = activeCount > 0 && isExtensionEnabled && showCounter;
+      if ('setIcon' in chrome.browserAction) {
+        chrome.browserAction.setIcon({
+          path: {
+            38: 'images/icons/icon-' + iconState + '-38.png'
+          }
+        });
+      }
 
-    if ('setBadgeText' in chrome.browserAction) {
-      chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '', tabId });
+      const activeCount = appliedRulesets.getActiveRulesetCount(tabId);
+
+      if ('setBadgeBackgroundColor' in chrome.browserAction) {
+        chrome.browserAction.setBadgeBackgroundColor({ color: '#666666', tabId });
+      }
+
+      const showBadge = activeCount > 0 && isExtensionEnabled && showCounter;
+
+      if ('setBadgeText' in chrome.browserAction) {
+        chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '', tabId });
+      }
     }
   });
 }
@@ -276,6 +295,20 @@ var urlBlacklist = new Set();
 // TODO: Remove this code if they ever give us a real counter
 var redirectCounter = new Map();
 
+// Create a map to indicate whether a given request has been subject to a simple
+// HTTP Nowhere redirect.
+let simpleHTTPNowhereRedirect = new Map();
+
+const cancelUrl = chrome.extension.getURL("/pages/cancel/index.html");
+
+function redirectOnCancel(shouldCancel, originURL){
+  return shouldCancel ? {redirectUrl: newCancelUrl(originURL)} : {cancel: false};
+}
+
+function newCancelUrl(originURL){
+  return cancelUrl + "?originURL=" + encodeURI(originURL);
+}
+
 /**
  * Called before a HTTP(s) request. Does the heavy lifting
  * Cancels the request/redirects it to HTTPS. URL modification happens in here.
@@ -287,10 +320,39 @@ function onBeforeRequest(details) {
     return;
   }
 
+  // Clear the content shown in the extension popup.
+  // This needed to be done before this listener returns,
+  // otherwise, the extension page might include rulesets
+  // from previous page.
+  if (details.type == "main_frame") {
+    appliedRulesets.removeTab(details.tabId);
+  }
+
   let uri = new URL(details.url);
 
+  // Check if a user has disabled HTTPS Everywhere on this site.  We should
+  // ensure that all subresources are not run through HTTPS Everywhere as well.
+  let firstPartyHost;
+  if (details.type == "main_frame") {
+    firstPartyHost = uri.host;
+  } else {
+    // In Firefox, documentUrl is preferable here, since it will always be the
+    // URL in the URL bar, but it was only introduced in FF 54.  We should get
+    // rid of `originUrl` at some point.
+    if ('documentUrl' in details) { // Firefox 54+
+      firstPartyHost = new URL(details.documentUrl).host;
+    } else if ('originUrl' in details) { // Firefox < 54
+      firstPartyHost = new URL(details.originUrl).host;
+    } else if('initiator' in details) { // Chrome
+      firstPartyHost = new URL(details.initiator).host;
+    }
+  }
+  if (disabledList.has(firstPartyHost)) {
+    return;
+  }
+
   // Normalise hosts with tailing dots, e.g. "www.example.com."
-  while (uri.hostname[uri.hostname.length - 1] === '.') {
+  while (uri.hostname[uri.hostname.length - 1] === '.' && uri.hostname !== '.') {
     uri.hostname = uri.hostname.slice(0, -1);
   }
 
@@ -298,7 +360,7 @@ function onBeforeRequest(details) {
   // true if the URL is a http:// connection to a remote canonical host, and not
   // a tor hidden service
   const shouldCancel = httpNowhereOn &&
-    uri.protocol === 'http:' &&
+    (uri.protocol === 'http:' || uri.protocol === 'ftp:') &&
     uri.hostname.slice(-6) !== '.onion' &&
     uri.hostname !== 'localhost' &&
     !/^127(\.[0-9]{1,3}){3}$/.test(uri.hostname) &&
@@ -323,38 +385,37 @@ function onBeforeRequest(details) {
         " changed before processing to " + uri.href);
   }
   if (urlBlacklist.has(uri.href)) {
-    return {cancel: shouldCancel};
+    return redirectOnCancel(shouldCancel, details.url);
   }
-
-  if (details.type == "main_frame") {
-    appliedRulesets.removeTab(details.tabId);
-  }
-
-  var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
 
   if (redirectCounter.get(details.requestId) >= 8) {
     util.log(util.NOTE, "Redirect counter hit for " + uri.href);
     urlBlacklist.add(uri.href);
     rules.settings.domainBlacklist.add(uri.hostname);
     util.log(util.WARN, "Domain blacklisted " + uri.hostname);
-    return {cancel: shouldCancel};
+    return redirectOnCancel(shouldCancel, details.url);
   }
 
   // whether to use mozilla's upgradeToSecure BlockingResponse if available
   let upgradeToSecure = false;
-  var newuristr = null;
-  // check rewritten URIs against the trivially upgraded URI
-  let trivialUpgradeUri = uri.href.replace(/^http:/, "https:");
+  let newuristr = null;
+
+  let potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
 
   for (let ruleset of potentiallyApplicable) {
-    appliedRulesets.addRulesetToTab(details.tabId, details.type, ruleset);
-    if (ruleset.active && !newuristr) {
-      newuristr = ruleset.apply(uri.href);
-      // only use upgradeToSecure for trivial rulesets
-      if (newuristr == trivialUpgradeUri) {
-        upgradeToSecure = true;
+    if (details.url.match(ruleset.scope)) {
+      appliedRulesets.addRulesetToTab(details.tabId, details.type, ruleset);
+      if (ruleset.active && !newuristr) {
+        newuristr = ruleset.apply(uri.href);
       }
     }
+  }
+
+  // only use upgradeToSecure for trivial rewrites
+  if (upgradeToSecureAvailable && newuristr) {
+    // check rewritten URIs against the trivially upgraded URI
+    const trivialUpgradeUri = uri.href.replace(/^http:/, "https:");
+    upgradeToSecure = (newuristr == trivialUpgradeUri);
   }
 
   // re-insert userpass info which was stripped temporarily
@@ -386,16 +447,23 @@ function onBeforeRequest(details) {
     // If loading a main frame, try the HTTPS version as an alternative to
     // failing.
     if (shouldCancel) {
-      upgradeToSecure = true;
       if (!newuristr) {
         newuristr = uri.href.replace(/^http:/, "https:");
+        simpleHTTPNowhereRedirect.set(details.requestId, true);
+        upgradeToSecure = true;
       } else {
         newuristr = newuristr.replace(/^http:/, "https:");
       }
     }
-    if (newuristr && newuristr.substring(0, 5) === "http:") {
-      // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
-      return {cancel: true};
+    if (
+      newuristr &&
+      (
+        newuristr.substring(0, 5) === "http:" ||
+        newuristr.substring(0, 4) === "ftp:"
+      )
+    ) {
+      // Abort early if we're about to redirect to HTTP or FTP in HTTP Nowhere mode
+      return {redirectUrl: newCancelUrl(newuristr)};
     }
   }
 
@@ -407,7 +475,7 @@ function onBeforeRequest(details) {
     return {redirectUrl: newuristr};
   } else {
     util.log(util.INFO, 'onBeforeRequest returning shouldCancel: ' + shouldCancel);
-    return {cancel: shouldCancel};
+    return redirectOnCancel(shouldCancel, details.url);
   }
 }
 
@@ -563,6 +631,9 @@ function onCompleted(details) {
   if (redirectCounter.has(details.requestId)) {
     redirectCounter.delete(details.requestId);
   }
+  if (simpleHTTPNowhereRedirect.has(details.requestId)) {
+    simpleHTTPNowhereRedirect.delete(details.requestId);
+  }
 }
 
 /**
@@ -570,8 +641,44 @@ function onCompleted(details) {
  * @param details details for the chrome.webRequest (see chrome doc)
  */
 function onErrorOccurred(details) {
+  if (httpNowhereOn &&
+    details.type == "main_frame" &&
+    simpleHTTPNowhereRedirect.get(details.requestId) &&
+    ( // Enumerate a class of errors that are likely due to HTTPS misconfigurations
+      details.error.indexOf("net::ERR_SSL_") == 0 ||
+      details.error.indexOf("net::ERR_CERT_") == 0 ||
+      details.error.indexOf("net::ERR_CONNECTION_") == 0 ||
+      details.error.indexOf("net::ERR_ABORTED") == 0 ||
+      details.error.indexOf("NS_ERROR_CONNECTION_REFUSED") == 0 ||
+      details.error.indexOf("NS_ERROR_UNKNOWN_HOST") == 0 ||
+      details.error.indexOf("NS_ERROR_NET_TIMEOUT") == 0 ||
+      details.error.indexOf("NS_ERROR_NET_ON_TLS_HANDSHAKE_ENDED") == 0 ||
+      details.error.indexOf("NS_BINDING_ABORTED") == 0 ||
+      details.error.indexOf("SSL received a record that exceeded the maximum permissible length.") == 0 ||
+      details.error.indexOf("Peer’s Certificate has expired.") == 0 ||
+      details.error.indexOf("Unable to communicate securely with peer: requested domain name does not match the server’s certificate.") == 0 ||
+      details.error.indexOf("Peer’s Certificate issuer is not recognized.") == 0 ||
+      details.error.indexOf("Peer’s Certificate has been revoked.") == 0 ||
+      details.error.indexOf("The server uses key pinning (HPKP) but no trusted certificate chain could be constructed that matches the pinset. Key pinning violations cannot be overridden.") == 0 ||
+      details.error.indexOf("SSL received a weak ephemeral Diffie-Hellman key in Server Key Exchange handshake message.") == 0 ||
+      details.error.indexOf("The certificate was signed using a signature algorithm that is disabled because it is not secure.") == 0 ||
+      details.error.indexOf("Unable to communicate securely with peer: requested domain name does not match the server’s certificate.") == 0 ||
+      details.error.indexOf("Cannot communicate securely with peer: no common encryption algorithm(s).") == 0 ||
+      details.error.indexOf("SSL peer has no certificate for the requested DNS name.") == 0
+    ))
+  {
+    let url = new URL(details.url);
+    if (url.protocol == "https:") {
+      url.protocol = "http:";
+    }
+    chrome.tabs.update(details.tabId, {url: newCancelUrl(url.toString())});
+  }
+
   if (redirectCounter.has(details.requestId)) {
     redirectCounter.delete(details.requestId);
+  }
+  if (simpleHTTPNowhereRedirect.has(details.requestId)) {
+    simpleHTTPNowhereRedirect.delete(details.requestId);
   }
 }
 
@@ -636,7 +743,7 @@ function onHeadersReceived(details) {
 
 // Registers the handler for requests
 // See: https://github.com/EFForg/https-everywhere/issues/10039
-chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*"]}, ["blocking"]);
+chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*", "ftp://*/*"]}, ["blocking"]);
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
 chrome.webRequest.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
@@ -683,16 +790,24 @@ chrome.runtime.onConnect.addListener(function (port) {
         disableSwitchPlannerFor(tabId);
       };
 
-      if (message.type === "enable") {
-        enableSwitchPlannerFor(tabId);
-        port.onDisconnect.addListener(disableOnCloseCallback);
-      } else if (message.type === "disable") {
-        disableSwitchPlannerFor(tabId);
-      } else if (message.type === "getHosts") {
-        sendResponse({
-          nrw: sortSwitchPlanner(tabId, "nrw"),
-          rw: sortSwitchPlanner(tabId, "rw")
-        });
+      const responses = {
+        enable: () => {
+          enableSwitchPlannerFor(tabId);
+          port.onDisconnect.addListener(disableOnCloseCallback);
+        },
+        disable: () => {
+          disableSwitchPlannerFor(tabId);
+        },
+        getHosts: () => {
+          sendResponse({
+            nrw: sortSwitchPlanner(tabId, "nrw"),
+            rw: sortSwitchPlanner(tabId, "rw")
+          });
+          return true;
+        }
+      };
+      if (message.type in responses) {
+        return responses[message.type]();
       }
     });
   }
@@ -701,90 +816,237 @@ chrome.runtime.onConnect.addListener(function (port) {
 // This is necessary for communication with the popup in Firefox Private
 // Browsing Mode, see https://bugzilla.mozilla.org/show_bug.cgi?id=1329304
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
-  if (message.type == "get_option") {
-    store.get(message.object, sendResponse);
-    return true;
-  } else if (message.type == "set_option") {
-    store.set(message.object, item => {
-      if (sendResponse) {
-        sendResponse(item);
-      }
-    });
-  } else if (message.type == "delete_from_ruleset_cache") {
-    all_rules.ruleCache.delete(message.object);
-  } else if (message.type == "get_active_rulesets") {
-    sendResponse(appliedRulesets.getRulesets(message.object));
-  } else if (message.type == "set_ruleset_active_status") {
-    let rulesets = appliedRulesets.getRulesets(message.object.tab_id);
 
-    for (let ruleset of rulesets) {
-      if (ruleset.name == message.object.name) {
-        ruleset.active = message.object.active;
-        if (ruleset.default_state == message.object.active) {
-          message.object.active = undefined;
-        }
-        break;
-      }
+  function get_update_channels_generic(update_channels){
+    let last_updated_promises = [];
+    for(let update_channel of update_channels) {
+      last_updated_promises.push(new Promise(resolve => {
+        store.local.get({['rulesets-timestamp: ' + update_channel.name]: 0}, item => {
+          resolve([update_channel.name, item['rulesets-timestamp: ' + update_channel.name]]);
+        });
+      }));
     }
+    Promise.all(last_updated_promises).then(results => {
+      const last_updated = results.reduce((obj, item) => {
+        obj[item[0]] = item[1];
+        return obj;
+      }, {});
+      sendResponse({update_channels, last_updated});
+    });
+  }
 
-    all_rules.setRuleActiveState(message.object.name, message.object.active).then(() => {
+  function storeDisabledList() {
+    const disabledListArray = Array.from(disabledList);
+    store.set({disabledList: disabledListArray}, () => {
       sendResponse(true);
     });
     return true;
-  } else if (message.type == "reset_to_defaults") {
-    // restore the 'default states' of the rulesets
-    store.set_promise('ruleActiveStates', {}).then(() => {
-      // clear the caches such that it becomes stateless
-      destroy_caches();
-      // re-activate all rules according to the new states
-      initializeAllRules();
-      // reload tabs when operations completed
-      chrome.tabs.reload();
-    });
-  } else if (message.type == "add_new_rule") {
-    all_rules.addNewRuleAndStore(message.object).then(() => {
-      sendResponse(true);
-    });
-    return true;
-  } else if (message.type == "remove_rule") {
-    all_rules.removeRuleAndStore(message.object);
-  } else if (message.type == "import_settings") {
-    // This is used when importing settings from the options ui
-    import_settings(message.object).then(() => {
-      sendResponse(true);
-    });
-  } else if (message.type == "get_ruleset_timestamps") {
-    update.getRulesetTimestamps().then(timestamps => sendResponse(timestamps));
-    return true;
+  }
+
+  const responses = {
+    get_option: () => {
+      store.get(message.object, sendResponse);
+      return true;
+    },
+    set_option: () => {
+      store.set(message.object, item => {
+        if (sendResponse) {
+          sendResponse(item);
+        }
+      });
+    },
+    delete_from_ruleset_cache: () => {
+      all_rules.ruleCache.delete(message.object);
+    },
+    get_active_rulesets: () => {
+      sendResponse(appliedRulesets.getRulesets(message.object));
+      return true;
+    },
+    set_ruleset_active_status: () => {
+      let rulesets = appliedRulesets.getRulesets(message.object.tab_id);
+
+      for (let ruleset of rulesets) {
+        if (ruleset.name == message.object.name) {
+          ruleset.active = message.object.active;
+          if (ruleset.default_state == message.object.active) {
+            message.object.active = undefined;
+          }
+          break;
+        }
+      }
+
+      all_rules.setRuleActiveState(message.object.name, message.object.active).then(() => {
+        sendResponse(true);
+      });
+
+      return true;
+    },
+    reset_to_defaults: () => {
+      // restore the 'default states' of the rulesets
+      store.set_promise('ruleActiveStates', {}).then(() => {
+        // clear the caches such that it becomes stateless
+        destroy_caches();
+        // re-activate all rules according to the new states
+        initializeAllRules();
+        // reload tabs when operations completed
+        chrome.tabs.reload();
+      });
+    },
+    get_user_rules: () => {
+      store.get_promise(all_rules.USER_RULE_KEY, []).then(userRules => sendResponse(userRules));
+      return true;
+    },
+    add_new_rule: () => {
+      all_rules.addNewRuleAndStore(message.object).then(() => {
+        sendResponse(true);
+      });
+      return true;
+    },
+    remove_rule: () => {
+      all_rules.removeRuleAndStore(message.object.ruleset, message.object.src)
+        .then(() => {
+          /**
+           * FIXME: initializeAllRules is needed for calls from the option pages.
+           * Since message.object is not of type Ruleset, rules.removeUserRule
+           * is not usable...
+           */
+          if (message.object.src === 'options') {
+            return initializeAllRules();
+          }
+        })
+        .then(() => {
+          if (sendResponse !== null) {
+            sendResponse(true);
+          }
+        })
+      return true;
+    },
+    get_ruleset_timestamps: () => {
+      update.getRulesetTimestamps().then(timestamps => sendResponse(timestamps));
+      return true;
+    },
+    get_pinned_update_channels: () => {
+      get_update_channels_generic(update_channels);
+      return true;
+    },
+    get_stored_update_channels: () => {
+      store.get({update_channels: []}, item => {
+        get_update_channels_generic(item.update_channels);
+      });
+      return true;
+    },
+    create_update_channel: () => {
+
+      store.get({update_channels: []}, item => {
+
+        const update_channel_names = update_channels.concat(item.update_channels).reduce((obj, item) => {
+          obj.add(item.name);
+          return obj;
+        }, new Set());
+
+        if(update_channel_names.has(message.object)){
+          return sendResponse(false);
+        }
+
+        item.update_channels.push({
+          name: message.object,
+          jwk: {},
+          update_path_prefix: '',
+          scope: ''
+        });
+
+        store.set({update_channels: item.update_channels}, () => {
+          sendResponse(true);
+        });
+
+      });
+      return true;
+    },
+    delete_update_channel: () => {
+      store.get({update_channels: []}, item => {
+        store.set({update_channels: item.update_channels.filter(update_channel => {
+          return (update_channel.name != message.object);
+        })}, () => {
+          store.local.remove([
+            'rulesets-timestamp: ' + message.object,
+            'rulesets-stored-timestamp: ' + message.object,
+            'rulesets: ' + message.object
+          ], () => {
+            initializeAllRules();
+            sendResponse(true);
+          });
+        });
+      });
+      return true;
+    },
+    update_update_channel: () => {
+      store.get({update_channels: []}, item => {
+        let scope_changed = false;
+        item.update_channels = item.update_channels.map(update_channel => {
+          if(update_channel.name == message.object.name){
+            if(update_channel.scope != message.object.scope){
+              scope_changed = true;
+            }
+            update_channel = message.object;
+          }
+          return update_channel;
+        });
+
+        // Ensure that we check for new rulesets from the update channel immediately.
+        // If the scope has changed, make sure that the rulesets are re-initialized.
+        store.set({update_channels: item.update_channels}, () => {
+          // Since loadUpdateChannesKeys is already contained in chrome.storage.onChanged
+          // within update.js, the below call will make it run twice. This is
+          // necesssary to avoid a race condition, see #16673
+          update.loadUpdateChannelsKeys().then(() => {
+            update.resetTimer();
+            if(scope_changed){
+              initializeAllRules();
+            }
+            sendResponse(true);
+          });
+        });
+
+      });
+      return true;
+    },
+    get_last_checked: () => {
+      store.local.get({'last-checked': false}, item => {
+        sendResponse(item['last-checked']);
+      });
+      return true;
+    },
+    disable_on_site: () => {
+      disabledList.add(message.object);
+      return storeDisabledList();
+    },
+    enable_on_site: () => {
+      disabledList.delete(message.object);
+      return storeDisabledList();
+    },
+    check_if_site_disabled: () => {
+      sendResponse(disabledList.has(message.object));
+      return true;
+    },
+    is_firefox: () => {
+      if(typeof(browser) != "undefined"){
+        browser.runtime.getBrowserInfo().then(function(info) {
+          if (info.name == "Firefox") {
+            sendResponse(true);
+          } else {
+            sendResponse(false);
+          }
+        });
+      } else {
+        sendResponse(false);
+      }
+      return true;
+    }
+  };
+  if (message.type in responses) {
+    return responses[message.type]();
   }
 });
-
-/**
- * Import extension settings (custom rulesets, ruleset toggles, globals) from an object
- * @param settings the settings object
- */
-async function import_settings(settings) {
-  if (settings && settings.changed) {
-    let ruleActiveStates = {};
-    // Load all the ruleset toggles into memory and store
-    for (const ruleset_name in settings.rule_toggle) {
-      ruleActiveStates[ruleset_name] = (settings.rule_toggle[ruleset_name] == "true");
-    }
-
-    // Save settings
-    await new Promise(resolve => {
-      store.set({
-        legacy_custom_rulesets: settings.custom_rulesets,
-        httpNowhere: settings.prefs.http_nowhere_enabled,
-        showCounter: settings.prefs.show_counter,
-        globalEnabled: settings.prefs.global_enabled,
-        ruleActiveStates
-      }, resolve);
-    });
-
-    initializeAllRules();
-  }
-}
 
 /**
  * Clear any cache/ blacklist we have.

@@ -10,16 +10,12 @@
 			 - stanjson.aastocks.com
 			 - stanjson-uat.aastocks.com
 
-		Couldn't resolve host name:
-			 - sccharts.aastocks.com
-			 - sccharts-uat.aastocks.com
-			 - standardchartered.aastocks.com
-			 - standardchartered-uat.aastocks.com
-
-		Couldn't connect to server:
-			 - mail.cn.aastocks.com
-			 - smtp.cn.aastocks.com
-			 - smtp1.cn.aastocks.com
+		Connection refused:
+			 - fpdata.aastocks.com
+			 - fxcharts.aastocks.com
+			 - hkg.aastocks.com
+			 - hkg1.aastocks.com
+			 - m.aastocks.com
 
 		Timeout was reached:
 			 - bb.aastocks.com
@@ -32,9 +28,8 @@
 			 - fund.aastocks.com
 			 - fx.aastocks.com
 			 - payment.aastocks.com
-			 - smtp.aastocks.com
-			 - smtp2.aastocks.com
 			 - tldata.aastocks.com
+			 - video.aastocks.com
 			 - ws2.aastocks.com
 			 - wss-uat.aastocks.com
 			 - wss1.aastocks.com
@@ -79,12 +74,46 @@
 
 -->
 <ruleset name="AASTOCKS.com (partial)">
+	<target host="aastocks.com" />
 	<target host="www.aastocks.com" />
+	<test url="http://www.aastocks.com/tc/resources/Images/news/icon_video.png" />
+	<!-- 
+		On Firefox, enforcing HTTPS on the homepages will break the "Real-time
+		Latest Quote" functionalities because of some Mixed Content Blocking issues.
+		This bug does not affect Chromium browser (by default) or Firefox in
+		HTTP Nowhere mode (#15606)
+	-->
+	<exclusion pattern="^http://www\.aastocks\.com/$" />
+	<exclusion pattern="^http://www\.aastocks\.com/(tc|sc|en)/$" />
 	<exclusion pattern="^http://www\.aastocks\.com/(tc|sc|en)/.+\.as[hp]x" />
+	<test url="http://www.aastocks.com/sc/" />
+	<test url="http://www.aastocks.com/tc/" />
+	<test url="http://www.aastocks.com/en/" />
 	<test url="http://www.aastocks.com/sc/default.aspx" />
 	<test url="http://www.aastocks.com/tc/ltp/rtquote.aspx?symbol=00005" />
 	<test url="http://www.aastocks.com/en/stocks/quote/detail-quote.aspx?symbol=02822" />
 	<test url="http://www.aastocks.com/en/datafeed/getstockhistory.ashx" />
+
+	<!--
+		Mixed content issues prevent the loading of videos and thumbnails over HTTPS. 
+	-->
+	<exclusion pattern="^http://(www\.)?aastocks\.com/aatv/(sc/)?(category/|hot/|video/|$)" />
+	<test url="http://aastocks.com/aatv/" />
+	<test url="http://aastocks.com/aatv/category/list.aspx" />
+	<test url="http://aastocks.com/aatv/hot/topvideo.aspx" />
+	<test url="http://aastocks.com/aatv/video/611/2" />
+	<test url="http://aastocks.com/aatv/sc/" />
+	<test url="http://aastocks.com/aatv/sc/category/list.aspx" />
+	<test url="http://aastocks.com/aatv/sc/hot/topvideo.aspx" />
+	<test url="http://aastocks.com/aatv/sc/video/624/0" />
+	<test url="http://www.aastocks.com/aatv/" />
+	<test url="http://www.aastocks.com/aatv/category/list.aspx" />
+	<test url="http://www.aastocks.com/aatv/hot/topvideo.aspx" />
+	<test url="http://www.aastocks.com/aatv/video/611/2" />
+	<test url="http://www.aastocks.com/aatv/sc/" />
+	<test url="http://www.aastocks.com/aatv/sc/category/list.aspx" />
+	<test url="http://www.aastocks.com/aatv/sc/hot/topvideo.aspx" />
+	<test url="http://www.aastocks.com/aatv/sc/video/624/0" />
 
 	<target host="accounts.aastocks.com" />
 	<test url="http://accounts.aastocks.com/tc/mainsite/registration.aspx" />
@@ -96,11 +125,18 @@
 	<target host="fcadata.aastocks.com" />
 	<target host="fcsdata.aastocks.com" />
 	<target host="fctdata.aastocks.com" />
-	<target host="fpdata.aastocks.com" />
-	<target host="fxcharts.aastocks.com" />
 	<target host="chartdata1.internet.aastocks.com" />
+	<!--
+		On Chromium browers, this will break the dynamic chart due to a
+		missing 'Access-Control-Allow-Origin' header; this do not affect
+		Firefox at the time of testing (Firefox 61+).
+	-->
+	<exclusion pattern="^http://chartdata1\.internet\.aastocks\.com/servlet/iDataServlet/" />
+	<test url="http://chartdata1.internet.aastocks.com/servlet/iDataServlet/getdaily?id=00005.HK&amp;type=24&amp;market=1&amp;level=1&amp;period=21&amp;encoding=utf8" />
 	
 	<target host="hkg.aastocks.com" />
+	<test url="http://hkg.aastocks.com/cms/commentary/commentator_photo_chi_17.jpg" />
+	<test url="http://hkg.aastocks.com/cms/commentary/commentator_photo_chi_76.png" />
 	<target host="hkg1.aastocks.com" />
 	<target host="hkg3.aastocks.com" />
 	<target host="hkg8.aastocks.com" />
@@ -112,7 +148,7 @@
 	<target host="logon.aastocks.com" />
 	<test url="http://logon.aastocks.com/payment/tc/termsconditions.aspx" />
 	
-	<target host="m.aastocks.com" />
+	<!-- target host="m.aastocks.com" / -->
 	<target host="mpdata.aastocks.com" />
 	
 	<target host="plib.aastocks.com" />
@@ -141,7 +177,11 @@
 	<securecookie host="hkg8\.aastocks\.com" name=".+" />
 
 	<securecookie host="logon\.aastocks\.com" name=".+" />
-	<securecookie host="secure\.aastocks.com" name=".+" />
+	<securecookie host="secure\.aastocks\.com" name=".+" />
 
-	<rule from="^http:" to="https:" />
+	<rule from="^http://hkg1?\.aastocks\.com/"
+		  	to="https://hkg3.aastocks.com/" />
+	
+	<rule from="^http:" 
+		  	to="https:" />
 </ruleset>

@@ -9,8 +9,8 @@ const assert = require('chai').assert,
   sinon = require('sinon');
 
 const fs = require('fs'),
-  update_channels = Function(fs.readFileSync(__dirname + '/../background-scripts/update_channels.js').toString() + "return update_channels;")(),
-  pako = Function(fs.readFileSync(__dirname + '/../external/pako-1.0.5/pako_inflate.min.js').toString() + "return pako;")();
+  { update_channels } = require('../background-scripts/update_channels'),
+  pako = require('../external/pako-1.0.5/pako_inflate.min.js');
 
 util.setDefaultLogLevel(util.WARN);
 

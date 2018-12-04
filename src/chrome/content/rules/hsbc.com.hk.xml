@@ -1,87 +1,84 @@
 <!--
-	For other HSBC Holdings coverage, see HSBC.xml.
+	For other HSBC Holdings coverage, see 
+		+ HSBC.xml
 
+	Non-functional hosts
+		Timeout was reached:
+		- about.hsbc.com.hk
+		- assetmanagement.hsbc.com.hk
+		- business.hsbc.com.hk
 
-	Nonfunctional hosts in *hsbc.com.hk:
-
-		- www.about *
-		- www.business *
-		- mail ᵈ
-		- www.warrants ᵈ
-
-	* Unrecognized name
-	ᵈ Dropped
-
-
-	Problematic hosts in *hsbc.com.hk:
-
-		- www.broking ᵐ
-
-	ᵐ Mismatched
-
-
-	Insecure cookies are set for these domains and hosts: ᶜ
-
-		- hsbc.com.hk
-		- .hsbc.com.hk
-		- services.assetmanagement.hsbc.com.hk
-		- broking.hsbc.com.hk
+		SSL peer certificate was not OK:
 		- www.broking.hsbc.com.hk
-		- www.commercial.hsbc.com.hk
-		- www.digitalcounterservices.hsbc.com.hk
-		- www.ebanking.hsbc.com.hk
-		- www1.ebanking.hsbc.com.hk
-		- www.ebroking.hsbc.com.hk
-		- mbib.hsbc.com.hk
-		- www.personal.hsbc.com.hk
-		- www.hsbc.com.hk
+		- www.fundexpress.hsbc.com.hk
 
-	ᶜ See https://owasp.org/index.php/SecureFlag
-
-
-	Mixed content:
-
-		- Bugs, on:
-		
-			- services.assetmanagement, www.broking, www.digitalcounterservices, www.ebanking, www1.ebanking, www.ebroking, mbib, www.personal, www.redhotoffers from www1.member-hsbc-group.com ˢ
-			- www.commercial from \d+.fls.doubleclick.net
-
-	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
-
+		Incomplete certificate chain:
+		- bestserviceawards.hsbc.com.hk
+		- www.bestserviceawards.hsbc.com.hk
 -->
 <ruleset name="HSBC.com.hk (partial)">
-
 	<target host="hsbc.com.hk" />
+	
+	<target host="about.hsbc.com.hk" />
+	<target host="www.about.hsbc.com.hk" />
+	<target host="assetmanagement.hsbc.com.hk" />
 	<target host="services.assetmanagement.hsbc.com.hk" />
+	<target host="www.assetmanagement.hsbc.com.hk" />
+
+	<target host="business.hsbc.com.hk" />
+	<target host="www.business.hsbc.com.hk" />
+
+	<!-- 403 on / -->
 	<target host="www.commercial.hsbc.com.hk" />
+	<exclusion pattern="^http://www\.commercial\.hsbc\.com\.hk/$" />
+	<test url="http://www.commercial.hsbc.com.hk/1/2/commercial/promo/account" />
+	<test url="http://www.commercial.hsbc.com.hk/1/2/directadvice" />
+	<test url="http://www.commercial.hsbc.com.hk/1/2/estatement" />
+
 	<target host="www.digitalcounterservices.hsbc.com.hk" />
+
+	<target host="payme.hsbc.com.hk" />
+	<target host="www1.personal.ebanking.hsbc.com.hk" />
+	<target host="www2.personal.ebanking.hsbc.com.hk" />
 	<target host="www.ebanking.hsbc.com.hk" />
 	<target host="www1.ebanking.hsbc.com.hk" />
+	<target host="www2.ebanking.hsbc.com.hk" />
 	<target host="www.ebroking.hsbc.com.hk" />
+
+	<target host="insights.hsbc.com.hk" />
+	<target host="www.isstprod.hsbc.com.hk" />
+
 	<target host="mbib.hsbc.com.hk" />
+	<exclusion pattern="^http://mbib\.hsbc\.com\.hk/$" />
+	<test url="http://mbib.hsbc.com.hk/1/2/mobile/webpages/cn/faq?isFromMobile=false" />
+	<test url="http://mbib.hsbc.com.hk/1/2/mobile/webpages/cn/privacy-and-security?isFromMobile=true" />
+	<test url="http://mbib.hsbc.com.hk/1/content/commercial/TxnBank/BIBLogon/pdf/email_scam_zh.pdf" />
+
+	<target host="www.security.online-banking.hsbc.com.hk" />
+	<target host="static.services.online-banking.hsbc.com.hk" />
+	<target host="www.services.online-banking.hsbc.com.hk" />
+
 	<target host="www.personal.hsbc.com.hk" />
+	<target host="investments.personal-banking.hsbc.com.hk" />
+
 	<target host="www.redhotoffers.hsbc.com.hk" />
+	<target host="retailbank.hsbc.com.hk" />
+
+	<target host="warrants.hsbc.com.hk" />
+	<target host="www.warrants.hsbc.com.hk" />
 	<target host="www.hsbc.com.hk" />
 
-		<!--	Mixed bugs, sets cookie without Secure:
-								-->
-		<!--test url="http://www.commercial.hsbc.com.hk/1/2/wisebusiness" /-->
+	<securecookie host=".+" name=".+" />
 
+	<rule from="^http://about\.hsbc\.com\.hk/"
+		to="https://www.about.hsbc.com.hk/" />
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^(?:www\.)?hsbc\.com\.hk$" name="^HKWGTK$" /-->
-	<!--securecookie host="^\.hsbc\.com\.hk$" name="^HSBC_CLIENT_COOKIE$" /-->
-	<!--securecookie host="^services\.assetmanagement\.hsbc\.com\.hk$" name="^(?:JSESSIONID|locale)$" /-->
-	<!--securecookie host="^www\.commercial\.hsbc\.com\.hk$" name="^(?:HKBTK|JSESSIONID)$" /-->
-	<!--securecookie host="^www\.digitalcounterservices\.hsbc\.com\.hk$" name="^(?:__RequestVerificationToken|ASP\.NET_SessionId|FromIndex2)$" /-->
-	<!--securecookie host="^www1?\.ebanking\.hsbc\.com\.hk$" name="^(?:JSESSIONID|LB_COOKIE_1)$" /-->
-	<!--securecookie host="^(?:www\.e?broking|mbib|www\.personal).hsbc\.com\.hk$" name="^(?:JSESSIONID|[A-Z]+TK)$" /-->
+	<rule from="^http://assetmanagement\.hsbc\.com\.hk/"
+		to="https://www.assetmanagement.hsbc.com.hk/" />
 
-	<securecookie host="^\w" name=".+" />
-
+	<rule from="^http://business\.hsbc\.com\.hk/"
+		to="https://www.business.hsbc.com.hk/" />
 
 	<rule from="^http:"
 		to="https:" />
-
 </ruleset>

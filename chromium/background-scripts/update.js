@@ -1,51 +1,65 @@
-/* global update_channels */
 /* global pako */
-/* global __dirname */
 
 "use strict";
 
+let combined_update_channels;
+const { update_channels } = require('./update_channels');
+
 // Determine if we're in the tests.  If so, define some necessary components.
-if(typeof(window) == "undefined"){
-  const fs = require('fs');
-  const WebCrypto = require("node-webcrypto-ossl"),
+if (typeof window === "undefined") {
+  var WebCrypto = require("node-webcrypto-ossl"),
+    crypto = new WebCrypto(),
     atob = require("atob"),
     btoa = require("btoa"),
-    encoding = require('text-encoding');
+    pako = require('../external/pako-1.0.5/pako_inflate.min.js'),
+    { TextDecoder } = require('text-encoding'),
+    chrome = require("sinon-chrome"),
+    window = { atob, btoa, chrome, crypto, pako, TextDecoder };
 
-  var window = {
-    crypto: new WebCrypto(),
-    atob,
-    btoa
-  };
-
-  var update_channels = Function(fs.readFileSync(__dirname + '/update_channels.js').toString() + "return update_channels;")(),
-    pako = Function(fs.readFileSync(__dirname + '/../external/pako-1.0.5/pako_inflate.min.js').toString() + "return pako;")(),
-    TextDecoder = encoding.TextDecoder,
-    chrome = require("sinon-chrome");
+  combined_update_channels = update_channels;
 }
 
 (function(exports) {
 
 const util = require('./util');
+
 let store,
   background_callback;
 
 // how often we should check for new rulesets
 const periodicity = 86400;
 
-// jwk key loaded from keys.js
-let imported_keys = {};
-for(let update_channel of update_channels){
-  imported_keys[update_channel.name] = window.crypto.subtle.importKey(
-    "jwk",
-    update_channel.jwk,
-    {
-      name: "RSA-PSS",
-      hash: {name: "SHA-256"},
-    },
-    false,
-    ["verify"]
-  );
+let imported_keys;
+
+// update channels are loaded from `background-scripts/update_channels.js` as well as the storage api
+async function loadUpdateChannelsKeys() {
+  util.log(util.NOTE, 'Loading update channels and importing associated public keys.');
+
+  const stored_update_channels = await store.get_promise('update_channels', []);
+  const combined_update_channels_preflight = update_channels.concat(stored_update_channels);
+
+  imported_keys = {};
+  combined_update_channels = [];
+
+  for(let update_channel of combined_update_channels_preflight){
+
+    try{
+      imported_keys[update_channel.name] = await window.crypto.subtle.importKey(
+        "jwk",
+        update_channel.jwk,
+        {
+          name: "RSA-PSS",
+          hash: {name: "SHA-256"},
+        },
+        false,
+        ["verify"]
+      );
+      combined_update_channels.push(update_channel);
+      util.log(util.NOTE, update_channel.name + ': Update channel key loaded.');
+    } catch(err) {
+      util.log(util.WARN, update_channel.name + ': Could not import key.  Aborting.');
+    }
+  }
 }
 
 
@@ -59,6 +73,13 @@ async function timeToNextCheck() {
   } else {
     return 0;
   }
+}
+
+// Check for new rulesets immediately
+async function resetTimer() {
+  await store.local.set_promise('last-checked', false);
+  destroyTimer();
+  await createTimer();
 }
 
 // Check for new rulesets. If found, return the timestamp. If not, return false
@@ -77,7 +98,7 @@ async function checkForNewRulesets(update_channel) {
 // Retrieve the timestamp for when a stored ruleset bundle was published
 async function getRulesetTimestamps(){
   let timestamp_promises = [];
-  for(let update_channel of update_channels){
+  for(let update_channel of combined_update_channels){
     timestamp_promises.push(new Promise(async resolve => {
       let timestamp = await store.local.get_promise('rulesets-stored-timestamp: ' + update_channel.name, 0);
       resolve([update_channel.name, timestamp]);
@@ -116,38 +137,34 @@ async function getNewRulesets(rulesets_timestamp, update_channel) {
 // Otherwise, it throws an exception.
 function verifyAndStoreNewRulesets(new_rulesets, rulesets_timestamp, update_channel){
   return new Promise((resolve, reject) => {
-    imported_keys[update_channel.name].then(publicKey => {
-      window.crypto.subtle.verify(
-        {
-          name: "RSA-PSS",
-          saltLength: 32
-        },
-        publicKey,
-        new_rulesets.signature_array_buffer,
-        new_rulesets.rulesets_array_buffer
-      ).then(async isvalid => {
-        if(isvalid) {
-          util.log(util.NOTE, update_channel.name + ': Downloaded ruleset signature checks out.  Storing rulesets.');
+    window.crypto.subtle.verify(
+      {
+        name: "RSA-PSS",
+        saltLength: 32
+      },
+      imported_keys[update_channel.name],
+      new_rulesets.signature_array_buffer,
+      new_rulesets.rulesets_array_buffer
+    ).then(async isvalid => {
+      if(isvalid) {
+        util.log(util.NOTE, update_channel.name + ': Downloaded ruleset signature checks out.  Storing rulesets.');
 
-          const rulesets_gz = util.ArrayBufferToString(new_rulesets.rulesets_array_buffer);
-          const rulesets_byte_array = pako.inflate(rulesets_gz);
-          const rulesets = new TextDecoder("utf-8").decode(rulesets_byte_array);
-          const rulesets_json = JSON.parse(rulesets);
+        const rulesets_gz = util.ArrayBufferToString(new_rulesets.rulesets_array_buffer);
+        const rulesets_byte_array = pako.inflate(rulesets_gz);
+        const rulesets = new TextDecoder("utf-8").decode(rulesets_byte_array);
+        const rulesets_json = JSON.parse(rulesets);
 
-          if(rulesets_json.timestamp != rulesets_timestamp){
-            reject(update_channel.name + ': Downloaded ruleset had an incorrect timestamp.  This may be an attempted downgrade attack.  Aborting.');
-          } else {
-            await store.local.set_promise('rulesets: ' + update_channel.name, window.btoa(rulesets_gz));
-            resolve(true);
-          }
+        if(rulesets_json.timestamp != rulesets_timestamp){
+          reject(update_channel.name + ': Downloaded ruleset had an incorrect timestamp.  This may be an attempted downgrade attack.  Aborting.');
         } else {
-          reject(update_channel.name + ': Downloaded ruleset signature is invalid.  Aborting.');
+          await store.local.set_promise('rulesets: ' + update_channel.name, window.btoa(rulesets_gz));
+          resolve(true);
         }
-      }).catch(() => {
-        reject(update_channel.name + ': Downloaded ruleset signature could not be verified.  Aborting.');
-      });
+      } else {
+        reject(update_channel.name + ': Downloaded ruleset signature is invalid.  Aborting.');
+      }
     }).catch(() => {
-      reject(update_channel.name + ': Could not import key.  Aborting.');
+      reject(update_channel.name + ': Downloaded ruleset signature could not be verified.  Aborting.');
     });
   });
 }
@@ -155,19 +172,19 @@ function verifyAndStoreNewRulesets(new_rulesets, rulesets_timestamp, update_chan
 // Unzip and apply the rulesets we have stored.
 async function applyStoredRulesets(rulesets_obj){
   let rulesets_promises = [];
-  for(let update_channel of update_channels){
+  for(let update_channel of combined_update_channels){
     rulesets_promises.push(new Promise(resolve => {
-      const key = 'rulesets: ' + update_channel.name
+      const key = 'rulesets: ' + update_channel.name;
       chrome.storage.local.get(key, root => {
         if(root[key]){
           util.log(util.NOTE, update_channel.name + ': Applying stored rulesets.');
 
           const rulesets_gz = window.atob(root[key]);
           const rulesets_byte_array = pako.inflate(rulesets_gz);
-          const rulesets = new TextDecoder("utf-8").decode(rulesets_byte_array);
-          const rulesets_json = JSON.parse(rulesets);
+          const rulesets_string = new TextDecoder("utf-8").decode(rulesets_byte_array);
+          const rulesets_json = JSON.parse(rulesets_string);
 
-          resolve(rulesets_json);
+          resolve({json: rulesets_json, scope: update_channel.scope});
         } else {
           resolve();
         }
@@ -175,10 +192,15 @@ async function applyStoredRulesets(rulesets_obj){
     }));
   }
 
-  const rulesets_jsons = await Promise.all(rulesets_promises);
-  if(rulesets_jsons.join("").length > 0){
-    for(let rulesets_json of rulesets_jsons){
-      rulesets_obj.addFromJson(rulesets_json.rulesets);
+  function isNotUndefined(subject){
+    return (typeof subject != 'undefined');
+  }
+
+  const channel_results = (await Promise.all(rulesets_promises)).filter(isNotUndefined);
+
+  if(channel_results.length > 0){
+    for(let channel_result of channel_results){
+      rulesets_obj.addFromJson(channel_result.json.rulesets, channel_result.scope);
     }
   } else {
     rulesets_obj.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
@@ -193,7 +215,7 @@ async function performCheck() {
   store.local.set_promise('last-checked', current_timestamp);
 
   let num_updates = 0;
-  for(let update_channel of update_channels){
+  for(let update_channel of combined_update_channels){
     let new_rulesets_timestamp = await checkForNewRulesets(update_channel);
     if(new_rulesets_timestamp){
       util.log(util.NOTE, update_channel.name + ': A new ruleset bundle has been released.  Downloading now.');
@@ -222,6 +244,10 @@ chrome.storage.onChanged.addListener(async function(changes, areaName) {
       }
     }
   }
+
+  if ('update_channels' in changes) {
+    await loadUpdateChannelsKeys();
+  }
 });
 
 let initialCheck,
@@ -249,6 +275,8 @@ async function initialize(store_param, cb){
   store = store_param;
   background_callback = cb;
 
+  await loadUpdateChannelsKeys();
+
   if (await store.get_promise('autoUpdateRulesets', true)) {
     await createTimer();
   }
@@ -257,7 +285,9 @@ async function initialize(store_param, cb){
 Object.assign(exports, {
   applyStoredRulesets,
   initialize,
-  getRulesetTimestamps
+  getRulesetTimestamps,
+  resetTimer,
+  loadUpdateChannelsKeys
 });
 
 })(typeof exports == 'undefined' ? require.scopes.update = {} : exports);

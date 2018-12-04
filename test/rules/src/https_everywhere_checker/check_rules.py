@@ -20,6 +20,7 @@ from lxml import etree
 
 import http_client
 import metrics
+import urllib.parse
 from rules import Ruleset
 from rule_trie import RuleTrie
 
@@ -99,13 +100,14 @@ class UrlComparisonThread(threading.Thread):
         problems = []
         for url in task.urls:
             result = self.processUrl(url, task)
-            if result:
+            if result[0]:
                 problems.append(result)
         if problems:
             for problem in problems:
-                logging.error("{}: {}".format(task.ruleFname, problem))
+                logging.error("{}: {}".format(task.ruleFname, problem[0]))
             if self.autoDisable:
-                disableRuleset(task.ruleset, problems)
+                urlCount = len(task.urls)
+                disableRuleset(task.ruleset, problems, urlCount)
 
     def queue_result(self, result, details, fname, url, https_url=None):
         """
@@ -209,17 +211,30 @@ class UrlComparisonThread(threading.Thread):
         logging.info("Finished comparing {} -> {}. Rulefile: {}.".format(
                     plainUrl, transformedUrl, ruleFname))
 
-        return message
+        return [message, plainUrl]
 
 
-def disableRuleset(ruleset, problems):
-    logging.info("Disabling ruleset {}".format(ruleset.filename))
+def disableRuleset(ruleset, problemRules, urlCount):
+    problems = [problem[0] for problem in problemRules]
+    rules = [problem[1] for problem in problemRules]
     contents = open(ruleset.filename).read()
+
     # Don't bother to disable rulesets that are already disabled
     if re.search("\bdefault_off=", contents):
         return
-    contents = re.sub("(<ruleset [^>]*)>",
-                      "\\1 default_off='failed ruleset test'>", contents)
+
+    # Go ahead and disable rulset if all targets are problematic
+    if urlCount == len(problemRules):
+        logging.info("Disabling ruleset {}".format(ruleset.filename))
+        contents = re.sub("(<ruleset [^>]*)>",
+            "\\1 default_off='failed ruleset test'>", contents);
+    # If not all targets, just the target
+    else:
+        for rule in rules:
+            host = urllib.parse.urlparse(rule)
+            logging.info("Disabling target {}".format(host.netloc))
+            contents = re.sub('<[ \n]*target[ \n]+host[ \n]*=[ \n]*"{}"[ \n]*\/?[ \n]*>'.format(host.netloc),
+                '<!-- target host="{}" /-->'.format(host.netloc), contents);
 
     # Since the problems are going to be inserted into an XML comment, they cannot
     # contain "--", or they will generate a parse error. Split up all "--" with a
