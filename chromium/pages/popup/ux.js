@@ -55,7 +55,7 @@ function appendRulesToListDiv(rulesets, list_div) {
 
     // img "remove" button
     let templateRemove = document.createElement("img");
-    templateRemove.src = chrome.extension.getURL("images/remove.png");
+    templateRemove.src = chrome.runtime.getURL("images/remove.png");
     templateRemove.className = "remove";
 
     templateLabel.appendChild(templateCheckbox);
