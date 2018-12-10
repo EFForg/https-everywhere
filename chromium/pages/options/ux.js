@@ -244,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // img element "remove button"
     let templateRemove = document.createElement("img");
-    templateRemove.src = chrome.extension.getURL("images/remove.png");
+    templateRemove.src = chrome.runtime.getURL("images/remove.png");
     templateRemove.className = "remove";
 
     for (const userRule of userRules) {
@@ -278,7 +278,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     // img element "remove button"
     let templateRemove = document.createElement("img");
-    templateRemove.src = chrome.extension.getURL("images/remove.png");
+    templateRemove.src = chrome.runtime.getURL("images/remove.png");
     templateRemove.className = "remove";
 
     if( item ){

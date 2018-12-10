@@ -200,7 +200,7 @@ function updateState () {
  * The following allows fennec to interact with the popup ui
  * */
 chrome.browserAction.onClicked.addListener(e => {
-  const url = chrome.extension.getURL("/pages/popup/index.html?tabId=" + e.id);
+  const url = chrome.runtime.getURL("/pages/popup/index.html?tabId=" + e.id);
   chrome.tabs.create({
     url
   });
@@ -299,7 +299,7 @@ var redirectCounter = new Map();
 // HTTP Nowhere redirect.
 let simpleHTTPNowhereRedirect = new Map();
 
-const cancelUrl = chrome.extension.getURL("/pages/cancel/index.html");
+const cancelUrl = chrome.runtime.getURL("/pages/cancel/index.html");
 
 function redirectOnCancel(shouldCancel, originURL){
   return shouldCancel ? {redirectUrl: newCancelUrl(originURL)} : {cancel: false};

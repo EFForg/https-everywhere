@@ -45,7 +45,7 @@ function loadExtensionFile(url, returnType) {
   var xhr = new XMLHttpRequest();
   // Use blocking XHR to ensure everything is loaded by the time
   // we return.
-  xhr.open("GET", chrome.extension.getURL(url), false);
+  xhr.open("GET", chrome.runtime.getURL(url), false);
   xhr.send(null);
   // Get file contents
   if (xhr.readyState !== 4) {
