@@ -41,6 +41,8 @@ var httpNowhereOn = false;
 var showCounter = true;
 var isExtensionEnabled = true;
 let disabledList = new Set();
+let sitesVisited = new Set();
+let sitesUpgraded = new Set();
 
 function initializeStoredGlobals(){
   return new Promise(resolve => {
@@ -50,6 +52,8 @@ function initializeStoredGlobals(){
       globalEnabled: true,
       enableMixedRulesets: false,
       disabledList: [],
+      sitesVisited: [],
+      sitesUpgraded: []
     }, function(item) {
       httpNowhereOn = item.httpNowhere;
       showCounter = item.showCounter;
@@ -162,6 +166,11 @@ function updateState () {
     }
     const tabId = tabs[0].id;
     const tabUrl = new URL(tabs[0].url);
+
+    // Add new URL to siteVisited, if already in list, do not add
+    if( !sitesVisited.has(tabUrl.href) && iconState !== "disabled"){
+      sitesVisited.add(tabUrl.href);
+    }
 
     if (disabledList.has(tabUrl.host) || iconState == "disabled") {
       if ('setIcon' in chrome.browserAction) {
