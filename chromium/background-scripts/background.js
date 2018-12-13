@@ -42,7 +42,7 @@ var showCounter = true;
 var isExtensionEnabled = true;
 let disabledList = new Set();
 let sitesVisited = new Set();
-let sitesUpgraded = new Set();
+let sitesUpgraded = 0;
 
 function initializeStoredGlobals(){
   return new Promise(resolve => {
@@ -53,7 +53,7 @@ function initializeStoredGlobals(){
       enableMixedRulesets: false,
       disabledList: [],
       sitesVisited: [],
-      sitesUpgraded: []
+      sitesUpgraded: 0
     }, function(item) {
       httpNowhereOn = item.httpNowhere;
       showCounter = item.showCounter;
@@ -638,6 +638,7 @@ function onBeforeRedirect(details) {
  */
 function onCompleted(details) {
   if (redirectCounter.has(details.requestId)) {
+    // Maybe not delete to retain how many redirects or siteUpgrades occurred?
     redirectCounter.delete(details.requestId);
   }
   if (simpleHTTPNowhereRedirect.has(details.requestId)) {
