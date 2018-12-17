@@ -372,6 +372,6 @@ We ask that if you want to delete your GitHub account, you either close your HTT
 * * *
 
 # Contributing Translations
-We are reviewing our process around translations and currently discussing ways to improve. Translations are still processed under the same entity and those who have account already, do not need to take action at this time. Thank you for your contributions.
+We are reviewing our process around translations and currently discussing ways to improve. Translations are still processed under the same entity and those who have an account already, do not need to take action at this time. Thank you for your contributions.
 
 * * *
