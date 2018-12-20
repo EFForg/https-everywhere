@@ -42,6 +42,10 @@ function setup_docker {
   docker build -t httpse .
 }
 
+function enable_ipv6 {
+	sudo sh -c 'echo 0 > /proc/sys/net/ipv6/conf/all/disable_ipv6'
+}
+
 case $TEST in
   *chrome*)
     setup_chrome
@@ -58,6 +62,7 @@ case $TEST in
     setup_unittests
     ;;
   *validations*|*fetch*)
+		enable_ipv6
     setup_docker
     ;;
   *preloaded*)
