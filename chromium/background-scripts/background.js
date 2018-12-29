@@ -37,9 +37,10 @@ async function initializeAllRules() {
  *    isExtensionEnabled: Boolean
  *  }
  */
-var httpNowhereOn = false;
-var showCounter = true;
-var isExtensionEnabled = true;
+let httpNowhereOn = false;
+let showCounter = true;
+let showEaseModeWarningPage = true;
+let isExtensionEnabled = true;
 let disabledList = new Set();
 
 function initializeStoredGlobals(){
@@ -49,10 +50,12 @@ function initializeStoredGlobals(){
       showCounter: true,
       globalEnabled: true,
       enableMixedRulesets: false,
+      showEaseModeWarningPage: true,
       disabledList: [],
     }, function(item) {
       httpNowhereOn = item.httpNowhere;
       showCounter = item.showCounter;
+      showEaseModeWarningPage = item.showEaseModeWarningPage;
       isExtensionEnabled = item.globalEnabled;
       for (let disabledSite of item.disabledList) {
         disabledList.add(disabledSite);
@@ -105,6 +108,10 @@ chrome.storage.onChanged.addListener(async function(changes, areaName) {
       rules.settings.enableMixedRulesets = changes.enableMixedRulesets.newValue;
       initializeAllRules();
     }
+    if ('showEaseModeWarningPage' in changes) {
+      showEaseModeWarningPage = changes.showEaseModeWarningPage.newValue;
+    }
+
     if ('debugging_rulesets' in changes) {
       initializeAllRules();
     }
@@ -302,7 +309,11 @@ let simpleHTTPNowhereRedirect = new Map();
 const cancelUrl = chrome.runtime.getURL("/pages/cancel/index.html");
 
 function redirectOnCancel(shouldCancel, originURL){
-  return shouldCancel ? {redirectUrl: newCancelUrl(originURL)} : {cancel: false};
+  if (shouldCancel) {
+    return showEaseModeWarningPage ? {redirectUrl: newCancelUrl(originURL)} : {cancel: true};
+  } else {
+    return {cancel: false};
+  }
 }
 
 function newCancelUrl(originURL){

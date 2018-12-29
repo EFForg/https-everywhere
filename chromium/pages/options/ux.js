@@ -11,12 +11,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const autoUpdateRulesets = document.getElementById("autoUpdateRulesets");
   const enableMixedRulesets = document.getElementById("enableMixedRulesets");
   const showDevtoolsTab = document.getElementById("showDevtoolsTab");
+  const showEaseModeWarningPage = document.getElementById("showEaseModeWraningPage");
 
   const defaultOptions = {
     showCounter: true,
     autoUpdateRulesets: true,
     enableMixedRulesets: false,
-    showDevtoolsTab: true
+    showDevtoolsTab: true,
+    showEaseModeWarningPage: true
   };
 
   sendMessage("get_option", defaultOptions, item => {
@@ -24,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     autoUpdateRulesets.checked = item.autoUpdateRulesets;
     enableMixedRulesets.checked = item.enableMixedRulesets;
     showDevtoolsTab.checked = item.showDevtoolsTab;
+    showEaseModeWarningPage.checked = item.showEaseModeWarningPage;
 
     showCounter.addEventListener("change", () => {
       sendMessage("set_option", { showCounter: showCounter.checked });
@@ -39,6 +42,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     showDevtoolsTab.addEventListener("change", () => {
       sendMessage("set_option", { showDevtoolsTab: showDevtoolsTab.checked });
+    });
+
+    showEaseModeWarningPage.addEventListener("change", () => {
+      sendMessage("set_option", { showEaseModeWarningPage: showEaseModeWarningPage.checked });
     });
   });
 
