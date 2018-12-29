@@ -21,19 +21,16 @@ document.addEventListener("DOMContentLoaded", () => {
     showEaseModeWarningPage: true
   };
 
-  sendMessage("get_option", { showCounter: defaultOptions.showCounter }, item => {
-    showCounter.checked = item.showCounter;
-
-    showCounter.addEventListener("change", () => {
-      sendMessage("set_option", { showCounter: showCounter.checked });
-    });
-  });
-
   sendMessage("get_option", defaultOptions, item => {
+    showCounter.checked = item.showCounter;
     autoUpdateRulesets.checked = item.autoUpdateRulesets;
     enableMixedRulesets.checked = item.enableMixedRulesets;
     showDevtoolsTab.checked = item.showDevtoolsTab;
     showEaseModeWarningPage.checked = item.showEaseModeWarningPage;
+
+    showCounter.addEventListener("change", () => {
+      sendMessage("set_option", { showCounter: showCounter.checked });
+    });
 
     autoUpdateRulesets.addEventListener("change", () => {
       sendMessage("set_option", { autoUpdateRulesets: autoUpdateRulesets.checked });
