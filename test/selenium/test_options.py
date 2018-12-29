@@ -1,3 +1,4 @@
+import unittest
 from time import sleep
 from util import ExtensionTestCase
 
