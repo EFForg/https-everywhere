@@ -29,7 +29,7 @@ const nullIterable = Object.create(null, {
 const scopes = new Map();
 
 /* Returns the scope object from the map for the given scope string */
-function getScope(scope){
+function getScope(scope) {
   if (!scopes.has(scope)) {
     scopes.set(scope, new RegExp(scope));
   }
@@ -174,7 +174,7 @@ RuleSet.prototype = {
     }
 
     if(this_rules_length > 0) {
-      for(let x = 0; x < this.rules.length; x++){
+      for(let x = 0; x < this.rules.length; x++) {
         if(this.rules[x].to != ruleset.rules[x].to) {
           return false;
         }
@@ -431,7 +431,7 @@ RuleSets.prototype = {
     }
   },
 
-  addStoredCustomRulesets: function(){
+  addStoredCustomRulesets: function() {
     return new Promise(resolve => {
       this.store.get({
         legacy_custom_rulesets: [],
@@ -445,17 +445,17 @@ RuleSets.prototype = {
   },
 
   // Load in the legacy custom rulesets, if any
-  loadCustomRulesets: function(legacy_custom_rulesets){
-    for(let legacy_custom_ruleset of legacy_custom_rulesets){
+  loadCustomRulesets: function(legacy_custom_rulesets) {
+    for(let legacy_custom_ruleset of legacy_custom_rulesets) {
       this.loadCustomRuleset(legacy_custom_ruleset);
     }
   },
 
-  loadCustomRuleset: function(ruleset_string){
+  loadCustomRuleset: function(ruleset_string) {
     this.addFromXml((new DOMParser()).parseFromString(ruleset_string, 'text/xml'));
   },
 
-  setRuleActiveState: async function(ruleset_name, active){
+  setRuleActiveState: async function(ruleset_name, active) {
     if (active == undefined) {
       delete this.ruleActiveStates[ruleset_name];
     } else {

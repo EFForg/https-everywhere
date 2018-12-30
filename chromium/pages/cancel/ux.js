@@ -5,7 +5,9 @@
 let observer;
 document.addEventListener("DOMContentLoaded", () => {
   const explainer = document.querySelector("[data-i18n=cancel_he_blocking_explainer]");
-  observer = new MutationObserver(() => {replaceLink(explainer)});
+  observer = new MutationObserver(() => {
+    replaceLink(explainer)
+  });
   if (explainer.innerText.length > 0) {
     replaceLink(explainer);
   } else {
@@ -14,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   displayURL();
 });
 
-function replaceLink(explainer){
+function replaceLink(explainer) {
   observer.disconnect();
   const linkText = chrome.i18n.getMessage("cancel_he_blocking_network");
   const link = document.createElement("a");
