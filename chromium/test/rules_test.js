@@ -5,7 +5,7 @@ const assert = require('chai').assert,
 
 const Rule = rules.Rule,
   RuleSet = rules.RuleSet,
-  RuleSets = rules.RuleSets,
+  RuleSets = rules.RuleSets
 
 
 describe('rules.js', function() {
