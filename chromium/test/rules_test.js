@@ -6,8 +6,6 @@ const assert = require('chai').assert,
 const Rule = rules.Rule,
   RuleSet = rules.RuleSet,
   RuleSets = rules.RuleSets,
-  getRule = rules.getRule,
-  cookieRule = rules.CookieRule;
 
 
 describe('rules.js', function() {
@@ -38,14 +36,6 @@ describe('rules.js', function() {
       let trivial = rules.trivial_rule;
       let rule = getRule('^http:', 'https:');
       assert.equal(rule, trivial);
-    });
-  });
-
-  describe('CookieRule' function(){
-    it('returns cookie rule', function() {
-        let trivial_cookie_rule = rules.trivial_cookie_rule_c;
-        let cookieRule = cookieRule('.+', '.+');
-        assert.equal(trivial_cookie_rule, cookieRule);
     });
   });
 
