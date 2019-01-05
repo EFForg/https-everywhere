@@ -478,9 +478,11 @@ function onBeforeRequest(details) {
 
   if (upgradeToSecureAvailable && upgradeToSecure) {
     util.log(util.INFO, 'onBeforeRequest returning upgradeToSecure: true');
+    sitesUpgraded++;
     return {upgradeToSecure: true};
   } else if (newuristr) {
     util.log(util.INFO, 'onBeforeRequest returning redirectUrl: ' + newuristr);
+    sitesUpgraded++;
     return {redirectUrl: newuristr};
   } else {
     util.log(util.INFO, 'onBeforeRequest returning shouldCancel: ' + shouldCancel);
@@ -638,7 +640,6 @@ function onBeforeRedirect(details) {
  */
 function onCompleted(details) {
   if (redirectCounter.has(details.requestId)) {
-    // Maybe not delete to retain how many redirects or siteUpgrades occurred?
     redirectCounter.delete(details.requestId);
   }
   if (simpleHTTPNowhereRedirect.has(details.requestId)) {
