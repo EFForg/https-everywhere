@@ -650,7 +650,6 @@ function onErrorOccurred(details) {
       details.error.indexOf("net::ERR_CONNECTION_") == 0 ||
       details.error.indexOf("net::ERR_ABORTED") == 0 ||
       details.error.indexOf("NS_ERROR_CONNECTION_REFUSED") == 0 ||
-      details.error.indexOf("NS_ERROR_UNKNOWN_HOST") == 0 ||
       details.error.indexOf("NS_ERROR_NET_TIMEOUT") == 0 ||
       details.error.indexOf("NS_ERROR_NET_ON_TLS_HANDSHAKE_ENDED") == 0 ||
       details.error.indexOf("NS_BINDING_ABORTED") == 0 ||
