@@ -312,8 +312,15 @@ function enableOnSite() {
 }
 
 function toggleHttpNowhere() {
-  getOption_('httpNowhere', false, function(item) {
-    setOption_('httpNowhere', !item.httpNowhere);
+  getTab(tab => {
+    getOption_('httpNowhere', false, item => {
+      const enabled = !item.httpNowhere;
+      setOption_('httpNowhere', enabled, () => {
+        if (enabled) {
+          chrome.tabs.reload(tab.id);
+        }
+      });
+    });
   });
 }
 
