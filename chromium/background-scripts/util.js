@@ -69,7 +69,7 @@ function ArrayBufferToString(ab) {
   let array = new Uint8Array(ab);
   let string = "";
 
-  for (let byte of array){
+  for (let byte of array) {
     string += String.fromCharCode(byte);
   }
 

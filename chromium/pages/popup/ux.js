@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", function () {
   getTab(tab => {
     const url = new URL(tab.url);
     sendMessage("check_if_site_disabled", url.host, disabled => {
-      if(!disabled){
+      if(!disabled) {
         listRules(tab);
       }
       showEnableOrDisable(url, disabled);
@@ -195,8 +195,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let rulesets_versions = e('rulesets-versions');
   sendMessage("get_ruleset_timestamps", null, timestamps => {
-    for(let [update_channel, timestamp] of timestamps){
-      if(timestamp > 0){
+    for(let [update_channel, timestamp] of timestamps) {
+      if(timestamp > 0) {
         let ruleset_date = new Date(timestamp * 1000);
         let ruleset_version_string = ruleset_date.getUTCFullYear() + "." + (ruleset_date.getUTCMonth() + 1) + "." + ruleset_date.getUTCDate();
 
