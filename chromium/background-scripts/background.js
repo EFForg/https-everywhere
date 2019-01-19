@@ -699,7 +699,22 @@ function onHeadersReceived(details) {
 
     // Do not upgrade resources if the first-party domain disbled EASE mode
     // This is needed for HTTPS sites serve mixed content and is broken
-    if (disabledList.has(uri.hostname)) {
+    let firstPartyHost;
+    if (details.type == "main_frame") {
+      firstPartyHost = uri.host;
+    } else {
+      // In Firefox, documentUrl is preferable here, since it will always be the
+      // URL in the URL bar, but it was only introduced in FF 54.  We should get
+      // rid of `originUrl` at some point.
+      if ('documentUrl' in details) { // Firefox 54+
+        firstPartyHost = new URL(details.documentUrl).host;
+      } else if ('originUrl' in details) { // Firefox < 54
+        firstPartyHost = new URL(details.originUrl).host;
+      } else if('initiator' in details) { // Chrome
+        firstPartyHost = new URL(details.initiator).host;
+      }
+    }
+    if (disabledList.has(firstPartyHost)) {
       return {};
     }
 
