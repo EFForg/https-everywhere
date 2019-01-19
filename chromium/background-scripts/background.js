@@ -690,10 +690,16 @@ function onErrorOccurred(details) {
  */
 function onHeadersReceived(details) {
   if (isExtensionEnabled && httpNowhereOn) {
-    // Do not upgrade the .onion requests in HTTP Nowhere Mode,
+    // Do not upgrade the .onion requests in EASE mode,
     // See https://github.com/EFForg/https-everywhere/pull/14600#discussion_r168072480
     const uri = new URL(details.url);
     if (uri.hostname.slice(-6) == '.onion') {
+      return {};
+    }
+
+    // Do not upgrade resources if the first-party domain disbled EASE mode
+    // This is needed for HTTPS sites serve mixed content and is broken
+    if (disabledList.has(uri.hostname)) {
       return {};
     }
 
