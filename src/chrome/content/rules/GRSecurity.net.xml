@@ -1,12 +1,27 @@
 <!--
-	Invalid certificate:
-		mail.grsecurity.net
+	Nonfunctional hosts in *.grsecurity.net:
+		- mail.grsecurity.net (m)
+		- store.grsecurity.net (e)
 
-	No working URL known:
-		store.grsecurity.net
+	Nonfunctional hosts in *.grsecurity.org:
+		- cvsweb.grsecurity.org (m)
+		- forums.grsecurity.org (m)
+		- mail.grsecurity.org (m)
+		- pax.grsecurity.org (m)
+		- store.grsecurity.org (e)
 
+	h: http redirect
+	m: certificate mismatch
+	r: connection refused
+	s: self-signed certificate
+	t: timeout on https
 -->
-<ruleset name="GRSecurity.net">
+<ruleset name="GRSecurity">
+	<target host="grsecurity.org" />
+	<target host="www.grsecurity.org" />
+	<target host="cvsweb.grsecurity.org" />
+	<target host="forums.grsecurity.org" />
+	<target host="pax.grsecurity.org" />
 
 	<target host="grsecurity.net" />
 	<target host="www.grsecurity.net" />
@@ -16,6 +31,9 @@
 
 	<securecookie host=".+" name=".+" />
 
-	<rule from="^http:" to="https:" />
+	<rule from="^http://cvsweb\.grsecurity\.org/" to="https://cvsweb.grsecurity.net/" />
+	<rule from="^http://forums\.grsecurity\.org/" to="https://forums.grsecurity.net/" />
+	<rule from="^http://pax\.grsecurity\.org/" to="https://pax.grsecurity.net/" />
 
+	<rule from="^http:" to="https:" />
 </ruleset>
