@@ -6,7 +6,8 @@ const assert = require('chai').assert,
   util = require('../background-scripts/util'),
   atob = require("atob"),
   TextDecoder = require('text-encoding').TextDecoder,
-  sinon = require('sinon');
+  sinon = require('sinon'),
+  fetchMock = require('fetch-mock');
 
 const fs = require('fs'),
   { update_channels } = require('../background-scripts/update_channels'),
@@ -54,6 +55,8 @@ describe('update.js', function() {
       const example_rulesets = new TextDecoder("utf-8").decode(example_rulesets_byte_array);
       const example_rulesets_json = JSON.parse(example_rulesets);
 
+      fetchMock.get('*', example_rulesets_json);
+      
       update.applyStoredRulesets({addFromJson: response => {
         assert.isArray(response);
         assert.equal(response[0].name, "Example.com");
