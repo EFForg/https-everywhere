@@ -37,30 +37,6 @@ function getDefaultLogLevel() {
 }
 
 /**
- * Load a file packaged with the extension
- *
- * @param url: a relative URL to local file
- */
-function loadExtensionFile(url, returnType) {
-  var xhr = new XMLHttpRequest();
-  // Use blocking XHR to ensure everything is loaded by the time
-  // we return.
-  xhr.open("GET", chrome.runtime.getURL(url), false);
-  xhr.send(null);
-  // Get file contents
-  if (xhr.readyState !== 4) {
-    return;
-  }
-  if (returnType === 'xml') {
-    return xhr.responseXML;
-  }
-  if (returnType === 'json') {
-    return JSON.parse(xhr.responseText);
-  }
-  return xhr.responseText;
-}
-
-/**
  * Convert an ArrayBuffer to string
  *
  * @param array: an ArrayBuffer to convert
@@ -86,7 +62,6 @@ Object.assign(exports, {
   log,
   setDefaultLogLevel,
   getDefaultLogLevel,
-  loadExtensionFile,
   ArrayBufferToString
 });
 
