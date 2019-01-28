@@ -20,9 +20,6 @@ describe('update.js', function() {
   describe('applyStoredRulesets', function() {
     beforeEach(() => {
       chrome.flush();
-      if(util.loadExtensionFile.restore) {
-        util.loadExtensionFile.restore(); 
-      }
     });
 
     it('applies compressed rulesets from chrome.storage', function(done) {
@@ -56,8 +53,6 @@ describe('update.js', function() {
       const example_rulesets_byte_array = pako.inflate(atob(example_rulesets_gz));
       const example_rulesets = new TextDecoder("utf-8").decode(example_rulesets_byte_array);
       const example_rulesets_json = JSON.parse(example_rulesets);
-
-      sinon.stub(util, "loadExtensionFile").returns(example_rulesets_json.rulesets);
 
       update.applyStoredRulesets({addFromJson: response => {
         assert.isArray(response);
