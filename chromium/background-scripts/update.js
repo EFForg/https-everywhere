@@ -203,7 +203,10 @@ async function applyStoredRulesets(rulesets_obj) {
       rulesets_obj.addFromJson(channel_result.json.rulesets, channel_result.scope);
     }
   } else {
-    rulesets_obj.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
+    const url = chrome.runtime.getURL('rules/default.rulesets');
+    const response = await fetch(url);
+
+    rulesets_obj.addFromJson(await response.json());
   }
 }
 
