@@ -56,7 +56,7 @@ describe('update.js', function() {
       const example_rulesets_json = JSON.parse(example_rulesets);
 
       fetchMock.get('*', example_rulesets_json.rulesets);
-      
+
       update.applyStoredRulesets({addFromJson: response => {
         assert.isArray(response);
         assert.equal(response[0].name, "Example.com");
