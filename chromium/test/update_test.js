@@ -6,7 +6,6 @@ const assert = require('chai').assert,
   util = require('../background-scripts/util'),
   atob = require("atob"),
   TextDecoder = require('text-encoding').TextDecoder,
-  sinon = require('sinon'),
   fetchMock = require('fetch-mock');
 
 const fs = require('fs'),
