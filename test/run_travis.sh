@@ -78,9 +78,11 @@ elif [ "$TEST" == "validations" ] || [ "$TEST" == "fetch" ] || [ "$TEST" == "pre
     fi
 
     if [ "$TEST" == "fetch" ]; then
+      echo >&2 "disable ipv6 currently is:"
+      cat /proc/sys/net/ipv6/conf/all/disable_ipv6 >&2
       echo >&2 "Testing test URLs in all changed rulesets."
       # --cap-add=NET_ADMIN is required here for miredo to create a network tunnel
-      docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" --cap-add=NET_ADMIN httpse bash -c "echo 0 > /proc/sys/net/ipv6/conf/all/disable_ipv6 && service miredo start && service tor start && test/fetch.sh"
+      docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" --cap-add=NET_ADMIN httpse bash -c "service miredo start && service tor start && test/fetch.sh"
     fi
 
     if [ "$TEST" == "preloaded" ]; then
