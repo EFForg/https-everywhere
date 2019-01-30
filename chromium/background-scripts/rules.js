@@ -134,7 +134,7 @@ RuleSet.prototype = {
    * @returns true or false, depending on whether it's deeply equivalent
    */
   isEquivalentTo: function(ruleset) {
-    if(this.name != ruleset.name ||
+    if (this.name != ruleset.name ||
        this.note != ruleset.note ||
        this.state != ruleset.state ||
        this.default_state != ruleset.default_state) {
@@ -143,29 +143,29 @@ RuleSet.prototype = {
 
     try {
       var this_exclusions_source = this.exclusions.source;
-    } catch(e) {
+    } catch (e) {
       var this_exclusions_source = null;
     }
 
     try {
       var ruleset_exclusions_source = ruleset.exclusions.source;
-    } catch(e) {
+    } catch (e) {
       var ruleset_exclusions_source = null;
     }
 
     try {
       var this_rules_length = this.rules.length;
-    } catch(e) {
+    } catch (e) {
       var this_rules_length = 0;
     }
 
     try {
       var ruleset_rules_length = ruleset.rules.length;
-    } catch(e) {
+    } catch (e) {
       var ruleset_rules_length = 0;
     }
 
-    if(this_rules_length != ruleset_rules_length) {
+    if (this_rules_length != ruleset_rules_length) {
       return false;
     }
 
@@ -173,9 +173,9 @@ RuleSet.prototype = {
       return false;
     }
 
-    if(this_rules_length > 0) {
-      for(let x = 0; x < this.rules.length; x++) {
-        if(this.rules[x].to != ruleset.rules[x].to) {
+    if (this_rules_length > 0) {
+      for (let x = 0; x < this.rules.length; x++) {
+        if (this.rules[x].to != ruleset.rules[x].to) {
           return false;
         }
       }
@@ -245,7 +245,7 @@ RuleSets.prototype = {
     for (let ruleset of ruleJson) {
       try {
         this.parseOneJsonRuleset(ruleset, scope_obj);
-      } catch(e) {
+      } catch (e) {
         util.log(util.WARN, 'Error processing ruleset:' + e);
       }
     }
@@ -446,7 +446,7 @@ RuleSets.prototype = {
 
   // Load in the legacy custom rulesets, if any
   loadCustomRulesets: function(legacy_custom_rulesets) {
-    for(let legacy_custom_ruleset of legacy_custom_rulesets) {
+    for (let legacy_custom_ruleset of legacy_custom_rulesets) {
       this.loadCustomRuleset(legacy_custom_ruleset);
     }
   },

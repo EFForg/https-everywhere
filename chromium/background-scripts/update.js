@@ -41,9 +41,9 @@ async function loadUpdateChannelsKeys() {
   imported_keys = {};
   combined_update_channels = [];
 
-  for(let update_channel of combined_update_channels_preflight) {
+  for (let update_channel of combined_update_channels_preflight) {
 
-    try{
+    try {
       imported_keys[update_channel.name] = await window.crypto.subtle.importKey(
         "jwk",
         update_channel.jwk,
@@ -56,7 +56,7 @@ async function loadUpdateChannelsKeys() {
       );
       combined_update_channels.push(update_channel);
       util.log(util.NOTE, update_channel.name + ': Update channel key loaded.');
-    } catch(err) {
+    } catch (err) {
       util.log(util.WARN, update_channel.name + ': Could not import key.  Aborting.');
     }
   }
@@ -66,7 +66,7 @@ async function loadUpdateChannelsKeys() {
 // Determine the time until we should check for new rulesets
 async function timeToNextCheck() {
   const last_checked = await store.local.get_promise('last-checked', false);
-  if(last_checked) {
+  if (last_checked) {
     const current_timestamp = Date.now() / 1000;
     const secs_since_last_checked = current_timestamp - last_checked;
     return Math.max(0, periodicity - secs_since_last_checked);
@@ -85,10 +85,10 @@ async function resetTimer() {
 // Check for new rulesets. If found, return the timestamp. If not, return false
 async function checkForNewRulesets(update_channel) {
   let timestamp_result = await fetch(update_channel.update_path_prefix + "/latest-rulesets-timestamp");
-  if(timestamp_result.status == 200) {
+  if (timestamp_result.status == 200) {
     let rulesets_timestamp = Number(await timestamp_result.text());
 
-    if((await store.local.get_promise('rulesets-timestamp: ' + update_channel.name, 0)) < rulesets_timestamp) {
+    if ((await store.local.get_promise('rulesets-timestamp: ' + update_channel.name, 0)) < rulesets_timestamp) {
       return rulesets_timestamp;
     }
   }
@@ -98,7 +98,7 @@ async function checkForNewRulesets(update_channel) {
 // Retrieve the timestamp for when a stored ruleset bundle was published
 async function getRulesetTimestamps() {
   let timestamp_promises = [];
-  for(let update_channel of combined_update_channels) {
+  for (let update_channel of combined_update_channels) {
     timestamp_promises.push(new Promise(async resolve => {
       let timestamp = await store.local.get_promise('rulesets-stored-timestamp: ' + update_channel.name, 0);
       resolve([update_channel.name, timestamp]);
@@ -146,7 +146,7 @@ function verifyAndStoreNewRulesets(new_rulesets, rulesets_timestamp, update_chan
       new_rulesets.signature_array_buffer,
       new_rulesets.rulesets_array_buffer
     ).then(async isvalid => {
-      if(isvalid) {
+      if (isvalid) {
         util.log(util.NOTE, update_channel.name + ': Downloaded ruleset signature checks out.  Storing rulesets.');
 
         const rulesets_gz = util.ArrayBufferToString(new_rulesets.rulesets_array_buffer);
@@ -154,7 +154,7 @@ function verifyAndStoreNewRulesets(new_rulesets, rulesets_timestamp, update_chan
         const rulesets = new TextDecoder("utf-8").decode(rulesets_byte_array);
         const rulesets_json = JSON.parse(rulesets);
 
-        if(rulesets_json.timestamp != rulesets_timestamp) {
+        if (rulesets_json.timestamp != rulesets_timestamp) {
           reject(update_channel.name + ': Downloaded ruleset had an incorrect timestamp.  This may be an attempted downgrade attack.  Aborting.');
         } else {
           await store.local.set_promise('rulesets: ' + update_channel.name, window.btoa(rulesets_gz));
@@ -172,11 +172,11 @@ function verifyAndStoreNewRulesets(new_rulesets, rulesets_timestamp, update_chan
 // Unzip and apply the rulesets we have stored.
 async function applyStoredRulesets(rulesets_obj) {
   let rulesets_promises = [];
-  for(let update_channel of combined_update_channels) {
+  for (let update_channel of combined_update_channels) {
     rulesets_promises.push(new Promise(resolve => {
       const key = 'rulesets: ' + update_channel.name;
       chrome.storage.local.get(key, root => {
-        if(root[key]) {
+        if (root[key]) {
           util.log(util.NOTE, update_channel.name + ': Applying stored rulesets.');
 
           const rulesets_gz = window.atob(root[key]);
@@ -198,8 +198,8 @@ async function applyStoredRulesets(rulesets_obj) {
 
   const channel_results = (await Promise.all(rulesets_promises)).filter(isNotUndefined);
 
-  if(channel_results.length > 0) {
-    for(let channel_result of channel_results) {
+  if (channel_results.length > 0) {
+    for (let channel_result of channel_results) {
       rulesets_obj.addFromJson(channel_result.json.rulesets, channel_result.scope);
     }
   } else {
@@ -215,21 +215,21 @@ async function performCheck() {
   store.local.set_promise('last-checked', current_timestamp);
 
   let num_updates = 0;
-  for(let update_channel of combined_update_channels) {
+  for (let update_channel of combined_update_channels) {
     let new_rulesets_timestamp = await checkForNewRulesets(update_channel);
-    if(new_rulesets_timestamp) {
+    if (new_rulesets_timestamp) {
       util.log(util.NOTE, update_channel.name + ': A new ruleset bundle has been released.  Downloading now.');
       let new_rulesets = await getNewRulesets(new_rulesets_timestamp, update_channel);
-      try{
+      try {
         await verifyAndStoreNewRulesets(new_rulesets, new_rulesets_timestamp, update_channel);
         store.local.set_promise('rulesets-stored-timestamp: ' + update_channel.name, new_rulesets_timestamp);
         num_updates++;
-      } catch(err) {
+      } catch (err) {
         util.log(util.WARN, update_channel.name + ': ' + err);
       }
     }
   }
-  if(num_updates > 0) {
+  if (num_updates > 0) {
     background_callback();
   }
 };

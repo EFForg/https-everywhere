@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function create_update_channel_element(update_channel, last_updated, pinned) {
     let ruleset_version_string;
 
-    if(last_updated) {
+    if (last_updated) {
       const ruleset_date = new Date(last_updated * 1000);
       ruleset_version_string = ruleset_date.getUTCFullYear() + "." + (ruleset_date.getUTCMonth() + 1) + "." + ruleset_date.getUTCDate();
     } else {
@@ -190,12 +190,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function render_update_channels() {
     const update_channels_list = document.getElementById("update-channels-list");
-    while(update_channels_list.firstChild) {
+    while (update_channels_list.firstChild) {
       update_channels_list.removeChild(update_channels_list.firstChild);
     }
 
     sendMessage("get_pinned_update_channels", null, item => {
-      for(const update_channel of item.update_channels) {
+      for (const update_channel of item.update_channels) {
         update_channels_list.appendChild(
           create_update_channel_element(
             update_channel,
@@ -208,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     sendMessage("get_stored_update_channels", null, item => {
-      for(const update_channel of item.update_channels) {
+      for (const update_channel of item.update_channels) {
         update_channels_list.appendChild(
           create_update_channel_element(
             update_channel,
@@ -272,7 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
   getOption_("disabledList", [], function(item) {
     let rule_host_parent = e("disabled-rules-wrapper");
 
-    if( 0 === item.disabledList.length ) {
+    if ( 0 === item.disabledList.length ) {
       hide(rule_host_parent);
       return;
     }
@@ -281,7 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
     templateRemove.src = chrome.runtime.getURL("images/remove.png");
     templateRemove.className = "remove";
 
-    if( item ) {
+    if ( item ) {
       for (const key of item.disabledList) {
         let rule_host = document.createElement("div");
         let remove = templateRemove.cloneNode(true);
@@ -304,12 +304,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   add_update_channel.addEventListener("click", () => {
     const update_channel_name = update_channel_name_div.value;
-    if(update_channel_name.trim() == "") {
+    if (update_channel_name.trim() == "") {
       displayError("Error: The update channel name is blank.  Please enter another name.");
     } else {
       update_channel_name_div.value = "";
       sendMessage("create_update_channel", update_channel_name, result => {
-        if(result == true) {
+        if (result == true) {
           render_update_channels();
         } else {
           displayError("Error: There already exists an update channel with this name.");
@@ -326,7 +326,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const update_channels_last_checked = document.getElementById("update-channels-last-checked");
   sendMessage("get_last_checked", null, last_checked => {
     let last_checked_string;
-    if(last_checked) {
+    if (last_checked) {
       const last_checked_date = new Date(last_checked * 1000);
       const options = {
         year: '2-digit',

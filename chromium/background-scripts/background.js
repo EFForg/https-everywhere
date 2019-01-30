@@ -343,7 +343,7 @@ function onBeforeRequest(details) {
       firstPartyHost = new URL(details.documentUrl).host;
     } else if ('originUrl' in details) { // Firefox < 54
       firstPartyHost = new URL(details.originUrl).host;
-    } else if('initiator' in details) { // Chrome
+    } else if ('initiator' in details) { // Chrome
       firstPartyHost = new URL(details.initiator).host;
     }
   }
@@ -709,7 +709,7 @@ function onHeadersReceived(details) {
         firstPartyHost = new URL(details.documentUrl).host;
       } else if ('originUrl' in details) { // Firefox < 54
         firstPartyHost = new URL(details.originUrl).host;
-      } else if('initiator' in details) { // Chrome
+      } else if ('initiator' in details) { // Chrome
         firstPartyHost = new URL(details.initiator).host;
       }
     }
@@ -840,7 +840,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
   function get_update_channels_generic(update_channels) {
     let last_updated_promises = [];
-    for(let update_channel of update_channels) {
+    for (let update_channel of update_channels) {
       last_updated_promises.push(new Promise(resolve => {
         store.local.get({['rulesets-timestamp: ' + update_channel.name]: 0}, item => {
           resolve([update_channel.name, item['rulesets-timestamp: ' + update_channel.name]]);
@@ -965,7 +965,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
           return obj;
         }, new Set());
 
-        if(update_channel_names.has(message.object)) {
+        if (update_channel_names.has(message.object)) {
           return sendResponse(false);
         }
 
@@ -1004,8 +1004,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       store.get({update_channels: []}, item => {
         let scope_changed = false;
         item.update_channels = item.update_channels.map(update_channel => {
-          if(update_channel.name == message.object.name) {
-            if(update_channel.scope != message.object.scope) {
+          if (update_channel.name == message.object.name) {
+            if (update_channel.scope != message.object.scope) {
               scope_changed = true;
             }
             update_channel = message.object;
@@ -1021,7 +1021,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
           // necesssary to avoid a race condition, see #16673
           update.loadUpdateChannelsKeys().then(() => {
             update.resetTimer();
-            if(scope_changed) {
+            if (scope_changed) {
               initializeAllRules();
             }
             sendResponse(true);
@@ -1050,7 +1050,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       return true;
     },
     is_firefox: () => {
-      if(typeof(browser) != "undefined") {
+      if (typeof(browser) != "undefined") {
         browser.runtime.getBrowserInfo().then(function(info) {
           if (info.name == "Firefox") {
             sendResponse(true);

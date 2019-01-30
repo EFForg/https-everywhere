@@ -8,7 +8,7 @@ function initialize() {
   return new Promise(resolve => {
     if (chrome.storage.sync) {
       chrome.storage.sync.set({"sync-set-test": true}, () => {
-        if(chrome.runtime.lastError) {
+        if (chrome.runtime.lastError) {
           setStorage(chrome.storage.local);
         } else {
           setStorage(chrome.storage.sync);
