@@ -1,4 +1,3 @@
-import unittest
 from time import sleep
 from util import ExtensionTestCase
 
@@ -11,8 +10,6 @@ class OptionsTest(ExtensionTestCase):
         self.assertEqual(self.driver.current_url, self.shim.options_url)
 
     def test_show_counter(self):
-        if self.shim.browser_type == 'chrome':
-            raise unittest.SkipTest('broken on chrome')
         selector = '#showCounter'
         self.load_options()
         sleep(3)
