@@ -1,6 +1,8 @@
 ---
 name: New ruleset
 about: Request/submit a new ruleset
+labels:
+  - new-ruleset
 ---
 
 [//]: # (Thank you for reporting an issue to HTTPS Everywhere.)
@@ -9,9 +11,6 @@ about: Request/submit a new ruleset
 [//]: # (Please help us by following this issue template.)
 [//]: # (You can delete all blank lines and all lines starting)
 [//]: # (with the comment marker, such as this one.)
-[//]: #
-[//]: # (Delete all but one of the following "Type" lines.)
-[//]: # (Leave in the line that best describes the issue you are reporting.)
 [//]: #
 [//]: # (If you are submitting a new ruleset, please check the list at)
 [//]: # (https://www.eff.org/https-everywhere/atlas/index.html and the open)
