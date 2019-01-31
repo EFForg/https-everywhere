@@ -1,6 +1,8 @@
 ---
 name: Ruleset/website issue report
 about: Report a issue about a ruleset/website
+labels:
+  - ruleset-bug
 ---
 
 [//]: # (Thank you for reporting an issue to HTTPS Everywhere.)
