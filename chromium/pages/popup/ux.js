@@ -214,7 +214,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-var escapeForRegex = function( value ) {
+var escapeForRegex = function(value) {
   return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
 };
 
