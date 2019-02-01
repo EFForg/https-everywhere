@@ -343,11 +343,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     update_channels_last_checked.innerText = chrome.i18n.getMessage("options_updatesLastChecked") + last_checked_string;
   });
-
-  document.onkeydown = function(evt) {
-    evt = evt || window.event;
-    if (evt.ctrlKey && evt.keyCode == 90) {
-      window.open("/pages/debugging-rulesets/index.html");
-    }
-  };
 });
