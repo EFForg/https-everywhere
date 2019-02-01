@@ -269,7 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
   })
 
   // HTTPS Everywhere Sites Disabled section in General Settings module
-  getOption_("disabledList", [], function(item) {
+  getOption_("disabledList", [], function (item) {
     let rule_host_parent = e("disabled-rules-wrapper");
 
     if (0 === item.disabledList.length) {
@@ -344,7 +344,7 @@ document.addEventListener("DOMContentLoaded", () => {
     update_channels_last_checked.innerText = chrome.i18n.getMessage("options_updatesLastChecked") + last_checked_string;
   });
 
-  document.onkeydown = function(evt) {
+  document.onkeydown = function (evt) {
     evt = evt || window.event;
     if (evt.ctrlKey && evt.keyCode == 90) {
       window.open("/pages/debugging-rulesets/index.html");

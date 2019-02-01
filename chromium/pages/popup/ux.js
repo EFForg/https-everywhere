@@ -92,7 +92,7 @@ function appendRulesToListDiv(rulesets, list_div) {
 
 function showHttpNowhereUI() {
   // Set up checkbox for HTTP nowhere mode
-  getOption_('httpNowhere', false, function(item) {
+  getOption_('httpNowhere', false, function (item) {
     if (item.httpNowhere) {
       e('http-nowhere-checkbox').checked = true;
     }
@@ -102,7 +102,7 @@ function showHttpNowhereUI() {
 
 // Change the UI to reflect extension enabled/disabled
 function updateEnabledDisabledUI() {
-  getOption_('globalEnabled', true, function(item) {
+  getOption_('globalEnabled', true, function (item) {
     e('onoffswitch').checked = item.globalEnabled;
     e('disableButton').style.visibility = "visible";
     // Hide or show the rules sections
@@ -117,14 +117,14 @@ function updateEnabledDisabledUI() {
 
 // Toggle extension enabled/disabled status
 function toggleEnabledDisabled() {
-  var extension_toggle_effect = function() {
+  var extension_toggle_effect = function () {
     updateEnabledDisabledUI();
     // The extension state changed, so reload this tab.
     chrome.tabs.reload();
     window.close();
   }
 
-  getOption_('globalEnabled', true, function(item) {
+  getOption_('globalEnabled', true, function (item) {
     setOption_('globalEnabled', !item.globalEnabled, extension_toggle_effect);
   });
 
@@ -135,7 +135,7 @@ function toggleEnabledDisabled() {
  * @param activeTab
  */
 function listRules(activeTab) {
-  sendMessage("get_active_rulesets", activeTab.id, function(rulesets) {
+  sendMessage("get_active_rulesets", activeTab.id, function (rulesets) {
     if (rulesets) {
       const stableRules = rulesets.filter(ruleset => ruleset.default_state);
       const unstableRules = rulesets.filter(ruleset => !ruleset.default_state);
@@ -214,7 +214,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-var escapeForRegex = function(value) {
+var escapeForRegex = function (value) {
   return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
 };
 
@@ -243,7 +243,7 @@ function showEnableOrDisable(url, disabled) {
  * Handles the manual addition of rules
  */
 function addManualRule() {
-  getTab(function(tab) {
+  getTab(function (tab) {
     hide(e("add-rule-link"));
     show(e("add-new-rule-div"));
 
@@ -257,7 +257,7 @@ function addManualRule() {
     e("new-rule-redirect").value = `https://${url.host}/`;
     e("new-rule-name").value = "Manual rule for " + url.host;
 
-    e("add-new-rule-button").addEventListener("click", function() {
+    e("add-new-rule-button").addEventListener("click", function () {
       const params = {
         /**
          * FIXME: the current implementation forbide users setting custom
@@ -268,22 +268,22 @@ function addManualRule() {
         rule: [{ to: e("new-rule-redirect").value, from: e("new-rule-regex").value }],
         default_off: "user rule"
       };
-      sendMessage("add_new_rule", params, function() {
+      sendMessage("add_new_rule", params, function () {
         location.reload();
       });
     });
 
-    e("cancel-new-rule").addEventListener("click", function() {
+    e("cancel-new-rule").addEventListener("click", function () {
       show(e("add-rule-link"));
       hide(e("add-new-rule-div"));
     });
 
-    e("new-rule-show-advanced-link").addEventListener("click", function() {
+    e("new-rule-show-advanced-link").addEventListener("click", function () {
       show(e("new-rule-advanced"));
       hide(e("new-rule-regular-text"));
     });
 
-    e("new-rule-hide-advanced-link").addEventListener("click", function() {
+    e("new-rule-hide-advanced-link").addEventListener("click", function () {
       hide(e("new-rule-advanced"));
       show(e("new-rule-regular-text"));
     });
@@ -294,7 +294,7 @@ function addManualRule() {
  * Disable HTTPS Everywhere on a particular FQDN
  */
 function disableOnSite() {
-  getTab(function(tab) {
+  getTab(function (tab) {
     const url = new URL(tab.url);
     sendMessage("disable_on_site", url.host);
     chrome.tabs.reload(tab.id);
@@ -303,7 +303,7 @@ function disableOnSite() {
 }
 
 function enableOnSite() {
-  getTab(function(tab) {
+  getTab(function (tab) {
     const url = new URL(tab.url);
     sendMessage("enable_on_site", url.host);
     chrome.tabs.reload(tab.id);

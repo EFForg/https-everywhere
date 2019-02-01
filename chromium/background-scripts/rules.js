@@ -1,6 +1,6 @@
 "use strict";
 
-(function(exports) {
+(function (exports) {
 
 const util = require('./util');
 
@@ -109,7 +109,7 @@ RuleSet.prototype = {
    * @param urispec The uri to rewrite
    * @returns {*} null or the rewritten uri
    */
-  apply: function(urispec) {
+  apply: function (urispec) {
     var returl = null;
     // If we're covered by an exclusion, go home
     if (this.exclusions !== null && this.exclusions.test(urispec)) {
@@ -133,7 +133,7 @@ RuleSet.prototype = {
    * @param ruleset The ruleset to compare with
    * @returns true or false, depending on whether it's deeply equivalent
    */
-  isEquivalentTo: function(ruleset) {
+  isEquivalentTo: function (ruleset) {
     if (this.name != ruleset.name ||
        this.note != ruleset.note ||
        this.state != ruleset.state ||
@@ -217,7 +217,7 @@ RuleSets.prototype = {
    * Load packaged rulesets, and rulesets in browser storage
    * @param store object from store.js
    */
-  loadFromBrowserStorage: async function(store, applyStoredFunc) {
+  loadFromBrowserStorage: async function (store, applyStoredFunc) {
     this.store = store;
     this.ruleActiveStates = await this.store.get_promise('ruleActiveStates', {});
     await applyStoredFunc(this);
@@ -228,7 +228,7 @@ RuleSets.prototype = {
   /**
    * Iterate through data XML and load rulesets
    */
-  addFromXml: function(ruleXml, scope) {
+  addFromXml: function (ruleXml, scope) {
     const scope_obj = getScope(scope);
     const rulesets = ruleXml.getElementsByTagName("ruleset");
     for (let ruleset of rulesets) {
@@ -240,7 +240,7 @@ RuleSets.prototype = {
     }
   },
 
-  addFromJson: function(ruleJson, scope) {
+  addFromJson: function (ruleJson, scope) {
     const scope_obj = getScope(scope);
     for (let ruleset of ruleJson) {
       try {
@@ -251,7 +251,7 @@ RuleSets.prototype = {
     }
   },
 
-  parseOneJsonRuleset: function(ruletag, scope) {
+  parseOneJsonRuleset: function (ruletag, scope) {
     var default_state = true;
     var note = "";
     var default_off = ruletag["default_off"];
@@ -321,7 +321,7 @@ RuleSets.prototype = {
    * @param params
    * @returns {boolean}
    */
-  addUserRule : function(params, scope) {
+  addUserRule : function (params, scope) {
     util.log(util.INFO, 'adding new user rule for ' + JSON.stringify(params));
     this.parseOneJsonRuleset(params, scope);
 
@@ -340,7 +340,7 @@ RuleSets.prototype = {
    * @param params
    * @returns {boolean}
    */
-  removeUserRule: function(ruleset, src) {
+  removeUserRule: function (ruleset, src) {
     /**
      * FIXME: We have to use ruleset.name here because the ruleset itself
      * carries no information on the target it is applying on. This also
@@ -363,7 +363,7 @@ RuleSets.prototype = {
     if (src === 'options') {
       /**
        * FIXME: There is nothing we can do if the call comes from the
-       * option page because isEquivalentTo cannot work reliably. 
+       * option page because isEquivalentTo cannot work reliably.
        * Leave the heavy duties to background.js to call initializeAllRules
        */
     }
@@ -374,14 +374,14 @@ RuleSets.prototype = {
   /**
   * Retrieve stored user rules from storage api
   **/
-  getStoredUserRules: async function() {
+  getStoredUserRules: async function () {
     return await this.store.get_promise(this.USER_RULE_KEY, []);
   },
 
   /**
   * Load all stored user rules into this RuleSet object
   */
-  loadStoredUserRules: function() {
+  loadStoredUserRules: function () {
     return this.getStoredUserRules()
       .then(userRules => {
         this.addFromJson(userRules, getScope());
@@ -394,7 +394,7 @@ RuleSets.prototype = {
   * @param params: params defining the rule
   * @param cb: Callback to call after success/fail
   * */
-  addNewRuleAndStore: async function(params) {
+  addNewRuleAndStore: async function (params) {
     if (this.addUserRule(params, getScope())) {
       // If we successfully added the user rule, save it in the storage
       // api so it's automatically applied when the extension is
@@ -412,7 +412,7 @@ RuleSets.prototype = {
   * Removes a user rule
   * @param ruleset: the ruleset to remove
   * */
-  removeRuleAndStore: async function(ruleset, src) {
+  removeRuleAndStore: async function (ruleset, src) {
     if (this.removeUserRule(ruleset, src)) {
       let userRules = await this.getStoredUserRules();
 
@@ -431,7 +431,7 @@ RuleSets.prototype = {
     }
   },
 
-  addStoredCustomRulesets: function() {
+  addStoredCustomRulesets: function () {
     return new Promise(resolve => {
       this.store.get({
         legacy_custom_rulesets: [],
@@ -445,17 +445,17 @@ RuleSets.prototype = {
   },
 
   // Load in the legacy custom rulesets, if any
-  loadCustomRulesets: function(legacy_custom_rulesets) {
+  loadCustomRulesets: function (legacy_custom_rulesets) {
     for (let legacy_custom_ruleset of legacy_custom_rulesets) {
       this.loadCustomRuleset(legacy_custom_ruleset);
     }
   },
 
-  loadCustomRuleset: function(ruleset_string) {
+  loadCustomRuleset: function (ruleset_string) {
     this.addFromXml((new DOMParser()).parseFromString(ruleset_string, 'text/xml'));
   },
 
-  setRuleActiveState: async function(ruleset_name, active) {
+  setRuleActiveState: async function (ruleset_name, active) {
     if (active == undefined) {
       delete this.ruleActiveStates[ruleset_name];
     } else {
@@ -468,7 +468,7 @@ RuleSets.prototype = {
    * Does the loading of a ruleset.
    * @param ruletag The whole <ruleset> tag to parse
    */
-  parseOneXmlRuleset: function(ruletag, scope) {
+  parseOneXmlRuleset: function (ruletag, scope) {
     var default_state = true;
     var note = "";
     var default_off = ruletag.getAttribute("default_off");
@@ -540,7 +540,7 @@ RuleSets.prototype = {
    * @param host The host to check
    * @returns {*} (empty) list
    */
-  potentiallyApplicableRulesets: function(host) {
+  potentiallyApplicableRulesets: function (host) {
     // Have we cached this result? If so, return it!
     if (this.ruleCache.has(host)) {
       let cached_item = this.ruleCache.get(host);
@@ -613,7 +613,7 @@ RuleSets.prototype = {
    * @param cookie The cookie to test
    * @returns {*} ruleset or null
    */
-  shouldSecureCookie: function(cookie) {
+  shouldSecureCookie: function (cookie) {
     var hostname = cookie.domain;
     // cookie domain scopes can start with .
     while (hostname.charAt(0) == ".") {
@@ -643,7 +643,7 @@ RuleSets.prototype = {
    * @param domain The domain of the cookie
    * @returns {*} true or false
    */
-  safeToSecureCookie: function(domain) {
+  safeToSecureCookie: function (domain) {
     // Check if the domain might be being served over HTTP.  If so, it isn't
     // safe to secure a cookie!  We can't always know this for sure because
     // observing cookie-changed doesn't give us enough context to know the
@@ -702,7 +702,7 @@ RuleSets.prototype = {
    * @param host The host of this uri
    * @returns {*} the new uri or null
    */
-  rewriteURI: function(urispec, host) {
+  rewriteURI: function (urispec, host) {
     var newuri = null;
     var potentiallyApplicable = this.potentiallyApplicableRulesets(host);
     for (let ruleset of potentiallyApplicable) {

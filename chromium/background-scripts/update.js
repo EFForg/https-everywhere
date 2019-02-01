@@ -19,7 +19,7 @@ if (typeof window === "undefined") {
   combined_update_channels = update_channels;
 }
 
-(function(exports) {
+(function (exports) {
 
 const util = require('./util');
 
@@ -234,7 +234,7 @@ async function performCheck() {
   }
 };
 
-chrome.storage.onChanged.addListener(async function(changes, areaName) {
+chrome.storage.onChanged.addListener(async function (changes, areaName) {
   if (areaName === 'sync' || areaName === 'local') {
     if ('autoUpdateRulesets' in changes) {
       if (changes.autoUpdateRulesets.newValue) {

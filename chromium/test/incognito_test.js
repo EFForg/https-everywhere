@@ -4,8 +4,8 @@ const expect = require('chai').expect,
   tu = require('./testing_utils'),
   incognito = require('../background-scripts/incognito');
 
-describe('incognito.js', function() {
-  beforeEach(function() {
+describe('incognito.js', function () {
+  beforeEach(function () {
     tu.stubber([
       ['chrome.windows.onCreated.addListener', tu.Mock()],
       ['chrome.windows.onRemoved.addListener', tu.Mock()],
@@ -13,19 +13,19 @@ describe('incognito.js', function() {
     ]);
   });
 
-  describe('onIncognitoDestruction', function() {
-    beforeEach(function() {
+  describe('onIncognitoDestruction', function () {
+    beforeEach(function () {
       incognito.state.incognito_session_exists = false;
       this.callbackCalled = false;
       this.callback = () => this.callbackCalled = true;
       this.instance = incognito.onIncognitoDestruction(this.callback);
     })
 
-    it('no incognito session by default', function() {
+    it('no incognito session by default', function () {
       expect(incognito.state.incognito_session_exists).to.be.false;
     })
 
-    it('with no incognito, callback not called', async function() {
+    it('with no incognito, callback not called', async function () {
       incognito.state.incognito_session_exists = false;
 
       await this.instance.detect_incognito_destruction();
@@ -33,7 +33,7 @@ describe('incognito.js', function() {
       expect(this.callbackCalled).to.be.false;
     });
 
-    it('with incognitos still open, callback not called', async function() {
+    it('with incognitos still open, callback not called', async function () {
       incognito.state.incognito_session_exists = true;
       chrome.windows.getAll = func => func([{incognito: true}]);
 
@@ -42,7 +42,7 @@ describe('incognito.js', function() {
       expect(this.callbackCalled, 'not called').to.be.false;
     });
 
-    it('callback called when last incognito closed', async function() {
+    it('callback called when last incognito closed', async function () {
       incognito.state.incognito_session_exists = true;
       chrome.windows.getAll = func => func([]);
 
@@ -51,7 +51,7 @@ describe('incognito.js', function() {
       expect(this.callbackCalled).to.be.true;
     });
 
-    it('detects when an incognito window is created', function() {
+    it('detects when an incognito window is created', function () {
       this.instance.detect_incognito_creation({incognito: true});
       expect(incognito.state.incognito_session_exists, 'constant changed').to.be.true;
     })

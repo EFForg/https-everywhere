@@ -45,7 +45,7 @@ function display() {
   chrome.runtime.sendMessage({
     type: "getHosts",
     tabId: chrome.devtools.inspectedWindow.tabId,
-  }, function(response) {
+  }, function (response) {
     var switch_planner_details = e("SwitchPlannerDetails");
     while (switch_planner_details.firstChild) {
       switch_planner_details.removeChild(switch_planner_details.firstChild);
@@ -103,7 +103,7 @@ function switchPlannerSmallHtmlSection(asset_host_list) {
   return wrapper_div;
 }
 
-window.onload = function() {
+window.onload = function () {
   // Open a connection to the background page. Right now this is only used
   // by the background page so it knows when the devtools pane has closed.
   // We don't receive messages from the background page currently, though that
@@ -112,7 +112,7 @@ window.onload = function() {
   chrome.runtime.connect({ name: "devtools-page" });
 
   var checkbox = e("SwitchPlannerCheckbox");
-  checkbox.addEventListener("change", function() {
+  checkbox.addEventListener("change", function () {
     if (checkbox.checked) {
       enableSwitchPlanner();
     } else {
@@ -120,12 +120,12 @@ window.onload = function() {
     }
   });
 
-  e("SwitchPlannerDetailsLink").addEventListener("click", function() {
+  e("SwitchPlannerDetailsLink").addEventListener("click", function () {
     window.open("/pages/switch-planner/index.html?tab=" + chrome.devtools.inspectedWindow.tabId);
   });
   // Since this is rendered in a devtools console, we have to make clicks on the
   // link open a new window.
-  e("MixedContentLink").addEventListener("click", function(e) {
+  e("MixedContentLink").addEventListener("click", function (e) {
     window.open(e.target.href);
   });
 };

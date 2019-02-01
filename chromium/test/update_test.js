@@ -14,18 +14,18 @@ const fs = require('fs'),
 
 util.setDefaultLogLevel(util.WARN);
 
-describe('update.js', function() {
+describe('update.js', function () {
   const example_rulesets_gz = fs.readFileSync(__dirname + '/example.rulesets.gz');
 
-  describe('applyStoredRulesets', function() {
+  describe('applyStoredRulesets', function () {
     beforeEach(() => {
       chrome.flush();
       if (util.loadExtensionFile.restore) {
-        util.loadExtensionFile.restore(); 
+        util.loadExtensionFile.restore();
       }
     });
 
-    it('applies compressed rulesets from chrome.storage', function(done) {
+    it('applies compressed rulesets from chrome.storage', function (done) {
       let apply_promises = [];
 
       for (let update_channel of update_channels) {
@@ -47,7 +47,7 @@ describe('update.js', function() {
 
     });
 
-    it('applies rulesets from local extension file', function(done) {
+    it('applies rulesets from local extension file', function (done) {
       for (let update_channel of update_channels) {
         const key = 'rulesets: ' + update_channel.name;
         chrome.storage.local.get.withArgs(key).yields({});

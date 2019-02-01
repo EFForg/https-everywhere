@@ -1,6 +1,6 @@
 "use strict";
 
-(function(exports) {
+(function (exports) {
 
 // This file keeps track of incognito sessions, and clears any caches after
 // an entire incognito session is closed (i.e. all incognito windows are closed).
@@ -28,14 +28,14 @@ Incognito.prototype = {
    *
    * @param window: A standard Window object.
    */
-  detect_incognito_creation: function(window_) {
+  detect_incognito_creation: function (window_) {
     if (window_.incognito === true) {
       state.incognito_session_exists = true;
     }
   },
 
   // If a window is destroyed, and an incognito session existed, see if it still does.
-  detect_incognito_destruction: async function() {
+  detect_incognito_destruction: async function () {
     if (state.incognito_session_exists) {
       if (!(await any_incognito_windows())) {
         state.incognito_session_exists = false;

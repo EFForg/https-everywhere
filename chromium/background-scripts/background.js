@@ -1,6 +1,6 @@
 "use strict";
 
-(function(exports) {
+(function (exports) {
 
 const rules = require('./rules'),
   store = require('./store'),
@@ -50,7 +50,7 @@ function initializeStoredGlobals() {
       globalEnabled: true,
       enableMixedRulesets: false,
       disabledList: [],
-    }, function(item) {
+    }, function (item) {
       httpNowhereOn = item.httpNowhere;
       showCounter = item.showCounter;
       isExtensionEnabled = item.globalEnabled;
@@ -70,7 +70,7 @@ let upgradeToSecureAvailable;
 
 function getUpgradeToSecureAvailable() {
   if (typeof browser !== 'undefined') {
-    return browser.runtime.getBrowserInfo().then(function(info) {
+    return browser.runtime.getBrowserInfo().then(function (info) {
       let version = info.version.match(/^(\d+)/)[1];
       if (info.name == "Firefox" && version >= 59) {
         upgradeToSecureAvailable = true;
@@ -86,7 +86,7 @@ function getUpgradeToSecureAvailable() {
   }
 }
 
-chrome.storage.onChanged.addListener(async function(changes, areaName) {
+chrome.storage.onChanged.addListener(async function (changes, areaName) {
   if (areaName === 'sync' || areaName === 'local') {
     if ('httpNowhere' in changes) {
       httpNowhereOn = changes.httpNowhere.newValue;
@@ -112,16 +112,16 @@ chrome.storage.onChanged.addListener(async function(changes, areaName) {
 });
 
 if (chrome.tabs) {
-  chrome.tabs.onActivated.addListener(function() {
+  chrome.tabs.onActivated.addListener(function () {
     updateState();
   });
 }
 if (chrome.windows) {
-  chrome.windows.onFocusChanged.addListener(function() {
+  chrome.windows.onFocusChanged.addListener(function () {
     updateState();
   });
 }
-chrome.webNavigation.onCompleted.addListener(function() {
+chrome.webNavigation.onCompleted.addListener(function () {
   updateState();
 });
 
@@ -141,7 +141,7 @@ var switchPlannerInfo = {};
  * disabled: extension is disabled from the popup menu.
  */
 
-function updateState () {
+function updateState() {
   if (!chrome.tabs) return;
 
   let iconState = 'active';
@@ -156,7 +156,7 @@ function updateState () {
     title: 'HTTPS Everywhere' + ((iconState === 'active') ? '' : ' (' + iconState + ')')
   });
 
-  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     if (!tabs || tabs.length === 0) {
       return;
     }
@@ -217,14 +217,14 @@ function AppliedRulesets() {
 
   let that = this;
   if (chrome.tabs) {
-    chrome.tabs.onRemoved.addListener(function(tabId) {
+    chrome.tabs.onRemoved.addListener(function (tabId) {
       that.removeTab(tabId);
     });
   }
 }
 
 AppliedRulesets.prototype = {
-  addRulesetToTab: function(tabId, type, ruleset) {
+  addRulesetToTab: function (tabId, type, ruleset) {
     if (!this.active_tab_main_frames.has(tabId)) {
       this.active_tab_main_frames.set(tabId, false);
     }
@@ -259,7 +259,7 @@ AppliedRulesets.prototype = {
     }
   },
 
-  getRulesets: function(tabId) {
+  getRulesets: function (tabId) {
     if (this.active_tab_rules.has(tabId)) {
       return this.active_tab_rules.get(tabId);
     } else {
@@ -267,7 +267,7 @@ AppliedRulesets.prototype = {
     }
   },
 
-  removeTab: function(tabId) {
+  removeTab: function (tabId) {
     this.active_tab_rules.delete(tabId);
     this.active_tab_main_frames.delete(tabId);
   },
@@ -553,8 +553,8 @@ function sortSwitchPlanner(tab_id, rewritten) {
     var score = activeCount * 100 + passiveCount;
     asset_host_list.push([score, activeCount, passiveCount, asset_host]);
   }
-  asset_host_list.sort(function(a,b) {
-    return a[0]-b[0];
+  asset_host_list.sort(function (a,b) {
+    return a[0] - b[0];
   });
   return asset_host_list;
 }
@@ -617,8 +617,8 @@ function onBeforeRedirect(details) {
     let count = redirectCounter.get(details.requestId);
     if (count) {
       redirectCounter.set(details.requestId, count + 1);
-      util.log(util.DBUG, "Got redirect id "+details.requestId+
-                ": "+count);
+      util.log(util.DBUG, "Got redirect id " + details.requestId +
+                ": " + count);
     } else {
       redirectCounter.set(details.requestId, 1);
     }
@@ -803,10 +803,10 @@ function enableSwitchPlannerFor(tabId) {
 // Listen for connection from the DevTools panel so we can set up communication.
 chrome.runtime.onConnect.addListener(function (port) {
   if (port.name == "devtools-page") {
-    chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+    chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       var tabId = message.tabId;
 
-      var disableOnCloseCallback = function() {
+      var disableOnCloseCallback = function () {
         util.log(util.DBUG, "Devtools window for tab " + tabId + " closed, clearing data.");
         disableSwitchPlannerFor(tabId);
       };
@@ -836,7 +836,7 @@ chrome.runtime.onConnect.addListener(function (port) {
 
 // This is necessary for communication with the popup in Firefox Private
 // Browsing Mode, see https://bugzilla.mozilla.org/show_bug.cgi?id=1329304
-chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
   function get_update_channels_generic(update_channels) {
     let last_updated_promises = [];
@@ -1050,8 +1050,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       return true;
     },
     is_firefox: () => {
-      if (typeof(browser) != "undefined") {
-        browser.runtime.getBrowserInfo().then(function(info) {
+      if (typeof (browser) != "undefined") {
+        browser.runtime.getBrowserInfo().then(function (info) {
           if (info.name == "Firefox") {
             sendResponse(true);
           } else {

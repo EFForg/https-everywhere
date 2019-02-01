@@ -31,7 +31,7 @@ function displayURL() {
   const originURLLink = document.getElementById('originURL');
   originURLLink.innerText = originURL;
 
-  originURLLink.addEventListener("click", function() {
+  originURLLink.addEventListener("click", function () {
     if (confirm(chrome.i18n.getMessage("chrome_disable_on_this_site") + '?')) {
       const url = new URL(originURL);
       sendMessage("disable_on_site", url.host, () => {
