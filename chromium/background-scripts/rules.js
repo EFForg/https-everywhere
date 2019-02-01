@@ -498,7 +498,7 @@ RuleSets.prototype = {
 
     // Read user prefs
     if (rule_set.name in this.ruleActiveStates) {
-      rule_set.active = (this.ruleActiveStates[rule_set.name] == "true");
+      rule_set.active = this.ruleActiveStates[rule_set.name] == "true";
     }
 
     var rules = ruletag.getElementsByTagName("rule");
@@ -552,9 +552,9 @@ RuleSets.prototype = {
 
     // Let's begin search
     // Copy the host targets so we don't modify them.
-    let results = (this.targets.has(host) ?
+    let results = this.targets.has(host) ?
       new Set([...this.targets.get(host)]) :
-      new Set());
+      new Set();
 
     // Ensure host is well-formed (RFC 1035)
     if (host.length <= 0 || host.length > 255 || host.indexOf("..") != -1) {
@@ -568,9 +568,9 @@ RuleSets.prototype = {
       let tmp = segmented[i];
       segmented[i] = "*";
 
-      results = (this.targets.has(segmented.join(".")) ?
+      results = this.targets.has(segmented.join(".")) ?
         new Set([...results, ...this.targets.get(segmented.join("."))]) :
-        results);
+        results;
 
       segmented[i] = tmp;
     }
@@ -580,9 +580,9 @@ RuleSets.prototype = {
     for (let i = 2; i <= segmented.length - 2; i++) {
       let t = "*." + segmented.slice(i, segmented.length).join(".");
 
-      results = (this.targets.has(t) ?
+      results = this.targets.has(t) ?
         new Set([...results, ...this.targets.get(t)]) :
-        results);
+        results;
     }
 
     // Clean the results list, which may contain duplicates or undefined entries

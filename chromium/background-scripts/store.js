@@ -63,7 +63,7 @@ async function performMigrations() {
           if (rules.RuleSets().USER_RULE_KEY === key) {
             await set_promise(rules.RuleSets().USER_RULE_KEY, JSON.parse(ls[key]));
           } else {
-            ruleActiveStates[key] = (ls[key] === "true");
+            ruleActiveStates[key] = ls[key] === "true";
           }
         }
       }

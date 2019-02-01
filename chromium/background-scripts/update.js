@@ -88,7 +88,7 @@ async function checkForNewRulesets(update_channel) {
   if (timestamp_result.status == 200) {
     let rulesets_timestamp = Number(await timestamp_result.text());
 
-    if ((await store.local.get_promise('rulesets-timestamp: ' + update_channel.name, 0)) < rulesets_timestamp) {
+    if (await store.local.get_promise('rulesets-timestamp: ' + update_channel.name, 0) < rulesets_timestamp) {
       return rulesets_timestamp;
     }
   }
@@ -193,7 +193,7 @@ async function applyStoredRulesets(rulesets_obj) {
   }
 
   function isNotUndefined(subject) {
-    return (typeof subject != 'undefined');
+    return typeof subject != 'undefined';
   }
 
   const channel_results = (await Promise.all(rulesets_promises)).filter(isNotUndefined);

@@ -21,7 +21,7 @@ let valueHasChanged = false;
 sendMessage("get_option", { debugging_rulesets: "" }, item => {
   cm.setValue(item.debugging_rulesets);
   cm.on("change", cm => {
-    if (!(valueHasChanged)) {
+    if (!valueHasChanged) {
       valueHasChanged = true;
       document.title = unsavedTitle;
       cm.setOption("theme", "default main unsaved");

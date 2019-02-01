@@ -37,7 +37,7 @@ Incognito.prototype = {
   // If a window is destroyed, and an incognito session existed, see if it still does.
   detect_incognito_destruction: async function () {
     if (state.incognito_session_exists) {
-      if (!(await any_incognito_windows())) {
+      if (!await any_incognito_windows()) {
         state.incognito_session_exists = false;
         this.onIncognitoDestruction();
       }

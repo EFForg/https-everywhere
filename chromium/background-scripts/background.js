@@ -153,7 +153,7 @@ function updateState() {
   }
 
   chrome.browserAction.setTitle({
-    title: 'HTTPS Everywhere' + ((iconState === 'active') ? '' : ' (' + iconState + ')')
+    title: 'HTTPS Everywhere' + (iconState === 'active' ? '' : ' (' + iconState + ')')
   });
 
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -415,7 +415,7 @@ function onBeforeRequest(details) {
   if (upgradeToSecureAvailable && newuristr) {
     // check rewritten URIs against the trivially upgraded URI
     const trivialUpgradeUri = uri.href.replace(/^http:/, "https:");
-    upgradeToSecure = (newuristr == trivialUpgradeUri);
+    upgradeToSecure = newuristr == trivialUpgradeUri;
   }
 
   // re-insert userpass info which was stripped temporarily
@@ -986,7 +986,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     delete_update_channel: () => {
       store.get({update_channels: []}, item => {
         store.set({update_channels: item.update_channels.filter(update_channel => {
-          return (update_channel.name != message.object);
+          return update_channel.name != message.object;
         })}, () => {
           store.local.remove([
             'rulesets-timestamp: ' + message.object,
@@ -1050,7 +1050,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       return true;
     },
     is_firefox: () => {
-      if (typeof (browser) != "undefined") {
+      if (typeof browser != "undefined") {
         browser.runtime.getBrowserInfo().then(function (info) {
           if (info.name == "Firefox") {
             sendResponse(true);
