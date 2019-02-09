@@ -39,7 +39,7 @@ let parseString = util.promisify(xml2js.parseString);
 
 const rulesDir = 'src/chrome/content/rules';
 
-const isTrivial = (securecookie) => {
+const isTrivial = securecookie => {
   return securecookie.host === '.+' && securecookie.name === '.+';
 };
 
@@ -51,7 +51,7 @@ const isTrivial = (securecookie) => {
       return filenames.filter(filename => filename.endsWith('.xml'));
     })
     .then(filenames => {
-      readFilePromises = filenames.map(async (filename) => {
+      readFilePromises = filenames.map(async filename => {
         let content = null;
 
         return readFile(path.join(rulesDir, filename), 'utf8')
@@ -61,47 +61,83 @@ const isTrivial = (securecookie) => {
           })
           .then(ruleset => ruleset.ruleset)
           .then(ruleset => {
-            let rules = ruleset.rule.map(rule => rule.$);
             let targets = ruleset.target.map(target => target.$.host);
-            let securecookies = ruleset.securecookie ? ruleset.securecookie.map(sc => sc.$) : null;
+            let securecookies = ruleset.securecookie
+              ? ruleset.securecookie.map(sc => sc.$)
+              : [];
 
-            if (!(rules && rules.length === 1)) {
+            // make sure there is at least one non-trivial securecookie
+            if (!securecookies.length || securecookies.some(isTrivial)) {
               return;
             }
 
-            if (securecookies && securecookies.length === 1 && !isTrivial(securecookies[0])) {
-              let securecookie = securecookies[0];
-              if (!securecookie.host.endsWith('$')) {
+            for (let securecookie of securecookies) {
+              if (!securecookie.name === '.+') {
                 return;
               }
 
-              if (!securecookie.host.startsWith('^.+') &&
-                  !securecookie.host.startsWith('^.*') &&
-                  !securecookie.host.startsWith('.+') &&
-                  !securecookie.host.startsWith('.*') &&
-                  !securecookie.host.startsWith('^(?:.*\\.)?') &&
-                  !securecookie.host.startsWith('^(?:.+\\.)?')) {
+              if (
+                !securecookie.host.startsWith('^.+') &&
+                !securecookie.host.startsWith('^.*') &&
+                !securecookie.host.startsWith('.+') &&
+                !securecookie.host.startsWith('.*') &&
+                !securecookie.host.startsWith('(?:.*\\.)?') &&
+                !securecookie.host.startsWith('(?:.+\\.)?') &&
+                !securecookie.host.startsWith('^(?:.*\\.)?') &&
+                !securecookie.host.startsWith('^(?:.+\\.)?')
+              ) {
                 return;
               }
-
-              let hostRegex = new RegExp(securecookie.host);
-              for (let target of targets) {
-                if (target.includes('.*')) {
-                  return;
-                }
-
-                target = target.replace('*.', 'www.');
-                if (!hostRegex.test(target)) {
-                  return;
-                }
-              }
-
-              let scReSrc = `\n([\t ]*)<securecookie\\s*host=\\s*"([^"]+)"(\\s*)name=\\s*"([^"]+)"\\s*?/>[\t ]*\n`;
-              let scRe = new RegExp(scReSrc);
-              let source = content.replace(scRe, '\n$1<securecookie host=".+"$3name="$4" />\n');
-
-              fs.writeFileSync(path.join(rulesDir, filename), source, 'utf8');
             }
+
+            // make sure each domains and its subdomains are covered by at least
+            // one securecookie rule
+            let securedDomains = new Map();
+            for (let target of targets) {
+              // we cannot handle the right-wildcards based on the argument above
+              if (target.includes('.*')) {
+                return;
+              }
+              if (target.includes('*.')) {
+                target = target.replace('*.', 'www');
+              }
+              securedDomains.set(target, 0);
+              securedDomains.set('.' + target, 0);
+            }
+
+            for (let securecookie of securecookies) {
+              let pattern = new RegExp(securecookie.host);
+              securedDomains.forEach((val, key, map) => {
+                if (pattern.test(key)) {
+                  map.set(key, val + 1);
+                }
+              });
+            }
+
+            let domains = [...securedDomains.keys()];
+            if (!domains.every(key => securedDomains.get(key) > 0)) {
+              return;
+            }
+
+            // remove the securecookie tag except the last one
+            // replace the last securecookie tag with a trivial one
+            let scReSrc = `\n([\t ]*)<securecookie\\s*host=\\s*"([^"]+)"(\\s*)name=\\s*"([^"]+)"\\s*?/>[\t ]*\n`;
+            let scRe = new RegExp(scReSrc);
+
+            let source = content;
+            let occurrence = securecookies.length;
+            while (occurrence > 0) {
+              if (occurrence === 1) {
+                source = source.replace(
+                  scRe,
+                  '\n$1<securecookie host=".+"$3name="$4" />\n'
+                );
+              } else {
+                source = source.replace(scRe, '');
+              }
+              occurrence--;
+            }
+            fs.writeFileSync(path.join(rulesDir, filename), source, 'utf8');
           });
       });
     })
@@ -109,8 +145,7 @@ const isTrivial = (securecookie) => {
       console.log(error);
     });
 
-  await Promise.all(readFilePromises)
-    .catch(error => {
-      console.log(error);
-    });
+  await Promise.all(readFilePromises).catch(error => {
+    console.log(error);
+  });
 })();
