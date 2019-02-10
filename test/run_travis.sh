@@ -80,7 +80,7 @@ elif [ "$TEST" == "validations" ] || [ "$TEST" == "fetch" ] || [ "$TEST" == "pre
     if [ "$TEST" == "fetch" ]; then
       echo >&2 "Testing test URLs in all changed rulesets."
       # NET_ADMIN capability is required here for miredo to create a network tunnel
-      docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" --sysctl net.ipv6.conf.all.disable_ipv6=0 --cap-add=NET_ADMIN --device=/dev/net/tun httpse bash -c "service miredo start && service tor start && test/fetch.sh"
+      docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" --sysctl net.ipv6.conf.all.disable_ipv6=0 --cap-add MKNOD httpse bash -c "mkdir -p /dev/net && mknod /dev/net/tun c 10 200 && service miredo start && service tor start && test/fetch.sh"
     fi
 
     if [ "$TEST" == "preloaded" ]; then
