@@ -95,7 +95,7 @@ let isTrivial = securecookie => {
       // see https://github.com/EFForg/https-everywhere/blob/
       // 260cd8d402fb8069c55cda311e1be7a60db7339d/chromium/background-scripts/background.js#L595
       if (target.includes("*.")) {
-        target = target.replace("*.", "www");
+        target = target.replace("*.", "www.");
       }
       securedDomains.set(target, false);
       securedDomains.set("." + target, false);
@@ -110,7 +110,7 @@ let isTrivial = securecookie => {
       });
     }
 
-    // If each value of ${securedDomains} is true, return.
+    // If any value of ${securedDomains} is false, return.
     if (![...securedDomains.values()].every(secured => secured)) {
       return;
     }
