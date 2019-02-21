@@ -123,8 +123,20 @@ let isTrivial = securecookie => {
         occurrence == 1 ? trivialSecureCookieLiteral : ""
       );
     }
-    fs.writeFileSync(path.join(rulesDir, filename), content, "utf8");
+
+    return new Promise((resolve, reject) => {
+      fs.writeFile(path.join(rulesDir, filename), content, "utf8", (err) => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      });
+    })
   });
 
-  await Promise.all(filePromises).catch(err => console.log(err));
+
+  // use for-loop to await too many file opened error
+  for (let fp of filePromises) {
+    await fp.catch(error => console.log(error));
+  }
 })();
