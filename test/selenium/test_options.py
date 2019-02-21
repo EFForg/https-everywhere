@@ -11,8 +11,8 @@ class OptionsTest(ExtensionTestCase):
         self.assertEqual(self.driver.current_url, self.shim.options_url)
 
     def test_show_counter(self):
-        if self.shim.browser_type == 'chrome':
-            raise unittest.SkipTest('broken on chrome')
+        # if self.shim.browser_type == 'chrome':
+        #     raise unittest.SkipTest('broken on chrome')
         selector = '#showCounter'
         self.load_options()
         sleep(3)
@@ -22,7 +22,6 @@ class OptionsTest(ExtensionTestCase):
         el.click()
 
         self.driver.refresh()
-        sleep(3)
         el = self.query_selector(selector)
         self.assertFalse(el.is_selected())
         el.click()
