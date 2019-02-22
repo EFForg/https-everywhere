@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   sendMessage("get_option", defaultOptions, item => {
     // Sometimes item does not define on runtime in Chrome
-    if( !item ){
+    if(!item) {
       item = defaultOptions;
     }
     showCounter.checked = item.showCounter;
