@@ -372,13 +372,6 @@ We ask that if you want to delete your GitHub account, you either close your HTT
 * * *
 
 # Contributing Translations
-
-HTTPS Everywhere translations are handled through Transifex.  The easiest way to help with translations is to [create a Transifex account](https://www.transifex.com/signup/) if you don't already have one.  Then log into your account and click "Explore", then search for "Tor Project", and click on The Tor Project.  Then choose the language you plan to translate into, click on the name of that language, and then click "Join team" and "Go" to accept joining the translation team for your language.
-
-Then, in the Tor Project resources list, find and click the link for the file
-
-    HTTPS Everywhere - https-everywhere.dtd
-
-and choose "Translate now" to enter the translation interface.
+We are reviewing our process around translations and currently discussing ways to improve. Translations are still processed under the same entity and those who have an account already, do not need to take action at this time. Thank you for your contributions.
 
 * * *

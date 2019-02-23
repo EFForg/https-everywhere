@@ -20,13 +20,15 @@ describe('update.js', function() {
   describe('applyStoredRulesets', function() {
     beforeEach(() => {
       chrome.flush();
-      if(util.loadExtensionFile.restore){ util.loadExtensionFile.restore(); }
+      if(util.loadExtensionFile.restore) {
+        util.loadExtensionFile.restore(); 
+      }
     });
 
     it('applies compressed rulesets from chrome.storage', function(done) {
       let apply_promises = [];
 
-      for(let update_channel of update_channels){
+      for(let update_channel of update_channels) {
         const key = 'rulesets: ' + update_channel.name;
         chrome.storage.local.get.withArgs(key).yields({[key]: example_rulesets_gz});
       }
@@ -38,7 +40,7 @@ describe('update.js', function() {
           resolve();
         }));
 
-        if(apply_promises.length == update_channels.length){
+        if(apply_promises.length == update_channels.length) {
           Promise.all(apply_promises).then(() => done());
         }
       }});
@@ -46,7 +48,7 @@ describe('update.js', function() {
     });
 
     it('applies rulesets from local extension file', function(done) {
-      for(let update_channel of update_channels){
+      for(let update_channel of update_channels) {
         const key = 'rulesets: ' + update_channel.name;
         chrome.storage.local.get.withArgs(key).yields({});
       }

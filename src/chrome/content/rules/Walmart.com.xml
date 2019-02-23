@@ -1,16 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://accionistas.walmart.com/ => https://accionistas.walmart.com/: (51, "SSL: no alternative certificate subject name matches target host name 'accionistas.walmart.com'")
-Fetch error: http://corporativo.walmart.com/ => https://corporativo.walmart.com/: (51, "SSL: no alternative certificate subject name matches target host name 'corporativo.walmart.com'")
-Non-2xx HTTP code: http://es.foundation.walmart.com/ (200) => https://es.foundation.walmart.com/ (404)
-Fetch error: http://fundacion.walmart.com/ => https://fundacion.walmart.com/: (51, "SSL: no alternative certificate subject name matches target host name 'fundacion.walmart.com'")
-Non-2xx HTTP code: http://es.news.walmart.com/ (200) => https://es.news.walmart.com/ (404)
-Fetch error: http://noticias.walmart.com/ => https://noticias.walmart.com/: (6, 'Could not resolve host: noticias.walmart.com')
-Fetch error: http://beacon.stage.walmart.com/ => https://beacon.stage.walmart.com/: (28, 'Connection timed out after 20000 milliseconds')
-Fetch error: http://stock.walmart.com/ => https://stock.walmart.com/: (51, "SSL: no alternative certificate subject name matches target host name 'stock.walmart.com'")
-Fetch error: http://suppliercenter.walmart.com/ => https://suppliercenter.walmart.com/: (28, 'Operation timed out after 30002 milliseconds with 0 bytes received')
-
 	For rules causing false/broken MCB, see Walmart.com-falsemixed.xml.
 
 
@@ -32,10 +20,13 @@ Fetch error: http://suppliercenter.walmart.com/ => https://suppliercenter.walmar
 
 	Nonfunctional hosts in *walmart.com:
 
+		- c.affil ²
 		- blog ¹
 		- careers ²
+		- es.foundation ²
 		- learn *
 		- mobile ³
+		- beacon.stage (timeout)
 
 	¹ Mismatched, CN: corporate.walmart.com
 	² 404
@@ -53,7 +44,7 @@ Fetch error: http://suppliercenter.walmart.com/ => https://suppliercenter.walmar
 		- beacon.beta ²
 		- beacon.classrooms ²
 		- help ³
-		- localad ⁴
+		- localad (cert-chain)
 		- p13n-assets ⁴
 		- beacon.stage ²
 		- beacon.savingscatcher ²
@@ -94,7 +85,6 @@ Fetch error: http://suppliercenter.walmart.com/ => https://suppliercenter.walmar
 		- help.walmart.com
 		- news.walmart.com
 		- es.news.walmart.com
-		- noticias.walmart.com
 		- beacon.savingscatcher.walmart.com
 		- beacon.stage.walmart.com
 		- stock.walmart.com
@@ -123,14 +113,13 @@ Fetch error: http://suppliercenter.walmart.com/ => https://suppliercenter.walmar
 	² Unsecurable <= 500
 
 -->
-<ruleset name="Walmart.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Walmart.com (partial)">
 
-	<!--	Direct rewrites:
-				-->
+	<target host="walmart.com" />
+	<target host="www.walmart.com" />
 	<target host="beacon.walmart.com" />
 	<target host="accionistas.walmart.com" />
 	<target host="affil.walmart.com" />
-	<target host="c.affil.walmart.com" />
 	<target host="beacon.affil.walmart.com" />
 	<target host="affiliates.walmart.com" />
 	<target host="beacon.beta.walmart.com" />
@@ -144,112 +133,18 @@ Fetch error: http://suppliercenter.walmart.com/ => https://suppliercenter.walmar
 	<target host="corporativo.walmart.com" />
 	<target host="fonts.walmart.com" />
 	<target host="foundation.walmart.com" />
-	<target host="es.foundation.walmart.com" />
 	<target host="fundacion.walmart.com" />
 	<target host="help.walmart.com" />
 	<target host="news.walmart.com" />
 	<target host="es.news.walmart.com" />
-	<target host="noticias.walmart.com" />
 	<target host="partner.walmart.com" />
 	<target host="savingscatcher.walmart.com" />
 	<target host="beacon.savingscatcher.walmart.com" />
-	<target host="beacon.stage.walmart.com" />
 	<target host="stock.walmart.com" />
 	<target host="es.stock.walmart.com" />
 	<target host="suppliercenter.walmart.com" />
-	<target host="www.walmart.com" />
 
-	<!--	Complications:
-				-->
-	<target host="walmart.com" />
-	<!-- <target host="localad.walmart.com" /> -->
-
-		<!-- 	Redirect to http:
-						-->
-		<!--exclusion pattern="^http://www\.walmart\.com/+($|\?)" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://www\.walmart\.com/(?!/*(?:client_side_redirect\.gsp|(?:account|cservice)(?:$|[?/])|favicon\.ico|i/|logout\.do))" />
-
-			<!--	+ve:
-					-->
-			<test url="http://www.walmart.com/Value-of-the-Day" />
-			<test url="http://www.walmart.com/cart" />
-			<test url="http://www.walmart.com/instantcredit" />
-			<test url="http://www.walmart.com/store" />
-			<test url="http://www.walmart.com/store" />
-			<test url="http://www.walmart.com/store/finder" />
-			<test url="http://www.walmart.com/store/weekly-ads" />
-			<test url="http://www.walmart.com/weddingstationery" />
-			<test url="http://www.walmart.com/wishlist" />
-
-			<!--	-ve:
-					-->
-			<test url="http://www.walmart.com/account/trackorder" />
-			<test url="http://www.walmart.com/cservice/li_trackorder.gsp" />
-			<test url="http://www.walmart.com/favicon.ico" />
-			<test url="http://www.walmart.com/logout.do" />
-
-		<!--	Avoid broken MCB:
-						-->
-		<exclusion pattern="^http://help\.walmart\.com/(?!/*(?:euf/(?:assets|rightnow)/|favicon\.ico))" />
-
-			<!--	+ve:
-					-->
-			<test url="http://help.walmart.com/app/account/profile" />
-			<test url="http://help.walmart.com/app/answers/detail/a_id/1" />
-			<test url="http://help.walmart.com/app/answers/list" />
-			<test url="http://help.walmart.com/app/ask" />
-
-			<!--	-ve:
-					-->
-			<test url="http://help.walmart.com/euf/assets/images/BTN_search_75x30.png" />
-			<test url="http://help.walmart.com/favicon.ico" />
-
-		<!--
-		<exclusion pattern="^http://localad\.walmart\.com/+(?!$|\?)" />
-		-->
-
-			<!--	+ve:
-					-->
-		<!--
-			<test url="http://localad.walmart.com/f" />
-			<test url="http://localad.walmart.com/o" />
-			<test url="http://localad.walmart.com//o" />
-			<test url="http://localad.walmart.com/b" />
-			<test url="http://localad.walmart.com/a" />
-		-->
-
-			<!--	-ve:
-					-->
-			<!-- <test url="http://localad.walmart.com//" /> -->
-
-		<test url="http://beacon.walmart.com/tap.gif?tap=" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^(accionistas|blog|corporate|cms\.corporate|es\.corporate|corporativo|foundation|es\.foundation|fundacion|news|es\.news|noticias|stock|es\.stock)\.walmart\.com$" name="^(JSESSIONID|walmart_locale)$" /-->
-	<!--securecookie host="^affiliates\.walmart\.com$" name="^(CUSTOM_SESSION|LONG_LIVED_SESSION)$" /-->
-	<!--securecookie host="^beacon(\.(beta|classrooms|affil|savingscatcher|stage))?\.walmart\.com$" name="^(_tap-aiq|_tap_path|b\d+msc|bsc|btc)$" /-->
-	<!--securecookie host="^help\.walmart\.com$" name="^cp_session$" /-->
-	<!--securecookie host="^savingscatcher\.walmart\.com$" name="^(?:akaau_P1|iron|returnTo)$" /-->
-	<!--securecookie host="^suppliercenter\.walmart\.com$" name="^crumb$" /-->
-	<!--securecookie host="^weeklyad\.walmart\.com$" name="^(SC_Persistent|SC_Session)$" /-->
-	<!--securecookie host="^wm13\.walmart\.com$" name="^(EkAnalytics|EktGUID|ecm)$" /-->
-	<!--securecookie host="^www\.walmart\.com$" name="^akaau_P0$" /-->
-
-	<securecookie host="^(?:accionistas|beacon\.affil|affiliates|beacon\.(?:beta|classrooms)|corporate|(?:cms|es)\.corporate|corporativo|foundation|es\.foundation|fundacion|news|es\.news|noticias|savingscatcher|beacon\.s(?:avingscatcher|tage)|stock|es\.stock|suppliercenter)\.walmart\.com$" name=".+" />
-
-
-	<rule from="^http://walmart\.com/"
-		to="https://www.walmart.com/" />
-
-	<!--	Redirect keeps args:
-					-->
-	<!-- <rule from="^http://localad\.walmart\.com/+"
-		to="https://weeklyad.walmart.com/walmart/" /> -->
+	<securecookie host=".+" name=".+" />
 
 	<rule from="^http:"
 		to="https:" />
