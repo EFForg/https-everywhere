@@ -67,7 +67,7 @@ elif type brew >/dev/null 2>&1; then
 # distros that use rpm (Fedora, Suse, CentOS) installation
 elif type dnf >/dev/null 2>&1; then
   $SUDO_SHIM dnf install -y firefox gcc git libcurl-devel libxml2-devel \
-    libxslt-devel python-devel redhat-rpm-config xorg-x11-server-Xvfb which \
+    libxslt-devel python3-devel redhat-rpm-config xorg-x11-server-Xvfb which \
     findutils procps openssl openssl-devel chromium GConf2
   if ! type chromedriver >/dev/null; then
     curl -O "https://chromedriver.storage.googleapis.com/2.23/chromedriver_linux$ARCH.zip"
