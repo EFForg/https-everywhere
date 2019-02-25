@@ -1,3 +1,11 @@
+# @Author: S. Sharma <silentcat>
+# @Date:   2019-02-25T09:44:43-06:00
+# @Email:  silentcat@protonmail.com
+# @Last modified by:   silentcat
+# @Last modified time: 2019-02-25T10:30:46-06:00
+
+
+
 #!/bin/bash
 # Install packages that are necessary and/or useful to build and debug
 # HTTPS Everywhere
@@ -59,7 +67,8 @@ if type apt-get>/dev/null 2>&1;  then
 # macOS installation
 elif type brew >/dev/null 2>&1; then
   brew list python &>/dev/null || brew install python
-  brew install libxml2 gnu-sed chromedriver
+  brew cask install chromedriver
+  brew install libxml2 gnu-sed
   if ! echo $PATH | grep -ql /usr/local/bin ; then
     echo '/usr/local/bin not found in $PATH, please add it.'
   fi
