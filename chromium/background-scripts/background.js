@@ -643,7 +643,6 @@ function onCompleted(details) {
  * @param details details for the chrome.webRequest (see chrome doc)
  */
 function onErrorOccurred(details) {
-  console.log(details.error);
   if (httpNowhereOn &&
     details.type == "main_frame" &&
     simpleHTTPNowhereRedirect.get(details.requestId) &&
