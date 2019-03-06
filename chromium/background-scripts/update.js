@@ -2,7 +2,7 @@
 
 "use strict";
 
-let combined_update_channels;
+let combined_update_channels, extension_version;
 const { update_channels } = require('./update_channels');
 
 // Determine if we're in the tests.  If so, define some necessary components.
@@ -14,9 +14,14 @@ if (typeof window === "undefined") {
     pako = require('../external/pako-1.0.5/pako_inflate.min.js'),
     { TextDecoder } = require('text-encoding'),
     chrome = require("sinon-chrome"),
-    window = { atob, btoa, chrome, crypto, pako, TextDecoder };
+    window = { atob, btoa, chrome, crypto, pako, TextDecoder },
+    fs = require('fs');
+
+  extension_version = JSON.parse(fs.readFileSync('./manifest.json')).version;
 
   combined_update_channels = update_channels;
+} else {
+  extension_version = chrome.runtime.getManifest().version;
 }
 
 (function(exports) {
@@ -28,6 +33,9 @@ let store,
 
 // how often we should check for new rulesets
 const periodicity = 86400;
+
+const extension_date = new Date(extension_version.split('.').slice(0,3).join('-'));
+const extension_timestamp = extension_date.getTime() / 1000;
 
 let imported_keys;
 
@@ -184,7 +192,7 @@ async function applyStoredRulesets(rulesets_obj) {
           const rulesets_string = new TextDecoder("utf-8").decode(rulesets_byte_array);
           const rulesets_json = JSON.parse(rulesets_string);
 
-          resolve({json: rulesets_json, scope: update_channel.scope});
+          resolve({json: rulesets_json, scope: update_channel.scope, replaces: update_channel.replaces_default_rulesets});
         } else {
           resolve();
         }
@@ -198,11 +206,15 @@ async function applyStoredRulesets(rulesets_obj) {
 
   const channel_results = (await Promise.all(rulesets_promises)).filter(isNotUndefined);
 
-  if(channel_results.length > 0) {
-    for(let channel_result of channel_results) {
-      rulesets_obj.addFromJson(channel_result.json.rulesets, channel_result.scope);
+  let replaces = false;
+  for(const channel_result of channel_results) {
+    if(channel_result.replaces === true) {
+      replaces = true;
     }
-  } else {
+    rulesets_obj.addFromJson(channel_result.json.rulesets, channel_result.scope);
+  }
+
+  if(!replaces) {
     rulesets_obj.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
   }
 }
@@ -218,6 +230,12 @@ async function performCheck() {
   for(let update_channel of combined_update_channels) {
     let new_rulesets_timestamp = await checkForNewRulesets(update_channel);
     if(new_rulesets_timestamp) {
+
+      if(update_channel.replaces_default_rulesets && extension_timestamp > new_rulesets_timestamp) {
+        util.log(util.NOTE, update_channel.name + ': A new ruleset bundle has been released, but it is older than the extension-bundled rulesets it replaces.  Skipping.');
+        continue;
+      }
+
       util.log(util.NOTE, update_channel.name + ': A new ruleset bundle has been released.  Downloading now.');
       let new_rulesets = await getNewRulesets(new_rulesets_timestamp, update_channel);
       try{
@@ -271,11 +289,32 @@ function destroyTimer() {
   }
 }
 
+function clear_replacement_update_channels() {
+  let keys = [];
+  for (const update_channel of combined_update_channels) {
+    if(update_channel.replaces_default_rulesets) {
+      util.log(util.NOTE, update_channel.name + ': You have a new version of the extension.  Clearing any stored rulesets, which replace the new extension-bundled ones.');
+      keys.push('rulesets-timestamp: ' + update_channel.name);
+      keys.push('rulesets-stored-timestamp: ' + update_channel.name);
+      keys.push('rulesets: ' + update_channel.name);
+    }
+  }
+
+  return new Promise(resolve => {
+    chrome.storage.local.remove(keys, resolve);
+  });
+}
+
 async function initialize(store_param, cb) {
   store = store_param;
   background_callback = cb;
 
   await loadUpdateChannelsKeys();
+
+  if (await store.local.get_promise('extensionTimestamp', 0) !== extension_timestamp) {
+    await clear_replacement_update_channels();
+    await store.local.set_promise('extensionTimestamp', extension_timestamp);
+  }
 
   if (await store.get_promise('autoUpdateRulesets', true)) {
     await createTimer();
