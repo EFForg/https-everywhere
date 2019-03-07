@@ -109,7 +109,7 @@ async function getRulesetTimestamps() {
   for(let update_channel of combined_update_channels) {
     timestamp_promises.push(new Promise(async resolve => {
       let timestamp = await store.local.get_promise('rulesets-stored-timestamp: ' + update_channel.name, 0);
-      resolve([update_channel.name, timestamp]);
+      resolve([update_channel, timestamp]);
     }));
   }
   let timestamps = await Promise.all(timestamp_promises);
