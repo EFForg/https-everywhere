@@ -198,18 +198,15 @@ document.addEventListener("DOMContentLoaded", function () {
   rulesets_versions.addSpan = function(update_channel_name, ruleset_version_string) {
     let timestamp_span = document.createElement("span");
     timestamp_span.className = "rulesets-version";
-    timestamp_span.innerText = chrome.i18n.getMessage("about_rulesets_version") + " " + update_channel_name + ": " + ruleset_version_string;
+    timestamp_span.innerText = `${chrome.i18n.getMessage("about_rulesets_version")} ${update_channel_name}: ${ruleset_version_string}`;
     this.appendChild(timestamp_span);
   }
 
   sendMessage("get_ruleset_timestamps", null, timestamps => {
-    let replace = timestamps.reduce((reduced, [update_channel, timestamp]) => {
-      if(update_channel.replaces_default_rulesets && timestamp > 0) {
-        return true;
-      }
-      return false;
-    }, false);
-    if(!replace) {
+    let replaces = timestamps.some(([update_channel, timestamp]) =>
+      update_channel.replaces_default_rulesets && timestamp > 0
+    );
+    if(!replaces) {
       rulesets_versions.addSpan("EFF (Full, Bundled)", the_manifest.version);
     }
     for(let [update_channel, timestamp] of timestamps) {
