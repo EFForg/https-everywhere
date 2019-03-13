@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * For future contributors, this script was written to trivialize a special
@@ -28,89 +28,115 @@
  * tailing $
  */
 
-let util = require('util');
-let path = require('path');
-let xml2js = require('xml2js');
+let util = require("util");
+let path = require("path");
+let xml2js = require("xml2js");
 
-let fs = require('graceful-fs');
+let fs = require("graceful-fs");
 let readdir = util.promisify(fs.readdir);
 let readFile = util.promisify(fs.readFile);
 let parseString = util.promisify(xml2js.parseString);
 
-const rulesDir = 'src/chrome/content/rules';
+let rulesDir = "src/chrome/content/rules";
 
-const isTrivial = (securecookie) => {
-  return securecookie.host === '.+' && securecookie.name === '.+';
+let trivialSecureCookieLiteral = `\n$1<securecookie host=".+"$3name=".+"/>\n`;
+let secureCookieRegExp = new RegExp(
+  `\n([\t ]*)<securecookie\\s*host=\\s*"([^"]+)"(\\s*)name=\\s*"([^"]+)"\\s*?/>[\t ]*\n`
+);
+
+let isTrivial = securecookie => {
+  return securecookie.host === ".+" && securecookie.name === ".+";
 };
 
 (async () => {
-  let readFilePromises = null;
+  let filenames = (await readdir(rulesDir)).filter(fn => fn.endsWith(".xml"));
+  let filePromises = filenames.map(async filename => {
+    let content = await readFile(path.join(rulesDir, filename), "utf8");
+    let { ruleset } = await parseString(content);
 
-  await readdir(rulesDir)
-    .then(filenames => {
-      return filenames.filter(filename => filename.endsWith('.xml'));
-    })
-    .then(filenames => {
-      readFilePromises = filenames.map(async (filename) => {
-        let content = null;
+    let targets = ruleset.target.map(target => target.$.host);
+    let securecookies = ruleset.securecookie
+      ? ruleset.securecookie.map(sc => sc.$)
+      : [];
 
-        return readFile(path.join(rulesDir, filename), 'utf8')
-          .then(body => {
-            content = body;
-            return parseString(content);
-          })
-          .then(ruleset => ruleset.ruleset)
-          .then(ruleset => {
-            let rules = ruleset.rule.map(rule => rule.$);
-            let targets = ruleset.target.map(target => target.$.host);
-            let securecookies = ruleset.securecookie ? ruleset.securecookie.map(sc => sc.$) : null;
+    // make sure there is at least one non-trivial securecookie
+    if (!securecookies.length || securecookies.some(isTrivial)) {
+      return;
+    }
 
-            if (!(rules && rules.length === 1)) {
-              return;
-            }
+    for (let securecookie of securecookies) {
+      if (!securecookie.name === ".+") {
+        return;
+      }
 
-            if (securecookies && securecookies.length === 1 && !isTrivial(securecookies[0])) {
-              let securecookie = securecookies[0];
-              if (!securecookie.host.endsWith('$')) {
-                return;
-              }
+      if (
+        !securecookie.host.startsWith("^.+") &&
+        !securecookie.host.startsWith("^.*") &&
+        !securecookie.host.startsWith(".+") &&
+        !securecookie.host.startsWith(".*") &&
+        !securecookie.host.startsWith("(?:.*\\.)?") &&
+        !securecookie.host.startsWith("(?:.+\\.)?") &&
+        !securecookie.host.startsWith("^(?:.*\\.)?") &&
+        !securecookie.host.startsWith("^(?:.+\\.)?")
+      ) {
+        return;
+      }
+    }
 
-              if (!securecookie.host.startsWith('^.+') &&
-                  !securecookie.host.startsWith('^.*') &&
-                  !securecookie.host.startsWith('.+') &&
-                  !securecookie.host.startsWith('.*') &&
-                  !securecookie.host.startsWith('^(?:.*\\.)?') &&
-                  !securecookie.host.startsWith('^(?:.+\\.)?')) {
-                return;
-              }
+    // make sure each domains and its subdomains are covered by at least
+    // one securecookie rule
+    let securedDomains = new Map();
+    for (let target of targets) {
+      // we cannot handle the right-wildcards based on the argument above
+      if (target.includes(".*")) {
+        return;
+      }
+      // replace left-wildcard with www is an implementation detail
+      // see https://github.com/EFForg/https-everywhere/blob/
+      // 260cd8d402fb8069c55cda311e1be7a60db7339d/chromium/background-scripts/background.js#L595
+      if (target.includes("*.")) {
+        target = target.replace("*.", "www.");
+      }
+      securedDomains.set(target, false);
+      securedDomains.set("." + target, false);
+    }
 
-              let hostRegex = new RegExp(securecookie.host);
-              for (let target of targets) {
-                if (target.includes('.*')) {
-                  return;
-                }
+    for (let securecookie of securecookies) {
+      let pattern = new RegExp(securecookie.host);
+      securedDomains.forEach((val, key, map) => {
+        if (pattern.test(key)) {
+          map.set(key, true);
+        }
+      });
+    }
 
-                target = target.replace('*.', 'www.');
-                if (!hostRegex.test(target)) {
-                  return;
-                }
-              }
+    // If any value of ${securedDomains} is false, return.
+    if (![...securedDomains.values()].every(secured => secured)) {
+      return;
+    }
 
-              let scReSrc = `\n([\t ]*)<securecookie\\s*host=\\s*"([^"]+)"(\\s*)name=\\s*"([^"]+)"\\s*?/>[\t ]*\n`;
-              let scRe = new RegExp(scReSrc);
-              let source = content.replace(scRe, '\n$1<securecookie host=".+"$3name="$4" />\n');
+    // remove the securecookie tag except the last one
+    // replace the last securecookie tag with a trivial one
+    for (let occurrence = securecookies.length; occurrence; --occurrence) {
+      content = content.replace(
+        secureCookieRegExp,
+        occurrence == 1 ? trivialSecureCookieLiteral : ""
+      );
+    }
 
-              fs.writeFileSync(path.join(rulesDir, filename), source, 'utf8');
-            }
-          });
+    return new Promise((resolve, reject) => {
+      fs.writeFile(path.join(rulesDir, filename), content, "utf8", (err) => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
       });
     })
-    .catch(error => {
-      console.log(error);
-    });
+  });
 
-  await Promise.all(readFilePromises)
-    .catch(error => {
-      console.log(error);
-    });
+
+  // use for-loop to await too many file opened error
+  for (let fp of filePromises) {
+    await fp.catch(error => console.log(error));
+  }
 })();

@@ -194,16 +194,27 @@ document.addEventListener("DOMContentLoaded", function () {
   version_info.innerText = the_manifest.version;
 
   let rulesets_versions = e('rulesets-versions');
+
+  rulesets_versions.addSpan = function(update_channel_name, ruleset_version_string) {
+    let timestamp_span = document.createElement("span");
+    timestamp_span.className = "rulesets-version";
+    timestamp_span.innerText = `${chrome.i18n.getMessage("about_rulesets_version")} ${update_channel_name}: ${ruleset_version_string}`;
+    this.appendChild(timestamp_span);
+  }
+
   sendMessage("get_ruleset_timestamps", null, timestamps => {
+    let replaces = timestamps.some(([update_channel, timestamp]) =>
+      update_channel.replaces_default_rulesets && timestamp > 0
+    );
+    if(!replaces) {
+      rulesets_versions.addSpan("EFF (Full, Bundled)", the_manifest.version);
+    }
     for(let [update_channel, timestamp] of timestamps) {
       if(timestamp > 0) {
         let ruleset_date = new Date(timestamp * 1000);
         let ruleset_version_string = ruleset_date.getUTCFullYear() + "." + (ruleset_date.getUTCMonth() + 1) + "." + ruleset_date.getUTCDate();
 
-        let timestamp_span = document.createElement("span");
-        timestamp_span.className = "rulesets-version";
-        timestamp_span.innerText = chrome.i18n.getMessage("about_rulesets_version") + " " + update_channel + ": " + ruleset_version_string;
-        rulesets_versions.appendChild(timestamp_span);
+        rulesets_versions.addSpan(update_channel.name, ruleset_version_string);
       }
     }
   });

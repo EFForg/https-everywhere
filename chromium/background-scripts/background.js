@@ -651,6 +651,7 @@ function onErrorOccurred(details) {
       details.error.indexOf("net::ERR_CERT_") == 0 ||
       details.error.indexOf("net::ERR_CONNECTION_") == 0 ||
       details.error.indexOf("net::ERR_ABORTED") == 0 ||
+      details.error.indexOf("net::ERR_SSL_PROTOCOL_ERROR") == 0 ||
       details.error.indexOf("NS_ERROR_CONNECTION_REFUSED") == 0 ||
       details.error.indexOf("NS_ERROR_NET_TIMEOUT") == 0 ||
       details.error.indexOf("NS_ERROR_NET_ON_TLS_HANDSHAKE_ENDED") == 0 ||
@@ -660,6 +661,7 @@ function onErrorOccurred(details) {
       details.error.indexOf("Unable to communicate securely with peer: requested domain name does not match the server’s certificate.") == 0 ||
       details.error.indexOf("Peer’s Certificate issuer is not recognized.") == 0 ||
       details.error.indexOf("Peer’s Certificate has been revoked.") == 0 ||
+      details.error.indexOf("Peer reports it experienced an internal error.") == 0 ||
       details.error.indexOf("The server uses key pinning (HPKP) but no trusted certificate chain could be constructed that matches the pinset. Key pinning violations cannot be overridden.") == 0 ||
       details.error.indexOf("SSL received a weak ephemeral Diffie-Hellman key in Server Key Exchange handshake message.") == 0 ||
       details.error.indexOf("The certificate was signed using a signature algorithm that is disabled because it is not secure.") == 0 ||
@@ -689,10 +691,31 @@ function onErrorOccurred(details) {
  */
 function onHeadersReceived(details) {
   if (isExtensionEnabled && httpNowhereOn) {
-    // Do not upgrade the .onion requests in HTTP Nowhere Mode,
+    // Do not upgrade the .onion requests in EASE mode,
     // See https://github.com/EFForg/https-everywhere/pull/14600#discussion_r168072480
     const uri = new URL(details.url);
     if (uri.hostname.slice(-6) == '.onion') {
+      return {};
+    }
+
+    // Do not upgrade resources if the first-party domain disbled EASE mode
+    // This is needed for HTTPS sites serve mixed content and is broken
+    let firstPartyHost;
+    if (details.type == "main_frame") {
+      firstPartyHost = uri.host;
+    } else {
+      // In Firefox, documentUrl is preferable here, since it will always be the
+      // URL in the URL bar, but it was only introduced in FF 54.  We should get
+      // rid of `originUrl` at some point.
+      if ('documentUrl' in details) { // Firefox 54+
+        firstPartyHost = new URL(details.documentUrl).host;
+      } else if ('originUrl' in details) { // Firefox < 54
+        firstPartyHost = new URL(details.originUrl).host;
+      } else if('initiator' in details) { // Chrome
+        firstPartyHost = new URL(details.initiator).host;
+      }
+    }
+    if (disabledList.has(firstPartyHost)) {
       return {};
     }
 
