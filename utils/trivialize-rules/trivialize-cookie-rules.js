@@ -65,7 +65,7 @@ let isTrivial = securecookie => {
     }
 
     for (let securecookie of securecookies) {
-      if (!securecookie.name === ".+") {
+      if (".+" !== securecookie.name) {
         return;
       }
 
