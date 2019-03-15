@@ -77,9 +77,9 @@ To get an SSL certificate, go to: [Let's Encrypt](https://letsencrypt.org/)
 
 Scan your site at the [Mozilla Observatory](https://observatory.mozilla.org/) and get results on what is wrong/insecure about your site, as well as also tips and directions on how to fix those issues.
 
-**"How do I get on the HSTS preload list?"**
+**"How do I get on the HSTS Preload list?"**
 
-In order to do this, not only must you have a SSL certicate correctly installed and your site redirecting to HTTPS, but also meet a few extra requirements that satisfy a proper HSTS header. To view "how close" your site is to being on the HSTS preload list, scan your site [here](https://hstspreload.org/).
+In order to do this, not only must you have a SSL certicate correctly installed and your site redirecting to HTTPS, but also meet a few extra requirements for a [`Strict-Transport-Security`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security) header. To view "how close" your site is to being on the HSTS Preload list, scan your site [here](https://hstspreload.org/).
 
 * * *
 
