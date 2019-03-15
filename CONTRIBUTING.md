@@ -3,7 +3,7 @@
 * [Welcome!](#welcome)
     * [HTTPS Everywhere Source Code Layout](#https-everywhere-source-code-layout)
     * [Submitting Changes](#submitting-changes)
-    * [I want to fix my site](#i-want-to-fix-my-site)
+    * [I Want To Fix My Site](#i-want-to-fix-my-site)
 * [Contributing Rulesets](#contributing-rulesets)
     * [General Info](#general-info)
     * [New Rulesets](#new-rulesets)
@@ -73,11 +73,11 @@ HTTPS Everywhere is maintained by a limited set of staff and volunteers.  Please
 
 To get an SSL certificate, go to: [Let's Encrypt](https://letsencrypt.org/)
 
-"I have an SSL certificate, but it's not configured properly"
+**"I have an SSL certificate, but it's not configured properly"**
 
-Scan your site at the [Mozilla Observatory](https://observatory.mozilla.org/) and get not only what is wrong/insecure about your site, but also tips and directions on how to fix the issues.
+Scan your site at the [Mozilla Observatory](https://observatory.mozilla.org/) and get results on what is wrong/insecure about your site, as well as also tips and directions on how to fix those issues.
 
-"How do I get on the HSTS preload list?"
+**"How do I get on the HSTS preload list?"**
 
 In order to do this, not only must you have a SSL certicate correctly installed and your site redirecting to HTTPS, but also meet a few extra requirements that satisfy a proper HSTS header. To view "how close" your site is to being on the HSTS preload list, scan your site [here](https://hstspreload.org/).
 
