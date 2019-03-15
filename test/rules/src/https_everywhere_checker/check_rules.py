@@ -308,7 +308,7 @@ def cli():
                         help='write results in json file')
     args = parser.parse_args()
 
-    config = SafeConfigParser()
+    config = ConfigParser()
     config.read(args.checker_config)
 
     logfile = config.get("log", "logfile")
