@@ -3,6 +3,7 @@
 * [Welcome!](#welcome)
     * [HTTPS Everywhere Source Code Layout](#https-everywhere-source-code-layout)
     * [Submitting Changes](#submitting-changes)
+    * [I Want To Fix My Site](#i-want-to-fix-my-site)
 * [Contributing Rulesets](#contributing-rulesets)
     * [General Info](#general-info)
     * [New Rulesets](#new-rulesets)
@@ -67,6 +68,20 @@ Tests are performed in headless browsers and located in the [`test`](test) top-l
 To submit changes, open a pull request from our [GitHub repository](https://github.com/efforg/https-everywhere).
 
 HTTPS Everywhere is maintained by a limited set of staff and volunteers.  Please be mindful that we may take a while before we're able to review your contributions.
+
+## I Want To Fix My Site
+
+**"I want to get an SSL certificate"**
+
+To get an SSL certificate, as an option, you can go to [Let's Encrypt](https://letsencrypt.org/) and get a free certificate.
+
+**"I have an SSL certificate, but it's not configured properly"**
+
+Scan your site at the [Mozilla Observatory](https://observatory.mozilla.org/) and get results on what is wrong/insecure about your site, as well as tips and directions on how to fix those issues.
+
+**"How do I get on the HSTS Preload list?"**
+
+In order to do this, you must have an SSL certicate correctly installed and your site redirecting to HTTPS. As well as meet a few extra requirements for the [`HTTP Strict-Transport-Security`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security) header. To view "how close" your site is for HSTS preloading, scan your site [here](https://hstspreload.org/).
 
 * * *
 
