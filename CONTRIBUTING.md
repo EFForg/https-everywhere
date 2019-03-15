@@ -71,7 +71,9 @@ HTTPS Everywhere is maintained by a limited set of staff and volunteers.  Please
 
 ## I Want To Fix My Site
 
-To get an SSL certificate, go to: [Let's Encrypt](https://letsencrypt.org/)
+**"I want to get an SSL certificate"
+
+To get an SSL certificate, as an option, you can go to [Let's Encrypt](https://letsencrypt.org/) and get a free certificate.
 
 **"I have an SSL certificate, but it's not configured properly"**
 
