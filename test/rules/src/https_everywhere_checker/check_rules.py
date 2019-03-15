@@ -14,7 +14,7 @@ import sys
 import threading
 import time
 
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 
 from lxml import etree
 
