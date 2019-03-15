@@ -75,7 +75,7 @@ To get an SSL certificate, go to: [Let's Encrypt](https://letsencrypt.org/)
 
 **"I have an SSL certificate, but it's not configured properly"**
 
-Scan your site at the [Mozilla Observatory](https://observatory.mozilla.org/) and get results on what is wrong/insecure about your site, as well as also tips and directions on how to fix those issues.
+Scan your site at the [Mozilla Observatory](https://observatory.mozilla.org/) and get results on what is wrong/insecure about your site, as well as tips and directions on how to fix those issues.
 
 **"How do I get on the HSTS Preload list?"**
 
