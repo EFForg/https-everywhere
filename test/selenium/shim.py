@@ -165,7 +165,7 @@ class Shim:
 
         caps = DesiredCapabilities.CHROME.copy()
 
-        driver = webdriver.Chrome(chrome_options=opts, desired_capabilities=caps)
+        driver = webdriver.Chrome(options=opts, desired_capabilities=caps)
         try:
             yield driver
         finally:

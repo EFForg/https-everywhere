@@ -29,7 +29,7 @@ Enter your GitHub token info into `config.json`.
 
 ### With Docker
 
-Set your `$GITHUB_TOKEN`, and run
+Set your `$GITHUB_TOKEN` with "repo, write:discussion" permissions, and run
 
     docker run -it -v $(pwd)/state_dir:/opt/state_dir -e GITHUB_TOKEN=$GITHUB_TOKEN labeller
 
