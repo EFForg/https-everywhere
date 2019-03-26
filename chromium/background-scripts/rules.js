@@ -363,7 +363,7 @@ RuleSets.prototype = {
     if (src === 'options') {
       /**
        * FIXME: There is nothing we can do if the call comes from the
-       * option page because isEquivalentTo cannot work reliably. 
+       * option page because isEquivalentTo cannot work reliably.
        * Leave the heavy duties to background.js to call initializeAllRules
        */
     }

@@ -21,7 +21,7 @@ describe('update.js', function() {
     beforeEach(() => {
       chrome.flush();
       if(util.loadExtensionFile.restore) {
-        util.loadExtensionFile.restore(); 
+        util.loadExtensionFile.restore();
       }
     });
 
