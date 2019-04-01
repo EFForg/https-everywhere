@@ -562,21 +562,9 @@ RuleSets.prototype = {
       return nullIterable;
     }
 
-    // Replace each portion of the domain with a * in turn
-    let segmented = host.split(".");
-    for (let i = 0; i < segmented.length; i++) {
-      let tmp = segmented[i];
-      segmented[i] = "*";
-
-      results = (this.targets.has(segmented.join(".")) ?
-        new Set([...results, ...this.targets.get(segmented.join("."))]) :
-        results);
-
-      segmented[i] = tmp;
-    }
-
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
+    let segmented = host.split(".");
     for (let i = 2; i <= segmented.length - 2; i++) {
       let t = "*." + segmented.slice(i, segmented.length).join(".");
 
@@ -585,7 +573,7 @@ RuleSets.prototype = {
         results);
     }
 
-    // Clean the results list, which may contain duplicates or undefined entries
+    // Clean the results set, which may contain one undefined entry.
     results.delete(undefined);
 
     util.log(util.DBUG,"Applicable rules for " + host + ":");
