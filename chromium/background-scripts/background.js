@@ -662,6 +662,7 @@ function onErrorOccurred(details) {
       details.error.indexOf("net::ERR_CERT_") == 0 ||
       details.error.indexOf("net::ERR_CONNECTION_") == 0 ||
       details.error.indexOf("net::ERR_ABORTED") == 0 ||
+      details.error.indexOf("net::ERR_SSL_PROTOCOL_ERROR") == 0 ||
       details.error.indexOf("NS_ERROR_CONNECTION_REFUSED") == 0 ||
       details.error.indexOf("NS_ERROR_NET_TIMEOUT") == 0 ||
       details.error.indexOf("NS_ERROR_NET_ON_TLS_HANDSHAKE_ENDED") == 0 ||
@@ -671,6 +672,7 @@ function onErrorOccurred(details) {
       details.error.indexOf("Unable to communicate securely with peer: requested domain name does not match the server’s certificate.") == 0 ||
       details.error.indexOf("Peer’s Certificate issuer is not recognized.") == 0 ||
       details.error.indexOf("Peer’s Certificate has been revoked.") == 0 ||
+      details.error.indexOf("Peer reports it experienced an internal error.") == 0 ||
       details.error.indexOf("The server uses key pinning (HPKP) but no trusted certificate chain could be constructed that matches the pinset. Key pinning violations cannot be overridden.") == 0 ||
       details.error.indexOf("SSL received a weak ephemeral Diffie-Hellman key in Server Key Exchange handshake message.") == 0 ||
       details.error.indexOf("The certificate was signed using a signature algorithm that is disabled because it is not secure.") == 0 ||
