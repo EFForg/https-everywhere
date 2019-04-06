@@ -1,123 +1,28 @@
 <!--
-	For rules causing false/broken MCB, see Aftenposten.no-falsemixed.xml.
-
-
-	Nonfunctional subdomains:
-
-		- bedrift ¹
-		- papp2 ²
-		- sport ¹
-
-	¹ Dropped
-	² Revoked
-
-
-	Problematic subdomains:
-
-		- (www.)? ¹
-		- atorget ²
-		- bedriftfiles ³
-		- bil ²
-		- godetilbud ²
-		- kundeservice ⁴
-		- leserpanel ⁵
-		- ocacache ²
-		- reise ²
-		- rubrikkcache ²
-
-		- ap.mnocdn.no ²
-
-	¹ Mixed css
-	² Mismatched, CN: www.aftenposten.no
-	³ Self-signed; mismatched, CN: hotelladmin.aftenposten.no
-	⁴ Revoked
-	⁵ Mismatched, CN: hotellweb1.schibsted-it.no
-
-
-	Partially covered subdomains:
-
-		- (www.)?		(^ → www)
-		- kundeservice		(→ a)
-
-
-	Fully covered subdomains:
-
-		- a
-		- kundesenter
-		- kundeweb
-		- onlinesos
-
-
-	Insecure cookies are set for these domains:
-
-		- kundesenter.aftenposten.no
-		- www.aftenposten.no
-
-
-	Mixed content:
-
-		- css on www from $self ¹
-
-		- Images, on:
-
-			- leserpanel from $self ²
-			- www from $self ¹
-			- www from www.bt.no ¹
-			- www from ap.mnocdn.no ¹
-
-		- favicon on www from $self ¹
-
-		- Bugs on www from ocacache.medianorge.no ³
-
-	¹ Secured by us
-	² Not secured by us <= mismatched
-	³ Unsecurable
-
+	Mismatched:
+		- leserpanel
+		- sport
 -->
 <ruleset name="Aftenposten (partial)">
+	<target host="aftenposten.no" />
+	<target host="www.aftenposten.no" />
+	<target host="bedrift.aftenposten.no" />
+	<target host="bil.aftenposten.no" />
+	<target host="kundesenter.aftenposten.no" />
+	<target host="kundeportal.aftenposten.no" />
+	<target host="kundeweb.aftenposten.no" />
+	<target host="lisacache.aftenposten.no" />
+	<target host="media.aftenposten.no" />
+	<target host="onlinesos.aftenposten.no" />
+	<target host="oslopuls.aftenposten.no" />
+	<target host="reise.aftenposten.no" />
+	<target host="rubrikkcache.aftenposten.no" />
+	<target host="sport.aftenposten.no" />
 
-        <target host="aftenposten.no" />
-        <target host="*.aftenposten.no" />
-		<!--
-			Redirects to http:
-						-->
-		<!--exclusion pattern="^http://www\.aftenposten\.no/$" /-->
-		<!--
-			Exceptions:
-					-->
-		<!--exclusion pattern="^http://www\.aftenposten\.no/(?!nyheter($|[?/]))" /-->
-		<!--
-			Avoid broken MCB:
-						-->
-		<exclusion pattern="^http://www\.aftenposten\.no/+(?!.+\.(?:css|gif|jpg|png)(?:$|\?)|\?service=css|favicon\.ico|skins/)" />
-	<target host="ap.mnocdn.no" />
+	<securecookie host=".+" name=".+" />
 
+	<rule from="^http://sport\.aftenposten\.no/.*" to="https://www.aftenposten.no/100Sport/" />
+	<test url="http://sport.aftenposten.no/index.html" />
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^kundesenter\.aftenposten\.no$" name="^_wp_session$" /-->
-	<!--securecookie host="^www\.aftenposten\.no$" name="^(VPW_Quota_\d+|VPW_QuotaInfo_\d+)$" /-->
-
-	<!--securecookie host="^\.aftenposten\.no$" name="^environment$" /-->
-	<securecookie host="^(?:a|kundesenter|kundeweb|onlinesos)\.aftenposten\.no$" name=".+" />
-
-
-	<rule from="^http://(?:www\.)?aftenposten\.no/"
-		to="https://www.aftenposten.no/" />
-
-	<rule from="^http://kundeservice\.aftenposten\.no/(?=$|\?.*)"
-		to="https://a.aftenposten.no/kundeservice/" />
-
-	<rule from="^http://(a|kundesenter|kundeweb|onlinesos)\.aftenposten\.no/"
-		to="https://$1.aftenposten.no/" />
-
-	<!--	The following rule will generate SSL warnings by default
-		because the cert is only valid for www.aftenposten.no.
-									-->
-	<!--rule from="^http://(lisacache|media|oslopuls)\.aftenposten\.no/"
-		to="https://$1.aftenposten.no/" /-->
-
-	<rule from="^http://ap\.mnocdn\.no/"
-		to="https://www.aftenposten.no/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

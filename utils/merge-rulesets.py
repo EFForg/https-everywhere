@@ -48,6 +48,7 @@ for filename in sorted(files):
     root = tree.getroot()
 
     ruleset = {}
+    trivialNameSecureCookie = None
 
     for attr in root.attrib:
         ruleset[attr] = root.attrib[attr]
@@ -70,17 +71,28 @@ for filename in sorted(files):
             ruleset["rule"].append(ru)
 
         elif child.tag == "securecookie":
-            sc = {}
-            sc["host"] = child.attrib["host"]
-            sc["name"] = child.attrib["name"]
+            if child.attrib["name"] == ".+":
+                if not trivialNameSecureCookie:
+                    trivialNameSecureCookie = {}
+                    trivialNameSecureCookie["host"] = child.attrib["host"]
+                    trivialNameSecureCookie["name"] = ".+"
+                else:
+                    trivialNameSecureCookie["host"] = (trivialNameSecureCookie["host"] + "|" + child.attrib["host"])
+            else:
+                sc = {}
+                sc["host"] = child.attrib["host"]
+                sc["name"] = child.attrib["name"]
 
-            ruleset["securecookie"].append(sc)
+                ruleset["securecookie"].append(sc)
 
         elif child.tag == "exclusion":
             if len(ruleset["exclusion"]) == 0:
                 ruleset["exclusion"].append(child.attrib["pattern"])
             else:
                 ruleset["exclusion"][0] = (ruleset["exclusion"][0] + "|" + child.attrib["pattern"])
+
+    if trivialNameSecureCookie:
+        ruleset["securecookie"].insert(0, trivialNameSecureCookie)
 
     library.append(ruleset);
 
