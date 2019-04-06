@@ -20,6 +20,10 @@ describe('update.js', function() {
   describe('applyStoredRulesets', function() {
     beforeEach(() => {
       chrome.flush();
+
+      if(util.loadExtensionFile.restore) {
+        util.loadExtensionFile.restore();
+      }
     });
 
     it('applies compressed rulesets from chrome.storage', function(done) {
