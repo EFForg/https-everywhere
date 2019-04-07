@@ -11,33 +11,46 @@
  * Handles rule (de)activation in the popup
  */
 function toggleRuleLine(event) {
-  if (event.target.matches("input[type=checkbox]")) {
-    getTab(activeTab => {
-      const set_ruleset = {
-        active: event.target.checked,
-        name: event.target.nextSibling.innerText,
-        tab_id: activeTab.id,
-      };
+  getTab(activeTab => {
+    const set_ruleset = {
+      active: event.target.parentNode.firstChild.checked,
+      name: event.target.innerText,
+      tab_id: activeTab.id,
+    };
 
-      sendMessage("set_ruleset_active_status", set_ruleset, () => {
-        // purge the name from the cache so that this unchecking is persistent.
-        sendMessage("delete_from_ruleset_cache", set_ruleset.name, () => {
-          // Now reload the selected tab of the current window.
-          chrome.tabs.reload(set_ruleset.tab_id);
-        });
+    sendMessage("set_ruleset_active_status", set_ruleset, () => {
+      // purge the name from the cache so that this unchecking is persistent.
+      sendMessage("delete_from_ruleset_cache", set_ruleset.name, () => {
+        // Now reload the selected tab of the current window.
+        chrome.tabs.reload(set_ruleset.tab_id);
       });
     });
-  }
+  });
 }
 
+function toggleSeeMore(event){
+  let target = event.target.parentNode.querySelector('.see_more__text');
+  console.log(target)
+  let arrow = event.target;
+  console.log(arrow);
+
+  if(arrow.classList.contains('down')) {
+    arrow.classList.replace('down', 'up');
+  } else if (arrow.classList.contains('up')) {
+    arrow.classList.replace('up', 'down');
+  }
+
+  target.classList.toggle('hide');
+}
 
 /**
  * Creates rule lines (including checkbox and icon) for the popup
  * @param rulesets
  * @param list_div
+ * @param {string} ruleType
  * @returns {*}
  */
-function appendRulesToListDiv(rulesets, list_div) {
+function appendRulesToListDiv(rulesets, list_div, ruleType) {
   if (rulesets && rulesets.length) {
     // template parent block for each ruleset
     let templateLine = document.createElement("div");
@@ -58,14 +71,22 @@ function appendRulesToListDiv(rulesets, list_div) {
     templateRemove.src = chrome.runtime.getURL("images/remove.png");
     templateRemove.className = "remove";
 
-    templateLabel.appendChild(templateCheckbox);
+    templateLine.appendChild(templateCheckbox);
     templateLabel.appendChild(templateLabelText);
     templateLine.appendChild(templateLabel);
 
+    let increment = 0;
+
     for (const ruleset of rulesets) {
+      increment++;
       let line = templateLine.cloneNode(true);
       let checkbox = line.querySelector("input[type=checkbox]");
+      let label = line.querySelector("label");
       let text = line.querySelector("span");
+
+      // For each "id" attribute in each checkbox input and "for" attribute in label
+      checkbox.setAttribute("id", `${ruleType}_ruleset_${increment}`);
+      label.setAttribute("for", `${ruleType}_ruleset_${increment}`);
 
       checkbox.checked = ruleset.active;
       text.innerText = ruleset.name;
@@ -110,24 +131,26 @@ function updateEnabledDisabledUI() {
       document.body.className = ""
       showHttpNowhereUI()
     } else {
-      document.body.className = "disabled"
+      document.body.className = "disabled";
+      e('onoffswitch_label').innerText = 'HTTPS Everywhere is OFF';
     }
   });
 }
 
 // Toggle extension enabled/disabled status
 function toggleEnabledDisabled() {
-  var extension_toggle_effect = function() {
+  let extension_toggle_effect = function() {
     updateEnabledDisabledUI();
-    // The extension state changed, so reload this tab.
-    chrome.tabs.reload();
-    window.close();
+    // The extension state changed, give some time for toggle animation and reload tab
+    setTimeout(function(){
+      chrome.tabs.reload();
+      window.close();
+    }, 1500);
   }
 
   getOption_('globalEnabled', true, function(item) {
     setOption_('globalEnabled', !item.globalEnabled, extension_toggle_effect);
   });
-
 }
 
 /**
@@ -140,8 +163,8 @@ function listRules(activeTab) {
       const stableRules = rulesets.filter(ruleset => ruleset.default_state);
       const unstableRules = rulesets.filter(ruleset => !ruleset.default_state);
 
-      appendRulesToListDiv(stableRules, e("StableRules"));
-      appendRulesToListDiv(unstableRules, e("UnstableRules"));
+      appendRulesToListDiv(stableRules, e("StableRules"), 'stable');
+      appendRulesToListDiv(unstableRules, e("UnstableRules"), 'unstable');
 
       // Add listener to capture the toggle event
       e("RuleManagement").addEventListener("click", toggleRuleLine);
@@ -172,6 +195,8 @@ document.addEventListener("DOMContentLoaded", function () {
   updateEnabledDisabledUI();
   e('onoffswitch').addEventListener('click', toggleEnabledDisabled);
   e('http-nowhere-checkbox').addEventListener('click', toggleHttpNowhere, false);
+  e('HttpNowhere__see_more').addEventListener('click', toggleSeeMore);
+  e('RuleManagement__see_more').addEventListener('click', toggleSeeMore);
   e('reset-to-defaults').addEventListener('click', () => {
     sendMessage("is_firefox", null, is_firefox => {
       if (is_firefox) {
@@ -322,6 +347,9 @@ function enableOnSite() {
   });
 }
 
+/**
+ * @description Turns EASE Mode on and off
+ */
 function toggleHttpNowhere() {
   getTab(tab => {
     getOption_('httpNowhere', false, item => {
