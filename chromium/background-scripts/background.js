@@ -844,7 +844,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     let last_updated_promises = [];
     for(let update_channel of update_channels) {
       last_updated_promises.push(new Promise(resolve => {
-        store.local.get({['rulesets-timestamp: ' + update_channel.name]: 0}, item => {
+        store.get({['rulesets-timestamp: ' + update_channel.name]: 0}, item => {
           resolve([update_channel.name, item['rulesets-timestamp: ' + update_channel.name]]);
         });
       }));
@@ -990,7 +990,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
         store.set({update_channels: item.update_channels.filter(update_channel => {
           return (update_channel.name != message.object);
         })}, () => {
-          store.local.remove([
+          store.remove([
             'rulesets-timestamp: ' + message.object,
             'rulesets-stored-timestamp: ' + message.object,
             'rulesets: ' + message.object
@@ -1034,7 +1034,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       return true;
     },
     get_last_checked: () => {
-      store.local.get({'last-checked': false}, item => {
+      store.get({'last-checked': false}, item => {
         sendResponse(item['last-checked']);
       });
       return true;
