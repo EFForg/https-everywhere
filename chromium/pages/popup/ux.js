@@ -371,3 +371,15 @@ function getTab(callback) {
   }
   chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => callback(tabs[0]));
 }
+
+// This code fixes a Chromium-specific bug that causes links in extension popup
+// to open in regular tab even if the popup is opened in incognito mode.
+
+document.addEventListener('click', e => {
+  const { target } = e
+
+  if (target.matches('a[target="_blank"]')) {
+    chrome.tabs.create({ url: target.href })
+    e.preventDefault()
+  }
+})
