@@ -29,18 +29,23 @@ function toggleRuleLine(event) {
 }
 
 function toggleSeeMore(event){
-  let target = event.target.parentNode.querySelector('.see_more__text');
-  console.log(target)
-  let arrow = event.target;
-  console.log(arrow);
+  let target = event.target.parentNode.querySelector('.see_more__content');
+  let arrow  = event.target;
+  let prompt = arrow.parentNode.querySelector('.see_more__prompt');
 
   if(arrow.classList.contains('down')) {
     arrow.classList.replace('down', 'up');
+    prompt.innerText = 'See less';
   } else if (arrow.classList.contains('up')) {
     arrow.classList.replace('up', 'down');
+    prompt.innerText = 'See more';
   }
 
-  target.classList.toggle('hide');
+  if (target.classList.contains('hide')) {
+    target.classList.replace('hide', 'show');
+  } else if (target.classList.contains('show')) {
+    target.classList.replace('show', 'hide');
+  }
 }
 
 /**
