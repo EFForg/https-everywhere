@@ -562,10 +562,10 @@ RuleSets.prototype = {
       return nullIterable;
     }
 
-    // Replace www.example.com with *.example.com, however, this
-    // SHOULD NOT replace example.com with *.com
+    // Replace www.example.com with www.example.*
+    // eat away from the right for once and only once
     let segmented = host.split(".");
-    if (segmented.length > 2) {
+    if (segmented.length > 1) {
       let tmp = segmented[segmented.length - 1];
 
       results = (this.targets.has(segmented.join(".")) ?
