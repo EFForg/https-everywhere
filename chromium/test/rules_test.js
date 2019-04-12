@@ -203,15 +203,15 @@ describe('rules.js', function() {
           assert.deepEqual(res3, new Set(value), 'wildcard matches sub domains');
         });
 
-        it('matches middle wildcards', function() {
-          let target = 'sub.*.' + host;
+        it('matches right wildcards', function() {
+          let target = host + '.*';
           this.rsets.targets.set(target, value);
 
-          let res1 = this.rsets.potentiallyApplicableRulesets('sub.star.' + host);
+          let res1 = this.rsets.potentiallyApplicableRulesets(host + '.tld');
           assert.deepEqual(res1, new Set(value), 'default case');
 
-          let res2 = this.rsets.potentiallyApplicableRulesets('sub.foo.bar.' + host);
-          assert.isEmpty(res2, new Set(value), 'only matches one label');
+          let res2 = this.rsets.potentiallyApplicableRulesets(host + '.tld.com');
+          assert.isEmpty(res2, 'wildcard matches second level domains');
         });
       });
     });
