@@ -567,6 +567,7 @@ RuleSets.prototype = {
     let segmented = host.split(".");
     if (segmented.length > 1) {
       let tmp = segmented[segmented.length - 1];
+      segmented[segmented.length - 1] = "*";
 
       results = (this.targets.has(segmented.join(".")) ?
         new Set([...results, ...this.targets.get(segmented.join("."))]) :
