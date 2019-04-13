@@ -682,10 +682,7 @@ RuleSets.prototype = {
     util.log(util.INFO, "Testing securecookie applicability with " + test_uri);
     var potentiallyApplicable = this.potentiallyApplicableRulesets(domain);
     for (let ruleset of potentiallyApplicable) {
-      if (!ruleset.active) {
-        continue;
-      }
-      if (ruleset.apply(test_uri)) {
+      if (ruleset.active && ruleset.apply(test_uri)) {
         util.log(util.INFO, "Cookie domain could be secured.");
         this.cookieHostCache.set(domain, true);
         return true;
