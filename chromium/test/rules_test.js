@@ -4,9 +4,11 @@ const assert = require('chai').assert,
   rules = require('../background-scripts/rules');
 
 const Rule = rules.Rule,
+  CookieRule = rules.CookieRule,
   RuleSet = rules.RuleSet,
   RuleSets = rules.RuleSets,
-  getRule = rules.getRule;
+  getRule = rules.getRule,
+  getCookieRule = rules.getCookieRule;
 
 
 describe('rules.js', function() {
@@ -36,6 +38,22 @@ describe('rules.js', function() {
     it('returns trivial rule object', function() {
       let trivial = rules.trivial_rule;
       let rule = getRule('^http:', 'https:');
+      assert.equal(rule, trivial);
+    });
+  });
+
+  describe('CookieRule', function() {
+    it('constructs trivial cookie rule', function() {
+      let rule = new CookieRule(".+", ".+");
+      assert.deepEqual(rule.host_c, rules.trivial_cookie_rule_c);
+      assert.deepEqual(rule.name_c, rules.trivial_cookie_rule_c);
+    });
+  });
+
+  describe('getCookieRule', function() {
+    it('returns trivial cookie rule object', function() {
+      let trivial = rules.trivial_cookie_rule;
+      let rule = getCookieRule(".+", ".+");
       assert.equal(rule, trivial);
     });
   });

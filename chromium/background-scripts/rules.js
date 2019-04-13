@@ -49,6 +49,7 @@ function Rule(from, to) {
 
 // To reduce memory usage for the numerous rules/cookies with trivial rules
 const trivial_rule = new Rule("^http:", "https:");
+const trivial_cookie_rule = new CookieRule(".+", ".+");
 
 /**
  * Returns a common trivial rule or constructs a new one.
@@ -60,6 +61,17 @@ function getRule(from, to) {
   } else {
     // This is a non-trivial rule.
     return new Rule(from, to);
+  }
+}
+
+/**
+ * Returns a common trivial cookie rule or constructs a new one.
+ */
+function getCookieRule(host, cookiename) {
+  if (host === '.+' && cookiename === '.+') {
+    return trivial_cookie_rule;
+  } else {
+    return new CookieRule(host, cookiename);
   }
 }
 
@@ -300,7 +312,7 @@ RuleSets.prototype = {
           if (!rule_set.cookierules) {
             rule_set.cookierules = [];
           }
-          rule_set.cookierules.push(new CookieRule(cookierule["host"], cookierule["name"]));
+          rule_set.cookierules.push(getCookieRule(cookierule["host"], cookierule["name"]));
         }
       }
     }
@@ -520,7 +532,7 @@ RuleSets.prototype = {
       rule_set.cookierules = [];
       for (let cookierule of cookierules) {
         rule_set.cookierules.push(
-          new CookieRule(cookierule.getAttribute("host"),
+          getCookieRule(cookierule.getAttribute("host"),
             cookierule.getAttribute("name")));
       }
     }
@@ -718,10 +730,13 @@ Object.assign(exports, {
   nullIterable,
   settings,
   trivial_rule,
+  trivial_cookie_rule,
   Rule,
+  CookieRule,
   RuleSet,
   RuleSets,
-  getRule
+  getRule,
+  getCookieRule
 });
 
 })(typeof exports == 'undefined' ? require.scopes.rules = {} : exports);
