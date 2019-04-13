@@ -614,7 +614,7 @@ RuleSets.prototype = {
    * @returns {*} ruleset or null
    */
   shouldSecureCookie: function(cookie) {
-    let hostname = cookie.domain;
+    var hostname = cookie.domain;
     // cookie domain scopes can start with .
     while (hostname.charAt(0) == ".") {
       hostname = hostname.slice(1);
@@ -624,7 +624,7 @@ RuleSets.prototype = {
       return null;
     }
 
-    let potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
+    var potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
     for (let ruleset of potentiallyApplicable) {
       if (ruleset.cookierules !== null && ruleset.active) {
         for (let cookierule of ruleset.cookierules) {
