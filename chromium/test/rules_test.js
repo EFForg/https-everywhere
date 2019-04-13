@@ -40,6 +40,22 @@ describe('rules.js', function() {
     });
   });
 
+  describe('CookieRule', function() {
+    it('constructs trivial cookie rule', function() {
+      let rule = new CookieRule(".+", ".+");
+      assert.equal(rule.host_c, rules.trivial_cookie_rule_c);
+      assert.deepEqual(rule.name_c, rules.trivial_cookie_rule_c);
+    });
+  });
+
+  describe('getCookieRule', function() {
+    it('returns trivial rule object', function() {
+      let trivial = rules.trivial_cookie_rule;
+      let rule = getRule(".+", ".+");
+      assert.equal(rule, trivial);
+    });
+  });
+
   describe('RuleSet', function() {
     beforeEach(function() {
       this.ruleset = new RuleSet('set_name', true, 'note');
