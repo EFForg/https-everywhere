@@ -4,6 +4,7 @@ const assert = require('chai').assert,
   rules = require('../background-scripts/rules');
 
 const Rule = rules.Rule,
+  CookieRule = rules.CookieRule,
   RuleSet = rules.RuleSet,
   RuleSets = rules.RuleSets,
   getRule = rules.getRule;
