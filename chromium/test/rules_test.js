@@ -213,6 +213,14 @@ describe('rules.js', function() {
           let res2 = this.rsets.potentiallyApplicableRulesets(host + '.tld.com');
           assert.isEmpty(res2, 'wildcard matches second level domains');
         });
+
+        it('ignore middle wildcards', function() {
+          let target = 'www.*.' + host;
+          this.rsets.targets.set(target, value);
+
+          let res1 = this.rsets.potentiallyApplicableRulesets('www.cdn.' + host);
+          assert.isEmpty(res1, 'middle wildcards are matched');
+        });
       });
     });
   });
