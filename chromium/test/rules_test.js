@@ -204,21 +204,21 @@ describe('rules.js', function() {
         });
 
         it('matches right wildcards', function() {
-          let target = host + '.*';
+          const target = host + '.*';
           this.rsets.targets.set(target, value);
 
-          let res1 = this.rsets.potentiallyApplicableRulesets(host + '.tld');
+          const res1 = this.rsets.potentiallyApplicableRulesets(host + '.tld');
           assert.deepEqual(res1, new Set(value), 'default case');
 
-          let res2 = this.rsets.potentiallyApplicableRulesets(host + '.tld.com');
+          const res2 = this.rsets.potentiallyApplicableRulesets(host + '.tld.com');
           assert.isEmpty(res2, 'wildcard matches second level domains');
         });
 
         it('ignore middle wildcards', function() {
-          let target = 'www.*.' + host;
+          const target = 'www.*.' + host;
           this.rsets.targets.set(target, value);
 
-          let res1 = this.rsets.potentiallyApplicableRulesets('www.cdn.' + host);
+          const res1 = this.rsets.potentiallyApplicableRulesets('www.cdn.' + host);
           assert.isEmpty(res1, 'middle wildcards are matched');
         });
       });
