@@ -566,7 +566,7 @@ RuleSets.prototype = {
     // eat away from the right for once and only once
     let segmented = host.split(".");
     if (segmented.length > 1) {
-      let tmp = segmented[segmented.length - 1];
+      const tmp = segmented[segmented.length - 1];
       segmented[segmented.length - 1] = "*";
 
       results = (this.targets.has(segmented.join(".")) ?
