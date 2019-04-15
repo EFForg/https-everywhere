@@ -625,9 +625,9 @@ RuleSets.prototype = {
     }
 
     var potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
-    for (let ruleset of potentiallyApplicable) {
+    for (const ruleset of potentiallyApplicable) {
       if (ruleset.cookierules !== null && ruleset.active) {
-        for (let cookierule of ruleset.cookierules) {
+        for (const cookierule of ruleset.cookierules) {
           if (cookierule.host_c.test(cookie.domain) && cookierule.name_c.test(cookie.name)) {
             return ruleset;
           }
