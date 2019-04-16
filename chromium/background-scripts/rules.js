@@ -663,7 +663,10 @@ RuleSets.prototype = {
     const potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
     for (const ruleset of potentiallyApplicable) {
       if (ruleset.cookierules !== null && ruleset.active) {
+        // safe is false only indicate the lack of a cached result
+        // we cannot use it to avoid looping here
         for (const cookierule of ruleset.cookierules) {
+          // if safe is true, it is case (b); otherwise it is case (c)
           if (cookierule.host_c.test(cookie.domain) && cookierule.name_c.test(cookie.name)) {
             return safe || this.safeToSecureCookie(hostname, potentiallyApplicable);
           }
