@@ -626,11 +626,10 @@ RuleSets.prototype = {
     }
 
     var potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
-    for (let ruleset of potentiallyApplicable) {
+    for (const ruleset of potentiallyApplicable) {
       if (ruleset.cookierules !== null && ruleset.active) {
-        for (let cookierules of ruleset.cookierules) {
-          var cr = cookierules;
-          if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
+        for (const cookierule of ruleset.cookierules) {
+          if (cookierule.host_c.test(cookie.domain) && cookierule.name_c.test(cookie.name)) {
             return ruleset;
           }
         }
@@ -683,10 +682,7 @@ RuleSets.prototype = {
     util.log(util.INFO, "Testing securecookie applicability with " + test_uri);
     var potentiallyApplicable = this.potentiallyApplicableRulesets(domain);
     for (let ruleset of potentiallyApplicable) {
-      if (!ruleset.active) {
-        continue;
-      }
-      if (ruleset.apply(test_uri)) {
+      if (ruleset.active && ruleset.apply(test_uri)) {
         util.log(util.INFO, "Cookie domain could be secured.");
         this.cookieHostCache.set(domain, true);
         return true;
