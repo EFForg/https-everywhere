@@ -612,38 +612,15 @@ RuleSets.prototype = {
   /**
    * Check to see if the Cookie object c meets any of our cookierule criteria for being marked as secure.
    * @param cookie The cookie to test
-   * @returns {*} ruleset or null
+   * @returns {*} true or false
    */
   shouldSecureCookie: function(cookie) {
-    var hostname = cookie.domain;
+    let hostname = cookie.domain;
     // cookie domain scopes can start with .
     while (hostname.charAt(0) == ".") {
       hostname = hostname.slice(1);
     }
 
-    if (!this.safeToSecureCookie(hostname)) {
-      return null;
-    }
-
-    var potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
-    for (const ruleset of potentiallyApplicable) {
-      if (ruleset.cookierules !== null && ruleset.active) {
-        for (const cookierule of ruleset.cookierules) {
-          if (cookierule.host_c.test(cookie.domain) && cookierule.name_c.test(cookie.name)) {
-            return ruleset;
-          }
-        }
-      }
-    }
-    return null;
-  },
-
-  /**
-   * Check if it is secure to secure the cookie (=patch the secure flag in).
-   * @param domain The domain of the cookie
-   * @returns {*} true or false
-   */
-  safeToSecureCookie: function(domain) {
     // Check if the domain might be being served over HTTP.  If so, it isn't
     // safe to secure a cookie!  We can't always know this for sure because
     // observing cookie-changed doesn't give us enough context to know the
@@ -656,20 +633,54 @@ RuleSets.prototype = {
     // observed and the domain blacklisted, a cookie might already have been
     // flagged as secure.
 
-    if (settings.domainBlacklist.has(domain)) {
-      util.log(util.INFO, "cookies for " + domain + "blacklisted");
+    if (settings.domainBlacklist.has(hostname)) {
+      util.log(util.INFO, "cookies for " + hostname + "blacklisted");
       return false;
     }
-    var cached_item = this.cookieHostCache.get(domain);
-    if (cached_item !== undefined) {
-      util.log(util.DBUG, "Cookie host cache hit for " + domain);
-      return cached_item;
+
+    // Second, we need a cookie pass two tests before securing patching it
+    //   (1) it is safe to secure the cookie, as per safeToSecureCookie()
+    //   (2) it matches with the CookieRule
+    //
+    // We kept a cache of the results for (1), if we have cached results...
+    //   (a) is false, we should not secure the cookie for sure
+    //   (b) is true, we need to perform test (2)
+    //
+    // Otherwise,
+    //   (c) We need to perform (1) and (2) in place
+
+    let safe = false;
+    if (this.cookieHostCache.has(hostname)) {
+      util.log(util.DBUG, "Cookie host cache hit for " + hostname);
+      safe = this.cookieHostCache.get(hostname); // true only if it is case (b)
+      if (!safe) {
+        return false; // (a)
+      }
+    } else {
+      util.log(util.DBUG, "Cookie host cache miss for " + hostname);
     }
-    util.log(util.DBUG, "Cookie host cache miss for " + domain);
 
-    // If we passed that test, make up a random URL on the domain, and see if
-    // we would HTTPSify that.
+    const potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
+    for (const ruleset of potentiallyApplicable) {
+      if (ruleset.cookierules !== null && ruleset.active) {
+        for (const cookierule of ruleset.cookierules) {
+          if (cookierule.host_c.test(cookie.domain) && cookierule.name_c.test(cookie.name)) {
+            return safe || this.safeToSecureCookie(hostname, potentiallyApplicable);
+          }
+        }
+      }
+    }
+    return false;
+  },
 
+  /**
+   * Check if it is secure to secure the cookie (=patch the secure flag in).
+   * @param domain The domain of the cookie
+   * @param potentiallyApplicable
+   * @returns {*} true or false
+   */
+  safeToSecureCookie: function(domain, potentiallyApplicable) {
+    // Make up a random URL on the domain, and see if we would HTTPSify that.
     var nonce_path = "/" + Math.random().toString();
     var test_uri = "http://" + domain + nonce_path + nonce_path;
 
@@ -680,7 +691,6 @@ RuleSets.prototype = {
     }
 
     util.log(util.INFO, "Testing securecookie applicability with " + test_uri);
-    var potentiallyApplicable = this.potentiallyApplicableRulesets(domain);
     for (let ruleset of potentiallyApplicable) {
       if (ruleset.active && ruleset.apply(test_uri)) {
         util.log(util.INFO, "Cookie domain could be secured.");
