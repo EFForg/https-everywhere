@@ -48,7 +48,7 @@ If you get stuck we have two publicly-archived mailing lists: the https-everywhe
 
 You can also find more information on about HTTPS Everywhere on our [FAQ](https://www.eff.org/https-everywhere/faq) page.
 
-Also, please remember that this Project is Governed by [EFF's Public Projects Code of Conduct](https://www.eff.org/pages/eppcode).
+Also, please remember that this project is governed by [EFF's Public Projects Code of Conduct](https://www.eff.org/pages/eppcode).
 
 Thanks again, and we look forward to your contributions!
 
