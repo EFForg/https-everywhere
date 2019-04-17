@@ -777,7 +777,9 @@ let requestHandler = details => {
   }
 }
 
-extensionReady.then(() => { requestHandler = onBeforeRequest })
+extensionReady.then(() => {
+  requestHandler = onBeforeRequest
+})
 
 chrome.webRequest.onBeforeRequest.addListener(details => requestHandler(details), {urls: ["*://*/*", "ftp://*/*"]}, ["blocking"]);
 
