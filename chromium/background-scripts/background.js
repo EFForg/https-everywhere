@@ -21,7 +21,7 @@ async function initialize() {
   await all_rules.loadFromBrowserStorage(store, update.applyStoredRulesets);
   await incognito.onIncognitoDestruction(destroy_caches);
 }
-initialize();
+const extensionReady = initialize();
 
 async function initializeAllRules() {
   const r = new rules.RuleSets();
@@ -766,7 +766,20 @@ function onHeadersReceived(details) {
 
 // Registers the handler for requests
 // See: https://github.com/EFForg/https-everywhere/issues/10039
-chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest, {urls: ["*://*/*", "ftp://*/*"]}, ["blocking"]);
+
+// Delay all requests until ruleset intialization to mitigate some types of unencrypted HTTP leaks.
+
+let requestHandler = details => {
+  if (details.url.startsWith('https:')) {
+    return onBeforeRequest(details)
+  } else {
+    return extensionReady.then(() => onBeforeRequest(details))
+  }
+}
+
+extensionReady.then(() => { requestHandler = onBeforeRequest })
+
+chrome.webRequest.onBeforeRequest.addListener(details => requestHandler(details), {urls: ["*://*/*", "ftp://*/*"]}, ["blocking"]);
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
 chrome.webRequest.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
