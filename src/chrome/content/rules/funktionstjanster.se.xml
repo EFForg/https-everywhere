@@ -1,39 +1,39 @@
 <!-- 
-	funktionstjanster.se = authenticators and form submissions for SE gov sites etc
+	----- CGI eID-tjänst ----- 
+	
+	authenticators and formmails for .SE gov sites etc
 
-	Related: bankid.com.xml
+	known authenticator subdomains:
+
+		*.idp.funktionstjanster.se  (most traffic is on this one)
+
+		*.idpat.funktionstjanster.se
+		*.idpst.funktionstjanster.se
+		*.me.funktionstjanster.se
+		*.testidp.funktionstjanster.se
+
+	See also: 
+
+		- bankid.com.xml
+
+		- https://doc.funktionstjanster.se/
 -->
 
 <ruleset name="funktionstjanster.se">
-	
-	<!-- mNN.LLLL.funktionstjanster.se = authenticator hosts: -->
 
-	<target host="*.idp.funktionstjanster.se" />
-		<test url="http://m00-mg-local.idp.funktionstjanster.se/" />
-		<test url="http://m01-mg-local.idp.funktionstjanster.se/" />
-		<test url="http://m02-mg-local.idp.funktionstjanster.se/" />
+	<target host="*.funktionstjanster.se" />
+	
+	<!--
+		*.idp.funktionstjanster.se is where most of the action is,
 
-	<target host="*.idpat.funktionstjanster.se" />
-		<test url="http://m00-mg-local.idpat.funktionstjanster.se/" />
-		<test url="http://m05-mg-local.idpat.funktionstjanster.se/" />
-		<test url="http://m06-mg-local.idpat.funktionstjanster.se/" />
-	
-	<target host="*.idpst.funktionstjanster.se" />
-		<test url="http://m00-mg-local.idpst.funktionstjanster.se/" />
-		<test url="http://m05-mg-local.idpst.funktionstjanster.se/" />
-		<test url="http://m06-mg-local.idpst.funktionstjanster.se/" />
-	
-	<target host="*.me.funktionstjanster.se" />
-		<test url="http://m00-mg-local.me.funktionstjanster.se/" />
-		<test url="http://m05-mg-local.me.funktionstjanster.se/" />
-		<test url="http://m07-mg-local.me.funktionstjanster.se/" />
-	
-	<target host="*.testidp.funktionstjanster.se" />
-		<test url="http://m00-mg-local.testidp.funktionstjanster.se/" />
-		<test url="http://m01-mg-local.testidp.funktionstjanster.se/" />
-		<test url="http://m02-mg-local.testidp.funktionstjanster.se/" />
+		using as pattern to match all authenticators
+	-->
 
-	<rule from="^http://(m\d{2}-mg-local)\.(\w*)\.funktionstjanster\.se/" 
-            to="https://$1.$2.funktionstjanster.se/" />
+	<test url="http://m00-mg-local.idp.funktionstjanster.se/" />
+	<test url="http://m01-mg-local.idp.funktionstjanster.se/" />
+	<test url="http://m02-mg-local.idp.funktionstjanster.se/" />
+
+	<rule from="^http://(m\d{2}-mg-local\.\w*)\.funktionstjanster\.se/" 
+            to="https://$1.funktionstjanster.se/" />
 
 </ruleset>
