@@ -59,6 +59,7 @@ let rulesDir = "src/chrome/content/rules";
       return;
     }
 
+    let uselessTargets = new Set();
     let rewriteDomains = new Set();
     let targetMappings = new Map();
     let unsupportedDomains = new Set();
@@ -72,13 +73,14 @@ let rulesDir = "src/chrome/content/rules";
           if (validUrl.isUri(url)) {
             let domain = new URL(url).hostname;
             rewriteDomains.add(domain);
-            retval &= true;
           } else {
             retval = false;
           }
         });
       } catch (e) {
-        // assume it is a non-trivial rewrite here
+        if (!(e instanceof UnsupportedRegExp)) {
+          fail`e.message`;
+        }
         return false;
       }
       return retval;
@@ -119,11 +121,30 @@ let rulesDir = "src/chrome/content/rules";
       }
 
       if (unsupportedDomains.size > 0) {
-        warn`ruleset rewrite domains ${[
+        warn`ruleset rewrites domains ${[
           ...unsupportedDomains
         ]} that are not covered by ${targets}`;
+
         return;
       }
+    }
+
+    for (let target of targets) {
+      let mappings = targetMappings.get(target);
+      if (mappings && mappings.length == 0) {
+        // do not remove useless targets automatically
+        uselessTargets.add(target);
+        targetMappings.delete(target);
+      }
+    }
+
+    if (uselessTargets.size) {
+      warn`ruleset contains useless targets ${[...uselessTargets]} not applied to any rule`;
+    }
+
+    // return early if no rewriting is needed
+    if (!targetMappings.size) {
+      return ;
     }
 
     targetMappings.forEach((value, key, map) => {
