@@ -189,18 +189,6 @@ function updateState () {
           }
         });
       }
-
-      const activeCount = appliedRulesets.getActiveRulesetCount(tabId);
-
-      if ('setBadgeBackgroundColor' in chrome.browserAction) {
-        chrome.browserAction.setBadgeBackgroundColor({ color: '#666666', tabId });
-      }
-
-      const showBadge = activeCount > 0 && isExtensionEnabled && showCounter;
-
-      if ('setBadgeText' in chrome.browserAction) {
-        chrome.browserAction.setBadgeText({ text: showBadge ? String(activeCount) : '', tabId });
-      }
     }
   });
 }

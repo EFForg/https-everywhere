@@ -57,6 +57,9 @@ function toggleSeeMore(event){
  */
 function appendRulesToListDiv(rulesets, list_div, ruleType) {
   if (rulesets && rulesets.length) {
+    let counter = rulesets.length;
+    let counterElement = document.querySelector("#RuleManagement--counter");
+    counterElement.innerText = counter;
     // template parent block for each ruleset
     let templateLine = document.createElement("div");
     templateLine.className = "rule checkbox";
@@ -121,6 +124,7 @@ function showHttpNowhereUI() {
   getOption_('httpNowhere', false, function(item) {
     if (item.httpNowhere) {
       e('http-nowhere-checkbox').checked = true;
+      e('HttpNowhere__explained').innerText = 'Unencrypted requests are currently blocked';
     }
     e('HttpNowhere').style.visibility = "visible";
   });
@@ -134,7 +138,7 @@ function updateEnabledDisabledUI() {
     // Hide or show the rules sections
     if (item.globalEnabled) {
       document.body.className = ""
-      showHttpNowhereUI()
+      showHttpNowhereUI();
     } else {
       document.body.className = "disabled";
       e('onoffswitch_label').innerText = 'HTTPS Everywhere is OFF';
@@ -362,6 +366,9 @@ function toggleHttpNowhere() {
       setOption_('httpNowhere', enabled, () => {
         if (enabled) {
           chrome.tabs.reload(tab.id);
+          e('HttpNowhere__explained').innerText = 'Unencrypted requests are currently blocked';
+        } else {
+          e('HttpNowhere__explained').innerText = 'Unencrypted requests are currently allowed';
         }
       });
     });
