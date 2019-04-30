@@ -59,54 +59,49 @@ let rulesDir = "src/chrome/content/rules";
       return;
     }
 
-    let uselessTargets = new Set();
-    let rewriteDomains = new Set();
+    // a one-to-many mapping between targets and exploded domains
     let targetMappings = new Map();
+
+    let explodedDomains = new Set();
+    let unappliedTargets = new Set();
     let unsupportedDomains = new Set();
 
-    // note that "trivial" does not mean a trivial rule here
-    function isTrivialRewrite(rule) {
-      let retval = true;
+    function isExplosiveRewrite(rule) {
+      let explosive = true;
+      let { from, to } = rule;
 
       try {
         explodeRegExp(rule.from, url => {
           if (validUrl.isUri(url)) {
-            let domain = new URL(url).hostname;
-            rewriteDomains.add(domain);
+            let { hostname } = new URL(url);
+            explodedDomains.add(hostname);
           } else {
-            retval = false;
+            explosive = false;
           }
         });
       } catch (e) {
         if (!(e instanceof UnsupportedRegExp)) {
-          fail`e.message`;
+          fail`${e.message}`;
         }
         return false;
       }
-      return retval;
+      return explosive;
     }
 
-    // skip ruleset if it contains non-trivial rewrites
-    if (!rules.every(isTrivialRewrite)) {
+    if (!rules.every(isExplosiveRewrite)) {
       return;
     }
 
-    // a one-to-many mapping between targets and rewrite domains
-    for (let target of targets) {
-      targetMappings.set(target, []);
-    }
-
-    function atLeastOneTargetCovered(domain) {
+    function isSupported(domain) {
       if (targets.includes(domain)) {
         // avoid identity mapping messing up rewrites
         targetMappings.delete(domain);
         return true;
       }
 
-      // follows the left wildcard matching rules in rules.js
-      let parts = domain.split(".");
-      for (let i = 1; i <= parts.length - 2; ++i) {
-        let tmp = "*." + parts.slice(i, parts.length).join(".");
+      let segments = domain.split(".");
+      for (let i = 1; i <= segments.length - 2; ++i) {
+        let tmp = "*." + segments.slice(i, segments.length).join(".");
         if (targets.includes(tmp)) {
           targetMappings.get(tmp).push(domain);
           return true;
@@ -115,36 +110,41 @@ let rulesDir = "src/chrome/content/rules";
       return false;
     }
 
-    for (let domain of rewriteDomains) {
-      if (!atLeastOneTargetCovered(domain)) {
+    for (let target of targets) {
+      targetMappings.set(target, []);
+    }
+
+    for (let domain of explodedDomains) {
+      if (!isSupported(domain)) {
         unsupportedDomains.add(domain);
       }
+    }
 
-      if (unsupportedDomains.size > 0) {
-        warn`ruleset rewrites domains ${[
-          ...unsupportedDomains
-        ]} that are not covered by ${targets}`;
-
-        return;
-      }
+    if (unsupportedDomains.size > 0) {
+      warn`ruleset rewrites domains ${[
+        ...unsupportedDomains
+      ]} that are not covered by ${targets}`;
     }
 
     for (let target of targets) {
       let mappings = targetMappings.get(target);
       if (mappings && mappings.length == 0) {
-        // do not remove useless targets automatically
-        uselessTargets.add(target);
+        // add targets to the list of targets not applied
+        unappliedTargets.add(target);
+        // do not rewrite targets which is not applied
         targetMappings.delete(target);
       }
     }
 
-    if (uselessTargets.size) {
-      warn`ruleset contains useless targets ${[...uselessTargets]} not applied to any rule`;
+    if (unappliedTargets.size > 0) {
+      warn`ruleset contains targets ${[
+        ...unappliedTargets
+      ]} not applied to any rule`;
     }
 
-    // return early if no rewriting is needed
+    // skip rewrite
     if (!targetMappings.size) {
-      return ;
+      return;
     }
 
     targetMappings.forEach((value, key, map) => {
