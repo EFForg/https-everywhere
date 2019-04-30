@@ -41,8 +41,6 @@ var httpNowhereOn = false;
 var showCounter = true;
 var isExtensionEnabled = true;
 let disabledList = new Set();
-let sitesVisited = new Set();
-let sitesUpgraded = 0;
 
 function initializeStoredGlobals() {
   return new Promise(resolve => {
@@ -51,9 +49,7 @@ function initializeStoredGlobals() {
       showCounter: true,
       globalEnabled: true,
       enableMixedRulesets: false,
-      disabledList: [],
-      sitesVisited: [],
-      sitesUpgraded: 0
+      disabledList: []
     }, function(item) {
       httpNowhereOn = item.httpNowhere;
       showCounter = item.showCounter;
@@ -166,11 +162,6 @@ function updateState () {
     }
     const tabId = tabs[0].id;
     const tabUrl = new URL(tabs[0].url);
-
-    // Add new URL to siteVisited, if already in list, do not add
-    if( !sitesVisited.has(tabUrl.href) && iconState !== "disabled"){
-      sitesVisited.add(tabUrl.href);
-    }
 
     if (disabledList.has(tabUrl.host) || iconState == "disabled") {
       if ('setIcon' in chrome.browserAction) {
@@ -466,11 +457,9 @@ function onBeforeRequest(details) {
 
   if (upgradeToSecureAvailable && upgradeToSecure) {
     util.log(util.INFO, 'onBeforeRequest returning upgradeToSecure: true');
-    sitesUpgraded++;
     return {upgradeToSecure: true};
   } else if (newuristr) {
     util.log(util.INFO, 'onBeforeRequest returning redirectUrl: ' + newuristr);
-    sitesUpgraded++;
     return {redirectUrl: newuristr};
   } else {
     util.log(util.INFO, 'onBeforeRequest returning shouldCancel: ' + shouldCancel);
