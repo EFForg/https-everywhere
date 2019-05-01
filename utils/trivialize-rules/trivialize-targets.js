@@ -189,7 +189,7 @@ let rulesDir = "src/chrome/content/rules";
         process.exit(1);
       }
 
-      [, indent ] = matches;
+      [, indent] = matches;
       let sub = value.map(v => `\n${indent}<target host=\"${v}\" />`).join("") + "\n";
       content = content.replace(regex, sub);
     });
@@ -234,7 +234,7 @@ let rulesDir = "src/chrome/content/rules";
           process.exit(1);
         }
 
-        [, indent ] = matches;
+        [, indent] = matches;
         content = content.replace(regex, "\n");
       }
     }
