@@ -28,7 +28,7 @@ function toggleRuleLine(event) {
   });
 }
 
-function toggleSeeMore(event){
+function toggleSeeMore(event) {
   let target = event.target.parentNode.querySelector('.see_more__content');
   let arrow  = event.target;
   let prompt = arrow.parentNode.querySelector('.see_more__prompt');
@@ -151,7 +151,7 @@ function toggleEnabledDisabled() {
   let extension_toggle_effect = function() {
     updateEnabledDisabledUI();
     // The extension state changed, give some time for toggle animation and reload tab
-    setTimeout(function(){
+    setTimeout(function() {
       chrome.tabs.reload();
       window.close();
     }, 1500);

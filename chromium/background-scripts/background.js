@@ -33,12 +33,10 @@ async function initializeAllRules() {
  * Load preferences. Structure is:
  *  {
  *    httpNowhere: Boolean,
- *    showCounter: Boolean,
  *    isExtensionEnabled: Boolean
  *  }
  */
 var httpNowhereOn = false;
-var showCounter = true;
 var isExtensionEnabled = true;
 let disabledList = new Set();
 
@@ -46,13 +44,11 @@ function initializeStoredGlobals() {
   return new Promise(resolve => {
     store.get({
       httpNowhere: false,
-      showCounter: true,
       globalEnabled: true,
       enableMixedRulesets: false,
       disabledList: []
     }, function(item) {
       httpNowhereOn = item.httpNowhere;
-      showCounter = item.showCounter;
       isExtensionEnabled = item.globalEnabled;
       for (let disabledSite of item.disabledList) {
         disabledList.add(disabledSite);
@@ -90,10 +86,6 @@ chrome.storage.onChanged.addListener(async function(changes, areaName) {
   if (areaName === 'sync' || areaName === 'local') {
     if ('httpNowhere' in changes) {
       httpNowhereOn = changes.httpNowhere.newValue;
-      updateState();
-    }
-    if ('showCounter' in changes) {
-      showCounter = changes.showCounter.newValue;
       updateState();
     }
     if ('globalEnabled' in changes) {
@@ -160,7 +152,6 @@ function updateState () {
     if (!tabs || tabs.length === 0) {
       return;
     }
-    const tabId = tabs[0].id;
     const tabUrl = new URL(tabs[0].url);
 
     if (disabledList.has(tabUrl.host) || iconState == "disabled") {
@@ -172,7 +163,6 @@ function updateState () {
         });
       }
     } else {
-
       if ('setIcon' in chrome.browserAction) {
         chrome.browserAction.setIcon({
           path: {

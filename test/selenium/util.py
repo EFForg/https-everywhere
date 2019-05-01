@@ -120,7 +120,7 @@ class ExtensionTestCase(unittest.TestCase):
             time.sleep(0.25)
 
     def toggle_http_nowhere(self):
-        selector = '#http-nowhere-checkbox'
+        selector = '#http-nowhere-checkbox_label'
         with self.load_popup_for():
             el = self.query_selector(selector)
             el.click()
