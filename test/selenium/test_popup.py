@@ -11,7 +11,7 @@ class TestPopup(ExtensionTestCase):
             self.assertTrue(el.text.lower() in url)
 
     def test_disable_enable(self):
-        selector = '#onoffswitch'
+        selector = '#onoffswitch__label'
         var_name = 'background.state.isExtensionEnabled'
 
         # disable https everywhere
@@ -30,7 +30,7 @@ class TestPopup(ExtensionTestCase):
             self.assertTrue(el.is_selected())
 
     def test_http_nowhere(self):
-        selector = '#http-nowhere-checkbox'
+        selector = '#http-nowhere-checkbox_label'
         var_name = 'background.state.httpNowhereOn'
 
         # check default state and enable
