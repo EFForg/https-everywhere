@@ -171,7 +171,6 @@ let rulesDir = "src/chrome/content/rules";
     }
 
     // (4) Replace non-trivial targets with exploded domains
-    let content = content;
     let indent = null;
 
     targetToSupportedExplodedDomainsMap.forEach((value, key, map) => {
