@@ -45,12 +45,12 @@ let rulesDir = "src/chrome/content/rules";
     let targets = ruleset.target.map(target => target.$.host);
 
     // make sure ruleset contains at least one left wildcard targets
-    if (!targets.some(target => target.includes("*."))) {
+    if (!targets.some(target => target.startsWith("*."))) {
       return;
     }
 
     // but does not contain right widcard targets
-    if (targets.some(target => target.includes(".*"))) {
+    if (targets.some(target => target.endsWith(".*"))) {
       return;
     }
 
@@ -77,8 +77,10 @@ let rulesDir = "src/chrome/content/rules";
       try {
         explodeRegExp(rule.from, url => explodedUrls.push(url));
       } catch (e) {
+        // we are getting into runtime error, log and exit
         if (!(e instanceof UnsupportedRegExp)) {
           fail(e.message);
+          process.exit(1);
         }
         return false;
       }
@@ -96,11 +98,13 @@ let rulesDir = "src/chrome/content/rules";
 
         // if a rule do not rewrite all path for any URL, it is not a simple rule
         // i.e. a rule is simple only if it rewrite all path for all URLs
-        if (!(protocol == "http:" && pathname == "/*")) {
+        if (!(protocol === "http:" && pathname === "/*")) {
           isSimpleToAllExplodedUrls = false;
         }
 
         // if a rule is snapping to any URL, it is a snapping rule
+        // where a rule is snapping to a URL if it change the domain
+        // e.g. <rule from="^https://www\.example\.com/" to="https://example.com/" />
         if (url.replace(new RegExp(rule.from), rule.to) !== url.replace(/^http:/, "https:")) {
           isSnappingToAllExplodedUrls = true;
         }
@@ -115,7 +119,7 @@ let rulesDir = "src/chrome/content/rules";
     }
 
     if (!rules.every(isExplosiveRewrite)) {
-      return ;
+      return;
     }
 
     // (2) We chech if all exploded domains are supported by the targets
@@ -148,7 +152,7 @@ let rulesDir = "src/chrome/content/rules";
     targets.forEach(target => targetToSupportedExplodedDomainsMap.set(target, []));
     if (![...explodedDomains].every(domain => isSupported(domain))) {
       warn`ruleset rewrites domains ${[...unsupportedExplodedDomains]} unsupported by ${targets}`;
-      return ;
+      return;
     }
 
     // (3) We check if all targets are applied to rewrites
@@ -199,14 +203,14 @@ let rulesDir = "src/chrome/content/rules";
     //         existing rule; and remove the non-snapping rules.
     //     (b) else, do not trivialize the rules
     let condition1 = (unusedTargets.size == 0);
-    let condition2 = [...ruleToIsSimpleMap.entries()].every(([,value]) => value === true);
-    let condition3 = [...ruleToIsSnappingMap.entries()].some(([,value]) => value === false);
+    let condition2 = [...ruleToIsSimpleMap.entries()].every(([,value]) => value);
+    let condition3 = [...ruleToIsSnappingMap.entries()].some(([,value]) => !value);
 
     if (condition1 && condition2 && condition3) {
       // append trivial rule to the end of current ruleset
       if ((content.match(/\n<\/ruleset>/) || []).length != 1) {
         fail`ruleset contains zero or more than one </ruleset> tag`;
-        return ;
+        return;
       } else {
         content = content.replace(/\n<\/ruleset>/, `\n${indent}<rule from="^http:" to="https:" />\n</ruleset>`)
       }
