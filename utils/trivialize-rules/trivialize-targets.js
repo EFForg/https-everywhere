@@ -1,23 +1,23 @@
-"use strict";
+'use strict';
 
-let util = require("util");
-let path = require("path");
-let xml2js = require("xml2js");
+let util = require('util');
+let path = require('path');
+let xml2js = require('xml2js');
 
-let fs = require("graceful-fs");
+let fs = require('graceful-fs');
 let readdir = util.promisify(fs.readdir);
 let readFile = util.promisify(fs.readFile);
 let parseString = util.promisify(xml2js.parseString);
 
-let chalk = require("chalk");
-let validUrl = require("valid-url");
-let escapeStringRegexp = require("escape-string-regexp");
-let { explodeRegExp, UnsupportedRegExp } = require("./explode-regexp");
+let chalk = require('chalk');
+let validUrl = require('valid-url');
+let escapeStringRegexp = require('escape-string-regexp');
+let { explodeRegExp, UnsupportedRegExp } = require('./explode-regexp');
 
-let rulesDir = "src/chrome/content/rules";
+let rulesDir = 'src/chrome/content/rules';
 
 (async () => {
-  let filenames = (await readdir(rulesDir)).filter(fn => fn.endsWith(".xml"));
+  let filenames = (await readdir(rulesDir)).filter(fn => fn.endsWith('.xml'));
   let filePromises = filenames.map(async filename => {
     function createTag(tagName, colour, print) {
       return (strings, ...values) => {
@@ -27,35 +27,35 @@ let rulesDir = "src/chrome/content/rules";
           if (value instanceof Set) {
             value = Array.from(value);
           }
-          value = Array.isArray(value) ? value.join(", ") : value.toString();
+          value = Array.isArray(value) ? value.join(', ') : value.toString();
           result += chalk.blue(value) + strings[i];
         }
         print(colour(result));
       };
     }
 
-    let warn = createTag("WARN", chalk.yellow, console.warn);
-    let info = createTag("INFO", chalk.green, console.info);
-    let fail = createTag("FAIL", chalk.red, console.error);
+    let warn = createTag('WARN', chalk.yellow, console.warn);
+    let info = createTag('INFO', chalk.green, console.info);
+    let fail = createTag('FAIL', chalk.red, console.error);
 
-    let content = await readFile(path.join(rulesDir, filename), "utf8");
+    let content = await readFile(path.join(rulesDir, filename), 'utf8');
     let { ruleset } = await parseString(content);
 
     let rules = ruleset.rule.map(rule => rule.$);
     let targets = ruleset.target.map(target => target.$.host);
 
     // make sure ruleset contains at least one left wildcard targets
-    if (!targets.some(target => target.startsWith("*."))) {
+    if (!targets.some(target => target.startsWith('*.'))) {
       return;
     }
 
     // but does not contain right widcard targets
-    if (targets.some(target => target.endsWith(".*"))) {
+    if (targets.some(target => target.endsWith('.*'))) {
       return;
     }
 
     // should not contain trivial rules
-    if (rules.some(rule => rule.from === "^http:" && rule.to === "https:")) {
+    if (rules.some(rule => rule.from === '^http:' && rule.to === 'https:')) {
       return;
     }
 
@@ -98,14 +98,17 @@ let rulesDir = "src/chrome/content/rules";
 
         // if a rule do not rewrite all path for any URL, it is not a simple rule
         // i.e. a rule is simple only if it rewrite all path for all URLs
-        if (!(protocol === "http:" && pathname === "/*")) {
+        if (!(protocol === 'http:' && pathname === '/*')) {
           isSimpleToAllExplodedUrls = false;
         }
 
         // if a rule is snapping to any URL, it is a snapping rule
         // where a rule is snapping to a URL if it change the domain
         // e.g. <rule from="^https://www\.example\.com/" to="https://example.com/" />
-        if (url.replace(new RegExp(rule.from), rule.to) !== url.replace(/^http:/, "https:")) {
+        if (
+          url.replace(new RegExp(rule.from), rule.to) !==
+          url.replace(/^http:/, 'https:')
+        ) {
           isSnappingToAllExplodedUrls = true;
         }
 
@@ -136,9 +139,9 @@ let rulesDir = "src/chrome/content/rules";
       }
 
       // this part follows the implementation in rules.js
-      let segments = domain.split(".");
+      let segments = domain.split('.');
       for (let i = 1; i <= segments.length - 2; ++i) {
-        let tmp = "*." + segments.slice(i, segments.length).join(".");
+        let tmp = '*.' + segments.slice(i, segments.length).join('.');
         if (targets.includes(tmp)) {
           targetToSupportedExplodedDomainsMap.get(tmp).push(domain);
           return true;
@@ -149,9 +152,13 @@ let rulesDir = "src/chrome/content/rules";
     }
 
     // assume each target support no exploded domain initially
-    targets.forEach(target => targetToSupportedExplodedDomainsMap.set(target, []));
+    targets.forEach(target =>
+      targetToSupportedExplodedDomainsMap.set(target, [])
+    );
     if (![...explodedDomains].every(domain => isSupported(domain))) {
-      warn`ruleset rewrites domains ${[...unsupportedExplodedDomains]} unsupported by ${targets}`;
+      warn`ruleset rewrites domains ${[
+        ...unsupportedExplodedDomains
+      ]} unsupported by ${targets}`;
       return;
     }
 
@@ -161,7 +168,9 @@ let rulesDir = "src/chrome/content/rules";
     //         do not affect our works trivializing the targets, but
     //         it is better to give warnings
     targets.forEach(target => {
-      let supportedExplodedDomains = targetToSupportedExplodedDomainsMap.get(target);
+      let supportedExplodedDomains = targetToSupportedExplodedDomainsMap.get(
+        target
+      );
       if (supportedExplodedDomains && supportedExplodedDomains.length == 0) {
         // prepare the warning message here
         unusedTargets.add(target);
@@ -171,7 +180,9 @@ let rulesDir = "src/chrome/content/rules";
     });
 
     if (unusedTargets.size > 0) {
-      warn`ruleset contains targets ${[...unusedTargets]} not applied to any rewrites`;
+      warn`ruleset contains targets ${[
+        ...unusedTargets
+      ]} not applied to any rewrites`;
     }
 
     // (4) Replace non-trivial targets with exploded domains
@@ -190,7 +201,8 @@ let rulesDir = "src/chrome/content/rules";
       }
 
       [, indent] = matches;
-      let sub = value.map(v => `\n${indent}<target host=\"${v}\" />`).join("") + "\n";
+      let sub =
+        value.map(v => `\n${indent}<target host=\"${v}\" />`).join('') + '\n';
       content = content.replace(regex, sub);
     });
 
@@ -202,9 +214,13 @@ let rulesDir = "src/chrome/content/rules";
     //     (a) if all of the conditions are met, append a trivial rule after all
     //         existing rule; and remove the non-snapping rules.
     //     (b) else, do not trivialize the rules
-    let condition1 = (unusedTargets.size == 0);
-    let condition2 = [...ruleToIsSimpleMap.entries()].every(([,value]) => value);
-    let condition3 = [...ruleToIsSnappingMap.entries()].some(([,value]) => !value);
+    let condition1 = unusedTargets.size == 0;
+    let condition2 = [...ruleToIsSimpleMap.entries()].every(
+      ([, value]) => value
+    );
+    let condition3 = [...ruleToIsSnappingMap.entries()].some(
+      ([, value]) => !value
+    );
 
     if (condition1 && condition2 && condition3) {
       // append trivial rule to the end of current ruleset
@@ -212,19 +228,22 @@ let rulesDir = "src/chrome/content/rules";
         fail`ruleset contains zero or more than one </ruleset> tag`;
         return;
       } else {
-        content = content.replace(/\n<\/ruleset>/, `\n${indent}<rule from="^http:" to="https:" />\n</ruleset>`)
+        content = content.replace(
+          /\n<\/ruleset>/,
+          `\n${indent}<rule from="^http:" to="https:" />\n</ruleset>`
+        );
       }
 
       // remove all non-snapping rules
       let nonSnappingRules = [...ruleToIsSnappingMap.entries()]
         .filter(([, value]) => value === false)
-        .map(([key,]) => key);
+        .map(([key]) => key);
 
       for (let rule of nonSnappingRules) {
         let escapedRuleFrom = escapeStringRegexp(rule.from);
         let escapedRuleTo = escapeStringRegexp(rule.to);
 
-        let regexSource = `\n([\t ]*)<rule\\s*from=\\s*"${escapedRuleFrom}"(\\s*)to=\\s*"${escapedRuleTo}"\\s*?/>[\t ]*\n`
+        let regexSource = `\n([\t ]*)<rule\\s*from=\\s*"${escapedRuleFrom}"(\\s*)to=\\s*"${escapedRuleTo}"\\s*?/>[\t ]*\n`;
         let regex = new RegExp(regexSource);
 
         let matches = content.match(regex);
@@ -235,12 +254,12 @@ let rulesDir = "src/chrome/content/rules";
         }
 
         [, indent] = matches;
-        content = content.replace(regex, "\n");
+        content = content.replace(regex, '\n');
       }
     }
 
     return new Promise((resolve, reject) => {
-      fs.writeFile(path.join(rulesDir, filename), content, "utf8", err => {
+      fs.writeFile(path.join(rulesDir, filename), content, 'utf8', err => {
         if (err) {
           reject(err);
         }
