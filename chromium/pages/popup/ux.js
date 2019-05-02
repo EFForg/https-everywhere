@@ -28,10 +28,26 @@ function toggleRuleLine(event) {
   });
 }
 
+/**
+ * @param {object} event
+ * @description Toggles content for user to view rules and explanations for different modes
+ */
 function toggleSeeMore(event) {
+  /*
+    @todo
+    probably could put this all in one div so two events aren't being read for this section
+  */
   let target = event.target.parentNode.querySelector('.see_more__content');
-  let arrow  = event.target;
-  let prompt = arrow.parentNode.querySelector('.see_more__prompt');
+  let arrow, prompt;
+
+  if(event.target.classList.contains('see_more__arrow')) {
+    arrow  = event.target;
+    prompt = arrow.parentNode.querySelector('.see_more__prompt');
+  } else {
+    // Reverse logic if user clicks text instead of the arrow.
+    prompt = event.target;
+    arrow = prompt.parentNode.querySelector('.see_more__arrow');
+  }
 
   if(arrow.classList.contains('down')) {
     arrow.classList.replace('down', 'up');
@@ -124,6 +140,7 @@ function showHttpNowhereUI() {
   getOption_('httpNowhere', false, function(item) {
     if (item.httpNowhere) {
       e('http-nowhere-checkbox').checked = true;
+      e('HttpNowhere__header').innerText = 'Encrypt All Sites Eligible is ON';
       e('HttpNowhere__explained').innerText = 'Unencrypted requests are currently blocked';
     }
     e('HttpNowhere').style.visibility = "visible";
@@ -163,7 +180,7 @@ function toggleEnabledDisabled() {
 }
 
 /**
- * Create the list of rules for a specific tab
+ * @description Create the list of rules for a specific tab
  * @param activeTab
  */
 function listRules(activeTab) {
@@ -204,8 +221,12 @@ document.addEventListener("DOMContentLoaded", function () {
   updateEnabledDisabledUI();
   e('onoffswitch').addEventListener('click', toggleEnabledDisabled);
   e('http-nowhere-checkbox').addEventListener('click', toggleHttpNowhere, false);
+
   e('HttpNowhere__see_more').addEventListener('click', toggleSeeMore);
   e('RuleManagement__see_more').addEventListener('click', toggleSeeMore);
+  e('HttpNowhere__see_more--prompt').addEventListener('click', toggleSeeMore);
+  e('RuleManagement__see_more--prompt').addEventListener('click', toggleSeeMore);
+
   e('reset-to-defaults').addEventListener('click', () => {
     sendMessage("is_firefox", null, is_firefox => {
       if (is_firefox) {
@@ -257,7 +278,6 @@ document.addEventListener("DOMContentLoaded", function () {
   e("disable-on-this-site").addEventListener("click", disableOnSite);
   e("enable-on-this-site").addEventListener("click", enableOnSite);
 });
-
 
 var escapeForRegex = function( value ) {
   return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
@@ -366,8 +386,10 @@ function toggleHttpNowhere() {
       setOption_('httpNowhere', enabled, () => {
         if (enabled) {
           chrome.tabs.reload(tab.id);
+          e('HttpNowhere__header').innerText = 'Encrypt All Sites Eligible is ON';
           e('HttpNowhere__explained').innerText = 'Unencrypted requests are currently blocked';
         } else {
+          e('HttpNowhere__header').innerText = 'Encrypt All Sites Eligible is OFF';
           e('HttpNowhere__explained').innerText = 'Unencrypted requests are currently allowed';
         }
       });
