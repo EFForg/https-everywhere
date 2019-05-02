@@ -11,34 +11,71 @@
  * Handles rule (de)activation in the popup
  */
 function toggleRuleLine(event) {
-  if (event.target.matches("input[type=checkbox]")) {
-    getTab(activeTab => {
-      const set_ruleset = {
-        active: event.target.checked,
-        name: event.target.nextSibling.innerText,
-        tab_id: activeTab.id,
-      };
+  getTab(activeTab => {
+    const set_ruleset = {
+      active: event.target.parentNode.firstChild.checked,
+      name: event.target.innerText,
+      tab_id: activeTab.id,
+    };
 
-      sendMessage("set_ruleset_active_status", set_ruleset, () => {
-        // purge the name from the cache so that this unchecking is persistent.
-        sendMessage("delete_from_ruleset_cache", set_ruleset.name, () => {
-          // Now reload the selected tab of the current window.
-          chrome.tabs.reload(set_ruleset.tab_id);
-        });
+    sendMessage("set_ruleset_active_status", set_ruleset, () => {
+      // purge the name from the cache so that this unchecking is persistent.
+      sendMessage("delete_from_ruleset_cache", set_ruleset.name, () => {
+        // Now reload the selected tab of the current window.
+        chrome.tabs.reload(set_ruleset.tab_id);
       });
     });
-  }
+  });
 }
 
+/**
+ * @param {object} event
+ * @description Toggles content for user to view rules and explanations for different modes
+ */
+function toggleSeeMore(event) {
+  /*
+    @todo
+    probably could put this all in one div so two events aren't being read for this section
+  */
+  let target = event.target.parentNode.querySelector('.see_more__content');
+  let arrow, prompt;
+
+  if(event.target.classList.contains('see_more__arrow')) {
+    arrow  = event.target;
+    prompt = arrow.parentNode.querySelector('.see_more__prompt');
+  } else {
+    // Reverse logic if user clicks text instead of the arrow.
+    prompt = event.target;
+    arrow = prompt.parentNode.querySelector('.see_more__arrow');
+  }
+
+  if(arrow.classList.contains('down')) {
+    arrow.classList.replace('down', 'up');
+    prompt.innerText = 'See less';
+  } else if (arrow.classList.contains('up')) {
+    arrow.classList.replace('up', 'down');
+    prompt.innerText = 'See more';
+  }
+
+  if (target.classList.contains('hide')) {
+    target.classList.replace('hide', 'show');
+  } else if (target.classList.contains('show')) {
+    target.classList.replace('show', 'hide');
+  }
+}
 
 /**
  * Creates rule lines (including checkbox and icon) for the popup
  * @param rulesets
  * @param list_div
+ * @param {string} ruleType
  * @returns {*}
  */
-function appendRulesToListDiv(rulesets, list_div) {
+function appendRulesToListDiv(rulesets, list_div, ruleType) {
   if (rulesets && rulesets.length) {
+    let counter = rulesets.length;
+    let counterElement = document.querySelector("#RuleManagement--counter");
+    counterElement.innerText = counter;
     // template parent block for each ruleset
     let templateLine = document.createElement("div");
     templateLine.className = "rule checkbox";
@@ -58,14 +95,22 @@ function appendRulesToListDiv(rulesets, list_div) {
     templateRemove.src = chrome.runtime.getURL("images/remove.png");
     templateRemove.className = "remove";
 
-    templateLabel.appendChild(templateCheckbox);
+    templateLine.appendChild(templateCheckbox);
     templateLabel.appendChild(templateLabelText);
     templateLine.appendChild(templateLabel);
 
+    let increment = 0;
+
     for (const ruleset of rulesets) {
+      increment++;
       let line = templateLine.cloneNode(true);
       let checkbox = line.querySelector("input[type=checkbox]");
+      let label = line.querySelector("label");
       let text = line.querySelector("span");
+
+      // For each "id" attribute in each checkbox input and "for" attribute in label
+      checkbox.setAttribute("id", `${ruleType}_ruleset_${increment}`);
+      label.setAttribute("for", `${ruleType}_ruleset_${increment}`);
 
       checkbox.checked = ruleset.active;
       text.innerText = ruleset.name;
@@ -95,6 +140,8 @@ function showHttpNowhereUI() {
   getOption_('httpNowhere', false, function(item) {
     if (item.httpNowhere) {
       e('http-nowhere-checkbox').checked = true;
+      e('HttpNowhere__header').innerText = 'Encrypt All Sites Eligible is ON';
+      e('HttpNowhere__explained').innerText = 'Unencrypted requests are currently blocked';
     }
     e('HttpNowhere').style.visibility = "visible";
   });
@@ -108,30 +155,32 @@ function updateEnabledDisabledUI() {
     // Hide or show the rules sections
     if (item.globalEnabled) {
       document.body.className = ""
-      showHttpNowhereUI()
+      showHttpNowhereUI();
     } else {
-      document.body.className = "disabled"
+      document.body.className = "disabled";
+      e('onoffswitch_label').innerText = 'HTTPS Everywhere is OFF';
     }
   });
 }
 
 // Toggle extension enabled/disabled status
 function toggleEnabledDisabled() {
-  var extension_toggle_effect = function() {
+  let extension_toggle_effect = function() {
     updateEnabledDisabledUI();
-    // The extension state changed, so reload this tab.
-    chrome.tabs.reload();
-    window.close();
+    // The extension state changed, give some time for toggle animation and reload tab
+    setTimeout(function() {
+      chrome.tabs.reload();
+      window.close();
+    }, 1500);
   }
 
   getOption_('globalEnabled', true, function(item) {
     setOption_('globalEnabled', !item.globalEnabled, extension_toggle_effect);
   });
-
 }
 
 /**
- * Create the list of rules for a specific tab
+ * @description Create the list of rules for a specific tab
  * @param activeTab
  */
 function listRules(activeTab) {
@@ -140,8 +189,8 @@ function listRules(activeTab) {
       const stableRules = rulesets.filter(ruleset => ruleset.default_state);
       const unstableRules = rulesets.filter(ruleset => !ruleset.default_state);
 
-      appendRulesToListDiv(stableRules, e("StableRules"));
-      appendRulesToListDiv(unstableRules, e("UnstableRules"));
+      appendRulesToListDiv(stableRules, e("StableRules"), 'stable');
+      appendRulesToListDiv(unstableRules, e("UnstableRules"), 'unstable');
 
       // Add listener to capture the toggle event
       e("RuleManagement").addEventListener("click", toggleRuleLine);
@@ -172,6 +221,12 @@ document.addEventListener("DOMContentLoaded", function () {
   updateEnabledDisabledUI();
   e('onoffswitch').addEventListener('click', toggleEnabledDisabled);
   e('http-nowhere-checkbox').addEventListener('click', toggleHttpNowhere, false);
+
+  e('HttpNowhere__see_more').addEventListener('click', toggleSeeMore);
+  e('RuleManagement__see_more').addEventListener('click', toggleSeeMore);
+  e('HttpNowhere__see_more--prompt').addEventListener('click', toggleSeeMore);
+  e('RuleManagement__see_more--prompt').addEventListener('click', toggleSeeMore);
+
   e('reset-to-defaults').addEventListener('click', () => {
     sendMessage("is_firefox", null, is_firefox => {
       if (is_firefox) {
@@ -223,7 +278,6 @@ document.addEventListener("DOMContentLoaded", function () {
   e("disable-on-this-site").addEventListener("click", disableOnSite);
   e("enable-on-this-site").addEventListener("click", enableOnSite);
 });
-
 
 var escapeForRegex = function( value ) {
   return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
@@ -322,6 +376,9 @@ function enableOnSite() {
   });
 }
 
+/**
+ * @description Turns EASE Mode on and off
+ */
 function toggleHttpNowhere() {
   getTab(tab => {
     getOption_('httpNowhere', false, item => {
@@ -329,6 +386,11 @@ function toggleHttpNowhere() {
       setOption_('httpNowhere', enabled, () => {
         if (enabled) {
           chrome.tabs.reload(tab.id);
+          e('HttpNowhere__header').innerText = 'Encrypt All Sites Eligible is ON';
+          e('HttpNowhere__explained').innerText = 'Unencrypted requests are currently blocked';
+        } else {
+          e('HttpNowhere__header').innerText = 'Encrypt All Sites Eligible is OFF';
+          e('HttpNowhere__explained').innerText = 'Unencrypted requests are currently allowed';
         }
       });
     });
