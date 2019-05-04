@@ -42,7 +42,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // Display feedback to incorrect user input
+  const userInputError = document.getElementById("user-input-error");
+  function displayError(text) {
+    const userInputErrorText = document.getElementById("user-input-error-text");
+    userInputErrorText.innerText = text;
+    userInputError.style.display = "block";
+    window.scrollTo(0,0);
+  }
+
+  function hideErrors() {
+    userInputError.style.display = "none";
+  }
+
+  document.getElementById("user-input-error-hide").addEventListener("click", hideErrors);
+
   function onlyShowSection(sectionId) {
+    hideErrors();
     document.querySelectorAll(".section-wrapper").forEach(sw => {
       sw.style.display = "none";
     });
@@ -221,17 +237,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   renderUpdateChannels();
 
-  const addApdateChannel = document.getElementById("add-update-channel");
+  const addUpdateChannelForm = document.getElementById("add-update-channel-form");
   const updateChannelNameDiv = document.getElementById("update-channel-name");
-  const updateChannelsErrorText = document.getElementById("update-channels-error-text");
-  const updateChannelsError = document.getElementById("update-channels-error");
   updateChannelNameDiv.setAttribute("placeholder", chrome.i18n.getMessage("options_enterUpdateChannelName"));
-
-  function displayError(text) {
-    updateChannelsErrorText.innerText = text;
-    updateChannelsError.style.display = "block";
-    window.scrollTo(0,0);
-  }
 
   // Get a list of user Rules
   sendMessage("get_user_rules", null, userRules => {
@@ -303,19 +311,45 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Allow user to disable HTTPSE for a site
-  const addDisabledSiteBtn = document.getElementById("add-disabled-rule");
+  function validateDomain(domain) {
+    // TODO:
+    // this is incredibly simplistic placeholder
+    // the actual function will be implemented by @pipboy96
+    // enter "error" to test error message
+    if (domain === "error")
+      return null
+    // "No Error"
+    domain = domain.trim().toLowerCase()
+    return domain
+  }
+
+  // Allow user to disable HTTPS Everywhere for a site
+  const addDisabledSiteForm = document.getElementById("add-disabled-rule-form");
   const disabledSiteName = document.getElementById("disabled-domain-name");
   disabledSiteName.setAttribute("placeholder", chrome.i18n.getMessage("options_enterDisabledUrl"));
-  addDisabledSiteBtn.addEventListener("click", () => {
-    // TODO: use form submit event instead?
-    const host = disabledSiteName.value;
-    disabledSiteName.value = "";
-    addDisabledSite([host]);
-    sendMessage("disable_on_site", host);
+  addDisabledSiteForm.addEventListener("submit", (e) => {
+    // TODO: check if this domain is already in the disabled list
+    // this would be trivial if the disabled list was stored, but then we would need to update it when user interacts with Popup UI
+    // prevent page reload
+    e.preventDefault();
+    // hide past feedback, if there was any
+    hideErrors();
+    const domain = disabledSiteName.value;
+    const validated = validateDomain(domain);
+    if (validated === null) {
+      // incorrect domain
+      displayError("TODO: what is the error?");
+    } else {
+      // correct domain
+      disabledSiteName.value = "";
+      addDisabledSite([validated]);
+      sendMessage("disable_on_site", validated);
+    }
   })
 
-  addApdateChannel.addEventListener("click", () => {
+  addUpdateChannelForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    hideErrors();
     const updateChannelName = updateChannelNameDiv.value;
     if(updateChannelName.trim() == "") {
       displayError("Error: The update channel name is blank.  Please enter another name.");
@@ -331,10 +365,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  const updateChannelsErrorHide = document.getElementById("update-channels-error-hide");
-  updateChannelsErrorHide.addEventListener("click", () => {
-    updateChannelsError.style.display = "none";
-  });
 
   const updateChannelsLastChecked = document.getElementById("update-channels-last-checked");
   sendMessage("get_last_checked", null, lastChecked => {
