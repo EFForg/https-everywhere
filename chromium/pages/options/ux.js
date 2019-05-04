@@ -43,16 +43,16 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function onlyShowSection(sectionId) {
-    document.querySelectorAll('.section-wrapper').forEach(sw => {
+    document.querySelectorAll(".section-wrapper").forEach(sw => {
       sw.style.display = "none";
     });
     document.getElementById(sectionId).style.display = "block";
   }
-  onlyShowSection('general-settings-wrapper');
+  onlyShowSection("general-settings-wrapper");
 
-  document.querySelectorAll('.section-header-span').forEach(shs => {
+  document.querySelectorAll(".section-header-span").forEach(shs => {
     shs.addEventListener("click", () => {
-      document.querySelectorAll('.section-header-span').forEach(shs => {
+      document.querySelectorAll(".section-header-span").forEach(shs => {
         shs.classList.remove("active");
         shs.classList.add("inactive");
       });
@@ -62,144 +62,144 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  function create_update_channel_element(update_channel, last_updated, pinned) {
-    let ruleset_version_string;
+  function createUpdateChannelElement(updateChannel, lastUpdated, pinned) {
+    let rulesetVersionString;
 
-    if(last_updated) {
-      const ruleset_date = new Date(last_updated * 1000);
-      ruleset_version_string = ruleset_date.getUTCFullYear() + "." + (ruleset_date.getUTCMonth() + 1) + "." + ruleset_date.getUTCDate();
+    if(lastUpdated) {
+      const rulesetDate = new Date(lastUpdated * 1000);
+      rulesetVersionString = rulesetDate.getUTCFullYear() + "." + (rulesetDate.getUTCMonth() + 1) + "." + rulesetDate.getUTCDate();
     } else {
-      ruleset_version_string = "n/a";
+      rulesetVersionString = "n/a";
     }
 
-    const update_channel_div = document.createElement('div');
-    update_channel_div.className = "update-channel";
+    const updateChannelDiv = document.createElement("div");
+    updateChannelDiv.className = "update-channel";
 
-    const update_channel_name = document.createElement('div');
-    update_channel_name.className = "update-channel-name";
-    update_channel_name.innerText = update_channel.name;
-    update_channel_div.appendChild(update_channel_name);
-    const update_channel_last_updated = document.createElement('div');
-    update_channel_last_updated.className = "update-channel-last-updated";
-    update_channel_last_updated.innerText = chrome.i18n.getMessage("options_storedRulesetsVersion") + ruleset_version_string;
-    update_channel_name.appendChild(update_channel_last_updated);
+    const updateChannelName = document.createElement("div");
+    updateChannelName.className = "update-channel-name";
+    updateChannelName.innerText = updateChannel.name;
+    updateChannelDiv.appendChild(updateChannelName);
+    const updateChannelLastUpdated = document.createElement("div");
+    updateChannelLastUpdated.className = "update-channel-last-updated";
+    updateChannelLastUpdated.innerText = chrome.i18n.getMessage("options_storedRulesetsVersion") + rulesetVersionString;
+    updateChannelName.appendChild(updateChannelLastUpdated);
 
-    const update_channel_row_jwk = document.createElement('div');
-    update_channel_row_jwk.className = "update-channel-row-jwk";
-    update_channel_div.appendChild(update_channel_row_jwk);
-    const update_channel_jwk_column_left = document.createElement('div');
-    update_channel_jwk_column_left.className = "update-channel-column-left";
-    update_channel_jwk_column_left.innerText = "JWK:";
-    update_channel_row_jwk.appendChild(update_channel_jwk_column_left);
-    const update_channel_jwk_column_right = document.createElement('div');
-    update_channel_jwk_column_right.className = "update-channel-column-right";
-    update_channel_row_jwk.appendChild(update_channel_jwk_column_right);
-    const update_channel_jwk = document.createElement('textarea');
-    update_channel_jwk.className = "update-channel-jwk";
-    update_channel_jwk.setAttribute("data-name", update_channel.name);
-    update_channel_jwk.disabled = pinned;
-    update_channel_jwk.innerText = JSON.stringify(update_channel.jwk);
-    update_channel_jwk_column_right.appendChild(update_channel_jwk);
+    const updateChannelRowJwk = document.createElement("div");
+    updateChannelRowJwk.className = "update-channel-row-jwk";
+    updateChannelDiv.appendChild(updateChannelRowJwk);
+    const updateChannelJwkColumnLeft = document.createElement("div");
+    updateChannelJwkColumnLeft.className = "update-channel-column-left";
+    updateChannelJwkColumnLeft.innerText = "JWK:";
+    updateChannelRowJwk.appendChild(updateChannelJwkColumnLeft);
+    const updateChannelJwkColumnRight = document.createElement("div");
+    updateChannelJwkColumnRight.className = "update-channel-column-right";
+    updateChannelRowJwk.appendChild(updateChannelJwkColumnRight);
+    const updateChannelJwk = document.createElement("textarea");
+    updateChannelJwk.className = "update-channel-jwk";
+    updateChannelJwk.setAttribute("data-name", updateChannel.name);
+    updateChannelJwk.disabled = pinned;
+    updateChannelJwk.innerText = JSON.stringify(updateChannel.jwk);
+    updateChannelJwkColumnRight.appendChild(updateChannelJwk);
 
-    const update_channel_row_path_prefix = document.createElement('div');
-    update_channel_row_path_prefix.className = "update-channel-row-path-prefix";
-    update_channel_div.appendChild(update_channel_row_path_prefix);
-    const update_channel_path_prefix_column_left = document.createElement('div');
-    update_channel_path_prefix_column_left.className = "update-channel-column-left";
-    update_channel_path_prefix_column_left.innerText = "Path Prefix:";
-    update_channel_row_path_prefix.appendChild(update_channel_path_prefix_column_left);
-    const update_channel_path_prefix_column_right = document.createElement('div');
-    update_channel_path_prefix_column_right.className = "update-channel-column-right";
-    update_channel_row_path_prefix.appendChild(update_channel_path_prefix_column_right);
-    const update_channel_path_prefix = document.createElement('input');
-    update_channel_path_prefix.setAttribute("type", "text");
-    update_channel_path_prefix.className = "update-channel-path-prefix";
-    update_channel_path_prefix.setAttribute("data-name", update_channel.name);
-    update_channel_path_prefix.disabled = pinned;
-    update_channel_path_prefix.value = update_channel.update_path_prefix;
-    update_channel_path_prefix_column_right.appendChild(update_channel_path_prefix);
+    const updateChannelRowPathPrefix = document.createElement("div");
+    updateChannelRowPathPrefix.className = "update-channel-row-path-prefix";
+    updateChannelDiv.appendChild(updateChannelRowPathPrefix);
+    const updateChannelPathPrefixColumnLeft = document.createElement("div");
+    updateChannelPathPrefixColumnLeft.className = "update-channel-column-left";
+    updateChannelPathPrefixColumnLeft.innerText = "Path Prefix:";
+    updateChannelRowPathPrefix.appendChild(updateChannelPathPrefixColumnLeft);
+    const updateChannelPathPrefixColumnRight = document.createElement("div");
+    updateChannelPathPrefixColumnRight.className = "update-channel-column-right";
+    updateChannelRowPathPrefix.appendChild(updateChannelPathPrefixColumnRight);
+    const updateChannelPathPrefix = document.createElement("input");
+    updateChannelPathPrefix.setAttribute("type", "text");
+    updateChannelPathPrefix.className = "update-channel-path-prefix";
+    updateChannelPathPrefix.setAttribute("data-name", updateChannel.name);
+    updateChannelPathPrefix.disabled = pinned;
+    updateChannelPathPrefix.value = updateChannel.update_path_prefix;
+    updateChannelPathPrefixColumnRight.appendChild(updateChannelPathPrefix);
 
-    let clearer = document.createElement('div');
+    let clearer = document.createElement("div");
     clearer.className = "clearer";
-    update_channel_div.appendChild(clearer);
+    updateChannelDiv.appendChild(clearer);
 
-    const update_channel_row_scope = document.createElement('div');
-    update_channel_row_scope.className = "update-channel-row-scope";
-    update_channel_div.appendChild(update_channel_row_scope);
-    const update_channel_scope_column_left = document.createElement('div');
-    update_channel_scope_column_left.className = "update-channel-column-left";
-    update_channel_scope_column_left.innerText = "Scope:";
-    update_channel_row_scope.appendChild(update_channel_scope_column_left);
-    const update_channel_scope_column_right = document.createElement('div');
-    update_channel_scope_column_right.className = "update-channel-column-right";
-    update_channel_row_scope.appendChild(update_channel_scope_column_right);
-    const update_channel_scope = document.createElement('input');
-    update_channel_scope.setAttribute("type", "text");
-    update_channel_scope.className = "update-channel-scope";
-    update_channel_scope.setAttribute("data-name", update_channel.name);
-    update_channel_scope.disabled = pinned;
-    update_channel_scope.value = update_channel.scope;
-    update_channel_scope_column_right.appendChild(update_channel_scope);
+    const updateChannelRowScope = document.createElement("div");
+    updateChannelRowScope.className = "update-channel-row-scope";
+    updateChannelDiv.appendChild(updateChannelRowScope);
+    const updateChannelScopeColumnLeft = document.createElement("div");
+    updateChannelScopeColumnLeft.className = "update-channel-column-left";
+    updateChannelScopeColumnLeft.innerText = "Scope:";
+    updateChannelRowScope.appendChild(updateChannelScopeColumnLeft);
+    const updateChannelScopeColumnRight = document.createElement("div");
+    updateChannelScopeColumnRight.className = "update-channel-column-right";
+    updateChannelRowScope.appendChild(updateChannelScopeColumnRight);
+    const updateChannelScope = document.createElement("input");
+    updateChannelScope.setAttribute("type", "text");
+    updateChannelScope.className = "update-channel-scope";
+    updateChannelScope.setAttribute("data-name", updateChannel.name);
+    updateChannelScope.disabled = pinned;
+    updateChannelScope.value = updateChannel.scope;
+    updateChannelScopeColumnRight.appendChild(updateChannelScope);
 
-    const update_channel_row_controls = document.createElement('div');
-    update_channel_row_controls.className = "update-channel-row-controls";
-    update_channel_div.appendChild(update_channel_row_controls);
-    const update_channel_controls_column_left = document.createElement('div');
-    update_channel_controls_column_left.className = "update-channel-column-left";
-    update_channel_controls_column_left.innerText = " ";
-    update_channel_row_controls.appendChild(update_channel_controls_column_left);
-    const update_channel_controls_column_right = document.createElement('div');
-    update_channel_controls_column_right.className = "update-channel-column-right";
-    update_channel_row_controls.appendChild(update_channel_controls_column_right);
-    const update_channel_update = document.createElement('button');
-    update_channel_update.className = "update-channel-update";
-    update_channel_update.setAttribute("data-name", update_channel.name);
-    update_channel_update.disabled = pinned;
-    update_channel_update.innerText = chrome.i18n.getMessage("options_update");
-    update_channel_controls_column_right.appendChild(update_channel_update);
-    const update_channel_delete = document.createElement('button');
-    update_channel_delete.className = "update-channel-update";
-    update_channel_delete.setAttribute("data-name", update_channel.name);
-    update_channel_delete.disabled = pinned;
-    update_channel_delete.innerText = chrome.i18n.getMessage("options_delete");
-    update_channel_controls_column_right.appendChild(update_channel_delete);
+    const updateChannelRowControls = document.createElement("div");
+    updateChannelRowControls.className = "update-channel-row-controls";
+    updateChannelDiv.appendChild(updateChannelRowControls);
+    const updateChannelControlsColumnLeft = document.createElement("div");
+    updateChannelControlsColumnLeft.className = "update-channel-column-left";
+    updateChannelControlsColumnLeft.innerText = " ";
+    updateChannelRowControls.appendChild(updateChannelControlsColumnLeft);
+    const updateChannelControlsColumnRight = document.createElement("div");
+    updateChannelControlsColumnRight.className = "update-channel-column-right";
+    updateChannelRowControls.appendChild(updateChannelControlsColumnRight);
+    const updateChannelUpdate = document.createElement("button");
+    updateChannelUpdate.className = "update-channel-update";
+    updateChannelUpdate.setAttribute("data-name", updateChannel.name);
+    updateChannelUpdate.disabled = pinned;
+    updateChannelUpdate.innerText = chrome.i18n.getMessage("options_update");
+    updateChannelControlsColumnRight.appendChild(updateChannelUpdate);
+    const updateChannelDelete = document.createElement("button");
+    updateChannelDelete.className = "update-channel-update";
+    updateChannelDelete.setAttribute("data-name", updateChannel.name);
+    updateChannelDelete.disabled = pinned;
+    updateChannelDelete.innerText = chrome.i18n.getMessage("options_delete");
+    updateChannelControlsColumnRight.appendChild(updateChannelDelete);
 
-    clearer = document.createElement('div');
+    clearer = document.createElement("div");
     clearer.className = "clearer";
-    update_channel_div.appendChild(clearer);
+    updateChannelDiv.appendChild(clearer);
 
-    update_channel_delete.addEventListener("click", () => {
-      sendMessage("delete_update_channel", update_channel.name, () => {
-        render_update_channels();
+    updateChannelDelete.addEventListener("click", () => {
+      sendMessage("delete_update_channel", updateChannel.name, () => {
+        renderUpdateChannels();
       });
     });
 
-    update_channel_update.addEventListener("click", () => {
+    updateChannelUpdate.addEventListener("click", () => {
       sendMessage("update_update_channel", {
-        name: update_channel.name,
-        jwk: JSON.parse(update_channel_jwk.value),
-        update_path_prefix: update_channel_path_prefix.value,
-        scope: update_channel_scope.value
+        name: updateChannel.name,
+        jwk: JSON.parse(updateChannelJwk.value),
+        update_path_prefix: updateChannelPathPrefix.value,
+        scope: updateChannelScope.value
       }, () => {
-        render_update_channels();
+        renderUpdateChannels();
       });
     });
 
-    return update_channel_div;
+    return updateChannelDiv;
   }
 
-  function render_update_channels() {
-    const update_channels_list = document.getElementById("update-channels-list");
-    while(update_channels_list.firstChild) {
-      update_channels_list.removeChild(update_channels_list.firstChild);
+  function renderUpdateChannels() {
+    const updateChannelsList = document.getElementById("update-channels-list");
+    while(updateChannelsList.firstChild) {
+      updateChannelsList.removeChild(updateChannelsList.firstChild);
     }
 
     sendMessage("get_pinned_update_channels", null, item => {
-      for(const update_channel of item.update_channels) {
-        update_channels_list.appendChild(
-          create_update_channel_element(
-            update_channel,
-            item.last_updated[update_channel.name],
+      for(const updateChannel of item.update_channels) {
+        updateChannelsList.appendChild(
+          createUpdateChannelElement(
+            updateChannel,
+            item.last_updated[updateChannel.name],
             true
           )
         );
@@ -208,88 +208,89 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     sendMessage("get_stored_update_channels", null, item => {
-      for(const update_channel of item.update_channels) {
-        update_channels_list.appendChild(
-          create_update_channel_element(
-            update_channel,
-            item.last_updated[update_channel.name],
+      for(const updateChannel of item.update_channels) {
+        updateChannelsList.appendChild(
+          createUpdateChannelElement(
+            updateChannel,
+            item.last_updated[updateChannel.name],
             false
           )
         );
       }
     });
   }
-  render_update_channels();
+  renderUpdateChannels();
 
-  const add_update_channel = document.getElementById("add-update-channel");
-  const update_channel_name_div = document.getElementById("update-channel-name");
-  const update_channels_error_text = document.getElementById("update-channels-error-text");
-  const update_channels_error = document.getElementById("update-channels-error");
-  update_channel_name_div.setAttribute("placeholder", chrome.i18n.getMessage("options_enterUpdateChannelName"));
+  const addApdateChannel = document.getElementById("add-update-channel");
+  const updateChannelNameDiv = document.getElementById("update-channel-name");
+  const updateChannelsErrorText = document.getElementById("update-channels-error-text");
+  const updateChannelsError = document.getElementById("update-channels-error");
+  updateChannelNameDiv.setAttribute("placeholder", chrome.i18n.getMessage("options_enterUpdateChannelName"));
 
   function displayError(text) {
-    update_channels_error_text.innerText = text;
-    update_channels_error.style.display = "block";
+    updateChannelsErrorText.innerText = text;
+    updateChannelsError.style.display = "block";
     window.scrollTo(0,0);
   }
 
   // Get a list of user Rules
   sendMessage("get_user_rules", null, userRules => {
-    let user_rules_parent = e("user-rules-wrapper");
+    const userRulesParent = e("user-rules-wrapper");
 
     if ( 0 === userRules.length) {
-      hide(user_rules_parent);
+      hide(userRulesParent);
       return ;
     }
 
     // img element "remove button"
-    let templateRemove = document.createElement("img");
+    const templateRemove = document.createElement("img");
     templateRemove.src = chrome.runtime.getURL("images/remove.png");
     templateRemove.className = "remove";
 
     for (const userRule of userRules) {
-      let user_rule_host = document.createElement("div");
-      let user_rule_name = document.createElement("p");
-      let remove = templateRemove.cloneNode(true);
+      const userRuleHost = document.createElement("div");
+      const userRuleName = document.createElement("p");
+      const remove = templateRemove.cloneNode(true);
 
-      user_rule_host.className = "user-rules-list-item";
-      user_rule_name.className = "user-rules-list-item-single"
-      user_rule_name.innerText = userRule.name;
-      user_rule_host.appendChild(user_rule_name);
-      user_rules_parent.appendChild(user_rule_host);
-      user_rule_host.appendChild(remove);
+      userRuleHost.className = "user-rules-list-item";
+      userRuleName.className = "user-rules-list-item-single"
+      userRuleName.innerText = userRule.name;
+      userRuleHost.appendChild(userRuleName);
+      userRulesParent.appendChild(userRuleHost);
+      userRuleHost.appendChild(remove);
 
       remove.addEventListener("click", () => {
         // assume the removal is successful and hide ui element
-        hide( user_rule_host );
+        hide(userRuleHost);
         // remove the user rule
-        sendMessage("remove_rule", { ruleset: userRule, src: 'options' });
+        sendMessage("remove_rule", { ruleset: userRule, src: "options" });
       });
     }
   })
 
+  // Displays a list of disabled sites for a list of domains
   function addDisabledSite (domains) {
-    let rule_host_parent = e("disabled-rules-wrapper");
+    const ruleHostParent = e("disabled-rules-wrapper");
 
     // img element "remove button"
-    let templateRemove = document.createElement("img");
+    const templateRemove = document.createElement("img");
     templateRemove.src = chrome.runtime.getURL("images/remove.png");
     templateRemove.className = "remove";
 
     for (const key of domains) {
-      let rule_host = document.createElement("div");
-      let remove = templateRemove.cloneNode(true);
-      let rule_host_site_name = document.createElement("p");
+      const ruleHost = document.createElement("div");
+      const remove = templateRemove.cloneNode(true);
+      const ruleHostSiteName = document.createElement("p");
 
-      rule_host.className = "disabled-rule-list-item";
-      rule_host_site_name.className = "disabled-rule-list-item_single"
-      rule_host_site_name.innerText = key;
-      rule_host.appendChild( rule_host_site_name);
-      rule_host_parent.appendChild(rule_host);
-      rule_host.appendChild(remove);
+      ruleHost.className = "disabled-rule-list-item";
+      ruleHostSiteName.className = "disabled-rule-list-item_single"
+      ruleHostSiteName.innerText = key;
+      ruleHost.appendChild(ruleHostSiteName);
+      ruleHostParent.appendChild(ruleHost);
+      ruleHost.appendChild(remove);
 
       remove.addEventListener("click", () => {
-        hide( rule_host );
+        hide(ruleHost);
         sendMessage("enable_on_site", key);
       });
     }
@@ -302,26 +303,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Allow user t disable HTTPSE for a site
-  const add_disabled_site = document.getElementById("add-disabled-rule");
-  const disabled_site_name = document.getElementById("disabled-domain-name");
-  disabled_site_name.setAttribute("placeholder", chrome.i18n.getMessage("options_enterDisabledUrl"));
-  add_disabled_site.addEventListener("click", () => {
-    const host = disabled_site_name.value;
-    disabled_site_name.value = "";
+  // Allow user to disable HTTPSE for a site
+  const addDisabledSiteBtn = document.getElementById("add-disabled-rule");
+  const disabledSiteName = document.getElementById("disabled-domain-name");
+  disabledSiteName.setAttribute("placeholder", chrome.i18n.getMessage("options_enterDisabledUrl"));
+  addDisabledSiteBtn.addEventListener("click", () => {
+    // TODO: use form submit event instead?
+    const host = disabledSiteName.value;
+    disabledSiteName.value = "";
     addDisabledSite([host]);
     sendMessage("disable_on_site", host);
   })
 
-  add_update_channel.addEventListener("click", () => {
-    const update_channel_name = update_channel_name_div.value;
-    if(update_channel_name.trim() == "") {
+  addApdateChannel.addEventListener("click", () => {
+    const updateChannelName = updateChannelNameDiv.value;
+    if(updateChannelName.trim() == "") {
       displayError("Error: The update channel name is blank.  Please enter another name.");
     } else {
-      update_channel_name_div.value = "";
-      sendMessage("create_update_channel", update_channel_name, result => {
+      updateChannelNameDiv.value = "";
+      sendMessage("create_update_channel", updateChannelName, result => {
         if(result == true) {
-          render_update_channels();
+          renderUpdateChannels();
         } else {
           displayError("Error: There already exists an update channel with this name.");
         }
@@ -329,30 +331,30 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  const update_channels_error_hide = document.getElementById("update-channels-error-hide");
-  update_channels_error_hide.addEventListener("click", () => {
-    update_channels_error.style.display = "none";
+  const updateChannelsErrorHide = document.getElementById("update-channels-error-hide");
+  updateChannelsErrorHide.addEventListener("click", () => {
+    updateChannelsError.style.display = "none";
   });
 
-  const update_channels_last_checked = document.getElementById("update-channels-last-checked");
-  sendMessage("get_last_checked", null, last_checked => {
-    let last_checked_string;
-    if(last_checked) {
-      const last_checked_date = new Date(last_checked * 1000);
+  const updateChannelsLastChecked = document.getElementById("update-channels-last-checked");
+  sendMessage("get_last_checked", null, lastChecked => {
+    let lastCheckedString;
+    if(lastChecked) {
+      const lastCheckedDate = new Date(lastChecked * 1000);
       const options = {
-        year: '2-digit',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZoneName: 'short'
+        year: "2-digit",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZoneName: "short"
       };
-      const customDateTime = new Intl.DateTimeFormat('default', options).format;
-      last_checked_string = customDateTime(last_checked_date);
+      const customDateTime = new Intl.DateTimeFormat("default", options).format;
+      lastCheckedString = customDateTime(lastCheckedDate);
     } else {
-      last_checked_string = chrome.i18n.getMessage("options_updatesLastCheckedNever");
+      lastCheckedString = chrome.i18n.getMessage("options_updatesLastCheckedNever");
     }
-    update_channels_last_checked.innerText = chrome.i18n.getMessage("options_updatesLastChecked") + last_checked_string;
+    updateChannelsLastChecked.innerText = chrome.i18n.getMessage("options_updatesLastChecked") + lastCheckedString;
   });
 
   document.onkeydown = function(evt) {
