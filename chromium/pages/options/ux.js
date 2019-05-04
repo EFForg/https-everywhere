@@ -268,39 +268,50 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })
 
-  // HTTPS Everywhere Sites Disabled section in General Settings module
-  getOption_("disabledList", [], function(item) {
+  function addDisabledSite (domains) {
     let rule_host_parent = e("disabled-rules-wrapper");
 
-    if( 0 === item.disabledList.length ) {
-      hide(rule_host_parent);
-      return;
-    }
     // img element "remove button"
     let templateRemove = document.createElement("img");
     templateRemove.src = chrome.runtime.getURL("images/remove.png");
     templateRemove.className = "remove";
 
-    if( item ) {
-      for (const key of item.disabledList) {
-        let rule_host = document.createElement("div");
-        let remove = templateRemove.cloneNode(true);
-        let rule_host_site_name = document.createElement("p");
+    for (const key of domains) {
+      let rule_host = document.createElement("div");
+      let remove = templateRemove.cloneNode(true);
+      let rule_host_site_name = document.createElement("p");
 
-        rule_host.className = "disabled-rule-list-item";
-        rule_host_site_name.className = "disabled-rule-list-item_single"
-        rule_host_site_name.innerText = key;
-        rule_host.appendChild( rule_host_site_name);
-        rule_host_parent.appendChild(rule_host);
-        rule_host.appendChild(remove);
+      rule_host.className = "disabled-rule-list-item";
+      rule_host_site_name.className = "disabled-rule-list-item_single"
+      rule_host_site_name.innerText = key;
+      rule_host.appendChild( rule_host_site_name);
+      rule_host_parent.appendChild(rule_host);
+      rule_host.appendChild(remove);
 
-        remove.addEventListener("click", () => {
-          hide( rule_host );
-          sendMessage("enable_on_site", key);
-        });
-      }
+      remove.addEventListener("click", () => {
+        hide( rule_host );
+        sendMessage("enable_on_site", key);
+      });
+    }
+  }
+
+  // HTTPS Everywhere Sites Disabled section in General Settings module
+  getOption_("disabledList", [], function(item) {
+    if (item && item.disabledList && item.disabledList.length > 0) {
+      addDisabledSite(item.disabledList);
     }
   });
+
+  // Allow user t disable HTTPSE for a site
+  const add_disabled_site = document.getElementById("add-disabled-rule");
+  const disabled_site_name = document.getElementById("disabled-domain-name");
+  disabled_site_name.setAttribute("placeholder", chrome.i18n.getMessage("options_enterDisabledUrl"));
+  add_disabled_site.addEventListener("click", () => {
+    const host = disabled_site_name.value;
+    disabled_site_name.value = "";
+    addDisabledSite([host]);
+    sendMessage("disable_on_site", host);
+  })
 
   add_update_channel.addEventListener("click", () => {
     const update_channel_name = update_channel_name_div.value;
