@@ -219,7 +219,6 @@ document.addEventListener("DOMContentLoaded", () => {
             true
           )
         );
-
       }
     });
 
@@ -261,7 +260,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const remove = templateRemove.cloneNode(true);
 
       userRuleHost.className = "user-rules-list-item";
-      userRuleName.className = "user-rules-list-item-single"
+      userRuleName.className = "user-rules-list-item-single";
       userRuleName.innerText = userRule.name;
       userRuleHost.appendChild(userRuleName);
       userRulesParent.appendChild(userRuleHost);
@@ -274,7 +273,7 @@ document.addEventListener("DOMContentLoaded", () => {
         sendMessage("remove_rule", { ruleset: userRule, src: "options" });
       });
     }
-  })
+  });
 
   // Displays a list of disabled sites for a list of domains
   function addDisabledSite (domains) {
@@ -286,13 +285,22 @@ document.addEventListener("DOMContentLoaded", () => {
     templateRemove.className = "remove";
 
     for (const key of domains) {
+      // If it is valid Punycode, display Unicode label
+      let display;
+      try {
+        const unicode = toUnicode(key);
+        display = unicode;
+      } catch(e) {
+        display = key;
+      }
+
       const ruleHost = document.createElement("div");
       const remove = templateRemove.cloneNode(true);
       const ruleHostSiteName = document.createElement("p");
 
       ruleHost.className = "disabled-rule-list-item";
-      ruleHostSiteName.className = "disabled-rule-list-item_single"
-      ruleHostSiteName.innerText = key;
+      ruleHostSiteName.className = "disabled-rule-list-item_single";
+      ruleHostSiteName.innerText = display;
       ruleHost.appendChild(ruleHostSiteName);
       ruleHostParent.appendChild(ruleHost);
       ruleHost.appendChild(remove);
@@ -312,15 +320,23 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function validateDomain(domain) {
-    // TODO:
-    // this is incredibly simplistic placeholder
-    // the actual function will be implemented by @pipboy96
-    // enter "error" to test error message
-    if (domain === "error")
+    // Checks whether input is a valid domain and returns it in a canonocal form
+    // TODO: should apply Punycode before or after toLowerCase()?
+    // TODO: what if toASCII errors out?
+    domain = domain.trim();
+    try {
+      domain = toASCII(domain);
+    } catch(e) {
+      // This domain is not representable as Punycode
       return null
-    // "No Error"
-    domain = domain.trim().toLowerCase()
-    return domain
+    }
+    domain = domain.toLowerCase();
+    const pattern = /^(\*|[a-z0-9_-]+)(\.[a-z0-9_-]+)*$/
+    const match = pattern.test(domain);
+    if (match !== true){
+      domain = null;
+    }
+    return domain;
   }
 
   // Allow user to disable HTTPS Everywhere for a site
@@ -338,28 +354,31 @@ document.addEventListener("DOMContentLoaded", () => {
     const validated = validateDomain(domain);
     if (validated === null) {
       // incorrect domain
-      displayError("TODO: what is the error?");
+      const message = chrome.i18n.getMessage("options_addDisabledSiteFormatError");
+      displayError(message);
     } else {
       // correct domain
       disabledSiteName.value = "";
       addDisabledSite([validated]);
       sendMessage("disable_on_site", validated);
     }
-  })
+  });
 
   addUpdateChannelForm.addEventListener("submit", (e) => {
     e.preventDefault();
     hideErrors();
     const updateChannelName = updateChannelNameDiv.value;
-    if(updateChannelName.trim() == "") {
-      displayError("Error: The update channel name is blank.  Please enter another name.");
+    if(updateChannelName.trim() === "") {
+      const message = chrome.i18n.getMessage("options_addUpdateChannelErrorBlank");
+      displayError(message);
     } else {
       updateChannelNameDiv.value = "";
       sendMessage("create_update_channel", updateChannelName, result => {
-        if(result == true) {
+        if(result === true) {
           renderUpdateChannels();
         } else {
-          displayError("Error: There already exists an update channel with this name.");
+          const message = chrome.i18n.getMessage("options_addUpdateChannelErrorExists");
+          displayError(message);
         }
       });
     }
@@ -389,7 +408,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.onkeydown = function(evt) {
     evt = evt || window.event;
-    if (evt.ctrlKey && evt.keyCode == 90) {
+    if (evt.ctrlKey && evt.keyCode === 90) {
       window.open("/pages/debugging-rulesets/index.html");
     }
   };
