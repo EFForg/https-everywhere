@@ -135,9 +135,9 @@ document.addEventListener("DOMContentLoaded", () => {
     updateChannelPathPrefix.value = updateChannel.update_path_prefix;
     updateChannelPathPrefixColumnRight.appendChild(updateChannelPathPrefix);
 
-    let clearer = document.createElement("div");
-    clearer.className = "clearer";
-    updateChannelDiv.appendChild(clearer);
+    const clearer1 = document.createElement("div");
+    clearer1.className = "clearer";
+    updateChannelDiv.appendChild(clearer1);
 
     const updateChannelRowScope = document.createElement("div");
     updateChannelRowScope.className = "update-channel-row-scope";
@@ -180,9 +180,9 @@ document.addEventListener("DOMContentLoaded", () => {
     updateChannelDelete.innerText = chrome.i18n.getMessage("options_delete");
     updateChannelControlsColumnRight.appendChild(updateChannelDelete);
 
-    clearer = document.createElement("div");
-    clearer.className = "clearer";
-    updateChannelDiv.appendChild(clearer);
+    const clearer2 = document.createElement("div");
+    clearer2.className = "clearer";
+    updateChannelDiv.appendChild(clearer2);
 
     updateChannelDelete.addEventListener("click", () => {
       sendMessage("delete_update_channel", updateChannel.name, () => {
