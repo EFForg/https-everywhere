@@ -288,7 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // If it is valid Punycode, display Unicode label
       let display = key;
       try {
-        const unicode = toUnicode(key);
+        const unicode = window.punycode.toUnicode(key);
         if (key !== unicode) {
           display += " (" + unicode +")";
         }
@@ -327,7 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // TODO: what if toASCII errors out?
     domain = domain.trim();
     try {
-      domain = toASCII(domain);
+      domain = window.punycode.toASCII(domain);
     } catch(e) {
       // This domain is not representable as Punycode
       return null
