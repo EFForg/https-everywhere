@@ -1,3 +1,5 @@
+"use strict";
+
 const { toASCII, toUnicode } = (() => {
   /**
    * This code is derived from punycode.js (https://github.com/bestiejs/punycode.js).

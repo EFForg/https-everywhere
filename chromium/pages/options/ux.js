@@ -286,10 +286,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     for (const key of domains) {
       // If it is valid Punycode, display Unicode label
-      let display;
+      let display = key;
       try {
         const unicode = toUnicode(key);
-        display = unicode;
+        if (key !== unicode) {
+          display += " (" + unicode +")";
+        }
       } catch(e) {
         display = key;
       }
@@ -333,7 +335,7 @@ document.addEventListener("DOMContentLoaded", () => {
     domain = domain.toLowerCase();
     const pattern = /^(\*|[a-z0-9_-]+)(\.[a-z0-9_-]+)*$/
     const match = pattern.test(domain);
-    if (match !== true){
+    if (match !== true) {
       domain = null;
     }
     return domain;
