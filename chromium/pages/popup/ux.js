@@ -33,34 +33,30 @@ function toggleRuleLine(event) {
  * @description Toggles content for user to view rules and explanations for different modes
  */
 function toggleSeeMore(event) {
-  /*
-    @todo
-    probably could put this all in one div so two events aren't being read for this section
-  */
-  let target = event.target.parentNode.querySelector('.see_more__content');
-  let arrow, prompt;
+  let target = event.target;
+  let content;
 
-  if(event.target.classList.contains('see_more__arrow')) {
-    arrow  = event.target;
-    prompt = arrow.parentNode.querySelector('.see_more__prompt');
+  if (target !== this) {
+    content = document.querySelector('.see_more__content');
   } else {
-    // Reverse logic if user clicks text instead of the arrow.
-    prompt = event.target;
-    arrow = prompt.parentNode.querySelector('.see_more__arrow');
+    content = target.parentNode.querySelector('.see_more__content');
   }
+
+  let arrow  = target.parentNode.querySelector('.see_more__arrow');
+  let text = target.parentNode.querySelector('.see_more__text');
 
   if(arrow.classList.contains('down')) {
     arrow.classList.replace('down', 'up');
-    prompt.innerText = 'See less';
+    text.innerText = 'See less';
   } else if (arrow.classList.contains('up')) {
     arrow.classList.replace('up', 'down');
-    prompt.innerText = 'See more';
+    text.innerText = 'See more';
   }
 
-  if (target.classList.contains('hide')) {
-    target.classList.replace('hide', 'show');
-  } else if (target.classList.contains('show')) {
-    target.classList.replace('show', 'hide');
+  if (content.classList.contains('hide')) {
+    content.classList.replace('hide', 'show');
+  } else if (content.classList.contains('show')) {
+    content.classList.replace('show', 'hide');
   }
 }
 
@@ -193,7 +189,7 @@ function listRules(activeTab) {
       appendRulesToListDiv(unstableRules, e("UnstableRules"), 'unstable');
 
       // Add listener to capture the toggle event
-      e("RuleManagement").addEventListener("click", toggleRuleLine);
+      e("add-new-rule-button").addEventListener("click", toggleRuleLine);
     }
 
     // Only show the "Add a rule" section if we're on an HTTPS page
@@ -221,10 +217,6 @@ document.addEventListener("DOMContentLoaded", function () {
   updateEnabledDisabledUI();
   e('onoffswitch').addEventListener('click', toggleEnabledDisabled);
   e('http-nowhere-checkbox').addEventListener('click', toggleHttpNowhere, false);
-
-  e('HttpNowhere__see_more').addEventListener('click', toggleSeeMore);
-  e('RuleManagement__see_more').addEventListener('click', toggleSeeMore);
-  e('HttpNowhere__see_more--prompt').addEventListener('click', toggleSeeMore);
   e('RuleManagement__see_more--prompt').addEventListener('click', toggleSeeMore);
 
   e('reset-to-defaults').addEventListener('click', () => {
