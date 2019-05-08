@@ -154,10 +154,11 @@ function updateEnabledDisabledUI() {
     // Hide or show the rules sections
     if (item.globalEnabled) {
       document.body.className = ""
+      e('onoffswitch_label').innerText = chrome.i18n.getMessage("menu_globalEnable");
       showHttpNowhereUI();
     } else {
       document.body.className = "disabled";
-      e('onoffswitch_label').innerText = 'HTTPS Everywhere is OFF';
+      e('onoffswitch_label').innerText = chrome.i18n.getMessage("menu_globalDisable");
     }
   });
 }
