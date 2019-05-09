@@ -13,8 +13,8 @@
 function toggleRuleLine(event) {
   getTab(activeTab => {
     const set_ruleset = {
-      active: event.target.parentNode.firstChild.checked,
-      name: event.target.innerText,
+      active: event.target.checked,
+      name: event.target.parentNode.innerText,
       tab_id: activeTab.id,
     };
 
@@ -111,6 +111,9 @@ function appendRulesToListDiv(rulesets, list_div, ruleType) {
       checkbox.checked = ruleset.active;
       text.innerText = ruleset.name;
 
+      // Add listener to capture the toggle event
+      line.addEventListener("click", toggleRuleLine);
+
       if (ruleset.note && ruleset.note.length) {
         line.title = ruleset.note;
 
@@ -151,10 +154,11 @@ function updateEnabledDisabledUI() {
     // Hide or show the rules sections
     if (item.globalEnabled) {
       document.body.className = ""
+      e('onoffswitch_label').innerText = chrome.i18n.getMessage("menu_globalEnable");
       showHttpNowhereUI();
     } else {
       document.body.className = "disabled";
-      e('onoffswitch_label').innerText = 'HTTPS Everywhere is OFF';
+      e('onoffswitch_label').innerText = chrome.i18n.getMessage("menu_globalDisable");
     }
   });
 }
@@ -187,9 +191,6 @@ function listRules(activeTab) {
 
       appendRulesToListDiv(stableRules, e("StableRules"), 'stable');
       appendRulesToListDiv(unstableRules, e("UnstableRules"), 'unstable');
-
-      // Add listener to capture the toggle event
-      e("add-new-rule-button").addEventListener("click", toggleRuleLine);
     }
 
     // Only show the "Add a rule" section if we're on an HTTPS page
