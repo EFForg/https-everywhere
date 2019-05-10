@@ -47,10 +47,10 @@ function toggleSeeMore(event) {
 
   if(arrow.classList.contains('down')) {
     arrow.classList.replace('down', 'up');
-    text.innerText = 'See less';
+    text.innerText = chrome.i18n.getMessage("menu_seeLess");
   } else if (arrow.classList.contains('up')) {
     arrow.classList.replace('up', 'down');
-    text.innerText = 'See more';
+    text.innerText = chrome.i18n.getMessage("menu_seeMore");
   }
 
   if (content.classList.contains('hide')) {
@@ -139,9 +139,11 @@ function showHttpNowhereUI() {
   getOption_('httpNowhere', false, function(item) {
     if (item.httpNowhere) {
       e('http-nowhere-checkbox').checked = true;
-      e('HttpNowhere__header').innerText = 'Encrypt All Sites Eligible is ON';
-      e('HttpNowhere__explained').innerText = 'Unencrypted requests are currently blocked';
+      e('HttpNowhere__header').innerText = chrome.i18n.getMessage("menu_encryptAllSitesEligibleOn");
+      e('HttpNowhere__explained').innerText = chrome.i18n.getMessage("menu_httpNoWhereExplainedBlocked");
     }
+    e('HttpNowhere__header').innerText = chrome.i18n.getMessage("menu_encryptAllSitesEligibleOff");
+    e('HttpNowhere__explained').innerText = chrome.i18n.getMessage("menu_httpNoWhereExplainedAllowed");
     e('HttpNowhere').style.visibility = "visible";
   });
 };
@@ -379,11 +381,11 @@ function toggleHttpNowhere() {
       setOption_('httpNowhere', enabled, () => {
         if (enabled) {
           chrome.tabs.reload(tab.id);
-          e('HttpNowhere__header').innerText = 'Encrypt All Sites Eligible is ON';
-          e('HttpNowhere__explained').innerText = 'Unencrypted requests are currently blocked';
+          e('HttpNowhere__header').innerText = chrome.i18n.getMessage("menu_encryptAllSitesEligibleOn");
+          e('HttpNowhere__explained').innerText = chrome.i18n.getMessage("menu_httpNoWhereExplainedBlocked");
         } else {
-          e('HttpNowhere__header').innerText = 'Encrypt All Sites Eligible is OFF';
-          e('HttpNowhere__explained').innerText = 'Unencrypted requests are currently allowed';
+          e('HttpNowhere__header').innerText = chrome.i18n.getMessage("menu_encryptAllSitesEligibleOff");
+          e('HttpNowhere__explained').innerText = chrome.i18n.getMessage("menu_httpNoWhereExplainedAllowed");
         }
       });
     });
