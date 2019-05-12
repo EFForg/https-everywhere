@@ -14,7 +14,6 @@ class TestPopup(ExtensionTestCase):
             checkbox_el = self.driver.find_element_by_id('stable_ruleset_1')
             self.assertTrue(checkbox_el.is_selected())
 
-
     def test_disable_enable(self):
         selector = '#onoffswitch__label'
         checkbox = 'onoffswitch'
