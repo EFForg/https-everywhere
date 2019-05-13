@@ -69,6 +69,8 @@ function toggleSeeMore(event) {
  */
 function appendRulesToListDiv(rulesets, list_div, ruleType) {
   if (rulesets && rulesets.length) {
+
+    // Count all stable rules
     if ('stable' === ruleType ) {
       let counter = rulesets.length;
       let counterElement = document.querySelector("#RuleManagement--counter");
