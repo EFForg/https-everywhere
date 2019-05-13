@@ -138,9 +138,10 @@ function showHttpNowhereUI() {
       e('http-nowhere-checkbox').checked = true;
       e('HttpNowhere__header').innerText = chrome.i18n.getMessage("menu_encryptAllSitesEligibleOn");
       e('HttpNowhere__explained').innerText = chrome.i18n.getMessage("menu_httpNoWhereExplainedBlocked");
+    } else {
+      e('HttpNowhere__header').innerText = chrome.i18n.getMessage("menu_encryptAllSitesEligibleOff");
+      e('HttpNowhere__explained').innerText = chrome.i18n.getMessage("menu_httpNoWhereExplainedAllowed");
     }
-    e('HttpNowhere__header').innerText = chrome.i18n.getMessage("menu_encryptAllSitesEligibleOff");
-    e('HttpNowhere__explained').innerText = chrome.i18n.getMessage("menu_httpNoWhereExplainedAllowed");
     e('HttpNowhere').style.visibility = "visible";
   });
 };
