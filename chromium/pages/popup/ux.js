@@ -69,9 +69,11 @@ function toggleSeeMore(event) {
  */
 function appendRulesToListDiv(rulesets, list_div, ruleType) {
   if (rulesets && rulesets.length) {
-    let counter = rulesets.length;
-    let counterElement = document.querySelector("#RuleManagement--counter");
-    counterElement.innerText = counter;
+    if ('stable' === ruleType ) {
+      let counter = rulesets.length;
+      let counterElement = document.querySelector("#RuleManagement--counter");
+      counterElement.innerText = counter;
+    }
     // template parent block for each ruleset
     let templateLine = document.createElement("div");
     templateLine.className = "rule checkbox";
