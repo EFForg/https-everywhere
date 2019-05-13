@@ -69,13 +69,6 @@ function toggleSeeMore(event) {
  */
 function appendRulesToListDiv(rulesets, list_div, ruleType) {
   if (rulesets && rulesets.length) {
-
-    // Count all stable rules
-    if ('stable' === ruleType ) {
-      let counter = rulesets.length;
-      let counterElement = document.querySelector("#RuleManagement--counter");
-      counterElement.innerText = counter;
-    }
     // template parent block for each ruleset
     let templateLine = document.createElement("div");
     templateLine.className = "rule checkbox";
@@ -192,6 +185,11 @@ function toggleEnabledDisabled() {
 function listRules(activeTab) {
   sendMessage("get_active_rulesets", activeTab.id, function(rulesets) {
     if (rulesets) {
+      // show the number of potentially applicable rulesets
+      let counter = rulesets.length;
+      let counterElement = document.querySelector("#RuleManagement--counter");
+      counterElement.innerText = counter;
+
       const stableRules = rulesets.filter(ruleset => ruleset.default_state);
       const unstableRules = rulesets.filter(ruleset => !ruleset.default_state);
 
