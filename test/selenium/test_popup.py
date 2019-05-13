@@ -4,11 +4,15 @@ from util import ExtensionTestCase
 
 class TestPopup(ExtensionTestCase):
     def test_rule_shown(self):
-        raise unittest.SkipTest('broken since #17010')
         url = 'http://freerangekitten.com'
         with self.load_popup_for(url):
-            el = self.query_selector('#StableRules > div > label > span')
-            self.assertTrue(el.text.lower() in url)
+            #Open Rule Management section
+            see_more_prompt = self.query_selector('#RuleManagement__see_more--prompt')
+            see_more_prompt.click()
+
+            #Check to see if stable rule is checked
+            checkbox_el = self.driver.find_element_by_id('stable_ruleset_1')
+            self.assertTrue(checkbox_el.is_selected())
 
     def test_disable_enable(self):
         selector = '#onoffswitch__label'
