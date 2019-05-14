@@ -18,11 +18,11 @@ from the addon distribution:
 
 ```xml
 <ruleset name="RabbitMQ">
-        <target host="rabbitmq.com" />
-        <target host="www.rabbitmq.com" />
+	<target host="rabbitmq.com" />
+	<target host="www.rabbitmq.com" />
 
-        <rule from="^http:"
-                to="https:" />
+	<rule from="^http:"
+		to="https:" />
 </ruleset>
 ```
 
@@ -64,10 +64,10 @@ complicated ways. Here's a simplified (and now obsolete) example for Wikipedia:
 
 ```xml
 <ruleset name="Wikipedia">
-  <target host="*.wikipedia.org" />
+	<target host="*.wikipedia.org" />
 
-  <rule from="^http://(\w{2})\.wikipedia\.org/wiki/"
-          to="https://secure.wikimedia.org/wikipedia/$1/wiki/"/>
+	<rule from="^http://(\w{2})\.wikipedia\.org/wiki/"
+		to="https://secure.wikimedia.org/wikipedia/$1/wiki/"/>
 </ruleset>
 ```
 
@@ -97,7 +97,7 @@ the rule should **not** be applied. The Stack Exchange rule contains an
 exclusion for the OpenID login path, which breaks logins if it is rewritten:
 
 ```xml
-<exclusion pattern="^http://(?:\w+\.)?stack(?:exchange|overflow)\.com/users/authenticate/" />
+<exclusion pattern="^http://(\w+\.)?stack(exchange|overflow)\.com/users/authenticate/" />
 ```
 
 Exclusions are always evaluated before rules in a given ruleset. Matching any
@@ -189,8 +189,8 @@ element, with a value explaining why the rule is off.
 
 ```xml
 <ruleset name="Amazon (buggy)" default_off="breaks site">
-   <target host="www.amazon.*" />
-   <target host="amazon.*" />
+	<target host="www.amazon.*" />
+	<target host="amazon.*" />
 </ruleset> 
 ```
 
