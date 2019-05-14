@@ -200,13 +200,9 @@ file.
 #### [Mixed Content Blocking (MCB)](#mixed-content-blocking-mcb)
 
 Some rulesets may trigger active mixed content (i.e. scripts loaded over HTTP
-instead of HTTPS). This type of mixed content is blocked in both
-[Chrome](https://trac.torproject.org/projects/tor/ticket/6975) and Firefox,
+instead of HTTPS). This type of mixed content is blocked in most major browsers,
 before HTTPS Everywhere has a chance to rewrite the URLs to an HTTPS version.
-This generally breaks the site. However, the Tor Browser doesn&apos;t block
-mixed content, in order to allow HTTPS Everywhere to try and rewrite the URLs
-to an HTTPS version.
-
-To enable a rule only on platforms that allow mixed content (currently only the
-Tor Browser), you can add a `platform="mixedcontent"` attribute to the ruleset
-element.
+This generally breaks the site. Depending on their configuration and threat
+model, some users might however decide to enable these rulesets via a global
+option in HTTPS Everywhere. To that effect, such rulesets are idenfied with 
+the specific `platform="mixedcontent"` attribute to the ruleset element.
