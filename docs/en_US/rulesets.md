@@ -3,14 +3,14 @@
 This page describes how to write rulesets for [HTTPS
 Everywhere](https://eff.org/https-everywhere), a browser extension that
 switches sites over from HTTP to HTTPS automatically. HTTPS Everywhere comes
-with [thousands](http://www.eff.org/https-everywhere/atlas/) of rulesets that
+with [thousands](https://www.eff.org/https-everywhere/atlas/) of rulesets that
 tell HTTPS Everywhere which sites it should switch to HTTPS and how. If there
 is a site that offers HTTPS and is not handled by the extension, this guide
 will explain how to add that site.
 
 #### [Rulesets](#rulesets)
 
-A `ruleset` is an [XML](http://www.xml.com/pub/a/98/10/guide0.html?page=2) file
+A `ruleset` is an [XML](https://www.xml.com/pub/a/98/10/guide0.html?page=2) file
 describing behavior for a site or group of sites. A ruleset contains one or
 more `rules`. For example, here is
 [`RabbitMQ.xml`](https://github.com/efforg/https-everywhere/blob/master/src/chrome/content/rules/RabbitMQ.xml),
@@ -37,7 +37,7 @@ match that host name.
 
 HTTPS Everywhere then tries each rule in those rulesets against the full URL.
 If the [Regular
-Expression](http://www.regular-expressions.info/quickstart.html), or regexp, in
+Expression](https://www.regular-expressions.info/quickstart.html), or regexp, in
 one of those rules matches, HTTPS Everywhere [rewrites the
 URL](#rules-and-regular-expressions) according the `to` attribute of the rule.
 
@@ -58,7 +58,7 @@ separate target.
 #### [Rules and Regular Expressions](#rules-and-regular-expressions)
 
 The `rule` tags do the actual rewriting work. The `from` attribute of each rule
-is a [regular expression](http://www.regular-expressions.info/quickstart.html)
+is a [regular expression](https://www.regular-expressions.info/quickstart.html)
 matched against a full URL. You can use rules to rewrite URLs in simple or
 complicated ways. Here's a simplified (and now obsolete) example for Wikipedia:
 
@@ -84,9 +84,9 @@ between rulesets is unspecified. Only the first rule or exception matching a
 given URL is applied.
 
 Rules are evaluated using [Javascript regular
-expressions](http://www.regular-expressions.info/javascript.html), which are
+expressions](https://www.regular-expressions.info/javascript.html), which are
 similar but not identical to [Perl-style regular
-expressions.](http://www.regular-expressions.info/pcre.html) Note that if your
+expressions.](https://www.regular-expressions.info/pcre.html) Note that if your
 rules include ampersands (&amp;), they need to be appropriately XML-encoded:
 replace each occurrence of **&amp;** with **&amp;#x26;**.
 
@@ -118,7 +118,7 @@ less cumbersome.
 #### [Secure Cookies](#secure-cookies)
 
 Many HTTPS websites fail to correctly set the [secure
-flag](https://secure.wikimedia.org/wikipedia/en/wiki/HTTP_cookie#Secure_and_HttpOnly)
+flag](https://en.wikipedia.org/wiki/HTTP_cookie#Secure_and_HttpOnly)
 on authentication and/or tracking cookies. HTTPS Everywhere provides a facility
 for turning this flag on. For instance:
 
