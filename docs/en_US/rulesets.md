@@ -204,5 +204,5 @@ instead of HTTPS). This type of mixed content is blocked in most major browsers,
 before HTTPS Everywhere has a chance to rewrite the URLs to an HTTPS version.
 This generally breaks the site. Depending on their configuration and threat
 model, some users might however decide to enable these rulesets via a global
-option in HTTPS Everywhere. To that effect, such rulesets are idenfied with 
+option in HTTPS Everywhere. To that effect, such rulesets are identified with 
 the specific `platform="mixedcontent"` attribute to the ruleset element.
