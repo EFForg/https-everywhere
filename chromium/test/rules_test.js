@@ -1,5 +1,11 @@
 'use strict'
 
+const text_encoding = require('text-encoding');
+global.TextDecoder = text_encoding.TextDecoder;
+global.TextEncoder = text_encoding.TextEncoder;
+global.self = global;
+require("../../https-everywhere-lib/pkg/https_everywhere_lib.js");
+
 const assert = require('chai').assert,
   rules = require('../background-scripts/rules');
 
