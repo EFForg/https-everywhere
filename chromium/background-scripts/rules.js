@@ -226,18 +226,17 @@ RuleSets.prototype = {
   },
 
   /**
-   * Iterate through data XML and load rulesets
+   * Convert XML to JS and load rulesets
    */
   addFromXml: function(ruleXml, scope) {
-    const scope_obj = getScope(scope);
-    const rulesets = ruleXml.getElementsByTagName("ruleset");
-    for (let ruleset of rulesets) {
-      try {
-        this.parseOneXmlRuleset(ruleset, scope_obj);
-      } catch (e) {
-        util.log(util.WARN, 'Error processing ruleset:' + e);
-      }
+    const rulesets_xml = ruleXml.getElementsByTagName("ruleset");
+
+    let rulesets = Array();
+    for (let ruleset_xml of rulesets_xml) {
+      rulesets.push(this.convertOneXmlToJs(ruleset_xml));
     }
+
+    this.addFromJson(rulesets, scope);
   },
 
   addFromJson: function(ruleJson, scope) {
@@ -465,73 +464,70 @@ RuleSets.prototype = {
   },
 
   /**
-   * Does the loading of a ruleset.
+   * Converts an XML ruleset to a JS ruleset for parsing
    * @param ruletag The whole <ruleset> tag to parse
    */
-  parseOneXmlRuleset: function(ruletag, scope) {
-    var default_state = true;
-    var note = "";
-    var default_off = ruletag.getAttribute("default_off");
-    if (default_off) {
-      default_state = false;
-      if (default_off === "user rule") {
-        default_state = true;
+  convertOneXmlToJs: function(ruletag) {
+    try {
+      let ruleset = {};
+
+      let default_off = ruletag.getAttribute("default_off");
+      if (default_off) {
+        ruleset["default_off"] = platform;
       }
-      note += default_off + "\n";
-    }
 
-    // If a ruleset declares a platform, and we don't match it, treat it as
-    // off-by-default. In practice, this excludes "mixedcontent" rules.
-    var platform = ruletag.getAttribute("platform");
-    if (platform) {
-      default_state = false;
-      if (platform == "mixedcontent" && settings.enableMixedRulesets) {
-        default_state = true;
+      let platform = ruletag.getAttribute("platform");
+      if (platform) {
+        ruleset["platform"] = platform;
       }
-      note += "Platform(s): " + platform + "\n";
-    }
 
-    var rule_set = new RuleSet(ruletag.getAttribute("name"),
-      default_state,
-      scope,
-      note.trim());
-
-    // Read user prefs
-    if (rule_set.name in this.ruleActiveStates) {
-      rule_set.active = (this.ruleActiveStates[rule_set.name] == "true");
-    }
-
-    var rules = ruletag.getElementsByTagName("rule");
-    for (let rule of rules) {
-      rule_set.rules.push(getRule(rule.getAttribute("from"),
-        rule.getAttribute("to")));
-    }
-
-    var exclusions = Array();
-    for (let exclusion of ruletag.getElementsByTagName("exclusion")) {
-      exclusions.push(exclusion.getAttribute("pattern"));
-    }
-    if (exclusions.length > 0) {
-      rule_set.exclusions = new RegExp(exclusions.join("|"));
-    }
-
-    var cookierules = ruletag.getElementsByTagName("securecookie");
-    if (cookierules.length > 0) {
-      rule_set.cookierules = [];
-      for (let cookierule of cookierules) {
-        rule_set.cookierules.push(
-          new CookieRule(cookierule.getAttribute("host"),
-            cookierule.getAttribute("name")));
+      let name = ruletag.getAttribute("name");
+      if (name) {
+        ruleset["name"] = name;
       }
-    }
 
-    var targets = ruletag.getElementsByTagName("target");
-    for (let target of targets) {
-      var host = target.getAttribute("host");
-      if (!this.targets.has(host)) {
-        this.targets.set(host, []);
+      let rules = Array();
+      for (let rule of ruletag.getElementsByTagName("rule")) {
+        rules.push({
+          from: rule.getAttribute("from"),
+          to: rule.getAttribute("to")
+        });
       }
-      this.targets.get(host).push(rule_set);
+      if (rules.length > 0) {
+        ruleset["rule"] = rules;
+      }
+
+      let exclusions = Array();
+      for (let exclusion of ruletag.getElementsByTagName("exclusion")) {
+        exclusions.push(exclusion.getAttribute("pattern"));
+      }
+      if (exclusions.length > 0) {
+        ruleset["exclusion"] = exclusions;
+      }
+
+      let cookierules = Array();
+      for (let cookierule of ruletag.getElementsByTagName("securecookie")) {
+        cookierules.push({
+          host: cookierule.getAttribute("host"),
+          name: cookierule.getAttribute("name")
+        });
+      }
+      if (cookierules.length > 0) {
+        ruleset["securecookie"] = cookierules;
+      }
+
+      let targets = Array();
+      for (let target of ruletag.getElementsByTagName("target")) {
+        targets.push(target.getAttribute("host"));
+      }
+      if (targets.length > 0) {
+        ruleset["target"] = targets;
+      }
+
+      return ruleset;
+    } catch (e) {
+      util.log(util.WARN, 'Error converting ruleset to JS:' + e);
+      return {};
     }
   },
 
