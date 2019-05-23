@@ -283,9 +283,7 @@ function redirectOnCancel(shouldCancel, originURL) {
   return shouldCancel ? {redirectUrl: newCancelUrl(originURL)} : {cancel: false};
 }
 
-function newCancelUrl(originURL) {
-  return cancelUrl + "?originURL=" + encodeURI(originURL);
-}
+const newCancelUrl = originURL => `${cancelUrl}?originURL=${encodeURIComponent(originURL)}`;
 
 /**
  * Called before a HTTP(s) request. Does the heavy lifting
