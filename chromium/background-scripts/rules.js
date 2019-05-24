@@ -638,11 +638,11 @@ RuleSets.prototype = {
       return false;
     }
 
-    // Second, we need a cookie pass two tests before securing patching it
+    // Second, we need a cookie pass two tests before patching it
     //   (1) it is safe to secure the cookie, as per safeToSecureCookie()
     //   (2) it matches with the CookieRule
     //
-    // We kept a cache of the results for (1), if we have cached results...
+    // We kept a cache of the results for (1), if we have a cached result which
     //   (a) is false, we should not secure the cookie for sure
     //   (b) is true, we need to perform test (2)
     //
