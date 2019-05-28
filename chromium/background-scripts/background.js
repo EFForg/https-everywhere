@@ -308,22 +308,18 @@ function onBeforeRequest(details) {
 
   // Check if a user has disabled HTTPS Everywhere on this site.  We should
   // ensure that all subresources are not run through HTTPS Everywhere as well.
-  let firstPartyHost;
+  let firstPartyHost = null;
   if (details.type == "main_frame") {
     firstPartyHost = uri.host;
   } else {
-    // In Firefox, documentUrl is preferable here, since it will always be the
-    // URL in the URL bar, but it was only introduced in FF 54.  We should get
-    // rid of `originUrl` at some point.
-    if ('documentUrl' in details) { // Firefox 54+
-      firstPartyHost = new URL(details.documentUrl).host;
-    } else if ('originUrl' in details) { // Firefox < 54
-      firstPartyHost = new URL(details.originUrl).host;
-    } else if('initiator' in details) { // Chrome
-      firstPartyHost = new URL(details.initiator).host;
+    const url = details.documentUrl || details.initiator;
+
+    if (url) {
+      firstPartyHost = new URL(url).host;
     }
   }
-  if (disabledList.has(firstPartyHost)) {
+
+  if (firstPartyHost && disabledList.has(firstPartyHost)) {
     return;
   }
 
