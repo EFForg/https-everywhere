@@ -231,7 +231,7 @@ RuleSets.prototype = {
   addFromXml: function(ruleXml, scope) {
     const rulesets_xml = ruleXml.getElementsByTagName("ruleset");
 
-    let rulesets = Array();
+    let rulesets = [];
     for (let ruleset_xml of rulesets_xml) {
       rulesets.push(this.convertOneXmlToJs(ruleset_xml));
     }
@@ -486,7 +486,7 @@ RuleSets.prototype = {
         ruleset["name"] = name;
       }
 
-      let rules = Array();
+      let rules = [];
       for (let rule of ruletag.getElementsByTagName("rule")) {
         rules.push({
           from: rule.getAttribute("from"),
@@ -497,7 +497,7 @@ RuleSets.prototype = {
         ruleset["rule"] = rules;
       }
 
-      let exclusions = Array();
+      let exclusions = [];
       for (let exclusion of ruletag.getElementsByTagName("exclusion")) {
         exclusions.push(exclusion.getAttribute("pattern"));
       }
@@ -505,7 +505,7 @@ RuleSets.prototype = {
         ruleset["exclusion"] = exclusions;
       }
 
-      let cookierules = Array();
+      let cookierules = [];
       for (let cookierule of ruletag.getElementsByTagName("securecookie")) {
         cookierules.push({
           host: cookierule.getAttribute("host"),
@@ -516,7 +516,7 @@ RuleSets.prototype = {
         ruleset["securecookie"] = cookierules;
       }
 
-      let targets = Array();
+      let targets = [];
       for (let target of ruletag.getElementsByTagName("target")) {
         targets.push(target.getAttribute("host"));
       }
