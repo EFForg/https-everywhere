@@ -31,7 +31,7 @@ function displayURL() {
   const originURLLink = document.getElementById('url-value');
   const openURLButton = document.getElementById('open-url-button');
 
-  originURLLink.innerHTML = originURL;
+  originURLLink.innerText = originURL;
   originURLLink.href = originURL;
 
   openURLButton.addEventListener("click", function() {
