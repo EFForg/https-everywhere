@@ -6,6 +6,26 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
+  const secretArea = document.getElementById('secretArea')
+
+  const onKeyDownHandler = evt => {
+    if (evt.ctrlKey && evt.key === 'z') {
+      secretArea.classList.remove('hidden')
+      secretArea.classList.add('flash')
+
+      /* TODO: enable developer mode */
+
+      document.removeEventListener('keydown', onKeyDownHandler)
+
+      evt.preventDefault()
+    }
+  }
+
+  if (false /* TODO: if developer mode is on */) {
+    secretArea.classList.remove('hidden')
+  } else {
+    document.addEventListener('keydown', onKeyDownHandler)
+  }
 
   const autoUpdateRulesets = document.getElementById("autoUpdateRulesets");
   const enableMixedRulesets = document.getElementById("enableMixedRulesets");
