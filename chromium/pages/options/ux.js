@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
       secretArea.classList.remove('hidden')
       secretArea.classList.add('flash')
 
-      /* TODO: enable developer mode */
+      sendMessage('set_option', { developerMode: true })
 
       document.removeEventListener('keydown', onKeyDownHandler)
 
@@ -21,11 +21,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  if (false /* TODO: if developer mode is on */) {
-    secretArea.classList.remove('hidden')
-  } else {
-    document.addEventListener('keydown', onKeyDownHandler)
-  }
+  sendMessage('get_option', { developerMode: false }, item => {
+    if (item.developerMode) {
+      secretArea.classList.remove('hidden')
+    } else {
+      document.addEventListener('keydown', onKeyDownHandler)
+    }
+  })
 
   const autoUpdateRulesets = document.getElementById("autoUpdateRulesets");
   const enableMixedRulesets = document.getElementById("enableMixedRulesets");
