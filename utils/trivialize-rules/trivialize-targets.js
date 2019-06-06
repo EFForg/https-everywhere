@@ -152,9 +152,10 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
     }
 
     // initially, assume each target doesn't support any exploded domain
-    targets.forEach(target =>
+    for (const target of targets) {
       targetToSupportedExplodedDomainsMap.set(target, [])
-    );
+    }
+
     if (![...explodedDomains].every(domain => isSupported(domain))) {
       warn`ruleset rewrites domains ${[
         ...unsupportedExplodedDomains
@@ -167,7 +168,7 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
     //     (b) if some targets are not covered by any rewrites, this
     //         doesn't affect our works trivializing the targets, but
     //         we should give a warning and then proceed to (4)
-    targets.forEach(target => {
+    for (const target of targets) {
       const supportedExplodedDomains = targetToSupportedExplodedDomainsMap.get(
         target
       );
@@ -177,7 +178,7 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
         // make sure we don't remove these targets when performing rewrites
         targetToSupportedExplodedDomainsMap.delete(target);
       }
-    });
+    }
 
     if (unusedTargets.size > 0) {
       warn`ruleset contains targets ${[
@@ -188,7 +189,7 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
     // (4) Replace non-trivial targets with exploded domains
     let indent = null;
 
-    targetToSupportedExplodedDomainsMap.forEach((value, key, map) => {
+    for (const [key, value] of targetToSupportedExplodedDomainsMap) {
       const escapedKey = escapeStringRegexp(key);
       const regexSource = `\n([\t ]*)<target\\s*host=\\s*"${escapedKey}"\\s*?/>[\t ]*\n`;
       const regex = new RegExp(regexSource);
@@ -204,7 +205,7 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
       const sub =
         value.map(v => `\n${indent}<target host=\"${v}\" />`).join('') + '\n';
       content = content.replace(regex, sub);
-    });
+    }
 
     // (5) Check if we can trivialize the rules. Need to satisfy all below conditions:
     //     i)   there is no unused target, i.e. unusedTargets.size == 0
