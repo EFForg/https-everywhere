@@ -1,24 +1,24 @@
 'use strict';
 
-let util = require('util');
-let path = require('path');
-let xml2js = require('xml2js');
+const util = require('util');
+const path = require('path');
+const xml2js = require('xml2js');
 
-let fs = require('graceful-fs');
-let readdir = util.promisify(fs.readdir);
-let readFile = util.promisify(fs.readFile);
-let parseString = util.promisify(xml2js.parseString);
+const fs = require('graceful-fs');
+const readdir = util.promisify(fs.readdir);
+const readFile = util.promisify(fs.readFile);
+const parseString = util.promisify(xml2js.parseString);
 
-let chalk = require('chalk');
-let validUrl = require('valid-url');
-let escapeStringRegexp = require('escape-string-regexp');
-let { explodeRegExp, UnsupportedRegExp } = require('./explode-regexp');
+const chalk = require('chalk');
+const validUrl = require('valid-url');
+const escapeStringRegexp = require('escape-string-regexp');
+const { explodeRegExp, UnsupportedRegExp } = require('./explode-regexp');
 
 const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
 
 (async () => {
-  let filenames = (await readdir(rulesDir)).filter(fn => fn.endsWith('.xml'));
-  let filePromises = filenames.map(async filename => {
+  const filenames = (await readdir(rulesDir)).filter(fn => fn.endsWith('.xml'));
+  const filePromises = filenames.map(async filename => {
     function createTag(tagName, colour, print) {
       return (strings, ...values) => {
         let result = `[${tagName}] ${chalk.bold(filename)}: ${strings[0]}`;
@@ -34,15 +34,15 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
       };
     }
 
-    let warn = createTag('WARN', chalk.yellow, console.warn);
-    let info = createTag('INFO', chalk.green, console.info);
-    let fail = createTag('FAIL', chalk.red, console.error);
+    const warn = createTag('WARN', chalk.yellow, console.warn);
+    const info = createTag('INFO', chalk.green, console.info);
+    const fail = createTag('FAIL', chalk.red, console.error);
 
     let content = await readFile(path.join(rulesDir, filename), 'utf8');
-    let { ruleset } = await parseString(content);
+    const { ruleset } = await parseString(content);
 
-    let rules = ruleset.rule.map(rule => rule.$);
-    let targets = ruleset.target.map(target => target.$.host);
+    const rules = ruleset.rule.map(rule => rule.$);
+    const targets = ruleset.target.map(target => target.$.host);
 
     // make sure ruleset contains at least one left wildcard targets
     if (!targets.some(target => target.startsWith('*.'))) {
@@ -59,20 +59,20 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
       return;
     }
 
-    let ruleToIsSimpleMap = new Map();
-    let ruleToIsSnappingMap = new Map();
+    const ruleToIsSimpleMap = new Map();
+    const ruleToIsSnappingMap = new Map();
 
-    let targetToSupportedExplodedDomainsMap = new Map();
+    const targetToSupportedExplodedDomainsMap = new Map();
 
-    let explodedDomains = new Set();
-    let unsupportedExplodedDomains = new Set();
-    let unusedTargets = new Set();
+    const explodedDomains = new Set();
+    const unsupportedExplodedDomains = new Set();
+    const unusedTargets = new Set();
 
     // (1) We check if all rules can be exploded to valid urls
     //     (a) if true, continue to (2)
     //     (b) if we cannot trivialize targets for this ruleset, skip
     function isExplosiveRewrite(rule) {
-      let explodedUrls = new Array();
+      const explodedUrls = new Array();
 
       try {
         explodeRegExp(rule.from, url => explodedUrls.push(url));
@@ -93,8 +93,8 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
       let isSimpleToAllExplodedUrls = true;
       let isSnappingToSomeExplodedUrls = false;
 
-      for (let url of explodedUrls) {
-        let { protocol, hostname, pathname } = new URL(url);
+      for (const url of explodedUrls) {
+        const { protocol, hostname, pathname } = new URL(url);
 
         // if a rule do not rewrite all path for any URL, it is not a simple rule
         // i.e. a rule is simple only if it rewrite all path for all URLs
@@ -139,9 +139,9 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
       }
 
       // this part follows the implementation in rules.js
-      let segments = domain.split('.');
+      const segments = domain.split('.');
       for (let i = 1; i <= segments.length - 2; ++i) {
-        let tmp = '*.' + segments.slice(i, segments.length).join('.');
+        const tmp = '*.' + segments.slice(i, segments.length).join('.');
         if (targets.includes(tmp)) {
           targetToSupportedExplodedDomainsMap.get(tmp).push(domain);
           return true;
@@ -168,7 +168,7 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
     //         doesn't affect our works trivializing the targets, but
     //         we should give a warning and then proceed to (4)
     targets.forEach(target => {
-      let supportedExplodedDomains = targetToSupportedExplodedDomainsMap.get(
+      const supportedExplodedDomains = targetToSupportedExplodedDomainsMap.get(
         target
       );
       if (supportedExplodedDomains && supportedExplodedDomains.length == 0) {
@@ -189,11 +189,11 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
     let indent = null;
 
     targetToSupportedExplodedDomainsMap.forEach((value, key, map) => {
-      let escapedKey = escapeStringRegexp(key);
-      let regexSource = `\n([\t ]*)<target\\s*host=\\s*"${escapedKey}"\\s*?/>[\t ]*\n`;
-      let regex = new RegExp(regexSource);
+      const escapedKey = escapeStringRegexp(key);
+      const regexSource = `\n([\t ]*)<target\\s*host=\\s*"${escapedKey}"\\s*?/>[\t ]*\n`;
+      const regex = new RegExp(regexSource);
 
-      let matches = content.match(regex);
+      const matches = content.match(regex);
       if (!matches) {
         // should be unreachable.
         warn`unexpected regular expression error`;
@@ -201,7 +201,7 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
       }
 
       [, indent] = matches;
-      let sub =
+      const sub =
         value.map(v => `\n${indent}<target host=\"${v}\" />`).join('') + '\n';
       content = content.replace(regex, sub);
     });
@@ -214,11 +214,11 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
     //     (a) if all of the conditions are met, append a trivial rule after all
     //         existing rules; and remove the non-snapping rules.
     //     (b) otherwise, do not trivialize the rules
-    let condition1 = unusedTargets.size == 0;
-    let condition2 = [...ruleToIsSimpleMap.entries()].every(
+    const condition1 = unusedTargets.size == 0;
+    const condition2 = [...ruleToIsSimpleMap.entries()].every(
       ([, value]) => value
     );
-    let condition3 = [...ruleToIsSnappingMap.entries()].some(
+    const condition3 = [...ruleToIsSnappingMap.entries()].some(
       ([, value]) => !value
     );
 
@@ -235,18 +235,18 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
       }
 
       // remove all non-snapping rules
-      let nonSnappingRules = [...ruleToIsSnappingMap.entries()]
+      const nonSnappingRules = [...ruleToIsSnappingMap.entries()]
         .filter(([, value]) => value === false)
         .map(([key]) => key);
 
-      for (let rule of nonSnappingRules) {
-        let escapedRuleFrom = escapeStringRegexp(rule.from);
-        let escapedRuleTo = escapeStringRegexp(rule.to);
+      for (const rule of nonSnappingRules) {
+        const escapedRuleFrom = escapeStringRegexp(rule.from);
+        const escapedRuleTo = escapeStringRegexp(rule.to);
 
-        let regexSource = `\n([\t ]*)<rule\\s*from=\\s*"${escapedRuleFrom}"(\\s*)to=\\s*"${escapedRuleTo}"\\s*?/>[\t ]*\n`;
-        let regex = new RegExp(regexSource);
+        const regexSource = `\n([\t ]*)<rule\\s*from=\\s*"${escapedRuleFrom}"(\\s*)to=\\s*"${escapedRuleTo}"\\s*?/>[\t ]*\n`;
+        const regex = new RegExp(regexSource);
 
-        let matches = content.match(regex);
+        const matches = content.match(regex);
         if (!matches) {
           // should be unreachable.
           warn`unexpected regular expression error`;
@@ -269,7 +269,7 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
   });
 
   // use for-loop to await too many file opened error
-  for (let fp of filePromises) {
+  for (const fp of filePromises) {
     await fp.catch(error => console.log(error));
   }
 })();
