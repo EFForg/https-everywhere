@@ -14,7 +14,7 @@ let validUrl = require('valid-url');
 let escapeStringRegexp = require('escape-string-regexp');
 let { explodeRegExp, UnsupportedRegExp } = require('./explode-regexp');
 
-let rulesDir = 'src/chrome/content/rules';
+const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
 
 (async () => {
   let filenames = (await readdir(rulesDir)).filter(fn => fn.endsWith('.xml'));
@@ -70,7 +70,7 @@ let rulesDir = 'src/chrome/content/rules';
 
     // (1) We check if all rules can be exploded to valid urls
     //     (a) if true, continue to (2)
-    //     (b) we cannot trivial targets for this ruleset, skipping
+    //     (b) if we cannot trivialize targets for this ruleset, skip
     function isExplosiveRewrite(rule) {
       let explodedUrls = new Array();
 
@@ -91,7 +91,7 @@ let rulesDir = 'src/chrome/content/rules';
       }
 
       let isSimpleToAllExplodedUrls = true;
-      let isSnappingToAllExplodedUrls = false;
+      let isSnappingToSomeExplodedUrls = false;
 
       for (let url of explodedUrls) {
         let { protocol, hostname, pathname } = new URL(url);
@@ -109,7 +109,7 @@ let rulesDir = 'src/chrome/content/rules';
           url.replace(new RegExp(rule.from), rule.to) !==
           url.replace(/^http:/, 'https:')
         ) {
-          isSnappingToAllExplodedUrls = true;
+          isSnappingToSomeExplodedUrls = true;
         }
 
         // store a collection of exploded domains globally
@@ -117,7 +117,7 @@ let rulesDir = 'src/chrome/content/rules';
       }
 
       ruleToIsSimpleMap.set(rule, isSimpleToAllExplodedUrls);
-      ruleToIsSnappingMap.set(rule, isSnappingToAllExplodedUrls);
+      ruleToIsSnappingMap.set(rule, isSnappingToSomeExplodedUrls);
       return true;
     }
 
@@ -125,9 +125,9 @@ let rulesDir = 'src/chrome/content/rules';
       return;
     }
 
-    // (2) We chech if all exploded domains are supported by the targets
+    // (2) We check if all the exploded domains are covered by the targets
     //     (a) if true, continue to (3)
-    //     (b) some exploded domains is not supported by this ruleset,
+    //     (b) some exploded domains are not covered by the targets,
     //         it is not safe to rewrite ruleset to include the
     //         exploded domains. skipping
     function isSupported(domain) {
@@ -151,7 +151,7 @@ let rulesDir = 'src/chrome/content/rules';
       return false;
     }
 
-    // assume each target support no exploded domain initially
+    // initially, assume each target doesn't support any exploded domain
     targets.forEach(target =>
       targetToSupportedExplodedDomainsMap.set(target, [])
     );
@@ -162,11 +162,11 @@ let rulesDir = 'src/chrome/content/rules';
       return;
     }
 
-    // (3) We check if all targets are applied to rewrites
+    // (3) We check to make sure all targets are covered by rewrites
     //     (a) if true, continue to (4)
-    //     (b) some targets are not applied to any rewrites, this
-    //         do not affect our works trivializing the targets, but
-    //         it is better to give warnings
+    //     (b) if some targets are not covered by any rewrites, this
+    //         doesn't affect our works trivializing the targets, but
+    //         we should give a warning and then proceed to (4)
     targets.forEach(target => {
       let supportedExplodedDomains = targetToSupportedExplodedDomainsMap.get(
         target
@@ -212,8 +212,8 @@ let rulesDir = 'src/chrome/content/rules';
     //     iii) at least one rule is a non-snapping rule
     //
     //     (a) if all of the conditions are met, append a trivial rule after all
-    //         existing rule; and remove the non-snapping rules.
-    //     (b) else, do not trivialize the rules
+    //         existing rules; and remove the non-snapping rules.
+    //     (b) otherwise, do not trivialize the rules
     let condition1 = unusedTargets.size == 0;
     let condition2 = [...ruleToIsSimpleMap.entries()].every(
       ([, value]) => value
