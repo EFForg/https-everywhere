@@ -169,9 +169,7 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
     //         doesn't affect our works trivializing the targets, but
     //         we should give a warning and then proceed to (4)
     for (const target of targets) {
-      const supportedExplodedDomains = targetToSupportedExplodedDomainsMap.get(
-        target
-      );
+      const supportedExplodedDomains = targetToSupportedExplodedDomainsMap.get(target);
       if (supportedExplodedDomains && supportedExplodedDomains.length === 0) {
         // prepare the warning message here
         unusedTargets.add(target);
@@ -216,12 +214,8 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
     //         existing rules; and remove the non-snapping rules.
     //     (b) otherwise, do not trivialize the rules
     const condition1 = unusedTargets.size === 0;
-    const condition2 = [...ruleToIsSimpleMap.entries()].every(
-      ([, value]) => value
-    );
-    const condition3 = [...ruleToIsSnappingMap.entries()].some(
-      ([, value]) => !value
-    );
+    const condition2 = [...ruleToIsSimpleMap.entries()].every(([, value]) => value);
+    const condition3 = [...ruleToIsSnappingMap.entries()].some(([, value]) => !value);
 
     if (condition1 && condition2 && condition3) {
       // append trivial rule to the end of current ruleset
