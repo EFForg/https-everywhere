@@ -19,7 +19,7 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
 (async () => {
   const filenames = (await readdir(rulesDir)).filter(fn => fn.endsWith('.xml'));
   const filePromises = filenames.map(async filename => {
-    function createTag(tagName, colour, print) {
+    const createTag = (tagName, colour, print) => {
       return (strings, ...values) => {
         let result = `[${tagName}] ${chalk.bold(filename)}: ${strings[0]}`;
         for (let i = 1; i < strings.length; i++) {
@@ -71,7 +71,7 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
     // (1) We check if all rules can be exploded to valid urls
     //     (a) if true, continue to (2)
     //     (b) if we cannot trivialize targets for this ruleset, skip
-    function isExplosiveRewrite(rule) {
+    const isExplosiveRewrite = rule => {
       const explodedUrls = new Array();
 
       try {
@@ -130,7 +130,7 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
     //     (b) some exploded domains are not covered by the targets,
     //         it is not safe to rewrite ruleset to include the
     //         exploded domains. skipping
-    function isSupported(domain) {
+    const isSupported = domain => {
       if (targets.includes(domain)) {
         // do not map non-wildcard targets to exploded domains
         // otherwise, it will introduce unnecessary rewrites
