@@ -171,7 +171,7 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
       const supportedExplodedDomains = targetToSupportedExplodedDomainsMap.get(
         target
       );
-      if (supportedExplodedDomains && supportedExplodedDomains.length == 0) {
+      if (supportedExplodedDomains && supportedExplodedDomains.length === 0) {
         // prepare the warning message here
         unusedTargets.add(target);
         // make sure we don't remove these targets when performing rewrites
@@ -214,7 +214,7 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
     //     (a) if all of the conditions are met, append a trivial rule after all
     //         existing rules; and remove the non-snapping rules.
     //     (b) otherwise, do not trivialize the rules
-    const condition1 = unusedTargets.size == 0;
+    const condition1 = unusedTargets.size === 0;
     const condition2 = [...ruleToIsSimpleMap.entries()].every(
       ([, value]) => value
     );
@@ -224,7 +224,7 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
 
     if (condition1 && condition2 && condition3) {
       // append trivial rule to the end of current ruleset
-      if ((content.match(/\n<\/ruleset>/) || []).length != 1) {
+      if ((content.match(/\n<\/ruleset>/) || []).length !== 1) {
         fail`ruleset contains zero or more than one </ruleset> tag`;
         return;
       } else {
