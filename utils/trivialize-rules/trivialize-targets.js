@@ -72,7 +72,7 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
     //     (a) if true, continue to (2)
     //     (b) if we cannot trivialize targets for this ruleset, skip
     const isExplosiveRewrite = rule => {
-      const explodedUrls = new Array();
+      const explodedUrls = [];
 
       try {
         explodeRegExp(rule.from, url => explodedUrls.push(url));
