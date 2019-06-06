@@ -32,7 +32,7 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
         }
         print(colour(result));
       };
-    }
+    };
 
     const warn = createTag('WARN', chalk.yellow, console.warn);
     const info = createTag('INFO', chalk.green, console.info);
@@ -119,7 +119,7 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
       ruleToIsSimpleMap.set(rule, isSimpleToAllExplodedUrls);
       ruleToIsSnappingMap.set(rule, isSnappingToSomeExplodedUrls);
       return true;
-    }
+    };
 
     if (!rules.every(isExplosiveRewrite)) {
       return;
@@ -149,11 +149,11 @@ const rulesDir = `${__dirname}/../../src/chrome/content/rules`;
       }
       unsupportedExplodedDomains.add(domain);
       return false;
-    }
+    };
 
     // initially, assume each target doesn't support any exploded domain
     for (const target of targets) {
-      targetToSupportedExplodedDomainsMap.set(target, [])
+      targetToSupportedExplodedDomainsMap.set(target, []);
     }
 
     if (![...explodedDomains].every(domain => isSupported(domain))) {
