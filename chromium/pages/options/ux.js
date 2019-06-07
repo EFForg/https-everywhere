@@ -6,6 +6,28 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
+  const secretArea = document.getElementById('secretArea')
+
+  const onKeyDownHandler = evt => {
+    if (evt.ctrlKey && evt.key === 'z') {
+      secretArea.classList.remove('hidden')
+      secretArea.classList.add('flash')
+
+      sendMessage('set_option', { developerMode: true })
+
+      document.removeEventListener('keydown', onKeyDownHandler)
+
+      evt.preventDefault()
+    }
+  }
+
+  sendMessage('get_option', { developerMode: false }, item => {
+    if (item.developerMode) {
+      secretArea.classList.remove('hidden')
+    } else {
+      document.addEventListener('keydown', onKeyDownHandler)
+    }
+  })
 
   const autoUpdateRulesets = document.getElementById("autoUpdateRulesets");
   const enableMixedRulesets = document.getElementById("enableMixedRulesets");
@@ -336,11 +358,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     update_channels_last_checked.innerText = chrome.i18n.getMessage("options_updatesLastChecked") + last_checked_string;
   });
-
-  document.onkeydown = function(evt) {
-    evt = evt || window.event;
-    if (evt.ctrlKey && evt.keyCode == 90) {
-      window.open("/pages/debugging-rulesets/index.html");
-    }
-  };
 });
