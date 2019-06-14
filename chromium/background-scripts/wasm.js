@@ -2,10 +2,15 @@
 
 (function(exports) {
 
-const { RuleSets } = wasm_bindgen;
+const util = require('./util'),
+  { RuleSets } = wasm_bindgen;
 
 async function initialize() {
-  await wasm_bindgen(chrome.runtime.getURL('wasm/https_everywhere_lib_bg.wasm'));
+  try {
+    await wasm_bindgen(chrome.runtime.getURL('wasm/https_everywhere_lib_bg.wasm'));
+  } catch(e) {
+    util.log(util.WARN, 'The wasm library has not loaded correctly for some reason.');
+  }
 }
 
 function is_enabled() {

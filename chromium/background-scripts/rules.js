@@ -223,7 +223,9 @@ RuleSets.prototype = {
     this.ruleActiveStates = await this.store.get_promise('ruleActiveStates', {});
     try {
       this.wasm_rs = wasm.RuleSets.new();
-    } catch(e) {}
+    } catch(e) {
+      util.log(util.WARN, 'Falling back to pure JS implementation.');
+    }
     await applyStoredFunc(this);
     await this.loadStoredUserRules();
     await this.addStoredCustomRulesets();
@@ -575,7 +577,7 @@ RuleSets.prototype = {
     let results;
     if (this.wasm_rs) {
       let pa = this.wasm_rs.potentially_applicable(host);
-      results = [...pa].map(ruleset => {
+      results = new Set([...pa].map(ruleset => {
         let rs = new RuleSet(ruleset.name, ruleset.default_state, getScope(ruleset.scope), ruleset.note);
 
         if (ruleset.cookierules) {
@@ -598,7 +600,7 @@ RuleSets.prototype = {
           rs.exclusions = null;
         }
         return rs;
-      });
+      }));
     } else {
       // Let's begin search
       // Copy the host targets so we don't modify them.
