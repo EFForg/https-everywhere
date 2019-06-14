@@ -224,7 +224,7 @@ RuleSets.prototype = {
     try {
       this.wasm_rs = wasm.RuleSets.new();
     } catch(e) {
-      util.log(util.WARN, 'Falling back to pure JS implementation.');
+      util.log(util.WARN, 'Falling back to pure JS implementation: ' + e);
     }
     await applyStoredFunc(this);
     await this.loadStoredUserRules();
