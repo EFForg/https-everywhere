@@ -7,12 +7,14 @@ const rules = require('./rules'),
   incognito = require('./incognito'),
   util = require('./util'),
   update = require('./update'),
-  { update_channels } = require('./update_channels');
+  { update_channels } = require('./update_channels'),
+  wasm = require('./wasm');
 
 
 let all_rules = new rules.RuleSets();
 
 async function initialize() {
+  await wasm.initialize();
   await store.initialize();
   await store.performMigrations();
   await initializeStoredGlobals();
