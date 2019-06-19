@@ -22,9 +22,6 @@ async function initialize() {
   await incognito.onIncognitoDestruction(destroy_caches);
 }
 const extensionReady = initialize();
-const timeStarted = performance.now()
-
-extensionReady.then(() => { console.log(performance.now() - timeStarted) })
 
 async function initializeAllRules() {
   const r = new rules.RuleSets();
