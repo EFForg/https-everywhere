@@ -778,9 +778,6 @@ const isSecureURL = url => {
   }
 }
 
-// Registers the handler for requests
-// See: https://github.com/EFForg/https-everywhere/issues/10039
-
 // Delay all requests until ruleset intialization to mitigate some types of unencrypted HTTP leaks.
 
 let requestHandler = details => {
@@ -795,6 +792,8 @@ extensionReady.then(() => {
   requestHandler = onBeforeRequest
 })
 
+// Registers the handler for requests
+// See: https://github.com/EFForg/https-everywhere/issues/10039
 chrome.webRequest.onBeforeRequest.addListener(details => requestHandler(details), {urls: ["*://*/*", "ftp://*/*"]}, ["blocking"]);
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
