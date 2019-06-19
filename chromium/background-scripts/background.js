@@ -119,15 +119,6 @@ chrome.webNavigation.onCompleted.addListener(function() {
   updateState();
 });
 
-// Records which tabId's are active in the HTTPS Switch Planner (see
-// pages/devtools/panel-ux.js).
-var switchPlannerEnabledFor = {};
-// Detailed information recorded when the HTTPS Switch Planner is active.
-// Structure is:
-//   switchPlannerInfo[tabId]["rw"/"nrw"][resource_host][active_content][url];
-// rw / nrw stand for "rewritten" versus "not rewritten"
-var switchPlannerInfo = {};
-
 /**
  * Set the icon color correctly
  * active: extension is enabled.
@@ -185,8 +176,6 @@ chrome.browserAction.onClicked.addListener(e => {
     url
   });
 });
-
-
 
 /**
  * Add a listener for removed tabs
@@ -411,16 +400,6 @@ function onBeforeRequest(details) {
     }
   }
 
-  // In Switch Planner Mode, record any non-rewriteable
-  // HTTP URIs by parent hostname, along with the resource type.
-  if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== "https:") {
-    writeToSwitchPlanner(details.type,
-      details.tabId,
-      uri.hostname,
-      details.url,
-      newuristr);
-  }
-
   if (httpNowhereOn) {
     // If loading a main frame, try the HTTPS version as an alternative to
     // failing.
@@ -455,86 +434,6 @@ function onBeforeRequest(details) {
     util.log(util.INFO, 'onBeforeRequest returning shouldCancel: ' + shouldCancel);
     return redirectOnCancel(shouldCancel, details.url);
   }
-}
-
-
-// Map of which values for the `type' enum denote active vs passive content.
-// https://developer.chrome.com/extensions/webRequest.html#event-onBeforeRequest
-const mixedContentTypes = {
-  object: 1, other: 1, script: 1, stylesheet: 1, sub_frame: 1, xmlhttprequest: 1,
-  image: 0, main_frame: 0
-};
-
-/**
- * Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
- * use in determining which resources need to be ported to HTTPS.
- * (Reminder: Switch planner is the pro-tool enabled by switching into debug-mode)
- *
- * @param type: type of the resource (see activeTypes and passiveTypes arrays)
- * @param tab_id: The id of the tab
- * @param resource_host: The host of the original url
- * @param resource_url: the original url
- * @param rewritten_url: The url rewritten to
- * */
-function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritten_url) {
-  let rw = rewritten_url ? "rw" : "nrw";
-
-  let active_content = 1;
-  if (mixedContentTypes.hasOwnProperty(type)) {
-    active_content = mixedContentTypes[type];
-  } else {
-    util.log(util.WARN, "Unknown type from onBeforeRequest details: `" + type + "', assuming active");
-  }
-
-  if (!switchPlannerInfo[tab_id]) {
-    switchPlannerInfo[tab_id] = {};
-    switchPlannerInfo[tab_id]["rw"] = {};
-    switchPlannerInfo[tab_id]["nrw"] = {};
-  }
-  if (!switchPlannerInfo[tab_id][rw][resource_host])
-    switchPlannerInfo[tab_id][rw][resource_host] = {};
-  if (!switchPlannerInfo[tab_id][rw][resource_host][active_content])
-    switchPlannerInfo[tab_id][rw][resource_host][active_content] = {};
-
-  switchPlannerInfo[tab_id][rw][resource_host][active_content][resource_url] = 1;
-}
-
-/**
- * Return the number of properties in an object. For associative maps, this is
- * their size.
- * @param obj: object to calc the size for
- * */
-function objSize(obj) {
-  if (typeof obj == 'undefined') return 0;
-  var size = 0, key;
-  for (key in obj) {
-    if (obj.hasOwnProperty(key)) size++;
-  }
-  return size;
-}
-
-/**
- * Make an array of asset hosts by score so we can sort them,
- * presenting the most important ones first.
- * */
-function sortSwitchPlanner(tab_id, rewritten) {
-  var asset_host_list = [];
-  if (typeof switchPlannerInfo[tab_id] === 'undefined' ||
-      typeof switchPlannerInfo[tab_id][rewritten] === 'undefined') {
-    return [];
-  }
-  var tabInfo = switchPlannerInfo[tab_id][rewritten];
-  for (var asset_host in tabInfo) {
-    var ah = tabInfo[asset_host];
-    var activeCount = objSize(ah[1]);
-    var passiveCount = objSize(ah[0]);
-    var score = activeCount * 100 + passiveCount;
-    asset_host_list.push([score, activeCount, passiveCount, asset_host]);
-  }
-  asset_host_list.sort(function(a,b) {
-    return a[0]-b[0];
-  });
-  return asset_host_list;
 }
 
 /**
@@ -760,59 +659,6 @@ chrome.webRequest.onHeadersReceived.addListener(onHeadersReceived, {urls: ["http
 
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking.
 chrome.cookies.onChanged.addListener(onCookieChanged);
-
-
-/**
- * disable switch Planner
- * @param tabId the Tab to disable for
- */
-function disableSwitchPlannerFor(tabId) {
-  delete switchPlannerEnabledFor[tabId];
-  // Clear stored URL info.
-  delete switchPlannerInfo[tabId];
-}
-
-/**
- * Enable switch planner for specific tab
- * @param tabId the tab to enable it for
- */
-function enableSwitchPlannerFor(tabId) {
-  switchPlannerEnabledFor[tabId] = true;
-}
-
-// Listen for connection from the DevTools panel so we can set up communication.
-chrome.runtime.onConnect.addListener(function (port) {
-  if (port.name == "devtools-page") {
-    chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-      var tabId = message.tabId;
-
-      var disableOnCloseCallback = function() {
-        util.log(util.DBUG, "Devtools window for tab " + tabId + " closed, clearing data.");
-        disableSwitchPlannerFor(tabId);
-      };
-
-      const responses = {
-        enable: () => {
-          enableSwitchPlannerFor(tabId);
-          port.onDisconnect.addListener(disableOnCloseCallback);
-        },
-        disable: () => {
-          disableSwitchPlannerFor(tabId);
-        },
-        getHosts: () => {
-          sendResponse({
-            nrw: sortSwitchPlanner(tabId, "nrw"),
-            rw: sortSwitchPlanner(tabId, "rw")
-          });
-          return true;
-        }
-      };
-      if (message.type in responses) {
-        return responses[message.type]();
-      }
-    });
-  }
-});
 
 // This is necessary for communication with the popup in Firefox Private
 // Browsing Mode, see https://bugzilla.mozilla.org/show_bug.cgi?id=1329304
@@ -1062,9 +908,7 @@ function destroy_caches() {
 
 Object.assign(exports, {
   all_rules,
-  urlBlacklist,
-  sortSwitchPlanner,
-  switchPlannerInfo
+  urlBlacklist
 });
 
 })(typeof exports == 'undefined' ? require.scopes.background = {} : exports);
