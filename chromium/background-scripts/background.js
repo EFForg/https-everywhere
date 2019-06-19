@@ -22,6 +22,9 @@ async function initialize() {
   await incognito.onIncognitoDestruction(destroy_caches);
 }
 const extensionReady = initialize();
+const timeStarted = performance.now()
+
+extensionReady.then(() => { console.log(performance.now() - timeStarted) })
 
 async function initializeAllRules() {
   const r = new rules.RuleSets();
@@ -764,13 +767,24 @@ function onHeadersReceived(details) {
   return {};
 }
 
+// Returns true only if URL has https: protocol or hostname ends with .onion
+
+const isSecureURL = url => {
+  try {
+    const urlObj = new URL(url)
+    return urlObj.protocol === 'https:' || urlObj.hostname.endsWith('.onion')
+  } catch (e) {
+    return false
+  }
+}
+
 // Registers the handler for requests
 // See: https://github.com/EFForg/https-everywhere/issues/10039
 
 // Delay all requests until ruleset intialization to mitigate some types of unencrypted HTTP leaks.
 
 let requestHandler = details => {
-  if (details.url.startsWith('https:')) {
+  if (isSecureURL(details.url)) {
     return onBeforeRequest(details)
   } else {
     return extensionReady.then(() => onBeforeRequest(details))
