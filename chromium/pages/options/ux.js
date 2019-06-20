@@ -5,7 +5,7 @@
 
 "use strict";
 
-if (~navigator.userAgent.indexOf("Android")) {
+if (navigator.userAgent.includes("Android")) {
   const url = new URL(window.location.href);
   if (!url.searchParams.get('redirected')) {
     url.searchParams.set('redirected', true);
