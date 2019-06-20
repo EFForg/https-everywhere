@@ -5,6 +5,20 @@
 
 "use strict";
 
+if (~navigator.userAgent.indexOf("Android")) {
+  const url = new URL(window.location.href);
+  if (!url.searchParams.get('redirected')) {
+    url.searchParams.set('redirected', true);
+    document.body.innerText = "";
+    let link = document.createElement("a");
+    link.href = url.href;
+    link.target = "_blank";
+    link.className = "settings";
+    link.innerText = chrome.i18n.getMessage("options_settings");
+    document.body.appendChild(link);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const secretArea = document.getElementById('secretArea')
 
