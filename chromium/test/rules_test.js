@@ -4,7 +4,7 @@ const text_encoding = require('text-encoding');
 global.TextDecoder = text_encoding.TextDecoder;
 global.TextEncoder = text_encoding.TextEncoder;
 global.self = global;
-require("../../lib-wasm/pkg/https_everywhere_lib.js");
+require("../../lib-wasm/pkg/https_everywhere_lib_wasm.js");
 
 const assert = require('chai').assert,
   rules = require('../background-scripts/rules');
