@@ -20,7 +20,7 @@ if type adb > /dev/null 2>/dev/null ; then
     we_started_adb_daemon=0
   fi
   on_exit() {
-    if test "0$we_started_adb_daemon" == "01"; then
+    if test "$we_started_adb_daemon" == "1"; then
       #if we started it we kill it, to avoid constant dmesg PME# spam, see issue 18103
       adb kill-server
     fi
