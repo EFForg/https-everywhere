@@ -110,8 +110,8 @@ do_not_ship="*.py *.xml"
 rm -f $do_not_ship
 
 mkdir wasm
-cp ../../https-everywhere-lib/pkg/*.wasm wasm
-cp ../../https-everywhere-lib/pkg/*.js wasm
+cp ../../lib-wasm/pkg/*.wasm wasm
+cp ../../lib-wasm/pkg/*.js wasm
 
 cd ../..
 
