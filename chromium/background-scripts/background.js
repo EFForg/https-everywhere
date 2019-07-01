@@ -187,37 +187,60 @@ chrome.browserAction.onClicked.addListener(e => {
 });
 
 
-
 /**
- * Add a listener for removed tabs
+ * A centralized storage for browsing data within the browser session.
  */
-function AppliedRulesets() {
-  this.active_tab_rules = new Map();
-  this.active_tab_main_frames = new Map();
+function BrowserSession() {
+  this.tabs = new Map();
+  this.requests = new Map();
 
   let that = this;
   if (chrome.tabs) {
     chrome.tabs.onRemoved.addListener(function(tabId) {
-      that.removeTab(tabId);
+      if (that.tabs.has(tabId)) {
+        that.tabs.delete(tabId);
+      }
     });
   }
 }
 
-AppliedRulesets.prototype = {
-  addRulesetToTab: function(tabId, type, ruleset) {
-    if (!this.active_tab_main_frames.has(tabId)) {
-      this.active_tab_main_frames.set(tabId, false);
+BrowserSession.prototype = {
+  putTab: function(tabId, key, value, overwrite) {
+    if (!this.tabs.has(tabId)) {
+      this.tabs.set(tabId, {});
     }
+
+    if (!(key in this.tabs.get(tabId)) || overwrite) {
+      this.tabs.get(tabId)[key] = value;
+    }
+  },
+
+  getTab: function(tabId, key, defaultValue) {
+    if (this.tabs.has(tabId) && key in this.tabs.get(tabId)) {
+      return this.tabs.get(tabId)[key];
+    }
+    return defaultValue;
+  },
+
+  deleteTab: function(tabId) {
+    if (this.tabs.has(tabId)) {
+      this.tabs.delete(tabId);
+    }
+  },
+
+  putTabAppliedRulesets: function(tabId, type, ruleset) {
+    this.putTab(tabId, "main_frame", false, false);
 
     // always show main_frame ruleset on the top
     if (type == "main_frame") {
-      this.active_tab_main_frames.set(tabId, true);
-      this.active_tab_rules.set(tabId, [ruleset,]);
+      this.putTab(tabId, "main_frame", true, true);
+      this.putTab(tabId, "applied_rulesets", [ruleset,], true);
       return ;
     }
 
-    if (this.active_tab_rules.has(tabId)) {
-      let rulesets = this.active_tab_rules.get(tabId);
+    // sort by ruleset names alphabetically, case-insensitive
+    if (this.getTab(tabId, "applied_rulesets", null)) {
+      let rulesets = this.getTab(tabId, "applied_rulesets");
       let insertIndex = 0;
 
       const ruleset_name = ruleset.name.toLowerCase();
@@ -227,7 +250,7 @@ AppliedRulesets.prototype = {
 
         if (item_name == ruleset_name) {
           return ;
-        } else if (insertIndex == 0 && this.active_tab_main_frames.get(tabId)) {
+        } else if (insertIndex == 0 && this.getTab(tabId, "main_frame", false)) {
           insertIndex = 1;
         } else if (item_name < ruleset_name) {
           insertIndex++;
@@ -235,49 +258,38 @@ AppliedRulesets.prototype = {
       }
       rulesets.splice(insertIndex, 0, ruleset);
     } else {
-      this.active_tab_rules.set(tabId, [ruleset,]);
+      this.putTab(tabId, "applied_rulesets", [ruleset,], true);
     }
   },
 
-  getRulesets: function(tabId) {
-    if (this.active_tab_rules.has(tabId)) {
-      return this.active_tab_rules.get(tabId);
-    } else {
-      return null;
-    }
+  getTabAppliedRulesets: function(tabId) {
+    return this.getTab(tabId, "applied_rulesets", null);
   },
 
-  removeTab: function(tabId) {
-    this.active_tab_rules.delete(tabId);
-    this.active_tab_main_frames.delete(tabId);
+  putRequest: function(requestId, key, value) {
+    if (!this.requests.has(requestId)) {
+      this.requests.set(requestId, {});
+    }
+    this.requests.get(requestId)[key] = value;
   },
 
-  getActiveRulesetCount: function (tabId) {
-    let activeCount = 0;
-
-    const rulesets = this.getRulesets(tabId);
-    if (rulesets) {
-      for (const ruleset of rulesets) {
-        if (ruleset.active) {
-          activeCount++;
-        }
-      }
+  getRequest: function(requestId, key, defaultValue) {
+    if (this.requests.has(requestId) && key in this.requests.get(requestId)) {
+      return this.requests.get(requestId)[key];
     }
-    return activeCount;
+    return defaultValue;
+  },
+
+  deleteRequest: function(requestId) {
+    if (this.requests.has(requestId)) {
+      this.requests.delete(requestId);
+    }
   }
-};
+}
 
-var appliedRulesets = new AppliedRulesets();
+let browserSession = new BrowserSession();
 
 var urlBlacklist = new Set();
-
-// redirect counter workaround
-// TODO: Remove this code if they ever give us a real counter
-var redirectCounter = new Map();
-
-// Create a map to indicate whether a given request has been subject to a simple
-// HTTP Nowhere redirect.
-let simpleHTTPNowhereRedirect = new Map();
 
 const cancelUrl = chrome.runtime.getURL("/pages/cancel/index.html");
 
@@ -303,7 +315,7 @@ function onBeforeRequest(details) {
   // otherwise, the extension page might include rulesets
   // from previous page.
   if (details.type == "main_frame") {
-    appliedRulesets.removeTab(details.tabId);
+    browserSession.deleteTab(details.tabId);
   }
 
   let uri = new URL(details.url);
@@ -366,7 +378,7 @@ function onBeforeRequest(details) {
     return redirectOnCancel(shouldCancel, details.url);
   }
 
-  if (redirectCounter.get(details.requestId) >= 8) {
+  if (browserSession.getRequest(details.requestId, "redirect_count") >= 8) {
     util.log(util.NOTE, "Redirect counter hit for " + uri.href);
     urlBlacklist.add(uri.href);
     rules.settings.domainBlacklist.add(uri.hostname);
@@ -382,7 +394,7 @@ function onBeforeRequest(details) {
 
   for (let ruleset of potentiallyApplicable) {
     if (details.url.match(ruleset.scope)) {
-      appliedRulesets.addRulesetToTab(details.tabId, details.type, ruleset);
+      browserSession.putTabAppliedRulesets(details.tabId, details.type, ruleset);
       if (ruleset.active && !newuristr) {
         newuristr = ruleset.apply(uri.href);
       }
@@ -427,7 +439,7 @@ function onBeforeRequest(details) {
     if (shouldCancel) {
       if (!newuristr) {
         newuristr = uri.href.replace(/^http:/, "https:");
-        simpleHTTPNowhereRedirect.set(details.requestId, true);
+        browserSession.putRequest(details.requestId, "simple_http_nowhere_redirect", true);
         upgradeToSecure = true;
       } else {
         newuristr = newuristr.replace(/^http:/, "https:");
@@ -592,13 +604,12 @@ function onBeforeRedirect(details) {
   // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
   let prefix = details.redirectUrl.substring(0, 5);
   if (prefix === "http:" || prefix === "https") {
-    let count = redirectCounter.get(details.requestId);
+    let count = browserSession.getRequest(details.requestId, "redirect_count", 0);
     if (count) {
-      redirectCounter.set(details.requestId, count + 1);
-      util.log(util.DBUG, "Got redirect id "+details.requestId+
-                ": "+count);
+      browserSession.putRequest(details.requestId, "redirect_count", count + 1);
+      util.log(util.DBUG, "Got redirect id " + details.requestId + ": "+count);
     } else {
-      redirectCounter.set(details.requestId, 1);
+      browserSession.putRequest(details.requestId, "redirect_count", 1);
     }
   }
 }
@@ -608,12 +619,7 @@ function onBeforeRedirect(details) {
  * @param details details for the chrome.webRequest (see chrome doc)
  */
 function onCompleted(details) {
-  if (redirectCounter.has(details.requestId)) {
-    redirectCounter.delete(details.requestId);
-  }
-  if (simpleHTTPNowhereRedirect.has(details.requestId)) {
-    simpleHTTPNowhereRedirect.delete(details.requestId);
-  }
+  browserSession.deleteRequest(details.requestId);
 }
 
 /**
@@ -623,7 +629,7 @@ function onCompleted(details) {
 function onErrorOccurred(details) {
   if (httpNowhereOn &&
     details.type == "main_frame" &&
-    simpleHTTPNowhereRedirect.get(details.requestId) &&
+    browserSession.getRequest(details.requestId, "simple_http_nowhere_redirect", false) &&
     ( // Enumerate a class of errors that are likely due to HTTPS misconfigurations
       details.error.indexOf("net::ERR_SSL_") == 0 ||
       details.error.indexOf("net::ERR_CERT_") == 0 ||
@@ -654,12 +660,7 @@ function onErrorOccurred(details) {
     chrome.tabs.update(details.tabId, {url: newCancelUrl(url.toString())});
   }
 
-  if (redirectCounter.has(details.requestId)) {
-    redirectCounter.delete(details.requestId);
-  }
-  if (simpleHTTPNowhereRedirect.has(details.requestId)) {
-    simpleHTTPNowhereRedirect.delete(details.requestId);
-  }
+  browserSession.deleteRequest(details.requestId);
 }
 
 /**
@@ -859,12 +860,12 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     delete_from_ruleset_cache: () => {
       all_rules.ruleCache.delete(message.object);
     },
-    get_active_rulesets: () => {
-      sendResponse(appliedRulesets.getRulesets(message.object));
+    get_applied_rulesets: () => {
+      sendResponse(browserSession.getTabAppliedRulesets(message.object));
       return true;
     },
     set_ruleset_active_status: () => {
-      let rulesets = appliedRulesets.getRulesets(message.object.tab_id);
+      let rulesets = browserSession.getTabAppliedRulesets(message.object.tab_id);
 
       for (let ruleset of rulesets) {
         if (ruleset.name == message.object.name) {
