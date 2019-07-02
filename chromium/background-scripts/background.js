@@ -194,12 +194,9 @@ function BrowserSession() {
   this.tabs = new Map();
   this.requests = new Map();
 
-  let that = this;
   if (chrome.tabs) {
-    chrome.tabs.onRemoved.addListener(function(tabId) {
-      if (that.tabs.has(tabId)) {
-        that.tabs.delete(tabId);
-      }
+    chrome.tabs.onRemoved.addListener(tabId => {
+      this.deleteTab(tabId);
     });
   }
 }
