@@ -282,7 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let remove = templateRemove.cloneNode(true);
 
       user_rule_host.className = "user-rules-list-item";
-      user_rule_name.className = "user-rules-list-item-single"
+      user_rule_name.className = "user-rules-list-item-single";
       user_rule_name.innerText = userRule.name;
       user_rule_host.appendChild(user_rule_name);
       user_rules_parent.appendChild(user_rule_host);
@@ -317,7 +317,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let rule_host_site_name = document.createElement("p");
 
         rule_host.className = "disabled-rule-list-item";
-        rule_host_site_name.className = "disabled-rule-list-item_single"
+        rule_host_site_name.className = "disabled-rule-list-item_single";
         rule_host_site_name.innerText = key;
         rule_host.appendChild( rule_host_site_name);
         rule_host_parent.appendChild(rule_host);
