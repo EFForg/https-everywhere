@@ -184,7 +184,7 @@ function toggleEnabledDisabled() {
  * @param activeTab
  */
 function listRules(activeTab) {
-  sendMessage("get_active_rulesets", activeTab.id, function(rulesets) {
+  sendMessage("get_applied_rulesets", activeTab.id, function(rulesets) {
     if (rulesets) {
       // show the number of potentially applicable rulesets
       let counter = rulesets.length;
