@@ -298,29 +298,27 @@ function onBeforeRequest(details) {
     return;
   }
 
-  // Clear the content shown in the extension popup.
-  // This needed to be done before this listener returns,
-  // otherwise, the extension page might include rulesets
-  // from previous page.
-  if (details.type == "main_frame") {
-    browserSession.deleteTab(details.tabId);
-  }
-
   let uri = new URL(details.url);
 
-  // Check if a user has disabled HTTPS Everywhere on this site.  We should
-  // ensure that all subresources are not run through HTTPS Everywhere as well.
+  // Normalise hosts with tailing dots, e.g. "www.example.com."
+  while (uri.hostname[uri.hostname.length - 1] === '.' && uri.hostname !== '.') {
+    uri.hostname = uri.hostname.slice(0, -1);
+  }
+
   if (details.type == "main_frame") {
+    // Clear the content from previous browser session.
+    // This needed to be done before this listener returns,
+    // otherwise, the extension popup might include rulesets
+    // from previous page.
+    browserSession.deleteTab(details.tabId);
+
+    // Check if an user has disabled HTTPS Everywhere on this site.  We should
+    // ensure that all subresources are not run through HTTPS Everywhere as well.
     browserSession.putTab(details.tabId, 'first_party_host', uri.host, true);
   }
 
   if (disabledList.has(browserSession.getTab(details.tabId, 'first_party_host', null))) {
     return;
-  }
-
-  // Normalise hosts with tailing dots, e.g. "www.example.com."
-  while (uri.hostname[uri.hostname.length - 1] === '.' && uri.hostname !== '.') {
-    uri.hostname = uri.hostname.slice(0, -1);
   }
 
   // Should the request be canceled?
@@ -566,22 +564,7 @@ function onHeadersReceived(details) {
 
     // Do not upgrade resources if the first-party domain disbled EASE mode
     // This is needed for HTTPS sites serve mixed content and is broken
-    let firstPartyHost;
-    if (details.type == "main_frame") {
-      firstPartyHost = uri.host;
-    } else {
-      // In Firefox, documentUrl is preferable here, since it will always be the
-      // URL in the URL bar, but it was only introduced in FF 54.  We should get
-      // rid of `originUrl` at some point.
-      if ('documentUrl' in details) { // Firefox 54+
-        firstPartyHost = new URL(details.documentUrl).host;
-      } else if ('originUrl' in details) { // Firefox < 54
-        firstPartyHost = new URL(details.originUrl).host;
-      } else if('initiator' in details) { // Chrome
-        firstPartyHost = new URL(details.initiator).host;
-      }
-    }
-    if (disabledList.has(firstPartyHost)) {
+    if (disabledList.has(browserSession.getTab(details.tabId, 'first_party_host', null))) {
       return {};
     }
 
