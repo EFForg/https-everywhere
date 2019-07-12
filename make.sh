@@ -108,6 +108,11 @@ python3.6 ../../utils/chromium-translations.py ../../translations/ _locales/
 python3.6 ../../utils/chromium-translations.py ../../src/chrome/locale/ _locales/
 do_not_ship="*.py *.xml"
 rm -f $do_not_ship
+
+mkdir wasm
+cp ../../lib-wasm/pkg/*.wasm wasm
+cp ../../lib-wasm/pkg/*.js wasm
+
 cd ../..
 
 python3.6 ./utils/merge-rulesets.py || exit 5

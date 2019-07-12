@@ -26,12 +26,12 @@ function replaceLink(explainer) {
 }
 
 function displayURL() {
-  const cancelURL = new URL(window.location.href);
-  const originURL = decodeURI(cancelURL.searchParams.get('originURL'));
+  const searchParams = new URLSearchParams(window.location.search);
+  const originURL = searchParams.get('originURL');
   const originURLLink = document.getElementById('url-value');
   const openURLButton = document.getElementById('open-url-button');
 
-  originURLLink.innerHTML = originURL;
+  originURLLink.innerText = originURL;
   originURLLink.href = originURL;
 
   openURLButton.addEventListener("click", function() {
