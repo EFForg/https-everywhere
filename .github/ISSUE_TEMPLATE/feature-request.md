@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Request a feature to help us improve HTTTP Everywhere
+about: Request a feature to help us improve HTTPS Everywhere
 ---
 
 [//]: # (Thank you for reporting an issue to HTTPS Everywhere.)
