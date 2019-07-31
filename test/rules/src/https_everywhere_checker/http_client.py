@@ -344,7 +344,7 @@ class HTTPFetcher(object):
             if urlParts.hostname[-6:] == '.onion':
                 c.setopt(c.PROXY, "127.0.0.1")
                 c.setopt(c.PROXYPORT, 9050)
-                c.setopt(c.PROXYTYPE, pycurl.PROXYTYPE_SOCKS5)
+                c.setopt(c.PROXYTYPE, c.PROXYTYPE_SOCKS5)
             c.perform()
 
             bufValue = buf.getvalue()
