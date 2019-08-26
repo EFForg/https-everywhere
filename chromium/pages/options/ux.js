@@ -5,7 +5,43 @@
 
 "use strict";
 
+if (navigator.userAgent.includes("Android")) {
+  const url = new URL(window.location.href);
+  if (!url.searchParams.get('redirected')) {
+    url.searchParams.set('redirected', true);
+    document.body.innerText = "";
+    let link = document.createElement("a");
+    link.href = url.href;
+    link.target = "_blank";
+    link.className = "settings";
+    link.innerText = chrome.i18n.getMessage("options_settings");
+    document.body.appendChild(link);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  const secretArea = document.getElementById('secretArea')
+
+  const onKeyDownHandler = evt => {
+    if (evt.ctrlKey && evt.key === 'z') {
+      secretArea.classList.remove('hidden')
+      secretArea.classList.add('flash')
+
+      sendMessage('set_option', { developerMode: true })
+
+      document.removeEventListener('keydown', onKeyDownHandler)
+
+      evt.preventDefault()
+    }
+  }
+
+  sendMessage('get_option', { developerMode: false }, item => {
+    if (item.developerMode) {
+      secretArea.classList.remove('hidden')
+    } else {
+      document.addEventListener('keydown', onKeyDownHandler)
+    }
+  })
 
   const autoUpdateRulesets = document.getElementById("autoUpdateRulesets");
   const enableMixedRulesets = document.getElementById("enableMixedRulesets");
@@ -246,7 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let remove = templateRemove.cloneNode(true);
 
       user_rule_host.className = "user-rules-list-item";
-      user_rule_name.className = "user-rules-list-item-single"
+      user_rule_name.className = "user-rules-list-item-single";
       user_rule_name.innerText = userRule.name;
       user_rule_host.appendChild(user_rule_name);
       user_rules_parent.appendChild(user_rule_host);
@@ -281,7 +317,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let rule_host_site_name = document.createElement("p");
 
         rule_host.className = "disabled-rule-list-item";
-        rule_host_site_name.className = "disabled-rule-list-item_single"
+        rule_host_site_name.className = "disabled-rule-list-item_single";
         rule_host_site_name.innerText = key;
         rule_host.appendChild( rule_host_site_name);
         rule_host_parent.appendChild(rule_host);
@@ -336,11 +372,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     update_channels_last_checked.innerText = chrome.i18n.getMessage("options_updatesLastChecked") + last_checked_string;
   });
-
-  document.onkeydown = function(evt) {
-    evt = evt || window.event;
-    if (evt.ctrlKey && evt.keyCode == 90) {
-      window.open("/pages/debugging-rulesets/index.html");
-    }
-  };
 });

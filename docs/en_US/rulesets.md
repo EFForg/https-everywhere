@@ -3,14 +3,14 @@
 This page describes how to write rulesets for [HTTPS
 Everywhere](https://eff.org/https-everywhere), a browser extension that
 switches sites over from HTTP to HTTPS automatically. HTTPS Everywhere comes
-with [thousands](http://www.eff.org/https-everywhere/atlas/) of rulesets that
+with [thousands](https://atlas.eff.org/index.html) of rulesets that
 tell HTTPS Everywhere which sites it should switch to HTTPS and how. If there
 is a site that offers HTTPS and is not handled by the extension, this guide
 will explain how to add that site.
 
 #### [Rulesets](#rulesets)
 
-A `ruleset` is an [XML](http://www.xml.com/pub/a/98/10/guide0.html?page=2) file
+A `ruleset` is an [XML](https://www.xml.com/pub/a/98/10/guide0.html?page=2) file
 describing behavior for a site or group of sites. A ruleset contains one or
 more `rules`. For example, here is
 [`RabbitMQ.xml`](https://github.com/efforg/https-everywhere/blob/master/src/chrome/content/rules/RabbitMQ.xml),
@@ -18,11 +18,11 @@ from the addon distribution:
 
 ```xml
 <ruleset name="RabbitMQ">
-        <target host="rabbitmq.com" />
-        <target host="www.rabbitmq.com" />
+	<target host="rabbitmq.com" />
+	<target host="www.rabbitmq.com" />
 
-        <rule from="^http:"
-                to="https:" />
+	<rule from="^http:"
+		to="https:" />
 </ruleset>
 ```
 
@@ -37,7 +37,7 @@ match that host name.
 
 HTTPS Everywhere then tries each rule in those rulesets against the full URL.
 If the [Regular
-Expression](http://www.regular-expressions.info/quickstart.html), or regexp, in
+Expression](https://www.regular-expressions.info/quickstart.html), or regexp, in
 one of those rules matches, HTTPS Everywhere [rewrites the
 URL](#rules-and-regular-expressions) according the `to` attribute of the rule.
 
@@ -58,16 +58,16 @@ separate target.
 #### [Rules and Regular Expressions](#rules-and-regular-expressions)
 
 The `rule` tags do the actual rewriting work. The `from` attribute of each rule
-is a [regular expression](http://www.regular-expressions.info/quickstart.html)
+is a [regular expression](https://www.regular-expressions.info/quickstart.html)
 matched against a full URL. You can use rules to rewrite URLs in simple or
 complicated ways. Here's a simplified (and now obsolete) example for Wikipedia:
 
 ```xml
 <ruleset name="Wikipedia">
-  <target host="*.wikipedia.org" />
+	<target host="*.wikipedia.org" />
 
-  <rule from="^http://(\w{2})\.wikipedia\.org/wiki/"
-          to="https://secure.wikimedia.org/wikipedia/$1/wiki/"/>
+	<rule from="^http://(\w{2})\.wikipedia\.org/wiki/"
+		to="https://secure.wikimedia.org/wikipedia/$1/wiki/"/>
 </ruleset>
 ```
 
@@ -84,9 +84,9 @@ between rulesets is unspecified. Only the first rule or exception matching a
 given URL is applied.
 
 Rules are evaluated using [Javascript regular
-expressions](http://www.regular-expressions.info/javascript.html), which are
+expressions](https://www.regular-expressions.info/javascript.html), which are
 similar but not identical to [Perl-style regular
-expressions.](http://www.regular-expressions.info/pcre.html) Note that if your
+expressions.](https://www.regular-expressions.info/pcre.html) Note that if your
 rules include ampersands (&amp;), they need to be appropriately XML-encoded:
 replace each occurrence of **&amp;** with **&amp;#x26;**.
 
@@ -97,7 +97,7 @@ the rule should **not** be applied. The Stack Exchange rule contains an
 exclusion for the OpenID login path, which breaks logins if it is rewritten:
 
 ```xml
-<exclusion pattern="^http://(?:\w+\.)?stack(?:exchange|overflow)\.com/users/authenticate/" />
+<exclusion pattern="^http://(\w+\.)?stack(exchange|overflow)\.com/users/authenticate/" />
 ```
 
 Exclusions are always evaluated before rules in a given ruleset. Matching any
@@ -118,7 +118,7 @@ less cumbersome.
 #### [Secure Cookies](#secure-cookies)
 
 Many HTTPS websites fail to correctly set the [secure
-flag](https://secure.wikimedia.org/wikipedia/en/wiki/HTTP_cookie#Secure_and_HttpOnly)
+flag](https://en.wikipedia.org/wiki/HTTP_cookie#Secure_and_HttpOnly)
 on authentication and/or tracking cookies. HTTPS Everywhere provides a facility
 for turning this flag on. For instance:
 
@@ -189,8 +189,8 @@ element, with a value explaining why the rule is off.
 
 ```xml
 <ruleset name="Amazon (buggy)" default_off="breaks site">
-   <target host="www.amazon.*" />
-   <target host="amazon.*" />
+	<target host="www.amazon.*" />
+	<target host="amazon.*" />
 </ruleset> 
 ```
 
@@ -200,13 +200,9 @@ file.
 #### [Mixed Content Blocking (MCB)](#mixed-content-blocking-mcb)
 
 Some rulesets may trigger active mixed content (i.e. scripts loaded over HTTP
-instead of HTTPS). This type of mixed content is blocked in both
-[Chrome](https://trac.torproject.org/projects/tor/ticket/6975) and Firefox,
+instead of HTTPS). This type of mixed content is blocked in most major browsers,
 before HTTPS Everywhere has a chance to rewrite the URLs to an HTTPS version.
-This generally breaks the site. However, the Tor Browser doesn&apos;t block
-mixed content, in order to allow HTTPS Everywhere to try and rewrite the URLs
-to an HTTPS version.
-
-To enable a rule only on platforms that allow mixed content (currently only the
-Tor Browser), you can add a `platform="mixedcontent"` attribute to the ruleset
-element.
+This generally breaks the site. Depending on their configuration and threat
+model, some users might however decide to enable these rulesets via a global
+option in HTTPS Everywhere. To that effect, such rulesets are identified with 
+the specific `platform="mixedcontent"` attribute to the ruleset element.
