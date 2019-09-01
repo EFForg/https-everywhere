@@ -46,7 +46,7 @@ def get_browser_name(string):
         return os.path.basename(string)
     else:  # its a browser type
         for bn in BROWSER_NAMES:
-            if string in bn and unix_which(bn, silent=True):
+            if string in bn and unix_which(bn, silent=False):
                 return os.path.basename(unix_which(bn))
         raise ValueError('Could not get browser name from {}'.format(string))
 
