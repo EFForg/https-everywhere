@@ -1,11 +1,12 @@
 sudo: required
 os: linux
-dist: trusty
+dist: bionic
 language: python
 python: 3.6
 group: bionic
 services:
   - docker
+  - xvfb
 matrix:
   fast_finish: true
   include:
@@ -32,8 +33,5 @@ matrix:
     - addons:
         firefox: latest-esr
       env: TEST="firefox esr" BROWSER=firefox
-before_install:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
 before_script: travis_retry test/setup_travis.sh
 script: . test/run_travis.sh
