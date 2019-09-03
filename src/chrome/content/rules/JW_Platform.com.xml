@@ -1,36 +1,22 @@
 <!--
 	For other LongTail coverage, see LongTail.xml.
 
-	Mismatch:
-		- (www.)
 -->
 <ruleset name="JW Platform.com (partial)">
+	<target host="jwplatform.com"/>
+	<target host="www.jwplatform.com"/>
+	<target host="api.jwplatform.com"/>
+	<target host="content.jwplatform.com"/>
+	<!--CORS issues, see:
+	https://github.com/EFForg/https-everywhere/issues/4531
+	https://github.com/EFForg/https-everywhere/issues/14464	-->
+	<exclusion pattern="^http://content\.jwplatform\.com/jw6/[\w-]+\.xml"/>
+		<test url="http://content.jwplatform.com/jw6/IMHaCkVN.xml"/>
+		<test url="http://content.jwplatform.com/jw6/g4dnDa9E.xml"/>
+	<exclusion pattern="^http://content\.jwplatform\.com/manifests/"/>
+		<test url="http://content.jwplatform.com/manifests/yDPBPpwH.m3u8"/>
+	<exclusion pattern="^http://content\.jwplatform\.com/feeds/"/>
+		<test url="http://content.jwplatform.com/feeds/HMWyETmK.json"/>
 
-	<target host="api.jwplatform.com" />
-	<target host="content.jwplatform.com" />
-	<target host="dashboard.jwplatform.com" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://dashboard\.jwplatform\.com/+($|\?|favicon\.ico|login/)" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://dashboard\.jwplatform\.com/+(?!payments/|static/)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://dashboard.jwplatform.com/favicon.ico" />
-			<test url="http://dashboard.jwplatform.com/login" />
-			<test url="http://dashboard.jwplatform.com/login/" />
-
-		<!-- CORS issues, see https://github.com/EFForg/https-everywhere/issues/4531 -->
-		<exclusion pattern="^http://content\.jwplatform\.com/jw6/[\w-]+\.xml" />
-			<test url="http://content.jwplatform.com/jw6/IMHaCkVN.xml" />
-			<test url="http://content.jwplatform.com/jw6/g4dnDa9E.xml" />
-			<test url="http://content.jwplatform.com/jw6/m82jsNFO.xml" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:"/>
 </ruleset>

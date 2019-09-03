@@ -17,25 +17,25 @@ source utils/mktemp.sh
 # We'll create a Firefox profile here and install HTTPS Everywhere into it.
 PROFILE_DIRECTORY="$(mktemp -d)"
 trap 'rm -r "$PROFILE_DIRECTORY"' EXIT
-HTTPSE_INSTALL_DIRECTORY=$PROFILE_DIRECTORY/extensions/https-everywhere-eff@eff.org
+HTTPSE_INSTALL_FILE=$PROFILE_DIRECTORY/extensions/https-everywhere-eff@eff.org.xpi
 
-# Build the XPI to run all the validations in makexpi.sh, and to ensure that
+# Build the XPI to run all the validations in make.sh, and to ensure that
 # we test what is actually getting built.
-./makexpi.sh
-XPI_NAME="`ls -tr pkg/*-eff.xpi | tail -1`"
+./make.sh
+XPI_NAME="`ls -tr pkg/https-everywhere-20*.xpi | tail -1`"
 
 # Set up a skeleton profile and then install into it.
 # The skeleton contains a few files required to trick Firefox into thinking
 # that the extension was fully installed rather than just unpacked.
-rsync -a test/firefox/test_profile_skeleton/ $PROFILE_DIRECTORY
-unzip -qd $HTTPSE_INSTALL_DIRECTORY $XPI_NAME
+cp -a test/firefox/test_profile_skeleton/* $PROFILE_DIRECTORY
+cp $XPI_NAME $HTTPSE_INSTALL_FILE
 
 die() {
   echo "$@"
   exit 1
 }
 
-if [ ! -d "$HTTPSE_INSTALL_DIRECTORY" ]; then
+if [ ! -f "$HTTPSE_INSTALL_FILE" ]; then
   die "Firefox profile does not have HTTPS Everywhere installed"
 fi
 
@@ -58,8 +58,8 @@ else
 
   PATH=/home/user/geckodriver:$PATH
   if [ -n "$FIREFOX" ]; then
-    $XVFB_RUN python2.7 test/script.py Firefox "$PROFILE_DIRECTORY" $FIREFOX
+    $XVFB_RUN python3.6 test/script.py Firefox "$PROFILE_DIRECTORY" $FIREFOX
   else
-    $XVFB_RUN python2.7 test/script.py Firefox "$PROFILE_DIRECTORY"
+    $XVFB_RUN python3.6 test/script.py Firefox "$PROFILE_DIRECTORY"
   fi
 fi

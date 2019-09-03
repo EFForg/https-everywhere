@@ -1,0 +1,37 @@
+<!--
+	Nonfunctional hosts in *.pctipp.ch:
+		- www.pctipp.ch (h)
+		- go.pctipp.ch (m)
+		- m.pctipp.ch (m)
+		- redi.pctipp.ch (m)
+
+	h: http redirect
+	m: certificate mismatch
+	r: connection refused
+	s: self-signed certificate
+	t: timeout on https
+-->
+<ruleset name="PCtipp.ch (partial)">
+	<target host="pctipp.ch"/>
+	<target host="www.pctipp.ch"/>
+
+	<!-- HTTP redirect -->
+	<exclusion pattern="http://www\.pctipp\.ch/$"/>
+
+	<test url="http://www.pctipp.ch/fileadmin/templates/images/sprite.png"/>
+	<test url="http://www.pctipp.ch/forum/clientscript/vbulletin-core.js"/>
+	<test url="http://www.pctipp.ch/forum/images/statusicon/thread_lock-16.png"/>
+	<test url="http://www.pctipp.ch/mein-pctipp/aktivierung/"/>
+	<test url="http://www.pctipp.ch/mein-pctipp/benutzerdaten/"/>
+	<test url="http://www.pctipp.ch/mein-pctipp/login/"/>
+	<test url="http://www.pctipp.ch/typo3/clear.gif"/>
+	<test url="http://www.pctipp.ch/typo3_src/typo3/clear.gif"/>
+	<test url="http://www.pctipp.ch/typo3conf/ext/realurl/ext_icon.gif"/>
+	<test url="http://www.pctipp.ch/typo3temp/pics/91c3b45592.jpg"/>
+	<test url="http://www.pctipp.ch/uploads/media/index.html"/>
+
+	<rule from="^http://pctipp\.ch/"
+		to="https://pctipp.ch/"/>
+	<rule from="^http://www\.pctipp\.ch/(fileadmin|forum/(clientscript|images)|mein-pctipp/(aktivierung|benutzerdaten|login)|typo3|typo3_src|typo3conf|typo3temp|uploads)/"
+		to="https://www.pctipp.ch/$1/"/>
+</ruleset>

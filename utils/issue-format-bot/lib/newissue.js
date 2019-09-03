@@ -5,6 +5,7 @@
 const parse = require('./parse'),
   validate = require('./validate'),
   labeler = require('./labeler'),
+  helptext = require('./helptext'),
   _ = require('lodash');
 
 module.exports = function(robot, alexa) {
@@ -26,16 +27,16 @@ module.exports = function(robot, alexa) {
       let params;
       switch (data.message) {
       case 'invalid type':
-        params = context.issue({body: 'Hey there, I didn\'t understand the type of issue you specified. Please edit it and try again.'});
+        params = context.issue({body: 'Hey there, I didn\'t understand the type of issue you specified. Please edit it and try again.' + helptext});
         return context.github.issues.createComment(params);
       case 'multiple types':
-        params = context.issue({body: 'Hello! You seem to have specified more than one type. Can you edit your issue and delete all but one of the types in your issue?'});
+        params = context.issue({body: 'Hello! You seem to have specified more than one type. Can you edit your issue and delete all but one of the types in your issue?' + helptext});
         return context.github.issues.createComment(params);
       case 'no type':
-        params = context.issue({body: 'Hey, I couldn\'t find the type of issue in your description. Can you edit your issue to add this (perhaps referring to the [issue template](https://github.com/EFForg/https-everywhere/blob/master/.github/ISSUE_TEMPLATE.md)?)'});
+        params = context.issue({body: 'Hey, I couldn\'t find the type of issue in your description. Can you edit your issue to add this information (perhaps referring to the [issue template](https://github.com/EFForg/https-everywhere/blob/master/.github/ISSUE_TEMPLATE.md)?)\n\nFor this to work I need `Type: <type>` on its own line in the issue body. For example, `Type: new ruleset`. There\'s a list of types I understand in the issue template.' + helptext});
         return context.github.issues.createComment(params);
       case 'null description':
-        params = context.issue({body: 'Hi! I can\'t find any text in your description - please edit it to use the issue template.'});
+        params = context.issue({body: 'Hi! I can\'t find any text in your description - please edit it to use the [issue template](https://github.com/EFForg/https-everywhere/blob/master/.github/ISSUE_TEMPLATE.md).' + helptext});
         return context.github.issues.createComment(params);
       default:
         throw data;
@@ -55,9 +56,9 @@ module.exports = function(robot, alexa) {
       comment += 'Here are the problems I ran into:\n\n';
       problems.forEach(problem => comment += ` * ${problem}\n`);
       comment += '\nIf you edit your issue, I\'ll try again and report back if I have problems again.';
+      comment += helptext
       const params = context.issue({body: comment});
       return context.github.issues.createComment(params);
-
     }
   };
 };

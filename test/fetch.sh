@@ -19,7 +19,7 @@ if [ "$TO_BE_TESTED" ]; then
   # Do the actual test, using https-everywhere-checker.
   OUTPUT_FILE=`mktemp`
   trap 'rm "$OUTPUT_FILE"' EXIT
-  python $RULETESTFOLDER/src/https_everywhere_checker/check_rules.py $RULETESTFOLDER/http.checker.config $TO_BE_TESTED 2>&1 | tee $OUTPUT_FILE
+  python3.6 $RULETESTFOLDER/src/https_everywhere_checker/check_rules.py $RULETESTFOLDER/http.checker.config $TO_BE_TESTED 2>&1 | tee $OUTPUT_FILE
   # Unfortunately, no specific exit codes are available for connection
   # failures, so we catch those with grep.
   if [[ `cat $OUTPUT_FILE | grep ERROR | wc -l` -ge 1 ]]; then

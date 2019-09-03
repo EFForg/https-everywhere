@@ -1,68 +1,19 @@
 <!--
-	For rules causing MCB, see Inc.com-falsemixed.xml.
+	Non-functional hosts
+		SSL peer certificate was not OK:
+		- subscriptions.inc.com
 
-
-	Nonfunctional subdomains:
-
-		- admin ¹
-		- dev-admin ²
-		- store ¹
-
-	¹ Shows CentOS test page
-	² Refused
-
-
-	These altnames don't exist:
-
-		- www.subscriptions.inc.com
-
-
-	Mixed content:
-
-		- frame on www from dev-admin ¹
-
-		- css, on:
-
-			- conference from $self ²
-			- conference and www from netdna.bootstrapcdn.com ²
-			- conference from fonts.googleapis.com ²
-			- mediakit from $self ²
-			- www from $self ²
-			- www from admin ¹
-
-		- Images, on:
-
-			- www from admin ¹
-			- www from dev-admin ¹
-
-	¹ Unsecurable
-	² Secured by us
-
+		Mixed content blocking (MCB) triggered:
+		- mediakit.inc.com
 -->
-<ruleset name="Inc.com (partial)">
-
+<ruleset name="Inc.com">
 	<target host="inc.com" />
-	<target host="*.inc.com" />
-		<!--
-			Avoid broken MCB:
-						-->
-		<exclusion pattern="^http://(?:conference|mediakit)\.inc\.com/+(?!wp-content/|wp-includes/)" />
-		<exclusion pattern="^http://(?:www\.)?inc\.com/+(?!favicon\.ico|lib/|views/css/)" />
+	<target host="www.inc.com" />
+	<target host="conference.inc.com" /><!-- Note: MCB issues but server redirect to https -->
+	<target host="magazine.inc.com" />
+	<target host="store.inc.com" />
 
+	<securecookie host=".+" name=".+" />
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^magazine\.inc\.com$" name="^JSESSIONID$" /-->
-	<!--securecookie host="^\.subscriptions\.inc\.com$" name="^mb_sessid_/inc_amst$" /-->
-
-	<securecookie host="^(?:magazine|\.subscriptions)\.inc\.com$" name=".+" />
-
-
-	<rule from="^http://(?:www\.)?inc\.com/"
-		to="https://www.inc.com/" />
-
-	<rule from="^http://(conference|mediakit|subscriptions|magazine)\.inc\.com/"
-		to="https://$1.inc.com/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
-

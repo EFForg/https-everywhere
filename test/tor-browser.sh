@@ -5,13 +5,12 @@
 
 if [ -n "$GIT_DIR" ]
 then
-    # $GIT_DIR is set, so we're running as a hook.
-    cd $GIT_DIR
+  # $GIT_DIR is set, so we're running as a hook.
+  cd $GIT_DIR
 else
-    # Git command exists? Cool, let's CD to the right place.
-    git rev-parse && cd "$(git rev-parse --show-toplevel)"
+  # Git command exists? Cool, let's CD to the right place.
+  git rev-parse && cd "$(git rev-parse --show-toplevel)"
 fi
-
 
 source utils/mktemp.sh
 
@@ -32,15 +31,13 @@ trap 'rm -r "$PROFILE_DIRECTORY"' EXIT
 tar -Jxvf $1 -C $PROFILE_DIRECTORY > /dev/null
 TBB_LOCALIZED_DIRECTORY=`find $PROFILE_DIRECTORY -maxdepth 1 -mindepth 1 -type d`
 HTTPSE_INSTALL_XPI=$TBB_LOCALIZED_DIRECTORY/Browser/TorBrowser/Data/Browser/profile.default/extensions/https-everywhere-eff@eff.org.xpi
-echo 'pref("extensions.https_everywhere.log_to_stdout", true);' >> $TBB_LOCALIZED_DIRECTORY/Browser/TorBrowser/Data/Browser/profile.default/preferences/extension-overrides.js
-echo 'pref("extensions.https_everywhere.LogLevel", 0);' >> $TBB_LOCALIZED_DIRECTORY/Browser/TorBrowser/Data/Browser/profile.default/preferences/extension-overrides.js
 # Remove the prebundled HTTPSE
 rm -rf $HTTPSE_INSTALL_XPI
 
-# Build the XPI to run all the validations in makexpi.sh, and to ensure that
+# Build the XPI to run all the validations in make.sh, and to ensure that
 # we test what is actually getting built.
-./makexpi.sh
-XPI_NAME="`ls -tr pkg/*-eff.xpi | tail -1`"
+./make.sh
+XPI_NAME="`ls -tr pkg/https-everywhere-20*.xpi | tail -1`"
 
 # Install into our fresh Tor Browser
 cp -a $XPI_NAME $HTTPSE_INSTALL_XPI
@@ -49,8 +46,8 @@ if [ ! -f "$HTTPSE_INSTALL_XPI" ]; then
   die "Tor Browser does not have HTTPS Everywhere installed"
 fi
 
-echo "running tor browser"
+echo "Running Tor Browser"
 $TBB_LOCALIZED_DIRECTORY/Browser/start-tor-browser --verbose ${@:2}
 
-shasum=$(openssl sha -sha256 "$XPI_NAME")
+shasum=$(openssl dgst -sha256 "$XPI_NAME")
 echo -e "Git commit `git rev-parse HEAD`\n$shasum"

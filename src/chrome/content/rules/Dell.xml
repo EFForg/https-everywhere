@@ -1,93 +1,11 @@
 <!--
 	Other Dell rulesets:
-
 		- Idea_Storm.com.xml
-
-
-	CDN buckets:
-
-		- ccdn-global.dell.com.edgesuite.net
-
-			- i
-
-
-	Nonfunctional hosts in *dell.com:
-
-		- advisors ⁸
-		- www1.ap ¹
-		- accessories.euro ³
-		- events ²
-		- ftp ²
-		- www1.jp ¹
-		- linux ⁴
-		- lt ²
-		- mobility ⁵
-		- opensource ⁶
-		- software ⁷
-		- solutions ⁵
-
-	¹ 504, Akamai
-	² Dropped
-	³ 503, Akamai
-	⁴ Plaintext reply
-	⁵ Refused
-	⁶ Maps to another domain
-	⁷ Redirects to http
-	⁸ Unknown SSL protocol error
-
-
-	Problematic hosts in *dell.com:
-
-		- ^ ¹
-		- accessories-cdn ²
-		- (.*\.)?community ³
-		- content ³
-		- dealsdev ²
-		- i ²
-		- www1.la ²
-		- www1-cdn.la ²
-		- powermore ³
-		- accessories.us ³
-		- www-cdn ²
-
-	¹ Server sends no certificate chain, see https://whatsmychaincert.com
-	² Akamai/mismatched
-	³ Mismatched
-
-
-	These altnames don't exist:
-
-		- eagleeye.dell.com
-		- Identity.dell.com
-		- mobility.dell.com
-		- pilot.dell.com
-		- Payment.dell.com
-		- Prtools.dell.com
-		- sales.dell.com
-		- tools.dell.com
-		- wip.dell.com
-
-
-	Mixed content:
-
-		- css, on:
-		
-			- www from www-cdn1.dell.com *
-
-		- Images, on:
-
-			- accessories, deals, downloads, partnerdirect, channels.us, www from i.dell.com *
-			- www from si.cdn.dell.com *
-			- www from www-cdn1.dell.com *
-
-	* Secured by us
 -->
-
 <ruleset name="Dell.com (partial)">
 	<target host="dell.com" />
 	<target host="www.dell.com" />
 	<target host="accessories.dell.com" />
-	<target host="afcs.dell.com" />
 	<target host="channels.ap.dell.com" />
 	<target host="channelslb.ap.dell.com" />
 	<target host="channelspro.ap.dell.com" />
@@ -102,7 +20,6 @@
 	<target host="deals.dell.com" />
 	<target host="dellupdater.dell.com" />
 	<target host="downloads.dell.com" />
-	<target host="dpacksupport.dell.com" />
 	<target host="ecomm.dell.com" />
 	<target host="ecomm2.dell.com" />
 	<target host="support.euro.dell.com" />
@@ -117,45 +34,16 @@
 	<target host="paymentsportal.dell.com" />
 	<target host="premier.dell.com" />
 	<target host="signin.dell.com" />
-	<target host="support.software.dell.com" />
 	<target host="sso.dell.com" />
 	<target host="support.dell.com" />
 	<target host="supportapj.dell.com" />
+	<target host="topics-cdn.dell.com" />
 	<target host="channels.us.dell.com" />
 	<target host="lists.us.dell.com" />
 	<target host="pbar.us.dell.com" />
-	<target host="www-cdn.dell.com" />
-	<target host="www1-cdn.dell.com" />
+
 
 	<securecookie host=".+" name=".+" />
 
-	<rule from="^http://(?:www-cdn\.)?dell\.com/" to="https://www.dell.com/" />
-	<rule from="^http://i\.dell\.com/" to="https://si.cdn.dell.com/" />
 	<rule from="^http:" to="https:" />
-
-	<test url="http://fcs.dell.com/fcs/fcs/UIFramework/3.2.108.2/res/Image?path=sharedcontrols%2Fcontainers%2Fvalidation_messaging_left.png" />
-
-	<!-- Avoid false/broken MCB: -->
-	<exclusion pattern="^http://(?:www\.)?dell\.com/+(?!content/|favicon\.ico)" />
-	<test url="http://www.dell.com/learn/campaigns/dell-coupon-codes-us-smb?s=" />
-	<test url="http://www.dell.com/printers" />
-	<test url="http://www.dell.com/sitemap" />
-	<test url="http://www.dell.com/content/segmenter.aspx?c=us&amp;l=en&amp;s=&amp;cs=" />
-	<test url="http://www.dell.com/favicon.ico" />
-
-	<exclusion pattern="^http://partnerdirect\.dell\.com/(?!sites/channel/(?:Documents/|Style\ Library/|\w\w_\w\w/pages/loginpage\.aspx))" />
-	<test url="http://partnerdirect.dell.com/sites/channel/en_an/Authorize-Distributors/Pages/MyNewsandEvents.aspx" />
-	<test url="http://partnerdirect.dell.com/sites/channel/en_gy/Pages/adefault.aspx" />
-	<test url="http://partnerdirect.dell.com/sites/channel/en_la/Pages/MoreInfo.aspx" />
-	<test url="http://partnerdirect.dell.com/sites/channel/Documents/Rugged_FAQ.docx" />
-	<test url="http://www1-cdn.dell.com/css/images/icons/icons-sprite-24.png" />
-
-	<!-- Causes CORS issues, https://github.com/EFForg/https-everywhere/issues/6737 -->
-	<exclusion pattern="^http://afcs\.dell\.com/support/article/static/" />
-	<test url="http://afcs.dell.com/support/article/static/resources/icon-small.woff" />
-
-	<!-- Causes CORS issues, https://github.com/EFForg/https-everywhere/issues/9246 -->
-	<exclusion pattern="^http://afcs\.dell\.com/bundles/" />
-	<test url="http://afcs.dell.com/bundles/proactive-chat-css-3-5-0-175?v=EXATybnwj3UO_Xj3MW5KLQ1BlpjGLLtSgFkNm9xdtT41&amp;afcs=1" />
-	<test url="http://afcs.dell.com/bundles/corebundle-4-8-0-79?v=YtWgQZ93mJFVqwlaEN-93ZC3a99QoragFLnJd0Gjh3U1&amp;afcs=1" />
 </ruleset>

@@ -1,64 +1,41 @@
 <!--
-	For problematic rules, see FedEx.com-problematic.xml.
+	Non-functional hosts
+		SSL peer certificate was not OK:
+		- fedex.com
+		- metrics.fedex.com
+		- www.ftn.fedex.com
 
+		Peer certificate cannot be authenticated with given CA certificates:
+		- access.van.fedex.com
+		- blog.van.fedex.com
+		- news.van.fedex.com
 
-		- fedex.com.d2.sc.omtrdc.net 
+		Different content:
+		- m.fedex.com
 
-			- metrics
-
-
-	Problematic subdomains:
-
-		- metrics	(mismatched, CN: *.d2.sc.omtrdc.net)
-		- blog.van	(mismatched, CN: *.gridserver.com)
-		- news.van	(CN: Parallels Panel)
-
-
-	Partially covered subdomains:
-
-		- (www.) *
-		- m *
-		- wwwtest *
-
-	* Some pages redirect to http, others 404
-
-
-	Mixed content:
-
-		- css, on:
-
-			- news.van from news.van *
-			- news.van from www *
-
-		- Images, on:
-
-			- news.van from images *
-			- news.van from news.van *
-
-	* Secured by us
-
+		Mixed content blocking (MCB) triggered:
+		- crossborder.fedex.com
 -->
 <ruleset name="FedEx.com (partial)">
-
 	<target host="fedex.com" />
-	<target host="*.fedex.com" />
-		<exclusion pattern="^http://m\.fedex\.com/+(?!img/)" />
-		<exclusion pattern="^http://wwwtest\.fedex\.com/(?!css/|images/)" />
+	<target host="www.fedex.com" />
+	<target host="careers.fedex.com" />
+	<target host="customcritical.fedex.com" />
+	<target host="ftn.fedex.com" />
+	<target host="getrewards.fedex.com" />
+	<target host="groundwarehousejobs.fedex.com" />
+	<target host="images.fedex.com" />
+	<target host="local.fedex.com" />
+	<target host="psg.office.fedex.com" />
+	<target host="oo.blue.fedex.com" />
+	<target host="pilot.fedex.com" />
+	<target host="printonline.fedex.com" />
+	<target host="samedaycity.fedex.com" />
+	<target host="supplychain.fedex.com" />
+	<target host="wwwtest.fedex.com" />
 
-
-	<securecookie host="^\.fedex\.com$" name="^s_\w+$" />
-
-
-	<!--	^ redirects to www over http
-		so copy that behavior:
-					-->
-	<rule from="^http://(?:www\.)?fedex\.com/(?=css/|images/|myprofile/)"
+	<rule from="^http://fedex\.com/"
 		to="https://www.fedex.com/" />
 
-	<rule from="^http://(images|m|wwwtest)\.fedex\.com/"
-		to="https://$1.fedex.com/" />
-
-	<rule from="^http://metrics\.fedex\.com/"
-		to="https://fedex-com.d2.sc.omtrdc.net/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.6
 
 # Merge all the .xml rulesets into a single "default.rulesets" file -- this
 # prevents inodes from wasting disk space, but more importantly, this works
@@ -11,18 +11,16 @@ import argparse
 import glob
 import json
 import os
-import subprocess
-import sys
 import unicodedata
 import xml.etree.ElementTree
 
 def normalize(f):
-	"""
-	OSX and Linux filesystems encode composite characters differently in
-	filenames. We should normalize to NFC: http://unicode.org/reports/tr15/
-	"""
-	f = unicodedata.normalize("NFC", unicode(f, "utf-8")).encode("utf-8")
-	return f
+    """
+    OSX and Linux filesystems encode composite characters differently in
+    filenames. We should normalize to NFC: http://unicode.org/reports/tr15/
+    """
+    f = unicodedata.normalize("NFC", f)
+    return f
 
 # commandline arguments parsing (nobody use it, though)
 parser = argparse.ArgumentParser(description="Merge rulesets")
@@ -38,7 +36,7 @@ files = map(normalize, glob.glob(os.path.join(args.source_dir, "*.xml")))
 
 # Under git bash, sed -i issues errors and sets the file "read-only".
 if os.path.isfile(ofn):
-	os.system("chmod u+w " + ofn)
+    os.system("chmod u+w " + ofn)
 
 # Library (JSON Object)
 library = []
@@ -46,52 +44,63 @@ library = []
 # Parse XML ruleset and construct JSON library
 print(" * Parsing XML ruleset and constructing JSON library...")
 for filename in sorted(files):
-	tree = xml.etree.ElementTree.parse(filename)
-	root = tree.getroot()
-	
-	ruleset = {}
+    tree = xml.etree.ElementTree.parse(filename)
+    root = tree.getroot()
 
-	for attr in root.attrib:
-		ruleset[attr] = root.attrib[attr]
-	
-	for child in root:
-		if child.tag in ["target", "rule", "securecookie", "exclusion"]:
-			if child.tag not in ruleset:
-				ruleset[child.tag] = []
-		else:
-			continue
+    ruleset = {}
+    trivialNameSecureCookie = None
 
-		if child.tag == "target":
-			ruleset["target"].append(child.attrib["host"])
+    for attr in root.attrib:
+        ruleset[attr] = root.attrib[attr]
 
-		elif child.tag == "rule":
-			ru = {}
-			ru["from"] = child.attrib["from"]
-			ru["to"] = child.attrib["to"]
+    for child in root:
+        if child.tag in ["target", "rule", "securecookie", "exclusion"]:
+            if child.tag not in ruleset:
+                ruleset[child.tag] = []
+        else:
+            continue
 
-			ruleset["rule"].append(ru)
+        if child.tag == "target":
+            ruleset["target"].append(child.attrib["host"])
 
-		elif child.tag == "securecookie":
-			sc = {}
-			sc["host"] = child.attrib["host"]
-			sc["name"] = child.attrib["name"]
+        elif child.tag == "rule":
+            ru = {}
+            ru["from"] = child.attrib["from"]
+            ru["to"] = child.attrib["to"]
 
-			ruleset["securecookie"].append(sc)
+            ruleset["rule"].append(ru)
 
-		elif child.tag == "exclusion":
-			ruleset["exclusion"].append(child.attrib["pattern"])
+        elif child.tag == "securecookie":
+            if child.attrib["name"] == ".+":
+                if not trivialNameSecureCookie:
+                    trivialNameSecureCookie = {}
+                    trivialNameSecureCookie["host"] = child.attrib["host"]
+                    trivialNameSecureCookie["name"] = ".+"
+                else:
+                    trivialNameSecureCookie["host"] = (trivialNameSecureCookie["host"] + "|" + child.attrib["host"])
+            else:
+                sc = {}
+                sc["host"] = child.attrib["host"]
+                sc["name"] = child.attrib["name"]
 
-	library.append(ruleset);
+                ruleset["securecookie"].append(sc)
+
+        elif child.tag == "exclusion":
+            if len(ruleset["exclusion"]) == 0:
+                ruleset["exclusion"].append(child.attrib["pattern"])
+            else:
+                ruleset["exclusion"][0] = (ruleset["exclusion"][0] + "|" + child.attrib["pattern"])
+
+    if trivialNameSecureCookie:
+        ruleset["securecookie"].insert(0, trivialNameSecureCookie)
+
+    library.append(ruleset);
 
 # Write to default.rulesets
 print(" * Writing JSON library to %s" % ofn)
 outfile = open(ofn, "w")
-outfile.write(json.dumps(library))
+outfile.write(json.dumps(library, separators=(",", ":")))
 outfile.close()
 
-# We make default.rulesets at build time, 
-# but it shouldn't have a variable timestamp
-subprocess.call(["touch", "-r", "src/install.rdf", ofn])
-
 # Everything is okay.
-print(" * Everything is Okay.")
+print(" * Everything is okay.")

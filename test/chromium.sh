@@ -19,23 +19,23 @@ fi
 # If you just want to run Chromium with the latest code:
 if [ "$1" == "--justrun" ]; then
 	shift
-	./makecrx.sh
+	./make.sh
 	echo "running Chromium"
 	source utils/mktemp.sh
 
 	PROFILE_DIRECTORY="$(mktemp -d)"
 	trap 'rm -r "$PROFILE_DIRECTORY"' EXIT
-	
+
 	# Chromium package name is 'chromium' in Debian 7 (wheezy) and other distros like Arch
 	BROWSER="chromium-browser"
 	which $BROWSER || BROWSER="chromium"
 	$BROWSER \
 		--user-data-dir="$PROFILE_DIRECTORY" \
-		--load-extension=pkg/crx/ \
+		--load-extension=pkg/crx-cws/ \
 		"$@"
 else
-	./makecrx.sh
+	./make.sh
 	echo "running tests"
 	CRX_NAME="`ls -tr pkg/*.crx | tail -1`"
-	$XVFB_RUN python2.7 test/script.py Chrome $CRX_NAME
+	$XVFB_RUN python3.6 test/script.py Chrome $CRX_NAME
 fi

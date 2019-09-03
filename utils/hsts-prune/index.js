@@ -145,7 +145,7 @@ const check_header_directives = (check_domain, cb) => {
         max_age = Number(max_age_match[1]);
       }
       cb(null,
-        preload && include_subdomains && max_age >= 10886400);
+        preload && include_subdomains && max_age >= 31536000);
       sent_callback = true;
     } else {
       cb(null, false);
@@ -314,7 +314,7 @@ async.parallel({
           });
         }
 
-        // After building the additonal checks in the form of the
+        // After building the additional checks in the form of the
         // checks array of functions, run the checks in parallel and
         // perform the appropriate actions based on the results.
 

@@ -1,18 +1,29 @@
 <!--
-	For other eBay coverage, see EBay.xml.
-
-
-	Fully covered domains:
-
-		- img.shoppingshadow.com	(→ img.shopping.com)
-
+	img and di* have certificate mismatch issue, need to redirect to secure-*
 -->
-<ruleset name="shoppingshadow.com" default_off="mismatched">
+<ruleset name="shoppingshadow.com">
 
-	<target host="img.shoppingshadow.com" />
+	<target host="*.shoppingshadow.com" />
 
+	<rule from="^http://img(2)?\.shoppingshadow\.com/"
+		to="https://secure-img$1.shoppingshadow.com/" />
 
-	<rule from="^http://img\.shoppingshadow\.com/"
-		to="https://img.shopping.com/" />
+		<test url="http://img.shoppingshadow.com/" />
+		<test url="http://img2.shoppingshadow.com/" />
+		<test url="http://secure-img.shoppingshadow.com/" />
+		<test url="http://secure-img2.shoppingshadow.com/" />
+
+	<rule from="^http://di(\d-?\d?)\.shoppingshadow\.com/"
+		to="https://secure-di$1.shoppingshadow.com/" />
+
+		<test url="http://di1.shoppingshadow.com/" />
+		<test url="http://di61.shoppingshadow.com/" />
+		<test url="http://di3-1.shoppingshadow.com/" />
+		<test url="http://secure-di1.shoppingshadow.com/" />
+		<test url="http://secure-di61.shoppingshadow.com/" />
+		<test url="http://secure-di3-1.shoppingshadow.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -8,56 +8,38 @@
 			- hardhat.mozilla.net
 
 	Problematic hosts in *mozilla.net:
-		- download.cdn ¹
 		- hardhat ²
-		- www ³
-	¹ 404; mismatched, CN: gp1.wac.edgecastcdn.net
 	² Works; mismatched, CN: gp1.wac.edgecastcdn.net
-	³ Prompts for LDAP login; mismatched, CN: static-san.mozilla.org
-
-	Observed hosts in *mozilla.net:
-		- static-cdn.addons
-		- static-ssl-cdn.addons
-		- in *cdn
-			- activations
-			- addons
-			- air
-			- code
-			- developer
-			- download		(→ ftp.mozilla.org)
-			- download-installer
-			- fhr
-			- marketplace
-			- mozorg
-			- support
-			- versioncheck
-		- videos-cdn
-		- www			(→ www.mozilla.org)
-
-	Mixed content:
-		- Images on hardhat.cdn.mozilla.net from www.mozilla.org *
-		- Ad on activations.cdn.mozilla.net from getpocket.com *
-	* Secured by us
 -->
-<ruleset name="Mozilla.net (partial)">
+<ruleset name="Mozilla.net">
 
 	<target host="*.mozilla.net" />
+		<test url="http://assets.mozilla.net/pdf/IHPbriefs_Web_Literacy_March_2017.pdf" />
 		<test url="http://cdn.mozilla.net/browserquest/img/1/spritesheet.png" />
-		<test url="http://code.cdn.mozilla.net/fonts/fira.css" />
-		<test url="http://developer.cdn.mozilla.net/" />
+			<test url="http://activations.cdn.mozilla.net/" />
+			<test url="http://addons-discovery.cdn.mozilla.net/50b599424886d5ec9380d52b954087cb.webm" />
+			<test url="http://addons.cdn.mozilla.net/user-media/addon_icons/5/5890-64.png" />
+			<test url="http://air.cdn.mozilla.net/" />
+			<test url="http://blocked.cdn.mozilla.net/" />
+			<test url="http://code.cdn.mozilla.net/fonts/fira.css" />
+			<test url="http://developer.cdn.mozilla.net/" />
+			<test url="http://download-installer.cdn.mozilla.net/" />
+			<test url="http://download.cdn.mozilla.net/" />
+			<test url="http://fhr.cdn.mozilla.net/" />
+			<test url="http://hardhat.cdn.mozilla.net/" />
+			<test url="http://mozorg.cdn.mozilla.net/" />
+			<test url="http://snippets.cdn.mozilla.net/" />
+			<test url="http://support.cdn.mozilla.net/" />
+			<test url="http://videos.cdn.mozilla.net/" />
+		<test url="http://interactive-examples.mdn.mozilla.net/pages/tabbed/map.html" />
+		<test url="http://static.addons.mozilla.net/en-US/firefox/.pdf" />
+		<test url="http://www.mozilla.net/" />
 
 	<!--	Mismatched:	-->
 	<exclusion pattern="^http://hardhat\.mozilla\.net/" />
 		<test url="http://hardhat.mozilla.net/en-US/outages.html" />
 
-	<rule from="^http://download\.cdn\.mozilla\.net/"
-		to="https://ftp.mozilla.org/" />
-		<test url="http://download.cdn.mozilla.net/" />
-
-	<!--	Redirects as so over http.	-->
-	<rule from="^http://www\.mozilla\.net/"
-		to="https://www.mozilla.org/" />
-		<test url="http://www.mozilla.net/" />
+	<securecookie host=".+" name=".+" />
 
 	<rule from="^http:" to="https:" />
 </ruleset>
