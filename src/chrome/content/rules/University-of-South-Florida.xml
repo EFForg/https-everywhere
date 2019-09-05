@@ -1,68 +1,67 @@
 
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://usfsp.edu/ => https://usfsp.edu/: (51, "SSL: no alternative certificate subject name matches target host name 'usfsp.edu'")
+	Pretty complete ruleset for the various usf.edu and usfsp.edu domains.
+    Note that the usfsm domains are not yet https protected.
 
-Disabled by https-everywhere-checker because:
-Fetch error: http://usfsp.edu/ => https://usfsp.edu/: (51, "SSL: no alternative certificate subject name matches target host name 'usfsp.edu'")
-	For problematic rules, see University-of-South-Florida-mismatches.xml.
-
+	These domains are giving errors in the build. Removing so we can get initial rules working, will follow up.
+	<target host="vpn.usfsp.edu" />  SSL certificate problem: unable to get local issuer certificate
+	<target host="lib.usf.edu" />  SSL certificate problem: unable to get local issuer certificate
+	<target host="usfweb2.usf.edu" />  (this uses a very weak cypher) OpenSSL SSL_connect: SSL_ERROR_SYSCALL in connection
 
 	Nonfunctional usf.edu subdomains:
 
-		- (www.)		(times out)
-		- directory.acomp	(cert: netid.usf.edu; redirects there)
-		- it			(expired, self-signed; 301s to rc.blog.usf.edu/domain-not-found/)
-		- guides.lib		(cert: libguides.com; 404)
+		- directory.acomp	   (cert: netid.usf.edu; redirects there)
+		- it			       (expired, self-signed; 301s to rc.blog.usf.edu/domain-not-found/)
+		- guides.lib		   (cert: libguides.com; 404)
 		- (www.)nelson
-		- news
+		- news                 Deprecated 
 		- (www.)research
 		- system
-		- tap			(expired, self-signed; 301s to rc.blog.usf.edu/domain-not-found/)
+		- tap			       (expired, self-signed; 301s to rc.blog.usf.edu/domain-not-found/)
+		- (*.)blog				deprecated
+		- rc
+		- usfsp.edu				Wil not be updated
 
 -->
-<ruleset name="University of South Florida (partial)" default_off="failed ruleset test">
+<ruleset name="University of South Florida">
 
-	<target host="lib.usf.edu" />
+	<target host="usf.edu" />
+	<target host="www.usf.edu" />
+	<target host="emergency.usf.edu" />
+	<target host="coeduapps.usf.edu" />
+	<target host="apps.usf.edu" />
 	<target host="www.lib.usf.edu" />
 	<target host="my.usf.edu" />
 	<target host="mysites.usf.edu" />
+	<target host="team.usf.edu" />
 	<target host="netid.usf.edu" />
-	<target host="usfsts.usf.edu" />
-	<target host="usfweb2.usf.edu" />
+	<target host="usfweb.usf.edu" />
+	<target host="cdn.usf.edu" />
+	<target host="cmsfs.forest.usf.edu" />
+	<target host="vpn.usf.edu" />
+	<target host="jira.usf.edu" />
+	<target host="confluence.usf.edu" />
+	<target host="scholarcommons.usf.edu" />
+	<target host="itchat.usf.edu" />
+	<target host="livechat.health.usf.edu" />
+	<target host="maps.usf.edu" />
+	<target host="m.usf.edu" />
 	<target host="webauth.usf.edu" />
-	<target host="stpete.usf.edu" />
-	<target host="www.stpete.usf.edu" />
-	<target host="sharemypc.stpete.usf.edu" />
-	<target host="usfsp.edu" />
-	<target host="dev.usfsp.edu" />
-	<target host="vpn.usfsp.edu" />
+	<target host="www.cutr.usf.edu" />
+	
+	<target host="health.usf.edu" />
+	
 	<target host="www.usfsp.edu" />
 	<target host="sharemypc.usfsp.edu" />
+	
+	<target host="wusf.usf.edu" />
+	<target host="www.wusf.org" />
+	<target host="wusfnews.wusf.usf.edu" />
+	<target host="arts4allflorida.org" />
 
 
 	<!--	Not handling cross-domain cookies as a precaution.	-->
 	<securecookie host="^(?:\w.*\.)?usf(?:sp)?\.edu$" name=".+" />
-
-
-	<!--	Cert only matches www.lib.
-						-->
-	<rule from="^http://(?:www\.)?lib\.usf\.edu/"
-		to="https://www.lib.usf.edu/" />
-
-
-	<!--	- Cert doesn't match
-		- Redirects like so
-				-->
-	<rule from="^http://(?:www\.)?stpete\.usf\.edu/"
-		to="https://www.usfsp.edu/" />
-
-
-	<!--	- Cert only matches sharemypc.stpete.usf
-		- Data appear identical
-				-->
-	<rule from="^http://sharemypc\.(?:stpete\.usf|usfsp)\.edu/"
-		to="https://sharemypc.stpete.usf.edu/" />
 
 	<rule from="^http:" to="https:" />
 </ruleset>
