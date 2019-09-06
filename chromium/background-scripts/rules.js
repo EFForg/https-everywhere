@@ -222,7 +222,7 @@ RuleSets.prototype = {
     this.store = store;
     this.ruleActiveStates = await this.store.get_promise('ruleActiveStates', {});
     try {
-      this.wasm_rs = wasm.JsRuleSets.new();
+      this.wasm_rs = wasm.RuleSets.new();
     } catch(e) {
       util.log(util.WARN, 'Falling back to pure JS implementation: ' + e);
     }
