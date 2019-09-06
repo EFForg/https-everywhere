@@ -3,7 +3,7 @@
 (function(exports) {
 
 const util = require('./util'),
-  { JsRuleSets } = wasm_bindgen;
+  { RuleSets } = wasm_bindgen;
 
 async function initialize() {
   try {
@@ -19,7 +19,7 @@ function is_enabled() {
 
 Object.assign(exports, {
   initialize,
-  JsRuleSets,
+  RuleSets,
   is_enabled,
 });
 
