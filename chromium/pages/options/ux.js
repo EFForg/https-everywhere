@@ -5,29 +5,58 @@
 
 "use strict";
 
-document.addEventListener("DOMContentLoaded", () => {
+if (navigator.userAgent.includes("Android")) {
+  const url = new URL(window.location.href);
+  if (!url.searchParams.get('redirected')) {
+    url.searchParams.set('redirected', true);
+    document.body.innerText = "";
+    let link = document.createElement("a");
+    link.href = url.href;
+    link.target = "_blank";
+    link.className = "settings";
+    link.innerText = chrome.i18n.getMessage("options_settings");
+    document.body.appendChild(link);
+  }
+}
 
-  const showCounter = document.getElementById("showCounter");
+document.addEventListener("DOMContentLoaded", () => {
+  const secretArea = document.getElementById('secretArea')
+
+  const onKeyDownHandler = evt => {
+    if (evt.ctrlKey && evt.key === 'z') {
+      secretArea.classList.remove('hidden')
+      secretArea.classList.add('flash')
+
+      sendMessage('set_option', { developerMode: true })
+
+      document.removeEventListener('keydown', onKeyDownHandler)
+
+      evt.preventDefault()
+    }
+  }
+
+  sendMessage('get_option', { developerMode: false }, item => {
+    if (item.developerMode) {
+      secretArea.classList.remove('hidden')
+    } else {
+      document.addEventListener('keydown', onKeyDownHandler)
+    }
+  })
+
   const autoUpdateRulesets = document.getElementById("autoUpdateRulesets");
   const enableMixedRulesets = document.getElementById("enableMixedRulesets");
   const showDevtoolsTab = document.getElementById("showDevtoolsTab");
 
   const defaultOptions = {
-    showCounter: true,
     autoUpdateRulesets: true,
     enableMixedRulesets: false,
     showDevtoolsTab: true
   };
 
   sendMessage("get_option", defaultOptions, item => {
-    showCounter.checked = item.showCounter;
     autoUpdateRulesets.checked = item.autoUpdateRulesets;
     enableMixedRulesets.checked = item.enableMixedRulesets;
     showDevtoolsTab.checked = item.showDevtoolsTab;
-
-    showCounter.addEventListener("change", () => {
-      sendMessage("set_option", { showCounter: showCounter.checked });
-    });
 
     autoUpdateRulesets.addEventListener("change", () => {
       sendMessage("set_option", { autoUpdateRulesets: autoUpdateRulesets.checked });
@@ -284,16 +313,23 @@ document.addEventListener("DOMContentLoaded", () => {
     templateRemove.src = chrome.runtime.getURL("images/remove.png");
     templateRemove.className = "remove";
 
-    for (const key of domains) {
-      // If it is valid Punycode, display Unicode label
-      let display = key;
-      try {
-        const unicode = window.punycode.toUnicode(key);
-        if (key !== unicode) {
-          display += " (" + unicode +")";
-        }
-      } catch(e) {
-        display = key;
+    if( item ) {
+      for (const key of item.disabledList) {
+        let rule_host = document.createElement("div");
+        let remove = templateRemove.cloneNode(true);
+        let rule_host_site_name = document.createElement("p");
+
+        rule_host.className = "disabled-rule-list-item";
+        rule_host_site_name.className = "disabled-rule-list-item_single";
+        rule_host_site_name.innerText = key;
+        rule_host.appendChild( rule_host_site_name);
+        rule_host_parent.appendChild(rule_host);
+        rule_host.appendChild(remove);
+
+        remove.addEventListener("click", () => {
+          hide( rule_host );
+          sendMessage("enable_on_site", key);
+        });
       }
 
       const ruleHost = document.createElement("div");
@@ -407,11 +443,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     updateChannelsLastChecked.innerText = chrome.i18n.getMessage("options_updatesLastChecked") + lastCheckedString;
   });
-
-  document.onkeydown = function(evt) {
-    evt = evt || window.event;
-    if (evt.ctrlKey && evt.keyCode === 90) {
-      window.open("/pages/debugging-rulesets/index.html");
-    }
-  };
 });

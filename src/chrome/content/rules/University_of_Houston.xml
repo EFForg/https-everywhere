@@ -1,69 +1,53 @@
 <!--
-	Nonfunctional subdomains:
+	Non-functional hosts
+		Timeout was reached:
+		- bauerticker.uh.edu
+		- orientation.distance.uh.edu
+		- eto.uh.edu
+		- nsm.uh.edu
+		- forms.nsm.uh.edu
+		- nsmit.nsm.uh.edu
+		- researchstores.nsm.uh.edu
+		- www.nsm.uh.edu
 
-		- bauerticker
-		- distance
-		- orientation.distance	(reset)
-		- www.hrm		(CN: *.contentactive.com; 404)
-		- m.law			(reset)
-		- www.uhsa		(SN: ssl.uh.edu; redirects there)
-		- weekendu		(reset)
+		SSL connect error:
+		- m.law.uh.edu
 
+		SSL peer certificate was not OK:
+		- www.arch.uh.edu
+		- bauer.uh.edu
+		- coe.uh.edu
+		- distance.uh.edu
+		- egr.uh.edu
+		- www.hrm.uh.edu
+		- law.uh.edu
+		- mail.nsm.uh.edu
+		- www.sw.uh.edu
+		- www.uhsa.uh.edu
+		- weekendu.uh.edu
 
-	Problematic subdomains:
+		Peer certificate cannot be authenticated with given CA certificates:
+		- myuh.uh.edu
 
-		- www.arch			(CN: ssl.uh.edu;
-		- eto				(expired; works)
-		- researchstores.nsm.uh.edu	(CN: nsm.uh.edu; works)
-		- www.sw			(CN: ssl.uh.edu;
+		Incomplete certificate chain error:
+		- tech.uh.edu
+		- www.tech.uh.edu
+		- vnet.uh.edu
 
-
-	Fully covered subdomains:
-
-		- ^
-		- accessuh
-		- (www.)bauer
-		- (www.)coe
-		- (www.)egr
-		- (www.)law
-		- fp.my
-		- myuh
-		- nsm
-		- forms.nsm
-		- mail.nsm
-		- mynsm.nsm
-		- mynsmstore.nsm
-		- nsmit.nsm
-		- www.nsm
-		- www.opt
-		- ssl
-		- (www.)tech
-		- vnet
-		- www
-
+		Mixed content blocking (MCB) triggered:
+		- www.law.uh.edu
 -->
 <ruleset name="University of Houston (partial)">
+	<target host="uh.edu" />
+	<target host="www.uh.edu" />
+	<target host="accessuh.uh.edu" />
+	<target host="www.bauer.uh.edu" />
+	<target host="www.coe.uh.edu" />
+	<target host="www.egr.uh.edu" />
+	<target host="www.opt.uh.edu" />
+	<target host="ssl.uh.edu" />
 
-	<target host="*.uh.edu" />
+	<securecookie host=".+" name=".+" />
 
-
-	<securecookie host=".+" name=".+"/>
-
-
-	<rule from="^http://(?:www\.)?uh\.edu/"
-		to="https://ssl.uh.edu/" />
-
-	<rule from="^http://(accessuh|fp\.mh|myuh|(?:forms|mail|mynsm|mynsmstore|nsmit)\.nsm|www\.opt|ssl|vnet)\.uh\.edu/"
-		to="https://$1.uh.edu/" />
-
-	<!--	Certs don't match www.
-					-->
-	<rule from="^http://(?:www\.)?nsm\.uh\.edu/"
-		to="https://nsm.uh.edu/" />
-
-	<!--	Certs don't match !www.
-					-->
-	<rule from="^http://(?:www\.)?(bauer|coe|egr|law|tech)\.uh\.edu/"
-		to="https://www.$1.uh.edu/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
