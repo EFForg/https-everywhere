@@ -19,23 +19,6 @@ if (navigator.userAgent.includes("Android")) {
   }
 }
 
-/* Adds or removes "dark" class for all relevant elements) */
-function setProporColor(darkStyle) {
-  if (darkStyle) {
-    document.body.classList.add("dark");
-    document.querySelectorAll(".section-header-span").forEach(shs => {
-      shs.classList.add("dark");
-    });
-    document.getElementById("update-channels-warning").classList.add("dark");
-  } else {
-    document.body.classList.remove("dark");
-    document.querySelectorAll(".section-header-span").forEach(shs => {
-      shs.classList.remove("dark");
-    });
-    document.getElementById("update-channels-warning").classList.remove("dark");
-  }
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   const secretArea = document.getElementById('secretArea')
 
@@ -63,22 +46,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const autoUpdateRulesets = document.getElementById("autoUpdateRulesets");
   const enableMixedRulesets = document.getElementById("enableMixedRulesets");
   const showDevtoolsTab = document.getElementById("showDevtoolsTab");
-  const darkStyle = document.getElementById("darkStyle");
 
   const defaultOptions = {
     autoUpdateRulesets: true,
     enableMixedRulesets: false,
-    showDevtoolsTab: true,
-    darkStyle: false
+    showDevtoolsTab: true
   };
 
   sendMessage("get_option", defaultOptions, item => {
     autoUpdateRulesets.checked = item.autoUpdateRulesets;
     enableMixedRulesets.checked = item.enableMixedRulesets;
     showDevtoolsTab.checked = item.showDevtoolsTab;
-    darkStyle.checked = item.darkStyle;
-
-    setProporColor(darkStyle.checked);
 
     autoUpdateRulesets.addEventListener("change", () => {
       sendMessage("set_option", { autoUpdateRulesets: autoUpdateRulesets.checked });
@@ -90,11 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     showDevtoolsTab.addEventListener("change", () => {
       sendMessage("set_option", { showDevtoolsTab: showDevtoolsTab.checked });
-    });
-
-    darkStyle.addEventListener("change", () => {
-      sendMessage("set_option", { darkStyle: darkStyle.checked });
-      setProporColor(darkStyle.checked);
     });
   });
 
