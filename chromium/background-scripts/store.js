@@ -8,7 +8,7 @@ function initialize() {
   return new Promise(resolve => {
     if (chrome.storage.sync) {
       chrome.storage.sync.set({"sync-set-test": true}, () => {
-        if(chrome.runtime.lastError){
+        if(chrome.runtime.lastError) {
           setStorage(chrome.storage.local);
         } else {
           setStorage(chrome.storage.sync);
@@ -99,9 +99,9 @@ async function performMigrations() {
 }
 
 const local = {
-  get: chrome.storage.local.get,
-  set: chrome.storage.local.set,
-  remove: chrome.storage.local.remove,
+  get: (...args) => chrome.storage.local.get(...args),
+  set: (...args) => chrome.storage.local.set(...args),
+  remove: (...args) => chrome.storage.local.remove(...args),
   get_promise: local_get_promise,
   set_promise: local_set_promise
 };

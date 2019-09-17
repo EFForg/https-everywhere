@@ -5,29 +5,58 @@
 
 "use strict";
 
-document.addEventListener("DOMContentLoaded", () => {
+if (navigator.userAgent.includes("Android")) {
+  const url = new URL(window.location.href);
+  if (!url.searchParams.get('redirected')) {
+    url.searchParams.set('redirected', true);
+    document.body.innerText = "";
+    let link = document.createElement("a");
+    link.href = url.href;
+    link.target = "_blank";
+    link.className = "settings";
+    link.innerText = chrome.i18n.getMessage("options_settings");
+    document.body.appendChild(link);
+  }
+}
 
-  const showCounter = document.getElementById("showCounter");
+document.addEventListener("DOMContentLoaded", () => {
+  const secretArea = document.getElementById('secretArea')
+
+  const onKeyDownHandler = evt => {
+    if (evt.ctrlKey && evt.key === 'z') {
+      secretArea.classList.remove('hidden')
+      secretArea.classList.add('flash')
+
+      sendMessage('set_option', { developerMode: true })
+
+      document.removeEventListener('keydown', onKeyDownHandler)
+
+      evt.preventDefault()
+    }
+  }
+
+  sendMessage('get_option', { developerMode: false }, item => {
+    if (item.developerMode) {
+      secretArea.classList.remove('hidden')
+    } else {
+      document.addEventListener('keydown', onKeyDownHandler)
+    }
+  })
+
   const autoUpdateRulesets = document.getElementById("autoUpdateRulesets");
   const enableMixedRulesets = document.getElementById("enableMixedRulesets");
   const showDevtoolsTab = document.getElementById("showDevtoolsTab");
 
   const defaultOptions = {
-    showCounter: true,
     autoUpdateRulesets: true,
     enableMixedRulesets: false,
     showDevtoolsTab: true
   };
 
   sendMessage("get_option", defaultOptions, item => {
-    showCounter.checked = item.showCounter;
     autoUpdateRulesets.checked = item.autoUpdateRulesets;
     enableMixedRulesets.checked = item.enableMixedRulesets;
     showDevtoolsTab.checked = item.showDevtoolsTab;
-
-    showCounter.addEventListener("change", () => {
-      sendMessage("set_option", { showCounter: showCounter.checked });
-    });
 
     autoUpdateRulesets.addEventListener("change", () => {
       sendMessage("set_option", { autoUpdateRulesets: autoUpdateRulesets.checked });
@@ -42,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  function onlyShowSection(sectionId){
+  function onlyShowSection(sectionId) {
     document.querySelectorAll('.section-wrapper').forEach(sw => {
       sw.style.display = "none";
     });
@@ -62,10 +91,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  function create_update_channel_element(update_channel, last_updated, pinned){
+  function create_update_channel_element(update_channel, last_updated, pinned) {
     let ruleset_version_string;
 
-    if(last_updated){
+    if(last_updated) {
       const ruleset_date = new Date(last_updated * 1000);
       ruleset_version_string = ruleset_date.getUTCFullYear() + "." + (ruleset_date.getUTCMonth() + 1) + "." + ruleset_date.getUTCDate();
     } else {
@@ -188,14 +217,14 @@ document.addEventListener("DOMContentLoaded", () => {
     return update_channel_div;
   }
 
-  function render_update_channels(){
+  function render_update_channels() {
     const update_channels_list = document.getElementById("update-channels-list");
-    while(update_channels_list.firstChild){
+    while(update_channels_list.firstChild) {
       update_channels_list.removeChild(update_channels_list.firstChild);
     }
 
     sendMessage("get_pinned_update_channels", null, item => {
-      for(const update_channel of item.update_channels){
+      for(const update_channel of item.update_channels) {
         update_channels_list.appendChild(
           create_update_channel_element(
             update_channel,
@@ -208,7 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     sendMessage("get_stored_update_channels", null, item => {
-      for(const update_channel of item.update_channels){
+      for(const update_channel of item.update_channels) {
         update_channels_list.appendChild(
           create_update_channel_element(
             update_channel,
@@ -227,7 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const update_channels_error = document.getElementById("update-channels-error");
   update_channel_name_div.setAttribute("placeholder", chrome.i18n.getMessage("options_enterUpdateChannelName"));
 
-  function displayError(text){
+  function displayError(text) {
     update_channels_error_text.innerText = text;
     update_channels_error.style.display = "block";
     window.scrollTo(0,0);
@@ -253,7 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let remove = templateRemove.cloneNode(true);
 
       user_rule_host.className = "user-rules-list-item";
-      user_rule_name.className = "user-rules-list-item-single"
+      user_rule_name.className = "user-rules-list-item-single";
       user_rule_name.innerText = userRule.name;
       user_rule_host.appendChild(user_rule_name);
       user_rules_parent.appendChild(user_rule_host);
@@ -272,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
   getOption_("disabledList", [], function(item) {
     let rule_host_parent = e("disabled-rules-wrapper");
 
-    if( 0 === item.disabledList.length ){
+    if( 0 === item.disabledList.length ) {
       hide(rule_host_parent);
       return;
     }
@@ -281,14 +310,14 @@ document.addEventListener("DOMContentLoaded", () => {
     templateRemove.src = chrome.runtime.getURL("images/remove.png");
     templateRemove.className = "remove";
 
-    if( item ){
+    if( item ) {
       for (const key of item.disabledList) {
         let rule_host = document.createElement("div");
         let remove = templateRemove.cloneNode(true);
         let rule_host_site_name = document.createElement("p");
 
         rule_host.className = "disabled-rule-list-item";
-        rule_host_site_name.className = "disabled-rule-list-item_single"
+        rule_host_site_name.className = "disabled-rule-list-item_single";
         rule_host_site_name.innerText = key;
         rule_host.appendChild( rule_host_site_name);
         rule_host_parent.appendChild(rule_host);
@@ -304,12 +333,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   add_update_channel.addEventListener("click", () => {
     const update_channel_name = update_channel_name_div.value;
-    if(update_channel_name.trim() == ""){
+    if(update_channel_name.trim() == "") {
       displayError("Error: The update channel name is blank.  Please enter another name.");
     } else {
       update_channel_name_div.value = "";
       sendMessage("create_update_channel", update_channel_name, result => {
-        if(result == true){
+        if(result == true) {
           render_update_channels();
         } else {
           displayError("Error: There already exists an update channel with this name.");
@@ -326,7 +355,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const update_channels_last_checked = document.getElementById("update-channels-last-checked");
   sendMessage("get_last_checked", null, last_checked => {
     let last_checked_string;
-    if(last_checked){
+    if(last_checked) {
       const last_checked_date = new Date(last_checked * 1000);
       const options = {
         year: '2-digit',
@@ -343,11 +372,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     update_channels_last_checked.innerText = chrome.i18n.getMessage("options_updatesLastChecked") + last_checked_string;
   });
-
-  document.onkeydown = function(evt) {
-    evt = evt || window.event;
-    if (evt.ctrlKey && evt.keyCode == 90) {
-      window.open("/pages/debugging-rulesets/index.html");
-    }
-  };
 });

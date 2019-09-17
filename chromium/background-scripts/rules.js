@@ -2,7 +2,8 @@
 
 (function(exports) {
 
-const util = require('./util');
+const util = require('./util'),
+  wasm = require('./wasm');
 
 let settings = {
   enableMixedRulesets: false,
@@ -29,7 +30,7 @@ const nullIterable = Object.create(null, {
 const scopes = new Map();
 
 /* Returns the scope object from the map for the given scope string */
-function getScope(scope){
+function getScope(scope) {
   if (!scopes.has(scope)) {
     scopes.set(scope, new RegExp(scope));
   }
@@ -174,7 +175,7 @@ RuleSet.prototype = {
     }
 
     if(this_rules_length > 0) {
-      for(let x = 0; x < this.rules.length; x++){
+      for(let x = 0; x < this.rules.length; x++) {
         if(this.rules[x].to != ruleset.rules[x].to) {
           return false;
         }
@@ -220,33 +221,46 @@ RuleSets.prototype = {
   loadFromBrowserStorage: async function(store, applyStoredFunc) {
     this.store = store;
     this.ruleActiveStates = await this.store.get_promise('ruleActiveStates', {});
+    try {
+      this.wasm_rs = wasm.RuleSets.new();
+    } catch(e) {
+      util.log(util.WARN, 'Falling back to pure JS implementation: ' + e);
+    }
     await applyStoredFunc(this);
     await this.loadStoredUserRules();
     await this.addStoredCustomRulesets();
   },
 
   /**
-   * Iterate through data XML and load rulesets
+   * Convert XML to JS and load rulesets
    */
   addFromXml: function(ruleXml, scope) {
-    const scope_obj = getScope(scope);
-    const rulesets = ruleXml.getElementsByTagName("ruleset");
-    for (let ruleset of rulesets) {
-      try {
-        this.parseOneXmlRuleset(ruleset, scope_obj);
-      } catch (e) {
-        util.log(util.WARN, 'Error processing ruleset:' + e);
-      }
+    const rulesets_xml = ruleXml.getElementsByTagName("ruleset");
+
+    let rulesets = [];
+    for (let ruleset_xml of rulesets_xml) {
+      rulesets.push(this.convertOneXmlToJs(ruleset_xml));
     }
+
+    this.addFromJson(rulesets, scope);
   },
 
   addFromJson: function(ruleJson, scope) {
     const scope_obj = getScope(scope);
-    for (let ruleset of ruleJson) {
-      try {
-        this.parseOneJsonRuleset(ruleset, scope_obj);
-      } catch(e) {
-        util.log(util.WARN, 'Error processing ruleset:' + e);
+
+    if (this.wasm_rs) {
+      this.wasm_rs.add_all_from_js_array(
+        ruleJson,
+        settings.enableMixedRulesets,
+        this.ruleActiveStates,
+        scope);
+    } else {
+      for (let ruleset of ruleJson) {
+        try {
+          this.parseOneJsonRuleset(ruleset, scope_obj);
+        } catch(e) {
+          util.log(util.WARN, 'Error processing ruleset:' + e);
+        }
       }
     }
   },
@@ -323,7 +337,15 @@ RuleSets.prototype = {
    */
   addUserRule : function(params, scope) {
     util.log(util.INFO, 'adding new user rule for ' + JSON.stringify(params));
-    this.parseOneJsonRuleset(params, scope);
+    if (this.wasm_rs) {
+      this.wasm_rs.add_all_from_js_array(
+        [params],
+        settings.enableMixedRulesets,
+        this.ruleActiveStates,
+        scope);
+    } else {
+      this.parseOneJsonRuleset(params, scope);
+    }
 
     // clear cache so new rule take effect immediately
     for (const target of params.target) {
@@ -352,18 +374,23 @@ RuleSets.prototype = {
     this.ruleCache.delete(ruleset.name);
 
     if (src === 'popup') {
-      const tmp = this.targets.get(ruleset.name).filter(r => !r.isEquivalentTo(ruleset))
-      this.targets.set(ruleset.name, tmp);
 
-      if (this.targets.get(ruleset.name).length == 0) {
-        this.targets.delete(ruleset.name);
+      if (this.wasm_rs) {
+        this.wasm_rs.remove_ruleset(ruleset);
+      } else {
+        const tmp = this.targets.get(ruleset.name).filter(r => !r.isEquivalentTo(ruleset))
+        this.targets.set(ruleset.name, tmp);
+
+        if (this.targets.get(ruleset.name).length == 0) {
+          this.targets.delete(ruleset.name);
+        }
       }
     }
 
     if (src === 'options') {
       /**
        * FIXME: There is nothing we can do if the call comes from the
-       * option page because isEquivalentTo cannot work reliably. 
+       * option page because isEquivalentTo cannot work reliably.
        * Leave the heavy duties to background.js to call initializeAllRules
        */
     }
@@ -431,7 +458,7 @@ RuleSets.prototype = {
     }
   },
 
-  addStoredCustomRulesets: function(){
+  addStoredCustomRulesets: function() {
     return new Promise(resolve => {
       this.store.get({
         legacy_custom_rulesets: [],
@@ -445,17 +472,17 @@ RuleSets.prototype = {
   },
 
   // Load in the legacy custom rulesets, if any
-  loadCustomRulesets: function(legacy_custom_rulesets){
-    for(let legacy_custom_ruleset of legacy_custom_rulesets){
+  loadCustomRulesets: function(legacy_custom_rulesets) {
+    for(let legacy_custom_ruleset of legacy_custom_rulesets) {
       this.loadCustomRuleset(legacy_custom_ruleset);
     }
   },
 
-  loadCustomRuleset: function(ruleset_string){
+  loadCustomRuleset: function(ruleset_string) {
     this.addFromXml((new DOMParser()).parseFromString(ruleset_string, 'text/xml'));
   },
 
-  setRuleActiveState: async function(ruleset_name, active){
+  setRuleActiveState: async function(ruleset_name, active) {
     if (active == undefined) {
       delete this.ruleActiveStates[ruleset_name];
     } else {
@@ -465,73 +492,70 @@ RuleSets.prototype = {
   },
 
   /**
-   * Does the loading of a ruleset.
+   * Converts an XML ruleset to a JS ruleset for parsing
    * @param ruletag The whole <ruleset> tag to parse
    */
-  parseOneXmlRuleset: function(ruletag, scope) {
-    var default_state = true;
-    var note = "";
-    var default_off = ruletag.getAttribute("default_off");
-    if (default_off) {
-      default_state = false;
-      if (default_off === "user rule") {
-        default_state = true;
+  convertOneXmlToJs: function(ruletag) {
+    try {
+      let ruleset = {};
+
+      let default_off = ruletag.getAttribute("default_off");
+      if (default_off) {
+        ruleset["default_off"] = platform;
       }
-      note += default_off + "\n";
-    }
 
-    // If a ruleset declares a platform, and we don't match it, treat it as
-    // off-by-default. In practice, this excludes "mixedcontent" rules.
-    var platform = ruletag.getAttribute("platform");
-    if (platform) {
-      default_state = false;
-      if (platform == "mixedcontent" && settings.enableMixedRulesets) {
-        default_state = true;
+      let platform = ruletag.getAttribute("platform");
+      if (platform) {
+        ruleset["platform"] = platform;
       }
-      note += "Platform(s): " + platform + "\n";
-    }
 
-    var rule_set = new RuleSet(ruletag.getAttribute("name"),
-      default_state,
-      scope,
-      note.trim());
-
-    // Read user prefs
-    if (rule_set.name in this.ruleActiveStates) {
-      rule_set.active = (this.ruleActiveStates[rule_set.name] == "true");
-    }
-
-    var rules = ruletag.getElementsByTagName("rule");
-    for (let rule of rules) {
-      rule_set.rules.push(getRule(rule.getAttribute("from"),
-        rule.getAttribute("to")));
-    }
-
-    var exclusions = Array();
-    for (let exclusion of ruletag.getElementsByTagName("exclusion")) {
-      exclusions.push(exclusion.getAttribute("pattern"));
-    }
-    if (exclusions.length > 0) {
-      rule_set.exclusions = new RegExp(exclusions.join("|"));
-    }
-
-    var cookierules = ruletag.getElementsByTagName("securecookie");
-    if (cookierules.length > 0) {
-      rule_set.cookierules = [];
-      for (let cookierule of cookierules) {
-        rule_set.cookierules.push(
-          new CookieRule(cookierule.getAttribute("host"),
-            cookierule.getAttribute("name")));
+      let name = ruletag.getAttribute("name");
+      if (name) {
+        ruleset["name"] = name;
       }
-    }
 
-    var targets = ruletag.getElementsByTagName("target");
-    for (let target of targets) {
-      var host = target.getAttribute("host");
-      if (!this.targets.has(host)) {
-        this.targets.set(host, []);
+      let rules = [];
+      for (let rule of ruletag.getElementsByTagName("rule")) {
+        rules.push({
+          from: rule.getAttribute("from"),
+          to: rule.getAttribute("to")
+        });
       }
-      this.targets.get(host).push(rule_set);
+      if (rules.length > 0) {
+        ruleset["rule"] = rules;
+      }
+
+      let exclusions = [];
+      for (let exclusion of ruletag.getElementsByTagName("exclusion")) {
+        exclusions.push(exclusion.getAttribute("pattern"));
+      }
+      if (exclusions.length > 0) {
+        ruleset["exclusion"] = exclusions;
+      }
+
+      let cookierules = [];
+      for (let cookierule of ruletag.getElementsByTagName("securecookie")) {
+        cookierules.push({
+          host: cookierule.getAttribute("host"),
+          name: cookierule.getAttribute("name")
+        });
+      }
+      if (cookierules.length > 0) {
+        ruleset["securecookie"] = cookierules;
+      }
+
+      let targets = [];
+      for (let target of ruletag.getElementsByTagName("target")) {
+        targets.push(target.getAttribute("host"));
+      }
+      if (targets.length > 0) {
+        ruleset["target"] = targets;
+      }
+
+      return ruleset;
+    } catch (e) {
+      util.log(util.WARN, 'Error converting ruleset to JS:' + e);
+      return {};
     }
   },
 
@@ -550,50 +574,80 @@ RuleSets.prototype = {
       util.log(util.DBUG, "Ruleset cache miss for " + host);
     }
 
-    // Let's begin search
-    // Copy the host targets so we don't modify them.
-    let results = (this.targets.has(host) ?
-      new Set([...this.targets.get(host)]) :
-      new Set());
+    let results;
+    if (this.wasm_rs) {
+      let pa = this.wasm_rs.potentially_applicable(host);
+      results = new Set([...pa].map(ruleset => {
+        let rs = new RuleSet(ruleset.name, ruleset.default_state, getScope(ruleset.scope), ruleset.note);
 
-    // Ensure host is well-formed (RFC 1035)
-    if (host.length <= 0 || host.length > 255 || host.indexOf("..") != -1) {
-      util.log(util.WARN, "Malformed host passed to potentiallyApplicableRulesets: " + host);
-      return nullIterable;
-    }
+        if (ruleset.cookierules) {
+          let cookierules = ruleset.cookierules.map(cookierule => {
+            return new CookieRule(cookierule.host, cookierule.name);
+          });
+          rs.cookierules = cookierules;
+        } else {
+          rs.cookierules = null;
+        }
 
-    // Replace each portion of the domain with a * in turn
-    let segmented = host.split(".");
-    for (let i = 0; i < segmented.length; i++) {
-      let tmp = segmented[i];
-      segmented[i] = "*";
+        let rules = ruleset.rules.map(rule => {
+          return getRule(rule.from, rule.to);
+        });
+        rs.rules = rules;
 
-      results = (this.targets.has(segmented.join(".")) ?
-        new Set([...results, ...this.targets.get(segmented.join("."))]) :
-        results);
-
-      segmented[i] = tmp;
-    }
-
-    // now eat away from the left, with *, so that for x.y.z.google.com we
-    // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
-    for (let i = 2; i <= segmented.length - 2; i++) {
-      let t = "*." + segmented.slice(i, segmented.length).join(".");
-
-      results = (this.targets.has(t) ?
-        new Set([...results, ...this.targets.get(t)]) :
-        results);
-    }
-
-    // Clean the results list, which may contain duplicates or undefined entries
-    results.delete(undefined);
-
-    util.log(util.DBUG,"Applicable rules for " + host + ":");
-    if (results.size == 0) {
-      util.log(util.DBUG, "  None");
-      results = nullIterable;
+        if (ruleset.exclusions) {
+          rs.exclusions = new RegExp(ruleset.exclusions);
+        } else {
+          rs.exclusions = null;
+        }
+        return rs;
+      }));
     } else {
-      results.forEach(result => util.log(util.DBUG, "  " + result.name));
+      // Let's begin search
+      // Copy the host targets so we don't modify them.
+      results = (this.targets.has(host) ?
+        new Set([...this.targets.get(host)]) :
+        new Set());
+
+      // Ensure host is well-formed (RFC 1035)
+      if (host.length <= 0 || host.length > 255 || host.indexOf("..") != -1) {
+        util.log(util.WARN, "Malformed host passed to potentiallyApplicableRulesets: " + host);
+        return nullIterable;
+      }
+
+      // Replace www.example.com with www.example.*
+      // eat away from the right for once and only once
+      let segmented = host.split(".");
+      if (segmented.length > 1) {
+        const tmp = segmented[segmented.length - 1];
+        segmented[segmented.length - 1] = "*";
+
+        results = (this.targets.has(segmented.join(".")) ?
+          new Set([...results, ...this.targets.get(segmented.join("."))]) :
+          results);
+
+        segmented[segmented.length - 1] = tmp;
+      }
+
+      // now eat away from the left, with *, so that for x.y.z.google.com we
+      // check *.y.z.google.com, *.z.google.com and *.google.com
+      for (let i = 1; i <= segmented.length - 2; i++) {
+        let t = "*." + segmented.slice(i, segmented.length).join(".");
+
+        results = (this.targets.has(t) ?
+          new Set([...results, ...this.targets.get(t)]) :
+          results);
+      }
+
+      // Clean the results list, which may contain duplicates or undefined entries
+      results.delete(undefined);
+
+      util.log(util.DBUG,"Applicable rules for " + host + ":");
+      if (results.size == 0) {
+        util.log(util.DBUG, "  None");
+        results = nullIterable;
+      } else {
+        results.forEach(result => util.log(util.DBUG, "  " + result.name));
+      }
     }
 
     // Insert results into the ruleset cache
@@ -611,39 +665,15 @@ RuleSets.prototype = {
   /**
    * Check to see if the Cookie object c meets any of our cookierule criteria for being marked as secure.
    * @param cookie The cookie to test
-   * @returns {*} ruleset or null
+   * @returns {*} true or false
    */
   shouldSecureCookie: function(cookie) {
-    var hostname = cookie.domain;
+    let hostname = cookie.domain;
     // cookie domain scopes can start with .
     while (hostname.charAt(0) == ".") {
       hostname = hostname.slice(1);
     }
 
-    if (!this.safeToSecureCookie(hostname)) {
-      return null;
-    }
-
-    var potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
-    for (let ruleset of potentiallyApplicable) {
-      if (ruleset.cookierules !== null && ruleset.active) {
-        for (let cookierules of ruleset.cookierules) {
-          var cr = cookierules;
-          if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
-            return ruleset;
-          }
-        }
-      }
-    }
-    return null;
-  },
-
-  /**
-   * Check if it is secure to secure the cookie (=patch the secure flag in).
-   * @param domain The domain of the cookie
-   * @returns {*} true or false
-   */
-  safeToSecureCookie: function(domain) {
     // Check if the domain might be being served over HTTP.  If so, it isn't
     // safe to secure a cookie!  We can't always know this for sure because
     // observing cookie-changed doesn't give us enough context to know the
@@ -656,20 +686,57 @@ RuleSets.prototype = {
     // observed and the domain blacklisted, a cookie might already have been
     // flagged as secure.
 
-    if (settings.domainBlacklist.has(domain)) {
-      util.log(util.INFO, "cookies for " + domain + "blacklisted");
+    if (settings.domainBlacklist.has(hostname)) {
+      util.log(util.INFO, "cookies for " + hostname + "blacklisted");
       return false;
     }
-    var cached_item = this.cookieHostCache.get(domain);
-    if (cached_item !== undefined) {
-      util.log(util.DBUG, "Cookie host cache hit for " + domain);
-      return cached_item;
+
+    // Second, we need a cookie pass two tests before patching it
+    //   (1) it is safe to secure the cookie, as per safeToSecureCookie()
+    //   (2) it matches with the CookieRule
+    //
+    // We kept a cache of the results for (1), if we have a cached result which
+    //   (a) is false, we should not secure the cookie for sure
+    //   (b) is true, we need to perform test (2)
+    //
+    // Otherwise,
+    //   (c) We need to perform (1) and (2) in place
+
+    let safe = false;
+    if (this.cookieHostCache.has(hostname)) {
+      util.log(util.DBUG, "Cookie host cache hit for " + hostname);
+      safe = this.cookieHostCache.get(hostname); // true only if it is case (b)
+      if (!safe) {
+        return false; // (a)
+      }
+    } else {
+      util.log(util.DBUG, "Cookie host cache miss for " + hostname);
     }
-    util.log(util.DBUG, "Cookie host cache miss for " + domain);
 
-    // If we passed that test, make up a random URL on the domain, and see if
-    // we would HTTPSify that.
+    const potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
+    for (const ruleset of potentiallyApplicable) {
+      if (ruleset.cookierules !== null && ruleset.active) {
+        // safe is false only indicate the lack of a cached result
+        // we cannot use it to avoid looping here
+        for (const cookierule of ruleset.cookierules) {
+          // if safe is true, it is case (b); otherwise it is case (c)
+          if (cookierule.host_c.test(cookie.domain) && cookierule.name_c.test(cookie.name)) {
+            return safe || this.safeToSecureCookie(hostname, potentiallyApplicable);
+          }
+        }
+      }
+    }
+    return false;
+  },
 
+  /**
+   * Check if it is secure to secure the cookie (=patch the secure flag in).
+   * @param domain The domain of the cookie
+   * @param potentiallyApplicable
+   * @returns {*} true or false
+   */
+  safeToSecureCookie: function(domain, potentiallyApplicable) {
+    // Make up a random URL on the domain, and see if we would HTTPSify that.
     var nonce_path = "/" + Math.random().toString();
     var test_uri = "http://" + domain + nonce_path + nonce_path;
 
@@ -680,12 +747,8 @@ RuleSets.prototype = {
     }
 
     util.log(util.INFO, "Testing securecookie applicability with " + test_uri);
-    var potentiallyApplicable = this.potentiallyApplicableRulesets(domain);
     for (let ruleset of potentiallyApplicable) {
-      if (!ruleset.active) {
-        continue;
-      }
-      if (ruleset.apply(test_uri)) {
+      if (ruleset.active && ruleset.apply(test_uri)) {
         util.log(util.INFO, "Cookie domain could be secured.");
         this.cookieHostCache.set(domain, true);
         return true;

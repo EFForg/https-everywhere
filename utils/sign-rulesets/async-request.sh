@@ -15,7 +15,8 @@ trap 'rm $SIGNED_SHA256SUM_BASE64' EXIT
 
 mkdir -p $2
 TIMESTAMP=`date +%s`
-echo "{ \"timestamp\": $TIMESTAMP, \"rulesets\":" "`cat $RULESETS_FILE`" "}" | tr -d '\n' | gzip -nc > $2/default.rulesets.$TIMESTAMP.gz
+REFERENCE=`git rev-parse HEAD`
+echo "{ \"timestamp\": $TIMESTAMP, \"reference\": \"$REFERENCE\", \"rulesets\":" "`cat $RULESETS_FILE`" "}" | tr -d '\n' | gzip -nc > $2/default.rulesets.$TIMESTAMP.gz
 
 echo 'Hash for signing: '
 sha256sum $2/default.rulesets.$TIMESTAMP.gz | cut -f1 -d' '

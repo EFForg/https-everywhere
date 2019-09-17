@@ -34,7 +34,9 @@ document.getElementById("save-button").addEventListener("click", e => {
   e.preventDefault();
   sendMessage("set_option", { debugging_rulesets: cm.getValue() }, () => {
     savedTextElement.style.display = "block";
-    setTimeout(() => { savedTextElement.style.display = "none" }, 1000);
+    setTimeout(() => {
+      savedTextElement.style.display = "none"
+    }, 1000);
 
     valueHasChanged = false;
     document.title = savedTitle;
