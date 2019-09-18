@@ -1,4 +1,5 @@
 import unittest
+from time import sleep
 
 from util import ExtensionTestCase
 
@@ -6,9 +7,9 @@ kittens_url = 'http://freerangekitten.com/'
 
 http_url = 'http://http.badssl.com/'
 
-
 class TestNavigation(ExtensionTestCase):
     def test_redirect(self):
+        sleep(3)
         self.driver.get(kittens_url)
         self.assertTrue(self.driver.current_url.startswith('https'))
 

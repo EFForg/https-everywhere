@@ -77,7 +77,7 @@ LZMA_VERSION = 63
 # we recognize (but not necessarily support) all features up to that version
 MAX_EXTRACT_VERSION = 63
 
-DEFAULT_DATE = (1980,1,1,0,0,0)  # hard-coded timestamp
+DEFAULT_DATE = (2013,12,1,0,0,0)  # hard-coded timestamp
 
 # Below are some formats and associated data for reading/writing headers using
 # the struct module.  The names and structures of headers/records are those used

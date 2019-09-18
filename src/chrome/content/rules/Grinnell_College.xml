@@ -2,10 +2,7 @@
 	Nonfunctional subdomains:
 
 		- athdb			(replies with http)
-		- catalog		(shows www.acalogadmin.com; mismatched, CN: *.acalogadmin.com)
-		- perecruiting.cs
 		- pdid			(times out)
-		- pioneers
 		- schedule25wb		(times out)
 		- (www.)web
 		- wm
@@ -15,9 +12,12 @@
 	Problematic subdomains:
 
 		- ^		(times out)
-		- www.cs	(works; expired 2010-08-17, self-signed)
 		- drupal	(works, mismatched, CN: www.cs.grinnell.edu)
 		- www.cat.lib	(cert only matches ^cat.lib)
+		- db		(cert only matches ^itwebapps)
+		- www.math	(cert only matches ^www.cs)
+		- magazine	(bad cert domain)
+		- *.grin.edu	(bad cert domain)
 
 
 	Partially covered subdomains:
@@ -27,37 +27,53 @@
 
 	Fully covered subdomains:
 
-		- autodiscover
 		- bookstore
-		- db
 		- digital
 		- help
 		- imap
 		- itwebapps
 		- (www.)cat.lib		(www → ^)
 		- libweb
-		- loggia
 		- mail
 		- webmail
+		- www.cs
 
 -->
 <ruleset name="Grinnell College (partial)">
 
 	<target host="grinnell.edu" />
-	<target host="*.grinnell.edu" />
-
+	<target host="www.grinnell.edu" />
+	<target host="admission.grinnell.edu" />
+	<target host="alumni.grinnell.edu" />
+	<target host="appdev.grinnell.edu" />
+	<target host="bookstore.grinnell.edu" />
+	<target host="catalog.grinnell.edu" />
+	<target host="cat.lib.grinnell.edu" />
+	<target host="www.cs.grinnell.edu" />
+	<target host="digital.grinnell.edu" />
+	<target host="ebill.grinnell.edu" />
+	<target host="help.grinnell.edu" />
+	<target host="imap.grinnell.edu" />
+	<target host="itwebapps.grinnell.edu" />
+	<target host="libweb.grinnell.edu" />
+	<target host="mail.grinnell.edu" />
+	<target host="m.catalog.grinnell.edu" />
+	<target host="pioneers.grinnell.edu" />
+	<target host="selfservice.grinnell.edu" />
+	<target host="sga.grinnell.edu" />
+	<target host="sites.grinnell.edu" />
+	<target host="*.sites.grinnell.edu" />
+		<test url="http://gciel.sites.grinnell.edu/" />
+		<test url="http://dasil.sites.grinnell.edu/" />
+		<test url="http://wilsonspark.sites.grinnell.edu/" />
+		<test url="http://comm.sites.grinnell.edu/" />
+		<test url="http://makerlab.sites.grinnell.edu/" />
+	<target host="wa3.grinnell.edu" />
 
 	<!--securecookie host="^\.grinnell\.edu$" name="^SESS\w{32}$" /-->
-	<securecookie host="^(?:\.?bookstore|db|\.?digital|help|cat\.lib|mail)\.grinnell\.edu$" name=".+" />
+	<securecookie host=".+" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?grinnell\.edu/(files/|includes/|misc/|sites/)"
-		to="https://www.grinnell.edu/$1" />
-
-	<rule from="^http://(autodiscover|db|digital|help|imap|itwebapps|libweb|loggia|mail)\.grinnell\.edu/"
-		to="https://$1.grinnell.edu/" />
-
-	<rule from="^http://(?:www\.)?cat\.lib\.grinnell\.edu/"
-		to="https://cat.lib.grinnell.edu/" />
+        <rule from="^http:" to="https:" />
 
 </ruleset>

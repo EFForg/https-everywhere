@@ -1,68 +1,42 @@
 <!--
 	Nonfunctional domains:
-
+		- advertising.dailymotion.com
 		- blog.dailymotion.com
-		- press.dailymotion.com		(shows steaw.com, CN: www.steaw.com)
-		- proxy-46.dailymotion.com
 		- publicite.dailymotion.com
-		- publisher.dailymotion.com	(reset)
-		- vid.ak.dmcdn.net		(403, Akamai)
-		- vid2.ak.dmcdn.net		(504, akamai)
-
-
-	Problematic domains:
-
-		- ak2.static.dailymotion.com	(mismatched, CN: *.dmcdn.net)
-		- support.dmcloud.net		(mismatched, CN: *.zendesk.com)
-
 
 	Partially covered domains:
-
 		- (www.)dailymotion.com
-
 			- cdn/manifest/video/\w+.mnft 403s
 			- crossdomain.xml breaks videos
-
 -->
-<ruleset name="Dailymotion (default off)" default_off="breaks some embedded videos">
 
+<ruleset name="Dailymotion">
 	<target host="dailymotion.com" />
-	<!--
-		* for cross-domain cookie.
-					-->
+	<!-- * for cross-domain cookies -->
 	<target host="*.dailymotion.com" />
-		<!--
-			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-July/001241.html
-													-->
-		<exclusion pattern="^http://(?:www\.)?dailymotion\.com/(?:cdn/[\w-]+/video/|crossdomain\.xml$)" />
+		<!-- https://mail1.eff.org/pipermail/https-everywhere-rules/2012-July/001241.html -->
+		<exclusion pattern="^http://(www\.)?dailymotion\.com/crossdomain\.xml$" />
+			<test url="http://dailymotion.com/crossdomain.xml" />
+			<test url="http://www.dailymotion.com/crossdomain.xml" />
+
 	<target host="*.dmcdn.net" />
-	<target host="dmcloud.net" />
-	<target host="*.dmcloud.net" />
 
+	<!-- Testing wrt embedded breakage -->
+	<!-- securecookie host="^.*\.dailymotion\.com$" name=".+" /-->
 
-	<!--	Testing wrt embedded breakage.
-
-		securecookie host="^.*\.dailymotion\.com$" name=".+" /-->
-	<!--
-		Omniture tracking cookies:
-						-->
+	<!-- Omniture tracking cookies -->
 	<securecookie host="^\.dailymotion\.com$" name="^s_\w+$" />
 	<securecookie host="^www\.dailymotion\.com$" name=".+" />
 
-
-	<rule from="^http://(erroracct\.|www\.)?dailymotion\.com/"
+	<rule from="^http://(www\.|faq\.|press\.)?dailymotion\.com/"
 		to="https://$1dailymotion.com/" />
+		<test url="http://www.dailymotion.com/" />
+		<test url="http://faq.dailymotion.com/" />
+		<test url="http://press.dailymotion.com/" />
 
-	<rule from="^http://(s\d|static(?:\d|s\d-ssl))\.dmcdn\.net/"
+	<rule from="^http://(s\d(-ssl)?|static\d)\.dmcdn\.net/"
 		to="https://$1.dmcdn.net/" />
-
-	<rule from="^http://ak2\.static\.dailymotion\.com/"
-		to="https://static1-ssl.dmcdn.net/" />
-
-	<rule from="^http://(s\.|www\.)?dmcloud\.net/"
-		to="https://$1dmcloud.net/" />
-
-	<rule from="^http://support\.dmcloud\.net/"
-		to="https://dmcloud.zendesk.com/" />
-
+		<test url="http://s1.dmcdn.net/" />
+		<test url="http://s1-ssl.dmcdn.net/" />
+		<test url="http://static1.dmcdn.net/" />
 </ruleset>

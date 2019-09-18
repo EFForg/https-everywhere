@@ -1,63 +1,31 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://ophirum.spiegel.de/ => https://ophirum.spiegel.de/: (51, "SSL: no alternative certificate subject name matches target host name 'ophirum.spiegel.de'")
-
 	Other Spiegel Group rulesets:
 
 		- Spiegel-QC.xml
 
+	Cert mismatch:
+		 ophirum.spiegel.de
 
-	CDN buckets:
-
-		- cdn.spiegel.de.edgesuite.net
-
-			- cdn
-			- cdn[1-4]
-
-
-	Nonfunctional subdomains:
-
-		- orange *
-		- tvprogramm ¹
-		- werkstattvergleich ²
-		- wetter	(cert: plesk; shows default Parallels Plesk page)
-
-	* Shows www.spiegelgruppe.de
-	¹ Refused
-	² Redirects to hudson.fairgarage.de
-
-
-	Problematic hosts in spiegel.de:
-
-		- forum *
-		- shop *
-		- tippspiel ²
-		- wissen *
-
-	* Mismatched
-	² Server sends no certificate chain, see https://whatsmychaincert.com
-
-
-	Insecure cookies are set for these domains and hosts:
-
-		- .spiegel.de
-		- abo.spiegel.de
-		- count.spiegel.de
-		- magazin.spiegel.de
-		- ophirum.spiegel.de
+	Connection refused:
+		- cdn.spiegel.de
+		- cdn1.spiegel.de
+		- cdn2.spiegel.de
+		- cdn3.spiegel.de
+		- cdn4.spiegel.de
 
 -->
-<ruleset name="Spiegel.de (partial)" default_off='failed ruleset test'>
+<ruleset name="Spiegel.de (partial)" >
 
 	<!--	Direct rewrites:
 				-->
 	<target host="spiegel.de" />
 	<target host="abo.spiegel.de" />
+	<target host="c.spiegel.de" />
 	<target host="count.spiegel.de" />
+	<target host="fsm2.spiegel.de" />
 	<target host="magazin.spiegel.de" />
-	<target host="ophirum.spiegel.de" />
-	<!--target host="tippspiel.spiegel.de" /-->
+	<target host="spiegel-de.spiegel.de" />
+	<target host="tippspiel.spiegel.de" />
 	<target host="www.spiegel.de" />
 
 	<!--	Complications:
@@ -71,30 +39,18 @@ Fetch error: http://ophirum.spiegel.de/ => https://ophirum.spiegel.de/: (51, "SS
 
 		<!--	Redirects to http:
 						-->
-		<!--exclusion pattern="^http://tippspiel\.spiegel\.de/$" /-->
-		<!--
-			Exceptions:
-					-->
-		<!--exclusion pattern="^http://tippspiel\.spiegel\.de/+(?!frontend/|img/)" /-->
-
-		<!--	Redirects to http:
-						-->
 		<!--exclusion pattern="^http://www\.spiegel\.de/index\.html" /-->
 		<!--
 			Exceptions:
 					-->
-		<!--exclusion pattern="^http://www\.spiegel\.de/(?!images/|layout/|pics/|static/|staticgen/)" /-->
+		<exclusion pattern="^http://www\.spiegel\.de/(?!images/|layout/|pics/|static/|staticgen/)" />
 		<!--
 			exclude static/flash from rule above to
 			to make videos work properly
 								-->
-		<!--exclusion pattern="^http://www\.spiegel\.de/static/flash/" /-->
-		<!--
-			Combined:
-					-->
-		<exclusion pattern="^http://www\.spiegel\.de/(?!images/|layout/|pics/)" />
+		<exclusion pattern="^http://www\.spiegel\.de/static/flash/" />
 
-			<!--	+ve:
+		<!--	+ve:
 					-->
 			<test url="http://www.spiegel.de/impressum" />
 			<test url="http://www.spiegel.de/index.html" />
@@ -110,27 +66,9 @@ Fetch error: http://ophirum.spiegel.de/ => https://ophirum.spiegel.de/: (51, "SS
 			<test url="http://www.spiegel.de/pics/43/0,1020,308043,00.jpg" />
 			<test url="http://www.spiegel.de/static/sys/dimensionspixel.gif" />
 
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.spiegel\.de$" name="^_540p$" /-->
-	<!--securecookie host="^abo\.spiegel\.de$" name="^aboshop-common$" /-->
-	<!--securecookie host="^count\.spiegel\.de$" name="^NETMIND_SID$" /-->
-	<!--securecookie host="^magazin\.spiegel\.de$" name="^BIGipServer[\w~-]+$" /-->
-	<!--securecookie host="^ophirum\.spiegel\.de$" name="^PHPSESSID$" /-->
-
-	<securecookie host="^(?:abo|count|magazin|ophirum)\.spiegel\.de$" name=".+" />
-
-
-	<!--	- Cert only matches www
-		- Unsupported paths redirect to http
-		- cdn\d?: Akamai
-				-->
-	<rule from="^http://cdn\d?\.spiegel\.de/"
-		to="https://www.spiegel.de/" />
-
 	<!--	Redirect drops path and forward slash...:
 							-->
+
 	<rule from="^http://shop\.spiegel\.de/[^?]*\??$"
 		to="https://www.amazon.de/b?ie=UTF8&amp;node=2478999031" />
 
@@ -139,8 +77,8 @@ Fetch error: http://ophirum.spiegel.de/ => https://ophirum.spiegel.de/: (51, "SS
 		<test url="http://shop.spiegel.de/shop/action/quickSearch" />
 		<test url="http://shop.spiegel.de/shop/action/quickSearch?" />
 
-	<!--	...but not args:
-				-->
+	<!--	...but not args:-->
+
 	<rule from="^http://shop\.spiegel\.de/[^?]*\?"
 		to="https://www.amazon.de/b?ie=UTF8&amp;node=2478999031&amp;" />
 
@@ -149,8 +87,10 @@ Fetch error: http://ophirum.spiegel.de/ => https://ophirum.spiegel.de/: (51, "SS
 		<test url="http://shop.spiegel.de/shop/action/quickSearch?foo" />
 		<test url="http://shop.spiegel.de/shop/action/quickSearch?bar" />
 
+	<rule from="^http://cdn\d?\.spiegel\.de/"
+		to="https://www.spiegel.de/" />
+
 	<rule from="^http:"
 		to="https:" />
-	
 
 </ruleset>

@@ -3,13 +3,14 @@ from contextlib import contextmanager
 from collections import namedtuple
 import subprocess
 import time
+import shutil
 
 from selenium import webdriver
 from selenium.webdriver import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
 
 firefox_info = {'extension_id': 'https-everywhere-eff@eff.org', 'uuid': 'd56a5b99-51b6-4e83-ab23-796216679614'}
-chrome_info = {'extension_id': 'nmleinhehnmmepmdbjddclicgpfhbdjo'}
+chrome_info = {'extension_id': 'kofalhllfompobhklifpbealgeckijek'}
 
 
 BROWSER_TYPES = ['chrome', 'firefox']
@@ -53,12 +54,21 @@ def get_browser_name(string):
 def build_crx():
     '''Builds the .crx file for Chrome and returns the path to it'''
     cmd = [os.path.join(get_git_root(), 'make.sh'), '--remove-update-channels']
-    return os.path.join(get_git_root(), run_shell_command(cmd).split()[-1])
+    run_shell_command(cmd)
+
+    # Since this is an unpacked extension we're loading, the extension ID is
+    # determined by the below `crx_dir` path alone. Don't alter it without
+    # changing the corresponding ID at the top of this file.
+
+    crx_dir = os.path.join(os.sep, 'tmp','https-everywhere-test')
+    shutil.rmtree(crx_dir, True)
+    shutil.copytree(os.path.join(get_git_root(), 'pkg', 'crx-cws'), crx_dir)
+    return crx_dir
 
 
 def build_xpi():
     cmd = [os.path.join(get_git_root(), 'make.sh'), '--remove-update-channels']
-    return os.path.join(get_git_root(), run_shell_command(cmd).split()[-3])
+    return os.path.join(get_git_root(), run_shell_command(cmd).split()[-5])
 
 
 def install_ext_on_ff(driver, extension_path):
@@ -149,13 +159,13 @@ class Shim:
         opts = Options()
         if self.on_travis:  # github.com/travis-ci/travis-ci/issues/938
             opts.add_argument("--no-sandbox")
-        opts.add_extension(self.extension_path)
+        opts.add_argument("--load-extension=" + self.extension_path)
         opts.binary_location = self.browser_path
         opts.add_experimental_option("prefs", {"profile.block_third_party_cookies": False})
 
         caps = DesiredCapabilities.CHROME.copy()
 
-        driver = webdriver.Chrome(chrome_options=opts, desired_capabilities=caps)
+        driver = webdriver.Chrome(options=opts, desired_capabilities=caps)
         try:
             yield driver
         finally:

@@ -14,13 +14,16 @@
 //  cd ~/path/to/my/webapp
 //  git diff
 
+global.self = global;
+require("../../lib-wasm/pkg/https_everywhere_lib_wasm.js");
+
 var path = require("path"),
   fs = require("fs"),
   DOMParser = require('xmldom').DOMParser,
   readdirp = require('readdirp'),
   es = require('event-stream'),
 
-  rules = require("../chromium/rules"),
+  rules = require("../../chromium/background-scripts/rules"),
 
   URI = require("urijs");
 
@@ -34,15 +37,15 @@ var ruleSets = null;
 function processDir(dir) {
   var stream = readdirp({
     root: dir,
-    fileFilter: ['*.html', '*.js', '*.rb', '*.erb', '*.mustache', 
+    fileFilter: ['*.html', '*.js', '*.rb', '*.erb', '*.mustache',
       '*.scala', '*.c', '*.cc', '*.cpp', '*.cxx',
       '*.java', '*.go', '*.php', '*.css', '*.pl', '*.py',
       '*.rhtml', '*.sh', '*.yaml']
   });
 
   stream
-    .on('warn', function (err) { 
-      console.error('non-fatal error', err); 
+    .on('warn', function (err) {
+      console.error('non-fatal error', err);
     // Optionally call stream.destroy() here in order to abort and cause 'close' to be emitted
     })
     .on('error', function (err) { console.error('fatal error', err); })
@@ -94,7 +97,7 @@ function processFile(filename) {
  */
 function loadRuleSets() {
   console.log("Loading rules...");
-  var fileContents = fs.readFileSync(path.join(__dirname, '../pkg/crx/rules/default.rulesets'), 'utf8');
+  var fileContents = fs.readFileSync(path.join(__dirname, '../../pkg/crx-eff/rules/default.rulesets'), 'utf8');
   ruleSets = new rules.RuleSets({});
   ruleSets.addFromJson(JSON.parse(fileContents));
 }

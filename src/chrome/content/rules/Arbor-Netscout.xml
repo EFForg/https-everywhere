@@ -1,0 +1,89 @@
+
+<!--
+	Problematic domains:
+
+		- (www.)?arbor.net ¹
+		- atlas.arbornetworks.com ¹
+		- ddos.arbornetworks.com ²
+		- partner.arbornetworks.com
+
+	¹ Redirect differs
+	² Shows www
+
+
+	These altnames don't exist:
+
+		- www.atlas.arbor.net
+		- www.partner.arbornetworks.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.arbornetworks.com
+
+
+	Mixed content:
+
+		- Bug on blog from assets.cookieconsent.silktide.com ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Arbor Networks">
+
+	<target host="atlas.arbor.net" />
+
+	<target host="arbornetworks.com" />
+	<target host="asert.arbornetworks.com" />
+	<target host="blog.arbornetworks.com" />
+	<target host="pages.arbornetworks.com" />
+	<target host="partner.arbornetworks.com" />
+	<target host="partnercenter.arbornetworks.com" />
+	<target host="www.arbornetworks.com" />
+
+	<!--	Complications:
+				-->
+	<target host="arbor.net" />
+	<target host="www.arbor.net" />
+
+	<target host="atlas.arbornetworks.com" />
+	<target host="ddos.arbornetworks.com" />
+
+	<target host="netscout.com" />
+	<target host="www.netscout.com" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.arbornetworks\.com$" name="^[\da-f]{32}$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\w" name=".+" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://atlas\.arbornetworks\.com/+"
+		to="https://atlas.arbor.net/" />
+
+		<test url="http://atlas.arbornetworks.com/home.htm" />
+
+	<rule from="^http://blog\.arbornetworks\.com/"
+                to="https://www.arbornetworks.com/blog/insight/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://ddos\.arbornetworks\.com/+"
+		to="https://www.arbornetworks.com/asert/" />
+
+		<test url="http://ddos.arbornetworks.com/home.htm" />
+	
+		<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://partner\.arbornetworks\.com/+"
+		to="https://partnercenter.arbornetworks.com/" />
+	
+		<test url="http://partner.arbornetworks.com/et.cfm" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

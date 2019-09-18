@@ -317,7 +317,7 @@ class Ruleset(object):
             if target.endswith(".*"):
                 needed_count = 10
 
-            # non-wildcard target always have a implicit test url, if is it not excluded
+            # non-wildcard target always have an implicit test url, if is it not excluded
             if not "*" in target and not self.excludes(("http://{}/".format(target))):
                 continue
 

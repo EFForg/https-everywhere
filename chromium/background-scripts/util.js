@@ -45,7 +45,7 @@ function loadExtensionFile(url, returnType) {
   var xhr = new XMLHttpRequest();
   // Use blocking XHR to ensure everything is loaded by the time
   // we return.
-  xhr.open("GET", chrome.extension.getURL(url), false);
+  xhr.open("GET", chrome.runtime.getURL(url), false);
   xhr.send(null);
   // Get file contents
   if (xhr.readyState !== 4) {
@@ -69,27 +69,13 @@ function ArrayBufferToString(ab) {
   let array = new Uint8Array(ab);
   let string = "";
 
-  for (let byte of array){
+  for (let byte of array) {
     string += String.fromCharCode(byte);
   }
 
   return string;
 }
 
-/**
- * Return the entire contents of a fetch response object
- *
- * @param response: fetch response to read from
- * @return a promise which resolves to an ArrayBuffer of the fetch response contents
- */
-function slurp(response) {
-  return new Promise(res => {
-    let reader = new FileReader();
-    reader.addEventListener("loadend", () => res(reader.result));
-
-    response.blob().then(blob => reader.readAsArrayBuffer(blob));
-  });
-}
 
 Object.assign(exports, {
   VERB,
@@ -101,8 +87,7 @@ Object.assign(exports, {
   setDefaultLogLevel,
   getDefaultLogLevel,
   loadExtensionFile,
-  ArrayBufferToString,
-  slurp
+  ArrayBufferToString
 });
 
 })(typeof exports == 'undefined' ? require.scopes.util = {} : exports);

@@ -1,12 +1,18 @@
 'use strict'
 
+const text_encoding = require('text-encoding');
+global.TextDecoder = text_encoding.TextDecoder;
+global.TextEncoder = text_encoding.TextEncoder;
+global.self = global;
+require("../../lib-wasm/pkg/https_everywhere_lib_wasm.js");
+
 const assert = require('chai').assert,
   rules = require('../background-scripts/rules');
 
-const Exclusion = rules.Exclusion,
-  Rule = rules.Rule,
+const Rule = rules.Rule,
   RuleSet = rules.RuleSet,
-  RuleSets = rules.RuleSets;
+  RuleSets = rules.RuleSets,
+  getRule = rules.getRule;
 
 
 describe('rules.js', function() {
@@ -24,18 +30,19 @@ describe('rules.js', function() {
     });
   });
 
-  describe('Exclusion', function() {
-    it('constructs', function() {
-      let exclusion = new Exclusion(test_str);
-      assert.isTrue(exclusion.pattern_c.test(test_str), true);
-    });
-  });
-
   describe('Rule', function() {
     it('constructs trivial rule', function() {
       let rule = new Rule('^http:', 'https:');
-      assert.equal(rule.to, rules.trivial_rule_to);
-      assert.equal(rule.from_c, rules.trivial_rule_from_c);
+      assert.equal(rule.to, rules.trivial_rule.to);
+      assert.deepEqual(rule.from_c, rules.trivial_rule.from_c);
+    });
+  });
+
+  describe('getRule', function() {
+    it('returns trivial rule object', function() {
+      let trivial = rules.trivial_rule;
+      let rule = getRule('^http:', 'https:');
+      assert.equal(rule, trivial);
     });
   });
 
@@ -46,7 +53,7 @@ describe('rules.js', function() {
 
     describe('#apply', function() {
       it('excludes excluded uris', function() {
-        this.ruleset.exclusions = [new Exclusion(test_str)];
+        this.ruleset.exclusions = new RegExp(test_str);
         assert.isNull(this.ruleset.apply(test_str));
       });
 
@@ -73,8 +80,8 @@ describe('rules.js', function() {
       it('not equivalent with different exclusions', function() {
         let rs_a = new RuleSet(...inputs),
           rs_b = new RuleSet(...inputs);
-        rs_a.exclusions = [new Exclusion('foo')];
-        rs_b.exclusions = [new Exclusion('bar')];
+        rs_a.exclusions = new RegExp('foo');
+        rs_b.exclusions = new RegExp('bar');
 
         assert.isFalse(rs_a.isEquivalentTo(rs_b));
       });
@@ -102,7 +109,8 @@ describe('rules.js', function() {
         to: "https:",
         from: "^http:"
       }],
-      target: ["freerangekitten.com", "www.freerangekitten.com"]
+      target: ["freerangekitten.com", "www.freerangekitten.com"],
+      exclusion: ["foo", "bar"]
     }];
 
     beforeEach(function() {
@@ -112,8 +120,13 @@ describe('rules.js', function() {
     describe('#addFromJson', function() {
       it('can add a rule', function() {
         this.rsets.addFromJson(rules_json);
-
         assert.isTrue(this.rsets.targets.has('freerangekitten.com'));
+      });
+
+      it('parses exclusions', function() {
+        this.rsets.addFromJson(rules_json);
+        let rs = [...this.rsets.targets.get('freerangekitten.com')][0];
+        assert.strictEqual(rs.exclusions.source, "foo|bar");
       });
     });
 
@@ -125,11 +138,20 @@ describe('rules.js', function() {
         let newuri = this.rsets.rewriteURI('http://' + host + '/', host);
 
         assert.strictEqual(newuri, 'https://' + host + '/', 'protocol changed to https')
-      })
+      });
 
       it('does not rewrite unknown hosts', function() {
         assert.isNull(this.rsets.rewriteURI('http://unknown.com/', 'unknown.com'));
-      })
+      });
+
+      it('does not rewrite excluded URLs', function() {
+        this.rsets.addFromJson(rules_json);
+        assert.isNull(this.rsets.rewriteURI('http://freerangekitten.com/foo', 'freerangekitten.com'));
+        assert.isNull(this.rsets.rewriteURI('http://www.freerangekitten.com/bar', 'freerangekitten.com'));
+
+        let newuri = this.rsets.rewriteURI('http://freerangekitten.com/baz', 'freerangekitten.com');
+        assert.strictEqual(newuri, 'https://freerangekitten.com/baz', 'protocol changed to https');
+      });
     });
 
     describe('#potentiallyApplicableRulesets', function() {
@@ -187,15 +209,23 @@ describe('rules.js', function() {
           assert.deepEqual(res3, new Set(value), 'wildcard matches sub domains');
         });
 
-        it('matches middle wildcards', function() {
-          let target = 'sub.*.' + host;
+        it('matches right wildcards', function() {
+          const target = host + '.*';
           this.rsets.targets.set(target, value);
 
-          let res1 = this.rsets.potentiallyApplicableRulesets('sub.star.' + host);
+          const res1 = this.rsets.potentiallyApplicableRulesets(host + '.tld');
           assert.deepEqual(res1, new Set(value), 'default case');
 
-          let res2 = this.rsets.potentiallyApplicableRulesets('sub.foo.bar.' + host);
-          assert.isEmpty(res2, new Set(value), 'only matches one label');
+          const res2 = this.rsets.potentiallyApplicableRulesets(host + '.tld.com');
+          assert.isEmpty(res2, 'wildcard matches second level domains');
+        });
+
+        it('ignore middle wildcards', function() {
+          const target = 'www.*.' + host;
+          this.rsets.targets.set(target, value);
+
+          const res1 = this.rsets.potentiallyApplicableRulesets('www.cdn.' + host);
+          assert.isEmpty(res1, 'middle wildcards are matched');
         });
       });
     });

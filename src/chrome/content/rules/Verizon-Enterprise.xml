@@ -1,0 +1,27 @@
+<!--
+	For other Verizon coverage, see Verizon.xml.
+
+	- !www: mismatched, CN: www.verizonbusiness.com
+	- Some paths redirect to http
+-->
+
+<ruleset name="Verizon Enterprise (partial)">
+	<target host="verizonenterprise.com" />
+	<target host="www.verizonenterprise.com" />
+
+	<!-- Explicitly exclude all but those that match custom rule to pass CI builds -->
+	<exclusion pattern="^http://(www\.)?verizonenterprise\.com/(?!.*gfx|.*templates)" />
+		<test url="http://verizonenterprise.com/about/" />
+		<test url="http://verizonenterprise.com/industry/" />
+		<test url="http://verizonenterprise.com/vdms/" />
+		<test url="http://www.verizonenterprise.com/about/" />
+		<test url="http://www.verizonenterprise.com/industry/" />
+		<test url="http://www.verizonenterprise.com/vdms/" />
+
+	<rule from="^http://(www\.)?verizonenterprise\.com/(gfx|templates)/"
+		to="https://www.verizonenterprise.com/$2/" />
+		<test url="http://verizonenterprise.com/gfx/" />
+		<test url="http://verizonenterprise.com/templates/" />
+		<test url="http://www.verizonenterprise.com/gfx/" />
+		<test url="http://www.verizonenterprise.com/templates/" />
+</ruleset>

@@ -1,4 +1,4 @@
-// Copyright 2017 AJ Jordan, AGPLv3+
+// Copyright 2017-2018 AJ Jordan, AGPLv3+
 
 'use strict';
 
@@ -40,13 +40,13 @@ function addLabelsCalledOnce(err, context) {
   assert.isTrue(context.github.issues.addLabels.calledOnce);
 }
 
-function assertWhichLabel(label) {
+function assertWhichLabels(labels) {
   return function(err, context) {
     const args = context.github.issues.addLabels.args[0];
 
     assert.isObject(args[0]);
     assert.isArray(args[0].labels);
-    assert.deepEqual(args[0].labels, [label]);
+    assert.deepEqual(args[0].labels.sort(), labels.sort());
   };
 }
 
@@ -62,7 +62,7 @@ vows.describe('issue labeler module').addBatch(setup(
     topic: function(labeler) {
       const context = makeContext.issue();
       // XXX should we test on the boundaries of different labels instead of in the middle?
-      labeler(context, {domain: 'domain10.com'}, alexa);
+      labeler(context, {type: 'new ruleset', domain: 'domain10.com'}, alexa);
       return context;
     },
     teardown: resetSpies,
@@ -70,15 +70,15 @@ vows.describe('issue labeler module').addBatch(setup(
       assert.ifError(err);
     },
     'it adds labels to the issue only once': addLabelsCalledOnce,
-    'the label was the top-100 label': assertWhichLabel('top-100'),
-    'all other labels were removed': assertOtherLabelsRemoved(['top-1k', 'top-10k', 'top-100k', 'top-1m'])
+    'the labels were the top-100 and ruleset labels': assertWhichLabels(['top-100', 'new-ruleset']),
+    'all other labels were removed': assertOtherLabelsRemoved(['top-1k', 'top-10k', 'top-100k', 'top-1m', 'bug', 'enhancement', 'ruleset-bug'])
   }
 )).addBatch(setup(
   'and we pass it an issue in the top 1,000 domains', {
     topic: function(labeler) {
       const context = makeContext.issue();
       // XXX should we test on the boundaries of different labels instead of in the middle?
-      labeler(context, {domain: 'domain500.com'}, alexa);
+      labeler(context, {type: 'new ruleset', domain: 'domain500.com'}, alexa);
       return context;
     },
     teardown: resetSpies,
@@ -86,7 +86,37 @@ vows.describe('issue labeler module').addBatch(setup(
       assert.ifError(err);
     },
     'it adds labels to the issue only once': addLabelsCalledOnce,
-    'the label was the top-1k label': assertWhichLabel('top-1k'),
-    'all other labels were removed': assertOtherLabelsRemoved(['top-100', 'top-10k', 'top-100k', 'top-1m'])
+    'the labels were the top-1k and ruleset labels': assertWhichLabels(['top-1k', 'new-ruleset']),
+    'all other labels were removed': assertOtherLabelsRemoved(['top-100', 'top-10k', 'top-100k', 'top-1m', 'bug', 'enhancement', 'ruleset-bug'])
+  }
+)).addBatch(setup(
+  'and we pass it a codebase issue', {
+    topic: function(labeler) {
+      const context = makeContext.issue();
+      labeler(context, {type: 'code issue'}, alexa);
+      return context;
+    },
+    teardown: resetSpies,
+    'it works': function(err) {
+      assert.ifError(err);
+    },
+    'it adds labels to the issue only once': addLabelsCalledOnce,
+    'the label was the bug label': assertWhichLabels(['bug']),
+    'all other labels were removed': assertOtherLabelsRemoved(['top-100', 'top-1k', 'top-10k', 'top-100k', 'top-1m', 'enhancement', 'ruleset-bug', 'new-ruleset'])
+  }
+)).addBatch(setup(
+  'and we pass it a codebase issue with a domain', {
+    topic: function(labeler) {
+      const context = makeContext.issue();
+      labeler(context, {type: 'code issue'}, alexa);
+      return context;
+    },
+    teardown: resetSpies,
+    'it works': function(err) {
+      assert.ifError(err);
+    },
+    'it adds labels to the issue only once': addLabelsCalledOnce,
+    'the label was the bug label': assertWhichLabels(['bug']),
+    'all other labels were removed': assertOtherLabelsRemoved(['top-100', 'top-1k', 'top-10k', 'top-100k', 'top-1m', 'enhancement', 'ruleset-bug', 'new-ruleset'])
   }
 )).export(module);
