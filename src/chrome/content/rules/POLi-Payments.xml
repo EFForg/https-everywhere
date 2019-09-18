@@ -1,0 +1,84 @@
+<!--
+
+	Non-functional subdomains:
+
+		- polipaymentdeveloper.com	(m)
+
+		- paywithpoli.com	(t)
+			- www	(t)
+			- polihealth-ext.a2	(t)
+			- express.apac	(m)
+			- apac-test	(r)
+			- nz10100.apac-test	(r)
+			- nz10101.apac-test	(r)
+			- au	(t)
+			- commonapi-int.dev1	(t)
+			- multibankapi.dev1	(t)
+			- www.tst1	(s)
+			- au00710.tst1	(s)
+			- consoleapi-ext.tst1	(s)
+			- txn.tst1	(s)
+			- wiki.tst1	(s)
+
+		- polipay.co.nz	(m)
+			- blog	(m)
+			- merchants	(i)
+			- www.merchants	(i)
+			- transact	(i)
+			- www.transact	(i)
+
+	h: http redirect
+	i: invalid certificate chain
+	m: certificate mismatch
+	r: connection refused
+	s: self-signed certificate
+	t: timeout on https
+
+
+	polipayments.com has wildcard dns, but not cert. The cert only matches www.
+-->
+<ruleset name="POLi Payments">
+
+	<target host="polipayments.com" />
+	<target host="www.polipayments.com" />
+
+	<target host="polipaymentdeveloper.com" />
+	<target host="www.polipaymentdeveloper.com" />
+
+	<target host="apac.paywithpoli.com" />
+	<target host="ads.apac.paywithpoli.com" />
+	<target host="api.apac.paywithpoli.com" />
+	<target host="consoles.apac.paywithpoli.com" />
+	<target host="consoleapi-ext.apac.paywithpoli.com" />
+		<test url="http://consoleapi-ext.apac.paywithpoli.com/Help/Api/POST-api-Entities-Edit-Customer" />
+	<target host="facebook.apac.paywithpoli.com" />
+	<target host="merchantapi.apac.paywithpoli.com" />
+		<test url="http://merchantapi.apac.paywithpoli.com/MerchantAPIService.svc/XML/" />
+	<target host="news.apac.paywithpoli.com" />
+	<target host="paymentapi.apac.paywithpoli.com" />
+		<test url="http://paymentapi.apac.paywithpoli.com/paymentrouterservice.svc" />
+	<target host="reportapi-ext.apac.paywithpoli.com" />
+	<target host="status.apac.paywithpoli.com" />
+	<target host="signup.apac.paywithpoli.com" />
+	<target host="transaction.apac.paywithpoli.com" />
+	<target host="txn.apac.paywithpoli.com" />
+
+	<target host="polipay.co.nz" />
+	<target host="www.polipay.co.nz" />
+
+	<securecookie host="^(www\.)?polipayments\.com$" name=".+" />
+	<securecookie host="^www\.polipaymentdeveloper\.com$" name=".+" />
+	<securecookie host="^.*\.apac\.paywithpoli\.com$" name=".+" />
+	<securecookie host="^www\.polipay\.co\.nz$" name=".+" />
+
+	<!-- certificate mismatch-->
+	<rule from="^http://polipaymentdeveloper\.com/"
+		to="https://www.polipaymentdeveloper.com/" />
+
+	<!-- certificate mismatch-->
+	<rule from="^http://polipay\.co\.nz/"
+		to="https://www.polipay.co.nz/" />
+
+	<rule from="^http:"
+		to="https:" />
+</ruleset>

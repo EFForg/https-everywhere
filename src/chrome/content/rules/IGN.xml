@@ -1,127 +1,69 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://mail.ign.com/ => https://mail.ign.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://ads.ign.com/ (200) => https://a248.e.akamai.net/f/1005/1/g/ads.ign.com/ (503)
-Fetch error: http://mail.ign.com/ => https://mail.ign.com/: None
-Non-2xx HTTP code: http://media.ign.com/ (200) => https://a248.e.akamai.net/media.ign.com/ (503)
-Non-2xx HTTP code: http://pcmedia.ign.com/ (200) => https://a248.e.akamai.net/f/1005/1/g/pcmedia.ign.com/ (503)
-	For problematic rules, see IGN-problematic.xml.
-
-
 	For other News Corporation coverage, see News-Corporation.xml.
 
-
 	CDN buckets:
-
 		- maint.ign.com.edgesuite.net
+		- www.ign.com.edgesuite.net/…
 
-		- www.ign.com.edgesuite.net/...
-
-			- ign.com subdomains:
-				- au
-				- ca
-				- ie
-				- dsmedia
-				- media
-				- pcmedia
-				- ps3media
-				- pspmedia
-				- uk
-				- xbox360media
-				- widgets
-				- www
-
-			- assets[12].ignimgs.com
-			- fonts.ignimgs.com
-			- media.ignimgs.com
-			- oyster.ignimgs.com
-			- oystatic.ignimgs.com
-
-
-	Nonfunctional domains:
-
-		- corp.ign.com
-		- nwvault.ign.com *
-
-	* Refused
-
-
-	Problematic domains:
-
-		ign.com subdomains:
-
-			- ^		(cert only matches redirect.ign.com)
-			- ap
-			- au *
-			- ca *
-			- de **
-			- ds *
-			- maint *
-			- pcmedia *
-			- ps3media *
-			- pspmedia *
-			- redirect **
-			- uk *
-			- widgets *
-			- www *
-			- xbox360media *
-
-		- assets[12].ignimgs.com
+	Invalid certificate:
 		- fonts.ignimgs.com
-		- media.ignimgs.com *
-		- oystatic.ignimgs.com *
 
-	* Akamai, works
-	* Self-signed
+	Server error:
+		- docs.widgets.ign.com
 
-
-	Fully covered domains:
-
-		- ign.com subdomains:
-
-			- ads *
-			- assets *
-			- dsmedia *
-			- pcmedia *
-			- ps3media *
-			- pspmedia *
-			- wirelessmedia *
-			- xbox360media *
-
-		- ignimgs.com subdomains:
-
-			- assets[12] *
-			- fonts *
-			- media *
-			- oyster *
-
-	* → akamai
-
+	Timed out:
+		- ign.com, equivalent to www.ign.com
+		- ds.ign.com, equivalent to www.ign.com/ds if no path, else www.ign.com
 -->
-<ruleset name="IGN (partial)" default_off='failed ruleset test'>
 
+<ruleset name="IGN (partial)">
+	<!-- ign.com -->
+	<target host="ign.com" />
+	<target host="www.ign.com" />
 	<target host="ads.ign.com" />
-	<target host="mail.ign.com" />
+	<target host="ap.ign.com" />
+	<target host="au.ign.com" />
+	<target host="assets.ign.com" />
+	<target host="ca.ign.com" />
+	<target host="corp.ign.com" />
+	<target host="de.ign.com" />
+	<target host="ds.ign.com" />
+		<test url="http://ds.ign.com/a" />
+	<target host="dsmedia.ign.com" />
+	<target host="ie.ign.com" />
 	<target host="media.ign.com" />
+	<target host="nwvault.ign.com" />
 	<target host="pcmedia.ign.com" />
 	<target host="ps3media.ign.com" />
 	<target host="pspmedia.ign.com" />
+	<target host="redirect.ign.com" />
 	<target host="s.ign.com" />
+	<target host="sea.ign.com" />
+	<target host="uk.ign.com" />
+	<target host="widgets.ign.com" />
 	<target host="wirelessmedia.ign.com" />
-	<target host="*.ignimgs.com" />
-		<!--
-			Points some resource links to akamai.net/$
-									-->
-		<exclusion pattern="^http://oystatic\.ignimgs\.com/cache/css/(?!35/70/3570337b77bc103506ad234873b09d3f\.css)" />
+	<target host="xbox360media.ign.com" />
+
+	<!-- ignimgs.com -->
+	<target host="assets1.ignimgs.com" />
+	<target host="assets2.ignimgs.com" />
+	<target host="kraken.ignimgs.com" />
+	<target host="media.ignimgs.com" />
+	<target host="oystatic.ignimgs.com" />
+	<target host="oyster.ignimgs.com" />
 
 
-	<securecookie host="^s\.ign\.com$" name=".+" />
+	<securecookie host="^.+\.ign\.com$" name=".+" />
 
 
-	<rule from="^http://(mail|s)\.ign\.com/"
-		to="https://$1.ign.com/" />
+	<rule from="^http://ign\.com/"
+		to="https://www.ign.com/" />
 
+	<rule from="^http://ds\.ign\.com/$"
+		to="https://www.ign.com/ds" />
+
+	<rule from="^http://ds\.ign\.com/"
+		to="https://www.ign.com/ds/" />
+
+	<rule from="^http:" to="https:" />
 </ruleset>

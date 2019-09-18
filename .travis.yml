@@ -1,21 +1,23 @@
 sudo: required
 os: linux
-dist: trusty
+dist: bionic
 language: python
 python: 3.6
-group: deprecated-2017Q4
+group: bionic
 services:
   - docker
+  - xvfb
 matrix:
   fast_finish: true
   include:
     - env: TEST="lint"
       language: node_js
       node_js:
-        - "node"
+        - "lts/*"
     - env: TEST="unittests"
       language: node_js
-      node_js: 9
+      node_js:
+        - "lts/*"
     - env: TEST="validations"
     - env: TEST="fetch"
     - env: TEST="preloaded"
@@ -31,8 +33,5 @@ matrix:
     - addons:
         firefox: latest-esr
       env: TEST="firefox esr" BROWSER=firefox
-before_install:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
 before_script: travis_retry test/setup_travis.sh
 script: . test/run_travis.sh

@@ -346,7 +346,7 @@ class HTTPFetcher(object):
             c.perform()
 
             bufValue = buf.getvalue()
-            headerStr = headerBuf.getvalue().decode('utf-8')
+            headerStr = headerBuf.getvalue().decode('utf-8', 'ignore')
             httpCode = c.getinfo(pycurl.HTTP_CODE)
         finally:
             buf.close()

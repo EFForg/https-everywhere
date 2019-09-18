@@ -1,10 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://help.xbox.com/ => https://help.xbox.com/: (28, 'Connection timed out after 20001 milliseconds')
-Fetch error: http://s.xbox.com/ => https://s.xbox.com/: (6, 'Could not resolve host: s.xbox.com')
-Fetch error: http://service.xbox.com/ => https://service.xbox.com/: (28, 'Connection timed out after 20001 milliseconds')
-
 	For other Microsoft coverage, see Microsoft.xml.
 
 
@@ -21,8 +15,10 @@ Fetch error: http://service.xbox.com/ => https://service.xbox.com/: (28, 'Connec
 			- forums **
 			- gamercard *
 			- gearsofwar
+			- help (timeout)
 			- marketplace **
 			- news *
+			- service (timeout)
 			- sonos ⁴
 			- tiles *
 			- www **
@@ -37,7 +33,9 @@ Fetch error: http://service.xbox.com/ => https://service.xbox.com/: (28, 'Connec
 	Problematic hosts in *xbox.com:
 
 		- compass ¹
-		- feedback ²
+		- feedback (timeout)
+		- feedbacklogin (mismatched)
+		- myservice (mismatched)
 		- nxeassets *
 		- o		(mismatched, CN: *.112.2o7.net)
 		- piflc		(works, mismatched, CN: *.xboxlive.com)
@@ -60,14 +58,9 @@ Fetch error: http://service.xbox.com/ => https://service.xbox.com/: (28, 'Connec
 		- c
 		- compass	(→ compass-ssl.xbox.com)
 		- compass-ssl
-		- feedback	(→ feedbacklogin.xbox.com)
-		- feedbacklogin
 		- halo
-		- help
 		- live
-		- music
 		- music-cache
-		- musictemp
 		- myservice
 		- nxeassets	(→ nxeassets-ssl.xbox.com)
 		- nxeassets-ssl
@@ -93,45 +86,30 @@ Fetch error: http://service.xbox.com/ => https://service.xbox.com/: (28, 'Connec
 	* Secured by us
 
 -->
-<ruleset name="Xbox.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Xbox.com (partial)">
 
 	<!--	Direct rewrites:
 				-->
 	<target host="account.xbox.com" />
 	<target host="c.xbox.com" />
 	<target host="compass-ssl.xbox.com" />
-	<target host="feedbacklogin.xbox.com" />
 	<target host="halo.xbox.com" />
-	<target host="help.xbox.com" />
 	<target host="live.xbox.com" />
-	<target host="music.xbox.com" />
 	<target host="music-cache.xbox.com" />
-	<target host="musictemp.xbox.com" />
-	<target host="myservice.xbox.com" />
 	<target host="nxeassets-ssl.xbox.com" />
 	<target host="rewards.xbox.com" />
-	<target host="s.xbox.com" />
-	<target host="service.xbox.com" />
 	<target host="support.xbox.com" />
 
 	<!--	Complications:
 				-->
 	<target host="compass.xbox.com" />
-	<target host="feedback.xbox.com" />
 	<target host="nxeassets.xbox.com" />
 	<target host="o.xbox.com" />
 	<target host="piflc.xbox.com" />
 
-		<!--	Redirects to http:
-					-->
-		<!--exclusion pattern="^http://forums\.xbox\.com/($|\?|shell/)" /-->
-		<!--exclusion pattern="^http://marketplace.xbox.com/((en-US/)?($|\?)|Product/[\w-]+/[\da-f-]+/|Shell/)" /-->
-		<!--exclusion pattern="^http://rewards\.xbox\.com/($|\?)" /-->
-		<!--exclusion pattern="^http://www\.xbox\.com/((en-US/)?($|\?)|Content/|en-US/global-resources/css/|shell/)" /-->
-
 		<!--	Exceptions:
 					-->
-		<exclusion pattern="^http://rewards\.xbox\.com/(?!css/|favicon\.ico|join-now|(?:localized_)?media/)" />
+		<exclusion pattern="^http://rewards\.xbox\.com/(?!css/|favicon\.ico|(?:localized_)?media/)" />
 
 			<!--	+ve:
 					-->
@@ -145,25 +123,18 @@ Fetch error: http://service.xbox.com/ => https://service.xbox.com/: (28, 'Connec
 			<test url="http://rewards.xbox.com/dynamic/css/welcome.css/" />
 			<test url="http://rewards.xbox.com/favicon.ico" />
 			<test url="http://rewards.xbox.com/media/images/img_header_logo.png" />
-			<test url="http://rewards.xbox.com/join-now/" />
 
 		<test url="http://support.xbox.com/en-US/" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.xbox\.com$" name="^(ASP\.NET_SessionId|s_vi)$" /-->
-	<!--securecookie host="^music\.xbox\.com$" name="^XBXWebMusicSessionId$" /-->
-
 	<securecookie host="^\.xbox\.com$" name="^s_vi$" />
 	<securecookie host="^(?:help|live|music|myservice)\.xbox\.com$" name=".+" />
 
 
 	<rule from="^http://(compas|nxeasset)s\.xbox\.com/"
 		to="https://$1s-ssl.xbox.com/" />
-
-	<rule from="^http://feedback\.xbox\.com/"
-		to="https://feedbacklogin.xbox.com/" />
 
 	<rule from="^http://o\.xbox\.com/"
 		to="https://xbox-com.112.2o7.net/" />

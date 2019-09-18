@@ -1,240 +1,58 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://www-k.ext.ti.com/sc/technical-support/pic/asia.htm (200) => https://www.ti.com/ww/en/pic/PIC-Asia.html (404)
-Non-2xx HTTP code: http://www-k.ext.ti.com/sc/technical-support/pic/japan.htm (200) => https://www.ti.com/ww/en/pic/PIC-Japan.html (404)
-Non-2xx HTTP code: http://www-k.ext.ti.com/sc/technical-support/pic/asia.htm? (200) => https://www.ti.com/ww/en/pic/PIC-Asia.html (404)
-Non-2xx HTTP code: http://www-k.ext.ti.com/sc/technical-support/pic/asia.htm?f (200) => https://www.ti.com/ww/en/pic/PIC-Asia.html (404)
-Non-2xx HTTP code: http://www-k.ext.ti.com/sc/technical-support/pic/asia.htm?o (200) => https://www.ti.com/ww/en/pic/PIC-Asia.html (404)
-Non-2xx HTTP code: http://www-k.ext.ti.com/sc/technical-support/pic/japan.htm? (200) => https://www.ti.com/ww/en/pic/PIC-Japan.html (404)
-Non-2xx HTTP code: http://www-k.ext.ti.com/sc/technical-support/pic/japan.htm?f (200) => https://www.ti.com/ww/en/pic/PIC-Japan.html (404)
-Non-2xx HTTP code: http://www-k.ext.ti.com/sc/technical-support/pic/japan.htm?o (200) => https://www.ti.com/ww/en/pic/PIC-Japan.html (404)
-Fetch error: http://videos.ti.com/cn => https://focus.ti.com/general/docs/video/Portal.tsp: Too many redirects while fetching 'https://focus.ti.com/general/docs/video/Portal.tsp'
-Fetch error: http://videos.ti.com/cn? => https://focus.ti.com/general/docs/video/Portal.tsp?: Too many redirects while fetching 'https://focus.ti.com/general/docs/video/Portal.tsp?'
-Fetch error: http://videos.ti.com/cn?f => https://focus.ti.com/general/docs/video/Portal.tsp?f: Too many redirects while fetching 'https://focus.ti.com/general/docs/video/Portal.tsp?f'
-Fetch error: http://videos.ti.com/ => https://focus.ti.com/general/docs/video/Portal.tsp: Too many redirects while fetching 'https://focus.ti.com/general/docs/video/Portal.tsp'
+	Timeout:
+		ti.com
+		reviews.ti.com
+		trainingcenter.ti.com
+		videos.ti.com
+		www-s.ti.com
+		commerce.ti.com (504 gateway timeout)
 
-	Texas Instruments
+	Invalid certificate:
+		www-k.ext.ti.com
 
-	For rules causing false/broken MCB, see TI.com-falsemixed.xml.
+	Service unavailable (503):
+		processors.wiki.ti.com
 
+	Mixed content issues:
+		m.ti.com
 
-	Nonfunctional domains:
-
-		- careers	(shows default Media Temple page, CN: plesk)
-		- education	(403/404, valid cert)
-		- investor *
-		- m		(redirects to www, valid cert)
-		- newscenter *
-		- reviews	(akamai)
-		- processors.wiki	(503, Akamai)
-		- www2		(shows RHEL Apache test page, CN: dqhgl02)
-
-	* Times out
-
-
-	Problematic subdomains:
-
-		- ^			(cert only matches www)
-		- e2e-uat ²
-		- www-k.ext		(times out)
-		- trainingcenter	(mismatched, CN: *.vsearch2.net)
-		- videos		(redirects to www; mismatched, CN: www.ti.com)
-		- www			Blocks Tor users
-
-	² Self-signed, mismatched, CN: 515969-UAT1.saas.telligent.com
-
-
-	Partially covered subdomains:
-
-		- www-k.ext	(→ www)
-		- www ² * ³
-
-	² Excluded doc downloads per https://github.com/EFForg/https-everywhere/issues/1467
-	* Excluded product per https://github.com/EFForg/https-everywhere/issues/3179
-	³ Excluded tools/ per https://github.com/EFForg/https-everywhere/issues/1611
-
-
-	Fully covered domains:
-
-		- (www.)national.com	(→ www.ti.com)
-
-		- ti.com subdomains:
-
-			- e2e
-			- e2e-uat	(→ e2e)
-			- fedid.ext
-
-
-	Insecure cookies are set for these hosts:
-
-		- e2e.ti.com
-
-
-	Mixed content:
-
-		- css on processors.wiki from $self *
-
-		- Images, on:
-
-			- e2e from www.ti.com *
-			- processors.wiki from $self *
-			- processors.wiki from e2e-uat *
-			- www from focus *
-
-	Mixed images from reviews.ti.com on www.ti.com
-
-		- Web bugs on processors.wiki from i.creativecommons.org *
-
-	* Secured by us
+	Redirect issues:
+		focus.ti.com
 
 -->
-<ruleset name="TI.com (partial)" default_off='failed ruleset test'>
 
-	<!--	Direct rewrites:
-				-->
-	<target host="commerce.ti.com" />
-	<target host="e2e.ti.com" />
-	<target host="estore.ti.com" />
-	<target host="fedid.ext.ti.com" />
-	<target host="focus.ti.com" />
-	<target host="my.ti.com" />
-	<target host="myportal.ti.com" />
-	<!--target host="processors.wiki.ti.com" /-->
-	<target host="www.ti.com" />
-
-	<!--	Complications:
-				-->
-	<target host="national.com" />
-	<target host="www.national.com" />
+<ruleset name="TI.com (partial)">
 
 	<target host="ti.com" />
+	<target host="www.ti.com" />
+
+		<exclusion pattern="^http://www\.ti\.com/corp/" />
+			<test url="http://www.ti.com/corp/docs/legal/copyright.shtml" />
+			<test url="http://www.ti.com/corp/docs/company/home.html" />
+
+	<target host="careers.ti.com" />
+
+	<target host="education.ti.com" />
+
+	<target host="estore.ti.com" />
+
+	<target host="e2e.ti.com" />
 	<target host="e2e-uat.ti.com" />
-	<target host="www-k.ext.ti.com" />
-	<target host="reviews.ti.com" />
-	<target host="videos.ti.com" />
 
-		<exclusion pattern="^http://www-k\.ext\.ti\.com/(?!sc/technical-support/pic/asia\.htm|sc/technical-support/pic/japan\.htm)" />
+	<target host="fedid.ext.ti.com" />
 
-			<!--	+ve:
-					-->
-			<test url="http://www-k.ext.ti.com/sc/technical-support/email-tech-support.asp" />
-			<test url="http://www-k.ext.ti.com/sc/technical-support/knowledgebase/analog/analog_help.htm" />
-			<test url="http://www-k.ext.ti.com/sc/technical-support/pic/americas.htm" />
-			<test url="http://www-k.ext.ti.com/sc/technical_support/product_information_centers.htm" />
-			<test url="http://www-k.ext.ti.com/sc/technical-support/tools/dsp/ftp/00index.htm" />
+	<target host="investor.ti.com" />
 
-			<!--	-ve:
-					-->
-			<test url="http://www-k.ext.ti.com/sc/technical-support/pic/asia.htm" />
-			<test url="http://www-k.ext.ti.com/sc/technical-support/pic/japan.htm" />
+	<target host="my.ti.com" />
+	<target host="myportal.ti.com" />
 
-		<exclusion pattern="http://reviews\.ti\.com/(?!$|\?)" />
+	<target host="news.ti.com" />
+	<target host="newscenter.ti.com" />
 
-			<test url="http://reviews.ti.com/8594/19300/reviews.htm" />
-			<test url="http://reviews.ti.com/8594/19437/reviews.htm" />
-			<test url="http://reviews.ti.com/8594/230839/reviews.htm" />
-			<test url="http://reviews.ti.com/8594/37187/reviews.htm" />
-
-		<!--	Avoid false/broken MCB:
-						-->
-		<!--exclusion pattern="^http://processors\.wiki\.ti\.com/+(?!extensions/|images/|load\.php|skins/)" /-->
-
-		<!--	Breaks doc downloads:
-						-->
-		<exclusion pattern="^http://www.ti.com/(?:general/docs/)?lit/" />
-
-			<!--	+ve:
-					-->
-			<test url="http://www.ti.com/general/docs/lit/getliterature.tsp?baseLiteratureNumber=spruer9&amp;fileType=pdf" />
-			<test url="http://www.ti.com/lit/ug/spruer9d/spruer9d.pdf" />
-
-		<!--	https://github.com/EFForg/https-everywhere/issues/3179
-
-			Apparently some subset of product/* triggers MCB:
-									-->
-		<exclusion pattern="^http://(?:www\.)?ti\.com/product(?:$|[?/])" />
-
-			<!--	+ve:
-					-->
-			<test url="http://ti.com/product/tps3511" />
-			<test url="http://www.ti.com/product/am3358" />
-			<test url="http://www.ti.com/product/cc3000" />
-			<test url="http://www.ti.com/product/tps3511" />
-
-		<!--	https://github.com/EFForg/https-everywhere/issues/1611
-								-->
-		<exclusion pattern="^http://www.ti.com/tool/" />
-
-			<!--	+ve:
-					-->
-			<test url="http://www.ti.com/tool/pmp9754" />
-
-		<test url="http://e2e.ti.com/cfs-file/__key/communityserver-components-sitefiles/images-blog_2D00_headers/powerhouse.gif" />
-		<test url="http://e2e.ti.com/support/omap/" />
-		<test url="http://e2e.ti.com/support/other_analog/default.aspx" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^e2e\.ti\.com$" name="^(AuthorizationCookie|BIGipServer[\w.-]+)$" /-->
-
-	<!--	Cookie domains:
-
-			- .
-			- estore
-			- focus
-			- myportal
-			- www
-
-		Set by myportal, might be used as login
-		on e2e or othe unsecurable subdomains:
-
-	<securecookie host="^\.ti\.com$" name="^iatc$" /-->
-
-	<securecookie host=".+\.ti\.com$" name=".+" />
-
-
-	<!--	Server drops path:
-					-->
-	<rule from="^http://(?:www\.)?national\.com/.*"
-		to="https://www.ti.com/" />
-
-		<test url="http://www.national.com//" />
+	<target host="training.ti.com" />
 
 	<rule from="^http://ti\.com/"
 		to="https://www.ti.com/" />
-
-	<rule from="^http://e2e-uat\.ti\.com/"
-		to="https://e2e.ti.com/" />
-
-	<rule from="^http://www-k\.ext\.ti\.com/sc/technical-support/pic/asia\.htm(?:\?.*)?$"
-		to="https://www.ti.com/ww/en/pic/PIC-Asia.html" />
-
-		<test url="http://www-k.ext.ti.com/sc/technical-support/pic/asia.htm?" />
-		<test url="http://www-k.ext.ti.com/sc/technical-support/pic/asia.htm?f" />
-		<test url="http://www-k.ext.ti.com/sc/technical-support/pic/asia.htm?o" />
-
-	<rule from="^http://www-k\.ext\.ti\.com/sc/technical-support/pic/japan\.htm(?:\?.*)?$"
-		to="https://www.ti.com/ww/en/pic/PIC-Japan.html" />
-
-		<test url="http://www-k.ext.ti.com/sc/technical-support/pic/japan.htm?" />
-		<test url="http://www-k.ext.ti.com/sc/technical-support/pic/japan.htm?f" />
-		<test url="http://www-k.ext.ti.com/sc/technical-support/pic/japan.htm?o" />
-
-	<rule from="^http://reviews\.ti\.com/(?:\?.*)?$"
-		to="https://focus.ti.com/" />
-
-		<test url="http://reviews.ti.com/?" />
-		<test url="http://reviews.ti.com/?f" />
-		<test url="http://reviews.ti.com/?o" />
-
-	<rule from="^http://videos\.ti\.com/[^?]*"
-		to="https://focus.ti.com/general/docs/video/Portal.tsp" />
-
-		<test url="http://videos.ti.com/cn" />
-		<test url="http://videos.ti.com/cn?" />
-		<test url="http://videos.ti.com/cn?f" />
 
 	<rule from="^http:"
 		to="https:" />

@@ -1,60 +1,36 @@
 <!--
-	For related hidden service rules, see propub3r6espa33w.onion.xml
+	For related onion service rules, see propub3r6espa33w.onion.xml
 
-	CDN buckets:
+	Non-functional hosts
+		SSL peer certificate was not OK:
+		- mail.propublica.org
+		- tiles-a.propublica.org
+		- tiles-b.propublica.org
+		- tiles-c.propublica.org
+		- tiles-d.propublica.org
 
-		- s3.amazonaws.com/cdn.propublica.net/
-		- propublica.s3.amazonaws.com
-		- d3i4wq2ul46tvd.cloudfront.net
-
-
-	Problematic domains:
-
-		- (www.)propublica.net *
-
-	* Works; mismatched, CN: www.propublica.org
-
-
-	Mixed content:
-
-		- Images, on:
-
-			- www, from:
-
-				- (www.) *
-				- s3.amazonaws.com *
-				- cdn.propublica.net.s3.amazonaws.com *
-				- propublica.s3.amazonaws.com *
-				- cdn.propublica.net *
-
-	* Secured by us
+		Incomplete certificate chain error:
+		- propublica.org
 
 -->
 <ruleset name="ProPublica.org">
-
-	<target host="propublica.net" />
-	<target host="*.propublica.net" />
 	<target host="propublica.org" />
-	<target host="*.propublica.org" />
+	<target host="www.propublica.org" />
+	<target host="assets.propublica.org" />
+	<exclusion pattern="^http://assets\.propublica\.org/$" /><!-- 403 -->
+	<test url="http://assets.propublica.org/prod/v3/images/electionland-sprites.png" />
+	<test url="http://assets.propublica.org/prod/v3/images/logo-propublica.svg" />
+	<test url="http://assets.propublica.org/images/articles/_oneOne300w/20181106-ny-rain-1x1.jpg" />
+	<target host="donate.propublica.org" />
+	<target host="projects.propublica.org" />
+	<target host="securedrop.propublica.org" />
+	<target host="static.propublica.org" />
 
+	<securecookie host=".+" name=".+" />
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^www\.propublica\.org$" name="^(PHPSESSID|pp-tracking)$" /-->
-
-	<securecookie host="^(?:.*\.)?propublica\.org$" name=".+" />
-
-
-	<rule from="^http://(?:www\.)?propublica\.net/+"
+	<rule from="^http://propublica\.org/"
 		to="https://www.propublica.org/" />
 
-	<rule from="^http://cdn\.propublica\.net/"
-		to="https://s3.amazonaws.com/cdn.propublica.net/" />
-
-	<rule from="^http://(www\.|mail\.|projects\.|static\.|securedrop\.)?propublica\.org/"
-		to="https://$1propublica.org/" />
-
-	<rule from="^http://tiles-[abcd]\.propublica\.org/"
-		to="https://d3i4wq2ul46tvd.cloudfront.net/" />
-
+	<rule from="^http:"
+		to="https:" />
 </ruleset>
