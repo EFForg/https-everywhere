@@ -52,15 +52,11 @@ function initializeStoredGlobals() {
       globalEnabled: true,
       enableMixedRulesets: false,
       disabledList: [],
-      httpOnceList: []
     }, function(item) {
       httpNowhereOn = item.httpNowhere;
       isExtensionEnabled = item.globalEnabled;
       for (let disabledSite of item.disabledList) {
         disabledList.add(disabledSite);
-      }
-      for (let httpOnceSite of item.httpOnceList) {
-        httpOnceList.add(httpOnceSite);
       }
       updateState();
 
@@ -121,6 +117,9 @@ if (chrome.windows) {
   chrome.windows.onFocusChanged.addListener(function() {
     updateState();
   });
+
+  // Grant access to HTTP site only during session, clear once window is closed
+  chrome.windows.onRemoved.addListener( () => httpOnceList.clear() );
 }
 chrome.webNavigation.onCompleted.addListener(function() {
   updateState();
