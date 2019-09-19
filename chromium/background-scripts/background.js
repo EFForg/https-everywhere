@@ -1,4 +1,6 @@
 "use strict";
+// Resolve tabs context
+// test variable
 
 (function(exports) {
 
@@ -41,6 +43,7 @@ async function initializeAllRules() {
 var httpNowhereOn = false;
 var isExtensionEnabled = true;
 let disabledList = new Set();
+let httpOnceList = new Set();
 
 function initializeStoredGlobals() {
   return new Promise(resolve => {
@@ -48,12 +51,16 @@ function initializeStoredGlobals() {
       httpNowhere: false,
       globalEnabled: true,
       enableMixedRulesets: false,
-      disabledList: []
+      disabledList: [],
+      httpOnceList: []
     }, function(item) {
       httpNowhereOn = item.httpNowhere;
       isExtensionEnabled = item.globalEnabled;
       for (let disabledSite of item.disabledList) {
         disabledList.add(disabledSite);
+      }
+      for (let httpOnceSite of item.httpOnceList) {
+        httpOnceList.add(httpOnceSite);
       }
       updateState();
 
@@ -147,7 +154,7 @@ function updateState () {
     }
     const tabUrl = new URL(tabs[0].url);
 
-    if (disabledList.has(tabUrl.host) || iconState == "disabled") {
+    if (disabledList.has(tabUrl.host) || httpOnceList.has(tabUrl.host) || iconState == "disabled") {
       if ('setIcon' in chrome.browserAction) {
         chrome.browserAction.setIcon({
           path: {
@@ -317,7 +324,10 @@ function onBeforeRequest(details) {
     browserSession.putTab(details.tabId, 'first_party_host', uri.host, true);
   }
 
-  if (disabledList.has(browserSession.getTab(details.tabId, 'first_party_host', null))) {
+  if (
+    disabledList.has(browserSession.getTab(details.tabId, 'first_party_host', null)) || 
+    httpOnceList.has(browserSession.getTab(details.tabId, 'first_party_host', null))) 
+  {
     return;
   }
 
@@ -564,7 +574,10 @@ function onHeadersReceived(details) {
 
     // Do not upgrade resources if the first-party domain disbled EASE mode
     // This is needed for HTTPS sites serve mixed content and is broken
-    if (disabledList.has(browserSession.getTab(details.tabId, 'first_party_host', null))) {
+    if (
+    disabledList.has(browserSession.getTab(details.tabId, 'first_party_host', null)) ||
+    httpOnceList.has(browserSession.getTab(details.tabId, 'first_party_host', null))) 
+    {
       return {};
     }
 
@@ -654,11 +667,21 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     });
   }
 
-  function storeDisabledList() {
+  function storeDisabledList(message) {
+
     const disabledListArray = Array.from(disabledList);
-    store.set({disabledList: disabledListArray}, () => {
-      sendResponse(true);
-    });
+    const httpOnceListArray = Array.from(httpOnceList);
+
+    if ('once' === message) {
+      store.set({httpOnceList: httpOnceListArray}, () => {
+        sendResponse(true);
+      });
+    } else {
+      store.set({disabledList: disabledListArray}, () => {
+        sendResponse(true);
+      });
+    }
+
     return true;
   }
 
@@ -835,13 +858,17 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       });
       return true;
     },
+    disable_on_site_once: () => {
+      httpOnceList.add(message.object);
+      return storeDisabledList('once');
+    },
     disable_on_site: () => {
       disabledList.add(message.object);
-      return storeDisabledList();
+      return storeDisabledList('disable');
     },
     enable_on_site: () => {
       disabledList.delete(message.object);
-      return storeDisabledList();
+      return storeDisabledList('enable');
     },
     check_if_site_disabled: () => {
       sendResponse(disabledList.has(message.object));
