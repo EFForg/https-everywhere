@@ -1,6 +1,4 @@
 "use strict";
-// Resolve tabs context
-// test variable
 
 (function(exports) {
 
@@ -51,7 +49,7 @@ function initializeStoredGlobals() {
       httpNowhere: false,
       globalEnabled: true,
       enableMixedRulesets: false,
-      disabledList: [],
+      disabledList: []
     }, function(item) {
       httpNowhereOn = item.httpNowhere;
       isExtensionEnabled = item.globalEnabled;
