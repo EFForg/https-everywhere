@@ -1,10 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://user.img.todaoferta.uol.com.br/ => https://user.img.todaoferta.uol.com.br/: (6, 'Could not resolve host: user.img.todaoferta.uol.com.br')
-Non-2xx HTTP code: http://tts.uol.com.br/ (200) => https://tts.uol.com.br/ (500)
-
-
 	Other UOL rulesets:
 
 		- ImgUOL.com.xml
@@ -30,6 +24,7 @@ Non-2xx HTTP code: http://tts.uol.com.br/ (200) => https://tts.uol.com.br/ (500)
 		- www.bol ¹
 		- combatarms ²
 		- convergenciadigital ¹
+		- denuncia (cert-chain)
 		- edmotta ²
 		- email ¹
 		- esporte ¹
@@ -50,6 +45,7 @@ Non-2xx HTTP code: http://tts.uol.com.br/ (200) => https://tts.uol.com.br/ (500)
 		- regras ¹
 		- shopping ²
 		- central.shopping ⁴
+		- tts (500)
 		- comprar.todaoferta ⁵
 		- ed.img.todaoferta ⁶
 		- tudodownloads ²
@@ -68,7 +64,6 @@ Non-2xx HTTP code: http://tts.uol.com.br/ (200) => https://tts.uol.com.br/ (500)
 
 	Problematic subdomains:
 
-		- click ¹		(Dropped)
 		- mais ²
 		- todaoferta ²
 
@@ -82,7 +77,6 @@ Non-2xx HTTP code: http://tts.uol.com.br/ (200) => https://tts.uol.com.br/ (500)
 		- visitante.acesso
 		- cadastro
 		- pagseguro.captcha
-		- denuncia
 		- go4gold
 		- thumb.mais
 
@@ -98,8 +92,6 @@ Non-2xx HTTP code: http://tts.uol.com.br/ (200) => https://tts.uol.com.br/ (500)
 		- sac
 		- simg
 		- p.simg
-		- user.img.todaoferta
-		- tts
 		- verifica
 
 
@@ -112,7 +104,6 @@ Non-2xx HTTP code: http://tts.uol.com.br/ (200) => https://tts.uol.com.br/ (500)
 
 		- .uol.com.br
 		- cadastro.uol.com.br
-		- denuncia.uol.com.br
 		- pagseguro.uol.com.br
 		- .pagseguro.uol.com.br
 		- sandbox.pagseguro.uol.com.br
@@ -132,22 +123,19 @@ Non-2xx HTTP code: http://tts.uol.com.br/ (200) => https://tts.uol.com.br/ (500)
 			- mais from thumb.mais.uol.com.br
 			- todaoferta from todaoferta.imguol.com
 			- todaoferta from ed.img.todaoferta.uol.com.br
-			- todaoferta from user.img.todaoferta.uol.com.br
 
 		- favicon on mais from home.img.uol.com.br
 
 		- Ads on todaoferta from www.googleadservices.com
 
 -->
-<ruleset name="UOL.com.br (partial)" default_off='failed ruleset test'>
+<ruleset name="UOL.com.br (partial)">
 
-	<!--	Direct rewrites:
-					-->
 	<target host="acesso.uol.com.br" />
 	<target host="visitante.acesso.uol.com.br" />
 	<target host="cadastro.uol.com.br" />
+	<target host="click.uol.com.br" />
 	<target host="pagseguro.captcha.uol.com.br" />
-	<target host="denuncia.uol.com.br" />
 	<target host="go4gold.uol.com.br" />
 	<target host="mais.uol.com.br" />
 	<target host="thumb.mais.uol.com.br" />
@@ -162,13 +150,6 @@ Non-2xx HTTP code: http://tts.uol.com.br/ (200) => https://tts.uol.com.br/ (500)
 	<target host="sac.uol.com.br" />
 	<target host="simg.uol.com.br" />
 	<target host="p.simg.uol.com.br" />
-	<!--target host="todaoferta.uol.com.br" /-->
-	<target host="user.img.todaoferta.uol.com.br" />
-	<target host="tts.uol.com.br" />
-
-	<!--	Special cases:
-				-->
-	<!--target host="click.uol.com.br" /-->
 
 		<!--	Avoid broken MCB:
 						-->
@@ -185,22 +166,9 @@ Non-2xx HTTP code: http://tts.uol.com.br/ (200) => https://tts.uol.com.br/ (500)
 			<test url="http://mais.uol.com.br/stc/mais/c/thickbox.css" />
 
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.uol\.com\.br$" name="^(RMTRK\.ID|auction_uol_id)$" /-->
-	<!--securecookie host="^cadastro\.uol\.com\.br$" name="^SIGNUP_SESSION$" /-->
-	<!--securecookie host="^(sandbox\.)?pagseguro\.uol\.com\.br$" name="^csrfId$" /-->
-	<!--securecookie host="^\.?pagseguro\.uol\.com\.br$" name="^TS[\da-f]{8}$" /-->
-	<!--securecookie host="^\.pagseguro\.uol\.com\.br$" name="^LAST_SERVER_HIT$" /-->
-	<!--securecookie host="^(cadastro|denuncia|(sandbox.)?pagseguro)\.uol\.com\.br$" name="^JSESSIONID$" /-->
-
 	<securecookie host="^\.uol\.com\.br$" name="^RMTRK\.ID$" />
-	<securecookie host="^(?:cadastro|denuncia|(?:sandbox\.)?pagseguro)\.uol\.com\.br$" name=".+" />
+	<securecookie host="^(?:cadastro|(?:sandbox\.)?pagseguro)\.uol\.com\.br$" name=".+" />
 	<securecookie host="^\.pagseguro\.uol\.com\.br$" name="^(?:LAST_SERVER_HIT|TS\w+)$" />
-
-
-	<!--rule from="^http://click\.uol\.com\.br/"
-		to="https://clicklogger.rm.uol.com.br/" /-->
 
 	<rule from="^http:"
 		to="https:" />

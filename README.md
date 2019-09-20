@@ -67,3 +67,5 @@ Hacking on the Source Code
 --------------------------
 
 Please refer to our [contributing](CONTRIBUTING.md) document to contribute to the project.
+
+This project is governed by [EFF's Public Projects Code of Conduct](https://www.eff.org/pages/eppcode).

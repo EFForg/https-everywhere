@@ -14,7 +14,7 @@ import sys
 import threading
 import time
 
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 
 from lxml import etree
 
@@ -227,7 +227,7 @@ def disableRuleset(ruleset, problemRules, urlCount):
     if urlCount == len(problemRules):
         logging.info("Disabling ruleset {}".format(ruleset.filename))
         contents = re.sub("(<ruleset [^>]*)>",
-            "\\1 default_off='failed ruleset test'>", contents);
+            "\\1 default_off=\"failed ruleset test\">", contents);
     # If not all targets, just the target
     else:
         for rule in rules:
@@ -308,7 +308,7 @@ def cli():
                         help='write results in json file')
     args = parser.parse_args()
 
-    config = SafeConfigParser()
+    config = ConfigParser()
     config.read(args.checker_config)
 
     logfile = config.get("log", "logfile")
@@ -366,14 +366,6 @@ def cli():
     metricClass = getMetricClass(metricName)
     metric = metricClass()
 
-    # Debugging options, graphviz dump
-    dumpGraphvizTrie = False
-    if config.has_option("debug", "dump_graphviz_trie"):
-        dumpGraphvizTrie = config.getboolean("debug", "dump_graphviz_trie")
-    if dumpGraphvizTrie:
-        graphvizFile = config.get("debug", "graphviz_file")
-        exitAfterDump = config.getboolean("debug", "exit_after_dump")
-
     if args.rule_files:
         xmlFnames = args.rule_files
     else:
@@ -425,17 +417,6 @@ def cli():
         trie.addRuleset(ruleset)
         rulesets.append(ruleset)
 
-    # Trie is built now, dump it if it's set in config
-    if dumpGraphvizTrie:
-        logging.debug("Dumping graphviz ruleset trie")
-        graph = trie.generateGraphizGraph()
-        if graphvizFile == "-":
-            graph.dot()
-        else:
-            with open(graphvizFile, "w") as gvFd:
-                graph.dot(gvFd)
-        if exitAfterDump:
-            sys.exit(0)
     fetchOptions = http_client.FetchOptions(config)
     fetchers = list()
 
@@ -461,7 +442,6 @@ def cli():
         resQueue = queue.Queue()
         startTime = time.time()
         testedUrlPairCount = 0
-        config.getboolean("debug", "exit_after_dump")
 
         for i in range(threadCount):
             t = UrlComparisonThread(
