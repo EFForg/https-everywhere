@@ -1,11 +1,3 @@
-# @Author: S. Sharma <silentcat>
-# @Date:   2019-02-25T09:44:43-06:00
-# @Email:  silentcat@protonmail.com
-# @Last modified by:   silentcat
-# @Last modified time: 2019-02-25T10:30:46-06:00
-
-
-
 #!/bin/bash
 # Install packages that are necessary and/or useful to build and debug
 # HTTPS Everywhere
