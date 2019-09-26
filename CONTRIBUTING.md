@@ -3,6 +3,7 @@
 * [Welcome!](#welcome)
     * [HTTPS Everywhere Source Code Layout](#https-everywhere-source-code-layout)
     * [Submitting Changes](#submitting-changes)
+    * [I Want To Fix My Site](#i-want-to-fix-my-site)
 * [Contributing Rulesets](#contributing-rulesets)
     * [General Info](#general-info)
     * [New Rulesets](#new-rulesets)
@@ -47,6 +48,8 @@ If you get stuck we have two publicly-archived mailing lists: the https-everywhe
 
 You can also find more information on about HTTPS Everywhere on our [FAQ](https://www.eff.org/https-everywhere/faq) page.
 
+Also, please remember that this project is governed by [EFF's Public Projects Code of Conduct](https://www.eff.org/pages/eppcode).
+
 Thanks again, and we look forward to your contributions!
 
 
@@ -67,6 +70,20 @@ Tests are performed in headless browsers and located in the [`test`](test) top-l
 To submit changes, open a pull request from our [GitHub repository](https://github.com/efforg/https-everywhere).
 
 HTTPS Everywhere is maintained by a limited set of staff and volunteers.  Please be mindful that we may take a while before we're able to review your contributions.
+
+## I Want To Fix My Site
+
+**"I want to get an SSL certificate"**
+
+To get an SSL certificate, as an option, you can go to [Let's Encrypt](https://letsencrypt.org/) and get a free certificate.
+
+**"I have an SSL certificate, but it's not configured properly"**
+
+Scan your site at the [Mozilla Observatory](https://observatory.mozilla.org/) and get results on what is wrong/insecure about your site, as well as tips and directions on how to fix those issues.
+
+**"How do I get on the HSTS Preload list?"**
+
+In order to do this, you must have an SSL certificate correctly installed and your site redirecting to HTTPS. As well as meet a few extra requirements for the [`HTTP Strict-Transport-Security`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security) header. To view "how close" your site is for HSTS preloading, scan your site [here](https://hstspreload.org/).
 
 * * *
 
@@ -326,7 +343,7 @@ In `utils` we have a tool called `hsts-prune` which removes `targets` from rules
 
 > Let `included domain` denote either a `target`, or a parent of a `target`.  Let `supported browsers` include the ESR, Dev, and Stable releases of Firefox, and the Stable release of Chromium.  If `included domain` is a parent of the `target`, the `included domain` must be present in the HSTS preload list for all `supported browsers` with the relevant flag which denotes inclusion of subdomains set to `true`.  If `included domain` is the `target` itself, it must be included the HSTS preload list for all `supported browsers`.  Additionally, if the http endpoint of the `target` exists, it must issue a 3XX redirect to the https endpoint for that target.  Additionally, the https endpoint for the `target` must deliver a `Strict-Transport-Security` header with the following directives present:
 >
-> - `max-age` >= 10886400
+> - `max-age` >= 31536000
 > - `includeSubDomains`
 > - `preload`
 >
@@ -372,13 +389,6 @@ We ask that if you want to delete your GitHub account, you either close your HTT
 * * *
 
 # Contributing Translations
-
-HTTPS Everywhere translations are handled through Transifex.  The easiest way to help with translations is to [create a Transifex account](https://www.transifex.com/signup/) if you don't already have one.  Then log into your account and click "Explore", then search for "Tor Project", and click on The Tor Project.  Then choose the language you plan to translate into, click on the name of that language, and then click "Join team" and "Go" to accept joining the translation team for your language.
-
-Then, in the Tor Project resources list, find and click the link for the file
-
-    HTTPS Everywhere - https-everywhere.dtd
-
-and choose "Translate now" to enter the translation interface.
+We are reviewing our process around translations and currently discussing ways to improve. Translations are still processed under the same entity and those who have an account already, do not need to take action at this time. Thank you for your contributions.
 
 * * *

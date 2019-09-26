@@ -18,7 +18,8 @@ exports.update_channels = [{
        '-sbyMKGJ5j1BWTnibCklDXtWzXtuiz18EgE'
   },
   update_path_prefix: 'https://www.https-rulesets.org/v1/',
-  scope: ''
+  scope: '',
+  replaces_default_rulesets: true
 }];
 
 })(typeof exports === 'undefined' ? require.scopes.update_channels = {} : exports);

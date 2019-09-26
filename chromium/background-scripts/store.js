@@ -8,7 +8,7 @@ function initialize() {
   return new Promise(resolve => {
     if (chrome.storage.sync) {
       chrome.storage.sync.set({"sync-set-test": true}, () => {
-        if(chrome.runtime.lastError){
+        if(chrome.runtime.lastError) {
           setStorage(chrome.storage.local);
         } else {
           setStorage(chrome.storage.sync);
@@ -51,35 +51,57 @@ function local_set_promise(key, value) {
 
 
 async function performMigrations() {
-  const migration_version = await get_promise('migration_version', 0);
+  let migration_version = await get_promise('migration_version', 0);
 
-  if (migration_version < 1) {
+  try {
+    if (migration_version === 0) {
+      let ls = localStorage;
+      let ruleActiveStates = {};
 
-    let ls;
-    try {
-      ls = localStorage;
-    } catch(e) {}
-
-    let ruleActiveStates = {};
-    for (const key in ls) {
-      if (ls.hasOwnProperty(key)) {
-        if (key == rules.RuleSets().USER_RULE_KEY){
-          await set_promise(rules.RuleSets().USER_RULE_KEY, JSON.parse(ls[key]));
-        } else {
-          ruleActiveStates[key] = (ls[key] == "true");
+      for (let key in ls) {
+        if (ls.hasOwnProperty(key)) {
+          if (rules.RuleSets().USER_RULE_KEY === key) {
+            await set_promise(rules.RuleSets().USER_RULE_KEY, JSON.parse(ls[key]));
+          } else {
+            ruleActiveStates[key] = (ls[key] === "true");
+          }
         }
       }
+      migration_version = 1;
+      await set_promise('migration_version', migration_version);
+      await set_promise('ruleActiveStates', ruleActiveStates);
     }
-    await set_promise('ruleActiveStates', ruleActiveStates);
+
+  } catch (e) {
+    // do nothing
   }
 
-  await set_promise('migration_version', 1);
+  if (migration_version <= 1) {
+    await get_promise(rules.RuleSets().USER_RULE_KEY, [])
+      .then(userRules => {
+        userRules = userRules.map(userRule => {
+          return {
+            name: userRule.host,
+            target: [userRule.host],
+            rule: [{ from: userRule.urlMatcher, to: userRule.redirectTo }],
+            default_off: "user rule"
+          }
+        })
+        return userRules;
+      })
+      .then(userRules => {
+        return set_promise(rules.RuleSets().USER_RULE_KEY, userRules);
+      })
+
+    migration_version = 2;
+    await set_promise('migration_version', migration_version);
+  }
 }
 
 const local = {
-  get: chrome.storage.local.get,
-  set: chrome.storage.local.set,
-  remove: chrome.storage.local.remove,
+  get: (...args) => chrome.storage.local.get(...args),
+  set: (...args) => chrome.storage.local.set(...args),
+  remove: (...args) => chrome.storage.local.remove(...args),
   get_promise: local_get_promise,
   set_promise: local_set_promise
 };

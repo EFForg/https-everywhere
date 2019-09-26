@@ -1,7 +1,4 @@
 <!--
-	For problematic rules, see Debian.org-problematic.xml.
-
-
 	Other Debian rulesets:
 
 		- DebConf.org.xml
@@ -9,71 +6,32 @@
 		- Deb.li.xml
 
 
-	Nonfunctional domains:
+	Nonfunctional domains in *.debian.org:
 
-		- in *debian.org:
+			- puppet-dashboard (r)
+			- security (r)
+			- sip-ws (r)
+			- ftp.us (m)
+			- ftp-master.metadata (m)
 
-			- arch ¹
-			- ca ³
-			- popcon ⁶
-			- puppet-dashboard ⁶
-			- security ⁶
-			- sip-ws ⁸
-			- snapshot ⁶
-			- ftp.us ⁶
-
-	¹ Differs from http
-	² Shows www
-	³ Shows db; mismatched, CN: db.debian.org
-	⁶ Refused
-	⁷ Shows ftp-master; mismatched, CN: ftp-master.debian.org
-	⁸ Reset
-	⁹ Dropped
-
-
-	Problematic hosts in *debian.org:
-
-		- metadata.ftp-master ¹
-		- ftp-master.metadata ¹
-		- planet ²
-
-	¹ Fastly
-	² MaxCDN
+	h: http redirect
+	m: certificate mismatch
+	r: connection refused
+	s: self-signed certificate
+	t: timeout on https
 
 
 	Partially covered hosts in *debian.org:
 
-		- security *	(→ www)
+		- security *	(www)
 
 	* At least some paths 404
-
-
-	altnames that don't exist:
-
-		- www.bugs.debian.org
-		- www.buildd.debian.org
-		- www.db.debian.org
-		- www.ftp-master.debian.org
-		- www.lists.debian.org
-		- www.nagios.debian.org
-		- www.nm.debian.org
-		- www.packages.debian.org
-		- scm.debian.org
-		- www.security-tracker.debian.org
-		- www.udd.debian.org
-		- www.wiki.debian.org
-
 -->
-<ruleset name="Debian.org (partial)">
+<ruleset name="Debian.org">
 
 	<!--	Direct rewrites:
 				-->
 	<target host="debian.org" />
-	<target host="alioth.debian.org" />
-	<target host="*.alioth.debian.org" />
-		<test url="http://aptitude.alioth.debian.org/" />
-		<test url="http://pkg-haskell.alioth.debian.org/" />
-		<test url="http://python-modules.alioth.debian.org/" />
 	<target host="anonscm.debian.org" />
 	<target host="appstream.debian.org" />
 	<target host="apt.buildd.debian.org" />
@@ -83,15 +41,12 @@
 	<target host="bugs.debian.org" />
 	<target host="bugs-master.debian.org" />
 	<target host="buildd.debian.org" />
-	<target host="bzr.debian.org" />
 	<target host="cdimage.debian.org" />
 	<target host="cdimage-search.debian.org" />
 	<target host="cgi.debian.org" />
 	<target host="cloud.debian.org" />
 	<target host="contributors.debian.org" />
-	<target host="cvs.debian.org" />
 	<target host="d-i.debian.org" />
-	<target host="darcs.debian.org" />
 	<target host="db.debian.org" />
 	<target host="deb.debian.org" />
 	<target host="debtags.debian.org" />
@@ -100,10 +55,10 @@
 	<target host="dsa.debian.org" />
 	<target host="ftp-master.debian.org" />
 	<target host="api.ftp-master.debian.org" />
+	<target host="metadata.ftp-master.debian.org" />
 	<target host="get.debian.org" />
 	<target host="git.debian.org" />
 	<target host="gobby.debian.org" />
-	<target host="hg.debian.org" />
 	<target host="i18n.debian.org" />
 	<target host="incoming.debian.org" />
 	<target host="jenkins.debian.org" />
@@ -113,6 +68,7 @@
 	<target host="lists.debian.org" />
 	<target host="manpages.debian.org" />
 	<target host="dyn.manpages.debian.org" />
+	<target host="ftp-master.metadata.debian.org" />
 	<target host="micronews.debian.org" />
 	<target host="mirror-master.debian.org" />
 	<target host="munin.debian.org" />
@@ -122,7 +78,9 @@
 	<target host="packages.debian.org" />
 	<target host="people.debian.org" />
 	<target host="piuparts.debian.org" />
+	<target host="planet.debian.org" />
 	<target host="planet-search.debian.org" />
+	<target host="popcon.debian.org" />
 	<target host="incoming.ports.debian.org" />
 	<target host="www.ports.debian.org" />
 	<target host="qa.debian.org" />
@@ -130,13 +88,14 @@
 	<target host="release.debian.org" />
 	<target host="rt.debian.org" />
 	<target host="rtc.debian.org" />
+	<target host="salsa.debian.org" />
 	<target host="search.debian.org" />
 	<target host="security-master.debian.org" />
 	<target host="security-team.debian.org" />
 	<target host="security-tracker.debian.org" />
 	<!--target host="sip-ws.debian.org" /-->
+	<target host="snapshot.debian.org" />
 	<target host="sso.debian.org" />
-	<target host="svn.debian.org" />
 	<target host="syncproxy2.eu.debian.org" />
 	<target host="syncproxy3.eu.debian.org" />
 	<target host="syncproxy2.wna.debian.org" />
@@ -177,6 +136,8 @@
 
 	<rule from="^http://security\.debian\.org/+"
 		to="https://www.debian.org/security/" />
+	<rule from="^http://ftp-master\.metadata\.debian\.org/"
+		to="https://metadata.ftp-master.debian.org/" />
 
 	<rule from="^http:"
 		to="https:" />

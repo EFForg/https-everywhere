@@ -113,14 +113,14 @@ class ExtensionTestCase(unittest.TestCase):
         self.driver.switch_to.window(bg)
 
     def toggle_disabled(self):
-        selector = '#onoffswitch'
+        selector = '#onoffswitch__label'
         with self.load_popup_for():
             el = self.query_selector(selector)
             el.click()
             time.sleep(0.25)
 
     def toggle_http_nowhere(self):
-        selector = '#http-nowhere-checkbox'
+        selector = '#http-nowhere-checkbox_label'
         with self.load_popup_for():
             el = self.query_selector(selector)
             el.click()

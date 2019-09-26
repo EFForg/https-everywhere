@@ -1,76 +1,80 @@
 <!--
 	Other Electronic Arts rulesets:
-
 		- BioWare.xml
 		- EA_Sports.com.xml
 		- Origin.com.xml
 		- Sim_City.com.xml
 
-	!functional:
-		- eu.dragonage.com		(cert: socialsignup.ea.com; shows that domain)
-		- (prod.)crysis.ea.com		(timeout)
-		- cdn.prod.crysis.ea.com	(Akamai; "An error occurred")
-		- eapressbox.ea.com		(timeout)
-		- forum.ea.com			(timeout)
-		- cdn.forum.ea.com		(Akamai; "An error occurred"; same data on forum)
-		- gpl.ea.com			(timeout)
-		- (www.)info.ea.com
-		- investor.ea.com		(cert: *.shareholder.com; 403)
-		- preferences.ea.com		(times out)
-		- eamobile.com			(cert: synergy-stage.eamobile.com; shows that domain's data)
-		- insideea.com			(ssl_error_rx_record_too_long)
--->
-<ruleset name="Electronic Arts (partial)" platform="mixedcontent">
+	Connection reset:
+		- www.info.ea.com
 
+	Invalid certificate:
+		- cdn.prod.crysis.ea.com
+		- eu.dragonage.com
+		- cdn.forum.ea.com
+		- o.ea.com
+		- support.ea.com, equivalent to help.ea.com
+		- om.eamobile.com, equivalent to eamobile.122.2o7.net
+
+	Timed out:
+		- investor.ea.com
+		- resources.ea.com, equivalent to ssl.resources.ea.com
+-->
+
+<ruleset name="Electronic Arts (partial)">
+	<!-- ea.com -->
 	<target host="ea.com"/>
-	<target host="*.ea.com"/>
+	<target host="www.ea.com" />
+	<target host="accounts.ea.com" />
+	<target host="activate.ea.com" />
+	<target host="answers.ea.com" />
+	<target host="click.e.ea.com" />
+	<target host="media.contentapi.ea.com" />
+		<test url="http://media.contentapi.ea.com/content/dam/able/manuals/ufc3xb1man.pdf" />
+	<target host="fonts.ea.com" />
+	<target host="forum.ea.com" />
+	<target host="forums.ea.com" />
+	<target host="gpl.ea.com" />
+	<target host="help.ea.com" />
+	<target host="info.ea.com" />
+	<target host="ir.ea.com" />
+	<target host="jobs.ea.com" />
+	<target host="www.jobs.ea.com" />
+	<target host="myaccount.ea.com" />
+	<target host="nds-network-nav.ea.com" />
+	<target host="news.ea.com" />
+	<target host="pl.ea.com" />
+		<test url="http://pl.ea.com/release/1.12.0/elements/ea-elements.html" />
+	<target host="profile.ea.com" />
+	<target host="resources.ea.com" />
+	<target host="signin.ea.com" />
+	<target host="ssl.resources.ea.com" />
+	<target host="starwars.ea.com" />
+	<target host="forums.galaxy-of-heroes.starwars.ea.com" />
+	<target host="support.ea.com" />
+	<target host="tos.ea.com" />
+	<target host="x.ea.com" />
+		<test url="http://x.ea.com/1" />
+
+	<!-- eamobile.com -->
 	<target host="om.eamobile.com"/>
 	<target host="synergy-stage.eamobile.com"/>
-	<target host="thesims3.com"/>
-	<target host="*.thesims3.com"/>
 
 
 	<!--	incomplete
 		.ea s_ : omniture cookies	-->
-	<securecookie host="^\.ea\.com$" name="^(?:CEM-session|s_.*)$"/>
-	<securecookie host="^(?:help|jobs|profile|ssl\.resources)\.ea\.com$" name=".+" />
-	<securecookie host="^(?:forum|\w\w|www)?\.thesims\.com$" name=".+" />
+	<securecookie host="^\.ea\.com$" name="^(CEM-session|s_.*)$"/>
+	<securecookie host="^(help|jobs|profile|ssl\.resources)\.ea\.com$" name=".+" />
 
 
-	<!--	cert !match !www	-->
-	<rule from="^http://ea\.com/"
-		to="https://www.ea.com/"/>
-
-	<rule from="^http://(?:(activate|ll\.assets|fonts|help|images|socialsignup|tos|www)|(?:www\.)?(jobs))\.ea\.com/"
-		to="https://$1$2.ea.com/"/>
-
-	<rule from="^http://(?:ssl\.)?resources\.ea\.com/"
+	<rule from="^http://resources\.ea\.com/"
 		to="https://ssl.resources.ea.com/"/>
 
-	<!--	cert !match support, redirects to help	-->
 	<rule from="^http://support\.ea\.com/"
 		to="https://help.ea.com/"/>
 
 	<rule from="^http://om\.eamobile\.com/"
-		to="https://eamwebproduction.122.2o7.net/"/>
+		to="https://eamobile.122.2o7.net/"/>
 
-	<rule from="^http://synergy-stage\.eamobile\.com/"
-		to="https://synergy-stage.eamobile.com/"/>
-
-	<!--	llnw:	*.hs.llnwd.net
-		cert !match !www	-->
-	<rule from="^http://(?:llnw\.|www\.)?thesims3\.com/"
-		to="https://www.thesims3.com/"/>
-
-	<!--	\w\w:	country codes	-->
-	<rule from="^http://(forum|\w\w)\.thesims3\.com/"
-		to="https://$1.thesims3.com/"/>
-
-	<rule from="^http://(\w\w\.)?store\.thesims3\.com/(community|content/|css/|images/)"
-		to="https://$1store.thesims3.com/$2"/>
-
-	<!--	also on store, but cert valid & works	-->
-	<rule from="^http://llnw\.store\.thesims3\.com/"
-		to="https://llnw.store.thesims3.com/"/>
-
+	<rule from="^http:" to="https:" />
 </ruleset>

@@ -25,6 +25,10 @@
 		- investor ʳ
 		- mkto ᴹ
 		- newsroom ᵈ
+		- solutionpartnerdashboard (refused)
+		- www1 (timeout)
+		- www2 (timeout)
+		- www3 (timeout)
 
 	ᴹ Marketo / shows another domain
 	⁴ 404
@@ -34,11 +38,10 @@
 
 	Problematic hosts in *cisco.com:
 
+		- cisco-images (mismatched)
 		- csc-test2 ᵉ ᵐ ᵘ
 		- csc-test[3-5] ᵐ
 		- eir-stage ˢ
-		- home ᵈ
-		- homesupport ᵈ
 		- solucionespyme ᵐ
 		- sso-marketplace ᵉ
 		- video ᵐ ˣ
@@ -49,15 +52,6 @@
 	ˢ Self-signed, CN: eir-stage
 	ᵘ Untrusted root
 	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
-
-
-	Partially covered hosts in *cisco.com:
-
-		- csr *
-		- www
-
-	* Some pages redirect to http
-
 
 	These altnames don't exist:
 
@@ -94,28 +88,24 @@
 	ᵐ Not secured by us <= mismatched
 
 -->
-<ruleset name="Cisco.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Cisco.com (partial)">
 
-	<!--	Direct rewrites:
-				-->
 	<target host="cisco.com" />
 	<target host="apps.cisco.com" />
 	<target host="blogs.cisco.com" />
-	<target host="cisco-images.cisco.com" />
 	<target host="cloudsso.cisco.com" />
 	<target host="cloudsso1.cisco.com" />
 	<target host="cloudsso2.cisco.com" />
 	<target host="communities.cisco.com" />
+	<target host="csr.cisco.com" />
 	<target host="csc-test1.cisco.com" />
 	<target host="developer.cisco.com" />
-	<target host="eir.cisco.com" />
 	<target host="jobs.cisco.com" />
 	<target host="learningnetwork.cisco.com" />
 	<target host="learningnetworkstore.cisco.com" />
 	<target host="marketplace.cisco.com" />
 	<target host="software.cisco.com" />
 	<target host="solutionpartner.cisco.com" />
-	<target host="solutionpartnerdashboard.cisco.com" />
 	<!--target host="sso-marketplace.cisco.com" /-->
 	<target host="sso-prod0.cisco.com" />
 	<target host="sso-prod1.cisco.com" />
@@ -128,76 +118,9 @@
 	<target host="tools2.cisco.com" />
 	<target host="tools3.cisco.com" />
 	<target host="www.cisco.com" />
-	<target host="www1.cisco.com" />
-	<target host="www2.cisco.com" />
-	<target host="www3.cisco.com" />
-
-	<!--	Complications:
-				-->
-	<target host="home.cisco.com" />
-	<target host="homesupport.cisco.com" />
-
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://csr\.cisco\.com/(?:casestudy|pages)/" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://csr\.cisco\.com/(?!/*(?:$|\?|cdnorigin/|content/|favicon\.ico))" />
-
-			<!--	+ve:
-					-->
-			<test url="http://csr.cisco.com/casestudy/be-the-bridge" />
-			<test url="http://csr.cisco.com/casestudy/flow" />
-			<test url="http://csr.cisco.com/casestudy/inveneo" />
-			<test url="http://csr.cisco.com/casestudy/veterans" />
-			<test url="http://csr.cisco.com/pages/education" />
-			<test url="http://csr.cisco.com/pages/environment" />
-			<test url="http://csr.cisco.com/pages/measure-impact" />
-			<test url="http://csr.cisco.com/pages/resources" />
-
-			<!--	-ve:
-					-->
-			<test url="http://csr.cisco.com/cdnorigin/content/images/layout/intwhitebg1025.png" />
-			<test url="http://csr.cisco.com/cdnorigin/content/scripts/Libs/fancybox/source/helpers/jquery.fancybox-thumbs.css" />
-			<test url="http://csr.cisco.com/cdnorigin/content/styles/idangerous.swiper.css" />
-			<test url="http://csr.cisco.com/cdnorigin/content/themes/base/jquery.ui.dialog.css" />
-			<test url="http://csr.cisco.com/cdnorigin/media/images/original/icon-pdf.png" />
-			<test url="http://csr.cisco.com/content/Scripts/Libs/fancybox/source/jquery.fancybox.css" />
-			<test url="http://csr.cisco.com/favicon.ico" />
-
-		<exclusion pattern="^http://www\.cisco\.com/cgi-bin/login" />
-
-			<test url="http://www.cisco.com/cgi-bin/login" />
-
-		<!--	Sets cookies without Secure:
-							-->
-		<!--test url="http://tools.cisco.com/RPF/register/register.do?exit_url=" /-->
-
-		<!--	Formerly didn't work:
-						-->
-		<test url="http://www.cisco.com/go/smallbizsupport" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.cisco\.com$" name="^(?:CP_GUTC|ObSSOCookie|TOOLS-Loc)$" /-->
-	<!--securecookie host="^blogs\.cisco\.com$" name="^wpmp_switcher$" /-->
-	<!--securecookie host="^communities\.cisco\.com$" name="^(BIGipServerm\w+-\d+-pool|JSESSIONID|jive\.security\.context)$" /-->
-	<!--securecookie host="^jobs\.cisco\.com$" name="^(?:JSESSIONID|PERSIST)$" /-->
-	<!--securecookie host="^learningnetwork\.cisco\.com$" name="^(?:BIGipServer|jive\.(?:login\.ts|security\.context)$)" /-->
-	<!--securecookie host="^learningnetworkstore\.cisco\.com$" name="^JSESSIONID$" /-->
-	<!--securecookie host="^sso\.cisco\.com$" name="^ObFormLoginCookie$" /-->
-	<!--securecookie host="^sso-marketplace\.cisco\.com$" name="^PF$" /-->
-	<!--securecookie host="^(?:learningnetworkstore|tools|www)\.cisco\.com$" name="^JSESSIONID$" /-->
 
 	<securecookie host=".+" name=".+" />
 
-
-	<rule from="^http://home(?:support)?\.cisco\.com/+"
-		to="https://support.linksys.com/" />
-
-	<rule from="^http:"
-		to="https:" />
+	<rule from="^http:" to="https:" />
 
 </ruleset>
