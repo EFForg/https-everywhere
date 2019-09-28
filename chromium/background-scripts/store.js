@@ -3,6 +3,7 @@
 (function(exports) {
 
 const rules = require('./rules');
+const util = require("./util");
 
 function initialize() {
   return new Promise(resolve => {
@@ -94,6 +95,22 @@ async function performMigrations() {
       })
 
     migration_version = 2;
+    await set_promise('migration_version', migration_version);
+  }
+
+  if (migration_version <= 2) {
+    await get_promise('disabledList', [])
+      .then(disabledList => {
+        disabledList = disabledList.map(item => {
+          return util.getNormalisedHostname(item);
+        })
+        return disabledList;
+      })
+      .then(disabledList => {
+        return set_promise('disabledList', disabledList);
+      })
+
+    migration_version = 3;
     await set_promise('migration_version', migration_version);
   }
 }

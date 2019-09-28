@@ -301,9 +301,7 @@ function onBeforeRequest(details) {
   let uri = new URL(details.url);
 
   // Normalise hosts with tailing dots, e.g. "www.example.com."
-  while (uri.hostname[uri.hostname.length - 1] === '.' && uri.hostname !== '.') {
-    uri.hostname = uri.hostname.slice(0, -1);
-  }
+  uri.hostname = util.getNormalisedHostname(uri.hostname);
 
   if (details.type == "main_frame") {
     // Clear the content from previous browser session.
@@ -836,15 +834,15 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       return true;
     },
     disable_on_site: () => {
-      disabledList.add(message.object);
+      disabledList.add(util.getNormalisedHostname(message.object));
       return storeDisabledList();
     },
     enable_on_site: () => {
-      disabledList.delete(message.object);
+      disabledList.delete(util.getNormalisedHostname(message.object));
       return storeDisabledList();
     },
     check_if_site_disabled: () => {
-      sendResponse(disabledList.has(message.object));
+      sendResponse(disabledList.has(util.getNormalisedHostname(message.object)));
       return true;
     },
     is_firefox: () => {
