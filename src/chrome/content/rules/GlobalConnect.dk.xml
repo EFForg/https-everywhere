@@ -1,23 +1,52 @@
 <!--
-  Problematic domains:
+	Refused:
+		- escalation (fixed by this ruleset)
+		- test
 
-    - ^ ⁴
+	Self-signed:
+		- gccmg
+		- ldap
+		- ssl
+		- vpn
 
-  ¹: Works but serves a lot of strict http content
-  ²: 403
-  ³: connection timeout
-  ⁴: refused
+	Mismatched:
+		- booking2
+		- fibertjek
+		- ipv6
+		- link
+		- sip
+		- support
+		- web
 -->
-<ruleset name="GlobalConnect.dk (partial)">
-
+<ruleset name="GlobalConnect.dk">
 	<target host="globalconnect.dk" />
 	<target host="www.globalconnect.dk" />
+	<target host="autodiscover.globalconnect.dk" />
+	<target host="booking.globalconnect.dk" />
+	<target host="bookinguk.globalconnect.dk" />
+	<target host="citrix.globalconnect.dk" />
+	<target host="develop.globalconnect.dk" />
+	<target host="eng.globalconnect.dk" />
+	<target host="escalation.globalconnect.dk" />
+	<target host="extranet.globalconnect.dk" />
+	<target host="insight.globalconnect.dk" />
+	<target host="my.globalconnect.dk" />
+	<target host="dash.my.globalconnect.dk" />
+	<target host="mytest.globalconnect.dk" />
+	<target host="omc.globalconnect.dk" />
+	<target host="rnj.globalconnect.dk" />
+	<target host="techvpn1.globalconnect.dk" />
+	<target host="tracker.globalconnect.dk" />
+	<target host="tw.globalconnect.dk" />
+	<target host="tysktest.globalconnect.dk" />
+	<target host="ug.globalconnect.dk" />
+	<target host="vip.globalconnect.dk" />
+	<target host="webmail.globalconnect.dk" />
+	<target host="xms.globalconnect.dk" />
 
-    <rule from="^http:"
-		to="https:" />
+	<!-- .* removes the path to mirror website's own 301 redirect -->
+	<rule from="^http://escalation\.globalconnect\.dk/.*" to="https://www.globalconnect.dk/kundeservice#eskalering" />
+	<test url="http://escalation.globalconnect.dk/path" />
 
-    <!-- Rule to avoid connection refused on non-www website root -->
-    <rule from="^https://globalconnect\.dk"
-        to="https://www.globalconnect.dk" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
