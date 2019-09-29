@@ -146,8 +146,9 @@ function updateState () {
       return;
     }
     const tabUrl = new URL(tabs[0].url);
+    const hostname = util.getNormalisedHostname(tabUrl.hostname);
 
-    if (disabledList.has(tabUrl.host) || iconState == "disabled") {
+    if (disabledList.has(hostname) || iconState == "disabled") {
       if ('setIcon' in chrome.browserAction) {
         chrome.browserAction.setIcon({
           path: {
@@ -556,7 +557,8 @@ function onHeadersReceived(details) {
     // Do not upgrade the .onion requests in EASE mode,
     // See https://github.com/EFForg/https-everywhere/pull/14600#discussion_r168072480
     const uri = new URL(details.url);
-    if (uri.hostname.slice(-6) == '.onion') {
+    const hostname = util.getNormalisedHostname(uri.hostname);
+    if (hostname.slice(-6) == '.onion') {
       return {};
     }
 
