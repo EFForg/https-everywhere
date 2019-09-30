@@ -1,85 +1,19 @@
 <!--
-	Nonfunctional subdomains:
-
-		- go ¹
-		- help ²
-		- operations ³
-
-	¹ Handshake fails
-	² Refused
-	³ Dropped
-
-
-	Problematic subdomains:
-
-		- ^ ¹
-		- mail ²
-		- status ³
-
-	¹ Dropped
-	² Handshake fails
-	³ StatusPage.io
-
-
-	Partially covered subdomains:
-
-		- operations *	(→ sumologic.statuspage.io)
-
-	* .+ doesn't redirect
-
-
-	Fully covered subdomains:
-
-		- (www.)?	(^ → www)
-		- api
-		- collectors
-		- mail		(→ mail.google.com)
-		- service
-		- status	(→ sumologic.statuspage.io)
-		- support
-
-
-	These altnames don't exist:
-
-		- analytics.sumologic.com
-		- applications.sumologic.com
-		- billing.sumologic.com
-		- blog.sumologic.com
-		- community.sumologic.com
-		- data.sumologic.com
-		- developers.sumologic.com
-		- forum.sumologic.com
-		- jobs.sumologic.com
-		- logreduce.sumologic.com
-		- plp.sumologic.com
-		- sales.sumologic.com
-		- security.sumologic.com
-		- signup.sumologic.com
-
-
-	Insecure cookies are set for these hosts:
-
-		- api.sumologic.com
-		- collectors.sumologic.com
-		- info.sumologic.com
-
+	Connection closed:
+		- go
+		- mail
 -->
-<ruleset name="Sumo Logic.com (partial)">
+<ruleset name="SumoLogic.com (partial)">
+    <target host="sumologic.com" />
+    <target host="www.sumologic.com" />
+    <target host="api.sumologic.com" />
+    <target host="collectors.sumologic.com" />
+    <target host="help.sumologic.com" />
+    <target host="info.sumologic.com" />
+    <target host="operations.sumologic.com" />
+    <target host="service.sumologic.com" />
+    <target host="status.sumologic.com" />
+    <target host="support.sumologic.com" />
 
-	<!--	Direct rewrites:
-				-->
-	<target host="api.sumologic.com" />
-
-	<!--	Special cases:
-				-->
-	<target host="operations.sumologic.com" />
-	<target host="status.sumologic.com" />
-
-		<exclusion pattern="^http://operations\.sumologic\.com/(?!$)" />
-
-			<test url="http://operations.sumologic.com/?" />
-			<test url="http://operations.sumologic.com//" />
-	
 	<rule from="^http:" to="https:" />
-
 </ruleset>
