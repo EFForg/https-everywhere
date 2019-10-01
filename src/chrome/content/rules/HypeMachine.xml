@@ -1,43 +1,17 @@
 <!--
-	CDN buckets:
-
-		- s3.amazonaws.com/faces-s3.hypem.com/
-
-		- hypem-static.edgesuite.net
-
-			- static-ak.hypem.net
-
-
-	Problematic domains:
-
-		- static-ak.hypem.net	(works, akamai)
-
-
-	Fully covered domains:
-
-		- static.hypem.com
-		- static-ak.hypem.net	(→ static.hypem.net)
-
+	Non-functional hosts:
+		Certificate mismatched:
+		- www.hypem.com
 -->
-<ruleset name="HypeMachine (not supported)" default_off="Full SSL not supported">
-    <target host="hypem.com" />
-    <target host="*.hypem.com" />
-		<!--
-			Pages 501:
+<ruleset name="Hype Machine">
+	<target host="hypem.com" />
+	<target host="www.hypem.com" />
+	<target host="blog.hypem.com" />
+	<target host="merch.hypem.com" />
+	<target host="static.hypem.com" />
 
-				https://trac.torproject.org/projects/tor/ticket/9153
-											-->
-		<exclusion pattern="^http://(?:www\.)?hypem\.com/(?!favicon\.ico|images/|inc/|js/)" />
-	<target host="static-ak.hypem.net" />
+	<rule from="^http://www\.hypem\.com/"
+		  	to="https://hypem.com/" />
 
-
-	<!--securecookie host="^([^/:@]+\.)?hypem\.com$" name=".+" /-->
-
-
-	<rule from="^http://([^/:@]+\.)?hypem\.com/"
-		to="https://$1hypem.com/" />
-
-	<rule from="^http://static-ak\.hypem\.net/"
-		to="https://static.hypem.com/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

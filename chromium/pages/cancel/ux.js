@@ -26,17 +26,22 @@ function replaceLink(explainer) {
 }
 
 function displayURL() {
-  const cancelURL = new URL(window.location.href);
-  const originURL = decodeURI(cancelURL.searchParams.get('originURL'));
-  const originURLLink = document.getElementById('originURL');
-  originURLLink.innerText = originURL;
+  const searchParams = new URLSearchParams(window.location.search);
+  const originURL = searchParams.get('originURL');
+  const originURLLink = document.getElementById('url-value');
+  const openURLButton = document.getElementById('open-url-button');
 
-  originURLLink.addEventListener("click", function() {
+  originURLLink.innerText = originURL;
+  originURLLink.href = originURL;
+
+  openURLButton.addEventListener("click", function() {
     if (confirm(chrome.i18n.getMessage("chrome_disable_on_this_site") + '?')) {
       const url = new URL(originURL);
       sendMessage("disable_on_site", url.host, () => {
         window.location = originURL;
       });
     }
+
+    return false;
   });
 }

@@ -45,9 +45,9 @@ if type apt-get>/dev/null 2>&1;  then
     python3.6-dev $BROWSERS zip sqlite3 python3-pip libcurl4-openssl-dev xvfb \
     libssl-dev git curl $CHROMEDRIVER
   if ! type geckodriver >/dev/null 2>&1;  then
-    curl -LO "https://github.com/mozilla/geckodriver/releases/download/v0.17.0/geckodriver-v0.17.0-linux$ARCH.tar.gz"
-    tar -zxvf "geckodriver-v0.17.0-linux$ARCH.tar.gz"
-    rm -f "geckodriver-v0.17.0-linux$ARCH.tar.gz"
+    curl -LO "https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux$ARCH.tar.gz"
+    tar -zxvf "geckodriver-v0.24.0-linux$ARCH.tar.gz"
+    rm -f "geckodriver-v0.24.0-linux$ARCH.tar.gz"
     $SUDO_SHIM mv geckodriver /usr/bin/geckodriver
     $SUDO_SHIM chown root /usr/bin/geckodriver
     $SUDO_SHIM chmod 755 /usr/bin/geckodriver
@@ -67,7 +67,7 @@ elif type brew >/dev/null 2>&1; then
 # distros that use rpm (Fedora, Suse, CentOS) installation
 elif type dnf >/dev/null 2>&1; then
   $SUDO_SHIM dnf install -y firefox gcc git libcurl-devel libxml2-devel \
-    libxslt-devel python-devel redhat-rpm-config xorg-x11-server-Xvfb which \
+    libxslt-devel python3-devel redhat-rpm-config xorg-x11-server-Xvfb which \
     findutils procps openssl openssl-devel chromium GConf2
   if ! type chromedriver >/dev/null; then
     curl -O "https://chromedriver.storage.googleapis.com/2.23/chromedriver_linux$ARCH.zip"
@@ -78,9 +78,9 @@ elif type dnf >/dev/null 2>&1; then
     $SUDO_SHIM chmod 755 /usr/bin/chromedriver
   fi
   if ! type geckodriver >/dev/null 2>&1;  then
-    curl -LO "https://github.com/mozilla/geckodriver/releases/download/v0.17.0/geckodriver-v0.17.0-macos.tar.gz"
-    tar -zxvf "geckodriver-v0.17.0-macos.tar.gz"
-    rm -f "geckodriver-v0.17.0-macos.tar.gz"
+    curl -LO "https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-macos.tar.gz"
+    tar -zxvf "geckodriver-v0.24.0-macos.tar.gz"
+    rm -f "geckodriver-v0.24.0-macos.tar.gz"
     $SUDO_SHIM mv geckodriver /usr/bin/geckodriver
     $SUDO_SHIM chown root /usr/bin/geckodriver
     $SUDO_SHIM chmod 755 /usr/bin/geckodriver
