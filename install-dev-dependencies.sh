@@ -59,7 +59,8 @@ if type apt-get>/dev/null 2>&1;  then
 # macOS installation
 elif type brew >/dev/null 2>&1; then
   brew list python &>/dev/null || brew install python
-  brew install libxml2 gnu-sed chromedriver
+  brew cask install chromedriver
+  brew install libxml2 gnu-sed
   if ! echo $PATH | grep -ql /usr/local/bin ; then
     echo '/usr/local/bin not found in $PATH, please add it.'
   fi
