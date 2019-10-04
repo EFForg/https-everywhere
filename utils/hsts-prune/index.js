@@ -182,7 +182,6 @@ const check_https_redirection_and_header_directives = (check_domain, cb) => {
 // Here we begin parsing the XML files and modifying the targets
 
 function remove_target_from_xml(source, target) {
-  let pos;
   // escape the regexp for targets that have a *
   target = escape_string_regexp(target);
 

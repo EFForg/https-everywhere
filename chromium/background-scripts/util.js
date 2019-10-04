@@ -61,6 +61,16 @@ function loadExtensionFile(url, returnType) {
 }
 
 /**
+ * Remove tailing dots from hostname, e.g. "www.example.com."
+ */
+function getNormalisedHostname(hostname) {
+  while (hostname && hostname[hostname.length - 1] === '.' && hostname !== '.') {
+    hostname = hostname.slice(0, -1);
+  }
+  return hostname;
+}
+
+/**
  * Convert an ArrayBuffer to string
  *
  * @param array: an ArrayBuffer to convert
@@ -84,6 +94,7 @@ Object.assign(exports, {
   NOTE,
   WARN,
   log,
+  getNormalisedHostname,
   setDefaultLogLevel,
   getDefaultLogLevel,
   loadExtensionFile,
