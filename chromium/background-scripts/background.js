@@ -150,8 +150,9 @@ function updateState () {
       return;
     }
     const tabUrl = new URL(tabs[0].url);
+    const hostname = util.getNormalisedHostname(tabUrl.hostname);
 
-    if (disabledList.has(tabUrl.host) || httpOnceList.has(tabUrl.host) || iconState == "disabled") {
+    if (disabledList.has(hostname) || httpOnceList.has(hostname) || iconState == "disabled") {
       if ('setIcon' in chrome.browserAction) {
         chrome.browserAction.setIcon({
           path: {
@@ -305,9 +306,7 @@ function onBeforeRequest(details) {
   let uri = new URL(details.url);
 
   // Normalise hosts with tailing dots, e.g. "www.example.com."
-  while (uri.hostname[uri.hostname.length - 1] === '.' && uri.hostname !== '.') {
-    uri.hostname = uri.hostname.slice(0, -1);
-  }
+  uri.hostname = util.getNormalisedHostname(uri.hostname);
 
   if (details.type == "main_frame") {
     // Clear the content from previous browser session.
@@ -565,7 +564,8 @@ function onHeadersReceived(details) {
     // Do not upgrade the .onion requests in EASE mode,
     // See https://github.com/EFForg/https-everywhere/pull/14600#discussion_r168072480
     const uri = new URL(details.url);
-    if (uri.hostname.slice(-6) == '.onion') {
+    const hostname = util.getNormalisedHostname(uri.hostname);
+    if (hostname.slice(-6) == '.onion') {
       return {};
     }
 
@@ -860,15 +860,15 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       return storeDisabledList('once');
     },
     disable_on_site: () => {
-      disabledList.add(message.object);
+      disabledList.add(util.getNormalisedHostname(message.object));
       return storeDisabledList('disable');
     },
     enable_on_site: () => {
-      disabledList.delete(message.object);
+      disabledList.delete(util.getNormalisedHostname(message.object));
       return storeDisabledList('enable');
     },
     check_if_site_disabled: () => {
-      sendResponse(disabledList.has(message.object));
+      sendResponse(disabledList.has(util.getNormalisedHostname(message.object)));
       return true;
     },
     is_firefox: () => {

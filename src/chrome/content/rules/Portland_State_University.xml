@@ -1,143 +1,51 @@
 <!--
-	For rules causing false/mixed MCB, see Portland_State_University-falsemixed.xml.
+	Non-functional hosts:
+		Timeout:
+		- research.pdx.edu
 
+		SSL error:
+		- mail.pdx.edu
 
-	CDN buckets:
+		Incomplete certificate chain:
+		- banweb.banner.pdx.edu
+		- banweb.pdx.edu
 
-		- pdx.libguides.com
+		Certificate mismatched:
+		- print.pdx.edu
 
-
-	Nonfunctional subdomains:
-
-		- www.experts *
-		- psu-eres.lib		(dropped)
-		- exhibits.library	(refused)
-		- my			(redirects to http)
-		- (www.)rsp *
-
-	* 404; expired 2011-04-23, self-signed, CN: eurystheus.oit.pdx.edu
-
-
-	Problematic subdomains:
-
-		- cal *
-		- www.fap		(works, expired 2013-04-20)
-		- guides.library	(libguides.com)
-		- www.library		(cert only matches ^library)
-		- mail *
-		- sa			(works, expired 2012-12-07)
-		- (www.)summer		(404; expired 2011-08-12, self-signed, CN: sisyphus.oit.pdx.edu)
-
-	* Interrupted
-
-
-	Partially covered subdomains:
-
-		- guides.library	(→ libguides.com)
-		- webdev *
-		- (www.) *
-
-	* Avoiding false/broken MCB, rest covered in Portland_State_University-falsemixed.xml
-
-
-	Fully covered subdomains:
-
-		- banweb
-		- cal		(→ www.google.com)
-		- d2l
-		- (www.)library	(www → ^)
-		- mail		(→ mail.google.com)
-		- (www.)sa	(^ → www)
-		- sso
-		- (www.)summer	(→ ^)
-		- vikat
-		- webdev
-
-
-	Observed cookie domains:
-
-		- banweb
-		- .library
-		- guides.library
-		- my
-		- sso
-		- www
-
-
-	Mixed  content:
-
-		- Scripts on webdev from webdev *
-
-		- css, on:
-
-			- webdev from webdev *
-			- www from www *
-			- www from fonts.gentooapis.com *
-
-		- Images, from:
-
-			- vikat from library *
-			- webdev from webdev *
-			- www from www *
-
-		- favicons, on:
-
-			- www.sa from www *
-			- webdev from webdev *
-
-	* Secured by us
-
-
-	webdev and www are in a separate falsemixed ruleset
-	due to mixed scripts and css from webdev and www.
-
-	NB: We secure all resources, and thus
-	falsemixed should be merged for Ffx 24.
-
+		Different content:
+		- www.library.pdx.edu
 -->
 <ruleset name="Portland State University (partial)">
+	<target host="pdx.edu" />
+	<target host="www.pdx.edu" />
+	
+	<target host="alba.pdx.edu" />
 
-	<target host="pdu.edu" />
-	<target host="*.pdu.edu" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<!--exclusion pattern="^http://(www\.)?pdu\.edu/(?!favicon\.ico|(\w+/)?(misc|sites)/|syndication/)" /-->
-		<!--<exclusion pattern="^http://webdev\.pdu\.edu/(?!css/|favicon\.ico|images/|js/)" /-->
-		<exclusion pattern="^http://(?:webdev\.|www\.)?pdu\.edu/(?!css/|favicon\.ico|images/|js/|(?:\w+/)?(?:misc|sites)/|syndication/)" />
-		<!--exclusion pattern="^http://(www\.fap|my)\.pdu\.edu/" /-->
-		<!--exclusion pattern="^http://guides\.library\.pdx\.edu/(?!css\d*/|favicon\.ico|include/|js\d*/)" /-->
-		<!--exclusion pattern="^http://my\.pdu\.edu/($|\?|favicon\.ico|sites/)" /-->
+	<target host="cat.pdx.edu" />
+	
+	<target host="d2l.pdx.edu" />
+	
+	<target host="library.pdx.edu" />
+	<target host="www.library.pdx.edu" />
+	<target host="guides.library.pdx.edu" />
+	<target host="pdxscholar.library.pdx.edu" />
+	<target host="search.library.pdx.edu" />
+	
+	<target host="oaiplus.pdx.edu" />
+	
+	<target host="publishing.pdx.edu" />
+	
+	<target host="climatecope.research.pdx.edu" />
+	<target host="wpsa.research.pdx.edu" />
+	
+	<target host="my.pdx.edu" />
+	
+	<target host="sso.pdx.edu" />
+		<test url="http://sso.pdx.edu/idp/profile/SAML2/POST/SSO" />
 
-
-	<!--securecookie host="^(?!www\.)?.+\.pdu\.edu$" name=".+" /-->
-	<securecookie host="^(?:banweb|sso|vikat)\.pdu\.edu$" name=".+" />
-	<!--
-		Could we secure any of these safely?
-							-->
-	<!--securecookie host="^\.pdu\.edu$" name="^(III_EXPT_FILE|III_SESSION_ID|SESSION_LANGUAGE)$" /-->
-	<!--securecookie host="^\.library\.pdu\.edu$" name=".+" /-->
-
-
-	<rule from="^http://((?:banweb|d2l|sso|vikat|webdev|www)\.)?pdu\.edu/"
-		to="https://$1pdu.edu/" />
-
-	<rule from="^http://cal\.pdu\.edu/.*"
-		to="https://www.google.com/calendar/hosted/pdx.edu" />
-
-	<rule from="^http://(?:www\.)?library\.pdu\.edu/"
-		to="https://library.pdu.edu/" />
-
-	<rule from="^http://guides\.library\.pdx\.edu/(?=css\d*/|favicon\.ico|include/|js\d*/)"
-		to="https://libguides.com/" />
-
-	<rule from="^http://mail\.pdu\.edu/.*"
-		to="https://mail.google.com/a/pdu.edu" />
-
-	<rule from="^http://(?:www\.)?sa\.pdu\.edu/"
-		to="https://www.sa.pdu.edu/" />
-
-	<rule from="^http://(?:www\.)?summer\.pdu\.edu/.*"
-		to="https://pdu.edu/summer" />
-
+	<rule from="^http://www\.library\.pdx\.edu/"
+		  	to="https://library.pdx.edu/" />
+	
+	<rule from="^http:" to="https:" />
 </ruleset>
