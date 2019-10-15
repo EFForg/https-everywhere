@@ -6,13 +6,13 @@ const assert = require('chai').assert,
 
 describe('utils.js', function() {
   describe('getNormalisedHostname', function() {
-    it("removes tailing dots", function() {
-      assert.strictEqual(utils.getNormalisedHostname("example.com."), "example.com");
-      assert.strictEqual(utils.getNormalisedHostname("example.com.."), "example.com");
+    it('removes tailing dots', function() {
+      assert.strictEqual(utils.getNormalisedHostname('example.com.'), 'example.com');
+      assert.strictEqual(utils.getNormalisedHostname('example.com..'), 'example.com');
     });
 
-    it("preserves a single dot", function() {
-      assert.strictEqual(utils.getNormalisedHostname("."), ".");
+    it('preserves a single dot', function() {
+      assert.strictEqual(utils.getNormalisedHostname('.'), '.');
     });
   });
 });
