@@ -35,23 +35,19 @@ async function initializeAllRules() {
  * Load preferences. Structure is:
  *  {
  *    httpNowhere: Boolean,
- *    isExtensionEnabled: Boolean
  *  }
  */
 var httpNowhereOn = false;
-var isExtensionEnabled = true;
 let disabledList = new Set();
 
 function initializeStoredGlobals() {
   return new Promise(resolve => {
     store.get({
       httpNowhere: false,
-      globalEnabled: true,
       enableMixedRulesets: false,
       disabledList: []
     }, function(item) {
       httpNowhereOn = item.httpNowhere;
-      isExtensionEnabled = item.globalEnabled;
       for (let disabledSite of item.disabledList) {
         disabledList.add(disabledSite);
       }
@@ -90,10 +86,6 @@ chrome.storage.onChanged.addListener(async function(changes, areaName) {
       httpNowhereOn = changes.httpNowhere.newValue;
       updateState();
     }
-    if ('globalEnabled' in changes) {
-      isExtensionEnabled = changes.globalEnabled.newValue;
-      updateState();
-    }
     if ('enableMixedRulesets' in changes) {
       // Don't require users to restart the browsers
       rules.settings.enableMixedRulesets = changes.enableMixedRulesets.newValue;
@@ -123,7 +115,6 @@ chrome.webNavigation.onCompleted.addListener(function() {
  * Set the icon color correctly
  * active: extension is enabled.
  * blocking: extension is in "block all HTTP requests" mode.
- * disabled: extension is disabled from the popup menu.
  */
 
 function updateState () {
@@ -131,9 +122,7 @@ function updateState () {
 
   let iconState = 'active';
 
-  if (!isExtensionEnabled) {
-    iconState = 'disabled';
-  } else if (httpNowhereOn) {
+  if (httpNowhereOn) {
     iconState = 'blocking';
   }
 
@@ -148,7 +137,7 @@ function updateState () {
     const tabUrl = new URL(tabs[0].url);
     const hostname = util.getNormalisedHostname(tabUrl.hostname);
 
-    if (disabledList.has(hostname) || iconState == "disabled") {
+    if (disabledList.has(hostname)) {
       if ('setIcon' in chrome.browserAction) {
         chrome.browserAction.setIcon({
           path: {
@@ -294,11 +283,6 @@ const newCancelUrl = originURL => `${cancelUrl}?originURL=${encodeURIComponent(o
  * @param details of the handler, see Chrome doc
  * */
 function onBeforeRequest(details) {
-  // If HTTPSe has been disabled by the user, return immediately.
-  if (!isExtensionEnabled) {
-    return;
-  }
-
   let uri = new URL(details.url);
 
   // Normalise hosts with tailing dots, e.g. "www.example.com."
@@ -438,7 +422,7 @@ function onBeforeRequest(details) {
  * @param changeInfo Cookie changed info, see Chrome doc
  * */
 function onCookieChanged(changeInfo) {
-  if (!changeInfo.removed && !changeInfo.cookie.secure && isExtensionEnabled) {
+  if (!changeInfo.removed && !changeInfo.cookie.secure) {
     if (all_rules.shouldSecureCookie(changeInfo.cookie)) {
       let cookie = {
         name:changeInfo.cookie.name,
@@ -552,7 +536,7 @@ function onErrorOccurred(details) {
  * @param details details for the chrome.webRequest (see chrome doc)
  */
 function onHeadersReceived(details) {
-  if (isExtensionEnabled && httpNowhereOn) {
+  if (httpNowhereOn) {
     // Do not upgrade the .onion requests in EASE mode,
     // See https://github.com/EFForg/https-everywhere/pull/14600#discussion_r168072480
     const uri = new URL(details.url);

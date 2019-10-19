@@ -146,37 +146,16 @@ function showHttpNowhereUI() {
   });
 };
 
-// Change the UI to reflect extension enabled/disabled
-function updateEnabledDisabledUI() {
-  getOption_('globalEnabled', true, function(item) {
-    e('onoffswitch').checked = item.globalEnabled;
-    e('disableButton').style.visibility = "visible";
-    // Hide or show the rules sections
-    if (item.globalEnabled) {
-      document.body.className = ""
-      e('onoffswitch_label').innerText = chrome.i18n.getMessage("menu_globalEnable");
-      showHttpNowhereUI();
-    } else {
-      document.body.className = "disabled";
-      e('onoffswitch_label').innerText = chrome.i18n.getMessage("menu_globalDisable");
-    }
-  });
-}
-
 // Toggle extension enabled/disabled status
 function toggleEnabledDisabled() {
   let extension_toggle_effect = function() {
-    updateEnabledDisabledUI();
+    showHttpNowhereUI();
     // The extension state changed, give some time for toggle animation and reload tab
     setTimeout(function() {
       chrome.tabs.reload();
       window.close();
     }, 1500);
   }
-
-  getOption_('globalEnabled', true, function(item) {
-    setOption_('globalEnabled', !item.globalEnabled, extension_toggle_effect);
-  });
 }
 
 /**
@@ -220,8 +199,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Set up the enabled/disabled switch & hide/show rules
-  updateEnabledDisabledUI();
-  e('onoffswitch').addEventListener('click', toggleEnabledDisabled);
+  showHttpNowhereUI();
   e('http-nowhere-checkbox').addEventListener('click', toggleHttpNowhere, false);
   e('RuleManagement__see_more--prompt').addEventListener('click', toggleSeeMore);
 
