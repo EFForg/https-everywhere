@@ -13,11 +13,6 @@ class TestNavigation(ExtensionTestCase):
         self.driver.get(kittens_url)
         self.assertTrue(self.driver.current_url.startswith('https'))
 
-    def test_no_redirect_when_disabled(self):
-        self.toggle_disabled()
-        self.driver.get(kittens_url)
-        self.assertEqual(self.driver.current_url, kittens_url)  # not https
-
     def test_httpnowhere_blocks(self):
         if self.shim.browser_type == 'firefox':
             raise unittest.SkipTest('broken on firefox')
