@@ -146,18 +146,6 @@ function showHttpNowhereUI() {
   });
 };
 
-// Toggle extension enabled/disabled status
-function toggleEnabledDisabled() {
-  let extension_toggle_effect = function() {
-    showHttpNowhereUI();
-    // The extension state changed, give some time for toggle animation and reload tab
-    setTimeout(function() {
-      chrome.tabs.reload();
-      window.close();
-    }, 1500);
-  }
-}
-
 /**
  * @description Create the list of rules for a specific tab
  * @param activeTab
