@@ -13,19 +13,6 @@ let settings = {
 // To reduce memory usage for the numerous rules/cookies with trivial rules
 const trivial_cookie_rule_c = /.+/;
 
-// Empty iterable singleton to reduce memory usage
-const nullIterable = Object.create(null, {
-  [Symbol.iterator]: {
-    value: function* () {
-      // do nothing
-    }
-  },
-
-  size: {
-    value: 0
-  },
-});
-
 /* A map of all scope RegExp objects */
 const scopes = new Map();
 
@@ -575,66 +562,45 @@ RuleSets.prototype = {
     }
 
     let results;
+    let expressions = util.getWildcardExpressions(host);
+
     if (this.wasm_rs) {
-      let pa = this.wasm_rs.potentially_applicable(host);
-      results = new Set([...pa].map(ruleset => {
-        let rs = new RuleSet(ruleset.name, ruleset.default_state, getScope(ruleset.scope), ruleset.note);
+      for (const expression of expressions) {
+        let pa = this.wasm_rs.potentially_applicable(expression);
+        results = new Set([...pa].map(ruleset => {
+          let rs = new RuleSet(ruleset.name, ruleset.default_state, getScope(ruleset.scope), ruleset.note);
 
-        if (ruleset.cookierules) {
-          let cookierules = ruleset.cookierules.map(cookierule => {
-            return new CookieRule(cookierule.host, cookierule.name);
+          if (ruleset.cookierules) {
+            let cookierules = ruleset.cookierules.map(cookierule => {
+              return new CookieRule(cookierule.host, cookierule.name);
+            });
+            rs.cookierules = cookierules;
+          } else {
+            rs.cookierules = null;
+          }
+
+          let rules = ruleset.rules.map(rule => {
+            return getRule(rule.from, rule.to);
           });
-          rs.cookierules = cookierules;
-        } else {
-          rs.cookierules = null;
-        }
+          rs.rules = rules;
 
-        let rules = ruleset.rules.map(rule => {
-          return getRule(rule.from, rule.to);
-        });
-        rs.rules = rules;
-
-        if (ruleset.exclusions) {
-          rs.exclusions = new RegExp(ruleset.exclusions);
-        } else {
-          rs.exclusions = null;
-        }
-        return rs;
-      }));
+          if (ruleset.exclusions) {
+            rs.exclusions = new RegExp(ruleset.exclusions);
+          } else {
+            rs.exclusions = null;
+          }
+          return rs;
+        }));
+      }
     } else {
       // Let's begin search
-      // Copy the host targets so we don't modify them.
       results = (this.targets.has(host) ?
         new Set([...this.targets.get(host)]) :
         new Set());
 
-      // Ensure host is well-formed (RFC 1035)
-      if (host.length <= 0 || host.length > 255 || host.indexOf("..") != -1) {
-        util.log(util.WARN, "Malformed host passed to potentiallyApplicableRulesets: " + host);
-        return nullIterable;
-      }
-
-      // Replace www.example.com with www.example.*
-      // eat away from the right for once and only once
-      let segmented = host.split(".");
-      if (segmented.length > 1) {
-        const tmp = segmented[segmented.length - 1];
-        segmented[segmented.length - 1] = "*";
-
-        results = (this.targets.has(segmented.join(".")) ?
-          new Set([...results, ...this.targets.get(segmented.join("."))]) :
-          results);
-
-        segmented[segmented.length - 1] = tmp;
-      }
-
-      // now eat away from the left, with *, so that for x.y.z.google.com we
-      // check *.y.z.google.com, *.z.google.com and *.google.com
-      for (let i = 1; i <= segmented.length - 2; i++) {
-        let t = "*." + segmented.slice(i, segmented.length).join(".");
-
-        results = (this.targets.has(t) ?
-          new Set([...results, ...this.targets.get(t)]) :
+      for (const expression of expressions) {
+        results = (this.targets.has(expression) ?
+          new Set([...results, ...this.targets.get(expression)]) :
           results);
       }
 
@@ -644,7 +610,7 @@ RuleSets.prototype = {
       util.log(util.DBUG,"Applicable rules for " + host + ":");
       if (results.size == 0) {
         util.log(util.DBUG, "  None");
-        results = nullIterable;
+        results = util.nullIterable;
       } else {
         results.forEach(result => util.log(util.DBUG, "  " + result.name));
       }
@@ -778,7 +744,6 @@ RuleSets.prototype = {
 };
 
 Object.assign(exports, {
-  nullIterable,
   settings,
   trivial_rule,
   Rule,
