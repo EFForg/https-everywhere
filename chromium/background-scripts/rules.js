@@ -562,42 +562,40 @@ RuleSets.prototype = {
     }
 
     let results;
-    let expressions = util.getWildcardExpressions(host);
 
     if (this.wasm_rs) {
-      for (const expression of expressions) {
-        let pa = this.wasm_rs.potentially_applicable(expression);
-        results = new Set([...pa].map(ruleset => {
-          let rs = new RuleSet(ruleset.name, ruleset.default_state, getScope(ruleset.scope), ruleset.note);
+      let pa = this.wasm_rs.potentially_applicable(host);
+      results = new Set([...pa].map(ruleset => {
+        let rs = new RuleSet(ruleset.name, ruleset.default_state, getScope(ruleset.scope), ruleset.note);
 
-          if (ruleset.cookierules) {
-            let cookierules = ruleset.cookierules.map(cookierule => {
-              return new CookieRule(cookierule.host, cookierule.name);
-            });
-            rs.cookierules = cookierules;
-          } else {
-            rs.cookierules = null;
-          }
-
-          let rules = ruleset.rules.map(rule => {
-            return getRule(rule.from, rule.to);
+        if (ruleset.cookierules) {
+          let cookierules = ruleset.cookierules.map(cookierule => {
+            return new CookieRule(cookierule.host, cookierule.name);
           });
-          rs.rules = rules;
+          rs.cookierules = cookierules;
+        } else {
+          rs.cookierules = null;
+        }
 
-          if (ruleset.exclusions) {
-            rs.exclusions = new RegExp(ruleset.exclusions);
-          } else {
-            rs.exclusions = null;
-          }
-          return rs;
-        }));
-      }
+        let rules = ruleset.rules.map(rule => {
+          return getRule(rule.from, rule.to);
+        });
+        rs.rules = rules;
+
+        if (ruleset.exclusions) {
+          rs.exclusions = new RegExp(ruleset.exclusions);
+        } else {
+          rs.exclusions = null;
+        }
+        return rs;
+      }));
     } else {
       // Let's begin search
       results = (this.targets.has(host) ?
         new Set([...this.targets.get(host)]) :
         new Set());
 
+      let expressions = util.getWildcardExpressions(host);
       for (const expression of expressions) {
         results = (this.targets.has(expression) ?
           new Set([...results, ...this.targets.get(expression)]) :
