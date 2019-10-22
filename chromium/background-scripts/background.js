@@ -7,7 +7,7 @@ const rules = require('./rules'),
   incognito = require('./incognito'),
   util = require('./util'),
   update = require('./update'),
-  ssl_codes = require('./sslcodes'),
+  ssl_codes = require('./ssl_codes'),
   { update_channels } = require('./update_channels'),
   wasm = require('./wasm');
 
