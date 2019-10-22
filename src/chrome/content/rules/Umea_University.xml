@@ -1,51 +1,47 @@
 <!--
-	Nonfunctional subdomains:
+	Non-functional hosts
+		Couldn't connect to server:
+		- dp.foark.umu.se
 
-		- ftp.acc	(refused)
-		- dp.foark *
-		- www.foark *
-		- support.its **
-		- (www.)ub **
-		- ovik.ub **
+		Timeout was reached:
+		- www.anstalld.umu.se
+		- intra.ub.umu.se
 
-	* Shows RHEL test page; self-signed, CN: localhost.localdomain
-	** Dropped
-
-
-	Partially covered subdomains:
-
-		- (www.) *
-		- (www.)student *
-
-	* Some pages redirect to http
-
-
-	Fully covered subdomains:
-
-		- (www.)anstalld
-		- www.cambro
-		- cas
-		- (www.)servicedesk.its
-		- intra.ub
-
+		SSL peer certificate was not OK:
+		- its.umu.se
+		- student.umu.se
+		- www.student.umu.se
 -->
 <ruleset name="Umeå University (partial)">
-
 	<target host="umu.se" />
-	<target host="*.umu.se" />
-		<exclusion pattern="^http://(?:www\.)?(?:student\.)?umu\.se/(?!digitalAssets/|DownloadAsset\.action(?:$|\?)|static/)" />
+	<target host="www.umu.se" />
+	
+	<target host="ftp.acc.umu.se" />
+	<target host="adfs.umu.se" />
+	
+	<target host="www.cambro.umu.se" />
+	<target host="cas.umu.se" />
+	<target host="cs.umu.se" />
+	<target host="people.cs.umu.se" />
+	<test url="http://people.cs.umu.se/virginia/" />
+	<target host="support.cs.umu.se" />
+	<target host="webapps.cs.umu.se" />
+	<target host="www.cs.umu.se" />
+	
+	<target host="foark.umu.se" />
+	<target host="www.foark.umu.se" />
+	
+	<target host="infocenter.umu.se" />
+	<target host="www.infocenter.umu.se" />
+	
+	<target host="servicedesk.its.umu.se" />
+	<target host="www.servicedesk.its.umu.se" />
+	
+	<target host="ub.umu.se" />
+	<target host="ovik.ub.umu.se" />
+	<target host="www.ub.umu.se" />
 
+	<securecookie host=".+" name=".+" />
 
-	<securecookie host="^(?:(?:www\.)?anstalld|www\.cambro|cas|(?:www\.)?servicedesk\.its)\.umu\.se$" name=".+" />
-
-
-	<rule from="^http://((?:www\.cambro|cas|intra\.ub|www)\.?)umu\.se/"
-		to="https://$1umu.se/" />
-
-	<!--	Domains for which both ^foo and www.foo
-		exist, and both work without caveat:
-							-->
-	<rule from="^http://(www\.)?(anstalld|servicesdesk\.its|student)\.umu\.se/"
-		to="https://$1$2.umu.se/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

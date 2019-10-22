@@ -1,148 +1,63 @@
 <!--
-	For rules causing (valid) MCB, see UNC.edu-mixedcontent.xml.
-
 	Other University of North Carolina at Chapel Hill rulesets:
+		+ UNC_Lineberger.org.xml
 
-		- UNC_Lineberger.org.xml
+	Non-functional hosts
+		Timeout was reached:
+		- itsapps.unc.edu
 
-
-	Nonfunctional subdomains:
-
-		- heelmail ¹
-		- hrconnect ²
-		- studentcentral ³
-
-	¹ Dropped
-	² 404, valid cert
-	³ Redirects to a nonexistent domain
-
-
-	Problematic subdomains:
-
-		- calendar.lib *
-
-	* Works; mismatched, CN: *.libcal.com
-
-
-	Partially covered subdomains:
-
-		- ^ ¹
-		- ccinfo ¹
-		- cmsp ¹
-		- cs ¹
-		- diversity ¹
-		- events ¹
-		- financeadmin ¹
-		- global ¹
-		- help ¹
-		- hr ¹
-		- its ¹
-		- its-commons ¹
-		- (www.)library ²
-		- www.onecard ¹
-		- www.pid ¹
-		- research ¹
-
-	¹ At least some pages redirect to http
-	² Avoiding false/broken MCB
-
-
-	Fully covered subdomains:
-
-		- ccpa
-		- connectcarolina
-		- dir
-		- directory
-		- infoporte
-		- itsapps
-		- obi
-		- onecard
-		- onyen
-		- pid
-		- search
-		- selfservice
-
-		- sites subdomains:
-
-			- cs
-			- events
-			- global
-			- help
-			- its2
-			- its-commons
-
-		- sso
-		- webservices
-		- diversity.web
-		- www
-
-
-	These altnames don't exist:
-
+		SSL peer certificate was not OK:
 		- www.financeadmin.unc.edu
-		- www.itsapps.unc.edu
-
-
-	Mixed content:
-
-		- iframe on library from calendar.lib ¹
-
-		- css, on:
-
-			- library from $self ²
-			- library from autosuggest.trln.org ³
-
-		- Images, on:
-
-			- library from $self ²
-			- library from blogs.lib ²
-
-	¹ Unsecurable <= redirects back from unc.libcal.com
-	² Secured by us
-	³ Unsecurable <= redirects to another domain
-
+		- www.library.unc.edu
+		- www.onecard.unc.edu
+		- www.pid.unc.edu
 -->
 <ruleset name="UNC.edu (partial)">
+	<target host="unc.edu" />
+	<target host="www.unc.edu" />
 
-	<target host="*.unc.edu" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://((cmsp|cs|events|financeadmin|global|help|hr|its|its-commons|www\.pid|research)\.)?unc\.edu/+($|\?)" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://(?:(?:cmsp|cs|events|global|help|hr|its|its-commons|research)\.)?unc\.edu/+(?!favicon\.ico|files/|wp-content/|wp-includes/)" />
-		<exclusion pattern="^http://(?:financeadmin|www\.(?:onecard|pid))\.unc\.edu/+(?!DesktopModules/|[Pp]ortals/|UNCImages/|favicon\.ico|images/|uncimages/|spacer\.gif)" />
-		<!--
-			Avoid valid MCB:
-						-->
-		<exclusion pattern="^http://library\.unc\.edu/+(?!favicon\.ico|wp-content/|wp-includes/)" />
+	<target host="ccinfo.unc.edu" />
+	<target host="cmsp.unc.edu" />
+	<target host="connectcarolina.unc.edu" />
+	<target host="cs.unc.edu" />
 
+	<target host="dir.unc.edu" />
+	<target host="directory.unc.edu" />
+	<target host="diversity.unc.edu" />
+	
+	<target host="enterprises.unc.edu" />
+	<target host="events.unc.edu" />
 
-	<!--	Secured by server:
-					-->
-	<!--securecookie host="^sso\.unc\.edu$" name="^(JSESSIONID|_idp_authn_lc_key)" /-->
-	<!--
-		Not secured by server:
-					-->
-	<!--securecookie host="^(\.ccpa|connectcarolina|my)\.unc\.edu$" name="^BIGipServerERPweb-pplsoft-Prod$" /-->
-	<!--securecookie host="^(dir|directory|obi)\.unc\.edu$" name="^BIGipServerERPweb-companion-Prod$" /-->
-	<!--securecookie host="^infoporte\.unc\.edu$" name="^PHPSESSID$" /-->
-	<!--securecookie host="^itsapps\.unc\.edu$" name="^(BIGipServer~Middleware~itsapps_80|JSESSIONID)$" /-->
-	<!--securecookie host="^(www\.)?library\.unc\.edu$" name="^(PHPSESSID|bb2_screener_)" /-->
-	<!--securecookie host="^(www\.)?(onecard|pid)\.unc\.edu$" name="^dnn_IsMobile$" /-->
-	<!--securecookie host="^onyen\.unc\.edu$" name="^BIGipServer~Middleware~onyen_prod_81$" /-->
-	<!--securecookie host="^(search|(events|global|help|its2|its-commons)\.sites|diversity\.web|webservices)\.unc\.edu$" name="^BIGipServer~Middleware~sitesprod_80$" /-->
-	<!--securecookie host="^selfservice\.unc\.edu$" name="^BIGipServermyad_http_pool$" /-->
+	<target host="financeadmin.unc.edu" />
 
-	<securecookie host="^(?:connectcarolina|dir|directory|infoporte|itsapps|onecard|onyen|pid|search|selfservice|(?:events|global|help|its2|its-commons)\.sites|diversity\.web|webservices)\.unc\.edu$" name=".+" />
+	<target host="global.unc.edu" />
 
+	<target host="heelmail.unc.edu" />
+	<target host="help.unc.edu" />
+	<target host="hr.unc.edu" />
 
-	<rule from="^http://((?:ccinfo|ccpa|cmsp|connectcarolina(?:www\.)?cs|dir|directory|diversity|financeadmin|help|hr|infoporte|its|itsapps|its-commons|blogs\.lib|(?:www\.)?library|my|obi|(?:www\.)?onecard|onyen|(?:www\.)?pid|research|search|selfservice|(?:cs|events|global|help|its2|its-commons)\.sites|sso|diversity\.web|webservices|www)\.)?unc\.edu/"
-		to="https://$1unc.edu/" />
+	<target host="infoporte.unc.edu" />
+	<target host="its.unc.edu" />
+	<target host="its-commons.unc.edu" />
 
-	<rule from="^http://calendar\.lib\.unc\.edu/(?=css\d+|images/)"
-		to="https://unc.libcal.com/" />
+	<target host="calendar.lib.unc.edu" />
+	<target host="library.unc.edu" />
 
+	<target host="onecard.unc.edu" />
+	<target host="onyen.unc.edu" />
+
+	<target host="pid.unc.edu" />
+
+	<target host="research.unc.edu" />
+
+	<target host="search.unc.edu" />
+	<target host="selfservice.unc.edu" />
+	<target host="sso.unc.edu" />
+
+	<target host="diversity.web.unc.edu" />
+	<target host="webservices.unc.edu" />
+	
+	<securecookie host=".+" name=".+" />
+
+	<rule from="^http:" to="https:" />
 </ruleset>

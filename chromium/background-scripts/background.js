@@ -523,7 +523,6 @@ function onErrorOccurred(details) {
       details.error.indexOf("NS_ERROR_CONNECTION_REFUSED") == 0 ||
       details.error.indexOf("NS_ERROR_NET_TIMEOUT") == 0 ||
       details.error.indexOf("NS_ERROR_NET_ON_TLS_HANDSHAKE_ENDED") == 0 ||
-      details.error.indexOf("NS_BINDING_ABORTED") == 0 ||
       details.error.indexOf("SSL received a record that exceeded the maximum permissible length.") == 0 ||
       details.error.indexOf("Peer’s Certificate has expired.") == 0 ||
       details.error.indexOf("Unable to communicate securely with peer: requested domain name does not match the server’s certificate.") == 0 ||
