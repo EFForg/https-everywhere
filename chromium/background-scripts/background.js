@@ -7,6 +7,7 @@ const rules = require('./rules'),
   incognito = require('./incognito'),
   util = require('./util'),
   update = require('./update'),
+  ssl_codes = require('./sslcodes'),
   { update_channels } = require('./update_channels'),
   wasm = require('./wasm');
 
@@ -514,28 +515,9 @@ function onErrorOccurred(details) {
   if (httpNowhereOn &&
     details.type == "main_frame" &&
     browserSession.getRequest(details.requestId, "simple_http_nowhere_redirect", false) &&
-    ( // Enumerate a class of errors that are likely due to HTTPS misconfigurations
-      details.error.indexOf("net::ERR_SSL_") == 0 ||
-      details.error.indexOf("net::ERR_CERT_") == 0 ||
-      details.error.indexOf("net::ERR_CONNECTION_") == 0 ||
-      details.error.indexOf("net::ERR_ABORTED") == 0 ||
-      details.error.indexOf("net::ERR_SSL_PROTOCOL_ERROR") == 0 ||
-      details.error.indexOf("NS_ERROR_CONNECTION_REFUSED") == 0 ||
-      details.error.indexOf("NS_ERROR_NET_TIMEOUT") == 0 ||
-      details.error.indexOf("NS_ERROR_NET_ON_TLS_HANDSHAKE_ENDED") == 0 ||
-      details.error.indexOf("SSL received a record that exceeded the maximum permissible length.") == 0 ||
-      details.error.indexOf("Peer’s Certificate has expired.") == 0 ||
-      details.error.indexOf("Unable to communicate securely with peer: requested domain name does not match the server’s certificate.") == 0 ||
-      details.error.indexOf("Peer’s Certificate issuer is not recognized.") == 0 ||
-      details.error.indexOf("Peer’s Certificate has been revoked.") == 0 ||
-      details.error.indexOf("Peer reports it experienced an internal error.") == 0 ||
-      details.error.indexOf("The server uses key pinning (HPKP) but no trusted certificate chain could be constructed that matches the pinset. Key pinning violations cannot be overridden.") == 0 ||
-      details.error.indexOf("SSL received a weak ephemeral Diffie-Hellman key in Server Key Exchange handshake message.") == 0 ||
-      details.error.indexOf("The certificate was signed using a signature algorithm that is disabled because it is not secure.") == 0 ||
-      details.error.indexOf("Unable to communicate securely with peer: requested domain name does not match the server’s certificate.") == 0 ||
-      details.error.indexOf("Cannot communicate securely with peer: no common encryption algorithm(s).") == 0 ||
-      details.error.indexOf("SSL peer has no certificate for the requested DNS name.") == 0
-    )) {
+    // Enumerate a class of errors that are likely due to HTTPS misconfigurations
+    ssl_codes.error_list.includes(details.error)
+    ) {
     let url = new URL(details.url);
     if (url.protocol == "https:") {
       url.protocol = "http:";
