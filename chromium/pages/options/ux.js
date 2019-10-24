@@ -301,10 +301,6 @@ document.addEventListener("DOMContentLoaded", () => {
   getOption_("disabledList", [], function(item) {
     let rule_host_parent = e("disabled-rules-wrapper");
 
-    if( 0 === item.disabledList.length ) {
-      hide(rule_host_parent);
-      return;
-    }
     // img element "remove button"
     let templateRemove = document.createElement("img");
     templateRemove.src = chrome.runtime.getURL("images/remove.png");
@@ -328,6 +324,18 @@ document.addEventListener("DOMContentLoaded", () => {
           sendMessage("enable_on_site", key);
         });
       }
+    }
+  });
+
+  const add_disabled_site = document.getElementById("add-disabled-site");
+  const disabled_site_input = document.getElementById("disabled-site");
+  disabled_site_input.setAttribute("placeholder", chrome.i18n.getMessage("options_enterDisabledSite"));
+
+  add_disabled_site.addEventListener("click", function() {
+    if (disabled_site_input.value !== "") {
+      sendMessage("disable_on_site", disabled_site_input.value, function() {
+        chrome.tabs.reload();
+      });
     }
   });
 
