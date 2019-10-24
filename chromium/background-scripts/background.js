@@ -8,7 +8,8 @@ const rules = require('./rules'),
   util = require('./util'),
   update = require('./update'),
   { update_channels } = require('./update_channels'),
-  wasm = require('./wasm');
+  wasm = require('./wasm'),
+  ipUtils = require('./ip_utils');
 
 
 let all_rules = new rules.RuleSets();
@@ -304,6 +305,14 @@ function onBeforeRequest(details) {
   // Normalise hosts with tailing dots, e.g. "www.example.com."
   uri.hostname = util.getNormalisedHostname(uri.hostname);
 
+  let ip = ipUtils.parseIp(details.hostname);
+
+  let isLocalIp = false;
+
+  if (ip !== -1) {
+    isLocalIp = ipUtils.isLocalIp(ip);
+  }
+
   if (details.type == "main_frame") {
     // Clear the content from previous browser session.
     // This needed to be done before this listener returns,
@@ -327,9 +336,8 @@ function onBeforeRequest(details) {
     (uri.protocol === 'http:' || uri.protocol === 'ftp:') &&
     uri.hostname.slice(-6) !== '.onion' &&
     uri.hostname !== 'localhost' &&
-    !/^127(\.[0-9]{1,3}){3}$/.test(uri.hostname) &&
-    uri.hostname !== '0.0.0.0' &&
-    uri.hostname !== '[::1]';
+    uri.hostname !== '[::1]' &&
+    !isLocalIp;
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
