@@ -110,8 +110,8 @@ function getWildcardExpressions(host) {
 
   // now eat away from the left, with *, so that for x.y.z.google.com we
   // check *.y.z.google.com, *.z.google.com and *.google.com
-  for (let i = 1; i <= segmented.length - 2; i++) {
-    const tmp = "*." + segmented.slice(i, segmented.length).join(".");
+  for (let i = 1; i < segmented.length - 1; i++) {
+    const tmp = ["*", ...segmented.slice(i, segmented.length)].join(".");
     results.push(tmp);
   }
   return results;
