@@ -117,7 +117,16 @@ if (chrome.windows) {
   });
 
   // Grant access to HTTP site only during session, clear once window is closed
-  chrome.windows.onRemoved.addListener( () => httpOnceList.clear() );
+  chrome.windows.onRemoved.addListener(function() {
+    chrome.windows.getAll({}, function(windows) {
+      if(windows.length > 0) {
+        return;
+      } else {
+        httpOnceList.clear();
+      }
+    });
+  });
+
 }
 chrome.webNavigation.onCompleted.addListener(function() {
   updateState();
@@ -320,9 +329,8 @@ function onBeforeRequest(details) {
     browserSession.putTab(details.tabId, 'first_party_host', uri.host, true);
   }
 
-  if (
-    disabledList.has(browserSession.getTab(details.tabId, 'first_party_host', null)) || 
-    httpOnceList.has(browserSession.getTab(details.tabId, 'first_party_host', null))) 
+  if (disabledList.has(browserSession.getTab(details.tabId, 'first_party_host', null)) ||
+    httpOnceList.has(browserSession.getTab(details.tabId, 'first_party_host', null)))
   {
     return;
   }
@@ -571,9 +579,8 @@ function onHeadersReceived(details) {
 
     // Do not upgrade resources if the first-party domain disbled EASE mode
     // This is needed for HTTPS sites serve mixed content and is broken
-    if (
-    disabledList.has(browserSession.getTab(details.tabId, 'first_party_host', null)) ||
-    httpOnceList.has(browserSession.getTab(details.tabId, 'first_party_host', null))) 
+    if (disabledList.has(browserSession.getTab(details.tabId, 'first_party_host', null)) ||
+      httpOnceList.has(browserSession.getTab(details.tabId, 'first_party_host', null)))
     {
       return {};
     }
@@ -669,7 +676,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     const disabledListArray = Array.from(disabledList);
     const httpOnceListArray = Array.from(httpOnceList);
 
-    if ('once' === message) {
+    if (message === 'once') {
       store.set({httpOnceList: httpOnceListArray}, () => {
         sendResponse(true);
       });
@@ -900,6 +907,7 @@ function destroy_caches() {
   all_rules.ruleCache.clear();
   rules.settings.domainBlacklist.clear();
   urlBlacklist.clear();
+  httpOnceList.clear();
 }
 
 Object.assign(exports, {
