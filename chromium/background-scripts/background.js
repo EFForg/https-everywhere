@@ -339,8 +339,7 @@ function onBeforeRequest(details) {
   }
 
   if (disabledList.has(browserSession.getTab(details.tabId, 'first_party_host', null)) ||
-    httpOnceList.has(browserSession.getTab(details.tabId, 'first_party_host', null)))
-  {
+    httpOnceList.has(browserSession.getTab(details.tabId, 'first_party_host', null))) {
     return;
   }
 
@@ -587,8 +586,7 @@ function onHeadersReceived(details) {
     // Do not upgrade resources if the first-party domain disbled EASE mode
     // This is needed for HTTPS sites serve mixed content and is broken
     if (disabledList.has(browserSession.getTab(details.tabId, 'first_party_host', null)) ||
-      httpOnceList.has(browserSession.getTab(details.tabId, 'first_party_host', null)))
-    {
+      httpOnceList.has(browserSession.getTab(details.tabId, 'first_party_host', null))) {
       return {};
     }
 
