@@ -9,6 +9,12 @@ describe('ip_utils.js', () => {
     it('rejects an empty string', () => {
       assert(parseIp('') === -1);
     });
+    
+    it('rejects a string consisting a hostname', () => {
+      assert(parseIp('example.com') === -1);
+      assert(parseIp('www.example.com') === -1);
+      assert(parseIp('www.example.com.') === -1);
+    });
 
     it('rejects a string consisting entirely of dots', () => {
       assert(parseIp('.') === -1);
