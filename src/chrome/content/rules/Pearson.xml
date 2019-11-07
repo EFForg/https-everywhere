@@ -1,59 +1,42 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://register.pearsoncmg.com/ => https://register.pearsoncmg.com/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
 	Other Pearson rulesets:
+		- InformIT.com.xml
 
-		- InformIT.xml
+	Non-functional hosts
+		SSL peer certificate was not OK:
+		- thelearningcurve.pearson.com
+		- pearsoncmg.com
+		- www.pearsoncmg.com
+		- vue.com
+		- www.vue.com
+		- www8.vue.com
 
+		Incomplete certificate chain error:
+		- pearson.com
 
-	Nonfunctional domains:
-
-		- pearson.com subdomains:
-
-			- (www.) *
-			- blog *
-			- cr2012		(dropped)
-			- thelearningcurve	(refused)
-
-	* http reply
-
-
-	Fully covered domains:
-
+		Redirects to HTTP:
 		- developer.pearson.com
-		- neo.pearson.com
-		- register.pearsoncmg.com
-		- (www.)pearsonvue.com *
-		- www8.pearsonvue.com
-		- (www.)vue.com *
-
-	* → www8.pearsonvue.com
-
 -->
-<ruleset name="Pearson (partial)" platform="mixedcontent">
+<ruleset name="Pearson (partial)">
+	<!-- *.pearson.com -->
+	<target host="pearson.com" />
+	<target host="www.pearson.com" />
+	<target host="cr2012.pearson.com" />
+	<target host="neo.pearson.com" />
 
-	<target host="*.pearson.com" />
+	<!-- *.pearsoncmg.com -->
 	<target host="register.pearsoncmg.com" />
+		<test url="http://register.pearsoncmg.com/userprofile" />
+
+	<!-- *.pearsonvue.com -->
 	<target host="pearsonvue.com" />
-	<target host="*.pearsonvue.com" />
-	<target host="vue.com" />
-	<target host="www.vue.com" />
+	<target host="www.pearsonvue.com" />
+	<target host="www8.pearsonvue.com" />
 
+	<securecookie host=".+" name=".+" />
 
-	<securecookie host="^\.?(?:developer|neo)\.pearson\.com$" name=".+" />
-	<securecookie host="^register\.pearsoncmg\.com$" name=".+" />
-	<securecookie host="^www8\.pearsonvue\.com$" name=".+" />
+	<rule from="^http://pearson\.com/"
+		to="https://www.pearson.com/" />
 
-
-	<rule from="^http://(developer|neo)\.pearson\.com/"
-		to="https://$1.pearson.com/" />
-
-	<rule from="^http://register\.pearsoncmg\.com/"
-		to="https://register.pearsoncmg.com/" />
-
-	<!--	Should this always go to www8?  Some other numbers work too.
-										-->
-	<rule from="^http://(?:www8?\.)?(?:pearson)?vue\.com/"
-		to="https://www8.pearsonvue.com/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

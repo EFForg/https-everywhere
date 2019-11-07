@@ -26,18 +26,29 @@ function replaceLink(explainer) {
 }
 
 function displayURL() {
-  const cancelURL = new URL(window.location.href);
-  const originURL = decodeURI(cancelURL.searchParams.get('originURL'));
+  const searchParams = new URLSearchParams(window.location.search);
+  const originURL = searchParams.get('originURL');
   const originURLLink = document.getElementById('url-value');
   const openURLButton = document.getElementById('open-url-button');
+  const openHttpOnce = document.getElementById('http-once-button');
+  const url = new URL(originURL);
 
-  originURLLink.innerHTML = originURL;
+  originURLLink.innerText = originURL;
   originURLLink.href = originURL;
 
   openURLButton.addEventListener("click", function() {
     if (confirm(chrome.i18n.getMessage("chrome_disable_on_this_site") + '?')) {
-      const url = new URL(originURL);
       sendMessage("disable_on_site", url.host, () => {
+        window.location = originURL;
+      });
+    }
+
+    return false;
+  });
+
+  openHttpOnce.addEventListener("click", function() {
+    if (confirm(chrome.i18n.getMessage("chrome_disable_on_this_site") + '?')) {
+      sendMessage("disable_on_site_once", url.host, () => {
         window.location = originURL;
       });
     }

@@ -1,58 +1,46 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://usfsp.edu/ => https://usfsp.edu/: (51, "SSL: no alternative certificate subject name matches target host name 'usfsp.edu'")
+	For University of South Florida Saint Petersburg see USFSP.edu.xml
 
-Disabled by https-everywhere-checker because:
-Fetch error: http://usfsp.edu/ => https://usfsp.edu/: (51, "SSL: no alternative certificate subject name matches target host name 'usfsp.edu'")
-	For problematic rules, see University-of-South-Florida-mismatches.xml.
-
-
-	Nonfunctional usf.edu subdomains:
-
-		- (www.)		(times out)
-		- directory.acomp	(cert: netid.usf.edu; redirects there)
-		- it			(expired, self-signed; 301s to rc.blog.usf.edu/domain-not-found/)
-		- guides.lib		(cert: libguides.com; 404)
-		- (www.)nelson
-		- news
-		- (www.)research
+	Mismatched:
+		- directory.acomp
+		- it
 		- system
-		- tap			(expired, self-signed; 301s to rc.blog.usf.edu/domain-not-found/)
 
+	Refused:
+		- news
+
+	Timeout:
+		- tap
+
+	Incomplete certificate chain:
+		- lib
+
+	SSL configuration error:
+		- usfweb2 (see https://www.ssllabs.com/ssltest/analyze.html?d=usfweb2.usf.edu)
 -->
-<ruleset name="University of South Florida (partial)" default_off="failed ruleset test">
+<ruleset name="University of South Florida (partial)">
+	<target host="usf.edu" />
+	<target host="www.usf.edu" />
+	<target host="it.usf.edu" />
+	<target host="lib.usf.edu" />
+	<target host="www.lib.usf.edu" />
+	<target host="guides.lib.usf.edu" />
+	<target host="my.usf.edu" />
+	<target host="mysites.usf.edu" />
+	<target host="netid.usf.edu" />
+	<target host="news.usf.edu" />
+	<target host="research.usf.edu" />
+	<target host="www.research.usf.edu" />
+	<target host="system.usf.edu" />
+	<target host="webauth.usf.edu" />
 
-	<target host="*.usf.edu" />
-	<target host="usfsp.edu" />
-	<target host="*.usfsp.edu" />
+	<!-- .* removes the path to match website's own 301 redirect -->
+	<rule from="^http://(it|news|system)\.usf\.edu/.*" to="https://www.usf.edu/$1" />
+	<test url="http://it.usf.edu/abcdef" />
+	<test url="http://news.usf.edu/abcdef" />
+	<test url="http://system.usf.edu/abcdef" />
 
+	<rule from="^http://lib\.usf\.edu/" to="https://www.lib.usf.edu/" />
 
-	<!--	Not handling cross-domain cookies as a precaution.	-->
-	<securecookie host="^(?:\w.*\.)?usf(?:sp)?\.edu$" name=".+" />
-
-
-	<!--	Cert only matches www.lib.
-						-->
-	<rule from="^http://(?:www\.)?lib\.usf\.edu/"
-		to="https://www.lib.usf.edu/" />
-
-	<rule from="^http://(my|mysites|netid|usfsts|usfweb2|webauth)\.usf\.edu/"
-		to="https://$1.usf.edu/" />
-
-	<!--	- Cert doesn't match
-		- Redirects like so
-				-->
-	<rule from="^http://(?:www\.)?stpete\.usf\.edu/"
-		to="https://www.usfsp.edu/" />
-
-	<rule from="^http://((?:dev|vpn|www)\.)?usfsp\.edu/"
-		to="https://$1usfsp.edu/" />
-
-	<!--	- Cert only matches sharemypc.stpete.usf
-		- Data appear identical
-				-->
-	<rule from="^http://sharemypc\.(?:stpete\.usf|usfsp)\.edu/"
-		to="https://sharemypc.stpete.usf.edu/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
