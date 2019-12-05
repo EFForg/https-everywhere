@@ -8,7 +8,8 @@ const rules = require('./rules'),
   util = require('./util'),
   update = require('./update'),
   { update_channels } = require('./update_channels'),
-  wasm = require('./wasm');
+  wasm = require('./wasm'),
+  ipUtils = require('./ip_utils');
 
 
 let all_rules = new rules.RuleSets();
@@ -41,11 +42,17 @@ async function initializeAllRules() {
 var httpNowhereOn = false;
 var isExtensionEnabled = true;
 let disabledList = new Set();
+let httpOnceList = new Set();
 
 /**
  * Check if HTTPS Everywhere should be ON for host
  */
 function isExtensionDisabledOnSite(host) {
+  // make sure the host is not matched in the httpOnceList
+  if (httpOnceList.has(host)) {
+    return true;
+  }
+  
   // make sure the host is not matched in the disabledList
   if (disabledList.has(host)) {
     return true;
@@ -58,6 +65,8 @@ function isExtensionDisabledOnSite(host) {
       return true;
     }
   }
+  
+  // otherwise return false
   return false;
 }
 
@@ -133,6 +142,18 @@ if (chrome.windows) {
   chrome.windows.onFocusChanged.addListener(function() {
     updateState();
   });
+
+  // Grant access to HTTP site only during session, clear once window is closed
+  chrome.windows.onRemoved.addListener(function() {
+    chrome.windows.getAll({}, function(windows) {
+      if(windows.length > 0) {
+        return;
+      } else {
+        httpOnceList.clear();
+      }
+    });
+  });
+
 }
 chrome.webNavigation.onCompleted.addListener(function() {
   updateState();
@@ -322,6 +343,14 @@ function onBeforeRequest(details) {
   // Normalise hosts with tailing dots, e.g. "www.example.com."
   uri.hostname = util.getNormalisedHostname(uri.hostname);
 
+  let ip = ipUtils.parseIp(details.hostname);
+
+  let isLocalIp = false;
+
+  if (ip !== -1) {
+    isLocalIp = ipUtils.isLocalIp(ip);
+  }
+
   if (details.type == "main_frame") {
     // Clear the content from previous browser session.
     // This needed to be done before this listener returns,
@@ -345,9 +374,8 @@ function onBeforeRequest(details) {
     (uri.protocol === 'http:' || uri.protocol === 'ftp:') &&
     uri.hostname.slice(-6) !== '.onion' &&
     uri.hostname !== 'localhost' &&
-    !/^127(\.[0-9]{1,3}){3}$/.test(uri.hostname) &&
-    uri.hostname !== '0.0.0.0' &&
-    uri.hostname !== '[::1]';
+    uri.hostname !== '[::1]' &&
+    !isLocalIp;
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
@@ -671,11 +699,21 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     });
   }
 
-  function storeDisabledList() {
+  function storeDisabledList(message) {
+
     const disabledListArray = Array.from(disabledList);
-    store.set({disabledList: disabledListArray}, () => {
-      sendResponse(true);
-    });
+    const httpOnceListArray = Array.from(httpOnceList);
+
+    if (message === 'once') {
+      store.set({httpOnceList: httpOnceListArray}, () => {
+        sendResponse(true);
+      });
+    } else {
+      store.set({disabledList: disabledListArray}, () => {
+        sendResponse(true);
+      });
+    }
+
     return true;
   }
 
@@ -852,17 +890,22 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       });
       return true;
     },
+    disable_on_site_once: () => {
+      httpOnceList.add(message.object);
+      return storeDisabledList('once');
+    },
     disable_on_site: () => {
       const host = util.getNormalisedHostname(message.object);
+      // always validate hostname before adding it to the disabled list
       if (util.isValidHostname(host)) {
         disabledList.add(host);
-        return storeDisabledList();
+        return storeDisabledList('disable');
       }
       return sendResponse(false);
     },
     enable_on_site: () => {
       disabledList.delete(util.getNormalisedHostname(message.object));
-      return storeDisabledList();
+      return storeDisabledList('enable');
     },
     check_if_site_disabled: () => {
       return sendResponse(isExtensionDisabledOnSite(util.getNormalisedHostname(message.object)));
@@ -896,6 +939,7 @@ function destroy_caches() {
   all_rules.ruleCache.clear();
   rules.settings.domainBlacklist.clear();
   urlBlacklist.clear();
+  httpOnceList.clear();
 }
 
 Object.assign(exports, {
