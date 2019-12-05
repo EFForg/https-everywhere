@@ -52,7 +52,7 @@ function isExtensionDisabledOnSite(host) {
   if (httpOnceList.has(host)) {
     return true;
   }
-  
+
   // make sure the host is not matched in the disabledList
   if (disabledList.has(host)) {
     return true;
@@ -65,7 +65,7 @@ function isExtensionDisabledOnSite(host) {
       return true;
     }
   }
-  
+
   // otherwise return false
   return false;
 }
