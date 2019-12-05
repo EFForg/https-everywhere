@@ -84,12 +84,22 @@ const nullIterable = Object.create(null, {
 });
 
 /**
+ * Return true if host is well-formed (RFC 1035)
+ */
+function isValidHostname(host) {
+  if (host && host.length > 0 && host.length <= 255 && host.indexOf("..") === -1) {
+    return true;
+  }
+  return false;
+}
+
+/**
  * Return a list of wildcard expressions which support
  * the host under HTTPS Everywhere's implementation
  */
 function getWildcardExpressions(host) {
   // Ensure host is well-formed (RFC 1035)
-  if (host.length <= 0 || host.length > 255 || host.indexOf("..") != -1) {
+  if (!isValidHostname(host)) {
     return nullIterable;
   }
 
@@ -142,6 +152,7 @@ Object.assign(exports, {
   WARN,
   log,
   nullIterable,
+  isValidHostname,
   getNormalisedHostname,
   getWildcardExpressions,
   setDefaultLogLevel,

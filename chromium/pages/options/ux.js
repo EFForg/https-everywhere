@@ -332,11 +332,11 @@ document.addEventListener("DOMContentLoaded", () => {
   disabled_site_input.setAttribute("placeholder", chrome.i18n.getMessage("options_enterDisabledSite"));
 
   add_disabled_site.addEventListener("click", function() {
-    if (disabled_site_input.value !== "") {
-      sendMessage("disable_on_site", disabled_site_input.value, function() {
+    sendMessage("disable_on_site", disabled_site_input.value, okay => {
+      if (okay) {
         chrome.tabs.reload();
-      });
-    }
+      }
+    });
   });
 
   add_update_channel.addEventListener("click", () => {

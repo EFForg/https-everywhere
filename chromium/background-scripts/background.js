@@ -42,6 +42,25 @@ var httpNowhereOn = false;
 var isExtensionEnabled = true;
 let disabledList = new Set();
 
+/**
+ * Check if HTTPS Everywhere should be ON for host
+ */
+function isExtensionDisabledOnSite(host) {
+  // make sure the host is not matched in the disabledList
+  if (disabledList.has(host)) {
+    return true;
+  }
+
+  // make sure the host is matched by any wildcard expressions in the disabledList
+  const experessions = util.getWildcardExpressions(host);
+  for (const expression of experessions) {
+    if (disabledList.has(expression)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function initializeStoredGlobals() {
   return new Promise(resolve => {
     store.get({
@@ -148,7 +167,7 @@ function updateState () {
     const tabUrl = new URL(tabs[0].url);
     const hostname = util.getNormalisedHostname(tabUrl.hostname);
 
-    if (disabledList.has(hostname) || iconState == "disabled") {
+    if (isExtensionDisabledOnSite(hostname) || iconState == "disabled") {
       if ('setIcon' in chrome.browserAction) {
         chrome.browserAction.setIcon({
           path: {
@@ -177,7 +196,6 @@ chrome.browserAction.onClicked.addListener(e => {
     url
   });
 });
-
 
 /**
  * A centralized storage for browsing data within the browser session.
@@ -316,7 +334,7 @@ function onBeforeRequest(details) {
     browserSession.putTab(details.tabId, 'first_party_host', uri.host, true);
   }
 
-  if (disabledList.has(browserSession.getTab(details.tabId, 'first_party_host', null))) {
+  if (isExtensionDisabledOnSite(browserSession.getTab(details.tabId, 'first_party_host', null))) {
     return;
   }
 
@@ -563,7 +581,7 @@ function onHeadersReceived(details) {
 
     // Do not upgrade resources if the first-party domain disbled EASE mode
     // This is needed for HTTPS sites serve mixed content and is broken
-    if (disabledList.has(browserSession.getTab(details.tabId, 'first_party_host', null))) {
+    if (isExtensionDisabledOnSite(browserSession.getTab(details.tabId, 'first_party_host', null))) {
       return {};
     }
 
@@ -835,16 +853,19 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       return true;
     },
     disable_on_site: () => {
-      disabledList.add(util.getNormalisedHostname(message.object));
-      return storeDisabledList();
+      const host = util.getNormalisedHostname(message.object);
+      if (util.isValidHostname(host)) {
+        disabledList.add(host);
+        return storeDisabledList();
+      }
+      return sendResponse(false);
     },
     enable_on_site: () => {
       disabledList.delete(util.getNormalisedHostname(message.object));
       return storeDisabledList();
     },
     check_if_site_disabled: () => {
-      sendResponse(disabledList.has(util.getNormalisedHostname(message.object)));
-      return true;
+      return sendResponse(isExtensionDisabledOnSite(util.getNormalisedHostname(message.object)));
     },
     is_firefox: () => {
       if(typeof(browser) != "undefined") {

@@ -17,6 +17,37 @@ describe('util.js', function() {
     });
   });
 
+  describe('isValidHostname', function() {
+    it('return true for common hosts', function() {
+      assert.strictEqual(util.isValidHostname('example.com'). true);
+      assert.strictEqual(util.isValidHostname('www.example.com'). true);
+      assert.strictEqual(util.isValidHostname('www.subdomain.example.com'). true);
+    });
+
+    it('return true for wildcard hosts', function() {
+      assert.strictEqual(util.isValidHostname('example.*'). true);
+      assert.strictEqual(util.isValidHostname('example.com.*'). true);
+      assert.strictEqual(util.isValidHostname('*.example.com'). true);
+      assert.strictEqual(util.isValidHostname('*.subdomain.example.com'). true);
+    });
+
+    it('return false for ill-formed hosts', function() {
+      // construct a lengthy hostname which host.length > 255
+      let prefix = "e1234567890.";
+      let lengthyHostname = "example.com";
+
+      for (let i = 0; i < 100; ++i) {
+        lengthyHostname = (prefix + lengthyHostname);
+      }
+
+      assert.strictEqual(util.isValidHostname(null), false);
+      assert.strictEqual(util.isValidHostname(''), false);
+      assert.strictEqual(util.isValidHostname(lengthyHostname), false);
+      assert.strictEqual(util.isValidHostname('example..com'), false);
+      assert.strictEqual(util.isValidHostname('www.example..com'), false);
+    });
+  })
+
   describe('getNormalisedHostname', function() {
     it('removes tailing dots', function() {
       assert.strictEqual(util.getNormalisedHostname('example.com.'), 'example.com');
@@ -30,6 +61,7 @@ describe('util.js', function() {
 
   describe('getWildcardExpressions', function() {
     it('return empty result for ill-formed hosts', function() {
+      assert.strictEqual(util.getWildcardExpressions(null).size, 0);
       assert.strictEqual(util.getWildcardExpressions('').size, 0);
       assert.strictEqual(util.getWildcardExpressions('example.com..').size, 0);
     });
