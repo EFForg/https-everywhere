@@ -22,7 +22,7 @@ function replaceLink(explainer) {
   const link = document.createElement("a");
   link.href = "https://en.wikipedia.org/wiki/Downgrade_attack";
   link.innerText = linkText;
-  explainer.innerHTML = explainer.innerHTML.replace(linkText, link.outerHTML);
+  explainer.after(link);
 }
 
 function displayURL() {
