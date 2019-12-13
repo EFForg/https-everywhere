@@ -32,7 +32,7 @@ function replaceLink(explainer) {
 
     So if link fails to swap in replace, this conditional is triggered
   */
-  if(document.getElementsByClassName("wikilink").length === 0) {
+  if (document.getElementsByClassName("wikilink").length === 0) {
     link.innerText = linkText;
     explainer.after(link);
   }
