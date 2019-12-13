@@ -27,7 +27,7 @@ function replaceLink(explainer) {
 
   /*
     In response to translation of i18n string "cancel_he_blocking_network".
-    Within context of the paragraph and as a standalone string can be interpreted differentlty
+    Within context of the paragraph and as a standalone string can be interpreted differently
     langauge to language.
 
     So if link fails to swap in replace, this conditional is triggered
