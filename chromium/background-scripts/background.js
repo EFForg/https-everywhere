@@ -539,7 +539,7 @@ function onErrorOccurred(details) {
     browserSession.getRequest(details.requestId, "simple_http_nowhere_redirect", false) &&
     // Enumerate errors that are likely due to HTTPS misconfigurations
     ssl_codes.error_list.includes(details.error)
-    ) {
+  ) {
     let url = new URL(details.url);
     if (url.protocol == "https:") {
       url.protocol = "http:";
