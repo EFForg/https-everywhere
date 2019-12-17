@@ -537,7 +537,7 @@ function onErrorOccurred(details) {
   if (httpNowhereOn &&
     details.type == "main_frame" &&
     browserSession.getRequest(details.requestId, "simple_http_nowhere_redirect", false) &&
-    // Enumerate a class of errors that are likely due to HTTPS misconfigurations
+    // Enumerate errors that are likely due to HTTPS misconfigurations
     ssl_codes.error_list.includes(details.error)
     ) {
     let url = new URL(details.url);
