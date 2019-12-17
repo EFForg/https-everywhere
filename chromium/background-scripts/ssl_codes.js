@@ -5,7 +5,7 @@
  * Firefox SSL Errors: https://hg.mozilla.org/releases/mozilla-release/file/tip/security/manager/locales/en-US/chrome/pipnss/nsserrors.properties
  */
 
-  (function (exports) {
+(function (exports) {
 
   const error_list = [
     "net::ERR_SSL_PROTOCOL_ERROR",
@@ -41,4 +41,4 @@
 
   Object.assign(exports, { error_list });
 
-  })(typeof exports !== 'undefined' ? exports : require.scopes.ssl_codes = {});
+})(typeof exports !== 'undefined' ? exports : require.scopes.ssl_codes = {});
