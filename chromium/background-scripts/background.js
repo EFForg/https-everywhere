@@ -318,7 +318,7 @@ function onBeforeRequest(details) {
   // Normalise hosts with tailing dots, e.g. "www.example.com."
   uri.hostname = util.getNormalisedHostname(uri.hostname);
 
-  let ip = ipUtils.parseIp(details.hostname);
+  let ip = ipUtils.parseIp(uri.hostname);
 
   let isLocalIp = false;
 
