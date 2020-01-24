@@ -18,18 +18,6 @@ const Rule = rules.Rule,
 describe('rules.js', function() {
   let test_str = 'test';
 
-  describe('nullIterable', function() {
-    it('is iterable zero times and is size 0', function() {
-      let count = 0;
-      for (let _ of rules.nullIterable) { // eslint-disable-line no-unused-vars
-        count += 1;
-      }
-      assert.strictEqual(count, 0);
-      assert.strictEqual(rules.nullIterable.size,  0);
-      assert.isEmpty(rules.nullIterable);
-    });
-  });
-
   describe('Rule', function() {
     it('constructs trivial rule', function() {
       let rule = new Rule('^http:', 'https:');
