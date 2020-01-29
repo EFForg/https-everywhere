@@ -44,6 +44,32 @@ var isExtensionEnabled = true;
 let disabledList = new Set();
 let httpOnceList = new Set();
 
+/**
+ * Check if HTTPS Everywhere should be ON for host
+ */
+function isExtensionDisabledOnSite(host) {
+  // make sure the host is not matched in the httpOnceList
+  if (httpOnceList.has(host)) {
+    return true;
+  }
+
+  // make sure the host is not matched in the disabledList
+  if (disabledList.has(host)) {
+    return true;
+  }
+
+  // make sure the host is matched by any wildcard expressions in the disabledList
+  const experessions = util.getWildcardExpressions(host);
+  for (const expression of experessions) {
+    if (disabledList.has(expression)) {
+      return true;
+    }
+  }
+
+  // otherwise return false
+  return false;
+}
+
 function initializeStoredGlobals() {
   return new Promise(resolve => {
     store.get({
@@ -162,7 +188,7 @@ function updateState () {
     const tabUrl = new URL(tabs[0].url);
     const hostname = util.getNormalisedHostname(tabUrl.hostname);
 
-    if (disabledList.has(hostname) || httpOnceList.has(hostname) || iconState == "disabled") {
+    if (isExtensionDisabledOnSite(hostname) || iconState == "disabled") {
       if ('setIcon' in chrome.browserAction) {
         chrome.browserAction.setIcon({
           path: {
@@ -191,7 +217,6 @@ chrome.browserAction.onClicked.addListener(e => {
     url
   });
 });
-
 
 /**
  * A centralized storage for browsing data within the browser session.
@@ -318,7 +343,7 @@ function onBeforeRequest(details) {
   // Normalise hosts with tailing dots, e.g. "www.example.com."
   uri.hostname = util.getNormalisedHostname(uri.hostname);
 
-  let ip = ipUtils.parseIp(details.hostname);
+  let ip = ipUtils.parseIp(uri.hostname);
 
   let isLocalIp = false;
 
@@ -335,11 +360,10 @@ function onBeforeRequest(details) {
 
     // Check if an user has disabled HTTPS Everywhere on this site.  We should
     // ensure that all subresources are not run through HTTPS Everywhere as well.
-    browserSession.putTab(details.tabId, 'first_party_host', uri.host, true);
+    browserSession.putTab(details.tabId, 'first_party_host', uri.hostname, true);
   }
 
-  if (disabledList.has(browserSession.getTab(details.tabId, 'first_party_host', null)) ||
-    httpOnceList.has(browserSession.getTab(details.tabId, 'first_party_host', null))) {
+  if (isExtensionDisabledOnSite(browserSession.getTab(details.tabId, 'first_party_host', null))) {
     return;
   }
 
@@ -585,8 +609,7 @@ function onHeadersReceived(details) {
 
     // Do not upgrade resources if the first-party domain disbled EASE mode
     // This is needed for HTTPS sites serve mixed content and is broken
-    if (disabledList.has(browserSession.getTab(details.tabId, 'first_party_host', null)) ||
-      httpOnceList.has(browserSession.getTab(details.tabId, 'first_party_host', null))) {
+    if (isExtensionDisabledOnSite(browserSession.getTab(details.tabId, 'first_party_host', null))) {
       return {};
     }
 
@@ -872,16 +895,20 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       return storeDisabledList('once');
     },
     disable_on_site: () => {
-      disabledList.add(util.getNormalisedHostname(message.object));
-      return storeDisabledList('disable');
+      const host = util.getNormalisedHostname(message.object);
+      // always validate hostname before adding it to the disabled list
+      if (util.isValidHostname(host)) {
+        disabledList.add(host);
+        return storeDisabledList('disable');
+      }
+      return sendResponse(false);
     },
     enable_on_site: () => {
       disabledList.delete(util.getNormalisedHostname(message.object));
       return storeDisabledList('enable');
     },
     check_if_site_disabled: () => {
-      sendResponse(disabledList.has(util.getNormalisedHostname(message.object)));
-      return true;
+      return sendResponse(isExtensionDisabledOnSite(util.getNormalisedHostname(message.object)));
     },
     is_firefox: () => {
       if(typeof(browser) != "undefined") {
