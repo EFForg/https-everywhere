@@ -12,6 +12,6 @@ currently being supported with security updates.
 | Chrome          | :white_check_mark: |
 | Opera           | :white_check_mark: |
 
-## Reporting a Vulnerability Policy
+## Reporting a Vulnerability
 
 https://www.eff.org/security
