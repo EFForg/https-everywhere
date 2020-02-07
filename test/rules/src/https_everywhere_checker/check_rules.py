@@ -234,6 +234,7 @@ def disableRuleset(ruleset, problemRules, urlCount):
     # If not all targets, just the target
     else:
         for rule in rules:
+            setDisabled = "The following targets have been disabled:\n"
             host = urllib.parse.urlparse(rule)
             logging.info("Disabling target {}".format(host.netloc))
             contents = re.sub('<[ \n]*target[ \n]+host[ \n]*=[ \n]*"{}"[ \n]*\/?[ \n]*>'.format(host.netloc),
