@@ -23,6 +23,7 @@ import metrics
 import urllib.parse
 from rules import Ruleset
 from rule_trie import RuleTrie
+from datetime import datetime
 
 
 def convertLoglevel(levelString):
@@ -142,8 +143,9 @@ class UrlComparisonThread(threading.Thread):
             plainRcode, plainPage = fetcherPlain.fetchHtml(plainUrl)
         except Exception as e:
             errno, message = e.args
+            timestamp = datetime.now()
             if errno == 6:
-                message = "Fetch error: {} => {}: {}".format(
+                message = "Time: {}\n Fetch error: {} => {}: {}".format(timestamp,
                     plainUrl, transformedUrl, e)
                 self.queue_result("error", "fetch-error {}".format(e),
                                   ruleFname, plainUrl, https_url=transformedUrl)
@@ -226,6 +228,7 @@ def disableRuleset(ruleset, problemRules, urlCount):
     # Go ahead and disable rulset if all targets are problematic
     if urlCount == len(problemRules):
         logging.info("Disabling ruleset {}".format(ruleset.filename))
+        setDisabled = "Entire ruleset disabled at {}\n".format(datetime.now())
         contents = re.sub("(<ruleset [^>]*)>",
             "\\1 default_off=\"failed ruleset test\">", contents);
     # If not all targets, just the target
@@ -245,9 +248,9 @@ def disableRuleset(ruleset, problemRules, urlCount):
         contents = "<!--\n-->\n" + contents
     problemStatement = ("""
 <!--
-Disabled by https-everywhere-checker because:
 {}
-""".format("\n".join(problems)))
+{}
+""".format(setDisabled, "\n".join(problems)))
     contents = re.sub("^<!--", problemStatement, contents)
     with open(ruleset.filename, "w") as f:
         f.write(contents)
