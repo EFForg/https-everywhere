@@ -228,7 +228,7 @@ def disableRuleset(ruleset, problemRules, urlCount):
     # Go ahead and disable rulset if all targets are problematic
     if urlCount == len(problemRules):
         logging.info("Disabling ruleset {}".format(ruleset.filename))
-      	disableMessage = "Entire ruleset disabled at {}\n".format(datetime.now())
+        disableMessage = "Entire ruleset disabled at {}\n".format(datetime.now())
         contents = re.sub("(<ruleset [^>]*)>",
             "\\1 default_off=\"failed ruleset test\">", contents);
     # If not all targets, just the target
