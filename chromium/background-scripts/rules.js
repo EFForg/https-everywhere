@@ -2,7 +2,7 @@
 
 (function(exports) {
 
-const util = require('./util'),
+const util = require('./log'),
   wasm = require('./wasm');
 
 let settings = {

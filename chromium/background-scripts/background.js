@@ -2,14 +2,29 @@
 
 (function(exports) {
 
+/**
+ * @description
+ * Calls in needed utilities for proper parsing, validation, storage objects, update channels,
+ * and web assembly compilation
+ *
+ * @see for Update Channels:
+ * https://github.com/EFForg/https-everywhere/blob/master/docs/en_US/ruleset-update-channels.md
+ *
+ * @see for Rust Based Library:
+ * https://github.com/EFForg/https-everywhere-lib-core
+ */
+
 const rules = require('./rules'),
-  store = require('./store'),
+	store = require('./store'),
+	browserSession = require('./browser_session'),
   incognito = require('./incognito'),
-  util = require('./util'),
+	util = require('./log'),
+	ipUtils = require('./ip_utils'),
+	validation = require('./validation'),
+	ssl_codes = require('./ssl_codes'),
   update = require('./update'),
   { update_channels } = require('./update_channels'),
-  wasm = require('./wasm'),
-  ipUtils = require('./ip_utils');
+  wasm = require('./wasm');
 
 
 let all_rules = new rules.RuleSets();
@@ -39,10 +54,11 @@ async function initializeAllRules() {
  *    isExtensionEnabled: Boolean
  *  }
  */
-var httpNowhereOn = false;
-var isExtensionEnabled = true;
+let httpNowhereOn = false;
+let isExtensionEnabled = true;
 let disabledList = new Set();
 let httpOnceList = new Set();
+let urlBlacklist = new Set();
 
 /**
  * Check if HTTPS Everywhere should be ON for host
@@ -59,8 +75,8 @@ function isExtensionDisabledOnSite(host) {
   }
 
   // make sure the host is matched by any wildcard expressions in the disabledList
-  const experessions = util.getWildcardExpressions(host);
-  for (const expression of experessions) {
+  const expressions = validation.getWildcardExpressions(host);
+  for (const expression of expressions) {
     if (disabledList.has(expression)) {
       return true;
     }
@@ -97,7 +113,7 @@ let upgradeToSecureAvailable;
 function getUpgradeToSecureAvailable() {
   if (typeof browser !== 'undefined') {
     return browser.runtime.getBrowserInfo().then(function(info) {
-      let version = info.version.match(/^(\d+)/)[1];
+			let version = info.version.match(/^(\d+)/)[1];
       if (info.name == "Firefox" && version >= 59) {
         upgradeToSecureAvailable = true;
       } else {
@@ -160,7 +176,7 @@ chrome.webNavigation.onCompleted.addListener(function() {
 });
 
 /**
- * Set the icon color correctly
+ * @description Set the icon color correctly
  * active: extension is enabled.
  * blocking: extension is in "block all HTTP requests" mode.
  * disabled: extension is disabled from the popup menu.
@@ -186,7 +202,7 @@ function updateState () {
       return;
     }
     const tabUrl = new URL(tabs[0].url);
-    const hostname = util.getNormalisedHostname(tabUrl.hostname);
+    const hostname = validation.getNormalisedHostname(tabUrl.hostname);
 
     if (isExtensionDisabledOnSite(hostname) || iconState == "disabled") {
       if ('setIcon' in chrome.browserAction) {
@@ -219,106 +235,9 @@ chrome.browserAction.onClicked.addListener(e => {
 });
 
 /**
- * A centralized storage for browsing data within the browser session.
+ * @see pages/cancel
+ * Set up cancel page
  */
-function BrowserSession() {
-  this.tabs = new Map();
-  this.requests = new Map();
-
-  if (chrome.tabs) {
-    chrome.tabs.onRemoved.addListener(tabId => {
-      this.deleteTab(tabId);
-    });
-  }
-}
-
-BrowserSession.prototype = {
-  putTab: function(tabId, key, value, overwrite) {
-    if (!this.tabs.has(tabId)) {
-      this.tabs.set(tabId, {});
-    }
-
-    if (!(key in this.tabs.get(tabId)) || overwrite) {
-      this.tabs.get(tabId)[key] = value;
-    }
-  },
-
-  getTab: function(tabId, key, defaultValue) {
-    if (this.tabs.has(tabId) && key in this.tabs.get(tabId)) {
-      return this.tabs.get(tabId)[key];
-    }
-    return defaultValue;
-  },
-
-  deleteTab: function(tabId) {
-    if (this.tabs.has(tabId)) {
-      this.tabs.delete(tabId);
-    }
-  },
-
-  putTabAppliedRulesets: function(tabId, type, ruleset) {
-    this.putTab(tabId, "main_frame", false, false);
-
-    // always show main_frame ruleset on the top
-    if (type == "main_frame") {
-      this.putTab(tabId, "main_frame", true, true);
-      this.putTab(tabId, "applied_rulesets", [ruleset,], true);
-      return ;
-    }
-
-    // sort by ruleset names alphabetically, case-insensitive
-    if (this.getTab(tabId, "applied_rulesets", null)) {
-      let rulesets = this.getTab(tabId, "applied_rulesets");
-      let insertIndex = 0;
-
-      const ruleset_name = ruleset.name.toLowerCase();
-
-      for (const item of rulesets) {
-        const item_name = item.name.toLowerCase();
-
-        if (item_name == ruleset_name) {
-          return ;
-        } else if (insertIndex == 0 && this.getTab(tabId, "main_frame", false)) {
-          insertIndex = 1;
-        } else if (item_name < ruleset_name) {
-          insertIndex++;
-        }
-      }
-      rulesets.splice(insertIndex, 0, ruleset);
-    } else {
-      this.putTab(tabId, "applied_rulesets", [ruleset,], true);
-    }
-  },
-
-  getTabAppliedRulesets: function(tabId) {
-    return this.getTab(tabId, "applied_rulesets", null);
-  },
-
-  putRequest: function(requestId, key, value) {
-    if (!this.requests.has(requestId)) {
-      this.requests.set(requestId, {});
-    }
-    this.requests.get(requestId)[key] = value;
-  },
-
-  getRequest: function(requestId, key, defaultValue) {
-    if (this.requests.has(requestId) && key in this.requests.get(requestId)) {
-      return this.requests.get(requestId)[key];
-    }
-    return defaultValue;
-  },
-
-  deleteRequest: function(requestId) {
-    if (this.requests.has(requestId)) {
-      this.requests.delete(requestId);
-    }
-  }
-}
-
-let browserSession = new BrowserSession();
-
-var urlBlacklist = new Set();
-
 const cancelUrl = chrome.runtime.getURL("/pages/cancel/index.html");
 
 function redirectOnCancel(shouldCancel, originURL) {
@@ -327,25 +246,33 @@ function redirectOnCancel(shouldCancel, originURL) {
 
 const newCancelUrl = originURL => `${cancelUrl}?originURL=${encodeURIComponent(originURL)}`;
 
+// Establish session
+let session = new browserSession.browserSession();
+
 /**
  * Called before a HTTP(s) request. Does the heavy lifting
  * Cancels the request/redirects it to HTTPS. URL modification happens in here.
  * @param details of the handler, see Chrome doc
  * */
 function onBeforeRequest(details) {
+	let uri = new URL(details.url);
+	let ip = ipUtils.parseIp(uri.hostname);
+	let isLocalIp = false;
+
   // If HTTPSe has been disabled by the user, return immediately.
   if (!isExtensionEnabled) {
-    return;
-  }
+		return;
+	}
 
-  let uri = new URL(details.url);
+	// Clear session on tab removed
+	if (chrome.tabs) {
+		chrome.tabs.onRemoved.addListener(function() {
+			session.deleteTab(details.tabId);
+		});
+	}
 
   // Normalise hosts with tailing dots, e.g. "www.example.com."
-  uri.hostname = util.getNormalisedHostname(uri.hostname);
-
-  let ip = ipUtils.parseIp(uri.hostname);
-
-  let isLocalIp = false;
+  uri.hostname = validation.getNormalisedHostname(uri.hostname);
 
   if (ip !== -1) {
     isLocalIp = ipUtils.isLocalIp(ip);
@@ -356,14 +283,14 @@ function onBeforeRequest(details) {
     // This needed to be done before this listener returns,
     // otherwise, the extension popup might include rulesets
     // from previous page.
-    browserSession.deleteTab(details.tabId);
+    session.deleteTab(details.tabId);
 
     // Check if an user has disabled HTTPS Everywhere on this site.  We should
     // ensure that all subresources are not run through HTTPS Everywhere as well.
-    browserSession.putTab(details.tabId, 'first_party_host', uri.hostname, true);
+    session.putTab(details.tabId, 'first_party_host', uri.hostname, true);
   }
 
-  if (isExtensionDisabledOnSite(browserSession.getTab(details.tabId, 'first_party_host', null))) {
+  if (isExtensionDisabledOnSite(session.getTab(details.tabId, 'first_party_host', null))) {
     return;
   }
 
@@ -398,7 +325,7 @@ function onBeforeRequest(details) {
     return redirectOnCancel(shouldCancel, details.url);
   }
 
-  if (browserSession.getRequest(details.requestId, "redirect_count") >= 8) {
+  if (session.getRequest(details.requestId, "redirect_count") >= 8) {
     util.log(util.NOTE, "Redirect counter hit for " + uri.href);
     urlBlacklist.add(uri.href);
     rules.settings.domainBlacklist.add(uri.hostname);
@@ -408,13 +335,13 @@ function onBeforeRequest(details) {
 
   // whether to use mozilla's upgradeToSecure BlockingResponse if available
   let upgradeToSecure = false;
-  let newuristr = null;
+	let newuristr = null;
 
   let potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
 
   for (let ruleset of potentiallyApplicable) {
     if (details.url.match(ruleset.scope)) {
-      browserSession.putTabAppliedRulesets(details.tabId, details.type, ruleset);
+      session.putTabAppliedRulesets(details.tabId, details.type, ruleset);
       if (ruleset.active && !newuristr) {
         newuristr = ruleset.apply(uri.href);
       }
@@ -449,7 +376,7 @@ function onBeforeRequest(details) {
     if (shouldCancel) {
       if (!newuristr) {
         newuristr = uri.href.replace(/^http:/, "https:");
-        browserSession.putRequest(details.requestId, "simple_http_nowhere_redirect", true);
+        session.putRequest(details.requestId, "simple_http_nowhere_redirect", true);
         upgradeToSecure = true;
       } else {
         newuristr = newuristr.replace(/^http:/, "https:");
@@ -534,12 +461,12 @@ function onBeforeRedirect(details) {
   // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
   let prefix = details.redirectUrl.substring(0, 5);
   if (prefix === "http:" || prefix === "https") {
-    let count = browserSession.getRequest(details.requestId, "redirect_count", 0);
+    let count = session.getRequest(details.requestId, "redirect_count", 0);
     if (count) {
-      browserSession.putRequest(details.requestId, "redirect_count", count + 1);
+      session.putRequest(details.requestId, "redirect_count", count + 1);
       util.log(util.DBUG, "Got redirect id " + details.requestId + ": "+count);
     } else {
-      browserSession.putRequest(details.requestId, "redirect_count", 1);
+      session.putRequest(details.requestId, "redirect_count", 1);
     }
   }
 }
@@ -549,7 +476,7 @@ function onBeforeRedirect(details) {
  * @param details details for the chrome.webRequest (see chrome doc)
  */
 function onCompleted(details) {
-  browserSession.deleteRequest(details.requestId);
+  session.deleteRequest(details.requestId);
 }
 
 /**
@@ -559,29 +486,10 @@ function onCompleted(details) {
 function onErrorOccurred(details) {
   if (httpNowhereOn &&
     details.type == "main_frame" &&
-    browserSession.getRequest(details.requestId, "simple_http_nowhere_redirect", false) &&
-    ( // Enumerate a class of errors that are likely due to HTTPS misconfigurations
-      details.error.indexOf("net::ERR_SSL_") == 0 ||
-      details.error.indexOf("net::ERR_CERT_") == 0 ||
-      details.error.indexOf("net::ERR_CONNECTION_") == 0 ||
-      details.error.indexOf("net::ERR_ABORTED") == 0 ||
-      details.error.indexOf("net::ERR_SSL_PROTOCOL_ERROR") == 0 ||
-      details.error.indexOf("NS_ERROR_CONNECTION_REFUSED") == 0 ||
-      details.error.indexOf("NS_ERROR_NET_TIMEOUT") == 0 ||
-      details.error.indexOf("NS_ERROR_NET_ON_TLS_HANDSHAKE_ENDED") == 0 ||
-      details.error.indexOf("SSL received a record that exceeded the maximum permissible length.") == 0 ||
-      details.error.indexOf("Peer’s Certificate has expired.") == 0 ||
-      details.error.indexOf("Unable to communicate securely with peer: requested domain name does not match the server’s certificate.") == 0 ||
-      details.error.indexOf("Peer’s Certificate issuer is not recognized.") == 0 ||
-      details.error.indexOf("Peer’s Certificate has been revoked.") == 0 ||
-      details.error.indexOf("Peer reports it experienced an internal error.") == 0 ||
-      details.error.indexOf("The server uses key pinning (HPKP) but no trusted certificate chain could be constructed that matches the pinset. Key pinning violations cannot be overridden.") == 0 ||
-      details.error.indexOf("SSL received a weak ephemeral Diffie-Hellman key in Server Key Exchange handshake message.") == 0 ||
-      details.error.indexOf("The certificate was signed using a signature algorithm that is disabled because it is not secure.") == 0 ||
-      details.error.indexOf("Unable to communicate securely with peer: requested domain name does not match the server’s certificate.") == 0 ||
-      details.error.indexOf("Cannot communicate securely with peer: no common encryption algorithm(s).") == 0 ||
-      details.error.indexOf("SSL peer has no certificate for the requested DNS name.") == 0
-    )) {
+    session.getRequest(details.requestId, "simple_http_nowhere_redirect", false) &&
+		// Enumerate errors that are likely due to HTTPS misconfigurations
+		ssl_codes.error_list.includes(details.error)
+		) {
     let url = new URL(details.url);
     if (url.protocol == "https:") {
       url.protocol = "http:";
@@ -589,7 +497,7 @@ function onErrorOccurred(details) {
     chrome.tabs.update(details.tabId, {url: newCancelUrl(url.toString())});
   }
 
-  browserSession.deleteRequest(details.requestId);
+  session.deleteRequest(details.requestId);
 }
 
 /**
@@ -602,14 +510,14 @@ function onHeadersReceived(details) {
     // Do not upgrade the .onion requests in EASE mode,
     // See https://github.com/EFForg/https-everywhere/pull/14600#discussion_r168072480
     const uri = new URL(details.url);
-    const hostname = util.getNormalisedHostname(uri.hostname);
+    const hostname = validation.getNormalisedHostname(uri.hostname);
     if (hostname.slice(-6) == '.onion') {
       return {};
     }
 
     // Do not upgrade resources if the first-party domain disbled EASE mode
     // This is needed for HTTPS sites serve mixed content and is broken
-    if (isExtensionDisabledOnSite(browserSession.getTab(details.tabId, 'first_party_host', null))) {
+    if (isExtensionDisabledOnSite(session.getTab(details.tabId, 'first_party_host', null))) {
       return {};
     }
 
@@ -733,11 +641,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       all_rules.ruleCache.delete(message.object);
     },
     get_applied_rulesets: () => {
-      sendResponse(browserSession.getTabAppliedRulesets(message.object));
+      sendResponse(session.getTabAppliedRulesets(message.object));
       return true;
     },
     set_ruleset_active_status: () => {
-      let rulesets = browserSession.getTabAppliedRulesets(message.object.tab_id);
+      let rulesets = session.getTabAppliedRulesets(message.object.tab_id);
 
       for (let ruleset of rulesets) {
         if (ruleset.name == message.object.name) {
@@ -895,20 +803,20 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       return storeDisabledList('once');
     },
     disable_on_site: () => {
-      const host = util.getNormalisedHostname(message.object);
+      const host = validation.getNormalisedHostname(message.object);
       // always validate hostname before adding it to the disabled list
-      if (util.isValidHostname(host)) {
+      if (validation.isValidHostname(host)) {
         disabledList.add(host);
         return storeDisabledList('disable');
       }
       return sendResponse(false);
     },
     enable_on_site: () => {
-      disabledList.delete(util.getNormalisedHostname(message.object));
+      disabledList.delete(validation.getNormalisedHostname(message.object));
       return storeDisabledList('enable');
     },
     check_if_site_disabled: () => {
-      return sendResponse(isExtensionDisabledOnSite(util.getNormalisedHostname(message.object)));
+      return sendResponse(isExtensionDisabledOnSite(validation.getNormalisedHostname(message.object)));
     },
     is_firefox: () => {
       if(typeof(browser) != "undefined") {
