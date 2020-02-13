@@ -488,7 +488,7 @@ function onErrorOccurred(details) {
     details.type == "main_frame" &&
     session.getRequest(details.requestId, "simple_http_nowhere_redirect", false) &&
     // Enumerate errors that are likely due to HTTPS misconfigurations
-    ssl_codes.error_list.includes(details.error)
+    ssl_codes.some(message => details.error.indexOf(message) == 0)
   ) {
     let url = new URL(details.url);
     if (url.protocol == "https:") {
