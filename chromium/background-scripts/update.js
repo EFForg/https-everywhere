@@ -26,7 +26,7 @@ if (typeof window === "undefined") {
 
 (function(exports) {
 
-const util = require('./log');
+const util = require('./modules/log');
 
 let store,
   background_callback;

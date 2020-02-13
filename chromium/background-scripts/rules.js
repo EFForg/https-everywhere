@@ -2,7 +2,8 @@
 
 (function(exports) {
 
-const util = require('./log'),
+const util = require('./modules/log'),
+  validation = require('./modules/validation'),
   wasm = require('./wasm');
 
 let settings = {
@@ -594,7 +595,7 @@ RuleSets.prototype = {
         new Set([...this.targets.get(host)]) :
         new Set());
 
-      let expressions = util.getWildcardExpressions(host);
+      let expressions = validation.getWildcardExpressions(host);
       for (const expression of expressions) {
         results = (this.targets.has(expression) ?
           new Set([...results, ...this.targets.get(expression)]) :
@@ -607,7 +608,7 @@ RuleSets.prototype = {
       util.log(util.DBUG,"Applicable rules for " + host + ":");
       if (results.size == 0) {
         util.log(util.DBUG, "  None");
-        results = util.nullIterable;
+        results = validation.nullIterable;
       } else {
         results.forEach(result => util.log(util.DBUG, "  " + result.name));
       }
