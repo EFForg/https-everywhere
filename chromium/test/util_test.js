@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('chai').assert,
-  util = require('../background-scripts/util/ip_utils');
+  util = require('../background-scripts/modules/ip_utils');
 
 
 describe('util.js', function() {
