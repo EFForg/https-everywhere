@@ -603,7 +603,7 @@ function onHeadersReceived(details) {
     // See https://github.com/EFForg/https-everywhere/pull/14600#discussion_r168072480
     const uri = new URL(details.url);
     const hostname = util.getNormalisedHostname(uri.hostname);
-    if (hostname.slice(-6) == '.onion') {
+    if (hostname.slice(-6) == '.onion' || hostname == 'localhost') {
       return {};
     }
 
