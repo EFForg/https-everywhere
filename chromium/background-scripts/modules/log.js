@@ -22,7 +22,7 @@ let WARN = 5;
 // (
 let DEFAULT_LOG_LEVEL = NOTE;
 console.log("Hey developer! Want to see more verbose logging?");
-console.log("Type this into the console: let util = require('./modules/log'); util.setDefaultLogLevel(util.VERB);");
+console.log("Type this into the console: let util = require('./log'); util.setDefaultLogLevel(util.VERB);");
 console.log("Accepted levels are VERB, DBUG, INFO, NOTE and WARN, default is NOTE");
 
 
