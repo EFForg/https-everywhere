@@ -2,8 +2,8 @@
 
 (function(exports) {
 
-const util = require('./modules/log'),
-  validation = require('./modules/validation'),
+const util = require('./log'),
+  validation = require('./validation'),
   wasm = require('./wasm');
 
 let settings = {

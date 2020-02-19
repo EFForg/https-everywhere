@@ -2,7 +2,7 @@
 
 (function(exports) {
 
-const util = require('./modules/log'),
+const util = require('./log'),
   { RuleSets } = wasm_bindgen;
 
 async function initialize() {

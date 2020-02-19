@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('chai').assert,
-  util = require('../background-scripts/modules/validation');
+  util = require('../background-scripts/validation');
 
 
 describe('util.js', function() {
