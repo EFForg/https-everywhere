@@ -9,27 +9,28 @@ Fetch error: http://realtime.co/ => https://realtime.co/: (7, 'Failed to connect
 	Fully covered subdomains:
 
 		- ^
-		- accounts
-		- app
-		- ortc-ws2
-		- ortc-ws2-useast1-s000[5-9]
-		- ortc-ws2-useast1-s0010
-		- www	(→ app)
+		- www	(→ framework)
+
+	Problematic subdomains:
+
+		- accounts (Timeout)
+		- app (Timeout)
+		- ortc-ws2-useast1-s000[5-9] (Timeout)
+		- ortc-ws2-useast1-s0010 (Timeout)
+		- support (Uses intercom.io)
 
 -->
 <ruleset name="Realtime.co">
 
 	<target host="realtime.co" />
-	<target host="*.realtime.co" />
+	<target host="www.realtime.co" />
+	<target host="framework.realtime.co" />
 
 
-	<securecookie host="^a(?:ccounts|pp)\.realtime\.co$" name=".+" />
+	<!--securecookie host="^a(?:ccounts|pp)\.realtime\.co$" name=".+" /-->
 
 
-	<rule from="^http://(accounts\.|ortc-ws2(?:-useast1-s\d+)?\.)?realtime\.co/"
-		to="https://$1realtime.co/" />
-
-	<rule from="^http://www\.realtime\.co/"
-		to="https://app.realtime.co/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
