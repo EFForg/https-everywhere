@@ -9,9 +9,6 @@
 		- partner.shopmania.es *
 		- www.shopmania.es *
 
-	* At least some pages redirect to http.
-
-
 	Fully covered domains:
 
 		- cp.shopmania.com
@@ -26,32 +23,40 @@
 
 			- im[14]
 
+	Problematic subdomains:
+
+		- dashboard (invalid cert)
+		- partner.shopmania.com
+		- billing
+		- cdn & cdn[1-3] (invalid cert)
+		- f\d+ (invalid cert)
+		- im\d+ (invalid cert)
+
 -->
 <ruleset name="ShopMania (partial)">
 
 	<target host="shopmania.com" />
-	<target host="*.shopmania.com" />
+	<target host="www.shopmania.com" />
+	<target host="biz.shopmania.com" />
+	<target host="cp.shopmania.com" />
+	<target host="dashboard.shopmania.com" />
+	<target host="adm.shopmania.com" />
+	<target host="aff.shopmania.com" />
 	<target host="shopmania.es" />
-	<target host="*.shopmania.es" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://www\.shopmania\.(com|es)/+($|\?)" /-->
-		<exclusion pattern="^http://biz\.shopmania\.(?:com|es)/+(?:$|\?)" />
-		<!--exclusion pattern="^http://partner\.shopmania\.(com|es)/+($|\?)" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://www\.shopmania\.(?:com|es)/+(?!favicon\.ico|img/)" />
-		<!--exclusion pattern="^http://biz\.shopmania\.(com|es)/+(?!(cloud_ecommerce|cp-register_quick)($|[?/])|favicon\.ico)" /-->
-		<exclusion pattern="^http://partner\.shopmania\.(?:com|es)/+(?!dashboard(?:$|[?/])|favicon\.ico)" />
-	<target host="*.shopmania.org" />
+	<target host="www.shopmania.es" />
+	<target host="biz.shopmania.es" />
+	<target host="cp.shopmania.es" />
+	<target host="dashboard.shopmania.es" />
+	<target host="adm.shopmania.es" />
+	<target host="aff.shopmania.es" />
 
+	<rule from="^http://((?:biz|cp)\.)?shopmania\.(com|es)/"
+		to="https://www.merchantpro.com/" />
 
-	<rule from="^http://((?:biz|cp|dashboard|www)\.)?shopmania\.(com|es)/"
-		to="https://$1shopmania.$2/" />
+	<rule from="^http://((?:dashboard|www)\.)?shopmania\.(com|es)/"
+		to="https://www.shopmania.$2/" />
 
-	<rule from="^http://(fl\d+|im\d+)\.shopmania\.org/"
-		to="https://$1.shopmania.org/" />
-
+	<!-- Applies to adm., aff. -->
+	<rule from="^http:"
+		to="https:" />
 </ruleset>
