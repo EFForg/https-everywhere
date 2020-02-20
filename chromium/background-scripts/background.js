@@ -14,18 +14,18 @@
  * https://github.com/EFForg/https-everywhere-lib-core
  */
 
-const rules = require('./rules'),
-  store = require('./store'),
-  browserSession = require('./browser_session'),
+const browserSession = require('./browser_session'),
   incognito = require('./incognito'),
-  util = require('./log'),
   ipUtils = require('./ip_utils'),
-  validation = require('./validation'),
+  rules = require('./rules'),
+  state = require('./state'),
+  store = require('./store'),
   ssl_codes = require('./ssl_codes'),
   update = require('./update'),
   { update_channels } = require('./update_channels'),
-  wasm = require('./wasm');
-
+  util = require('./log'),
+  wasm = require('./wasm'),
+  validation = require('./validation');
 
 let all_rules = new rules.RuleSets();
 
@@ -60,31 +60,9 @@ let disabledList = new Set();
 let httpOnceList = new Set();
 let urlBlacklist = new Set();
 
-/**
- * Check if HTTPS Everywhere should be ON for host
- */
-function isExtensionDisabledOnSite(host) {
-  // make sure the host is not matched in the httpOnceList
-  if (httpOnceList.has(host)) {
-    return true;
-  }
-
-  // make sure the host is not matched in the disabledList
-  if (disabledList.has(host)) {
-    return true;
-  }
-
-  // make sure the host is matched by any wildcard expressions in the disabledList
-  const expressions = validation.getWildcardExpressions(host);
-  for (const expression of expressions) {
-    if (disabledList.has(expression)) {
-      return true;
-    }
-  }
-
-  // otherwise return false
-  return false;
-}
+let upgradeToSecureAvailable;
+// Establish session before proceeding with modifications in onBeforeRequest
+let session = new browserSession.browserSession();
 
 function initializeStoredGlobals() {
   return new Promise(resolve => {
@@ -107,8 +85,6 @@ function initializeStoredGlobals() {
     });
   });
 }
-
-let upgradeToSecureAvailable;
 
 function getUpgradeToSecureAvailable() {
   if (typeof browser !== 'undefined') {
@@ -204,7 +180,7 @@ function updateState() {
     const tabUrl = new URL(tabs[0].url);
     const hostname = validation.getNormalisedHostname(tabUrl.hostname);
 
-    if (isExtensionDisabledOnSite(hostname) || iconState == "disabled") {
+    if (state.isExtensionDisabledOnSite(hostname, httpOnceList, disabledList) || iconState == "disabled") {
       if ('setIcon' in chrome.browserAction) {
         chrome.browserAction.setIcon({
           path: {
@@ -245,9 +221,6 @@ function redirectOnCancel(shouldCancel, originURL) {
 }
 
 const newCancelUrl = originURL => `${cancelUrl}?originURL=${encodeURIComponent(originURL)}`;
-
-// Establish session
-let session = new browserSession.browserSession();
 
 /**
  * Called before a HTTP(s) request. Does the heavy lifting
@@ -290,7 +263,7 @@ function onBeforeRequest(details) {
     session.putTab(details.tabId, 'first_party_host', uri.hostname, true);
   }
 
-  if (isExtensionDisabledOnSite(session.getTab(details.tabId, 'first_party_host', null))) {
+  if (state.isExtensionDisabledOnSite(session.getTab(details.tabId, 'first_party_host', null), httpOnceList, disabledList)) {
     return;
   }
 
@@ -488,7 +461,7 @@ function onErrorOccurred(details) {
     details.type == "main_frame" &&
     session.getRequest(details.requestId, "simple_http_nowhere_redirect", false) &&
     // Enumerate errors that are likely due to HTTPS misconfigurations
-    ssl_codes.some(message => details.error.includes(message))
+    ssl_codes.error_list.some(message => details.error.includes(message))
   ) {
     let url = new URL(details.url);
     if (url.protocol == "https:") {
@@ -517,7 +490,7 @@ function onHeadersReceived(details) {
 
     // Do not upgrade resources if the first-party domain disbled EASE mode
     // This is needed for HTTPS sites serve mixed content and is broken
-    if (isExtensionDisabledOnSite(session.getTab(details.tabId, 'first_party_host', null))) {
+    if (state.isExtensionDisabledOnSite(session.getTab(details.tabId, 'first_party_host', null), httpOnceList, disabledList)) {
       return {};
     }
 
@@ -818,7 +791,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       return storeDisabledList('enable');
     },
     check_if_site_disabled: () => {
-      return sendResponse(isExtensionDisabledOnSite(validation.getNormalisedHostname(message.object)));
+      return sendResponse(state.isExtensionDisabledOnSite(validation.getNormalisedHostname(message.object), httpOnceList, disabledList));
     },
     is_firefox: () => {
       if (typeof (browser) != "undefined") {
@@ -854,7 +827,9 @@ function destroy_caches() {
 
 Object.assign(exports, {
   all_rules,
-  urlBlacklist
+  urlBlacklist,
+  httpOnceList,
+  disabledList
 });
 
 })(typeof exports == 'undefined' ? require.scopes.background = {} : exports);
