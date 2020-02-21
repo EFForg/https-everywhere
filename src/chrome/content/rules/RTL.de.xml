@@ -1,42 +1,21 @@
 <!--
-	CDN buckets:
-
-		- ak.rtl.de.edgesuite.net
-
-			- a610.g2.akamai.net
-			- bilder.akamai
-
-
-	Problematic subdomains:
-
-		- bilder.akamai *
-		- (www.) ¹
-		- intentium ²
-		- kommunikation ²
-		- rtl-living ³
-		- rtl-crime ³
-		- spiele.rtl.de ¹
-		- gzsz.rtl.de ¹
-
-	* Works, akamai
-	¹ mixed content blocking (requires active content from bilder.akamai)
-	² bad cert domain
-	³ refused
-
-	Fully covered subdomains:
-
-		- autoimg
-		- bilder
-		- rtl-videoclip-player
-
+	This domain contains a wildcard DNS record.
 -->
 <ruleset name="RTL.de (partial)" >
 
+	<target host="rtl.de" />
+	<target host="www.rtl.de" />
 	<target host="autoimg.rtl.de" />
 	<target host="bilder.rtl.de" />
-	<target host="rtl-videoclip-player.rtl.de" />
+	<target host="gzsz.rtl.de" />
+	<target host="kommunikation.rtl.de" />
+	<target host="spiele.rtl.de" />
 
-	<rule from="^http:"
-		to="https:" />
+	<securecookie host=".+" name=".+" />
+
+	<!-- Refused on https://rtl.de/, http://rtl.de/ redirects to https://www.rtl.de/. -->
+	<rule from="^http://rtl\.de/" to="https://www.rtl.de/" />
+
+	<rule from="^http:"	to="https:" />
 
 </ruleset>
