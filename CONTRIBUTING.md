@@ -83,7 +83,7 @@ Scan your site at the [Mozilla Observatory](https://observatory.mozilla.org/) an
 
 **"How do I get on the HSTS Preload list?"**
 
-In order to do this, you must have an SSL certificate correctly installed and your site redirecting to HTTPS. As well as meet a few extra requirements for the [`HTTP Strict-Transport-Security`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security) header. To view "how close" your site is for HSTS preloading, scan your site [here](https://hstspreload.org/).
+In order to do this, you must have an SSL certificate correctly installed and your site redirecting to HTTPS. As well as meet a few extra requirements for the [`HTTP Strict-Transport-Security`](https://developer.mozilla.org/docs/Web/HTTP/Headers/Strict-Transport-Security) header. To view "how close" your site is for HSTS preloading, scan your site [here](https://hstspreload.org/).
 
 * * *
 

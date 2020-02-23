@@ -11,10 +11,8 @@ Rights Reserved
 """
 import io
 import os
-import re
 import importlib.util
 import sys
-import time
 import stat
 import shutil
 import struct
