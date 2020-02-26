@@ -266,7 +266,8 @@ skipdict = {}
 
 def skipFile(filename):
     hasher = hashlib.new('sha256')
-    hasher.update(open(filename, 'rb').read())
+    with open(filename, 'rb') as f:
+        hasher.update(f.read())
     if hasher.digest() in skipdict:
         return True
     else:
@@ -388,7 +389,8 @@ def cli():
                 "Skipping rule file '{}', matches skiplist.".format(xmlFname))
             continue
 
-        ruleset = Ruleset(etree.parse(open(xmlFname, "rb")).getroot(), xmlFname)
+        with open(xmlFname, "rb") as f:
+            ruleset = Ruleset(etree.parse(f).getroot(), xmlFname)
         if ruleset.defaultOff and not includeDefaultOff:
             logging.debug("Skipping rule '{}', reason: {}".format(
                           ruleset.name, ruleset.defaultOff))
