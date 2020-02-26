@@ -237,7 +237,7 @@ def disableRuleset(ruleset, problemRules, urlCount):
             disableMessage = "The following targets have been disabled at {}:\n".format(timestamp)
             host = urllib.parse.urlparse(rule)
             logging.info("Disabling target {}".format(host.netloc))
-            contents = re.sub('<[ \n]*target[ \n]+host[ \n]*=[ \n]*"{}"[ \n]*\/?[ \n]*>'.format(host.netloc),
+            contents = re.sub('<[ \n]*target[ \n]+host[ \n]*=[ \n]*"{}"[ \n]*/?[ \n]*>'.format(host.netloc),
                 '<!-- target host="{}" /-->'.format(host.netloc), contents);
 
     # Since the problems are going to be inserted into an XML comment, they cannot
