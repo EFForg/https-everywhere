@@ -931,6 +931,22 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 });
 
 /**
+ * Onboarding, will be soon moved into it's own file
+ *
+ */
+chrome.runtime.onInstalled.addListener(async ({ reason, temporary }) => {
+  if (temporary) return; // skip during development
+  switch (reason) {
+    case "update":
+      {
+        // const url = browser.runtime.getURL("pages/onboarding/updated.html");
+        // await chrome.tabs.create({ url });
+      }
+      break;
+  }
+});
+
+/**
  * Clear any cache/ blacklist we have.
  */
 function destroy_caches() {
