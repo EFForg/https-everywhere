@@ -931,7 +931,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 });
 
 /**
- * Onboarding, will be soon moved into it's own file
+ * Onboarding, @todo will be soon moved into it's own file
  *
  */
 chrome.runtime.onInstalled.addListener(async ({ reason, temporary }) => {
