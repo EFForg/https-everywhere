@@ -884,6 +884,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       });
       return true;
     },
+    get_simple_rules_ending_with: () => {
+      return sendResponse(all_rules.getSimpleRulesEndingWith(message.object));
+    },
     get_last_checked: () => {
       store.local.get({'last-checked': false}, item => {
         sendResponse(item['last-checked']);

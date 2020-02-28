@@ -723,6 +723,36 @@ RuleSets.prototype = {
   },
 
   /**
+   * Get a list of simple rules (active, with no exclusions) for all hosts that
+   * are in a single ruleset, and end in the specified ending.
+   * @param ending Target ending to search for
+   * @returns A list of { host, from_regex, to, scope_regex }
+   */
+  getSimpleRulesEndingWith: function(ending) {
+    let results;
+
+    if (this.wasm_rs) {
+      results = this.wasm_rs.get_simple_rules_ending_with(ending);
+    } else {
+      results = [];
+      for(let [host, rulesets] of this.targets) {
+        if (host.endsWith(ending) &&
+            rulesets.length == 1 &&
+            rulesets[0].active == true &&
+            rulesets[0].exclusions == null
+        ) {
+          for (let rule of rulesets[0].rules) {
+            if (rule.from_c.test("http://" + host + "/")) {
+              results.push({ host, from_regex: rule.from_c.toString(), to: rule.to, scope_regex: rulesets[0].scope.toString() });
+            }
+          }
+        }
+      }
+    }
+    return results;
+  },
+
+  /**
    * Rewrite an URI
    * @param urispec The uri to rewrite
    * @param host The host of this uri
