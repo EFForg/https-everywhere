@@ -738,7 +738,7 @@ RuleSets.prototype = {
       for(let [host, rulesets] of this.targets) {
         if (host.endsWith(ending) &&
             rulesets.length == 1 &&
-            rulesets[0].active == true &&
+            rulesets[0].active === true &&
             rulesets[0].exclusions == null
         ) {
           for (let rule of rulesets[0].rules) {
