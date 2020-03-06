@@ -934,6 +934,21 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 });
 
 /**
+ * @description Upboarding event for visual changelog
+ */
+chrome.runtime.onInstalled.addListener(async ({reason, temporary}) => {
+  if (temporary) return;
+  switch (reason) {
+  case "update":
+    {
+      const url = chrome.runtime.getURL("pages/onboarding/updated.html");
+      await chrome.tabs.create({ url });
+    }
+    break;
+  }
+});
+
+/**
  * Clear any cache/ blacklist we have.
  */
 function destroy_caches() {
