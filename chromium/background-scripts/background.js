@@ -939,12 +939,12 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 chrome.runtime.onInstalled.addListener(async ({reason, temporary}) => {
   if (temporary) return;
   switch (reason) {
-    case "install":
-      {
-        const url = chrome.runtime.getURL("pages/onboarding/updated.html");
-        await chrome.tabs.create({ url });
-      }
-      break;
+    case "update":
+    {
+      const url = chrome.runtime.getURL("pages/onboarding/updated.html");
+      await chrome.tabs.create({ url });
+    }
+    break;
   }
 });
 
