@@ -46,9 +46,10 @@ class CertificatePlatforms(object):
 class FetchOptions(object):
     """HTTP fetcher options like timeouts."""
 
-    # The default list of cipher suites that ships with Firefox 68.5.0 ESR
-    # TLS 1.2 Recommemdation: https://wiki.mozilla.org/Security/Server_Side_TLS
-    _DEFAULT_CIPHERLIST = "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
+    # The default list of cipher suites that are supported in Firefox ESR, Chrome
+    # These naming formats are from OpenSSL
+    # This list is crosschecked with https://wiki.mozilla.org/Security/Cipher_Suites and https://clienttest.ssllabs.com
+    _DEFAULT_CIPHERLIST = "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384"
 
     def __init__(self, config):
         """Parse options from [http] section
