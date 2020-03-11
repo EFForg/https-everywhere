@@ -40,4 +40,3 @@ done) < "$WLIST"
 TMPFILE=`mktemp`
 (head -n1 "$WLIST" && tail -n +2 "$WLIST" | sort -t"," -b -u -k4) > "$TMPFILE"
 mv "$TMPFILE" "$WLIST"
-git diff --exit-code --no-patch "$WLIST"

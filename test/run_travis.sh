@@ -75,8 +75,6 @@ elif [ "$TEST" == "validations" ] || [ "$TEST" == "fetch" ] || [ "$TEST" == "pre
     if [ "$TEST" == "validations" ]; then
       echo >&2 "Performing validations on rulesets."
       docker run --rm -ti -v $(pwd):/opt httpse bash -c "test/validations.sh"
-      echo >&2 "Checking ruleset whitelist is updated if necessary."
-      utils/ruleset-whitelist-cleanup.sh
     fi
 
     if [ "$TEST" == "fetch" ]; then
