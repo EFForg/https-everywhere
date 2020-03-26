@@ -368,7 +368,7 @@ Officially supported browsers:
 
 We also informally support the Opera browser, but do not have tooling around testing Opera.  Firefox ESR is supported because this is what the [Tor Browser](https://www.torproject.org/projects/torbrowser.html.en), which includes HTTPS Everywhere, is built upon.  For the test commands, refer to [README.md](README.md).
 
-The current extension maintainer is @Hainish.  You can tag him for PRs which involve the core codebase.
+The current extension maintainer is [@zoracon](https://github.com/zoracon).  You can tag them for PRs which involve the core codebase.
 
 Several of our utilities and our full test suite is written in Python.  Eventually we would like the whole codebase to be standardized as JavaScript.  If you are so inclined, it would be helpful to rewrite the tooling and tests into JavaScript while maintaining the functionality.
 

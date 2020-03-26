@@ -884,6 +884,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       });
       return true;
     },
+    get_simple_rules_ending_with: () => {
+      return sendResponse(all_rules.getSimpleRulesEndingWith(message.object));
+    },
     get_last_checked: () => {
       store.local.get({'last-checked': false}, item => {
         sendResponse(item['last-checked']);
@@ -927,6 +930,21 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   };
   if (message.type in responses) {
     return responses[message.type]();
+  }
+});
+
+/**
+ * @description Upboarding event for visual changelog
+ */
+chrome.runtime.onInstalled.addListener(async ({reason, temporary}) => {
+  if (temporary) return;
+  switch (reason) {
+  case "update":
+    {
+      const url = chrome.runtime.getURL("pages/onboarding/updated.html");
+      await chrome.tabs.create({ url });
+    }
+    break;
   }
 });
 
