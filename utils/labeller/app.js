@@ -7,7 +7,6 @@ const _ = require('lodash');
 const parseXML = require('xml2js').parseString;
 const axios = require('axios');
 const unzip = require('unzipper');
-let ProgressBar = require('progress');
 const config = require('./config');
 const async = require('async');
 
@@ -20,8 +19,42 @@ const httpse = {
   repo: config.github_repo
 }
 
-class Labeller {
+let ProgressBar = require('progress');
+let alexa_labels = ['top-1m', 'top-100k', 'top-10k', 'top-1k', 'top-100'];
+
+// Utility functions stored here to not interupt flow of logic below
+class tools {
+   filter_labels(pr) {
+    // Check if Alexa labels already applied
+    let m = true;
+
+    pr.labels.forEach(element => {
+      if( alexa_labels.includes(element.name))
+        m = false;
+    });
+
+    // Return filtered pull requests
+    return m;
+  }
+
+  process_files(files, alexa) {
+    // console.log(files);
+    // console.log(alexa);
+    hosts_labels = [];
+
+    files.data.forEach(file => {
+      if(file.filename.match(/^src\/chrome\/content\/rules\//) !== null){
+        let matches = file.patch.match(/((host)="([^"]|"")*")/g);
+        
+      }
+      //filtered_match.push()
+    });
+    // if(alexa.includes()){
+
+    // }
+  }
 }
+let utils = new tools();
 
 /**
  * @description Fetch the Alexa top 1M sites and push it to an array `alexa` via streams
@@ -71,7 +104,7 @@ function get_alexa() {
     });
 }
 
-function get_prs(alexa){
+function get_prs(alexa) {
   let wildcard_www_regex = /^(www|\*)\.(.+)/
 
   octokit.paginate(
@@ -80,12 +113,27 @@ function get_prs(alexa){
   )
   .then(prs => {
     process_prs(alexa, prs)
-  });
+  })
+  .catch(reason => {
+    console.log(reason);
+  })
 }
 
-function process_prs(alexa, prs){
-  console.log(typeof alexa);
-  console.log(typeof prs);
+function process_prs(alexa, prs) {
+  let filtered_prs = prs.filter(utils.filter_labels);
+
+  prs.forEach(pr => {
+
+    let domain_label_pairs = [];
+
+    octokit.pulls.listFiles({
+      owner: httpse.owner,
+      repo: httpse.repo,
+      pull_number: pr.number,
+    }).then(files => {
+      domain_label_pairs = utils.process_files(files, alexa);
+    })
+  });
 }
 
 get_alexa();
