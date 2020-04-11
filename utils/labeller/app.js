@@ -22,9 +22,9 @@ const httpse = {
 let ProgressBar = require('progress');
 let alexa_labels = ['top-1m', 'top-100k', 'top-10k', 'top-1k', 'top-100'];
 
-// Utility functions stored here to not interupt flow of logic below
-class tools {
-   filter_labels(pr) {
+// Processing functions
+class Process {
+  labels(pr) {
     // Check if Alexa labels already applied
     let m = true;
 
@@ -37,24 +37,58 @@ class tools {
     return m;
   }
 
-  process_files(files, alexa) {
-    // console.log(files);
-    // console.log(alexa);
-    hosts_labels = [];
+  files(files, alexa) {
+    let rank;
 
     files.data.forEach(file => {
       if(file.filename.match(/^src\/chrome\/content\/rules\//) !== null){
-        let matches = file.patch.match(/((host)="([^"]|"")*")/g);
-        
-      }
-      //filtered_match.push()
-    });
-    // if(alexa.includes()){
 
-    // }
+        // Look at PR changes directly
+        let matches = file.patch.match(/((host)="([^"]|"")*")/g);
+
+        // strip to main domain
+        if( matches !== null) {
+          if( alexa.includes(matches[0].slice(6,-1))) {
+            let index = (matches[0].slice(6,-1))
+            rank = alexa.indexOf(index);
+            return rank;
+          }
+        }
+      }
+    });
+    if(rank) {
+      return rank;
+    } else {
+      return null;
+    }
+  }
+
+  return_label(rank_num) {
+    let label;
+    if(rank_num < 100){
+      label = "top-100";
+    } else if(rank_num < 1000){
+      label = "top-1k";
+    } else if(rank_num < 10000){
+      label = "top-10k";
+    } else if(rank_num < 100000){
+      label = "top-100k";
+    } else {
+      label = "top-1m";
+    }
+    return label;
+  }
+
+  add_label(chosen_label, pr_number) {
+    octokit.issues.addLabels({
+      owner: httpse.owner,
+      repo: httpse.repo,
+      issue_number: pr_number,
+      labels: [chosen_label]
+    });
   }
 }
-let utils = new tools();
+let process = new Process();
 
 /**
  * @description Fetch the Alexa top 1M sites and push it to an array `alexa` via streams
@@ -120,7 +154,7 @@ function get_prs(alexa) {
 }
 
 function process_prs(alexa, prs) {
-  let filtered_prs = prs.filter(utils.filter_labels);
+  let filtered_prs = prs.filter(process.labels);
 
   prs.forEach(pr => {
 
@@ -131,11 +165,14 @@ function process_prs(alexa, prs) {
       repo: httpse.repo,
       pull_number: pr.number,
     }).then(files => {
-      domain_label_pairs = utils.process_files(files, alexa);
+      let rank_number = process.files(files, alexa);
+      if(rank_number !== null) {
+        let determined_label = process.return_label(rank_number);
+        // pr is interchangeable with issue in API ¯\_(ツ)_/¯
+        process.add_label(determined_label, pr.number);
+      }
     })
   });
 }
 
 get_alexa();
-
-
