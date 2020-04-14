@@ -38,5 +38,5 @@ done) < "$WLIST"
 
 # Sorting by the 4th column (ruleset name)
 TMPFILE=`mktemp`
-(head -n1 "$WLIST" && tail -n +2 "$WLIST" | sort -t"," -b -u -k4) > "$TMPFILE"
+(head -n1 "$WLIST" && tail -n +2 "$WLIST" | LC_ALL=C sort -t"," -b -u -k4) > "$TMPFILE"
 mv "$TMPFILE" "$WLIST"
