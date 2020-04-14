@@ -24,7 +24,7 @@ let alexa_labels = ['top-1m', 'top-100k', 'top-10k', 'top-1k', 'top-100'];
 
 // Processing functions
 class Process {
-  labels(pr) {
+  labelled(pr) {
     // Check if Alexa labels already applied
     let m = true;
 
@@ -37,6 +37,7 @@ class Process {
     return m;
   }
 
+  // look at files in PR
   files(files, alexa) {
     let rank;
 
@@ -63,6 +64,7 @@ class Process {
     }
   }
 
+  // Get Alexa label
   return_label(rank_num) {
     let label;
     if(rank_num < 100){
@@ -79,26 +81,29 @@ class Process {
     return label;
   }
 
+  // Add Alexa Label
   add_label(chosen_label, pr_number) {
     octokit.issues.addLabels({
-      owner: httpse.owner,
-      repo: httpse.repo,
+      ...httpse,
       issue_number: pr_number,
       labels: [chosen_label]
     });
   }
 }
+
 let process = new Process();
 
 /**
  * @description Fetch the Alexa top 1M sites and push it to an array `alexa` via streams
  * @returns object
  */
-function get_alexa() {
+function initiate() {
+
   let alexa = [];
   let regex = /^[0-9]+,(.+)/
   const alexa_csv = 'https://s3.amazonaws.com/alexa-static/top-1m.csv.zip';
 
+  // Grab Alexa data
   axios({
     method: 'get',
     url: alexa_csv,
@@ -154,15 +159,14 @@ function get_prs(alexa) {
 }
 
 function process_prs(alexa, prs) {
-  let filtered_prs = prs.filter(process.labels);
+  let filtered_prs = prs.filter(process.labelled);
 
   prs.forEach(pr => {
 
     let domain_label_pairs = [];
 
     octokit.pulls.listFiles({
-      owner: httpse.owner,
-      repo: httpse.repo,
+      ...httpse,
       pull_number: pr.number,
     }).then(files => {
       let rank_number = process.files(files, alexa);
@@ -175,4 +179,4 @@ function process_prs(alexa, prs) {
   });
 }
 
-get_alexa();
+initiate();
