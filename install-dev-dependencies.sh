@@ -52,8 +52,8 @@ if type apt-get>/dev/null 2>&1;  then
     $SUDO_SHIM chown root /usr/bin/geckodriver
     $SUDO_SHIM chmod 755 /usr/bin/geckodriver
   fi
-  if [ ! -f /usr/lib/chromium/chromedriver ] && [ -f `which chromedriver` ]; then
-    $SUDO_SHIM ln -s `which chromedriver` /usr/lib/chromium/chromedriver
+  if [ ! -f /usr/lib/chromium-browser/chromedriver ] && [ -f `which chromedriver` ]; then
+    $SUDO_SHIM ln -s `which chromedriver` /usr/lib/chromium-browser/chromedriver
   fi
 
 # macOS installation
