@@ -4,8 +4,9 @@ toplevel=$(git rev-parse --show-toplevel)
 
 function setup_chrome {
     # Install the latest version of the chromedriver
-    version=$(wget https://chromedriver.storage.googleapis.com/LATEST_RELEASE -q -O -)
-    url="https://chromedriver.storage.googleapis.com/${version}/chromedriver_linux64.zip"
+    # version=$(wget https://chromedriver.storage.googleapis.com/LATEST_RELEASE -q -O -)
+    # Mismatch on Chromedriver Latest and Chrome Beta.
+    url="https://chromedriver.storage.googleapis.com/83.0.4103.14/chromedriver_linux64.zip"
     wget -O /tmp/chromedriver.zip ${url}
     sudo unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
     sudo chmod a+x /usr/local/bin/chromedriver
