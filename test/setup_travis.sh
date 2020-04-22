@@ -49,7 +49,7 @@ function setup_docker {
 
 case $TEST in
   *chrome*)
-    setup_chrome
+    setup_chrome $TEST
     browser_setup
     ;;
   *firefox*) # Install the latest version of geckodriver
