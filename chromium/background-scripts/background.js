@@ -374,6 +374,7 @@ function onBeforeRequest(details) {
     (uri.protocol === 'http:' || uri.protocol === 'ftp:') &&
     uri.hostname.slice(-6) !== '.onion' &&
     uri.hostname !== 'localhost' &&
+    !uri.endsWith('.localhost') &&
     uri.hostname !== '[::1]' &&
     !isLocalIp;
 
