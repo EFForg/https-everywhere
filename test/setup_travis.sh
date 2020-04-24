@@ -5,7 +5,14 @@ toplevel=$(git rev-parse --show-toplevel)
 function setup_chrome {
     # Install the latest version of the chromedriver
     version=$(wget https://chromedriver.storage.googleapis.com/LATEST_RELEASE -q -O -)
-    url="https://chromedriver.storage.googleapis.com/${version}/chromedriver_linux64.zip"
+
+    # Mismatch on Chromedriver Latest and Chrome Beta, hardcode for Chrome Beta
+    if [ "$1" == "chrome beta" ]; then
+      url="https://chromedriver.storage.googleapis.com/83.0.4103.14/chromedriver_linux64.zip"
+    elif [ "$1" == "chrome stable" ]; then
+      url="https://chromedriver.storage.googleapis.com/${version}/chromedriver_linux64.zip"
+    fi
+
     wget -O /tmp/chromedriver.zip ${url}
     sudo unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
     sudo chmod a+x /usr/local/bin/chromedriver
@@ -44,7 +51,7 @@ function setup_docker {
 
 case $TEST in
   *chrome*)
-    setup_chrome
+    setup_chrome "$TEST"
     browser_setup
     ;;
   *firefox*) # Install the latest version of geckodriver
