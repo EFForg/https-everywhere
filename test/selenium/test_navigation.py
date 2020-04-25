@@ -19,12 +19,13 @@ class TestNavigation(ExtensionTestCase):
         self.assertEqual(self.driver.current_url, kittens_url)  # not https
 
     def test_httpnowhere_blocks(self):
-        if self.shim.browser_type == 'firefox':
-            raise unittest.SkipTest('broken on firefox')
+        #if self.shim.browser_type == 'firefox':
+        #    raise unittest.SkipTest('broken on firefox')
         href_script = 'return window.location.href;'
         self.toggle_http_nowhere()
         self.driver.get(http_url)
-        self.assertFalse(http_url == self.driver.execute_script(href_script))
+        expected_href_location = self.driver.execute_script(href_script)
+        self.assertFalse(True, msg='Expect window.location.href equals {1}, but got {0}'.format(http_url, expected_href_location))
 
     def test_http_site_not_blocked(self):
         self.driver.get(http_url)
