@@ -21,14 +21,7 @@ class TestNavigation(ExtensionTestCase):
     def test_httpnowhere_blocks(self):
         #if self.shim.browser_type == 'firefox':
         #    raise unittest.SkipTest('broken on firefox')
-        href_script = """(async () => {
-          return await new Promise(resolve => {
-            setTimeout(() => {
-              resolve(window.href.location);
-            }, 1000);
-          })
-        })();
-        """
+        href_script = 'return window.location.href;'
         self.toggle_http_nowhere()
         self.driver.get(http_url)
         expected_href_location = self.driver.execute_script(href_script)
