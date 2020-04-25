@@ -124,4 +124,4 @@ class ExtensionTestCase(unittest.TestCase):
         with self.load_popup_for():
             el = self.query_selector(selector)
             el.click()
-            time.sleep(0.25)
+            time.sleep(1)
