@@ -19,8 +19,8 @@ class TestNavigation(ExtensionTestCase):
         self.assertEqual(self.driver.current_url, kittens_url)  # not https
 
     def test_httpnowhere_blocks(self):
-        if self.shim.browser_type == 'firefox':
-            raise unittest.SkipTest('broken on firefox')
+        # if self.shim.browser_type == 'firefox':
+        #     raise unittest.SkipTest('broken on firefox')
         href_script = 'return window.location.href;'
         self.driver.get(http_url)
         self.toggle_http_nowhere()
