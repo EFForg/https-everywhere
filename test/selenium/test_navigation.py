@@ -22,8 +22,8 @@ class TestNavigation(ExtensionTestCase):
         if self.shim.browser_type == 'firefox':
             raise unittest.SkipTest('broken on firefox')
         href_script = 'return window.location.href;'
-        self.toggle_http_nowhere()
         self.driver.get(http_url)
+        self.toggle_http_nowhere()
         self.assertFalse(http_url == self.driver.execute_script(href_script))
 
     def test_http_site_not_blocked(self):
