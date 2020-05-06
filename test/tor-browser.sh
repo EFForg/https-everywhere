@@ -34,6 +34,9 @@ HTTPSE_INSTALL_XPI=$TBB_LOCALIZED_DIRECTORY/Browser/TorBrowser/Data/Browser/prof
 # Remove the prebundled HTTPSE
 rm -rf $HTTPSE_INSTALL_XPI
 
+# Allow unsigned extensions
+echo 'user_pref("xpinstall.signatures.required", false);' >> $TBB_LOCALIZED_DIRECTORY/Browser/TorBrowser/Data/Browser/profile.default/user.js
+
 # Build the XPI to run all the validations in make.sh, and to ensure that
 # we test what is actually getting built.
 ./make.sh
