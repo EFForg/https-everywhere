@@ -488,7 +488,7 @@ RuleSets.prototype = {
 
       let default_off = ruletag.getAttribute("default_off");
       if (default_off) {
-        ruleset["default_off"] = platform;
+        ruleset["default_off"] = default_off;
       }
 
       let platform = ruletag.getAttribute("platform");
