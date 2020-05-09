@@ -20,28 +20,28 @@ if (navigator.userAgent.includes("Android")) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const secretArea = document.getElementById('secretArea')
+  const secretArea = document.getElementById('secretArea');
 
   const onKeyDownHandler = evt => {
     if (evt.ctrlKey && evt.key === 'z') {
-      secretArea.classList.remove('hidden')
-      secretArea.classList.add('flash')
+      secretArea.classList.remove('hidden');
+      secretArea.classList.add('flash');
 
-      sendMessage('set_option', { developerMode: true })
+      sendMessage('set_option', { developerMode: true });
 
-      document.removeEventListener('keydown', onKeyDownHandler)
+      document.removeEventListener('keydown', onKeyDownHandler);
 
-      evt.preventDefault()
+      evt.preventDefault();
     }
-  }
+  };
 
   sendMessage('get_option', { developerMode: false }, item => {
     if (item.developerMode) {
-      secretArea.classList.remove('hidden')
+      secretArea.classList.remove('hidden');
     } else {
-      document.addEventListener('keydown', onKeyDownHandler)
+      document.addEventListener('keydown', onKeyDownHandler);
     }
-  })
+  });
 
   const autoUpdateRulesets = document.getElementById("autoUpdateRulesets");
   const enableMixedRulesets = document.getElementById("enableMixedRulesets");
@@ -295,7 +295,7 @@ document.addEventListener("DOMContentLoaded", () => {
         sendMessage("remove_rule", { ruleset: userRule, src: 'options' });
       });
     }
-  })
+  });
 
   // HTTPS Everywhere Sites Disabled section in General Settings module
   getOption_("disabledList", [], function(item) {
