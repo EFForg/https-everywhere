@@ -365,7 +365,7 @@ RuleSets.prototype = {
       if (this.wasm_rs) {
         this.wasm_rs.remove_ruleset(ruleset);
       } else {
-        const tmp = this.targets.get(ruleset.name).filter(r => !r.isEquivalentTo(ruleset))
+        const tmp = this.targets.get(ruleset.name).filter(r => !r.isEquivalentTo(ruleset));
         this.targets.set(ruleset.name, tmp);
 
         if (this.targets.get(ruleset.name).length == 0) {

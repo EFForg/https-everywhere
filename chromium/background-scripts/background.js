@@ -793,7 +793,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
           if (sendResponse !== null) {
             sendResponse(true);
           }
-        })
+        });
       return true;
     },
     get_ruleset_timestamps: () => {
