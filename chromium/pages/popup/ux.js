@@ -253,7 +253,7 @@ document.addEventListener("DOMContentLoaded", function () {
     timestamp_span.className = "rulesets-version";
     timestamp_span.innerText = `${chrome.i18n.getMessage("about_rulesets_version")} ${update_channel_name}: ${ruleset_version_string}`;
     this.appendChild(timestamp_span);
-  }
+  };
 
   sendMessage("get_ruleset_timestamps", null, timestamps => {
     let replaces = timestamps.some(([update_channel, timestamp]) =>

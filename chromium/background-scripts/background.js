@@ -313,7 +313,7 @@ BrowserSession.prototype = {
       this.requests.delete(requestId);
     }
   }
-}
+};
 
 let browserSession = new BrowserSession();
 
@@ -647,7 +647,7 @@ function onHeadersReceived(details) {
       const upgradeInsecureRequests = {
         name: 'Content-Security-Policy',
         value: 'upgrade-insecure-requests'
-      }
+      };
       details.responseHeaders.push(upgradeInsecureRequests);
       responseHeadersChanged = true;
     }
@@ -670,7 +670,7 @@ chrome.webRequest.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https:
 chrome.webRequest.onCompleted.addListener(onCompleted, {urls: ["*://*/*"]});
 
 // Cleanup redirectCounter if necessary
-chrome.webRequest.onErrorOccurred.addListener(onErrorOccurred, {urls: ["*://*/*"]})
+chrome.webRequest.onErrorOccurred.addListener(onErrorOccurred, {urls: ["*://*/*"]});
 
 // Insert upgrade-insecure-requests directive in httpNowhere mode
 chrome.webRequest.onHeadersReceived.addListener(onHeadersReceived, {urls: ["https://*/*"]}, ["blocking", "responseHeaders"]);
