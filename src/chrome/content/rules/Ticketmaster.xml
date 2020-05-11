@@ -1,140 +1,44 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://ticketmaster.co.uk/ => https://www.ticketmaster.co.uk/section/: Too many redirects while fetching 'https://www.ticketmaster.co.uk/section/'
-
-	For other Live Nation coverage, see LiveNation.com.xml
+	For other Live Nation coverage, see 
+		+ LiveNation.com.xml
 
 	Other ticketmaster rulesets:
-		BilletNet.dk.xml
-		ETicketing.co.uk.xml
-
-	CDN buckets:
-
-		- ads.ticketmaster1st.akadns.net
-
-			 - ads.tmcs.ticketmaster.com
-			 - ads.as4x.tmcs.ticketmaster.com
-
-		- ticketmaster.ugc.bazaarvoice.com
-
-			- reviews.ticketmaster.co.uk
-
-		- ticketmaster.com.d2.sc.omtrdc.net
-
-			- metrics.ticketmaster.com
-
-
-	Problematic domains:
-
-		- (www.)billetnet.es			(redirects to billetnet.fr)
-		- (www.)billetnet.fr			(shows default Parallels Panel page)
-		- ticketmaster.com			(only matches www)
-		- media.ticketmaster.com *
-		- media.ticketmaster.co.uk *
-		- metrics.ticketmaster.com		(mismatched, CN: *.d2.sc.omtrdc.net)
-		- reviews.ticketmaster.co.uk *
-		- ads.tmcs.ticketmaster.com **
-		- ads.as4x.tmcs.ticketmaster.com **
-		- ticketmaster.co.uk			(cert only matches media)
-		- ticketmaster.es ***
-		- i.ticketweb.com **
-		- (www.)tmdeals.co.uk
-
-	* Akamai
-	** CN: de.ticketmaster.com, works.
-	*** Cert only matches www
-
-
-	Partially covered domains:
-
-		- (www.)ticketmaster.com *
-		- ticketsnow.ticketmaster.com *
-		- reviews.ticketmaster.co.uk *
-		- (www.)ticketmaster.de *
-		- (www.)ticketmaster.nl *
-
-	* At least some pages redirect to http.
-
-
-	Fully covered domains:
-
-		- (www.)ticketmaster.co.uk	(^ → www)
-		- secure.store.ticketmaster.com
-		- de.ticketmaster.com
-		- (www.)ticketmaster.es		(^ → www)
+		+ BilletNet.dk.xml
+		+ ETicketing.co.uk.xml
+		+ Ticketmaster.ae.xml
+		+ Ticketmaster.at.xml
+		+ Ticketmaster.be.xml
+		+ Ticketmaster.ch.xml
+		+ Ticketmaster.co.nz.xml
+		+ Ticketmaster.co.uk.xml
+		+ Ticketmaster.com.au.xml
+		+ Ticketmaster.com.mx.xml
+		+ Ticketmaster.cz.xml
+		+ Ticketmaster.de.xml
+		+ Ticketmaster.dk.xml
+		+ Ticketmaster.es.xml
+		+ Ticketmaster.eu.xml
+		+ Ticketmaster.fi.xml
+		+ Ticketmaster.fr.xml
+		+ Ticketmaster.gr.xml
+		+ Ticketmaster.ie.xml
+		+ Ticketmaster.it.xml
+		+ Ticketmaster.nl.xml
+		+ Ticketmaster.no.xml
+		+ Ticketmaster.pl.xml
+		+ Ticketmaster.se.xml
 
 -->
-<ruleset name="Ticketmaster (partial)" default_off="failed ruleset test">
+<ruleset name="Ticketmaster.com (partial)">
+	<target host="ticketmaster.com" />
+	<target host="media.ticketmaster.com" />
+	<test url="http://media.ticketmaster.com/en-au/img/static/pdf/AIDA_guide.pdf" />
+	<test url="http://media.ticketmaster.com/en-au/img/static/pdf/WA_SchoolsList_2016.pdf" />
+	<test url="http://media.ticketmaster.com/en-nz/img/static/pdf/tmnz_aga_pds.pdf" />
+	<target host="ticketsnow.ticketmaster.com" />
+	<target host="www.ticketmaster.com" />
 
-	<target host="ticketmaster.*" />
-	<target host="www.ticketmaster.*" />
-	<target host="*.ticketmaster.com" />
-	<target host="ticketmaster.co.uk" />
-	<target host="*.ticketmaster.co.uk" />
-	<target host="ticketweb.*" />
-	<target host="*.ticketweb.com" />
-	<target host="www.ticketweb.co.uk" />
+	<securecookie host=".+" name=".+" />
 
-
-	<!--
-		Omniture cookies:
-					-->
-	<securecookie host="^\.ticketmaster\.com$" name="^s_vi$" />
-	<securecookie host="^de\.ticketmaster\.com$" name=".+" />
-
-	<rule from="^http://(?:www\.)?ticket(?:ek|master)\.cl/"
-		to="https://www.ticketek.cl/" />
-
-
-	<rule from="^http://(?:www\.)?ticketmaster\.(ca|com\.(?:au|nz|mx)|ie)/favicon-rebrand\.ico"
-		to="https://www.ticketmaster.$1/favicon-rebrand.ico" />
-
-	<rule from="^http://(?:www\.)?ticketmaster\.com/(app/|checkout/|h/|json/|member(?:$|\?|/))"
-		to="https://www.ticketmaster.com/$1" />
-
-
-	<rule from="^http://(ds|mm|secure\.store)\.ticketmaster\.com/"
-		to="https://$1.ticketmaster.com/" />
-
-	<rule from="^http://metrics\.ticketmaster\.com/"
-		to="https://ticketmaster-com.d2.sc.omtrdc.net/" />
-
-	<rule from="^http://ticketsnow\.ticketmaster\.com/(DataProviders/|Scripts/|TopCitiesDropDownListGenerator\.aspx|UI/)"
-		to="https://ticketsnow.ticketmaster.com/$1" />
-
-
-	<rule from="^http://(?:www\.)?ticketmaster\.co\.uk/(?:section)?(\?.*)?$"
-		to="https://www.ticketmaster.co.uk/section/$1" />
-
-	<rule from="^http://(?:www\.)?ticketmaster\.co\.uk/"
-		to="https://www.ticketmaster.co.uk/" />
-
-	<rule from="^http://reviews\.ticketmaster\.co\.uk/(logging(?:$|\?)|\d+-\w\w_\w\w/\d+/reviews\.htm\?.*format=embedded|static/)"
-		to="https://ticketmaster.ugc.bazaarvoice.com/$1" />
-
-
-	<rule from="^http://(?:www\.)?ticketmaster\.(de|es|nl)/"
-		to="https://www.ticketmaster.$1/" />
-
-
-	<rule from="^http://(?:www\.)?ticketmaster\.dk/"
-		to="https://www.billetnet.dk/" />
-
-
-	<rule from="^http://media\.ticketmaster\.eu/"
-		to="https://media.ticketmaster.eu/" />
-
-
-	<rule from="^http://(?:www\.)?ticketnet\.fr/(assets|static)/"
-		to="https://www.ticketnet.fr/$1/" />
-
-
-	<rule from="^http://(?:www\.)?ticketweb\.com/"
-		to="https://www.ticketweb.com/" />
-
-
-	<rule from="^http://(?:www\.)?ticketweb\.co\.uk/(images/|INFO/|giftcards|member|partners/|section/|styles\.css|twpurple\.html|ukcontent\.css|user/gb_northeast/order/|venuepages/|[\w\./-]+\.html$|[\w-]+/artist/\d+)"
-		to="https://www.ticketweb.co.uk/$1" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
