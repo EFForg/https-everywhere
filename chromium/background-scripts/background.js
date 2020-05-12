@@ -869,10 +869,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
         // Ensure that we check for new rulesets from the update channel immediately.
         // If the scope has changed, make sure that the rulesets are re-initialized.
+        update.removeStorageListener();
         store.set({update_channels: item.update_channels}, () => {
-          // Since loadUpdateChannesKeys is already contained in chrome.storage.onChanged
-          // within update.js, the below call will make it run twice. This is
-          // necesssary to avoid a race condition, see #16673
           update.loadUpdateChannelsKeys().then(() => {
             update.resetTimer();
             if(scope_changed) {
@@ -880,8 +878,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             }
             sendResponse(true);
           });
+          update.addStorageListener();
         });
-
       });
       return true;
     },
