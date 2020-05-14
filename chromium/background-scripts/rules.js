@@ -207,7 +207,12 @@ RuleSets.prototype = {
    */
   loadFromBrowserStorage: async function(store, applyStoredFunc) {
     this.store = store;
-    this.ruleActiveStates = await this.store.get_promise('ruleActiveStates', {});
+
+    await this.store.get_promise('ruleActiveStates', {})
+      .then(({ruleActiveStates}) => {
+        this.ruleActiveStates = ruleActiveStates;
+      });
+
     try {
       this.wasm_rs = wasm.RuleSets.new();
     } catch(e) {
