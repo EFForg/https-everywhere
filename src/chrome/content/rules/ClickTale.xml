@@ -2,14 +2,16 @@
 	CDN buckets:
 
 		- clicktalecdn.sslcs.cdngc.net
-		- clicktale.pantherssl.com
-
 
 	Problematic domains:
 
 		- clicktale.com		(interrupted)
 		- cdn.clicktale.net	(403, mismatched, CN: ssl2.cdngc.net)
 		- s.clicktale.net	(403; mismatched, CN: ssl2.cdngc.net)
+
+  Connection Refused/Unresolved Hosts
+    - s.clicktale.net
+    - clicktale.pantherssl.com
 
 -->
 <ruleset name="ClickTale">
@@ -38,13 +40,20 @@
 			- Cert: ssl2.cdngc.net
 			- 403s
 		 	- Scripts 404 when rewritten to ^clicktale.net
-							-->
+
+       - Times out
 	<rule from="^http://s\.clicktale\.net/"
 		to="https://clicktale.pantherssl.com/" />
+  -->
 
-	<rule from="^http://cdn\.clicktale\.net/"
+
+	<!--
+    404:
+    <rule from="^http://cdn\.clicktale\.net/"
+
+    unresolved:
 		to="https://clicktalecdn.sslcs.cdngc.net/" />
-
+  -->
 
 	<rule from="^http:" to="https:" />
 </ruleset>
