@@ -266,7 +266,7 @@ RuleSets.prototype = {
 
     // If a ruleset declares a platform, and we don't match it, treat it as
     // off-by-default. In practice, this excludes "mixedcontent" rules.
-    var platform = ruletag["platform"]
+    var platform = ruletag["platform"];
     if (platform) {
       default_state = false;
       if (platform == "mixedcontent" && settings.enableMixedRulesets) {
@@ -365,7 +365,7 @@ RuleSets.prototype = {
       if (this.wasm_rs) {
         this.wasm_rs.remove_ruleset(ruleset);
       } else {
-        const tmp = this.targets.get(ruleset.name).filter(r => !r.isEquivalentTo(ruleset))
+        const tmp = this.targets.get(ruleset.name).filter(r => !r.isEquivalentTo(ruleset));
         this.targets.set(ruleset.name, tmp);
 
         if (this.targets.get(ruleset.name).length == 0) {
@@ -488,7 +488,7 @@ RuleSets.prototype = {
 
       let default_off = ruletag.getAttribute("default_off");
       if (default_off) {
-        ruleset["default_off"] = platform;
+        ruleset["default_off"] = default_off;
       }
 
       let platform = ruletag.getAttribute("platform");
