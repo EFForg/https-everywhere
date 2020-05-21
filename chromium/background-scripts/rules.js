@@ -586,6 +586,9 @@ RuleSets.prototype = {
         } else {
           rs.exclusions = null;
         }
+
+        rs.active = ruleset.active;
+
         return rs;
       }));
     } else {
