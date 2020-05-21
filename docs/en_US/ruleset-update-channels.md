@@ -29,6 +29,7 @@ Update channels can be found in [`chromium/background-scripts/update_channels.js
 2. A `jwk` object, which defines the RSA public key to use when verifying downloaded rulesets
 3. A `update_path_prefix` string, which tells the extension where to look for new rulesets
 4. A `scope` string, which is used to construct a JavaScript `RegExp` object
+5. A `replaces_default_rulesets` boolean, which tells the extension whether to overwrite the rulesets bundled with the extension
 
 Every 24 hours, the extension checks the URL contained in `update_path_prefix` appended with `/latest-rulesets-timestamp` (in the case of `EFF (Full)`, `https://www.https-rulesets.org/v1//latest-rulesets-timestamp`).  If it discovers the timestamp has updated since the last time it fetched the rulesets, it will download a new ruleset, following the format `update_path_prefix` appended with `default.rulesets.XXXXXXXXXX.gz`, where `XXXXXXXXXX` is the timestamp discovered in the previous request.  At the same time, a corresponding signature for that file is downloaded, `update_path_prefix` appended with `rulesets-signature.XXXXXXXXXX.sha256`, again with the timestamp replacing the `XXXXXXXXXX`.
 
