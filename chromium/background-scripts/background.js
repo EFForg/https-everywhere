@@ -185,8 +185,8 @@ function updateState () {
     if (!tabs || tabs.length === 0) {
       return;
     }
-    
-    // tabUrl.host should be used to show the "disabled" status properly (#19293) 
+
+    // tabUrl.host should be used to show the "disabled" status properly (#19293)
     const tabUrl = new URL(tabs[0].url);
     const host = util.getNormalisedHostname(tabUrl.host);
 
