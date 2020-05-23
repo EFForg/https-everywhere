@@ -62,10 +62,15 @@ function loadExtensionFile(url, returnType) {
 
 /**
  * Remove tailing dots from hostname, e.g. "www.example.com."
+ * Preserve port numbers if they are used
  */
-function getNormalisedHostname(hostname) {
+function getNormalisedHostname(host) {
+  let [ hostname, port ] = host.split(":");
   while (hostname && hostname[hostname.length - 1] === '.' && hostname !== '.') {
     hostname = hostname.slice(0, -1);
+  }
+  if (port) {
+    return `${hostname}:${port}`;
   }
   return hostname;
 }
