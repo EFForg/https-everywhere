@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  function create_update_channel_element(update_channel, last_updated, pinned) {
+  function create_update_channel_element(update_channel, last_updated, locked) {
     let ruleset_version_string;
 
     if(last_updated) {
@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const update_channel_jwk = document.createElement('textarea');
     update_channel_jwk.className = "update-channel-jwk";
     update_channel_jwk.setAttribute("data-name", update_channel.name);
-    update_channel_jwk.disabled = pinned;
+    update_channel_jwk.disabled = locked;
     update_channel_jwk.innerText = JSON.stringify(update_channel.jwk);
     update_channel_jwk_column_right.appendChild(update_channel_jwk);
 
@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
     update_channel_path_prefix.setAttribute("type", "text");
     update_channel_path_prefix.className = "update-channel-path-prefix";
     update_channel_path_prefix.setAttribute("data-name", update_channel.name);
-    update_channel_path_prefix.disabled = pinned;
+    update_channel_path_prefix.disabled = locked;
     update_channel_path_prefix.value = update_channel.update_path_prefix;
     update_channel_path_prefix_column_right.appendChild(update_channel_path_prefix);
 
@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
     update_channel_scope.setAttribute("type", "text");
     update_channel_scope.className = "update-channel-scope";
     update_channel_scope.setAttribute("data-name", update_channel.name);
-    update_channel_scope.disabled = pinned;
+    update_channel_scope.disabled = locked;
     update_channel_scope.value = update_channel.scope;
     update_channel_scope_column_right.appendChild(update_channel_scope);
 
@@ -183,13 +183,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const update_channel_update = document.createElement('button');
     update_channel_update.className = "update-channel-update";
     update_channel_update.setAttribute("data-name", update_channel.name);
-    update_channel_update.disabled = pinned;
+    update_channel_update.disabled = locked;
     update_channel_update.innerText = chrome.i18n.getMessage("options_update");
     update_channel_controls_column_right.appendChild(update_channel_update);
     const update_channel_delete = document.createElement('button');
     update_channel_delete.className = "update-channel-update";
     update_channel_delete.setAttribute("data-name", update_channel.name);
-    update_channel_delete.disabled = pinned;
+    update_channel_delete.disabled = locked;
     update_channel_delete.innerText = chrome.i18n.getMessage("options_delete");
     update_channel_controls_column_right.appendChild(update_channel_delete);
 
@@ -229,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
           create_update_channel_element(
             update_channel,
             item.last_updated[update_channel.name],
-            true
+            true,
           )
         );
 
@@ -242,7 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
           create_update_channel_element(
             update_channel,
             item.last_updated[update_channel.name],
-            false
+            update_channel.locked === true,
           )
         );
       }
