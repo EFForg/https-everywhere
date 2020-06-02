@@ -360,7 +360,7 @@ function onBeforeRequest(details) {
 
     // Check if an user has disabled HTTPS Everywhere on this site.  We should
     // ensure that all subresources are not run through HTTPS Everywhere as well.
-    browserSession.putTab(details.tabId, 'first_party_host', uri.hostname, true);
+    browserSession.putTab(details.tabId, 'first_party_host', uri.host, true);
   }
 
   if (isExtensionDisabledOnSite(browserSession.getTab(details.tabId, 'first_party_host', null))) {
