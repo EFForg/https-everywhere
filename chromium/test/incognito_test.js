@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const expect = require('chai').expect,
   tu = require('./testing_utils'),
@@ -19,11 +19,11 @@ describe('incognito.js', function() {
       this.callbackCalled = false;
       this.callback = () => this.callbackCalled = true;
       this.instance = incognito.onIncognitoDestruction(this.callback);
-    })
+    });
 
     it('no incognito session by default', function() {
       expect(incognito.state.incognito_session_exists).to.be.false;
-    })
+    });
 
     it('with no incognito, callback not called', async function() {
       incognito.state.incognito_session_exists = false;
@@ -54,6 +54,6 @@ describe('incognito.js', function() {
     it('detects when an incognito window is created', function() {
       this.instance.detect_incognito_creation({incognito: true});
       expect(incognito.state.incognito_session_exists, 'constant changed').to.be.true;
-    })
+    });
   });
 });
