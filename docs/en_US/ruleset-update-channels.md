@@ -123,7 +123,7 @@ You will need python 3.6 on your system or available via docker for the next ste
 
 Next, run
 
-    python3.6 utils/merge-rulesets.py
+    python3.8 utils/merge-rulesets.py
 
 You should see the following output:
 

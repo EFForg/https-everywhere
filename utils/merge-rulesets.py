@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3.8
 
 # Merge all the .xml rulesets into a single "default.rulesets" file -- this
 # prevents inodes from wasting disk space, but more importantly, this works

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3.8
 import MySQLdb
 
 try:    from db_private import DB_USER

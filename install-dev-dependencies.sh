@@ -42,7 +42,7 @@ if type apt-get>/dev/null 2>&1;  then
     CHROMEDRIVER="chromedriver"
   fi
   $SUDO_SHIM apt-get install -y libxml2-dev libxml2-utils libxslt1-dev \
-    python3.6-dev $BROWSERS zip sqlite3 python3-pip libcurl4-openssl-dev xvfb \
+    python3.8-dev $BROWSERS zip sqlite3 python3-pip libcurl4-openssl-dev xvfb \
     libssl-dev git curl $CHROMEDRIVER
   if ! type geckodriver >/dev/null 2>&1;  then
     curl -LO "https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux$ARCH.tar.gz"
