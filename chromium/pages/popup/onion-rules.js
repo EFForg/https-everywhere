@@ -12,9 +12,27 @@ document.addEventListener("DOMContentLoaded", function () {
     elem[i].innerHTML = chrome.i18n.getMessage(elem[i].getAttribute("i18n"));
   }
 
-  e("test").addEventListener("click", showRules);
+  showRules();
 });
 
+function _createTD(text) {
+  var td = document.createElement('td');
+  var textNode = document.createTextNode(text);
+  td.appendChild(textNode);
+  return td;
+}
+
 function showRules() {
-  chrome.runtime.sendMessage({type: "get_simple_rules_ending_with", object: ".tor.onion"}, rules => console.log(rules));
+  chrome.runtime.sendMessage({type: "get_simple_rules_ending_with", object: ".tor.onion"}, rules => {
+    var tbody = document.getElementById('onionTable');
+    for (var i in rules) {
+      var rule = rules[i];
+      var tr = document.createElement("tr");
+      tr.appendChild(_createTD(rule.from_regex));
+      tr.appendChild(_createTD(rule.scope_regex));
+      tr.appendChild(_createTD(rule.host));
+      tr.appendChild(_createTD(rule.to));
+      tbody.appendChild(tr);
+    }
+  });
 }
