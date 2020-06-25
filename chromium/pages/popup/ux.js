@@ -275,11 +275,16 @@ document.addEventListener("DOMContentLoaded", function () {
   e("add-rule-link").addEventListener("click", addManualRule);
   e("disable-on-this-site").addEventListener("click", disableOnSite);
   e("enable-on-this-site").addEventListener("click", enableOnSite);
+  e("viewOnionRules").addEventListener("click", viewOnionRules);
 });
 
 var escapeForRegex = function( value ) {
   return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
 };
+
+function viewOnionRules() {
+  chrome.windows.create({'url': '/pages/popup/onion-rules.html', 'type': 'popup'}, function(window) { });
+}
 
 function showEnableOrDisable(url, disabled) {
   if (["http:", "https:", "ftp:"].indexOf(url.protocol) != -1) {
