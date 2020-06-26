@@ -43,7 +43,7 @@ Incognito.prototype = {
       }
     }
   },
-}
+};
 
 /**
  * Check if any incognito window still exists

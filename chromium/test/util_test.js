@@ -46,7 +46,7 @@ describe('util.js', function() {
       assert.strictEqual(util.isValidHostname('example..com'), false);
       assert.strictEqual(util.isValidHostname('www.example..com'), false);
     });
-  })
+  });
 
   describe('getNormalisedHostname', function() {
     it('removes tailing dots', function() {

@@ -1,57 +1,13 @@
-<!--
-	CDN buckets:
-
-		- newsela-test-files-f331e.s3.amazonaws.com
-
-
-	Nonfunctional hosts in *newsela.com:
-
-		- support ʰ
-
-	ʰ Zendesk / redirects to http
-
-
-	Problematic hosts in *newsela.com:
-
-		- static ᵐ
-
-	ᵐ Cloudfront / mismatched
-
-
-	Insecure cookies are set for these domains: ᶜ
-
-		- .newsela.com
-
-	ᶜ See https://owasp.org/index.php/SecureFlag
-
--->
-<ruleset name="Newsela.com (partial)">
-
-	<!--	Direct rewrites:
-				-->
+<ruleset name="Newsela.com">
 	<target host="newsela.com" />
+	<target host="www.newsela.com" />
 	<target host="blog.newsela.com" />
 	<target host="e.newsela.com" />
-	<target host="www.newsela.com" />
-
-	<!--	Complications:
-				-->
 	<target host="static.newsela.com" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.newsela\.com$" name="^sessionid_v2$" /-->
+		<test url="http://static.newsela.com/teachers/Newsela%E2%80%99s%20Summer%20Reading%20Challenge.pdf" />
+	<target host="support.newsela.com" />
 
 	<securecookie host=".+" name=".+" />
 
-
-	<rule from="^http://static\.newsela\.com/"
-		to="https://newsela-test-files-f331e.s3.amazonaws.com/" />
-
-		<test url="http://static.newsela.com/teachers/Newsela%E2%80%99s%20Summer%20Reading%20Challenge.pdf" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>
