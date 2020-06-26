@@ -30,6 +30,7 @@ args = parser.parse_args()
 
 # output filename, pointed to the merged ruleset
 ofn = os.path.join(args.source_dir, "default.rulesets")
+ojson = os.path.join(args.source_dir, "default.rulesets.json")
 
 # XML Ruleset Files
 files = map(normalize, glob.glob(os.path.join(args.source_dir, "*.xml")))
@@ -37,6 +38,8 @@ files = map(normalize, glob.glob(os.path.join(args.source_dir, "*.xml")))
 # Under git bash, sed -i issues errors and sets the file "read-only".
 if os.path.isfile(ofn):
     os.system("chmod u+w " + ofn)
+if os.path.isfile(ojson):
+    os.system("chmod u+w " + ojson)
 
 # Library (JSON Object)
 library = []
@@ -97,10 +100,15 @@ for filename in sorted(files):
     library.append(ruleset);
 
 # Write to default.rulesets
-print(" * Writing JSON library to %s" % ofn)
+print(" * Writing JSON library to %s and %s"% (ofn, ojson) )
 outfile = open(ofn, "w")
+jsonout = open(ojson, "w")
+
 outfile.write(json.dumps(library, separators=(",", ":")))
+jsonout.write(json.dumps(library, separators=(",", ":")))
+
 outfile.close()
+jsonout.close()
 
 # Everything is okay.
 print(" * Everything is okay.")
