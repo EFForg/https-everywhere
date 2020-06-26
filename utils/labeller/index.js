@@ -180,3 +180,5 @@ function process_prs(alexa, prs) {
 }
 
 initiate();
+
+module.exports = Process;
