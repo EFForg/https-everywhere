@@ -132,6 +132,7 @@ function setStorage(store) {
     set_promise,
     local
   });
+  chrome.runtime.sendMessage("store_initialized");
 }
 
 Object.assign(exports, {

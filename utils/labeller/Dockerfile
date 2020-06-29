@@ -1,5 +1,5 @@
-FROM node:8-alpine
-LABEL maintainer="William Budington <bill@eff.org>"
+FROM node:10-alpine
+LABEL maintainer="Alexis Hancock <alexis@eff.org>"
 
 WORKDIR /opt
 

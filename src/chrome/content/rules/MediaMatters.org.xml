@@ -1,64 +1,27 @@
 <!--
-	CDN buckets:
+	Non-functional hosts
+		Timeout was reached:
+		- mta.e.mediamatters.org
+		- o1.email.mediamatters.org
+		- mail.mediamatters.org
+		- mythopedia.mediamatters.org
+		- www.mythopedia.mediamatters.org
+		- pti.mediamatters.org
 
-		- s3.mediamatters.org.s3.amazonaws.com
+		SSL connect error:
+		- feeds.mediamatters.org
 
-			- s3.mediamatters.org
-
-		- dnqv4na4axyak.cloudfront.net
-
-			- cloudfront.mediamatters.org
-
-
-	Nonfunctional subdomains:
-
-		- mythopedia *
-
-	* Refused
-
-
-	Problematic subdomains:
-
-		- action ¹
-		- cloudfront ²
-		- s3 ³
-
-	¹ NationBuilder, Tor users blocked by CloudFlare settings
-	² Cloudfront
-	² AmazonAWS
-
-
-	Fully covered subdomains:
-
-		- cloudfront	(→ dnqv4na4axyak.cloudfront.net)
-		- s3		(→ s3.mediamatters.org.s3.amazonaws.com)
-
+		SSL peer certificate was not OK:
+		- s3.mediamatters.org
 -->
-<ruleset name="MediaMatters.org (partial)">
-
+<ruleset name="MediaMatters.org">
 	<target host="mediamatters.org" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://mediamatters\.org/($|css/|js/|layout/)" /-->
-		<!--
-			At least two stylesheets 403
-
-			https://mail1.eff.org/pipermail/https-everywhere/2012-May/001434.html
-						-->
-		<exclusion pattern="^http://mediamatters\.org/static/stylesheets/" />
-	<target host="cloudfront.mediamatters.org" />
-	<target host="s3.mediamatters.org" />
 	<target host="www.mediamatters.org" />
+	<target host="action.mediamatters.org" />
+	<target host="cloudfront.mediamatters.org" />
+	<target host="support.mediamatters.org" />
 
+	<securecookie host=".+" name=".+" />
 
-	<rule from="^http://(?:www\.)?mediamatters\.org/static/"
-		to="https://dnqv4na4axyak.cloudfront.net/static/" />
-
-	<rule from="^http://cloudfront\.mediamatters\.org/"
-		to="https://cloudfront.mediamatters.org/" />
-
-	<rule from="^http://s3\.mediamatters\.org/"
-		to="https://s3.amazonaws.com/s3.mediamatters.org/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

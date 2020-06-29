@@ -359,7 +359,7 @@ function addManualRule() {
 function disableOnSite() {
   getTab(function(tab) {
     const url = new URL(tab.url);
-    sendMessage("disable_on_site", url.hostname);
+    sendMessage("disable_on_site", url.host);
     chrome.tabs.reload(tab.id);
     window.close();
   });
@@ -368,7 +368,7 @@ function disableOnSite() {
 function enableOnSite() {
   getTab(function(tab) {
     const url = new URL(tab.url);
-    sendMessage("enable_on_site", url.hostname);
+    sendMessage("enable_on_site", url.host);
     chrome.tabs.reload(tab.id);
     window.close();
   });
