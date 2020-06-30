@@ -1,9 +1,9 @@
 'use strict';
-// Process Functions for Labeller
 
+// Process Functions for Labeller
 const alexa_labels = ['top-1m', 'top-100k', 'top-10k', 'top-1k', 'top-100'];
 
-class Process {
+class Utils {
   constructor(octokit, httpse) {
     this.octokit = octokit;
     this.httpse = httpse;
@@ -77,5 +77,5 @@ class Process {
 }
 
 module.exports = {
-  Process: Process
+  Utils: Utils
 }
