@@ -1,13 +1,14 @@
 "use strict";
 
 const { Octokit } = require('@octokit/rest');
-const process = require('./process');
+const utils = require('./utils');
 const axios = require('axios');
 const unzip = require('unzipper');
 const config = require('./config');
+const token = config.github_token || process.env.GITHUB_TOKEN;
 
 const octokit = new Octokit({
-  auth: config.github_token,
+  auth: token,
   userAgent: 'Labeller v2'
 });
 const httpse = {
@@ -18,7 +19,7 @@ const httpse = {
 let ProgressBar = require('progress');
 
 // Background process functions for logic flow below
-let Process = new process.Process(octokit, httpse);
+let Utils = new utils.Utils(octokit, httpse);
 
 /**
  * @description Fetch the Alexa top 1M sites and push it to an array `alexa` via streams
@@ -95,7 +96,7 @@ function get_prs(alexa) {
  * @description Labels Pull Requests
  */
 function process_prs(alexa, prs) {
-  let filtered_prs = prs.filter(Process.labelled);
+  let filtered_prs = prs.filter(Utils.labelled);
 
   prs.forEach(pr => {
 
@@ -105,11 +106,11 @@ function process_prs(alexa, prs) {
       ...httpse,
       pull_number: pr.number,
     }).then(files => {
-      let rank_number = Process.files(files, alexa);
+      let rank_number = Utils.files(files, alexa);
       if(rank_number !== null) {
-        let determined_label = Process.return_label(rank_number);
+        let determined_label = Utils.return_label(rank_number);
         // pr is interchangeable with issue in API ¯\_(ツ)_/¯
-        Process.add_label(determined_label, pr.number);
+        Utils.add_label(determined_label, pr.number);
       }
     })
   });
