@@ -5,7 +5,7 @@ const utils = require('./utils');
 const axios = require('axios');
 const unzip = require('unzipper');
 const config = require('./config');
-const token = config.github_token || process.env.GITHUB_TOKEN
+const token = config.github_token || process.env.GITHUB_TOKEN;
 
 const octokit = new Octokit({
   auth: token,
