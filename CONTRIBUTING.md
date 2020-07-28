@@ -226,7 +226,7 @@ In general, avoid using open-ended regex in rules.  In certain cases, open-ended
 Examples:
 
 * Rulesets with a lot of domains that we can catch with a simple regex that would be tedious and error-prone to list individually, like [`360.cn.xml`](https://github.com/EFForg/https-everywhere/blob/9698e64a2de7cf37509ab13ba9dcfd5bd4f84a95/src/chrome/content/rules/360.cn.xml#L98-L103)
-* CDNs with an arbitrarily large number of subdomains, [example](https://github.com/EFForg/https-everywhere/pull/7484#issuecomment-262852427).
+* CDNs with an arbitrarily large number of subdomains ([example](https://github.com/EFForg/https-everywhere/pull/7484#issuecomment-262852427)).
 
 ### Enumerating Subdomains
 
