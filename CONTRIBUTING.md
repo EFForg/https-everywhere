@@ -67,47 +67,47 @@ Tests are performed in headless browsers and located in the [`test`](test) top-l
 
 Source Tree:
 
-    chromium/                 WebExtension source code (for Firefox & Chromium/chrome)
-    chromium/external         External dependencies
-    chromium/test             Unit tests
+		chromium/                 WebExtension source code (for Firefox & Chromium/chrome)
+		chromium/external         External dependencies
+		chromium/test             Unit tests
 
-    rules/                    Symbolic link to src/chrome/content/rules
+		rules/                    Symbolic link to src/chrome/content/rules
 
-    src/chrome/content/rules  Ruleset files live here
+		src/chrome/content/rules  Ruleset files live here
 
-    test/                     Travis unit test source code live here
+		test/                     Travis unit test source code live here
 
-    utils/                    Various utilities (includes some Travis test source)
+		utils/                    Various utilities (includes some Travis test source)
 
 ## Install Dependencies and Test Build
 
 Get the packages you need and install a git hook to run tests before push:
 
-    bash install-dev-dependencies.sh
+		bash install-dev-dependencies.sh
 
 Run the ruleset validations and browser tests:
 
-    bash test.sh
+		bash test.sh
 
 Run the latest code and rulesets in a standalone Firefox profile:
 
-    bash test/firefox.sh --justrun
+		bash test/firefox.sh --justrun
 
 Run the latest code and rulesets in a standalone profile for a specific version of Firefox:
 
-    FIREFOX=/path/to/firefox bash test/firefox.sh --justrun
+		FIREFOX=/path/to/firefox bash test/firefox.sh --justrun
 
 Run the latest code and rulesets in a standalone Chromium profile:
 
-    bash test/chromium.sh --justrun
+		bash test/chromium.sh --justrun
 
 Run the latest code and rulesets in a standalone Tor Browser profile:
 
-    bash test/tor-browser.sh path_to_tor_browser.tar.xz
+		bash test/tor-browser.sh path_to_tor_browser.tar.xz
 
 Build the Firefox (.xpi) & Chromium (.crx) extensions:
 
-    bash make.sh
+		bash make.sh
 
 Both of the build commands store their output under pkg/.
 
@@ -116,7 +116,7 @@ Both of the build commands store their output under pkg/.
 One can run the available test suites automatically by enabling the precommit
 hook provided with:
 
-    ln -s ../../hooks/precommit .git/hooks/pre-commit
+		ln -s ../../hooks/precommit .git/hooks/pre-commit
 
 ## Submitting Changes
 
@@ -137,16 +137,16 @@ Thanks for your interest in contributing to the HTTPS Everywhere `rulesets`! The
 
 ```xml
 <!--
-        An example ruleset. Note that this example doesn't necessarily
-        satisfy the style criteria described below - we just have it
-        here to show you what the components of a ruleset looks like.
+				An example ruleset. Note that this example doesn't necessarily
+				satisfy the style criteria described below - we just have it
+				here to show you what the components of a ruleset looks like.
 -->
 <ruleset name="eff.org">
-        <target host="*.eff.org" />
+				<target host="*.eff.org" />
 
-        <rule from="^http:" to="https:" />
+				<rule from="^http:" to="https:" />
 
-        <test url="http://www.eff.org/https-everywhere/" />
+				<test url="http://www.eff.org/https-everywhere/" />
 </ruleset>
 ```
 
@@ -154,7 +154,7 @@ HTTPS Everywhere includes tens of thousands of `rulesets`.  Any one of these sit
 
 Some `rulesets` have the attribute `platform="mixedcontent"`.  These `rulesets` cause problems in browsers that enable active mixed-content (loading insecure resources in a secure page) blocking.  When browsers started enforcing active mixed-content blocking, some HTTPS sites started to break.  That's why we introduced this tag - it disables those `rulesets` for browsers blocking active mixed content.  It is likely that many of these sites have fixed this historical problem, so we particularly encourage `ruleset` contributors to fix these `rulesets` first:
 
-    git grep -i mixedcontent src/chrome/content/rules
+		git grep -i mixedcontent src/chrome/content/rules
 
 ### New Rulesets
 
@@ -232,13 +232,13 @@ Examples:
 
 If you're not sure what subdomains might exist, you can install the `Sublist3r` tool:
 
-    git clone https://github.com/aboul3la/Sublist3r.git
-    cd Sublist3r
-    sudo pip install -r requirements.txt # or use virtualenv...
+		git clone https://github.com/aboul3la/Sublist3r.git
+		cd Sublist3r
+		sudo pip install -r requirements.txt # or use virtualenv...
 
 Then you can to enumerate the list of subdomains:
 
-    python sublist3r.py -d example.com -e Baidu,Yahoo,Google,Bing,Ask,Netcraft,Virustotal,SSL
+		python sublist3r.py -d example.com -e Baidu,Yahoo,Google,Bing,Ask,Netcraft,Virustotal,SSL
 
 Alternatively, you can iteratively use Google queries and enumerate the list of results like such:
 
@@ -252,15 +252,15 @@ Alternatively, you can iteratively use Google queries and enumerate the list of 
 
 In all cases where there is a list of domains, sort them in alphabetical order starting from the top level domain at the right reading left, moving ^ and www to the top of their group. For example:
 
-    example.com
-    www.example.com
-    a.example.com
-    www.a.example.com
-    b.a.example.com
-    b.example.com
-    example.net
-    www.example.net
-    a.example.net
+		example.com
+		www.example.com
+		a.example.com
+		www.a.example.com
+		b.a.example.com
+		b.example.com
+		example.net
+		www.example.net
+		a.example.net
 
 ### Rule Ordering
 
@@ -276,21 +276,21 @@ Example:
 
 ```xml
 <!--
-        Invalid certificate:
-                8marta.glavbukh.ru
-                forum2.glavbukh.ru (incomplete certificate chain)
+				Invalid certificate:
+								8marta.glavbukh.ru
+								forum2.glavbukh.ru (incomplete certificate chain)
 
-        Redirect to HTTP:
-                8marta2013.glavbukh.ru
-                den.glavbukh.ru
+				Redirect to HTTP:
+								8marta2013.glavbukh.ru
+								den.glavbukh.ru
 
-        Refused:
-                e.glavbukh.ru
-                www.e.glavbukh.ru
+				Refused:
+								e.glavbukh.ru
+								www.e.glavbukh.ru
 
-        Time out:
-                psd.glavbukh.ru
-                str.glavbukh.ru
+				Time out:
+								psd.glavbukh.ru
+								str.glavbukh.ru
 
 -->
 ```
@@ -341,11 +341,11 @@ Avoid snapping redirects. For instance, if `https://foo.fm` serves HTTPS correct
 
 ```xml
 <ruleset name="WHATWG.org">
-  <target host='whatwg.org' />
-  <target host="*.whatwg.org" />
+		<target host='whatwg.org' />
+		<target host="*.whatwg.org" />
 
-  <rule from="^http://((?:developers|html-differences|images|resources|\w+\.spec|wiki|www)\.)?whatwg\.org/"
-    to="https://$1whatwg.org/" />
+		<rule from="^http://((?:developers|html-differences|images|resources|\w+\.spec|wiki|www)\.)?whatwg\.org/"
+		to="https://$1whatwg.org/" />
 </ruleset>
 ```
 
@@ -353,20 +353,20 @@ Avoid snapping redirects. For instance, if `https://foo.fm` serves HTTPS correct
 
 ```xml
 <ruleset name="WHATWG.org">
-  <target host="whatwg.org" />
-  <target host="www.whatwg.org" />
-  <target host="developers.whatwg.org" />
-  <target host="html-differences.whatwg.org" />
-  <target host="images.whatwg.org" />
-  <target host="resources.whatwg.org" />
-  <target host="*.spec.whatwg.org" />
-    <test url="http://html.spec.whatwg.org/" />
-    <test url="http://fetch.spec.whatwg.org/" />
-    <test url="http://xhr.spec.whatwg.org/" />
-    <test url="http://dom.spec.whatwg.org/" />
-  <target host="wiki.whatwg.org" />
+	<target host="whatwg.org" />
+	<target host="www.whatwg.org" />
+	<target host="developers.whatwg.org" />
+	<target host="html-differences.whatwg.org" />
+	<target host="images.whatwg.org" />
+	<target host="resources.whatwg.org" />
+	<target host="*.spec.whatwg.org" />
+		<test url="http://html.spec.whatwg.org/" />
+		<test url="http://fetch.spec.whatwg.org/" />
+		<test url="http://xhr.spec.whatwg.org/" />
+		<test url="http://dom.spec.whatwg.org/" />
+	<target host="wiki.whatwg.org" />
 
-  <rule from="^http:" to="https:" />
+	<rule from="^http:" to="https:" />
 </ruleset>
 ```
 
