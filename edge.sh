@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# Written for transparency and reproducibility on Edge upload
 #Verify CRX file
 VERSION=`python3.6 -c "import json ; print(json.loads(open('chromium/manifest.json').read())['version'])"`
 crx_cws="pkg/https-everywhere-$VERSION-cws.crx"
