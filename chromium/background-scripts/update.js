@@ -11,7 +11,7 @@ if (typeof window === "undefined") {
     crypto = new WebCrypto(),
     atob = require("atob"),
     btoa = require("btoa"),
-    pako = require('../external/pako-1.0.5/pako_inflate.min.js'),
+    pako = require("pako"),
     { TextDecoder } = require('text-encoding'),
     chrome = require("sinon-chrome"),
     window = { atob, btoa, chrome, crypto, pako, TextDecoder },
