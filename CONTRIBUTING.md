@@ -126,7 +126,7 @@ hook provided with:
 
 1. Open a version of the Firefox or Chrome browser without HTTPS Everywhere loaded to the HTTP endpoint
 
-2. From your owrking ruleset branch, test with running `bash test/firefox.sh --justrun` or `bash test/chromium.sh --justrun` to open a fresh profile with the extension loaded and click around and compare the look and functionality of both sites. If something fails to load or looks strange, you may be able to debug the problem by opening the network tab of your browser debugging tool.  Modify the `ruleset` until you get it in a good state - you'll have to re-run the HTTPS Everywhere-equipped browser upon each change.
+2. From your working ruleset branch, test with running `bash test/firefox.sh --justrun` or `bash test/chromium.sh --justrun` to open a fresh profile with the extension loaded and click around and compare the look and functionality of both sites. If something fails to load or looks strange, you may be able to debug the problem by opening the network tab of your browser debugging tool.  Modify the `ruleset` until you get it in a good state - you'll have to re-run the HTTPS Everywhere-equipped browser upon each change.
 
 ### Coverage
 
