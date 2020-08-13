@@ -10,7 +10,7 @@ const assert = require('chai').assert,
 
 const fs = require('fs'),
   { update_channels } = require('../background-scripts/update_channels'),
-  pako = require("pako");
+  pako = require('../external/pako-1.0.5/pako_inflate.min.js');
 
 util.setDefaultLogLevel(util.WARN);
 
