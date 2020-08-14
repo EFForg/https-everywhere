@@ -340,15 +340,16 @@ function isValidHost(host) {
   }
 }
   add_disabled_site.addEventListener("click", function() {
-    try {
-      const url = new URL("http://" + disabled_site_input.value);
+    const host = disabled_site_input.value;
+
+    if (isValidHost(host)) {
       hide(add_disabled_site_invalid_host);
       sendMessage("disable_on_site", disabled_site_input.value, okay => {
         if (okay) {
           chrome.tabs.reload();
         }
       });
-    } catch(_) {
+    } else {
       show(add_disabled_site_invalid_host);
     }
   });
