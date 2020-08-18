@@ -331,14 +331,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const disabled_site_input = document.getElementById("disabled-site");
   const add_disabled_site_invalid_host = document.getElementById('add-disabled-site-invalid-host');
   disabled_site_input.setAttribute("placeholder", chrome.i18n.getMessage("options_enterDisabledSite"));
-function isValidHost(host) {
-  try {
-    new URL(`http://${host}/`);
-    return true;
-  } catch {
-    return false;
+  function isValidHost(host) {
+    try {
+      new URL(`http://${host}/`);
+      return true;
+    } catch {
+      return false;
+    }
   }
-}
   add_disabled_site.addEventListener("click", function() {
     const host = disabled_site_input.value;
 
