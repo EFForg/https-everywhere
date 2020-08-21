@@ -77,13 +77,16 @@ async function run(alexa) {
   const token = core.getInput('repo-token', { required: true });
   const octokit = new github.GitHub(token);
   const pR = context.payload.pull_request;
+  console.log(pR);
 
   try {
-    if (context.payload.action !== 'opened' || !pR) {
-      return
-    }
+    // if (context.payload.action !== 'opened' || !pR) {
+
+    //   return
+    // }
 
     const prNumber = pR.number
+    console.log(pR.number);
 
     pR.labels.forEach(element => {
       if( alexaLabels.includes(element.name))
