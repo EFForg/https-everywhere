@@ -6,7 +6,7 @@ const axios = require('axios');
 const unzip = require('unzipper');
 const context = github.context;
 const minimatch = require('minimatch');
-const rulesetGlob = '*.xml';
+const rulesetGlob = 'src/chrome/content/rules/*.xml';
 
 let ProgressBar = require('progress');
 let alexaLabels = ['top-1m', 'top-100k', 'top-10k', 'top-1k', 'top-100'];
@@ -95,7 +95,8 @@ async function run(alexa) {
     const fileList = response.data
 
     fileList.forEach(file => {
-      console.log(typeof file.filename);
+      console.log(file.filename);
+      console.log(minimatch(file.filename, rulesetGlob));
       if(minimatch(file.filename, rulesetGlob)){
         console.log('passed match');
 
