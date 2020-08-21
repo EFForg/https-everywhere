@@ -72,22 +72,23 @@ function return_label(rank_num) {
 // Label PR if Needed
 async function run(alexa) {
   const token = core.getInput('repo-token', { required: true });
-  const octokit = new github.GitHub(token);
+  const client = new github.GitHub(token);
   const pR = context.payload.pull_request;
 
   try {
-    if (context.payload.action !== 'opened' || !pR) {
-      return
-    }
+    // if (context.payload.action !== 'opened' || !pR) {
+    //   return
+    // }
 
     const prNumber = pR.number
+    console.log(prNumber);
 
     pR.labels.forEach(element => {
       if( alexaLabels.includes(element.name))
         return;
     });
 
-    const response = await octokit.pulls.listFiles({
+    const response = await client.pulls.listFiles({
       ...context.repo,
       pull_number: prNumber
     })
@@ -114,7 +115,7 @@ async function run(alexa) {
               if(rank !== null) {
                 let determined_label = return_label(rank);
                 console.log('labelling Pull Request');
-                octokit.issues.addLabels({
+                client.issues.addLabels({
                   ...context.repo,
                   issue_number: prNumber,
                   labels: [determined_label]
