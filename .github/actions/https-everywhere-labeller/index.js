@@ -7,7 +7,6 @@ const unzip = require('unzipper');
 const context = github.context;
 const minimatch = require('minimatch');
 const rulesetGlob = new minimatch.Minimatch('/src/chrome/content/rules/*.xml');
-console.log('say something, anything');
 
 let ProgressBar = require('progress');
 let alexaLabels = ['top-1m', 'top-100k', 'top-10k', 'top-1k', 'top-100'];
@@ -72,28 +71,23 @@ function return_label(rank_num) {
 
 // Label PR if Needed
 async function run(alexa) {
-  console.log('made it to run');
-  console.log(alexa.length);
   const token = core.getInput('repo-token', { required: true });
   const octokit = new github.GitHub(token);
-  console.log(octokit);
   const pR = context.payload.pull_request;
 
   try {
-    // if (context.payload.action !== 'opened' || !pR) {
-
-    //   return
-    // }
+    if (context.payload.action !== 'opened' || !pR) {
+      return
+    }
 
     const prNumber = pR.number
-    console.log(pR.number);
 
     pR.labels.forEach(element => {
       if( alexaLabels.includes(element.name))
         return;
     });
 
-    const response = await client.pulls.listFiles({
+    const response = await octokit.pulls.listFiles({
       ...context.repo,
       pull_number: prNumber
     })
