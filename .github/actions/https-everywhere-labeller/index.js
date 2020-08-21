@@ -76,12 +76,12 @@ async function run(alexa) {
   const pR = context.payload.pull_request;
 
   try {
-    // if (context.payload.action !== 'opened' || !pR) {
-    //   return
-    // }
+    if (context.payload.action !== 'opened' || !pR) {
+      console.log('pull request not open');
+      return
+    }
 
     const prNumber = pR.number
-    console.log(prNumber);
 
     pR.labels.forEach(element => {
       if( alexaLabels.includes(element.name))
@@ -95,10 +95,8 @@ async function run(alexa) {
     const fileList = response.data
 
     fileList.forEach(file => {
-      console.log(file.filename);
-      console.log(minimatch(file.filename, rulesetGlob));
       if(minimatch(file.filename, rulesetGlob)){
-        console.log('passed match');
+        console.log('Passed file match');
 
         // Look at PR changes directly
         let matches = file.patch.match(/((host)="([^"]|"")*")/g);
@@ -121,7 +119,7 @@ async function run(alexa) {
           }
         }
       } else {
-        console.log('failed match');
+        console.log('failed file match, exiting');
       }
     });
   } catch (err) {
