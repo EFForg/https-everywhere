@@ -72,6 +72,8 @@ function return_label(rank_num) {
 
 // Label PR if Needed
 async function run(alexa) {
+  console.log('made it to run');
+  console.log(alexa.length);
   const token = core.getInput('repo-token', { required: true });
   const octokit = new github.GitHub(token);
   const pR = context.payload.pull_request;
