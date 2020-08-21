@@ -97,6 +97,7 @@ async function run(alexa) {
 
     if (!fileList.every(file => rulesetGlob.match(file.filename))) {
       // Don't touch PRs that modify anything except rulesets
+      console.log(rulesetGlob);
       console.log('No ruleset files in this PR');
       return;
     } else {
