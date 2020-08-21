@@ -77,7 +77,6 @@ async function run(alexa) {
   const token = core.getInput('repo-token', { required: true });
   const octokit = new github.GitHub(token);
   const pR = context.payload.pull_request;
-  console.log(pR);
 
   try {
     // if (context.payload.action !== 'opened' || !pR) {
@@ -98,6 +97,7 @@ async function run(alexa) {
       pull_number: prNumber
     })
     const fileList = response.data
+    console.log(fileList);
 
     if (!fileList.every(file => rulesetGlob.match(file.name))) {
       // Don't touch PRs that modify anything except rulesets
