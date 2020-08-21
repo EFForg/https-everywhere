@@ -5,7 +5,7 @@ const github = require('@actions/github');
 const axios = require('axios');
 const unzip = require('unzipper');
 const context = github.context;
-const minimatch = require('minimatch').Minimatch;
+const minimatch = require('minimatch');
 const rulesetGlob = '/src/chrome/content/rules/*.xml';
 
 let ProgressBar = require('progress');
@@ -95,13 +95,13 @@ async function run(alexa) {
     const fileList = response.data
     console.log(fileList);
 
-    if (!fileList.every(file => new minimatch.match(file.filename, rulesetGlob, { matchBase: true }))) {
+    if (!fileList.every(file => minimatch(file.filename, rulesetGlob))) {
       // Don't touch PRs that modify anything except rulesets
       console.log('No ruleset files in this PR');
       return;
     } else {
       fileList.forEach(file => {
-        if(new minimatch.match(file.filename, rulesetGlob, { matchBase: true })){
+        if(minimatch(file.filename, rulesetGlob)){
           console.log('passed match');
 
           // Look at PR changes directly
