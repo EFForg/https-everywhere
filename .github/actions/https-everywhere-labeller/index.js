@@ -76,11 +76,6 @@ async function run(alexa) {
   const pR = context.payload.pull_request;
 
   try {
-    if (context.payload.action !== 'opened' || !pR) {
-      console.log('pull request not open');
-      return
-    }
-
     const prNumber = pR.number
 
     pR.labels.forEach(element => {
