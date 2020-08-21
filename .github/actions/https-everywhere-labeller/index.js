@@ -95,13 +95,14 @@ async function run(alexa) {
     const fileList = response.data
     console.log(fileList);
 
-    if (!fileList.every(file => rulesetGlob.match(file.name))) {
+    if (!fileList.every(file => rulesetGlob.match(file.filename))) {
       // Don't touch PRs that modify anything except rulesets
       console.log('No ruleset files in this PR');
       return;
     } else {
       fileList.forEach(file => {
-        if(rulesetGlob.match(file.name) !== null){
+        if(rulesetGlob.match(file.filename) !== null){
+          console.log('passed match');
 
           // Look at PR changes directly
           let matches = file.patch.match(/((host)="([^"]|"")*")/g);
