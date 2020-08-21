@@ -94,40 +94,33 @@ async function run(alexa) {
     })
     const fileList = response.data
 
-    if (!fileList.every(file => minimatch(file.filename, rulesetGlob))) {
-      // Don't touch PRs that modify anything except rulesets
-      console.log(file.filename);
-      console.log(minimatch(file.filename, rulesetGlob));
-      console.log('No ruleset files in this PR');
-      return;
-    } else {
-      fileList.forEach(file => {
-        if(minimatch(file.filename, rulesetGlob)){
-          console.log('passed match');
 
-          // Look at PR changes directly
-          let matches = file.patch.match(/((host)="([^"]|"")*")/g);
+    fileList.forEach(file => {
+      if(minimatch(file.filename, rulesetGlob)){
+        console.log('passed match');
 
-          // strip to main domain
-          if( matches !== null) {
-            if( alexa.includes(matches[0].slice(6,-1))) {
-              let index = (matches[0].slice(6,-1))
-              let rank = alexa.indexOf(index);
+        // Look at PR changes directly
+        let matches = file.patch.match(/((host)="([^"]|"")*")/g);
 
-              if(rank !== null) {
-                let determined_label = return_label(rank);
-                console.log('labelling Pull Request');
-                client.issues.addLabels({
-                  ...context.repo,
-                  issue_number: prNumber,
-                  labels: [determined_label]
-                });
-              }
+        // strip to main domain
+        if( matches !== null) {
+          if( alexa.includes(matches[0].slice(6,-1))) {
+            let index = (matches[0].slice(6,-1))
+            let rank = alexa.indexOf(index);
+
+            if(rank !== null) {
+              let determined_label = return_label(rank);
+              console.log('labelling Pull Request');
+              client.issues.addLabels({
+                ...context.repo,
+                issue_number: prNumber,
+                labels: [determined_label]
+              });
             }
           }
         }
-      });
-    }
+      }
+    });
   } catch (err) {
     core.error(err.stack)
     core.setFailed(err.message)
