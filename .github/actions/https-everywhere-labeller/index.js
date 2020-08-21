@@ -76,6 +76,7 @@ async function run(alexa) {
   console.log(alexa.length);
   const token = core.getInput('repo-token', { required: true });
   const octokit = new github.GitHub(token);
+  console.log(octokit);
   const pR = context.payload.pull_request;
 
   try {
