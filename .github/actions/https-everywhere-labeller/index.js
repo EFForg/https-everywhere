@@ -93,10 +93,11 @@ async function run(alexa) {
       pull_number: prNumber
     })
     const fileList = response.data
-    console.log(fileList);
 
     if (!fileList.every(file => minimatch(file.filename, rulesetGlob))) {
       // Don't touch PRs that modify anything except rulesets
+      console.log(file.filename);
+      console.log(minimatch(file.filename, rulesetGlob));
       console.log('No ruleset files in this PR');
       return;
     } else {
