@@ -5,7 +5,8 @@ const github = require('@actions/github');
 const axios = require('axios');
 const unzip = require('unzipper');
 const context = github.context;
-const minimatch = require('minimatch').Minimatch;
+const Minimatch = require('minimatch').Minimatch;
+const minimatch = new Minimatch;
 const rulesetGlob = '/src/chrome/content/rules/*.xml';
 
 let ProgressBar = require('progress');
