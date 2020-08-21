@@ -95,7 +95,7 @@ async function run(alexa) {
     const fileList = response.data
 
     fileList.forEach(file => {
-      console.log(file);
+      console.log(typeof file.filename);
       if(minimatch(file.filename, rulesetGlob)){
         console.log('passed match');
 
