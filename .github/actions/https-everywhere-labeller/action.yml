@@ -1,9 +1,24 @@
 name: 'Alexa Labeller'
 description: 'Label PRs with Top Alexa Labels'
+
 inputs:
   repo-token:
     description: 'Token for the repository'
     required: true
-runs:
-  using: 'node12'
-  main: 'index.js'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: node index.js
