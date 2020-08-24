@@ -1,12 +1,22 @@
 #!/bin/bash
 # Written for transparency and reproducibility on Edge upload
-#Verify CRX file
+
+# Install Node Package for CRX Verification via NPM
+# [sudo] npm -g i crx3-utils
+
+# Verify CRX file
+# crx3-info rsa 0 < $crx_cws > public.pem
+# crx3-verify rsa 0 public.pem < $crx_cws
+# echo "CRX verified"
+
+#Now remove unneeded pem file
+rm public.pem
 VERSION=`python3.6 -c "import json ; print(json.loads(open('chromium/manifest.json').read())['version'])"`
 crx_cws="pkg/https-everywhere-$VERSION-cws.crx"
 crx_eff="pkg/https-everywhere-$VERSION-eff.crx"
 
 crx3-info rsa 0 < $crx_cws > public.pem
-crx3-verify rsa 0 public.pem < $crx_cws
+ rsa 0 public.pem < $crx_cws
 echo "CRX verified"
 
 #Build Edge Zip File

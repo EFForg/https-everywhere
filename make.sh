@@ -182,14 +182,6 @@ $BROWSER --no-message-box --pack-extension="pkg/crx-eff" --pack-extension-key="$
 mv pkg/crx-cws.crx $crx_cws
 mv pkg/crx-eff.crx $crx_eff
 
-#Verify CRX file
-crx3-info rsa 0 < $crx_cws > public.pem
-crx3-verify rsa 0 public.pem < $crx_cws
-echo "CRX verified"
-
-#Now remove unneeded pem file
-rm public.pem
-
 echo >&2 "CWS crx package has sha256sum: `openssl dgst -sha256 -binary "$crx_cws" | xxd -p`"
 echo >&2 "EFF crx package has sha256sum: `openssl dgst -sha256 -binary "$crx_eff" | xxd -p`"
 

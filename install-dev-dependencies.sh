@@ -44,6 +44,7 @@ if type apt-get>/dev/null 2>&1;  then
   $SUDO_SHIM apt-get install -y libxml2-dev libxml2-utils libxslt1-dev \
     python3.6-dev $BROWSERS zip sqlite3 python3-pip libcurl4-openssl-dev xvfb \
     nodejs \
+    npm \
     libssl-dev git curl $CHROMEDRIVER
   if ! type geckodriver >/dev/null 2>&1;  then
     curl -LO "https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux$ARCH.tar.gz"
@@ -97,9 +98,9 @@ elif type dnf >/dev/null 2>&1; then
   export PYCURL_SSL_LIBRARY=openssl
 
   #Node
-  $SUDO_SHIM curl -sL https://rpm.nodesource.com/setup_12.x | bash -
-  $SUDO_SHIM dnf install -y gcc-c++ make
-  $SUDO_SHIM dnf install -y nodejs
+  curl -sL https://rpm.nodesource.com/setup_12.x | $SUDO_SHIM bash -
+  $SUDO_SHIM yum install -y nodejs
+  $SUDO_SHIM yum install gcc-c++ make
 else
     echo \
     "Your distro isn't supported by this script yet!"\
