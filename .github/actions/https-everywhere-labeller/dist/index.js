@@ -22896,7 +22896,7 @@ function return_label(rank_num) {
 
 // Label PR if Needed
 async function run(alexa) {
-  const token = core.getInput('repo-token', { required: true });
+  const token = core.getInput('token', { required: true });
   const client = new github.GitHub(token);
   const pR = context.payload.pull_request;
 
@@ -22948,6 +22948,10 @@ async function run(alexa) {
   }
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 094a1d71ec08dd745c7db560ba9db210e5cfd8ed
 /***/ }),
 /* 288 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
