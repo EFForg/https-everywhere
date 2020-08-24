@@ -5,12 +5,14 @@
   - [HTTPS Everywhere Source Code Layout](#https-everywhere-source-code-layout)
   - [Install Dependencies and Test Build](#install-dependencies-and-test-build)
   - [Precommit Testing](#precommit-testing)
+  - [Testing](#testing)
+    - [Quickly Testing a Ruleset](#quickly-testing-a-ruleset)
+    - [Coverage](#coverage)
   - [Submitting Changes](#submitting-changes)
   - [Contributing Rulesets](#contributing-rulesets)
     - [General Info](#general-info)
     - [New Rulesets](#new-rulesets)
     - [Minimum Requirements for a Ruleset PR](#minimum-requirements-for-a-ruleset-pr)
-  - [Testing](#testing)
   - [Ruleset Style Guide](#ruleset-style-guide)
     - [Motivation](#motivation)
     - [Indentation & Misc Stylistic Conventions](#indentation--misc-stylistic-conventions)
@@ -118,6 +120,18 @@ hook provided with:
 
 		ln -s ../../hooks/precommit .git/hooks/pre-commit
 
+## Testing
+
+### Quickly Testing a Ruleset
+
+1. Open a version of the Firefox or Chrome browser without HTTPS Everywhere loaded to the HTTP endpoint
+
+2. From your working ruleset branch, test with running `bash test/firefox.sh --justrun` or `bash test/chromium.sh --justrun` to open a fresh profile with the extension loaded and click around and compare the look and functionality of both sites. If something fails to load or looks strange, you may be able to debug the problem by opening the network tab of your browser debugging tool.  Modify the `ruleset` until you get it in a good state - you'll have to re-run the HTTPS Everywhere-equipped browser upon each change.
+
+### Coverage
+
+Please reference [HTTPS Ruleset Checker](https://github.com/EFForg/https-everywhere/blob/master/test/rules/README.md) to properly test rulesets against our tests before sending a pull request.
+
 ## Submitting Changes
 
 To submit changes, open a pull request from our [GitHub repository](https://github.com/efforg/https-everywhere).
@@ -174,12 +188,6 @@ There are several volunteers to HTTPS Everywhere who have graciously dedicated t
 In the back-and-forth process of getting the `ruleset` in good shape, there may be many commits made.  It is this project's convention to squash-and-merge these commits into a single commit before merging into the project.  If your commits are cryptographically signed, we may ask you to squash the commits yourself in order to preserve this signature.  Otherwise, we may squash them ourselves before merging.
 
 We prefer small, granular changes to the rulesets.  Not only are these easier to test and review, this results in cleaner commits.
-
-## Testing
-
-A general workflow for testing sites that provide both HTTP and HTTPS follows.  Open a version of the browser of your choice without HTTPS Everywhere loaded to the HTTP endpoint, alongside the browser with the latest code and rulesets for HTTPS Everywhere loaded to the HTTPS endpoint (as described in [README.md](README.md).)  Click around and compare the look and functionality of both sites.
-
-If something fails to load or looks strange, you may be able to debug the problem by opening the network tab of your browser debugging tool.  Modify the `ruleset` until you get it in a good state - you'll have to re-run the HTTPS Everywhere-equipped browser upon each change.
 
 ## Ruleset Style Guide
 
