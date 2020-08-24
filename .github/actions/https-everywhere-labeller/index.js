@@ -121,4 +121,8 @@ async function run(alexa) {
     core.error(err.stack)
     core.setFailed(err.message)
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 094a1d71ec08dd745c7db560ba9db210e5cfd8ed
