@@ -22948,10 +22948,7 @@ async function run(alexa) {
   }
 }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 094a1d71ec08dd745c7db560ba9db210e5cfd8ed
 /***/ }),
 /* 288 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
