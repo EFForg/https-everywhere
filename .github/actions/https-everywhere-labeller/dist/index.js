@@ -22896,7 +22896,7 @@ function return_label(rank_num) {
 
 // Label PR if Needed
 async function run(alexa) {
-  const token = core.getInput('repo-token', { required: true });
+  const token = core.getInput('github-token', { required: true });
   const client = new github.GitHub(token);
   const pR = context.payload.pull_request;
 
@@ -22947,6 +22947,7 @@ async function run(alexa) {
     core.setFailed(err.message)
   }
 }
+
 
 /***/ }),
 /* 288 */
