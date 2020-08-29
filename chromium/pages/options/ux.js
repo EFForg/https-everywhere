@@ -331,27 +331,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const disabled_site_input = document.getElementById("disabled-site");
   const add_disabled_site_invalid_host = document.getElementById('add-disabled-site-invalid-host');
   disabled_site_input.setAttribute("placeholder", chrome.i18n.getMessage("options_enterDisabledSite"));
-  function isValidHost(host) {
-    try {
-      new URL(`http://${host}/`);
-      return true;
-    } catch {
-      return false;
-    }
-  }
-  add_disabled_site.addEventListener("click", function() {
-    const host = disabled_site_input.value;
 
-    if (isValidHost(host)) {
-      hide(add_disabled_site_invalid_host);
-      sendMessage("disable_on_site", disabled_site_input.value, okay => {
-        if (okay) {
-          chrome.tabs.reload();
-        }
-      });
-    } else {
-      show(add_disabled_site_invalid_host);
-    }
+  add_disabled_site.addEventListener("click", function() {
+    // Add host to the whitelist when clicked.
+    // Display error message when disable_on_site failed.
+    const host = disabled_site_input.value;
+    sendMessage("disable_on_site", host, okay => {
+      if (okay) {
+        hide(add_disabled_site_invalid_host);
+        chrome.tabs.reload();
+      } else {
+        show(add_disabled_site_invalid_host);
+      }
+    });
   });
 
   add_update_channel.addEventListener("click", () => {
