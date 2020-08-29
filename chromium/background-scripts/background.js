@@ -302,7 +302,7 @@ BrowserSession.prototype = {
       this.requests.delete(requestId);
     }
   }
-}
+};
 
 let browserSession = new BrowserSession();
 
@@ -344,7 +344,7 @@ function onBeforeRequest(details) {
 
     // Check if an user has disabled HTTPS Everywhere on this site.  We should
     // ensure that all subresources are not run through HTTPS Everywhere as well.
-    browserSession.putTab(details.tabId, 'first_party_host', uri.hostname, true);
+    browserSession.putTab(details.tabId, 'first_party_host', uri.host, true);
   }
 
   if (isExtensionDisabledOnSite(browserSession.getTab(details.tabId, 'first_party_host', null))) {
@@ -358,6 +358,7 @@ function onBeforeRequest(details) {
     (uri.protocol === 'http:' || uri.protocol === 'ftp:') &&
     uri.hostname.slice(-6) !== '.onion' &&
     uri.hostname !== 'localhost' &&
+    !uri.hostname.endsWith('.localhost') &&
     uri.hostname !== '[::1]' &&
     !isLocalIp;
 
@@ -630,7 +631,7 @@ function onHeadersReceived(details) {
       const upgradeInsecureRequests = {
         name: 'Content-Security-Policy',
         value: 'upgrade-insecure-requests'
-      }
+      };
       details.responseHeaders.push(upgradeInsecureRequests);
       responseHeadersChanged = true;
     }
@@ -653,7 +654,7 @@ chrome.webRequest.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https:
 chrome.webRequest.onCompleted.addListener(onCompleted, {urls: ["*://*/*"]});
 
 // Cleanup redirectCounter if necessary
-chrome.webRequest.onErrorOccurred.addListener(onErrorOccurred, {urls: ["*://*/*"]})
+chrome.webRequest.onErrorOccurred.addListener(onErrorOccurred, {urls: ["*://*/*"]});
 
 // Insert upgrade-insecure-requests directive in httpNowhere mode
 chrome.webRequest.onHeadersReceived.addListener(onHeadersReceived, {urls: ["https://*/*"]}, ["blocking", "responseHeaders"]);
@@ -776,7 +777,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
           if (sendResponse !== null) {
             sendResponse(true);
           }
-        })
+        });
       return true;
     },
     get_ruleset_timestamps: () => {
@@ -852,10 +853,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
         // Ensure that we check for new rulesets from the update channel immediately.
         // If the scope has changed, make sure that the rulesets are re-initialized.
+        update.removeStorageListener();
         store.set({update_channels: item.update_channels}, () => {
-          // Since loadUpdateChannesKeys is already contained in chrome.storage.onChanged
-          // within update.js, the below call will make it run twice. This is
-          // necesssary to avoid a race condition, see #16673
           update.loadUpdateChannelsKeys().then(() => {
             update.resetTimer();
             if(scope_changed) {
@@ -863,10 +862,13 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             }
             sendResponse(true);
           });
+          update.addStorageListener();
         });
-
       });
       return true;
+    },
+    get_simple_rules_ending_with: () => {
+      return sendResponse(all_rules.getSimpleRulesEndingWith(message.object));
     },
     get_last_checked: () => {
       store.local.get({'last-checked': false}, item => {

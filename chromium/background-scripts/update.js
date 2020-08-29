@@ -252,7 +252,7 @@ async function performCheck() {
   }
 };
 
-chrome.storage.onChanged.addListener(async function(changes, areaName) {
+async function storageListener(changes, areaName) {
   if (areaName === 'sync' || areaName === 'local') {
     if ('autoUpdateRulesets' in changes) {
       if (changes.autoUpdateRulesets.newValue) {
@@ -266,7 +266,17 @@ chrome.storage.onChanged.addListener(async function(changes, areaName) {
   if ('update_channels' in changes) {
     await loadUpdateChannelsKeys();
   }
-});
+};
+
+function addStorageListener() {
+  chrome.storage.onChanged.addListener(storageListener);
+}
+
+function removeStorageListener() {
+  chrome.storage.onChanged.removeListener(storageListener);
+}
+
+addStorageListener();
 
 let initialCheck,
   subsequentChecks;
@@ -326,7 +336,9 @@ Object.assign(exports, {
   initialize,
   getRulesetTimestamps,
   resetTimer,
-  loadUpdateChannelsKeys
+  loadUpdateChannelsKeys,
+  addStorageListener,
+  removeStorageListener,
 });
 
 })(typeof exports == 'undefined' ? require.scopes.update = {} : exports);

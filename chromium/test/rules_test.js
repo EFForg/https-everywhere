@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const text_encoding = require('text-encoding');
 global.TextDecoder = text_encoding.TextDecoder;
@@ -88,7 +88,7 @@ describe('rules.js', function() {
         assert.isTrue(rs.isEquivalentTo(rs));
       });
     });
-  })
+  });
 
   describe('RuleSets', function() {
     let rules_json = [{
@@ -125,7 +125,7 @@ describe('rules.js', function() {
 
         let newuri = this.rsets.rewriteURI('http://' + host + '/', host);
 
-        assert.strictEqual(newuri, 'https://' + host + '/', 'protocol changed to https')
+        assert.strictEqual(newuri, 'https://' + host + '/', 'protocol changed to https');
       });
 
       it('does not rewrite unknown hosts', function() {
@@ -218,4 +218,4 @@ describe('rules.js', function() {
       });
     });
   });
-})
+});

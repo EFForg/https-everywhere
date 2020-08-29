@@ -324,7 +324,7 @@ class Ruleset(object):
             # According to the logic in rules.js available at
             # EFForg/https-everywhere/blob/07fe9bd51456cc963c2d99e327f3183e032374ee/chromium/rules.js#L404
             #
-            pattern = target.replace('.', '\.')  # .replace('*', '.+')
+            pattern = target.replace('.', r'\.')  # .replace('*', '.+')
 
             # `*.example.com` matches `bar.example.com` and `foo.bar.example.com` etc.
             if pattern[0] == '*':
@@ -332,10 +332,10 @@ class Ruleset(object):
 
             # however, `example.*` match `example.com` but not `example.co.uk`
             if pattern[-1] == '*':
-                pattern = pattern.replace('*', '[^\.]+')
+                pattern = pattern.replace('*', '[^.]+')
 
             # `www.*.example.com` match `www.image.example.com` but not `www.ssl.image.example.com`
-            pattern = pattern.replace('*', '[^\.]+')
+            pattern = pattern.replace('*', '[^.]+')
 
             pattern = '^' + pattern + '$'
 
@@ -356,15 +356,15 @@ class Ruleset(object):
             # Don't treat the question mark in non-capturing and lookahead groups as increasing the
             # number of required tests.
             needed_count = needed_count - \
-                len(regex.findall("\(\?:", rule.fromPattern))
+                len(regex.findall(r"\(\?:", rule.fromPattern))
             needed_count = needed_count - \
-                len(regex.findall("\(\?!", rule.fromPattern))
+                len(regex.findall(r"\(\?!", rule.fromPattern))
             needed_count = needed_count - \
-                len(regex.findall("\(\?=", rule.fromPattern))
+                len(regex.findall(r"\(\?=", rule.fromPattern))
             # Don't treat escaped questions marks as increasing the number of required
             # tests.
             needed_count = needed_count - \
-                len(regex.findall("\\?", rule.fromPattern))
+                len(regex.findall(r"\?", rule.fromPattern))
             actual_count = len(rule.tests)
             if actual_count < needed_count:
                 problems.append("{}: Not enough tests ({} vs {}) for {}".format(
@@ -374,9 +374,9 @@ class Ruleset(object):
             needed_count = 1 + \
                 len(regex.findall("[+*?|]", exclusion.exclusionPattern))
             needed_count = needed_count - \
-                len(regex.findall("\(\?:", exclusion.exclusionPattern))
+                len(regex.findall(r"\(\?:", exclusion.exclusionPattern))
             needed_count = needed_count - \
-                len(regex.findall("\\?", rule.fromPattern))
+                len(regex.findall(r"\?", rule.fromPattern))
             actual_count = len(exclusion.tests)
             if actual_count < needed_count:
                 problems.append("{}: Not enough tests ({} vs {}) for {}".format(

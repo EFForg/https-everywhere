@@ -266,7 +266,7 @@ RuleSets.prototype = {
 
     // If a ruleset declares a platform, and we don't match it, treat it as
     // off-by-default. In practice, this excludes "mixedcontent" rules.
-    var platform = ruletag["platform"]
+    var platform = ruletag["platform"];
     if (platform) {
       default_state = false;
       if (platform == "mixedcontent" && settings.enableMixedRulesets) {
@@ -365,7 +365,7 @@ RuleSets.prototype = {
       if (this.wasm_rs) {
         this.wasm_rs.remove_ruleset(ruleset);
       } else {
-        const tmp = this.targets.get(ruleset.name).filter(r => !r.isEquivalentTo(ruleset))
+        const tmp = this.targets.get(ruleset.name).filter(r => !r.isEquivalentTo(ruleset));
         this.targets.set(ruleset.name, tmp);
 
         if (this.targets.get(ruleset.name).length == 0) {
@@ -488,7 +488,7 @@ RuleSets.prototype = {
 
       let default_off = ruletag.getAttribute("default_off");
       if (default_off) {
-        ruleset["default_off"] = platform;
+        ruleset["default_off"] = default_off;
       }
 
       let platform = ruletag.getAttribute("platform");
@@ -586,6 +586,9 @@ RuleSets.prototype = {
         } else {
           rs.exclusions = null;
         }
+
+        rs.active = ruleset.active;
+
         return rs;
       }));
     } else {
@@ -720,6 +723,36 @@ RuleSets.prototype = {
     util.log(util.INFO, "Cookie domain could NOT be secured.");
     this.cookieHostCache.set(domain, false);
     return false;
+  },
+
+  /**
+   * Get a list of simple rules (active, with no exclusions) for all hosts that
+   * are in a single ruleset, and end in the specified ending.
+   * @param ending Target ending to search for
+   * @returns A list of { host, from_regex, to, scope_regex }
+   */
+  getSimpleRulesEndingWith: function(ending) {
+    let results;
+
+    if (this.wasm_rs) {
+      results = this.wasm_rs.get_simple_rules_ending_with(ending);
+    } else {
+      results = [];
+      for(let [host, rulesets] of this.targets) {
+        if (host.endsWith(ending) &&
+            rulesets.length == 1 &&
+            rulesets[0].active === true &&
+            rulesets[0].exclusions == null
+        ) {
+          for (let rule of rulesets[0].rules) {
+            if (rule.from_c.test("http://" + host + "/")) {
+              results.push({ host, from_regex: rule.from_c.toString(), to: rule.to, scope_regex: rulesets[0].scope.toString() });
+            }
+          }
+        }
+      }
+    }
+    return results;
   },
 
   /**

@@ -1,9 +1,9 @@
-'use strict'
+'use strict';
 
 function Mock() {
   let out = function() {
     out.calledWith = Array.from(arguments);
-  }
+  };
   return out;
 }
 

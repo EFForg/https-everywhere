@@ -1,42 +1,45 @@
 # Table of Contents
 
-* [Welcome!](#welcome)
-    * [HTTPS Everywhere Source Code Layout](#https-everywhere-source-code-layout)
-    * [Submitting Changes](#submitting-changes)
-    * [I Want To Fix My Site](#i-want-to-fix-my-site)
-* [Contributing Rulesets](#contributing-rulesets)
-    * [General Info](#general-info)
-    * [New Rulesets](#new-rulesets)
-    * [Minimum Requirements for a Ruleset PR](#minimum-requirements-for-a-ruleset-pr)
-    * [Testing](#testing)
-    * [Ruleset Style Guide](#ruleset-style-guide)
-        * [Motivation](#motivation)
-        * [Indentation &amp; Misc Stylistic Conventions](#indentation--misc-stylistic-conventions)
-        * [Wildcards in Targets](#wildcards-in-targets)
-            * [Left-Wildcards](#left-wildcards)
-            * [Edge-Case: Right-Wildcards](#edge-case-right-wildcards)
-        * [Complicated Regex in Rules](#complicated-regex-in-rules)
-        * [Enumerating Subdomains](#enumerating-subdomains)
-        * [Target Ordering](#target-ordering)
-        * [Rule Ordering](#rule-ordering)
-        * [Non-working hosts](#non-working-hosts)
-        * [Ruleset Names](#ruleset-names)
-            * [Filenames](#filenames)
-        * [Cross-referencing Rulesets](#cross-referencing-rulesets)
-        * [Regex Conventions](#regex-conventions)
-        * [Snapping Redirects](#snapping-redirects)
-        * [Example: Ruleset before style guidelines are applied](#example-ruleset-before-style-guidelines-are-applied)
-        * [Example: Ruleset after style guidelines are applied, with test URLs](#example-ruleset-after-style-guidelines-are-applied-with-test-urls)
-    * [Removal of Rules](#removal-of-rules)
-        * [Regular Rules](#regular-rules)
-        * [HSTS Preloaded Rules](#hsts-preloaded-rules)
-* [Contributing Code](#contributing-code)
-* [Contributing Documentation](#contributing-documentation)
-* [Contributing Translations](#contributing-translations)
+- [Table of Contents](#table-of-contents)
+- [Welcome](#welcome)
+  - [HTTPS Everywhere Source Code Layout](#https-everywhere-source-code-layout)
+  - [Install Dependencies and Test Build](#install-dependencies-and-test-build)
+  - [Precommit Testing](#precommit-testing)
+  - [Testing](#testing)
+    - [Quickly Testing a Ruleset](#quickly-testing-a-ruleset)
+    - [Coverage](#coverage)
+  - [Submitting Changes](#submitting-changes)
+  - [Contributing Rulesets](#contributing-rulesets)
+    - [General Info](#general-info)
+    - [New Rulesets](#new-rulesets)
+    - [Minimum Requirements for a Ruleset PR](#minimum-requirements-for-a-ruleset-pr)
+  - [Ruleset Style Guide](#ruleset-style-guide)
+    - [Motivation](#motivation)
+    - [Indentation & Misc Stylistic Conventions](#indentation--misc-stylistic-conventions)
+    - [Wildcards in Targets](#wildcards-in-targets)
+      - [Left-Wildcards](#left-wildcards)
+      - [Edge-Case: Right-Wildcards](#edge-case-right-wildcards)
+    - [Complicated Regex in Rules](#complicated-regex-in-rules)
+    - [Enumerating Subdomains](#enumerating-subdomains)
+    - [Target Ordering](#target-ordering)
+    - [Rule Ordering](#rule-ordering)
+    - [Non-working hosts](#non-working-hosts)
+    - [Ruleset Names](#ruleset-names)
+      - [Filenames](#filenames)
+    - [Cross-referencing Rulesets](#cross-referencing-rulesets)
+    - [Regex Conventions](#regex-conventions)
+    - [Snapping Redirects](#snapping-redirects)
+    - [Example: Ruleset before style guidelines are applied](#example-ruleset-before-style-guidelines-are-applied)
+    - [Example: Ruleset after style guidelines are applied, with test URLs](#example-ruleset-after-style-guidelines-are-applied-with-test-urls)
+  - [Removal of Rules](#removal-of-rules)
+    - [Regular Rules](#regular-rules)
+    - [HSTS Preloaded Rules](#hsts-preloaded-rules)
+  - [Contributing Code](#contributing-code)
+  - [Contributing Documentation](#contributing-documentation)
+  - [Pull Requests from Deleted Accounts](#pull-requests-from-deleted-accounts)
+  - [Contributing Translations](#contributing-translations)
 
-* * *
-
-# Welcome!
+# Welcome
 
 Welcome, and thank you for your interest in contributing to HTTPS Everywhere! HTTPS Everywhere depends on the open source community for its continued success, so any contribution is appreciated.
 
@@ -44,14 +47,13 @@ One of the things that makes it easy to contribute to HTTPS Everywhere is that y
 
 If you want to have the greatest impact, however, you can help be a ruleset maintainer. Ruleset maintainers are trusted volunteers who examine rulesets contributed by others and work with them to ensure that these rulesets work properly and are styled correctly before they're merged in. While we currently have a couple of extremely dedicated and extremely proficient ruleset maintainers, the backlog of sites to add to HTTPS Everywhere just keeps growing, and they need help! If you would like to volunteer to become one, the best thing to do is to build trust in your work by monitoring the repository, contributing pull requests, and commenting on issues that interest you. Then you can contact us at https-everywhere-rules-owner [at] eff &lt;dot&gt; org expressing your interest in helping out.
 
-If you get stuck we have two publicly-archived mailing lists: the https-everywhere list (https://lists.eff.org/mailman/listinfo/https-everywhere) is for discussing the project as a whole, and the https-everywhere-rulesets list (https://lists.eff.org/mailman/listinfo/https-everywhere-rules) is for discussing the `rulesets` and their contents, including patches and git pull requests.
+If you get stuck we have two publicly-archived mailing lists: the [https-everywhere list](https://lists.eff.org/mailman/listinfo/https-everywhere) is for discussing the project as a whole, and the [https-everywhere-rulesets list](https://lists.eff.org/mailman/listinfo/https-everywhere-rules) is for discussing the `rulesets` and their contents, including patches and git pull requests.
 
 You can also find more information on about HTTPS Everywhere on our [FAQ](https://www.eff.org/https-everywhere/faq) page.
 
 Also, please remember that this project is governed by [EFF's Public Projects Code of Conduct](https://www.eff.org/pages/eppcode).
 
 Thanks again, and we look forward to your contributions!
-
 
 ## HTTPS Everywhere Source Code Layout
 
@@ -65,51 +67,100 @@ The utilities ([`utils`](utils) top-level path) include scripts that build the e
 
 Tests are performed in headless browsers and located in the [`test`](test) top-level path.  These are written in Python, and some of the wrappers for these tests are in shell scripts.
 
+Source Tree:
+
+		chromium/                 WebExtension source code (for Firefox & Chromium/chrome)
+		chromium/external         External dependencies
+		chromium/test             Unit tests
+
+		rules/                    Symbolic link to src/chrome/content/rules
+
+		src/chrome/content/rules  Ruleset files live here
+
+		test/                     Travis unit test source code live here
+
+		utils/                    Various utilities (includes some Travis test source)
+
+## Install Dependencies and Test Build
+
+Get the packages you need and install a git hook to run tests before push:
+
+		bash install-dev-dependencies.sh
+
+Run the ruleset validations and browser tests:
+
+		bash test.sh
+
+Run the latest code and rulesets in a standalone Firefox profile:
+
+		bash test/firefox.sh --justrun
+
+Run the latest code and rulesets in a standalone profile for a specific version of Firefox:
+
+		FIREFOX=/path/to/firefox bash test/firefox.sh --justrun
+
+Run the latest code and rulesets in a standalone Chromium profile:
+
+		bash test/chromium.sh --justrun
+
+Run the latest code and rulesets in a standalone Tor Browser profile:
+
+		bash test/tor-browser.sh path_to_tor_browser.tar.xz
+
+Build the Firefox (.xpi) & Chromium (.crx) extensions:
+
+		bash make.sh
+
+Both of the build commands store their output under pkg/.
+
+## Precommit Testing
+
+One can run the available test suites automatically by enabling the precommit
+hook provided with:
+
+		ln -s ../../hooks/precommit .git/hooks/pre-commit
+
+## Testing
+
+### Quickly Testing a Ruleset
+
+1. Open a version of the Firefox or Chrome browser without HTTPS Everywhere loaded to the HTTP endpoint
+
+2. From your working ruleset branch, test with running `bash test/firefox.sh --justrun` or `bash test/chromium.sh --justrun` to open a fresh profile with the extension loaded and click around and compare the look and functionality of both sites. If something fails to load or looks strange, you may be able to debug the problem by opening the network tab of your browser debugging tool.  Modify the `ruleset` until you get it in a good state - you'll have to re-run the HTTPS Everywhere-equipped browser upon each change.
+
+### Coverage
+
+Please reference [HTTPS Ruleset Checker](https://github.com/EFForg/https-everywhere/blob/master/test/rules/README.md) to properly test rulesets against our tests before sending a pull request.
+
 ## Submitting Changes
 
 To submit changes, open a pull request from our [GitHub repository](https://github.com/efforg/https-everywhere).
 
 HTTPS Everywhere is maintained by a limited set of staff and volunteers.  Please be mindful that we may take a while before we're able to review your contributions.
 
-## I Want To Fix My Site
+## Contributing Rulesets
 
-**"I want to get an SSL certificate"**
-
-To get an SSL certificate, as an option, you can go to [Let's Encrypt](https://letsencrypt.org/) and get a free certificate.
-
-**"I have an SSL certificate, but it's not configured properly"**
-
-Scan your site at the [Mozilla Observatory](https://observatory.mozilla.org/) and get results on what is wrong/insecure about your site, as well as tips and directions on how to fix those issues.
-
-**"How do I get on the HSTS Preload list?"**
-
-In order to do this, you must have an SSL certificate correctly installed and your site redirecting to HTTPS. As well as meet a few extra requirements for the [`HTTP Strict-Transport-Security`](https://developer.mozilla.org/docs/Web/HTTP/Headers/Strict-Transport-Security) header. To view "how close" your site is for HSTS preloading, scan your site [here](https://hstspreload.org/).
-
-* * *
-
-# Contributing Rulesets
-
-## General Info
+### General Info
 
 Thanks for your interest in contributing to the HTTPS Everywhere `rulesets`! There's just a few things you should know before jumping in. First some terminology, which will help you understand how exactly `rulesets` are structured and what each one contains:
 
-- `ruleset`: a scope in which `rules`, `targets`, and `tests` are contained. `rulesets` are usually named after the entity which controls the group of `targets` contained in it.  There is one `ruleset` per XML file within the `src/chrome/content/rules` directory.
-- `target`: a Fully Qualified Domain Name which may include a wildcard specified by `*.` on the left side, which `rules` are applied to. There may be many `targets` within any given `ruleset`.
-- `rule`: a specific regular expression rewrite that is applied for all matching `targets` within the same `ruleset`.  There may be many `rules` within any given `ruleset`.
-- `test`: a URL for which a request is made to ensure that the rewrite is working properly.  There may be many `tests` within any given `ruleset`.
+* `ruleset`: a scope in which `rules`, `targets`, and `tests` are contained. `rulesets` are usually named after the entity which controls the group of `targets` contained in it.  There is one `ruleset` per XML file within the `src/chrome/content/rules` directory.
+* `target`: a Fully Qualified Domain Name which may include a wildcard specified by `*.` on the left side, which `rules` are applied to. There may be many `targets` within any given `ruleset`.
+* `rule`: a specific regular expression rewrite that is applied for all matching `targets` within the same `ruleset`.  There may be many `rules` within any given `ruleset`.
+* `test`: a URL for which a request is made to ensure that the rewrite is working properly.  There may be many `tests` within any given `ruleset`.
 
 ```xml
 <!--
-        An example ruleset. Note that this example doesn't necessarily
-        satisfy the style criteria described below - we just have it
-        here to show you what the components of a ruleset looks like.
+				An example ruleset. Note that this example doesn't necessarily
+				satisfy the style criteria described below - we just have it
+				here to show you what the components of a ruleset looks like.
 -->
 <ruleset name="eff.org">
-        <target host="*.eff.org" />
+				<target host="*.eff.org" />
 
-        <rule from="^http:" to="https:" />
+				<rule from="^http:" to="https:" />
 
-        <test url="http://www.eff.org/https-everywhere/" />
+				<test url="http://www.eff.org/https-everywhere/" />
 </ruleset>
 ```
 
@@ -117,30 +168,26 @@ HTTPS Everywhere includes tens of thousands of `rulesets`.  Any one of these sit
 
 Some `rulesets` have the attribute `platform="mixedcontent"`.  These `rulesets` cause problems in browsers that enable active mixed-content (loading insecure resources in a secure page) blocking.  When browsers started enforcing active mixed-content blocking, some HTTPS sites started to break.  That's why we introduced this tag - it disables those `rulesets` for browsers blocking active mixed content.  It is likely that many of these sites have fixed this historical problem, so we particularly encourage `ruleset` contributors to fix these `rulesets` first:
 
-    git grep -i mixedcontent src/chrome/content/rules
+		git grep -i mixedcontent src/chrome/content/rules
 
-## New Rulesets
+### New Rulesets
 
 If you want to create new `rulesets` to submit to us, we expect them to be in the `src/chrome/content/rules` directory. That directory also contains a useful script, `make-trivial-rule`, to create a simple `ruleset` for a specified domain. There is also a script in `test/validations/special/run.py`, to check all the pending `rulesets` for several common errors and oversights. For example, if you wanted to make a `ruleset` for the `example.com` domain, you could run:
-```
+
+```bash
 cd src/chrome/content/rules
 bash ./make-trivial-rule example.com
 ```
+
 This would create `Example.com.xml`, which you could then take a look at and edit based on your knowledge of any specific URLs at `example.com` that do or don't work in HTTPS. Please have a look at our Ruleset Style Guide below, where you can find useful tips about finding more subdomains. Our goal is to have as many subdomains covered as we can find.
 
-## Minimum Requirements for a Ruleset PR
+### Minimum Requirements for a Ruleset PR
 
 There are several volunteers to HTTPS Everywhere who have graciously dedicated their time to look at the `ruleset` contributions and work with contributors to ensure quality of the pull requests before merging.  It is typical for there to be several back-and-forth communications with these `ruleset` maintainers before a PR is in a good shape to merge.  Please be patient and respectful, the maintainers are donating their time for no benefit other than the satisfaction of making the web more secure.  They are under no obligation to merge your request, and may reject it if it is impossible to ensure quality.  You can identify these volunteers by looking for the "Collaborator" identifier in their comments on HTTPS Everywhere issues and pull requests.
 
 In the back-and-forth process of getting the `ruleset` in good shape, there may be many commits made.  It is this project's convention to squash-and-merge these commits into a single commit before merging into the project.  If your commits are cryptographically signed, we may ask you to squash the commits yourself in order to preserve this signature.  Otherwise, we may squash them ourselves before merging.
 
 We prefer small, granular changes to the rulesets.  Not only are these easier to test and review, this results in cleaner commits.
-
-## Testing
-
-A general workflow for testing sites that provide both HTTP and HTTPS follows.  Open a version of the browser of your choice without HTTPS Everywhere loaded to the HTTP endpoint, alongside the browser with the latest code and rulesets for HTTPS Everywhere loaded to the HTTPS endpoint (as described in [README.md](README.md).)  Click around and compare the look and functionality of both sites.
-
-If something fails to load or looks strange, you may be able to debug the problem by opening the network tab of your browser debugging tool.  Modify the `ruleset` until you get it in a good state - you'll have to re-run the HTTPS Everywhere-equipped browser upon each change.
 
 ## Ruleset Style Guide
 
@@ -187,19 +234,19 @@ In general, avoid using open-ended regex in rules.  In certain cases, open-ended
 Examples:
 
 * Rulesets with a lot of domains that we can catch with a simple regex that would be tedious and error-prone to list individually, like [`360.cn.xml`](https://github.com/EFForg/https-everywhere/blob/9698e64a2de7cf37509ab13ba9dcfd5bd4f84a95/src/chrome/content/rules/360.cn.xml#L98-L103)
-* CDNs with an arbitrarily large number of subdomains, like https://github.com/EFForg/https-everywhere/pull/7484#issuecomment-262852427 .
+* CDNs with an arbitrarily large number of subdomains ([example](https://github.com/EFForg/https-everywhere/pull/7484#issuecomment-262852427)).
 
 ### Enumerating Subdomains
 
 If you're not sure what subdomains might exist, you can install the `Sublist3r` tool:
 
-    git clone https://github.com/aboul3la/Sublist3r.git
-    cd Sublist3r
-    sudo pip install -r requirements.txt # or use virtualenv...
+		git clone https://github.com/aboul3la/Sublist3r.git
+		cd Sublist3r
+		sudo pip install -r requirements.txt # or use virtualenv...
 
 Then you can to enumerate the list of subdomains:
 
-    python sublist3r.py -d example.com -e Baidu,Yahoo,Google,Bing,Ask,Netcraft,Virustotal,SSL
+		python sublist3r.py -d example.com -e Baidu,Yahoo,Google,Bing,Ask,Netcraft,Virustotal,SSL
 
 Alternatively, you can iteratively use Google queries and enumerate the list of results like such:
 
@@ -213,15 +260,15 @@ Alternatively, you can iteratively use Google queries and enumerate the list of 
 
 In all cases where there is a list of domains, sort them in alphabetical order starting from the top level domain at the right reading left, moving ^ and www to the top of their group. For example:
 
-    example.com
-    www.example.com
-    a.example.com
-    www.a.example.com
-    b.a.example.com
-    b.example.com
-    example.net
-    www.example.net
-    a.example.net
+		example.com
+		www.example.com
+		a.example.com
+		www.a.example.com
+		b.a.example.com
+		b.example.com
+		example.net
+		www.example.net
+		a.example.net
 
 ### Rule Ordering
 
@@ -234,23 +281,24 @@ It is useful to list hosts that do not work in the comments of a `ruleset`.  Thi
 For easy reading, please avoid using UTF characters unless in the rare instances that they are part of the hostname itself.
 
 Example:
+
 ```xml
 <!--
-        Invalid certificate:
-                8marta.glavbukh.ru
-                forum2.glavbukh.ru (incomplete certificate chain)
+				Invalid certificate:
+								8marta.glavbukh.ru
+								forum2.glavbukh.ru (incomplete certificate chain)
 
-        Redirect to HTTP:
-                8marta2013.glavbukh.ru
-                den.glavbukh.ru
+				Redirect to HTTP:
+								8marta2013.glavbukh.ru
+								den.glavbukh.ru
 
-        Refused:
-                e.glavbukh.ru
-                www.e.glavbukh.ru
+				Refused:
+								e.glavbukh.ru
+								www.e.glavbukh.ru
 
-        Time out:
-                psd.glavbukh.ru
-                str.glavbukh.ru
+				Time out:
+								psd.glavbukh.ru
+								str.glavbukh.ru
 
 -->
 ```
@@ -295,17 +343,17 @@ Prefer capturing groups `(www\.)?` over non-capturing `(?:www\.)?`. The non-capt
 
 ### Snapping Redirects
 
-Avoid snapping redirects. For instance, if https://foo.fm serves HTTPS correctly, but redirects to https://foo.com, it's tempting to rewrite foo.fm to foo.com, to save users the latency of the redirect. However, such rulesets are less obviously correct and require more scrutiny. And the redirect can go out of date and cause problems. HTTPS Everywhere rulesets should change requests the minimum amount necessary to ensure a secure connection.
+Avoid snapping redirects. For instance, if `https://foo.fm` serves HTTPS correctly, but redirects to `https://foo.com`, it's tempting to rewrite `foo.fm` to `foo.com`, to save users the latency of the redirect. However, such rulesets are less obviously correct and require more scrutiny. And the redirect can go out of date and cause problems. HTTPS Everywhere rulesets should change requests the minimum amount necessary to ensure a secure connection.
 
 ### Example: Ruleset before style guidelines are applied
 
 ```xml
 <ruleset name="WHATWG.org">
-  <target host='whatwg.org' />
-  <target host="*.whatwg.org" />
+		<target host='whatwg.org' />
+		<target host="*.whatwg.org" />
 
-  <rule from="^http://((?:developers|html-differences|images|resources|\w+\.spec|wiki|www)\.)?whatwg\.org/"
-    to="https://$1whatwg.org/" />
+		<rule from="^http://((?:developers|html-differences|images|resources|\w+\.spec|wiki|www)\.)?whatwg\.org/"
+		to="https://$1whatwg.org/" />
 </ruleset>
 ```
 
@@ -326,8 +374,7 @@ Avoid snapping redirects. For instance, if https://foo.fm serves HTTPS correctly
 		<test url="http://dom.spec.whatwg.org/" />
 	<target host="wiki.whatwg.org" />
 
-	<rule from="^http:"
-		to="https:" />
+	<rule from="^http:" to="https:" />
 </ruleset>
 ```
 
@@ -343,52 +390,45 @@ In `utils` we have a tool called `hsts-prune` which removes `targets` from rules
 
 > Let `included domain` denote either a `target`, or a parent of a `target`.  Let `supported browsers` include the ESR, Dev, and Stable releases of Firefox, and the Stable release of Chromium.  If `included domain` is a parent of the `target`, the `included domain` must be present in the HSTS preload list for all `supported browsers` with the relevant flag which denotes inclusion of subdomains set to `true`.  If `included domain` is the `target` itself, it must be included the HSTS preload list for all `supported browsers`.  Additionally, if the http endpoint of the `target` exists, it must issue a 3XX redirect to the https endpoint for that target.  Additionally, the https endpoint for the `target` must deliver a `Strict-Transport-Security` header with the following directives present:
 >
-> - `max-age` >= 31536000
-> - `includeSubDomains`
-> - `preload`
+> * `max-age` >= 31536000
+> * `includeSubDomains`
+> * `preload`
 >
 > If all the above conditions are met, a contributor may remove the `target` from the HTTPS Everywhere rulesets.  If all targets are removed for a ruleset, the contributor is advised to remove the ruleset file itself.  The ruleset `rule` and `test` tags may need to be modified in order to pass the ruleset coverage test.
 
 Every new pull request automatically has the `hsts-prune` utility applied to it as part of the continual integration process.  If a new PR introduces a `target` which is preloaded, it will fail the CI test suite.  See:
 
-- `.travis.yml`
-- `test/run_travis.sh`
+* `.travis.yml`
+* `test/run_travis.sh`
 
-* * *
-
-# Contributing Code
+## Contributing Code
 
 In addition to `ruleset` contributions, we also encourage code contributions to HTTPS Everywhere.  There are a few considerations to keep in mind when contributing code.
 
 Officially supported browsers:
 
-- Firefox Stable
-- Firefox ESR
-- Chromium Stable
+* Firefox Stable
+* Firefox ESR
+* Chromium Stable
 
 We also informally support the Opera browser, but do not have tooling around testing Opera.  Firefox ESR is supported because this is what the [Tor Browser](https://www.torproject.org/projects/torbrowser.html.en), which includes HTTPS Everywhere, is built upon.  For the test commands, refer to [README.md](README.md).
 
-The current extension maintainer is @Hainish.  You can tag him for PRs which involve the core codebase.
+The current extension maintainer is [@zoracon](https://github.com/zoracon).  You can tag them for PRs which involve the core codebase.
 
 Several of our utilities and our full test suite is written in Python.  Eventually we would like the whole codebase to be standardized as JavaScript.  If you are so inclined, it would be helpful to rewrite the tooling and tests into JavaScript while maintaining the functionality.
 
-* * *
-
-# Contributing Documentation
+## Contributing Documentation
 
 Standalone documentation should be written in [Markdown](https://en.wikipedia.org/wiki/Markdown) that follows the [Google style guide](https://github.com/google/styleguide/blob/gh-pages/docguide/style.md). If you are updating existing documentation that does not follow the Google style guide, then you should follow the style of the file you are updating.
 
 * * *
 
-# Pull Requests from Deleted Accounts
+## Pull Requests from Deleted Accounts
 
 Sometimes a contributor will [delete their GitHub account](https://help.github.com/articles/deleting-your-user-account/) after submitting a pull request, resulting in the pull request being associated with the [Ghost user (@ghost)](https://github.com/ghost).  These @ghost pull requests can cause problems for HTTPS Everywhere maintainers, leaving questions unanswered and closing off the possibility of receiving maintainer feedback to solicit clarification or request changes.
 
 We ask that if you want to delete your GitHub account, you either close your HTTPS Everywhere pull requests before you delete your account, or wait to delete your account until we merge your pull requests. Otherwise, maintainers are free to close @ghost pull requests without any comment.
 
-* * *
+## Contributing Translations
 
-# Contributing Translations
 We are reviewing our process around translations and currently discussing ways to improve. Translations are still processed under the same entity and those who have an account already, do not need to take action at this time. Thank you for your contributions.
-
-* * *
