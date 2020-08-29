@@ -1,7 +1,7 @@
 /* global sendMessage */
 /* global getOption_ */
 /* global e */
-/* global hide */
+/* global show, hide */
 
 "use strict";
 
