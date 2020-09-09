@@ -63,7 +63,7 @@ function displayURL() {
 
   // Copy URL Feature on EASE
   copyButton.addEventListener("click", async event => {
-    copyButton.innerText = 'Copy URL';
+    copyButton.innerText = chrome.i18n.getMessage("cancel_copy_url");;
     if (!navigator.clipboard) {
       // Clipboard API not available
       return
