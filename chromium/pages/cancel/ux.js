@@ -62,18 +62,57 @@ function displayURL() {
   });
 
   // Copy URL Feature on EASE
-  copyButton.addEventListener("click", async event => {
-    copyButton.innerText = chrome.i18n.getMessage("cancel_copy_url");;
-    if (!navigator.clipboard) {
-      // Clipboard API not available
-      return
+
+  function copyLinkAlternate() {
+    let isSuccessful = false;
+
+    const sel = window.getSelection();
+
+    try {
+      sel.removeAllRanges();
+
+      const range = document.createRange();
+      range.selectNode(originURLLink);
+
+      sel.addRange(range);
+
+      isSuccessful = document.execCommand("copy");
+
+      sel.removeAllRanges();
+
+      return isSuccessful;
+    } catch (err) {
+      console.error(err);
+
+      sel.removeAllRanges();
+
+      return false;
     }
+  }
+
+  async function copyLink() {
     try {
       await navigator.clipboard.writeText(originURL);
-      copyButton.innerText = chrome.i18n.getMessage("cancel_copied_url");
+      return true;
     } catch (err) {
-      console.log(err);
-      console.log('failed');
+      return copyLinkAlternate();
+    }
+  }
+
+  let restoreTimeout = null;
+
+  copyButton.addEventListener("click", async () => {
+    if (await copyLink()) {
+      copyButton.innerText = chrome.i18n.getMessage("cancel_copied_url");
+
+      if (restoreTimeout !== null) {
+        clearTimeout(restoreTimeout);
+      }
+
+      restoreTimeout = setTimeout(() => {
+        copyButton.innerText = chrome.i18n.getMessage("cancel_copy_url");
+        restoreTimeout = null;
+      }, 1500);
     }
   });
 
