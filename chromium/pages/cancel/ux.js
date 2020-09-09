@@ -45,6 +45,7 @@ function displayURL() {
   const originURLLink = document.getElementById('url-value');
   const openURLButton = document.getElementById('open-url-button');
   const openHttpOnce = document.getElementById('http-once-button');
+  const copyButton = document.getElementById('copy-url');
   const url = new URL(originURL);
 
   originURLLink.innerText = originURL;
@@ -58,6 +59,22 @@ function displayURL() {
     }
 
     return false;
+  });
+
+  // Copy URL Feature on EASE
+  copyButton.addEventListener("click", async event => {
+    copyButton.innerText = 'Copy URL';
+    if (!navigator.clipboard) {
+      // Clipboard API not available
+      return
+    }
+    try {
+      await navigator.clipboard.writeText(originURL);
+      copyButton.innerText = chrome.i18n.getMessage("cancel_copied_url");
+    } catch (err) {
+      console.log(err);
+      console.log('failed');
+    }
   });
 
   openHttpOnce.addEventListener("click", function() {
