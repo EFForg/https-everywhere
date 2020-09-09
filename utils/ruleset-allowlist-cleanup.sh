@@ -1,5 +1,5 @@
 #!/bin/bash
-# Remove from ruleset whitelist the filenames of files that
+# Remove from ruleset allowlist the filenames of files that
 # no longer exist or have no matching hash sums.
 
 # Change directory to git root; taken from ../test/test.sh
@@ -14,7 +14,7 @@ fi
 
 # Run from ruleset folder to simplify sha256sum output
 cd src/chrome/content/rules
-WLIST=../../../../utils/ruleset-whitelist.csv
+WLIST=../../../../utils/ruleset-allowlist.csv
 DELIM=","
 
 (read; while IFS=$DELIM read listed_hash coverage_flag fetch_flag file; do

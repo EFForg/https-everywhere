@@ -15,7 +15,7 @@ recursos [enumerados aquí](https://www.eff.org/https-everywhere/development).
 *   [¿Por qué utilizar una lista blanca de sitios que admiten HTTPS? ¿Por qué
     no pueden intentar utilizar HTTPS para cada sitio, y sólo volver a HTTP si
     no está
-    disponible?](#why-use-a-whitelist-of-sites-that-support-https-why-cant-you-try-to-use-https-for-every-last-site-and-only-fall-back-to-http-if-it-isnt-available)
+    disponible?](#why-use-a-allowlist-of-sites-that-support-https-why-cant-you-try-to-use-https-for-every-last-site-and-only-fall-back-to-http-if-it-isnt-available)
 *   [¿Cómo puedo eliminar o mover el botón HTTPS Everywhere de la barra de
     herramientas?](#how-do-i-get-rid-ofmove-the-https-everywhere-button-in-the-toolbar)
 *   [¿Cuándo me protege HTTPS Everywhere? ¿Cuándo no me
@@ -82,7 +82,7 @@ estos navegadores, no dude en hacérnoslo saber en https-everywhere en EFF.org
 (pero tenga en cuenta que modificar document.location o window.location en
 JavaScript no es seguro).
 
-### [¿Por qué utilizar una lista blanca de sitios que admiten HTTPS? ¿Por qué no pueden intentar utilizar HTTPS para cada sitio, y sólo volver a HTTP si no está disponible?](#why-use-a-whitelist-of-sites-that-support-https-why-cant-you-try-to-use-https-for-every-last-site-and-only-fall-back-to-http-if-it-isnt-available)
+### [¿Por qué utilizar una lista blanca de sitios que admiten HTTPS? ¿Por qué no pueden intentar utilizar HTTPS para cada sitio, y sólo volver a HTTP si no está disponible?](#why-use-a-allowlist-of-sites-that-support-https-why-cant-you-try-to-use-https-for-every-last-site-and-only-fall-back-to-http-if-it-isnt-available)
 
 Hay varios problemas con la idea de tratar de detectar automáticamente HTTPS en
 cada sitio. No hay ninguna garantía de que los sitios van a dar la misma
