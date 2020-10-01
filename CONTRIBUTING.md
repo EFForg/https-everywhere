@@ -284,21 +284,14 @@ Example:
 
 ```xml
 <!--
-				Invalid certificate:
-								8marta.glavbukh.ru
-								forum2.glavbukh.ru (incomplete certificate chain)
+	Nonfunctional hosts in *.$lower:
+		# Example: foobar.$lower (m)
 
-				Redirect to HTTP:
-								8marta2013.glavbukh.ru
-								den.glavbukh.ru
-
-				Refused:
-								e.glavbukh.ru
-								www.e.glavbukh.ru
-
-				Time out:
-								psd.glavbukh.ru
-								str.glavbukh.ru
+	h: http redirect
+	m: certificate mismatch
+	r: connection refused
+	s: self-signed certificate
+	t: timeout on https
 
 -->
 ```
