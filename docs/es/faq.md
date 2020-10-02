@@ -12,7 +12,7 @@ recursos [enumerados aquí](https://www.eff.org/https-everywhere/development).
     inalámbrica?](#why-is-https-everywhere-preventing-me-from-joining-this-hotelschoolother-wireless-network)
 *   [¿Habrá una versión de HTTPS Everywhere para IE, Safari o algún otro
     navegador?](#will-there-be-a-version-of-https-everywhere-for-ie-safari-or-some-other-browser)
-*   [¿Por qué utilizar una lista blanca de sitios que admiten HTTPS? ¿Por qué
+*   [¿Por qué utilizar una lista de sitios aprobados que admiten HTTPS? ¿Por qué
     no pueden intentar utilizar HTTPS para cada sitio, y sólo volver a HTTP si
     no está
     disponible?](#why-use-a-allowlist-of-sites-that-support-https-why-cant-you-try-to-use-https-for-every-last-site-and-only-fall-back-to-http-if-it-isnt-available)
