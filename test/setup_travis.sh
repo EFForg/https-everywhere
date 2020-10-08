@@ -5,13 +5,14 @@ toplevel=$(git rev-parse --show-toplevel)
 function setup_chrome {
     # Install the latest version of the chromedriver
     version=$(wget https://chromedriver.storage.googleapis.com/LATEST_RELEASE -q -O -)
-    static="84.0.4147.30"
+    # Sometimes Chrome Stable needs a statc intervention
+    # static="85.0.4183.87"
 
     # Mismatch on Chromedriver Latest and Chrome Beta, hardcode for Chrome Beta
     if [ "$1" == "chrome beta" ]; then
-      url="https://chromedriver.storage.googleapis.com/85.0.4183.38/chromedriver_linux64.zip"
+      url="https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_linux64.zip"
     elif [ "$1" == "chrome stable" ]; then
-      url="https://chromedriver.storage.googleapis.com/${static}/chromedriver_linux64.zip"
+      url="https://chromedriver.storage.googleapis.com/${version}/chromedriver_linux64.zip"
     fi
 
     wget -O /tmp/chromedriver.zip ${url}
