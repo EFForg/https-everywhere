@@ -1,26 +1,19 @@
-***Delete section if irrelevant***
+Fixes #(issue)
 
-### List related PRs if any
+## Type of change
 
-- pr link
+Please delete options that are not relevant.
 
-### List related issues if any
+- [ ] Bug fix (non-breaking change which fixes an issue)
+- [ ] New feature (non-breaking change which adds functionality)
+- [ ] Refactoring existing code
+- [ ] New Ruleset (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Existing Ruleset
 
-- issue link
+## For Rulesets: Testing
 
-***May delete note after reading***
+- [ ] Ran `./test.sh` to test coverage for ruleset
+- [ ] Ran `python3.6 test/rules/src/https_everywhere_checker/check_rules.py  test/rules/http.checker.config src/chrome/content/rules/<new-ruleset.xml>` to check for errors in domains
 
-### Note to contributor:
-Thank you for contributing! If this is a new ruleset and your first time contributing, congratulations! There will be some tests ran through our continuous integration in Travis. For example, checking for duplicate hosts, problematic hosts, etc. in the ruleset file. You will see this testing begin when you open this pull request.
-
-If this is not your first time and you have open PRs that have not been closed or merged, please revisit them by searching: `https://github.com/EFForg/https-everywhere/issues?q=is%3Aopen+assignee%3A[yourusernamehere]`. If there is something not being addressed by other maintainers or a project lead, link them to the PR with your question. Thank you for your patience.
-
-More helpful filters in Pull Request search:
-- Changes requested: 
-`is:pr is:open type:pr review:changes_requested author:[your username]`
-- Updated from specific date: 
-`is:pr updated:>yyyy-mm-dd`
-- Merged PRs: 
- `is:pr is:merged author:[your username]`
-- Approved PRs: 
-`is:pr review:approved author:[your username]`
+## Existing Contributors
+If you have open PRs that have not been closed or merged, please revisit them by searching: `https://github.com/EFForg/https-everywhere/issues?q=is%3Aopen+assignee%3A[yourusernamehere]`. 
