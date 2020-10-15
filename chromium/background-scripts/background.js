@@ -181,10 +181,13 @@ function updateState () {
     title: 'HTTPS Everywhere' + ((iconState === 'active') ? '' : ' (' + iconState + ')')
   });
 
-  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-    if (!tabs || tabs.length === 0) {
+  const chromeUrl = 'chrome://';
+
+  chrome.tabs.query({ active: true, currentWindow: true, status: 'complete' }, function(tabs) {
+    if (!tabs || tabs.length === 0 || tabs[0].url.startsWith(chromeUrl) ) {
       return;
     }
+
     const tabUrl = new URL(tabs[0].url);
     const hostname = util.getNormalisedHostname(tabUrl.hostname);
 
