@@ -20,9 +20,6 @@ fi
 
 RULESETS_FILE=rules/default.rulesets
 
-SIGNED_SHA256SUM_BASE64=`mktemp /tmp/ruleset-signature.sha256.base64.XXXXXXXX`
-trap 'rm $SIGNED_SHA256SUM_BASE64' EXIT
-
 mkdir -p $2
 TIMESTAMP=`date +%s`
 REFERENCE=`git rev-parse HEAD`
@@ -31,12 +28,14 @@ echo "{ \"timestamp\": $TIMESTAMP, \"reference\": \"$REFERENCE\", \"rulesets\":"
 echo 'Hash for signing: '
 sha256sum $2/default.rulesets.$TIMESTAMP.gz | cut -f1 -d' '
 
-openssl dgst -sha256 -binary $2/default.rulesets.$TIMESTAMP.gz > $2/default.rulesets.$TIMESTAMP.sha256
+openssl dgst -sha256 -binary $2/default.rulesets.$TIMESTAMP.gz > default.rulesets.$TIMESTAMP.sha256
 
-pkcs15-crypt -s -k 02 --sha-256 -i $2/default.rulesets.$TIMESTAMP.sha256 -o $2/rulesets-signature.$TIMESTAMP.sig -f openssl
+pkcs15-crypt -s -k 02 --sha-256 -i default.rulesets.$TIMESTAMP.sha256 -o $2/rulesets-signature.$TIMESTAMP.sha256 -f openssl
 
-openssl dgst -sha256 -verify $1 -signature $2/rulesets-signature.$TIMESTAMP.sig $2/default.rulesets.$TIMESTAMP.gz
+openssl dgst -sha256 -verify $1 -signature $2/rulesets-signature.$TIMESTAMP.sha256 $2/default.rulesets.$TIMESTAMP.gz
 
 echo $TIMESTAMP > $2/latest-rulesets-timestamp
 
 echo "Rulesets signed and verified"
+
+rm default.rulesets.$TIMESTAMP.sha256
