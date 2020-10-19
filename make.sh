@@ -92,6 +92,7 @@ echo "Building version" $VERSION
 [ -d pkg ] || mkdir -p pkg
 [ -e pkg/crx-cws ] && rm -rf pkg/crx-cws
 [ -e pkg/crx-eff ] && rm -rf pkg/crx-eff
+[ -e pkg/crx-opera ] && rm -rf pkg/crx-opera
 [ -e pkg/xpi-amo ] && rm -rf pkg/xpi-amo
 [ -e pkg/xpi-eff ] && rm -rf pkg/xpi-eff
 
@@ -118,6 +119,7 @@ cd ../..
 python3.6 ./utils/merge-rulesets.py || exit 5
 
 cp src/chrome/content/rules/default.rulesets pkg/crx-cws/rules/default.rulesets
+cp src/chrome/content/rules/default.rulesets.json pkg/crx-cws/rules/default.rulesets.json
 
 sed -i -e "s/VERSION/$VERSION/g" pkg/crx-cws/manifest.json
 
@@ -126,15 +128,23 @@ for x in `cat .build_exclusions`; do
 done
 
 cp -a pkg/crx-cws pkg/crx-eff
+cp -a pkg/crx-cws pkg/crx-opera
 cp -a pkg/crx-cws pkg/xpi-amo
 cp -a pkg/crx-cws pkg/xpi-eff
 cp -a src/META-INF pkg/xpi-amo
 cp -a src/META-INF pkg/xpi-eff
 
+#Create Opera CRX caveat
+cd pkg/crx-opera
+sed -i 's/rules\/default.rulesets/rules\/default.rulesets.json/g' background-scripts/update.js
+rm rules/default.rulesets
+cd ../..
+
 # Remove the 'applications' manifest key from the crx version of the extension, change the 'author' string to a hash, and add the "update_url" manifest key
 # "update_url" needs to be present to avoid problems reported in https://bugs.chromium.org/p/chromium/issues/detail?id=805755
 python3.6 -c "import json; m=json.loads(open('pkg/crx-cws/manifest.json').read()); m['author']={'email': 'eff.software.projects@gmail.com'}; del m['applications']; m['update_url'] = 'https://clients2.google.com/service/update2/crx'; open('pkg/crx-cws/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
 python3.6 -c "import json; m=json.loads(open('pkg/crx-eff/manifest.json').read()); m['author']={'email': 'eff.software.projects@gmail.com'}; del m['applications']; open('pkg/crx-eff/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+python3.6 -c "import json; m=json.loads(open('pkg/crx-opera/manifest.json').read()); m['author']={'email': 'eff.software.projects@gmail.com'}; del m['applications']; open('pkg/crx-opera/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
 # Remove the 'update_url' manifest key from the xpi version of the extension delivered to AMO
 python3.6 -c "import json; m=json.loads(open('pkg/xpi-amo/manifest.json').read()); del m['applications']['gecko']['update_url']; m['applications']['gecko']['id'] = 'https-everywhere@eff.org'; open('pkg/xpi-amo/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
 
@@ -150,6 +160,7 @@ if $REMOVE_UPDATE_CHANNELS; then
   echo "Flag --remove-update-channels specified.  Removing all out-of-band update channels."
   echo "require.scopes.update_channels.update_channels = [];" >> pkg/crx-cws/background-scripts/update_channels.js
   echo "require.scopes.update_channels.update_channels = [];" >> pkg/crx-eff/background-scripts/update_channels.js
+  echo "require.scopes.update_channels.update_channels = [];" >> pkg/crx-opera/background-scripts/update_channels.js
   echo "require.scopes.update_channels.update_channels = [];" >> pkg/xpi-amo/background-scripts/update_channels.js
   echo "require.scopes.update_channels.update_channels = [];" >> pkg/xpi-eff/background-scripts/update_channels.js
 fi
@@ -157,12 +168,14 @@ fi
 if [ -n "$BRANCH" ] ; then
   crx_cws="pkg/https-everywhere-$VERSION-cws.crx"
   crx_eff="pkg/https-everywhere-$VERSION-eff.crx"
+  crx_opera="pkg/https-everywhere-$VERSION-opera.crx"
   xpi_amo="pkg/https-everywhere-$VERSION-amo.xpi"
   xpi_eff="pkg/https-everywhere-$VERSION-eff.xpi"
 
 else
   crx_cws="pkg/https-everywhere-$VERSION~pre-cws.crx"
   crx_eff="pkg/https-everywhere-$VERSION~pre-eff.crx"
+  crx_opera="pkg/https-everywhere-$VERSION-pre-opera.crx"
   xpi_amo="pkg/https-everywhere-$VERSION~pre-amo.xpi"
   xpi_eff="pkg/https-everywhere-$VERSION~pre-eff.xpi"
 fi
@@ -179,11 +192,15 @@ which $BROWSER || BROWSER="chromium"
 
 $BROWSER --no-message-box --pack-extension="pkg/crx-cws" --pack-extension-key="$KEY" 2> /dev/null
 $BROWSER --no-message-box --pack-extension="pkg/crx-eff" --pack-extension-key="$KEY" 2> /dev/null
+$BROWSER --no-message-box --pack-extension="pkg/crx-opera" --pack-extension-key="$KEY" 2> /dev/null
+
 mv pkg/crx-cws.crx $crx_cws
 mv pkg/crx-eff.crx $crx_eff
+mv pkg/crx-opera.crx $crx_opera
 
 echo >&2 "CWS crx package has sha256sum: `openssl dgst -sha256 -binary "$crx_cws" | xxd -p`"
 echo >&2 "EFF crx package has sha256sum: `openssl dgst -sha256 -binary "$crx_eff" | xxd -p`"
+echo >&2 "Opera crx package has sha256sum: `openssl dgst -sha256 -binary "$crx_opera" | xxd -p`"
 
 # now zip up the xpi AMO dir
 name=pkg/xpi-amo
@@ -218,11 +235,13 @@ echo "Created $xpi_amo"
 echo "Created $xpi_eff"
 echo "Created $crx_cws"
 echo "Created $crx_eff"
+echo "Created $crx_opera"
 
 if [ -n "$BRANCH" ]; then
   cd ..
   cp $SUBDIR/$crx_cws pkg
   cp $SUBDIR/$crx_eff pkg
+  cp $SUBDIR/$crx_opera pkg
   cp $SUBDIR/$xpi_amo pkg
   cp $SUBDIR/$xpi_eff pkg
   rm -rf $SUBDIR
