@@ -86,13 +86,13 @@ async function performMigrations() {
             target: [userRule.host],
             rule: [{ from: userRule.urlMatcher, to: userRule.redirectTo }],
             default_off: "user rule"
-          }
-        })
+          };
+        });
         return userRules;
       })
       .then(userRules => {
         return set_promise(rules.RuleSets().USER_RULE_KEY, userRules);
-      })
+      });
 
     migration_version = 2;
     await set_promise('migration_version', migration_version);
@@ -103,12 +103,12 @@ async function performMigrations() {
       .then(disabledList => {
         disabledList = disabledList.map(item => {
           return util.getNormalisedHostname(item);
-        })
+        });
         return disabledList;
       })
       .then(disabledList => {
         return set_promise('disabledList', disabledList);
-      })
+      });
 
     migration_version = 3;
     await set_promise('migration_version', migration_version);
@@ -132,6 +132,7 @@ function setStorage(store) {
     set_promise,
     local
   });
+  chrome.runtime.sendMessage("store_initialized");
 }
 
 Object.assign(exports, {

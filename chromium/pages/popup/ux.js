@@ -153,7 +153,7 @@ function updateEnabledDisabledUI() {
     e('disableButton').style.visibility = "visible";
     // Hide or show the rules sections
     if (item.globalEnabled) {
-      document.body.className = ""
+      document.body.className = "";
       e('onoffswitch_label').innerText = chrome.i18n.getMessage("menu_globalEnable");
       showHttpNowhereUI();
     } else {
@@ -172,7 +172,7 @@ function toggleEnabledDisabled() {
       chrome.tabs.reload();
       window.close();
     }, 1500);
-  }
+  };
 
   getOption_('globalEnabled', true, function(item) {
     setOption_('globalEnabled', !item.globalEnabled, extension_toggle_effect);
@@ -253,7 +253,7 @@ document.addEventListener("DOMContentLoaded", function () {
     timestamp_span.className = "rulesets-version";
     timestamp_span.innerText = `${chrome.i18n.getMessage("about_rulesets_version")} ${update_channel_name}: ${ruleset_version_string}`;
     this.appendChild(timestamp_span);
-  }
+  };
 
   sendMessage("get_ruleset_timestamps", null, timestamps => {
     let replaces = timestamps.some(([update_channel, timestamp]) =>
@@ -408,10 +408,10 @@ function getTab(callback) {
 // to open in regular tab even if the popup is opened in incognito mode.
 
 document.addEventListener('click', e => {
-  const { target } = e
+  const { target } = e;
 
   if (target.matches('a[target="_blank"]')) {
-    chrome.tabs.create({ url: target.href })
-    e.preventDefault()
+    chrome.tabs.create({ url: target.href });
+    e.preventDefault();
   }
-})
+});

@@ -23,7 +23,9 @@ import metrics
 import urllib.parse
 from rules import Ruleset
 from rule_trie import RuleTrie
+from datetime import datetime
 
+timestamp = datetime.now().replace(microsecond=0)
 
 def convertLoglevel(levelString):
     """Converts string 'debug', 'info', etc. into corresponding
@@ -143,7 +145,7 @@ class UrlComparisonThread(threading.Thread):
         except Exception as e:
             errno, message = e.args
             if errno == 6:
-                message = "Fetch error: {} => {}: {}".format(
+                message = "Time: {}\n Fetch error: {} => {}: {}".format(timestamp,
                     plainUrl, transformedUrl, e)
                 self.queue_result("error", "fetch-error {}".format(e),
                                   ruleFname, plainUrl, https_url=transformedUrl)
@@ -226,14 +228,16 @@ def disableRuleset(ruleset, problemRules, urlCount):
     # Go ahead and disable rulset if all targets are problematic
     if urlCount == len(problemRules):
         logging.info("Disabling ruleset {}".format(ruleset.filename))
+        disableMessage = "Entire ruleset disabled at {}\n".format(timestamp)
         contents = re.sub("(<ruleset [^>]*)>",
             "\\1 default_off=\"failed ruleset test\">", contents);
     # If not all targets, just the target
     else:
         for rule in rules:
+            disableMessage = "The following targets have been disabled at {}:\n".format(timestamp)
             host = urllib.parse.urlparse(rule)
             logging.info("Disabling target {}".format(host.netloc))
-            contents = re.sub('<[ \n]*target[ \n]+host[ \n]*=[ \n]*"{}"[ \n]*\/?[ \n]*>'.format(host.netloc),
+            contents = re.sub('<[ \n]*target[ \n]+host[ \n]*=[ \n]*"{}"[ \n]*/?[ \n]*>'.format(host.netloc),
                 '<!-- target host="{}" /-->'.format(host.netloc), contents);
 
     # Since the problems are going to be inserted into an XML comment, they cannot
@@ -245,9 +249,9 @@ def disableRuleset(ruleset, problemRules, urlCount):
         contents = "<!--\n-->\n" + contents
     problemStatement = ("""
 <!--
-Disabled by https-everywhere-checker because:
 {}
-""".format("\n".join(problems)))
+{}
+""".format(disableMessage, "\n".join(problems)))
     contents = re.sub("^<!--", problemStatement, contents)
     with open(ruleset.filename, "w") as f:
         f.write(contents)
@@ -262,7 +266,8 @@ skipdict = {}
 
 def skipFile(filename):
     hasher = hashlib.new('sha256')
-    hasher.update(open(filename, 'rb').read())
+    with open(filename, 'rb') as f:
+        hasher.update(f.read())
     if hasher.digest() in skipdict:
         return True
     else:
@@ -384,7 +389,8 @@ def cli():
                 "Skipping rule file '{}', matches skiplist.".format(xmlFname))
             continue
 
-        ruleset = Ruleset(etree.parse(open(xmlFname, "rb")).getroot(), xmlFname)
+        with open(xmlFname, "rb") as f:
+            ruleset = Ruleset(etree.parse(f).getroot(), xmlFname)
         if ruleset.defaultOff and not includeDefaultOff:
             logging.debug("Skipping rule '{}', reason: {}".format(
                           ruleset.name, ruleset.defaultOff))

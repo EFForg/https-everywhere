@@ -6,7 +6,7 @@ let observer;
 document.addEventListener("DOMContentLoaded", () => {
   const explainer = document.querySelector("[data-i18n=cancel_he_blocking_explainer]");
   observer = new MutationObserver(() => {
-    replaceLink(explainer)
+    replaceLink(explainer);
   });
   if (explainer.innerText.length > 0) {
     replaceLink(explainer);
@@ -45,6 +45,7 @@ function displayURL() {
   const originURLLink = document.getElementById('url-value');
   const openURLButton = document.getElementById('open-url-button');
   const openHttpOnce = document.getElementById('http-once-button');
+  const copyButton = document.getElementById('copy-url');
   const url = new URL(originURL);
 
   originURLLink.innerText = originURL;
@@ -58,6 +59,61 @@ function displayURL() {
     }
 
     return false;
+  });
+
+  // Copy URL Feature on EASE
+
+  function copyLinkAlternate() {
+    let isSuccessful = false;
+
+    const sel = window.getSelection();
+
+    try {
+      sel.removeAllRanges();
+
+      const range = document.createRange();
+      range.selectNode(originURLLink);
+
+      sel.addRange(range);
+
+      isSuccessful = document.execCommand("copy");
+
+      sel.removeAllRanges();
+
+      return isSuccessful;
+    } catch (err) {
+      console.error(err);
+
+      sel.removeAllRanges();
+
+      return false;
+    }
+  }
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(originURL);
+      return true;
+    } catch (err) {
+      return copyLinkAlternate();
+    }
+  }
+
+  let restoreTimeout = null;
+
+  copyButton.addEventListener("click", async () => {
+    if (await copyLink()) {
+      copyButton.innerText = chrome.i18n.getMessage("cancel_copied_url");
+
+      if (restoreTimeout !== null) {
+        clearTimeout(restoreTimeout);
+      }
+
+      restoreTimeout = setTimeout(() => {
+        copyButton.innerText = chrome.i18n.getMessage("cancel_copy_url");
+        restoreTimeout = null;
+      }, 1500);
+    }
   });
 
   openHttpOnce.addEventListener("click", function() {

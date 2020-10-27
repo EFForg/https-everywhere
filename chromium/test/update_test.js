@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const assert = require('chai').assert,
   update = require('../background-scripts/update'),
@@ -68,4 +68,4 @@ describe('update.js', function() {
 
   });
 
-})
+});
