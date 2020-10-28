@@ -1,5 +1,8 @@
 "use strict";
-
+/**
+ * @see for Rust Based Library:
+ * https://github.com/EFForg/https-everywhere-lib-core
+ */
 (function(exports) {
 
 const util = require('./log'),

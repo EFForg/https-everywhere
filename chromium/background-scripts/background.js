@@ -2,18 +2,6 @@
 
 (function (exports) {
 
-  /**
-   * @description
-   * Calls in needed utilities for proper parsing, validation, storage objects, update channels,
-   * and web assembly compilation
-   *
-   * @see for Update Channels:
-   * https://github.com/EFForg/https-everywhere/blob/master/docs/en_US/ruleset-update-channels.md
-   *
-   * @see for Rust Based Library:
-   * https://github.com/EFForg/https-everywhere-lib-core
-   */
-
   const browserSession = require('./browser_session'),
     incognito = require('./incognito'),
     ipUtils = require('./ip_utils'),
@@ -29,6 +17,11 @@
 
   let all_rules = new rules.RuleSets();
 
+  /**
+   * @description
+   * Initialize local settings, web assembly package,
+   * and remote ruleset information
+   */
   async function initialize() {
     await wasm.initialize();
     await store.initialize();
@@ -41,6 +34,11 @@
   }
   initialize();
 
+  /**
+   * @description
+   * 1. Compare Rulesets from Local Storage to Hosted Storage
+   * 2. Grab the latest set
+   */
   async function initializeAllRules() {
     const r = new rules.RuleSets();
     await r.loadFromBrowserStorage(store, update.applyStoredRulesets);
@@ -59,8 +57,8 @@
   let disabledList = new Set();
   let httpOnceList = new Set();
   let urlBlacklist = new Set();
-
   let upgradeToSecureAvailable;
+
   // Establish session before proceeding with modifications in onBeforeRequest
   let session = new browserSession.browserSession();
 
@@ -104,6 +102,10 @@
     }
   }
 
+  /**
+   * @description
+   * The following block Listens for changes in settings
+   */
   chrome.storage.onChanged.addListener(async function (changes, areaName) {
     if (areaName === 'sync' || areaName === 'local') {
       if ('httpNowhere' in changes) {
@@ -157,7 +159,6 @@
    * blocking: extension is in "block all HTTP requests" mode.
    * disabled: extension is disabled from the popup menu.
    */
-
   function updateState() {
     if (!chrome.tabs) return;
 
@@ -263,7 +264,7 @@
 
       // Check if an user has disabled HTTPS Everywhere on this site.  We should
       // ensure that all subresources are not run through HTTPS Everywhere as well.
-      browserSession.putTab(details.tabId, 'first_party_host', uri.host, true);
+      session.putTab(details.tabId, 'first_party_host', uri.host, true);
     }
 
     if (state.isExtensionDisabledOnSite(session.getTab(details.tabId, 'first_party_host', null), httpOnceList, disabledList)) {
