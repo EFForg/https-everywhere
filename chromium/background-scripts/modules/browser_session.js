@@ -1,7 +1,8 @@
 'use strict';
 
 /**
- * @module Browser Session Object
+ * @module browserSession
+ * @type {object}
  * @description A centralized storage for browsing data within the browser session.
  */
 

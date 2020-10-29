@@ -1,7 +1,9 @@
 'use strict';
 
 /**
- * @module IP Utilities
+ * @exports parseIp
+ * @exports isIpInRange
+ * @exports isLocalIp
  * @description Helps to parse IPs that are withiin range and scope for HTTPS Everywhere
  * @see https://github.com/EFForg/https-everywhere/issues/18474
  */

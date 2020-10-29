@@ -1,6 +1,8 @@
 "use strict";
 
 /**
+ * @exports error_list
+ * @type {array}
  * @description A list of known SSL config errors to filter through and not try to upgrade the user
  * @see
  * Chrome SSL errors: https://github.com/chromium/chromium/blob/master/components/domain_reliability/util.cc

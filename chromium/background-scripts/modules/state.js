@@ -1,7 +1,9 @@
 "use strict";
 
 /**
- * @module Methods for determining state of extension (Disabled/Enabled)
+ * @module isExtensionDisabledOnSite
+ * @type {boolean}
+ * @description Methods for determining state of extension (Disabled/Enabled)
  */
 
 (function (exports) {
