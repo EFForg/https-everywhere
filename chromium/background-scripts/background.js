@@ -181,12 +181,14 @@ function updateState () {
     title: 'HTTPS Everywhere' + ((iconState === 'active') ? '' : ' (' + iconState + ')')
   });
 
-  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-    if (!tabs || tabs.length === 0) {
+  const chromeUrl = 'chrome://';
+
+  chrome.tabs.query({ active: true, currentWindow: true, status: 'complete' }, function(tabs) {
+    if (!tabs || tabs.length === 0 || tabs[0].url.startsWith(chromeUrl) ) {
       return;
     }
 
-    // tabUrl.host should be used to show the "disabled" status properly (#19293)
+    // tabUrl.host instead of hostname should be used to show the "disabled" status properly (#19293)
     const tabUrl = new URL(tabs[0].url);
     const host = util.getNormalisedHostname(tabUrl.host);
 

@@ -159,6 +159,7 @@ if [ -n "$BRANCH" ] ; then
   crx_eff="pkg/https-everywhere-$VERSION-eff.crx"
   xpi_amo="pkg/https-everywhere-$VERSION-amo.xpi"
   xpi_eff="pkg/https-everywhere-$VERSION-eff.xpi"
+
 else
   crx_cws="pkg/https-everywhere-$VERSION~pre-cws.crx"
   crx_eff="pkg/https-everywhere-$VERSION~pre-eff.crx"
@@ -180,9 +181,9 @@ $BROWSER --no-message-box --pack-extension="pkg/crx-cws" --pack-extension-key="$
 $BROWSER --no-message-box --pack-extension="pkg/crx-eff" --pack-extension-key="$KEY" 2> /dev/null
 mv pkg/crx-cws.crx $crx_cws
 mv pkg/crx-eff.crx $crx_eff
+
 echo >&2 "CWS crx package has sha256sum: `openssl dgst -sha256 -binary "$crx_cws" | xxd -p`"
 echo >&2 "EFF crx package has sha256sum: `openssl dgst -sha256 -binary "$crx_eff" | xxd -p`"
-
 
 # now zip up the xpi AMO dir
 name=pkg/xpi-amo
@@ -195,8 +196,6 @@ echo >&2 "AMO xpi package has sha256sum: `openssl dgst -sha256 -binary "$cwd/$zi
 
 cp $zip $xpi_amo
 
-
-
 # now zip up the xpi EFF dir
 name=pkg/xpi-eff
 dir=pkg/xpi-eff
@@ -207,8 +206,6 @@ cwd=$(pwd -P)
 echo >&2 "EFF xpi package has sha256sum: `openssl dgst -sha256 -binary "$cwd/$zip" | xxd -p`"
 
 cp $zip $xpi_eff
-
-
 
 bash utils/android-push.sh "$xpi_eff"
 
