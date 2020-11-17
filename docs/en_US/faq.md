@@ -12,9 +12,9 @@ here](https://www.eff.org/https-everywhere/development).
     network?](#why-is-https-everywhere-preventing-me-from-joining-this-hotelschoolother-wireless-network)
 *   [Will there be a version of HTTPS Everywhere for IE, Safari, or some other
     browser?](#will-there-be-a-version-of-https-everywhere-for-ie-safari-or-some-other-browser)
-*   [Why use a whitelist of sites that support HTTPS? Why can't you try to use
+*   [Why use a allowlist of sites that support HTTPS? Why can't you try to use
     HTTPS for every last site, and only fall back to HTTP if it isn't
-    available?](#why-use-a-whitelist-of-sites-that-support-https-why-cant-you-try-to-use-https-for-every-last-site-and-only-fall-back-to-http-if-it-isnt-available)
+    available?](#why-use-a-allowlist-of-sites-that-support-https-why-cant-you-try-to-use-https-for-every-last-site-and-only-fall-back-to-http-if-it-isnt-available)
 *   [How do I get rid of/move the HTTPS Everywhere button in the
     toolbar?](#how-do-i-get-rid-ofmove-the-https-everywhere-button-in-the-toolbar)
 *   [When does HTTPS Everywhere protect me? When does it not protect
@@ -79,7 +79,7 @@ perform secure request rewriting in these browsers, feel free to let us know at
 https-everywhere at EFF.org (but note that modifying document.location or
 window.location in JavaScript is not secure).
 
-### [Why use a whitelist of sites that support HTTPS? Why can't you try to use HTTPS for every last site, and only fall back to HTTP if it isn't available?](#why-use-a-whitelist-of-sites-that-support-https-why-cant-you-try-to-use-https-for-every-last-site-and-only-fall-back-to-http-if-it-isnt-available)
+### [Why use a allowlist of sites that support HTTPS? Why can't you try to use HTTPS for every last site, and only fall back to HTTP if it isn't available?](#why-use-a-allowlist-of-sites-that-support-https-why-cant-you-try-to-use-https-for-every-last-site-and-only-fall-back-to-http-if-it-isnt-available)
 
 There are several problems with the idea of trying to automatically detect
 HTTPS on every site. There is no guarantee that sites are going to give the

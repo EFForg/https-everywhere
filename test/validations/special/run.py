@@ -32,9 +32,9 @@ xpath_exclusion_pattern = etree.XPath("/ruleset/exclusion/@pattern")
 xpath_cookie_host_pattern = etree.XPath("/ruleset/securecookie/@host")
 xpath_cookie_name_pattern = etree.XPath("/ruleset/securecookie/@name")
 
-# Load lists of ruleset names whitelisted for duplicate rules
+# Load lists of ruleset names allowlisted for duplicate rules
 thispath = os.path.dirname(os.path.realpath(__file__))
-with open(thispath + '/duplicate-whitelist.txt') as duplicate_fh:
+with open(thispath + '/duplicate-allowlist.txt') as duplicate_fh:
     duplicate_allowed_list = [x.rstrip('\n') for x in duplicate_fh.readlines()]
 
 filenames = glob.glob(thispath + '/../../../src/chrome/content/rules/*')
@@ -188,7 +188,7 @@ for filename in filenames:
 for host, count in host_counter.most_common():
     if count > 1:
         if host in duplicate_allowed_list:
-            warn("Whitelisted hostname %s shows up in %d different rulesets." % (host, count))
+            warn("Allowlisted hostname %s shows up in %d different rulesets." % (host, count))
         else:
             failure = 1
             fail("Hostname %s shows up in %d different rulesets." % (host, count))
