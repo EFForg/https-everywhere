@@ -71,7 +71,7 @@ function return_label(rank_num) {
 
 // Label PR if Needed
 async function run(alexa) {
-  const token = core.getInput('github-token', { required: true });
+  const token = core.getInput('token', { required: true });
   const client = new github.GitHub(token);
   const pR = context.payload.pull_request;
 
@@ -121,4 +121,8 @@ async function run(alexa) {
     core.error(err.stack)
     core.setFailed(err.message)
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 094a1d71ec08dd745c7db560ba9db210e5cfd8ed

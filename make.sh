@@ -131,6 +131,7 @@ cp -a pkg/crx-cws pkg/xpi-eff
 cp -a src/META-INF pkg/xpi-amo
 cp -a src/META-INF pkg/xpi-eff
 
+
 # Remove the 'applications' manifest key from the crx version of the extension, change the 'author' string to a hash, and add the "update_url" manifest key
 # "update_url" needs to be present to avoid problems reported in https://bugs.chromium.org/p/chromium/issues/detail?id=805755
 python3.6 -c "import json; m=json.loads(open('pkg/crx-cws/manifest.json').read()); m['author']={'email': 'eff.software.projects@gmail.com'}; del m['applications']; m['update_url'] = 'https://clients2.google.com/service/update2/crx'; open('pkg/crx-cws/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
@@ -179,6 +180,7 @@ which $BROWSER || BROWSER="chromium"
 
 $BROWSER --no-message-box --pack-extension="pkg/crx-cws" --pack-extension-key="$KEY" 2> /dev/null
 $BROWSER --no-message-box --pack-extension="pkg/crx-eff" --pack-extension-key="$KEY" 2> /dev/null
+
 mv pkg/crx-cws.crx $crx_cws
 mv pkg/crx-eff.crx $crx_eff
 

@@ -1,4 +1,9 @@
 <!--
+The following targets have been disabled at 2020-09-25 16:20:22:
+
+Time: 2020-09-25 16:20:22
+ Fetch error: http://www.maps.yandex.ru/ => https://maps.yandex.ru/: (6, 'Could not resolve host: www.maps.yandex.ru')
+
 	Other Yandex rulesets:
 
 		- BEM.info.xml
@@ -10,7 +15,6 @@
 		- Yandex.com.ua.xml
 		- Yandex.com.tr.xml
 		- Yandex.kz.xml
-		- Yandex.mobi.xml
 		- Yandex.net.xml
 		- Yandex.st.xml
 		- Yandex.ua.xml
@@ -44,6 +48,7 @@
 		- copy ³
 		- dns ³
 		- encyclopedia *
+    - ewent
 		- family ¹
 		- b.feedback ³
 		- gazeta ³
@@ -482,163 +487,33 @@
 
 	<target host="yandex.ru" />
 	<target host="*.yandex.ru" />
-		<!--
-			Redirects to http:
-						-->
-		<!--exclusion pattern="^http://(android-us\.apps|us\.apps|m\.auto|family|interactive-answers|op)\.yandex\.ru/$" /-->
-		<!--exclusion pattern="^http://market\.yandex\.ru/($|\?clid=|search\.xml)" /-->
-		<exclusion pattern="^http://uslugi\.yandex\.ru/($|arr\.png|index\.css)" />
-		<!--
-			Rather than enumerating domains that support SSL,
-			we enable SSL for all services and then exclude those
-			which become broken:
-
-
-			1. Public services without HTTPS support (or with broken support):
-												-->
-		<exclusion pattern="^http://(?:bar-widgets|cards|cs-ellpic|cs-thumb|dzen|encyclopedia|lingvo|ll|mirror|newmoscow|news|openid|presocial|wdgt)\.yandex\.ru/" />
-		<!--
-			Needed for Yandex video player to work:
-								-->
-		<exclusion pattern="^http://video\.yandex\.ru/iframe/" />
-		<exclusion pattern="^http://streaming\.video\.yandex\.ru/" />
-		<exclusion pattern="^http://[^.]+\.video\.yandex\.ru/q-upload/" />
-		<!--
-			3. Narod.ru.
-w
-		Narod.ru doesn't use auth data from Yandex,
-		so we don't need to encrypt its pages.
-		The only exception is Narod.Disk, but it doesn't provide HTTPS
-							-->
-		<exclusion pattern="^http://narod\d*\.yandex\.ru/" />
-		<!--
-			4. Search suggestions:
-						-->
-		<exclusion pattern="^http://suggest(?!-maps\.)(?:-[a-z]+)?\.yandex\.ru/" />
-		<!--
-			5. Webmaster:
-					-->
-		<exclusion pattern="^http://content\.webmaster\.yandex\.ru/" />
-		<!--
-			6. Mobile services:
-						-->
-		<exclusion pattern="^http://m\.yandex\.ru/" />
-		<!--
-			8. Various click counters and content stores:
-									-->
-		<exclusion pattern="^http://(?:copy|hghltd|print|market-click\d+|wrz)\.yandex\.ru/" />
-		<!--
-			9. Data clusters for Maps and Video:
-								-->
-		<exclusion pattern="^http://panoramas\.api-maps\.yandex\.ru" />
-		<exclusion pattern="^http://(?:jgo|vec\d+|stv\d+)\.maps\.yandex\.ru/" />
-		<exclusion pattern="^http://[^.]+-tub(?:-[^.]+)?\.yandex\.ru/" />
-		<!--
-			10. More subdomains without SSL from Aleksey Kosterin:
-										-->
-		<exclusion pattern="^http://(?:business|collection|kapersky|large|market|nahodki|navigator|online|punto|zakladki)\.yandex\.ru/" />
-		<!--
-			11. Some cert warnings:
-						-->
-		<exclusion pattern="^http://soft\.yandex\.ru/" />
-		<!--
-			Miscellaneous:
-					-->
-		<exclusion pattern="http://(?:apps|(?:android-)?us\.apps|appsearch|bm|contact2?|dns|family|gazeta|interactive-answers|m\.internet|islands|kaspersky|labs|(?:m|www)\.market|(?:m|pda)\.money|(?:m|pda|www)\.news|notanymore|op|prestable-pogoda|api\.rasp|repo|shad|static-maps|terms|uslugi|webcal|interactive-answers\.webmaster)\.yandex\.ru/" />
-
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.yandex\.ru$" name="^(Cookie_check|fuid01|my|yandexuid|yp|ys)$" /-->
-	<!--securecookie host="^(academy|events|startups|tech|developer\.tech)\.yandex\.ru$" name="^(express:sess:|express:sess\.sig)$" /-->
-	<!--securecookie host="^afisha\.yandex\.ru$" name="^ys$" /-->
-	<!--securecookie host="^(auto|pda\.auto|display|gorod|partner\.market|(www\.)?master|rabota|m\.rabota|realty|partner\.realty|slovari|stat)\.yandex\.ru$" name="^uid$" /-->
-	<!--securecookie host="^(bs|mc)\.yandex\.ru$" name="^yabs-sid$" /-->
-	<!--securecookie host="^(intern\.|shad\.)?contest\.yandex\.ru$" name="^CONTEST_LANG$" /-->
-	<!--securecookie host="^feedback2\.yandex\.ru$" name="^feedback2-sid$" /-->
-	<!--securecookie host="^\.fotki\.yandex\.ru$" name="^FSession_id$" /-->
-	<!--securecookie host="^\.?(captcha|hw|suggests\.rasp)\.yandex\.ru$" name="^yp$" /-->
-	<!--securecookie host="^(ipv[46]\.)?internet\.yandex\.ru$" name="^(csrftoken|test)$" /-->
-	<!--securecookie host="^(pda\.)?mail\.yandex\.ru$" name="^ni$" /-->
-	<!--securecookie host="^mobile\.yandex\.ru$" name="^family$" /-->
-	<!--securecookie host="^pass\.yandex\.ru$" name="^M_\w+_yandex_\w\w$" /-->
-	<!--securecookie host="^pogoda\.yandex\.ru$" name="^yw_lc$" /-->
-	<!--securecookie host="^realty\.yandex\.ru$" name="^from$" /-->
-	<!--securecookie host="^slovari\.yandex\.ru$" name="^slovari-state$" /-->
-	<!--securecookie host="^translate\.yandex\.ru$" name="^(first_visit_src|stoken)$" /-->
-
-	<securecookie host="(?:academy|afisha|auto|pda\.auto|bs|\.?captcha|(?:intern\.|shad\.)?contest|display|events|feedback2|\.?hw|(?:ipv[46]\.)?internet|mail|pda\.mail|partner\.market|(?:www\.)?master|mc|mobile|pass|pogoda|rabota|m\.rabota|\.?suggests\.rasp|realty|partner\.realty|slovari|startups|stat|(?:developer\.)?tech|translate|\.video)\.yandex\.ru$" name=".+" />
-
-
-	<!--	Redirect keeps path and args:
-						-->
-	<rule from="^http://dict\.yandex\.ru/+"
-		to="https://slovari.yandex.ru/" />
-
-	<!--	Domains for which www exists, but !www
-		doesn't, or doesn't work over http:
-							-->
-	<rule from="^http://www\.ewent\.yandex\.ru/"
-		to="https://www.ewent.yandex.ru/" />
-
-	<rule from="^http://favicon\.yandex\.ru/"
-		to="https://favicon.yandex.net/" />
-
-	<!--	Redirect drops path and args:
-						-->
-	<!--rule from="^http://gazeta\.yandex\.ru/.*"
-		to="https://news.yandex.ru/mynews" /-->
-
-	<!--	Redirect drops path but not args:
-							-->
-	<rule from="^http://(?:www\.)?m\.metro\.yandex\.ru/[^?]*"
-		to="https://m.soft.yandex.ru/metro/" />
-
-	<rule from="^http://mobile-feedback\.yandex\.ru/"
-		to="https://m.feedback.yandex.ru/" />
-
-	<!--	Redirect keeps path and args:
-						-->
-	<rule from="^http://skype\.yandex\.ru/+"
-		to="https://yandex.ru/promo/skype/" />
-
-	<rule from="^http://twitter\.yandex\.ru/+"
-		to="https://www.yandex.ru/" />
-
-	<rule from="^http://upics\.yandex\.ru/"
-		to="https://upics.yandex.net/" />
-
-	<!--	Domains for which both !www and www
-		exist, and both work without caveat:
-							-->
-	<rule from="^http://(www\.)?(academy|adresa|atlas|ewents|[ei]vents?|export|fotki|internet|karti|maps|(?:beta|constructor|m|n|router-quality)\.maps|master|metro|mshad|music|maps\.pda|pogoda|prefetch-maps|probki|research|site|startups|tech|tv|video|weather|yaca)\.yandex\.ru/"
-		to="https://$1$2.yandex.ru/" />
-
-	<rule from="^http://((?:\d\.downloader\.disk|sandbox\.api\.maps|www)\.)?yandex\.ru/"
-		to="https://$1yandex.ru/" />
+    <test url="http://audience.yandex.ru/" />
+    <test url="http://disk.yandex.ru/" />
+    <test url="http://download.yandex.ru/" />
+    <test url="http://academy.yandex.ru/" />
+    <test url="http://video.yandex.ru/" />
+    <test url="http://events.yandex.ru/" />
 
 	<rule from="^http://(?:www\.)?([^.]+)\.yandex\.ru/"
 		to="https://$1.yandex.ru/" />
+    <test url="http://www.disk.yandex.ru/" />
+    <test url="http://www.webmaster.yandex.ru/" />
+    <test url="http://www.kassa.yandex.ru/" />
 
 	<!--	Here we can enable 4+ level domains with a single regexp,
 		but I've never seen any domains more that 4 levels deep
 		in Yandex network, so I wouldn't enable them now -
-		it may be inconvenient and may broke some services.
+		it may be inconvenient and may brake some services.
 		Only 4-level domains match.
 						-->
 	<rule from="^http://([^.]+)\.([^.]+)\.yandex\.ru/"
 		to="https://$1.$2.yandex.ru/" />
+    <test url="http://points.maps.yandex.ru/" />
+    <test url="http://beta.dialogs.yandex.ru/" />
+    <test url="http://shad.contest.yandex.ru/" />
 
+  <securecookie host=".+" name=".+" />
 
-	<!--	"<error><status>401</status><message>Unauthorized</message><cause>Incorrect referer</cause></error>"
-
-		https doesn't give a referrer, so images don't load.
-
-		Example:	https://market.yandex.ru/search.xml?text=draytek&hid=91083&srnum=233
-		List:		https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001094.html
-							-->
-	<!--rule from="^https://static-maps\.yandex\.ru/"
-		to="http://static-maps.yandex.ru/" downgrade="1" /-->
+  <rule from="^http:" to="https:" />
 
 </ruleset>
