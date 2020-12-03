@@ -52,3 +52,12 @@ uglifycss \
 $ cp node_modules/pako/dist/pako_inflate.js pako-1.0.5/pako_inflate.min.js
 
 ```
+
+## Bootstrap
+`$ npm install bootstrap`
+
+```
+$ cp node_modules/bootstrap/dist/css/bootstrap.min.css bootstrap/bootstrap.min.css
+$ cp node_modules/bootstrap/dist/css/bootstrap-grid.min.css bootstrap/bootstrap-grid.min.css
+$ cp node_modules/bootstrap/dist/css/bootstrap-reboot.min.css bootstrap/bootstrap-reboot.min.css
+```
