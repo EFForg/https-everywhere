@@ -4,7 +4,7 @@ toplevel=$(git rev-parse --show-toplevel)
 
 function setup_chrome {
     # install the appropriate chromedriver version (for chrome stable & beta)
-    chrome_version=$("${CHROME}" --product-version | cut -d . -f 1-3)
+    chrome_version=$("${BROWSER}" --product-version | cut -d . -f 1-3)
     chromedriver_version_url=https://chromedriver.storage.googleapis.com/LATEST_RELEASE_"${chrome_version}"
     chromedriver_version=$(wget "${chromedriver_version_url}" -q -O -)
     chromedriver_url=https://chromedriver.storage.googleapis.com/"${chromedriver_version}"/chromedriver_linux64.zip
