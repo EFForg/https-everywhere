@@ -3,7 +3,7 @@
 const assert = require('chai').assert,
   update = require('../background-scripts/update'),
   chrome = require("sinon-chrome"),
-  util = require('../background-scripts/util'),
+  util = require('../background-scripts/modules/log'),
   atob = require("atob"),
   TextDecoder = require('text-encoding').TextDecoder,
   sinon = require('sinon');

@@ -1,6 +1,14 @@
 'use strict';
 
-(function (exports) {
+/**
+ * @exports parseIp
+ * @exports isIpInRange
+ * @exports isLocalIp
+ * @description Helps to parse IPs that are withiin range and scope for HTTPS Everywhere
+ * @see https://github.com/EFForg/https-everywhere/issues/18474
+ */
+
+(function(exports) {
 
 const parseIp = ip => {
   if (!/^[0-9.]+$/.test(ip)) {

@@ -1,6 +1,9 @@
-/* exported update_channels */
-
 'use strict';
+
+/**
+ * @see for Update Channels documentation:
+ * https://github.com/EFForg/https-everywhere/blob/master/docs/en_US/ruleset-update-channels.md
+ */
 
 (function (exports) {
 

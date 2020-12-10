@@ -3,7 +3,7 @@
 (function(exports) {
 
 const rules = require('./rules');
-const util = require("./util");
+const util = require("./log");
 
 function initialize() {
   return new Promise(resolve => {

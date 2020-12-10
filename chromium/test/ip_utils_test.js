@@ -1,6 +1,6 @@
 'use strict';
 
-const { parseIp, isIpInRange, isLocalIp } = require('../background-scripts/ip_utils');
+const { parseIp, isIpInRange, isLocalIp } = require('../background-scripts/modules/ip_utils');
 
 const assert = require('chai').assert;
 

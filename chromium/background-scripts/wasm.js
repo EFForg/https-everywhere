@@ -1,8 +1,11 @@
 "use strict";
-
+/**
+ * @see for Rust Based Library:
+ * https://github.com/EFForg/https-everywhere-lib-core
+ */
 (function(exports) {
 
-const util = require('./util'),
+const util = require('./log'),
   { RuleSets } = wasm_bindgen;
 
 async function initialize() {

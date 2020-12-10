@@ -17,6 +17,8 @@ if (typeof window === "undefined") {
     window = { atob, btoa, chrome, crypto, pako, TextDecoder },
     fs = require('fs');
 
+  console.log(fs.readFileSync('./manifest.json').version);
+
   extension_version = JSON.parse(fs.readFileSync('./manifest.json')).version;
 
   combined_update_channels = update_channels;
@@ -26,7 +28,7 @@ if (typeof window === "undefined") {
 
 (function(exports) {
 
-const util = require('./util');
+const util = require('./log');
 
 let store,
   background_callback;
