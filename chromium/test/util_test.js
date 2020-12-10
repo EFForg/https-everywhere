@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('chai').assert,
-  util = require('../background-scripts/validation');
+  util = require('../background-scripts/modules/validation');
 
 
 describe('util.js', function() {
@@ -49,9 +49,16 @@ describe('util.js', function() {
   });
 
   describe('getNormalisedHostname', function() {
-    it('removes tailing dots', function() {
+    it('preserve port numbers', function() {
+      assert.strictEqual(util.getNormalisedHostname('example.com'), 'example.com');
+      assert.strictEqual(util.getNormalisedHostname('example.com:8080'), 'example.com:8080');
+    });
+
+    it('removes tailing dots and preserve port numbers', function() {
       assert.strictEqual(util.getNormalisedHostname('example.com.'), 'example.com');
+      assert.strictEqual(util.getNormalisedHostname('example.com.:8080'), 'example.com:8080');
       assert.strictEqual(util.getNormalisedHostname('example.com..'), 'example.com');
+      assert.strictEqual(util.getNormalisedHostname('example.com..:8080'), 'example.com:8080');
     });
 
     it('preserves a single dot', function() {

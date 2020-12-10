@@ -10,7 +10,7 @@ function setup_chrome {
 
     # Mismatch on Chromedriver Latest and Chrome Beta, hardcode for Chrome Beta
     if [ "$1" == "chrome beta" ]; then
-      url="https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_linux64.zip"
+      url="https://chromedriver.storage.googleapis.com/88.0.4324.27/chromedriver_linux64.zip"
     elif [ "$1" == "chrome stable" ]; then
       url="https://chromedriver.storage.googleapis.com/${version}/chromedriver_linux64.zip"
     fi

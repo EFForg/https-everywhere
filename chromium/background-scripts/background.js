@@ -181,10 +181,11 @@ function updateState() {
       return;
     }
 
+    // tabUrl.host instead of hostname should be used to show the "disabled" status properly (#19293)
     const tabUrl = new URL(tabs[0].url);
-    const hostname = validation.getNormalisedHostname(tabUrl.hostname);
+    const host = validation.getNormalisedHostname(tabUrl.host);
 
-    if (state.isExtensionDisabledOnSite(hostname, httpOnceList, disabledList) || iconState == "disabled") {
+    if (state.isExtensionDisabledOnSite(host, httpOnceList, disabledList) || iconState == "disabled") {
       if ('setIcon' in chrome.browserAction) {
         chrome.browserAction.setIcon({
           path: {
