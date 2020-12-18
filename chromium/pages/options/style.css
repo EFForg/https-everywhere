@@ -1,23 +1,30 @@
+@import "../main.css";
+
 body{
-  min-width: 500px;
-  min-height: 250px;
-  display: block;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #202023;
-    color: #f9f9fa;
-  }
-
-  .section-header-span, div#update-channels-warning {
-    color: #000;
-  }
-
-  textarea, input[type=text] {
-    background-color: #202023;
-    color: #f9f9fa;
-  }
+/*---------
+# GRID LAYOUT
+---------*/
+.header-wrapper, .section-wrapper {
+  margin: auto;
+}
+.header-wrapper {
+  display: inline-flex;
+  grid-column: 2;
+  grid-row: 1;
+}
+.section-wrapper {
+  grid-column: 2;
+  grid-row: 2;
+}
+#add-disabled-site-wrapper {
+  float: left;
+}
+#add-update-channel-wrapper {
+  display: inline-block;
 }
 
 a.settings{
@@ -76,7 +83,7 @@ img.remove{
   cursor: pointer;
   float: right;
   height: 15px;
-  margin: 10px 0 0 8%;
+  margin-top: -34px;
   width: 15px;
 }
 .disabled-rule-list-item:last-of-type {
@@ -84,12 +91,11 @@ img.remove{
 }
 .disabled-rule-list-item {
   border-bottom: 1px solid #ccc;
-  display: inline-flex;
-  margin-left: 5%;
-  width: 80%;
+  clear: both;
 }
 .disabled-rule-list-item p {
-  width: 100%;
+  width: 80%;
+  word-wrap: anywhere;
 }
 
 .section-header{
@@ -106,28 +112,30 @@ img.remove{
 }
 
 .section-header-span{
-  font-size: 15px;
-  border: 0px;
-  border-radius: 13px;
+  cursor: pointer;
   padding: 8px;
-  margin-right: 10px;
+  margin-left: 0 !important;
+  margin-right: var(--space) !important;
   display: inline-block;
 }
 
 .section-header-span.active{
-  background-color: #66ccff;
+  background-color: var(--darker-blue);
+  color: #FFF;
 }
-
 .section-header-span.inactive{
-  background-color: #ddd;
+  background-color: var(--light-grey);
+}
+.section-header-span.inactive:hover {
+  background-color: var(--darker-blue);
 }
 
 .update-channel{
-  margin-top: 30px;
-  margin-bottom: 30px;
   border: 1px solid grey;
   border-radius: 20px;
-  width: 498px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding: 6px;
 }
 
 .update-channel-name{
@@ -172,8 +180,9 @@ div.update-channel-row-scope {
 
 button#add-update-channel, button#add-disabled-site {
   float: right;
+  height: 30px;
   margin: 0px 10px 10px 10px;
-  border-radius: 7px;
+  padding: 6px;
 }
 
 input#update-channel-name, input#disabled-site {
@@ -224,8 +233,8 @@ div#update-channels-last-checked {
   font-size: 10px;
 }
 
-#update-channels-wrapper{
-  width: 500px;
+#update-channels-list {
+  display: inline-block;
 }
 
 @keyframes flash {
@@ -248,4 +257,20 @@ div#update-channels-last-checked {
 
 .flash {
   animation: flash 1s ease-out;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #202023;
+    color: #f9f9fa;
+  }
+
+  .section-header-span, div#update-channels-warning {
+    color: #000;
+  }
+
+  textarea, input[type=text] {
+    background-color: #202023;
+    color: #f9f9fa;
+  }
 }
