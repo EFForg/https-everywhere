@@ -17,7 +17,7 @@ npm install
 ## Usage
 
 ```Shell
-node rewriter.js ~/path/to/my/webapp
+./rewriter.js ~/path/to/my/webapp
 cd ~/path/to/my/webapp
 git diff
 ```

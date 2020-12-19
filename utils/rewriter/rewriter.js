@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 global.self = global;
 TextDecoder = require('text-encoding').TextDecoder;
 TextEncoder = require('text-encoding').TextEncoder;
