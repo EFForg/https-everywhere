@@ -35,10 +35,9 @@ if type apt-get>/dev/null 2>&1;  then
   BROWSERS="firefox chromium-browser"
   CHROMEDRIVER="chromium-chromedriver"
   if [[ "$(lsb_release -is)" == "Debian" ]]; then
-    # Iceweasel is the rebranded Firefox that Debian ships, and Chromium
-    # takes the name of 'chromium' instead of 'chromium-browser' in
+    # Chromium takes the name of 'chromium' instead of 'chromium-browser' in
     # Debian 7 (wheezy) and later.
-    BROWSERS="iceweasel chromium"
+    BROWSERS="firefox-esr chromium"
     CHROMEDRIVER="chromedriver"
   fi
   $SUDO_SHIM apt-get install -y libxml2-dev libxml2-utils libxslt1-dev \
