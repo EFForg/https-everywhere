@@ -6,9 +6,9 @@
 //
 // Usage:
 //  cd https-everywhere
+//  ./install-dev-dependencies.sh
 //  ./make.sh # to build default.rulesets
-//  cd rewriter
-//  (install node and npm)
+//  cd utils/rewriter/
 //  npm install
 //  node rewriter.js ~/path/to/my/webapp
 //  cd ~/path/to/my/webapp
