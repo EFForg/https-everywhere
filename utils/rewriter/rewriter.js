@@ -25,10 +25,17 @@ var ruleSets = null;
 function processDir(dir) {
   var stream = readdirp({
     root: dir,
-    fileFilter: ['*.html', '*.js', '*.rb', '*.erb', '*.mustache',
-      '*.scala', '*.c', '*.cc', '*.cpp', '*.cxx',
-      '*.java', '*.go', '*.php', '*.css', '*.pl', '*.py',
-      '*.rhtml', '*.sh', '*.yaml']
+    directoryFilter: [
+      '!.*', // Protect `.git` and other VCS directories.
+      '!*modules',
+      '!LICENSES', // https://reuse.software/ convention.
+    ],
+    fileFilter: [
+      '!*.png', '!*.svg', '!*.ico', '!*.xcf',
+      '!*.pdf',
+
+      '!LICENSE*', '!COPYING*', // Prefer https://reuse.software/.
+    ],
   });
 
   stream
