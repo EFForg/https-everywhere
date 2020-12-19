@@ -15,6 +15,8 @@
 //  git diff
 
 global.self = global;
+TextDecoder = require('text-encoding').TextDecoder;
+TextEncoder = require('text-encoding').TextEncoder;
 require("../../lib-wasm/pkg/https_everywhere_lib_wasm.js");
 
 var path = require("path"),
