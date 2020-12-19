@@ -20,7 +20,7 @@ function setup_firefox {
     # install the latest version of geckodriver (per Github release API)
     firefox_version=$("${BROWSER}" -version)
     geckodriver_version=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep tag_name | cut -d '"' -f 4)
-    geckodriver_url="https://github.com/mozilla/geckodriver/releases/download/${version}/geckodriver-${version}-linux64.tar.gz"
+    geckodriver_url="https://github.com/mozilla/geckodriver/releases/download/${geckodriver_version}/geckodriver-${geckodriver_version}-linux64.tar.gz"
 
     echo "Setting up geckodriver ${geckodriver_version} for ${1} ${firefox_version}"
 
