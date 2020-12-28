@@ -18,8 +18,9 @@ function setup_chrome {
 
 function setup_firefox {
     # install the latest version of geckodriver (per Github release API)
+    # https://docs.github.com/en/free-pro-team@latest/rest/reference/repos#get-the-latest-release
     firefox_version=$("${BROWSER}" -version)
-    geckodriver_version=$(curl -svL https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep tag_name | cut -d '"' -f 4)
+    geckodriver_version=$(curl -svL -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep tag_name | cut -d '"' -f 4)
     geckodriver_url="https://github.com/mozilla/geckodriver/releases/download/${geckodriver_version}/geckodriver-${geckodriver_version}-linux64.tar.gz"
 
     echo "Setting up geckodriver ${geckodriver_version} for ${firefox_version}"
