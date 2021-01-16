@@ -50,5 +50,3 @@ uglifycss \
 ```bash
 
 $ cp node_modules/pako/dist/pako_inflate.js pako-1.0.5/pako_inflate.min.js
-
-```
