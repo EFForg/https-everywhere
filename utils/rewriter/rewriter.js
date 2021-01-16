@@ -70,14 +70,19 @@ function processFile(filename) {
   var contents = fs.readFileSync(filename, 'utf8');
   var rewrittenFile = URI.withinString(contents, function(url) {
     console.log("Found ", url);
-    var uri = new URI(url);
-    if (uri.protocol() != 'http') return url;
+    try {
+      var uri = new URI(url);
+      if (uri.protocol() != 'http') return url;
 
-    uri.normalize();
-    var rewritten = ruleSets.rewriteURI(uri.toString(), uri.host());
-    if (rewritten) {
-      return rewritten;
-    } else {
+      uri.normalize();
+      var rewritten = ruleSets.rewriteURI(uri.toString(), uri.host());
+      if (rewritten) {
+        return rewritten;
+      } else {
+        return url;
+      }
+    } catch (err) {
+      console.warn("Not rewritting instance because exception occured:" + err);
       return url;
     }
   });
