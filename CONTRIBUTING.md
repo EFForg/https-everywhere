@@ -284,21 +284,20 @@ Example:
 
 ```xml
 <!--
-				Invalid certificate:
-								8marta.glavbukh.ru
-								forum2.glavbukh.ru (incomplete certificate chain)
+	Invalid certificate:
+					incomplete.example.com (incomplete certificate chain)
+					selfsigned.example.com
+					wronghost.example.com
 
-				Redirect to HTTP:
-								8marta2013.glavbukh.ru
-								den.glavbukh.ru
+	Redirect to HTTP:
+					httponly.example.com
 
-				Refused:
-								e.glavbukh.ru
-								www.e.glavbukh.ru
+	Refused:
+					abc.example.com
+					abc.abc.example.com
 
-				Time out:
-								psd.glavbukh.ru
-								str.glavbukh.ru
+	Time out:
+					drop.example.com
 
 -->
 ```
