@@ -148,6 +148,19 @@ function ArrayBufferToString(ab) {
   return string;
 }
 
+/**
+ * Convert a string to an ArrayBuffer
+ *
+ * @param string: a string to convert
+ */
+function StringToArrayBuffer(str) {
+  var byteArray = new Uint8Array(str.length);
+  for (var i = 0; i < str.length; i++) {
+    byteArray[i] = str.charCodeAt(i);
+  }
+  return byteArray;
+}
+
 
 Object.assign(exports, {
   VERB,
@@ -163,7 +176,8 @@ Object.assign(exports, {
   setDefaultLogLevel,
   getDefaultLogLevel,
   loadExtensionFile,
-  ArrayBufferToString
+  ArrayBufferToString,
+  StringToArrayBuffer
 });
 
 })(typeof exports == 'undefined' ? require.scopes.util = {} : exports);

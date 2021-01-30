@@ -255,7 +255,7 @@ document.addEventListener("DOMContentLoaded", function () {
     this.appendChild(timestamp_span);
   };
 
-  sendMessage("get_ruleset_timestamps", null, timestamps => {
+  sendMessage("get_update_channel_timestamps", null, timestamps => {
     let replaces = timestamps.some(([update_channel, timestamp]) =>
       update_channel.replaces_default_rulesets && timestamp > 0
     );

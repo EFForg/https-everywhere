@@ -13,6 +13,7 @@ const rules = require('./rules'),
 
 
 let all_rules = new rules.RuleSets();
+let blooms = [];
 
 async function initialize() {
   await wasm.initialize();
@@ -22,6 +23,7 @@ async function initialize() {
   await getUpgradeToSecureAvailable();
   await update.initialize(store, initializeAllRules);
   await all_rules.loadFromBrowserStorage(store, update.applyStoredRulesets);
+  await update.applyStoredBlooms(blooms);
   await incognito.onIncognitoDestruction(destroy_caches);
 }
 initialize();
@@ -30,6 +32,9 @@ async function initializeAllRules() {
   const r = new rules.RuleSets();
   await r.loadFromBrowserStorage(store, update.applyStoredRulesets);
   Object.assign(all_rules, r);
+  const b = [];
+  await update.applyStoredBlooms(b);
+  Object.assign(blooms, b);
 }
 
 /**
@@ -426,6 +431,15 @@ function onBeforeRequest(details) {
     }
   }
 
+  if (newuristr == null && blooms.length > 0 && uri.protocol === 'http:') {
+    for(let bloom of blooms) {
+      if(bloom.check(uri.hostname)){
+        newuristr = uri.href.replace(/^http:/, "https:");
+        break;
+      }
+    }
+  }
+
   // only use upgradeToSecure for trivial rewrites
   if (upgradeToSecureAvailable && newuristr) {
     // check rewritten URIs against the trivially upgraded URI
@@ -800,8 +814,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
         });
       return true;
     },
-    get_ruleset_timestamps: () => {
-      update.getRulesetTimestamps().then(timestamps => sendResponse(timestamps));
+    get_update_channel_timestamps: () => {
+      update.getUpdateChannelTimestamps().then(timestamps => sendResponse(timestamps));
       return true;
     },
     get_pinned_update_channels: () => {
@@ -847,9 +861,16 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
           return (update_channel.name != message.object);
         })}, () => {
           store.local.remove([
-            'rulesets-timestamp: ' + message.object,
-            'rulesets-stored-timestamp: ' + message.object,
-            'rulesets: ' + message.object
+            'uc-timestamp: ' + message.object,
+            'uc-stored-timestamp: ' + message.object,
+            'rulesets: ' + message.object,
+            'bloom: ' + message.object,
+            'bloom_bitmap_bits: ' + message.object,
+            'bloom_k_num: ' + message.object,
+            'bloom_sip_keys_0_0: ' + message.object,
+            'bloom_sip_keys_0_1: ' + message.object,
+            'bloom_sip_keys_1_0: ' + message.object,
+            'bloom_sip_keys_1_1: ' + message.object,
           ], () => {
             initializeAllRules();
             sendResponse(true);
@@ -950,6 +971,7 @@ function destroy_caches() {
 
 Object.assign(exports, {
   all_rules,
+  blooms,
   urlBlacklist
 });
 
