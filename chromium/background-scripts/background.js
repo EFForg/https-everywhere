@@ -32,9 +32,8 @@ async function initializeAllRules() {
   const r = new rules.RuleSets();
   await r.loadFromBrowserStorage(store, update.applyStoredRulesets);
   Object.assign(all_rules, r);
-  const b = [];
-  await update.applyStoredBlooms(b);
-  Object.assign(blooms, b);
+  blooms.length = 0;
+  await update.applyStoredBlooms(blooms);
 }
 
 /**
@@ -704,8 +703,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     let last_updated_promises = [];
     for(let update_channel of update_channels) {
       last_updated_promises.push(new Promise(resolve => {
-        store.local.get({['rulesets-timestamp: ' + update_channel.name]: 0}, item => {
-          resolve([update_channel.name, item['rulesets-timestamp: ' + update_channel.name]]);
+        store.local.get({['uc-timestamp: ' + update_channel.name]: 0}, item => {
+          resolve([update_channel.name, item['uc-timestamp: ' + update_channel.name]]);
         });
       }));
     }
