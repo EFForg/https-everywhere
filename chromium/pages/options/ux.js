@@ -228,7 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
     update_channel_div.appendChild(clearer);
 
     update_channel_format.addEventListener("change", () => {
-      if(update_channel_format.value == "bloom"){
+      if(update_channel_format.value == "bloom") {
         update_channel_row_scope.style.display = "none";
       } else {
         update_channel_row_scope.style.display = "block";

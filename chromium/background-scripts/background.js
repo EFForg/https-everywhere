@@ -432,7 +432,7 @@ function onBeforeRequest(details) {
 
   if (newuristr == null && blooms.length > 0 && uri.protocol === 'http:') {
     for(let bloom of blooms) {
-      if(bloom.check(uri.hostname)){
+      if(bloom.check(uri.hostname)) {
         newuristr = uri.href.replace(/^http:/, "https:");
         break;
       }
