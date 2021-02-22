@@ -3,41 +3,40 @@
 
 		- TunnelBroker.xml
 
+	Non-functional hosts
+		SSL connect error:
+		- man.he.net
 
-
-	Nonfunctional subdomains:
-
-		- bgp.he.net	(refused)
-		- man.he.net	(redirects to www.he.net, valid cert)
-
-
-	bgp.he.net and faq.he.net don't support SSL at the moment
-
-
-	Problematic domains:
-
-		- (www.)hu.com *
-		- hurricaneelectric.com *
-
-	* Alternative domains, same content, using he.net certificate
-
+		SSL peer certificate was not OK:
+		- he.com
+		- www.he.com
+		- hurricaneelectric.net
 -->
-<ruleset name="Hurricane Electric">
-
+<ruleset name="Hurricane Electric (partial)">
 	<target host="he.com" />
 	<target host="www.he.com" />
+	
 	<target host="he.net" />
-	<target host="*.he.net" />
+	<target host="www.he.net" />
+	<target host="admin.he.net" />
+	<target host="bgp.he.net" />
+		<test url="http://bgp.he.net/AS39056" />
+	<target host="code.he.net" />
+	<target host="cust.he.net" />
+	<target host="dns.he.net" />
+	<target host="faq.he.net" />
+	<target host="ipv6.he.net" />
+	
 	<target host="hurricaneelectric.net" />
+		<test url="http://hurricaneelectric.net/tour/" />
 
+	<securecookie host=".+" name=".+" />
+	
+	<rule from="^http://(www\.)?he\.com/"
+		  to="https://www.he.net/" />
+	
+	<rule from="^http://hurricaneelectric\.net/"
+		  to="https://www.he.net/" />
 
-	<securecookie host="^(?:.*\.)?he\.net$" name=".+" />
-
-
-	<rule from="^http://(?:www\.)?h(?:e\.com|urricaneelectric\.net)/"
-		to="https://www.he.net/" />
-
-	<rule from="^http://((?:admin|code|cust|dns|ipv6|www)\.)?he\.net/"
-		to="https://$1he.net/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

@@ -14,13 +14,12 @@ function explodeRegExp(re, callback) {
     let [first, ...rest] = items;
 
     if (first.repeat) {
-      let repeat = first.repeat;
+      let { repeat, ...firstSub } = first;
       if (repeat.max !== 1) throw new UnsupportedRegExp(first.raw);
-      delete first.repeat;
       if (repeat.min === 0) {
         buildUrls(str, rest);
       }
-      return buildUrls(str, items);
+      return buildUrls(str, [ firstSub, ...rest ]);
     }
 
     switch (first.type) {

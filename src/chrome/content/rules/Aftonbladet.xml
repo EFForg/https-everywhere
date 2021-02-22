@@ -1,24 +1,13 @@
 <!--
-
 	Other Aftonbladet rulesets:
 
 		- Aftonbladet-CDN.se.xml
 
-
 	Problematic domains:
 
-		- aftonbladet.se		(cert only matches www)
-		- hemma.aftonbladet.se ¹
 		- metrics.aftonbladet.se ¹
 
 	¹ Mismatched
-
-
-	Partially covered domains:
-
-		- bloggar.aftonbladet.se *
-
-	* Some paths redirect to http
 
 
 	Fully covered domains:
@@ -26,64 +15,37 @@
 		- aftonbladet.se subdomains:
 
 			- (www.)?	(^ → www)
-			- ads
 			- metrics	(→ smetrics.aftonbladet.se)
 			- smetrics
-
 
 	Insecure cookies are set for these hosts:
 
 		- ads.aftonbladet.se
 
 -->
+
 <ruleset name="Aftonbladet.se (partial)">
 
-	<!--	Direct rewrites:
-				-->
+	<!--	Direct rewrites: -->
+
+	<target host="aftonbladet.se" />
+	<target host="www.aftonbladet.se" />
 	<target host="bloggar.aftonbladet.se" />
-	<target host="ads.aftonbladet.se" />
 	<target host="login.aftonbladet.se" />
 	<target host="smetrics.aftonbladet.se" />
-	<target host="www.aftonbladet.se" />
+	<target host="granskning.aftonbladet.se" />
+	<target host="hemma.aftonbladet.se" />
+	<target host="myhome.aftonbladet.se" />
 
-	<!--	Special cases:
-				-->
-	<target host="aftonbladet.se" />
+	<!--	Special cases: -->
+
 	<target host="metrics.aftonbladet.se" />
 
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://bloggar\.aftonbladet\.se/($|\w+/files/)" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://bloggar\.aftonbladet\.se/+(?!wp-content/)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://bloggar.aftonbladet.se/aosbloggen" />
-			<test url="http://bloggar.aftonbladet.se/granskning" />
-			<test url="http://bloggar.aftonbladet.se/letsdance" />
-
-			<!--	-ve:
-					-->
-			<test url="http://bloggar.aftonbladet.se/wp-content/themes/ab_startpage/css/style.css" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^ads\.aftonbladet\.se$" name="^(eas_geo|eas_uid)$" /-->
-
 	<securecookie host="^(?:ads|\.smetrics)\.aftonbladet\.se$" name=".+" />
-
-
-	<rule from="^http://aftonbladet\.se/"
-		to="https://www.aftonbladet.se/" />
 
 	<rule from="^http://metrics\.aftonbladet\.se/"
 		to="https://smetrics.aftonbladet.se/" />
 
-	<rule from="^http:"
-		to="https:" />
-
+	
+	<rule from="^http:" to="https:" />
 </ruleset>

@@ -2,31 +2,32 @@
 	CDN buckets:
 
 		- clicktalecdn.sslcs.cdngc.net
-		- clicktale.pantherssl.com
-
 
 	Problematic domains:
 
 		- clicktale.com		(interrupted)
 		- cdn.clicktale.net	(403, mismatched, CN: ssl2.cdngc.net)
 		- s.clicktale.net	(403; mismatched, CN: ssl2.cdngc.net)
+    - www07.clicktale.net (unable to get local issuer certificate)
+
+  Connection Refused/Unresolved Hosts
+    - s.clicktale.net
+    - clicktale.pantherssl.com
 
 -->
 <ruleset name="ClickTale">
 
 	<target host="clicktale.com" />
-	<target host="*.clicktale.com" />
-	<target host="*.clicktale.net" />
-
+	<target host="www.clicktale.com" />
+	<target host="login.app.clicktale.com" />
+	<target host="subs.app.clicktale.com" />
+	<target host="blog.clicktale.com" />
+	<target host="cdn.clicktale.net" />
 
 	<securecookie host=".*\.clicktale\.(?:com|net)$" name=".+" />
 
-
 	<rule from="^http://(?:www\.)?clicktale\.com/"
 		to="https://www.clicktale.com/" />
-
-	<rule from="^http://((?:login|subs)\.app|blog)\.clicktale\.com/"
-		to="https://$1.clicktale.com/" />
 
 	<!--	- s:
 
@@ -34,14 +35,20 @@
 			- Cert: ssl2.cdngc.net
 			- 403s
 		 	- Scripts 404 when rewritten to ^clicktale.net
-							-->
+
+       - Times out
 	<rule from="^http://s\.clicktale\.net/"
 		to="https://clicktale.pantherssl.com/" />
+  -->
 
-	<rule from="^http://cdn\.clicktale\.net/"
+
+	<!--
+    404:
+    <rule from="^http://cdn\.clicktale\.net/"
+
+    unresolved:
 		to="https://clicktalecdn.sslcs.cdngc.net/" />
+  -->
 
-	<rule from="^http://www(07)?\.clicktale\.net/"
-		to="https://www$1.clicktale.net/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

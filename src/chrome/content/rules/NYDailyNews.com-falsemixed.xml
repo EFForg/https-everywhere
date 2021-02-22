@@ -1,13 +1,26 @@
 <!--
 	For rules not causing false/broken MCB, see NYDailyNews.xml.
+
+	Server error:
+		- nydailynews.com/(autos|horoscopes)
+
+	SSL error:
+		- nydailynews.com, equivalent to www.nydailynews.com
 -->
+
 <ruleset name="NYDailyNews (false MCB)" platform="mixedcontent">
 
 	<target host="nydailynews.com" />
 	<target host="www.nydailynews.com" />
 
+	<rule from="^http://nydailynews\.com/"
+		  to="https://www.nydailynews.com/" />
 
-	<rule from="^http:"
-		to="https:" />
+	<exclusion pattern="^http://www\.nydailynews\.com/(autos|horoscopes)" />
+		<test url="http://www.nydailynews.com/autos" />
+		<test url="http://www.nydailynews.com/autos/" />
+		<test url="http://www.nydailynews.com/horoscopes" />
+
+	<rule from="^http:" to="https:" />
 
 </ruleset>

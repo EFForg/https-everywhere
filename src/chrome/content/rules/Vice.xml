@@ -1,7 +1,4 @@
 <!--
-	For problematic rules, see Vice-problematic.xml.
-
-
 	Other Vice Media rulesets:
 
 		- Motherboard.tv.xml
@@ -9,49 +6,14 @@
 		- viceland.com.xml
 
 
-	Nonfunctional domains:
+	Non-functional hosts:
 
-		- (www.)?noisey.cn
+		Timeout:
+		- socials.uk.vice.com
 
-
-	CDN buckets:
-
-
-		- ec2-184-73-100-150.compute-1.amazonaws.com
-		- scs-assets.s3.amazonaws.com
-		- d19o6jcqbnxtyy.cloudfront.net
-
-		- d1qzzfctbfyh6r.cloudfront.net
-
-			- assets.vice.com
-
-		- d1ymkg0yqrfr5q.cloudfront.net
-		- df5qbu832tmne.cloudfront.net
-
-			- assets.thumb.vice.com
-
-		- motherboard.vice.com.edgesuite.net
-		- motherboard-cdn-assets.vice.com.edgesuite.net
-
-
-	Problematic hosts in *vice.com:
-
-		- assets ¹
-		- link ¹
-		- shop ³ ⁴
-		- assets.thump ¹
-		- socials.uk ⁵
-
-	¹ cloudfront
-	¹ Mismatched
-	³ Expired
-	⁴ Self-signed
-	⁵ Revoked
-
-
-	Insecure cookies are set for these hosts:
-
-		- manage.vice.com
+		Certificate mismatched:
+		- link.vice.com
+		- assets.thump.vice.com
 
 
 	Mixed content:
@@ -76,9 +38,10 @@
 -->
 <ruleset name="Vice.com (partial)">
 
-	<!--	Direct rewrites:
-				-->
 	<target host="vice.com" />
+	<target host="www.vice.com" />
+	<test url="http://www.vice.com/stuff" />
+	<target host="assets.vice.com" />
 	<target host="assets2.vice.com" />
 	<target host="assets-news.vice.com" />
 	<target host="assets-sports.vice.com" />
@@ -94,58 +57,22 @@
 	<target host="motherboard-images.vice.com" />
 	<target host="munchies.vice.com" />
 	<target host="news.vice.com" />
+	<test url="http://news.vice.com/shows" />
 	<target host="news-images.vice.com" />
 	<target host="noisey.vice.com" />
 	<target host="scs-assets-cdn.vice.com" />
+	<target host="shop.vice.com" />
 	<target host="sports.vice.com" />
 	<target host="sports-images.vice.com" />
 	<target host="staging-assets-news.vice.com" />
+	<target host="store.vice.com" />
 	<target host="thecreatorsproject.vice.com" />
 	<target host="thecreatorsproject-images.vice.com" />
 	<target host="thump.vice.com" />
 	<target host="vice-sundry-assets-cdn.vice.com" />
-	<target host="www.vice.com" />
-
-	<!--	Complications:
-				-->
-	<target host="assets.vice.com" />
-	<target host="link.vice.com" />
-	<target host="assets.thump.vice.com" />
-
-		<!--exclusion pattern="^http://(?:shop|social)\.vice\.com/" /-->
-
-		<test url="http://news.vice.com/shows" />
-		<test url="http://www.vice.com/stuff" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^manage\.vice\.com$" name="^(_lang|PHPSESSID)$" /-->
 
 	<securecookie host=".+" name=".+" />
 
-	<rule from="^http://assets\.vice\.com/"
-		to="https://d1qzzfctbfyh6r.cloudfront.net/" />
-
-	<rule from="^http://link\.vice\.com/+(?=$|\?)"
-		to="https://vice.com/" />
-
-		<test url="http://link.vice.com/?f" />
-		<test url="http://link.vice.com/?o" />
-		<test url="http://link.vice.com//" />
-		<test url="http://link.vice.com//?o" />
-
-	<rule from="^http://link\.vice\.com/"
-		to="https://cb.sailthru.com/" />
-
-		<test url="http://link.vice.com/join/3nh/viceussignup" />
-
-	<!--rule from="^http://store\.vice\.com/"
-		to="https://vice.myshopify.com/" /-->
-
-	<rule from="^http://assets\.thump\.vice\.com/"
-		to="https://df5qbu832tmne.cloudfront.net/" />
-
-	<rule from="^http:"	to="https:" />
+	<rule from="^http:" to="https:" />
 
 </ruleset>

@@ -1,106 +1,26 @@
 <!--
-	For problematic rules, see AdRoll-problematic.xml
+	Refused:
+		- ^
 
+	Timeout:
+		- support
 
-	CDN buckets:
-
-		- adroll-2081128421.us-west-1.elb.amazonaws.com
-
-		- wildcard.adroll.com.edgekey.net
-
-			- s.adroll.com
-
-		- a.adroll.com.edgesuite.net
-
-		- adroll.userecho.com
-
-			- feedback.adroll.com
-
-		- adroll.wpengine.com		(redirects to blog.adroll)
-
-			- blog.adroll.com
-
-
-	Nonfunctional subdomains:
-
-		- blog *
-		- support *
-
-	* Redirects to http, mismatched, CN: *.wpengine.com)
-
-
-	Problematic subdomains:
-
-		- ^ ¹
-		- a		(akamai)
-		- feedback	(works, mismatched, CN: userecho.com)
-
-	¹ Refused
-
-
-	Fully covered hosts in *adroll.com:
-
-		- (www.)?	(^ → www)
-		- a		(→ s)
-		- d
-		- s
-
-
-	Insecure cookies are set for these domains and hosts:
-
-		- .adroll.com
-		- feedback.adroll.com
-
-
-	s.adroll.com sets __ar_v4 and _te_ wildcard cookies
-	on whichever domain it is loaded from.
-
+	Mismatched:
+		- a
 -->
 <ruleset name="AdRoll (partial)">
-
-	<!--	Direct rewrites:
-				-->
-	<target host="d.adroll.com" />
-	<target host="s.adroll.com" />
-	<target host="www.adroll.com" />
-
-	<!--	Complications:
-				-->
 	<target host="adroll.com" />
-	<target host="a.adroll.com" />
+	<target host="www.adroll.com" />
+	<target host="blog.adroll.com" />
+	<target host="d.adroll.com" />
 	<target host="feedback.adroll.com" />
+	<target host="help.adroll.com" />
+	<target host="s.adroll.com" />
+	<target host="support.adroll.com" />
 
-		<exclusion pattern="^http://feedback\.adroll\.com/(?!s/)" />
+	<securecookie host=".+" name=".+" />
 
-			<!--	+ve:
-					-->
-			<test url="http://feedback.adroll.com/topic/683270-visbility-of-segments-across-advertiser-profiles/" />
-			<test url="http://feedback.adroll.com/users/360899-egg-to-apples/topic/" />
-
-			<!--	-ve:
-					-->
-			<test url="http://feedback.adroll.com/s/assets2.0/css/font-awesome.min.css" />
-			<test url="http://feedback.adroll.com/s/assets2.0/css/plugins/lightbox/img/close.png" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.adroll\.com$" name="^__adroll$" /-->
-	<!--securecookie host="^feedback\.adroll\.com$" name="^uesessionid$" /-->
-
-	<securecookie host="^\.adroll\.com$" name="^__adroll$" />
-
-
-	<rule from="^http://adroll\.com/"
-		to="https://www.adroll.com/" />
-
-	<rule from="^http://a\.adroll\.com/"
-		to="https://s.adroll.com/" />
-
-	<rule from="^http://feedback\.adroll\.com/"
-		to="https://userecho.com/" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http://adroll\.com/" to="https://www.adroll.com/" />
+	<rule from="^http://support\.adroll\.com/" to="https://help.adroll.com/" />
+	<rule from="^http:" to="https:" />
 </ruleset>

@@ -1,0 +1,149 @@
+<!--
+	For problematic rules, see Caltech-mismatches.xml.
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/cit/
+		- s3.amazonaws.com/imss-test/
+		- s3.amazonaws.com/imss-test-storage.ads.caltech.edu/
+		- s3-us-west-1.amazonaws.com/imss-website-storage.cloud.caltech.edu/
+		- s3.amazonaws.com/www-prod-storage.cloud.caltech.edu/
+		- caltech-imss-website-v3-storage.s3.amazonaws.com
+
+
+	Nonfunctional subdomains:
+
+		- www.cacr *
+		- forms ⁷
+		- www.gg ¹
+		- web.gps ⁷
+		- (www.)herschel ¹
+
+		- (www.)ipac ²
+		- conference.ipac ²
+		- nedbatch.ipac ¹
+		- neocam.ipac		(rx_record_too_long)
+
+		- kiss
+		- www.ligo
+		- nexsci ²
+		- www.nustar		(CN: bragi, 403)
+		- sherpa ¹
+		- (www.)spitzer		(self-signed; shows RHEL test page)
+		- wise.ssl ⁶
+		- workshop ⁷
+
+	* Redirects to http/404
+	¹ Refused
+	² Plaintext reply
+	⁶ Shows ds9.ssl
+	⁷ Dropped
+
+
+	Problematic subdomains:
+
+		- www.access ᵐ
+		- blackboard ⁴
+		- cliara	(self-signed)
+		- course        (cert-chain)
+		- dabney	(ditto)
+		- (www.)galex ³
+		- courses.hss	(self-signed)
+		- irsecure ᵐ
+		- moodle        (cert-chain)
+		- ds9.ssl ³
+
+	⁴ 404, preemptable redirect
+	¹ Shows web; mismatched, CN: web.caltech.edu
+	³ Expired, self-signed
+	ᵐ Mismatched
+
+
+	These altnames don't exist:
+
+		- www.web.caltech.edu
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- mail.alumni.caltech.edu
+		- courses.caltech.edu
+		- m.gps.caltech.edu
+		- www.gps.caltech.edu
+		- koa.ipac.caltech.edu
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- odb.acs, www.cco, web from www.its.caltech.edu ˢ
+			- (www.)?imss from caltech-imss-website-v3-storage.s3.amazonaws.com ˢ
+			- www.its.caltech.edu from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Caltech.edu (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="caltech.edu" />
+	<target host="access.caltech.edu" />
+	<target host="odb.acs.caltech.edu" />
+	<target host="admissions.caltech.edu" />
+	<target host="www.admissions.caltech.edu" />
+	<target host="mail.alumni.caltech.edu" />
+	<target host="benefits.caltech.edu" />
+	<target host="www.benefits.caltech.edu" />
+	<target host="www.cco.caltech.edu" />
+	<target host="gps.caltech.edu" />
+	<target host="www.gps.caltech.edu" />
+	<target host="help.caltech.edu" />
+	<target host="hr.caltech.edu" />
+	<target host="www.hr.caltech.edu" />
+	<target host="imss.caltech.edu" />
+	<target host="www.imss.caltech.edu" />
+
+	<target host="irsa.ipac.caltech.edu" />
+	<target host="koa.ipac.caltech.edu" />
+	<target host="ned.ipac.caltech.edu" />
+
+	<target host="www.its.caltech.edu" />
+	<target host="webmail.caltech.edu" />
+	<target host="www.caltech.edu" />
+
+	<!--	Complications:
+				-->
+	<target host="www.access.caltech.edu" />
+	<target host="blackboard.caltech.edu" />
+	<target host="irsecure.caltech.edu" />
+
+	<securecookie host=".\.caltech\.edu$" name=".+" />
+
+	<!--	Ditto.
+			-->
+	<rule from="^http://www\.access\.caltech\.edu/"
+		to="https://access.caltech.edu/" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://blackboard\.caltech\.edu/.*"
+		to="https://caltech-sp.blackboard.com/eaccounts" />
+
+		<test url="http://blackboard.caltech.edu/home.htm" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://irsecure\.caltech\.edu/.*"
+		to="https://securelb.imodules.com/s/1709/devassoc/index.aspx?sid=1709&amp;gid=3&amp;pgid=498" />
+
+		<test url="http://irsecure.caltech.edu/home.htm" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

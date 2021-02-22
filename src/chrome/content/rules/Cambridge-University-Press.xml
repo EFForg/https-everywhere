@@ -1,101 +1,33 @@
 <!--
 	Cambridge University Press
 
-	Other Cambridge University Press rulesets:
+	Non-functional hosts
+		Couldn't connect to server:
+		- mobile.journals.cambridge.org
 
-		- Cambridge-Journals.xml
+		Timeout was reached:
+		- cambridge.org
 
+		SSL peer certificate was not OK:
+		- athens.cambridge.org
 
-	Nonfunctional subdomains:
-
-		- athens ¹
-		- dictionary-api ²
-
-	¹ Reset
-	² Shows default Media Temple page
-
-
-	Problematic subdomains:
-
-		- ^ ¹
-		- dictionaryblog ²
-		- ebooks ³
-		- education ⁴
-		- journals ³
-		- mobile.journals ⁵
-
-	¹ Cert only matches *.cambridge.org
-	² WordPress
-	³ Mixed css
-	⁴ Mismatched, CN: *.azurewebsites.net
-	⁵ Mismatched, CN: journals.cambridge.org
-
-
-	Partially covered subdomains:
-
-		- (www.)? ¹	(^ → www)
-		- ebooks ²
-		- journals ²
-
-	¹ Some pages redirect to http
-	² Avoiding broken MCB
-
-
-	Fully covered subdomains:
-
-		- assets
-		- dictionary
-		- shibboleth
-
-
-	dictionaryblog.cambridge.org is handled in WordPress-blogs.xml.
-
-
-	Mixed content:
-
-		- css on:
-
-			- ebooks, education, journals from www ¹
-			- ebooks from fonts.googleapis.com ¹
-
-		- Images, on:
-
-			- ebooks from $self ¹
-			- education from pbs.twimg.com ¹
-			- shibboleth from www ²
-
-	¹ Secured by us
-	² Unsecurable <= redirects to http
-
+		Redirect to HTTP:
+		- education.cambridge.org
 -->
-<ruleset name="Cambridge.org (partial)">
-
+<ruleset name="Cambridge University Press (partial)">
 	<target host="cambridge.org" />
-	<target host="*.cambridge.org" />
-		<!--
-			Avoid broken MCB:
-						-->
-		<exclusion pattern="^http://ebooks\.cambridge\.org/(?!.+\.(?:css|ico|jpg|png)(?:$|\?))" />
-		<exclusion pattern="^http://journals\.cambridge\.org/+(?!css/|favicon\.ico|images/)" />
-		<!--
-			Redirects to http:
-						-->
-		<!--exclusion pattern="^http://www\.cambridge\.org/($|assets/|favicon\.ico)" /-->
-		<!--
-			Exceptions:
-					-->
-		<!--exclusion pattern="^http://www\.cambridge\.org/(?!files/|generated_files/|other_files/|login($|[?/])|packages/)" /-->
+	<target host="www.cambridge.org" />
+	<target host="assets.cambridge.org" />
+	<target host="dictionary.cambridge.org" />
+	<target host="dictionary-api.cambridge.org" />
+	<target host="dictionaryblog.cambridge.org" />
+	<target host="ebooks.cambridge.org" />
+	<target host="journals.cambridge.org" />
+	<target host="shibboleth.cambridge.org" />
+	<target host="stahlonline.cambridge.org" />
 
-
-	<securecookie host="^(?:assets|dictionary)\.cambridge\.org$" name=".+" />
-
-
-	<rule from="^http://(?:www\.)?cambridge\.org/(?=files/|(?:generated|other)_files/|login(?:$|[?/])|packages/)"
+	<rule from="^http://cambridge\.org/"
 		to="https://www.cambridge.org/" />
 
-	<!--	Redirect keeps path and args:
-						-->
-	<rule from="^http://(assets|dictionary|ebooks|journals|shibboleth)\.cambridge\.org/"
-		to="https://$1.cambridge.org/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

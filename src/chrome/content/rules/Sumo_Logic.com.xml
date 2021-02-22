@@ -1,120 +1,19 @@
 <!--
-	Nonfunctional subdomains:
-
-		- go ¹
-		- help ²
-		- operations ³
-
-	¹ Handshake fails
-	² Refused
-	³ Dropped
-
-
-	Problematic subdomains:
-
-		- ^ ¹
-		- mail ²
-		- status ³
-
-	¹ Dropped
-	² Handshake fails
-	³ StatusPage.io
-
-
-	Partially covered subdomains:
-
-		- operations *	(→ sumologic.statuspage.io)
-
-	* .+ doesn't redirect
-
-
-	Fully covered subdomains:
-
-		- (www.)?	(^ → www)
-		- api
-		- collectors
-		- mail		(→ mail.google.com)
-		- service
-		- status	(→ sumologic.statuspage.io)
-		- support
-
-
-	These altnames don't exist:
-
-		- analytics.sumologic.com
-		- applications.sumologic.com
-		- billing.sumologic.com
-		- blog.sumologic.com
-		- community.sumologic.com
-		- data.sumologic.com
-		- developers.sumologic.com
-		- forum.sumologic.com
-		- jobs.sumologic.com
-		- logreduce.sumologic.com
-		- plp.sumologic.com
-		- sales.sumologic.com
-		- security.sumologic.com
-		- signup.sumologic.com
-
-
-	Insecure cookies are set for these hosts:
-
-		- api.sumologic.com
-		- collectors.sumologic.com
-		- info.sumologic.com
-
+	Connection closed:
+		- go
+		- mail
 -->
-<ruleset name="Sumo Logic.com (partial)">
+<ruleset name="SumoLogic.com (partial)">
+    <target host="sumologic.com" />
+    <target host="www.sumologic.com" />
+    <target host="api.sumologic.com" />
+    <target host="collectors.sumologic.com" />
+    <target host="help.sumologic.com" />
+    <target host="info.sumologic.com" />
+    <target host="operations.sumologic.com" />
+    <target host="service.sumologic.com" />
+    <target host="status.sumologic.com" />
+    <target host="support.sumologic.com" />
 
-	<!--	Direct rewrites:
-				-->
-	<target host="api.sumologic.com" />
-	<target host="collectors.sumologic.com" />
-	<target host="info.sumologic.com" />
-	<target host="service.sumologic.com" />
-	<target host="support.sumologic.com" />
-	<target host="www.sumologic.com" />
-
-	<!--	Special cases:
-				-->
-	<target host="sumologic.com" />
-	<target host="mail.sumologic.com" />
-	<target host="operations.sumologic.com" />
-	<target host="status.sumologic.com" />
-
-		<exclusion pattern="^http://operations\.sumologic\.com/(?!$)" />
-
-			<test url="http://operations.sumologic.com/?" />
-			<test url="http://operations.sumologic.com//" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^(api|collectors)\.sumologic\.com$" name="^AWSELB$" /-->
-	<!--securecookie host="^info\.sumologic\.com$" name="^BIGipServer\w+-app_https$" /-->
-
-	<securecookie host="^(?:api|collectors|info)\.sumologic\.com$" name=".+" />
-
-
-	<!--	Redirect keeps path and args,
-		but not forward slash:
-					-->
-	<rule from="^http://sumologic\.com/+"
-		to="https://www.sumologic.com/" />
-
-		<test url="http://sumologic.com/blog/" />
-
-	<!--	Redirect drops path and args:
-						-->
-	<rule from="^http://mail\.sumologic\.com/.*"
-		to="https://mail.google.com/a/sumologic.com" />
-
-		<test url="http://mail.sumologic.com/foo" />
-
-	<rule from="^http://(?:operation|statu)s\.sumologic\.com/"
-		to="https://sumologic.statuspage.io/" />
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

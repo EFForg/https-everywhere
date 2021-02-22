@@ -3,48 +3,21 @@
 
 		- ABC-Music-Publishing.xml
 
-
-	CDN buckets:
-
-		- d1ros97qkrwjf5.cloudfront.net
-		- d3mfbaa198drag.cloudfront.net
-		- cp44823.edgefcs.net
-
-
-	Nonfunctional:
-
-		- about.abc.net.au ¹
-		- mpegmedia.abc.net.au ²
-		- origin.abc.net.au ³		(redirects to www via http)
-		- (www.)abc.net.au ²
-		- www2b.abc.net.au ³
-		- (www.)abccommercial.com.au ³
-		- (www.)abccontentsales.com.au ³
-		- (www.)abcdigmusic.net.au
-		- (www.)radioaustralianews.net.au ³
-		- (www.)triplejunearthed.com ³
-
-	¹ 503, akamai
-	² 504, akamai
-	³ Dropped
-
+	Non-functional hosts in *.abc.net.au
+		Timeout:
+		- shop.abc.net.au
 -->
 <ruleset name="ABC Online (partial)">
 
-	<target host="shop.abc.net.au" />
+	<!-- *.abc.net.au -->
+	<target host="abc.net.au" />
+	<target host="www.abc.net.au" />
+	<target host="about.abc.net.au" />
+
+	<!-- *.abccommercial.com -->
 	<target host="abccommercial.com" />
-	<target host="*.abccommercial.com" />
+	<target host="www.abccommercial.com" />
 
-
-	<securecookie host="^shop.abc.net.au$" name=".+" />
-	<securecookie host="^\.abccommercial\.com$" name=".+" />
-
-
-	<rule from="^http://shop\.abc\.net\.au/"
-		to="https://shop.abc.net.au/" />
-
-	<!--	Cert isn't valid for !www	-->
-	<rule from="^http://(?:www\.)?abccomercial\.com/"
-		to="https://abccomercial.com/"/>
+	<rule from="^http:" to="https:" />
 
 </ruleset>

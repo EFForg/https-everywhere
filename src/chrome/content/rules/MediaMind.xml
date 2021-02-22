@@ -1,67 +1,22 @@
 <!--
 	Other MediaMind rulesets:
+		+ Peer39.xml
+		+ Serving-sys.com.xml
 
-		- Peer39.xml
-		- Serving-sys.com.xml
+	Non-functional hosts
+		Couldn't connect to server:
+		- creativezone.mediamind.com
 
+		SSL connect error:
+		- origin.demo.mediamind.com
 
-	CDN buckets:
-
-		- www.eyeblasterwiz.com.edgekey.net
-		- www.mediamind.com.edgekey.net
-
-
-	Nonfunctional domains:
-
-		- pilot.eyeblasterwiz.com	(403; mismatched, CN: platform.mediamind.com)
-		- mediamind.com			(refused)
-		- www.mediamind.com		(503, valid cert)
-
-
-	Problematic domains:
-
-		- demo.eyeblaster.com		(works, akamai)
-		- eyeblasterwiz.com		(400; mismatched, CN: platform.mediamind.com)
-		- www2.mediamind.com		(works; mismatched, CN: origin.demo.mediamind.com)
-
-
-	Fully covered domains:
-
-		- (www.)eyeblasterwiz.com	(^ → www)
-
-		- mediamind.com subdomains:
-
-			- creativezone
-			- demo
-			- origin.demo
-			- platform
-			- sandbox
-
-		- a.pgtb.me
-
-
-	Observed cookie domains:
-
-		- creativezone
-		- platform
-
+		Incomplete certificate chain error:
+		- mediamind.com
 -->
 <ruleset name="MediaMind (partial)">
+	<target host="www.mediamind.com" />
+	<target host="platform.mediamind.com" />
+	<target host="vpn.mediamind.com" />
 
-	<target host="*.mediamind.com" />
-	<target host="a.pgtb.me" />
-
-
-	<securecookie host="^(?:creativezone|platform)\.mediamind\.com$" name=".+" />
-
-
-	<rule from="^http://(?:www\.)?eyeblasterwiz\.com/"
-		to="https://www.eyeblasterwiz.com/" />
-
-	<rule from="^http://(creativezone|demo|origin\.demo|platform|sandbox)\.mediamind\.com/"
-		to="https://$1.mediamind.com/" />
-
-	<rule from="^http://a\.pgtb\.me/"
-		to="https://a.pgtb.me/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

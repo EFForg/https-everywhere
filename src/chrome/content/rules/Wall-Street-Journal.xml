@@ -1,0 +1,125 @@
+<!--
+	For other News Corporation coverage, see News-Corporation.xml.
+
+	Nonfunctional hosts in *wsj.com:
+		- blogs ᵃ (e.g. http://blogs.wsj.com/wtk/)
+		- cfonetwork ʳ
+		- cionetwork ʳ
+		- dj ᵈ
+		- europesubs ⁴
+		- guides ² (e.g. http://guides.wsj.com/wine/)
+		- help ʰ
+		- info ʳ
+		- peac ʳ
+		- portfolio ʳ
+		- projects ᵃ (e.g. https://projects.wsj.com/buzzwords2014/)
+		- realtime ʰ
+		- (www.)?stepahead ⁴
+		- admin.stream ³
+		- student ³
+		- synccontent
+		- wn ᵗ
+		- womenin ʳ
+		- wsjdconference ᵈ
+	ᵃ Active mixed content
+	² 502
+	³ 503
+	⁴ 404
+	⁵ 504
+	ᵈ Dropped
+	ʰ Redirects to http
+	ʳ Refused
+	ᵗ Timeout
+
+	Problematic hosts in *wsj.com:
+		- cn ᵐ
+		- m.cn ᵐ
+		- djx ᶜ
+		- indo ᵐ
+		- m.jp ᵐ
+		- kr ᵐ
+		- live ᵐ
+		- m ᵐ
+		- now ᵐ
+		- projoin.origin ᵐ
+		- stream ᵐ
+		- www.subscribe ᵗ
+		- topics ᵐ
+		- uk ᵐ
+		- ore.www ᵐ
+		- vir.www ᵐ
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+	ᵗ Timeout
+
+	Problematic hosts in *wsje.com:
+		- ^ ᵐ
+		- www ᵐ
+	ᵐ Mismatched
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+		- .wsj.com
+		- blue-store.wsj.com
+		- customercenter.wsj.com
+		- .customercenter.wsj.com
+		- services.wsj.com
+		- store.wsj.com
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+	Mixed content:
+		- Image on customercenter from s2.wsj.net ˢ
+		- Bug on classified, classifieds from dowjones.122.2o7.net ˢ
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+-->
+
+<ruleset name="Wall Street Journal (partial)">
+	<!-- dowjones.com -->
+	<target host="djrc.portal.dowjones.com" />
+
+	<!-- wsj.com -->
+	<target host="wsj.com" />
+	<target host="www.wsj.com" />
+	<target host="blue-store.wsj.com" />
+	<target host="buy.wsj.com" />
+		<test url="http://buy.wsj.com/maywsjus/" />
+	<target host="cbuy.wsj.com" />
+	<target host="city.wsj.com" />
+	<target host="classified.wsj.com" />
+	<target host="classifieds.wsj.com" />
+	<target host="conferences.wsj.com" />
+	<target host="converge.wsj.com" />
+	<target host="customercenter.wsj.com" />
+	<target host="deloitte.wsj.com" />
+	<target host="dlive.wsj.com" />
+	<target host="education.wsj.com" />
+	<target host="graphics.wsj.com" />
+	<target host="graphicsweb.wsj.com" />
+	<target host="id.wsj.com" />
+	<target host="jp.wsj.com" />
+	<target host="online.wsj.com" />
+	<target host="professor.wsj.com" />
+	<target host="quotes.wsj.com" />
+	<target host="services.wsj.com" />
+	<target host="signin.wsj.com" />
+	<target host="store.wsj.com" />
+	<target host="subscribe.wsj.com" />
+	<target host="subscription.wsj.com" />
+	<target host="video-api.wsj.com" />
+		<test url="http://video-api.wsj.com/api-video/player/v2/css/play_btn_50.png" />
+	<target host="wsjdlive.wsj.com" />
+
+
+	<!-- Not secured by server -->
+	<!--securecookie host="^\.wsj\.com$" name="^(LPLogin|djcs_route|wsjregion)$" /-->
+	<!--securecookie host="^(blue-)?store\.wsj\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^customercenter\.wsj\.com$" name="^(defaultLocale|slanguage|slocale)$" /-->
+	<!--securecookie host="^\.customercenter\.wsj\.com$" name="^djcs_int$" /-->
+	<!--securecookie host="^services\.wsj\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\." name="^(_gat?$|_gat_|s_v)" />
+	<securecookie host="^\.customercenter\." name=".+" />
+	<securecookie host="^\w" name=".+" />
+
+
+	<rule from="^http:" to="https:" />
+</ruleset>

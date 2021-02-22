@@ -1,34 +1,32 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://mediastorehouse.com/ => http://mediastorehouse.com/: Redirect for 'http://mediastorehouse.com/' missing Location
-Fetch error: http://mediastorehouse.net/ => https://secure.mediastorehouse.com/: Redirect for 'http://mediastorehouse.net/' missing Location
-Fetch error: http://www.mediastorehouse.net/ => https://secure.mediastorehouse.com/: Redirect for 'http://www.mediastorehouse.net/' missing Location
-	s3.amazonaws.com/images.mediastorehouse.com/
+	Non-functional hosts in *.mediastorehouse.com
+		SSL peer certificate was not OK:
+		- mediastorehouse.com
 
+	Non-functional hosts in *.mediastorehouse.net
+		Timeout was reached:
+		- mediastorehouse.net
 
-	Nonfunctional:
-
-		- images.mediastorehouse.net	(times out; not on secure nor images...com)
-
+		SSL peer certificate was not OK:
+		- images.mediastorehouse.net
+		- www.mediastorehouse.net
 -->
 <ruleset name="Media Storehouse (partial)">
-
+	<!-- *.mediastorehouse.com -->
 	<target host="mediastorehouse.com" />
-	<target host="*.mediastorehouse.com" />
+	<target host="www.mediastorehouse.com" />
+	<target host="secure.mediastorehouse.com" />
+	<target host="static.mediastorehouse.com" />
+
+	<!-- *.mediastorehouse.net -->
 	<target host="mediastorehouse.net" />
 	<target host="www.mediastorehouse.net" />
 
+	<rule from="^http://mediastorehouse\.com/"
+		to="https://www.mediastorehouse.com/" />
 
-	<securecookie host="^secure\.mediastorehouse\.com$" name=".+" />
+	<rule from="^http://(www\.)?mediastorehouse\.net/"
+		to="https://www.mediastorehouse.com/" />
 
-
-	<!--	Cert not valid for static nor www.
-		Data appear identical.			-->
-	<rule from="^http://(?:static|www)\.mediastorehouse\.com/"
-		to="https://secure.mediastorehouse.com/" />
-
-	<!--	www...net redirects to www...com	-->
-	<rule from="^http://(?:www\.)?mediastorehouse\.net/"
-		to="https://secure.mediastorehouse.com/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

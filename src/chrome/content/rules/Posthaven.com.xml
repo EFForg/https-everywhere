@@ -1,31 +1,20 @@
 <!--
-	For problematic rules, see Posthaven.com-problematic.xml.
-
-
-	CDN buckets:
-
-		- phaven-prod.s3.amazonaws.com
-		- posthaven-assets.s3.amazonaws.com
-
-
-	Problematic subdomains:
-
-		- blog *
-		- \w+ *	(per-account subdomains)
-
-	* Works; mismatched, CN: posthaven.com
-
+	Wildcard certificate and DNS records:
+ 		- posthaven.com
 -->
-<ruleset name="Posthaven.com (partial)">
 
+<ruleset name="Posthaven.com">
 	<target host="posthaven.com" />
-	<target host="www.posthaven.com" />
-
+	<target host="*.posthaven.com" />
+		<test url="http://www.posthaven.com/" />
+		<test url="http://alex.posthaven.com/" />
+		<test url="http://blog.posthaven.com/" />
+		<test url="http://geekomotion.posthaven.com/" />
 
 	<securecookie host="^posthaven\.com$" name=".+" />
 
-
-	<rule from="^http:"
-		to="https:" />
-
+	<!-- posthaven.com -->
+	<!-- *.posthaven.com -->
+	<rule from="^http://([\w-]+\.)?posthaven\.com/"
+		to="https://$1posthaven.com/" />
 </ruleset>

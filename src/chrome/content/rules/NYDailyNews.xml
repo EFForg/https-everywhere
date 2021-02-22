@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://nydailynews.com/ => http://nydailynews.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
 	For rules causing false/broken MCB, see NYDailyNews.com-falsemixed.xml.
 
 
@@ -15,33 +13,26 @@ Fetch error: http://nydailynews.com/ => http://nydailynews.com/: (60, 'SSL certi
 			- .hs. doesn't exist
 			- assets
 			- multimedia
-			- static[123]
 
 
 	Nonfunctional subdomains:
 
-		- assets ²
+		- assets: Invalid certificate. Also causes CORS problem, see https://github.com/EFForg/https-everywhere/pull/11514
+		- classifieds: Works; mismatched, CN: *.adperfect.com
+		- creative.nydailynews.com: Works; mismatched, CN: *.creatavist.com
+		- games.nydailynews.com: Timed out
+		- homedelivery.nydailynews.com: Self-signed certificate
+		- interactive.nydailynews.com: 500; mismatched, CN: a248.e.akamai.net
+		- live.nydailynews.com: Works; mismatched, CN: *.scribblelive.com
+		- liveblog.nydailynews.com: Works; mismatched, CN: *.scribblelive.com
+		- local.nydailynews.com: Works; mismatched, CN: *.localedge.com
+		- m: Invalid certificate
 		- multimedia *
+		- obituaries: 400; mismatched, CN: *.legacy.com
+		- video: Works; mismatched, CN: *.newsinc.com
+		- webport1.nydailynews.com:8443: Chain issue (missing intermediate certificate)
 
-	* 400; mismatched, CN: *.hs.llnwd.net
-	² redirects to www and causes CORS problem, see https://github.com/EFForg/https-everywhere/pull/11514
-
-
-	Problematic subdomains:
-
-		- classifieds ²
-		- static[123] *
-
-	* 400; mismatched, CN: *.hs.llnwd.net
-	² Works; mismatched, CN: *.adperfect.com
-
-
-	Fully covered subdomains:
-
-		- homedelivery
-		- webport
-		- webport...:8443
-		- webport1...:8443
+	* 400; mismatched, CN: a248.e.akamai.net
 
 
 	Mixed content:
@@ -55,10 +46,6 @@ Fetch error: http://nydailynews.com/ => http://nydailynews.com/: (60, 'SSL certi
 
 			- classifieds from *.cloudfront.net *
 
-	Mixed image on www from multimedia
-
-			- www from static[123] *
-
 
 		Web bugs, on www from:
 
@@ -70,29 +57,14 @@ Fetch error: http://nydailynews.com/ => http://nydailynews.com/: (60, 'SSL certi
 			- i.simpli.fi *
 
 	* Secured by us
-
 -->
+
 <ruleset name="NYDailyNews (partial)">
-
-	<target host="nydailynews.com" />
-	<target host="*.nydailynews.com" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://classifieds\.nydailynews\.com/+(?!resource/)"/>
-		<exclusion pattern="^http://www\.nydailynews\.com/+(?!cmlink/|nydn/|polopoly_fs/)" />
-
+	<target host="beta.nydailynews.com" />
+	<target host="myaccount2.nydailynews.com" />
+	<target host="placeanad.nydailynews.com" />
 
 	<securecookie host="^[^@:/]*\.nydailynews\.com$" name=".+" />
 
-
-	<rule from="^http://(?:static\d|www)\.nydailynews\.com/"
-		to="https://www.nydailynews.com/" />
-
-	<rule from="^http://(classifiedads|homedelivery|webport1?)\.nydailynews\.com(:8443)?/"
-		to="https://$1.nydailynews.com$2/" />
-
-	<rule from="^http://classifieds\.nydailynews\.com/resource/"
-		to="https://casmp.adperfect.com/resource/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

@@ -1,47 +1,76 @@
 <!--
-	CDN buckets:
+	Nonfunctional hosts on *.dhgate.com:
 
-		- blog.dhgate.com.cdn20.com
-		- image.dhgate.com.cdn20.com
-		- www.dhresource.com.cdn20.com
+		- ar.dhgate.com (m)
+		- bbs.dhgate.com (r)
+		- blog.dhgate.com (h)
+		- e.dhgate.com (e)
+		- gold.dhgate.com (mixed content)
+		- help.dhgate.com (h)
+		- ja.dhgate.com (m)
+		- ko.dhgate.com (m)
+		- payment.dhgate.com (no working URL known)
+		- promo.dhgate.com (mixed content)
+		- secure.dhgate.com (mixed content)
+		- seller.dhgate.com (h)
 
+	h: http redirect
+	m: certificate mismatch
+	r: connection refused
+	s: self-signed certificate
+	t: timeout on https
 
-	Nonfunctional domains:
-
-		- dhgate.com subdomains:
-
-			- blog *
-			- help	(times out)
-			- image *
-
-		- www.dhresource.com *
-
-	* 504, akamai
-
-
-	Problematic subdomains:
-
-		- ^	(times out)
-		- www	(mismatched, CN: secure.dhgate.com)
-
-
-	Mixed images on secure from image.dhgate.com & www.dhresource.com
-
+	Wildcard DNS record on dhgate.com.
 -->
-<ruleset name="DHgate.com (partial)">
+<ruleset name="DHgate.com">
 
 	<target host="dhgate.com" />
-	<target host="*.dhgate.com" />
-		<!--
-			Some (most?) pages not on secure:
-								-->
-		<exclusion pattern="^http://(?:www\.)?dhgate\.com/(?:\?.*)?$" />
+	<target host="www.dhgate.com" />
+	<target host="au.dhgate.com" />
+	<target host="m.au.dhgate.com" />
+	<target host="ca.dhgate.com" />
+	<target host="m.ca.dhgate.com" />
+	<target host="de.dhgate.com" />
+	<target host="m.de.dhgate.com" />
+	<target host="dg.dhgate.com" />
+	<target host="es.dhgate.com" />
+	<target host="m.es.dhgate.com" />
+	<target host="fr.dhgate.com" />
+	<target host="m.fr.dhgate.com" />
+	<target host="image.dhgate.com" />
+		<test url="http://image.dhgate.com/dhs/oth/edm/2013/07/11/logo.jpg" />
+	<target host="it.dhgate.com" />
+	<target host="m.it.dhgate.com" />
+	<target host="m.dhgate.com" />
+	<target host="dht-trail.nt.dhgate.com" />
+		<test url="http://dht-trail.nt.dhgate.com/trail/trail/userinfo.php" />
+	<target host="nz.dhgate.com" />
+	<target host="m.nz.dhgate.com" />
+	<target host="o2o.dhgate.com" />
+	<target host="pt.dhgate.com" />
+	<target host="m.pt.dhgate.com" />
+	<target host="ru.dhgate.com" />
+	<target host="m.ru.dhgate.com" />
+	<target host="tr.dhgate.com" />
+	<target host="m.tr.dhgate.com" />
+	<target host="realstats.dhgate.com" />
+		<test url="http://realstats.dhgate.com/dams-feedback/biz-FeedBack-log.do" />
+	<target host="shoppingcart.dhgate.com" />
+		<test url="http://shoppingcart.dhgate.com/cart/minicart.do" />
+	<target host="survey.dhgate.com" />
+
+	<target host="www.dhresource.com" />
+		<test url="http://www.dhresource.com/dhs/oth/edm/2013/07/11/logo.jpg" />
+	<target host="css.dhresource.com" />
+	<target host="js.dhresource.com" />
+		<test url="http://js.dhresource.com/buyer/common/thirdload/load.js" />
+
+	<!-- mixed content on $ -->
+	<exclusion pattern="^http://css\.dhresource\.com/$" />
+	<test url="http://css.dhresource.com/buyer/common/image/head/logo.png" />
 
 
-	<!--securecookie host="^\.?secure\.dhgate\.com$" name=".+" /-->
-
-
-	<rule from="^http://(?:secure\.|www\.)?dhgate\.com/"
-		to="https://secure.dhgate.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

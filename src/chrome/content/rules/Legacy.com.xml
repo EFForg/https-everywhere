@@ -1,68 +1,44 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://mi.legacy.com/ => https://mi.legacy.com/: Too many redirects while fetching 'https://mi.legacy.com/'
-Fetch error: http://static.legacy.com/ => https://static.legacy.com/: Too many redirects while fetching 'https://static.legacy.com/'
+	Invalid certificate:
+		- static.cms.legacy.com
+		- connect.legacy.com
+		- www.connect.legacy.com
 
-	CDN buckets:
+	Partially redirects to HTTP:
+		- memorialwebsites.legacy.com
 
-		- legacy.o.miisolutions.net
-
-
-	Nonfunctional hosts in *legacy.com:
-
-		- (www.)? ᵈ
-		- static.cms ³
-
-	³ 503
-	ᵈ Dropped
-
-
-	Problematic hosts in *legacy.com:
-
-		- ak-static ᴬ
-		- (www.)?connect ᵐ
-		- mi-cache ᴬ
-		- mi-static ᴬ
-
-	ᴬ Akamai / mismatched
-	ᵐ Mismatched
-
-
-	Partially covered hosts in *legacy.com:
-
-		- memorialwebsites *
-
-	* Some pages redirect to http
-
+	Timed out:
+		- legacy.com, equivalent to www.legacy.com
 -->
-<ruleset name="Legacy.com (partial)" default_off='failed ruleset test'>
 
+<ruleset name="Legacy.com (partial)">
+	<target host="legacy.com" />
+	<target host="www.legacy.com" />
+	<target host="ak-static.legacy.com" />
 	<target host="blog.legacy.com" />
 	<target host="cache.legacy.com" />
+	<target host="cms.legacy.com" />
 	<target host="media2.legacy.com" />
 	<target host="memorialwebsites.legacy.com" />
+		<!-- Redirects to HTTP -->
+		<exclusion pattern="^http://memorialwebsites\.legacy\.com/(.*/)?(Homepage|InvalidPage)\.aspx" />
+			<test url="http://memorialwebsites.legacy.com/Homepage.aspx" />
+			<test url="http://memorialwebsites.legacy.com/InvalidPage.aspx" />
+			<test url="http://memorialwebsites.legacy.com/mi/Homepage.aspx" />
+			<test url="http://memorialwebsites.legacy.com/mi/InvalidPage.aspx" />
 	<target host="mi.legacy.com" />
+	<target host="mi-cache.legacy.com" />
+	<target host="mi-static.legacy.com" />
 	<target host="static.legacy.com" />
 	<target host="sympathy.legacy.com" />
-
-		<!--	Redirects to http:
-						-->
-		<exclusion pattern="^http://memorialwebsites\.legacy\.com/(?:.*/)?InvalidPage\.aspx" />
-
-			<!--	+ve:
-					-->
-			<test url="http://memorialwebsites.legacy.com/InvalidPage.aspx" />
-			<test url="http://memorialwebsites.legacy.com/bar/InvalidPage.aspx" />
-			<test url="http://memorialwebsites.legacy.com/foo/InvalidPage.aspx" />
-
 
 	<securecookie host=".+" name="^optimizely" />
 	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
 	<securecookie host="^\w" name=".+" />
 
 
-	<rule from="^http:"
-		to="https:" />
+	<rule from="^http://legacy\.com/"
+		to="https://www.legacy.com/" />
 
+	<rule from="^http:" to="https:" />
 </ruleset>

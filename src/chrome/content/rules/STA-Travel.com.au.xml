@@ -1,0 +1,48 @@
+<!--
+	For other coverage, see STA-Travel.com.xml
+
+
+	Non-functional subdomains:
+		- $host		(t)
+		- cache-rg	(m)
+		- flights	(m)
+		- g	(m)
+		- ibe	(no route to host)
+		- insurance	(e)
+		- m	(m)
+		- mail	(t)
+		- ww2	(ssl connection error)
+		- ww3	(ssl connection error)
+		- ww4	(e)
+
+	e: expired certificate
+	h: http redirect
+	i: invalid certificate chain
+	m: certificate mismatch
+	r: connection refused
+	s: self-signed certificate
+	t: timeout on https
+-->
+<ruleset name="STA Travel.com.au">
+
+	<target host="statravel.com.au" />
+	<target host="www.statravel.com.au" />
+	<target host="book.statravel.com.au" />
+	<target host="cheap-car-rental.statravel.com.au" />
+	<target host="locations.statravel.com.au" />
+	<target host="rail.statravel.com.au" />
+	<target host="tours.statravel.com.au" />
+		<test url="http://tours.statravel.com.au/content/images/icon-cal-small.png" />
+
+	<securecookie host=".+" name=".+" />
+
+	<!-- http redirect -->
+	<exclusion pattern="^http://www\.statravel\.com\.au/tours" />
+		<test url="http://www.statravel.com.au/tours.htm" />
+
+	<rule from="^http://statravel\.com\.au/"
+		to="https://www.statravel.com.au/" />
+
+	<rule from="^http:"
+		to="https:" />
+</ruleset>

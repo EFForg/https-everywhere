@@ -1,13 +1,20 @@
-<!--
-	Other Amazon rulesets:
 
-		- 6PM.com.xml
+<!--
+The following targets have been disabled at 2020-04-17 18:38:06:
+
+Fetch error: http://kindlescout.amazon.com/ => https://kindlescout.amazon.com/: (28, 'Resolving timed out after 20530 milliseconds')
+Fetch error: http://storywriter.amazon.com/ => https://storywriter.amazon.com/: (7, 'Failed to connect to storywriter.amazon.com port 443: Connection refused')
+Fetch error: http://vendorexpress.amazon.com/ => https://vendorexpress.amazon.com/: (28, 'Resolving timed out after 20528 milliseconds')
+Fetch error: http://widgets.amazon.com/ => https://widgets.amazon.com/: (35, 'error:14171102:SSL routines:tls_process_server_hello:unsupported protocol')
+
+	Other Amazon rulesets:
 		- AWS_Trust.com.xml
 		- AbeBooks.co.uk.xml
 		- AbeBooks.xml
 		- Amazon-Adsystem.com.xml
 		- Amazon.jobs.xml
-		- AmazonWebServices.xml
+		- AmazonAWS.com.xml
+		- AmazonWebServices.com.xml
 		- AmazonSupply.com.xml
 		- Amazon_Trust.com.xml
 		- Amazon_blogs.com.xml
@@ -21,11 +28,10 @@
 		- BeautyBar.com.xml
 		- ComiXology.com.xml
 		- CreateSpace.xml
-		- Images-CreateSpace.com.xml
-		- Junglee.com.xml
+		- Images-Amazon.com.xml
 		- MTurk.com.xml
 		- Soap.com.xml
-		- TenMarks.com.xml
+		- SSL-Images-Amazon.com.xml
 		- amazon.ca.xml
 		- amazon.cn.xml
 		- amazon.co.jp.xml
@@ -42,82 +48,65 @@
 		- casa.com.xml
 		- diapers.com.xml
 		- eastdane.com.xml
-		- q-assets.com.xml
 		- quidsi.com.xml
 		- shopbop.com.xml
 		- wag.com.xml
 		- yoyo.com.xml
 
+	Non-functional hosts
+		Timeout was reached:
+			- pda-bes.amazon.com
 
 	Amazon appears to operate in 7 countries, and does not hold the domains
 	for some others, like .se or .be.  In other cases there is an http-only site
 	that redirects to one of these 7 countries.
-
-
-	Insecure cookies are set for these domains and hosts: ᶜ
-
-		- .amazon.com
-		- www.amazon.com
-
-	ᶜ See https://owasp.org/index.php/SecureFlag
-
 -->
 <ruleset name="Amazon.com">
-
 	<target host="amazon.com" />
 	<target host="advertising.amazon.com" />
 	<target host="affiliate-program.amazon.com" />
 	<target host="authorcentral.amazon.com" />
+	<target host="aws.amazon.com" />
+	<target host="docs.aws.amazon.com" />
+	<target host="forums.aws.amazon.com" />
+	<target host="status.aws.amazon.com" />
+	<target host="aws-portal.amazon.com" />
 	<target host="catalyst.amazon.com" />
-	<target host="coursematerials.amazon.com" />
 	<target host="developer.amazon.com" />
+	<target host="fls-eu.amazon.com" />
+	<target host="fls-na.amazon.com" />
+	<target host="g-images.amazon.com" />
+	<target host="images.amazon.com" />
+	<target host="images-jp.amazon.com" />
 	<target host="kdp.amazon.com" />
-	<target host="kindlescout.amazon.com" />
+	<!-- target host="kindlescout.amazon.com" /-->
 	<target host="local.amazon.com" />
 	<target host="payments.amazon.com" />
-	<target host="pda-bes.amazon.com" />
 	<target host="rcm.amazon.com" />
 	<target host="sellercentral.amazon.com" />
 	<target host="services.amazon.com" />
 	<target host="smile.amazon.com" />
-	<target host="storywriter.amazon.com" />
+	<!-- target host="storywriter.amazon.com" /-->
 	<target host="studios.amazon.com" />
 	<target host="uedata.amazon.com" />
-	<target host="vendorexpress.amazon.com" />
+	<!-- target host="vendorexpress.amazon.com" /-->
 	<target host="videodirect.amazon.com" />
+	<target host="webservices.amazon.com" />
+		<test url="http://webservices.amazon.com/scratchpad/index.html" />
 	<target host="whispercast.amazon.com" />
-	<target host="widgets.amazon.com" />
+	<!-- target host="widgets.amazon.com" /-->
 	<target host="ws.amazon.com" />
 
-		<!--	Amazon has a history of breaking us soon after
-			adding rulesets, so these are here to detect that.
-									-->
-		<test url="http://www.amazon.com/-/e/B001JS3S9M" />
-		<test url="http://www.amazon.com/-/e/B01FBTO1GI" />
-		<test url="http://www.amazon.com//e/B00T41GEFQ" />
-		<test url="http://www.amazon.com/Chris-Kennedy/e/B00E4MIJA8" />
-		<test url="http://www.amazon.com/Francis-H-Powell/e/B00WSWYVNK" />
-		<test url="http://www.amazon.com/International-Shipping-Direct/b/?node=230659011" />
-		<test url="http://www.amazon.com/J.K.-Rowling/e/B000AP9A6K/" />
-		<test url="http://www.amazon.com/Joey-Reghitto/e/B01DJH2WRE" />
-		<test url="http://www.amazon.com/Mary-Bartnikowski/e/B001KJ3QOC" />
-		<test url="http://www.amazon.com/Pattern-Recognition-William-Gibson-ebook/dp/B000OCXGVY" />
-		<test url="http://www.amazon.com/b?node=14047587011" />
-		<test url="http://www.amazon.com/business/" />
-		<test url="http://www.amazon.com/gift-cards/b/?node=2238192011" />
-		<test url="http://www.amazon.com/gp/browse.html?node=14048078011" />
-		<test url="http://www.amazon.com/s/?rh=i%3Agift-cards" />
+	<securecookie host=".+" name=".+" />
 
+	<rule from="^http://g-images\.amazon\.com/"
+		to="https://d1ge0kk1l5kms0.cloudfront.net/" />
+		<test url="http://g-images.amazon.com/images/G/01/dvd/sony/casinoroyale/CR13lrg._VNONE_FOUND_.jpg" />
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.amazon\.com$" name="^(?:kdp-lc-main|session-id|session-id-time|session-token|skin|ubid-main|x-wl-uid)$" /-->
-	<!--securecookie host="^www\.amazon\.com$" name="^x-amz-captcha-[12]$" /-->
-
-	<securecookie host=".+" name="^(?:aps-trtmnt$|s_v)" />
-	<securecookie host="^\w" name=".+" />
-
+	<rule from="^http://images(-jp)?\.amazon\.com/"
+		to="https://images-na.ssl-images-amazon.com/" />
+		<test url="http://images.amazon.com/images/P/B000067Q2B.01._SCLZZZZZZZ_.jpg" />
+		<test url="http://images-jp.amazon.com/images/P/B000067Q2B.01._SCLZZZZZZZ_.jpg" />
 
 	<rule from="^http:" to="https:" />
-
 </ruleset>

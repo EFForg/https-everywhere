@@ -1,89 +1,34 @@
 <!--
 	For problematic rules, see RubyGems.org-problematic.xml.
 
+	For related rules, see GemCutter.org.xml
 
-	CDN buckets:
+	Invalid certificate:
+		aws-eu-cache01.rubygems.org
+		blog.rubygems.org
+		production.cf.rubygems.org
+		guides.rubygems.org
+		help.rubygems.org
+		index.rubygems.org
+		m.rubygems.org
 
-		- rubygems.github.com
-
-			- blog.rubygems.org
-			- guides.rubygems.org
-
-		- gem.heroku.com
-
-			- m.rubygems.org
-
-		- stats.pingdom.com
-
-			- uptime.rubygems.org
-
-
-	Nonfunctional subdomains:
-
-		- blog *
-		- guides *
-		- uptime	(refused)
-
-	* Prints "unknown domain: $foo.rubygems.org"; mismatched, CN: *.github.com)
-
-
-	Problematic domains:
-
-		- (www.)gemcutter.org	(works; mismatched, CN: *.rubygems.org)
-
-		- rubygems.org subdomains:
-
-			- help	(works; mismatched, CN: *.tenderapp.com)
-			- m *
-			- status *
-
-	* Works; mismatched, CN: *.heroku.com
-
-
-	Partially covered domains:
-
-		- m.rubygems.org	(→ gem.heroku.com, where $ 500s)
-
-
-	Fully covered domains:
-
-		- (www.)gemcutter.org	(→ rubygems.org)
-		- (www.)rubygems.org
-
-
-	Observed cookie domains:
-
-		- ^
-		- help
-		- status
-		- uptime
-		- www
+	Refused:
+		uptime.rubygems.org
 
 -->
 <ruleset name="RubyGems.org (partial)">
 
-	<target host="gemcutter.org" />
-	<target host="www.gemcutter.org" />
 	<target host="rubygems.org" />
-	<target host="*.rubygems.org" />
-		<!--
-			$ 500s when rewritten to gem.heroku.com
-								-->
-		<!--exclusion pattern="^http://m\.rubygems\.org/(?!iui/)" /-->
+	<target host="www.rubygems.org" />
+	<target host="api.rubygems.org" />
+	<target host="bundler.rubygems.org" />
+	<target host="monitoring.rubygems.org" />
+	<target host="staging.rubygems.org" />
+	<target host="status.rubygems.org" />
 
+	<securecookie host="^(www\.)?rubygems.org" name=".+" />
 
-	<securecookie host="^(?:www\.)?rubygems.org" name=".+" />
-
-
-	<!--	Server keeps path:
-					-->
-	<rule from="^http://(?:www\.)?gemcutter\.org/"
-		to="https://rubygems.org/" />
-
-	<rule from="^http://(www\.)?rubygems\.org/"
-		to="https://$1rubygems.org/" />
-
-	<rule from="^http://m\.rubygems\.org/(?=iui/)"
-		to="https://gem.heroku.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
