@@ -3,7 +3,7 @@
 (function(exports) {
 
 const util = require('./util'),
-  { RuleSets } = wasm_bindgen;
+  { RuleSets, Bloom } = wasm_bindgen;
 
 async function initialize() {
   try {
@@ -20,6 +20,7 @@ function is_enabled() {
 Object.assign(exports, {
   initialize,
   RuleSets,
+  Bloom,
   is_enabled,
 });
 

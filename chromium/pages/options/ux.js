@@ -113,6 +113,33 @@ document.addEventListener("DOMContentLoaded", () => {
     update_channel_last_updated.innerText = chrome.i18n.getMessage("options_storedRulesetsVersion") + ruleset_version_string;
     update_channel_name.appendChild(update_channel_last_updated);
 
+    const update_channel_row_format = document.createElement('div');
+    update_channel_row_format.className = "update-channel-row-format";
+    update_channel_div.appendChild(update_channel_row_format);
+    const update_channel_format_column_left = document.createElement('div');
+    update_channel_format_column_left.className = "update-channel-column-left";
+    update_channel_format_column_left.innerText = "Format:";
+    update_channel_row_format.appendChild(update_channel_format_column_left);
+    const update_channel_format_column_right = document.createElement('div');
+    update_channel_format_column_right.className = "update-channel-column-right";
+    update_channel_row_format.appendChild(update_channel_format_column_right);
+    const update_channel_format = document.createElement('select');
+    update_channel_format.className = "update-channel-format";
+    update_channel_format.setAttribute("data-name", update_channel.name);
+    update_channel_format.disabled = locked;
+    update_channel_format_column_right.appendChild(update_channel_format);
+    const update_channel_format_option_ruleset = document.createElement('option');
+    update_channel_format_option_ruleset.value = "ruleset";
+    update_channel_format_option_ruleset.innerText = "ruleset";
+    update_channel_format_option_ruleset.defaultSelected = true;
+    update_channel_format_option_ruleset.selected = (update_channel.format == "ruleset");
+    update_channel_format.appendChild(update_channel_format_option_ruleset);
+    const update_channel_format_option_bloom = document.createElement('option');
+    update_channel_format_option_bloom.value = "bloom";
+    update_channel_format_option_bloom.innerText = "bloom";
+    update_channel_format_option_bloom.selected = (update_channel.format == "bloom");
+    update_channel_format.appendChild(update_channel_format_option_bloom);
+
     const update_channel_row_jwk = document.createElement('div');
     update_channel_row_jwk.className = "update-channel-row-jwk";
     update_channel_div.appendChild(update_channel_row_jwk);
@@ -153,6 +180,9 @@ document.addEventListener("DOMContentLoaded", () => {
     update_channel_div.appendChild(clearer);
 
     const update_channel_row_scope = document.createElement('div');
+    if(update_channel.format == "bloom") {
+      update_channel_row_scope.style.display = "none";
+    }
     update_channel_row_scope.className = "update-channel-row-scope";
     update_channel_div.appendChild(update_channel_row_scope);
     const update_channel_scope_column_left = document.createElement('div');
@@ -197,6 +227,13 @@ document.addEventListener("DOMContentLoaded", () => {
     clearer.className = "clearer";
     update_channel_div.appendChild(clearer);
 
+    update_channel_format.addEventListener("change", () => {
+      if(update_channel_format.value == "bloom") {
+        update_channel_row_scope.style.display = "none";
+      } else {
+        update_channel_row_scope.style.display = "block";
+      }
+    });
     update_channel_delete.addEventListener("click", () => {
       sendMessage("delete_update_channel", update_channel.name, () => {
         render_update_channels();
@@ -206,6 +243,7 @@ document.addEventListener("DOMContentLoaded", () => {
     update_channel_update.addEventListener("click", () => {
       sendMessage("update_update_channel", {
         name: update_channel.name,
+        format: update_channel_format.value,
         jwk: JSON.parse(update_channel_jwk.value),
         update_path_prefix: update_channel_path_prefix.value,
         scope: update_channel_scope.value
