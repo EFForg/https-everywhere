@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 
 # This python utility check for wildcard securecookies which
 # can be normalized, warn and exit with non-zero when such

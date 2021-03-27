@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 """
 Generate a messages.json translations file for HTTPS Everywhere Standalone
 """
