@@ -4,7 +4,7 @@
 
 /**
  * Parse and convert literal IP address into numerical IP address.
- * @param {string} ip 
+ * @param {string} ip
  * @returns {number}
  */
 const parseIp = ip => {
@@ -40,8 +40,8 @@ const parseIp = ip => {
 
 /**
  * Check if the numeric IP address is within a certain range.
- * @param {number} ip 
- * @param {number[]} range 
+ * @param {number} ip
+ * @param {number[]} range
  * @returns {boolean}
  */
 const isIpInRange = (ip, [rangeIp, mask]) => (ip & mask) >>> 0 === rangeIp;
@@ -57,7 +57,7 @@ const localRanges = [
 
 /**
  * Check if the numeric IP address is inside the local IP address ranges.
- * @param {number} ip 
+ * @param {number} ip
  * @returns {boolean}
  */
 const isLocalIp = ip => localRanges.some(range => isIpInRange(ip, range));
