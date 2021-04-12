@@ -403,7 +403,7 @@ function onBeforeRequest(details) {
     return redirectOnCancel(shouldCancel, details.url);
   }
 
-  if (browserSession.getRequest(details.requestId, "redirect_count") >= 8) {
+  if (browserSession.getRequest(details.requestId, "redirect_count", 0) >= 8) {
     util.log(util.NOTE, "Redirect counter hit for " + uri.href);
     urlBlacklist.add(uri.href);
     rules.settings.domainBlacklist.add(uri.hostname);
