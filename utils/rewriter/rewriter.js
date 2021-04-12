@@ -1,20 +1,8 @@
-// HTTPS Rewriter.
-//
-// Uses the rulesets from HTTPS to recursively rewrite URL references in a
-// given directory to HTTPS. Uses protocol-relative URLs wherever possible.
-// Makes a copy of each file at filename.bak.
-//
-// Usage:
-//  cd https-everywhere
-//  ./make.sh # to build default.rulesets
-//  cd rewriter
-//  (install node and npm)
-//  npm install
-//  node rewriter.js ~/path/to/my/webapp
-//  cd ~/path/to/my/webapp
-//  git diff
+#!/usr/bin/env node
 
 global.self = global;
+TextDecoder = require('text-encoding').TextDecoder;
+TextEncoder = require('text-encoding').TextEncoder;
 require("../../lib-wasm/pkg/https_everywhere_lib_wasm.js");
 
 var path = require("path"),
@@ -37,10 +25,17 @@ var ruleSets = null;
 function processDir(dir) {
   var stream = readdirp({
     root: dir,
-    fileFilter: ['*.html', '*.js', '*.rb', '*.erb', '*.mustache',
-      '*.scala', '*.c', '*.cc', '*.cpp', '*.cxx',
-      '*.java', '*.go', '*.php', '*.css', '*.pl', '*.py',
-      '*.rhtml', '*.sh', '*.yaml']
+    directoryFilter: [
+      '!.*', // Protect `.git` and other VCS directories.
+      '!*modules',
+      '!LICENSES', // https://reuse.software/ convention.
+    ],
+    fileFilter: [
+      '!*.png', '!*.svg', '!*.ico', '!*.xcf',
+      '!*.pdf',
+
+      '!LICENSE*', '!COPYING*', // Prefer https://reuse.software/.
+    ],
   });
 
   stream
@@ -75,14 +70,19 @@ function processFile(filename) {
   var contents = fs.readFileSync(filename, 'utf8');
   var rewrittenFile = URI.withinString(contents, function(url) {
     console.log("Found ", url);
-    var uri = new URI(url);
-    if (uri.protocol() != 'http') return url;
+    try {
+      var uri = new URI(url);
+      if (uri.protocol() != 'http') return url;
 
-    uri.normalize();
-    var rewritten = ruleSets.rewriteURI(uri.toString(), uri.host());
-    if (rewritten) {
-      return rewritten;
-    } else {
+      uri.normalize();
+      var rewritten = ruleSets.rewriteURI(uri.toString(), uri.host());
+      if (rewritten) {
+        return rewritten;
+      } else {
+        return url;
+      }
+    } catch (err) {
+      console.warn("Not rewritting instance because exception occured:" + err);
       return url;
     }
   });
