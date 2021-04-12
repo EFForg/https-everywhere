@@ -26,7 +26,7 @@ const parseIp = ip => {
       return -1;
     }
 
-    ipN = (ipN << 8) | octet;
+    ipN = (ipN << 8) | octetN;
   }
 
   return ipN >>> 0;
