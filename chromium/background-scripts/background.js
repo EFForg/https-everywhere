@@ -273,7 +273,7 @@ BrowserSession.prototype = {
 
     // sort by ruleset names alphabetically, case-insensitive
     if (this.getTab(tabId, "applied_rulesets", null)) {
-      let rulesets = this.getTab(tabId, "applied_rulesets", []);
+      let rulesets = this.getTab(tabId, "applied_rulesets", null);
       let insertIndex = 0;
 
       const ruleset_name = ruleset.name.toLowerCase();
