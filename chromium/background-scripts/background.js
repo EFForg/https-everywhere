@@ -92,7 +92,8 @@ function initializeStoredGlobals() {
   });
 }
 
-let upgradeToSecureAvailable;
+/** @type {boolean} */
+let upgradeToSecureAvailable = false;
 
 function getUpgradeToSecureAvailable() {
   if (typeof browser !== 'undefined') {
