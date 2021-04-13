@@ -16,7 +16,11 @@ const trivial_cookie_rule_c = /.+/;
 /* A map of all scope RegExp objects */
 const scopes = new Map();
 
-/* Returns the scope object from the map for the given scope string */
+/**
+ * Returns the scope object from the map for the given scope string
+ * @param {string} scope
+ * @returns {RegExp}
+ */
 function getScope(scope) {
   if (!scopes.has(scope)) {
     scopes.set(scope, new RegExp(scope));
@@ -398,7 +402,7 @@ RuleSets.prototype = {
   loadStoredUserRules: function() {
     return this.getStoredUserRules()
       .then(userRules => {
-        this.addFromJson(userRules, getScope());
+        this.addFromJson(userRules, '');
         util.log(util.INFO, `loaded ${userRules.length} stored user rules`);
       });
   },
@@ -409,7 +413,7 @@ RuleSets.prototype = {
   * @param cb: Callback to call after success/fail
   * */
   addNewRuleAndStore: async function(params) {
-    if (this.addUserRule(params, getScope())) {
+    if (this.addUserRule(params, '')) {
       // If we successfully added the user rule, save it in the storage
       // api so it's automatically applied when the extension is
       // reloaded.
