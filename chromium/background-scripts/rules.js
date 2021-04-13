@@ -17,7 +17,7 @@ const trivial_cookie_rule_c = /.+/;
 const scopes = new Map();
 
 /**
- * Compile literal ruleset scope into RegExp
+ * Returns the scope object from the map for the given scope string.
  * @param {string} scope literal ruleset scope
  * @returns {RegExp}
  */
