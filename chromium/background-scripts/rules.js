@@ -18,7 +18,7 @@ const scopes = new Map();
 
 /**
  * Returns the scope object from the map for the given scope string.
- * @param {string} scope literal ruleset scope
+ * @param {string} scope ruleset scope string
  * @returns {RegExp}
  */
 function getScope(scope) {
@@ -81,7 +81,7 @@ function CookieRule(host, cookiename) {
  *A collection of rules
  * @param {string} set_name The name of this set
  * @param {boolean} default_state activity state
- * @param {RegExp} scope compiled RegExp ruleset scope
+ * @param {string} scope ruleset scope string
  * @param {string} note Note will be displayed in popup
  * @constructor
  */
@@ -92,7 +92,7 @@ function RuleSet(set_name, default_state, scope, note) {
   this.cookierules = null;
   this.active = default_state;
   this.default_state = default_state;
-  this.scope = scope;
+  this.scope = getScope(scope);
   this.note = note;
 }
 
@@ -291,7 +291,7 @@ RuleSets.prototype = {
       note += "Platform(s): " + platform + "\n";
     }
 
-    var rule_set = new RuleSet(ruletag["name"], default_state, getScope(scope), note.trim());
+    var rule_set = new RuleSet(ruletag["name"], default_state, scope, note.trim());
 
     // Read user prefs
     if (rule_set.name in this.ruleActiveStates) {
@@ -582,7 +582,7 @@ RuleSets.prototype = {
     if (this.wasm_rs) {
       let pa = this.wasm_rs.potentially_applicable(host);
       results = new Set([...pa].map(ruleset => {
-        let rs = new RuleSet(ruleset.name, ruleset.default_state, getScope(ruleset.scope), ruleset.note);
+        let rs = new RuleSet(ruleset.name, ruleset.default_state, ruleset.scope, ruleset.note);
 
         if (ruleset.cookierules) {
           let cookierules = ruleset.cookierules.map(cookierule => {
