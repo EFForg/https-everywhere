@@ -251,7 +251,7 @@ RuleSets.prototype = {
         ruleJson,
         settings.enableMixedRulesets,
         this.ruleActiveStates,
-        getScope(scope));
+        scope);
     } else {
       for (let ruleset of ruleJson) {
         try {
