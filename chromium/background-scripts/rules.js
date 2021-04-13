@@ -242,9 +242,8 @@ RuleSets.prototype = {
   },
 
   /**
-   * 
-   * @param {*} ruleJson 
-   * @param {string} scope 
+   * @param {*} ruleJson
+   * @param {string} scope
    */
   addFromJson: function(ruleJson, scope) {
     if (this.wasm_rs) {
