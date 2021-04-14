@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 """
 Given two directories, copy Firefox-style https-everywhere.dtd translations from
 the first directory into appropriately-named Chromium-style messages.json

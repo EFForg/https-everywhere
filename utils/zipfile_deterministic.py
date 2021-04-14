@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 """
 A fork of the Python 3.6 zipfile module, modified to remove sources of entropy
 and ensure bit-by-bit determinism for the output file.

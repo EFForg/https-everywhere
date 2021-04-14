@@ -1,8 +1,8 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 #
 # Run Selenium tests for HTTPS Everywhere
 #
-# This script may be executed as `python3.6 script.py [directory of CRX]`
+# This script may be executed as `python3 script.py [directory of CRX]`
 #
 # The script is compatible with Python 3.6.
 # Selenium, WebDriver and Google Chrome (or Chromium) must be installed
@@ -41,7 +41,7 @@ if sys.argv[1] == "Chrome":
 
     try:
         # First argument is optional, if not specified will search path.
-        driver = webdriver.Chrome(chromedriver_path, chrome_options=chromeOps)
+        driver = webdriver.Chrome(chromedriver_path, options=chromeOps)
     except WebDriverException as e:
         error = e.__str__()
 

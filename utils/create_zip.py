@@ -1,10 +1,10 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 
 # Uses the Python zip implementation to create deterministic zip's
 # Author: Yan Zhu, yan@mit.edu
 
 """
-Usage: python3.6 create_zip.py -x <exclusions> -n <name of zipped file> <directory>
+Usage: python3 create_zip.py -x <exclusions> -n <name of zipped file> <directory>
 """
 
 import argparse

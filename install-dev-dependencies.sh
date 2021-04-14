@@ -41,7 +41,7 @@ if type apt-get>/dev/null 2>&1;  then
     CHROMEDRIVER="chromium-driver"
   fi
   $SUDO_SHIM apt-get install -y libxml2-dev libxml2-utils libxslt1-dev \
-    python3.6-dev $BROWSERS zip sqlite3 python3-pip libcurl4-openssl-dev xvfb \
+    python3-dev $BROWSERS zip sqlite3 python3-pip libcurl4-openssl-dev xvfb \
     nodejs \
     npm \
     libssl-dev git curl $CHROMEDRIVER
