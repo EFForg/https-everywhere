@@ -16,7 +16,11 @@ const trivial_cookie_rule_c = /.+/;
 /* A map of all scope RegExp objects */
 const scopes = new Map();
 
-/* Returns the scope object from the map for the given scope string */
+/**
+ * Returns the scope object from the map for the given scope string.
+ * @param {string} scope ruleset scope string
+ * @returns {RegExp}
+ */
 function getScope(scope) {
   if (!scopes.has(scope)) {
     scopes.set(scope, new RegExp(scope));
@@ -75,9 +79,10 @@ function CookieRule(host, cookiename) {
 
 /**
  *A collection of rules
- * @param set_name The name of this set
- * @param default_state activity state
- * @param note Note will be displayed in popup
+ * @param {string} set_name The name of this set
+ * @param {boolean} default_state activity state
+ * @param {string} scope ruleset scope string
+ * @param {string} note Note will be displayed in popup
  * @constructor
  */
 function RuleSet(set_name, default_state, scope, note) {
@@ -87,7 +92,7 @@ function RuleSet(set_name, default_state, scope, note) {
   this.cookierules = null;
   this.active = default_state;
   this.default_state = default_state;
-  this.scope = scope;
+  this.scope = getScope(scope);
   this.note = note;
 }
 
@@ -176,7 +181,6 @@ RuleSet.prototype = {
 
 /**
  * Initialize Rule Sets
- * @param ruleActiveStates default state for rules
  * @constructor
  */
 function RuleSets() {
@@ -189,7 +193,10 @@ function RuleSets() {
   // A cache for cookie hostnames.
   this.cookieHostCache = new Map();
 
-  // A hash of rule name -> active status (true/false).
+  /**
+   * A hash of rule name -> active status (true/false).
+   * @type {Object<string, boolean>}
+   */
   this.ruleActiveStates = {};
 
   // The key to retrieve user rules from the storage api
@@ -220,6 +227,8 @@ RuleSets.prototype = {
 
   /**
    * Convert XML to JS and load rulesets
+   * @param {Document} ruleXml
+   * @param {string} scope
    */
   addFromXml: function(ruleXml, scope) {
     const rulesets_xml = ruleXml.getElementsByTagName("ruleset");
@@ -232,9 +241,11 @@ RuleSets.prototype = {
     this.addFromJson(rulesets, scope);
   },
 
+  /**
+   * @param {*} ruleJson
+   * @param {string} scope
+   */
   addFromJson: function(ruleJson, scope) {
-    const scope_obj = getScope(scope);
-
     if (this.wasm_rs) {
       this.wasm_rs.add_all_from_js_array(
         ruleJson,
@@ -244,7 +255,7 @@ RuleSets.prototype = {
     } else {
       for (let ruleset of ruleJson) {
         try {
-          this.parseOneJsonRuleset(ruleset, scope_obj);
+          this.parseOneJsonRuleset(ruleset, scope);
         } catch(e) {
           util.log(util.WARN, 'Error processing ruleset:' + e);
         }
@@ -252,6 +263,11 @@ RuleSets.prototype = {
     }
   },
 
+  /**
+   * Parse one JSON format ruleset element
+   * @param {*} ruletag
+   * @param {string} scope
+   */
   parseOneJsonRuleset: function(ruletag, scope) {
     var default_state = true;
     var note = "";
@@ -320,6 +336,7 @@ RuleSets.prototype = {
   /**
    * Load a user rule
    * @param params
+   * @param {string} scope
    * @returns {boolean}
    */
   addUserRule : function(params, scope) {
@@ -398,7 +415,7 @@ RuleSets.prototype = {
   loadStoredUserRules: function() {
     return this.getStoredUserRules()
       .then(userRules => {
-        this.addFromJson(userRules, getScope());
+        this.addFromJson(userRules, '');
         util.log(util.INFO, `loaded ${userRules.length} stored user rules`);
       });
   },
@@ -409,7 +426,7 @@ RuleSets.prototype = {
   * @param cb: Callback to call after success/fail
   * */
   addNewRuleAndStore: async function(params) {
-    if (this.addUserRule(params, getScope())) {
+    if (this.addUserRule(params, '')) {
       // If we successfully added the user rule, save it in the storage
       // api so it's automatically applied when the extension is
       // reloaded.
@@ -466,7 +483,7 @@ RuleSets.prototype = {
   },
 
   loadCustomRuleset: function(ruleset_string) {
-    this.addFromXml((new DOMParser()).parseFromString(ruleset_string, 'text/xml'));
+    this.addFromXml((new DOMParser()).parseFromString(ruleset_string, 'text/xml'), '');
   },
 
   setRuleActiveState: async function(ruleset_name, active) {
@@ -565,7 +582,7 @@ RuleSets.prototype = {
     if (this.wasm_rs) {
       let pa = this.wasm_rs.potentially_applicable(host);
       results = new Set([...pa].map(ruleset => {
-        let rs = new RuleSet(ruleset.name, ruleset.default_state, getScope(ruleset.scope), ruleset.note);
+        let rs = new RuleSet(ruleset.name, ruleset.default_state, ruleset.scope, ruleset.note);
 
         if (ruleset.cookierules) {
           let cookierules = ruleset.cookierules.map(cookierule => {

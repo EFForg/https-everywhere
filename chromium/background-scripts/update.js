@@ -296,7 +296,7 @@ async function applyStoredRulesets(rulesets_obj) {
   }
 
   if(!replaces) {
-    rulesets_obj.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'));
+    rulesets_obj.addFromJson(util.loadExtensionFile('rules/default.rulesets', 'json'), '');
   }
 }
 
