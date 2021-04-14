@@ -1,4 +1,4 @@
-# Incorporating DuckDuckGo Smart Encryption
+# Incorporating DuckDuckGo Smarter Encryption
 
 * Status: Pending
 * Deciders: EFF (@zoracon and @hainish) and DuckDuckGo
@@ -16,11 +16,11 @@ With the increased HTTPS traffic, the current model of listed sites that support
     * Different domains for secure connection are now an older habit (i.e. secure.google.com)
     * TLS 1.0, 1.1 deprecation 
 * Chrome’s Manifest V3 will force the extensions to have a ruleset cap. Instead of competing with other extensions like DuckDuckGo,  if the user prefers to use HTTPS Everywhere or DuckDuckGo's privacy essentials, we will provide the same coverage.
-* DuckDuckGo’s Smart Encryption covers more domains than our current, more manual model.
+* DuckDuckGo’s Smarter Encryption covers more domains than our current, more manual model.
 
 ## Decision Outcome
 
-We chose to add the DuckDuckGo Smart Encryption update channel, because it no longer is beneficial to diverse efforts with others with similar goals in this space.
+We chose to add the DuckDuckGo Smarter Encryption update channel, because it no longer is beneficial to diverse efforts with others with similar goals in this space.
 
 ### Consequences and Concerns
 
@@ -31,4 +31,4 @@ We chose to add the DuckDuckGo Smart Encryption update channel, because it no lo
 
 * https://spreadprivacy.com/duckduckgo-smarter-encryption/
 * https://www.eff.org/deeplinks/2020/11/10-years-https-everywhere
-* 
+* [Bloom Filter for Rule Signing]()
