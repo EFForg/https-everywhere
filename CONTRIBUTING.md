@@ -142,7 +142,7 @@ HTTPS Everywhere is maintained by a limited set of staff and volunteers.  Please
 
 ### General Info
 
-**On May 31st, 2021 we will end manual additions to the rulesets.** Please see [this explanation on the future of HTTPSE Rulesets.](`https://github.com/EFForg/https-everywhere/blob/master/docs/adr/duckduckgo-smart-encryption.md`)
+**On May 31st, 2021 we will end manual additions to the rulesets.** Please see [this explanation on the future of HTTPSE Rulesets.](`https://github.com/EFForg/https-everywhere/blob/master/docs/adr/duckduckgo-smarter-encryption.md`)
 
 Thanks for your interest in contributing to the HTTPS Everywhere `rulesets`! There's just a few things you should know before jumping in. First some terminology, which will help you understand how exactly `rulesets` are structured and what each one contains:
 

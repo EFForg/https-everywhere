@@ -10,7 +10,7 @@ With the increased HTTPS traffic, the current model of listed sites that support
 
 ## Decision Drivers
 
-* Firefox has an HTTPS Only option
+* Firefox has an HTTPS-Only option
 * Browsers and websites are moving away from issues that created need for more granular ruleset maintenance.
     * Mixed content is now blocked in major browsers
     * Different domains for secure connection are now an older habit (i.e. secure.google.com)
@@ -24,7 +24,7 @@ We chose to add the DuckDuckGo Smarter Encryption update channel, because it no 
 
 ### Consequences and Concerns
 
-* We have many downstream partners supported and unofficial that rely on our current rulesets. This transition gives them time to make the needed decisions on their before we completely switch over to using DuckDuckGo's Smart Encryption, and sunset our current rulesets in HTTPS Everywhere
+* We have many downstream partners supported and unofficial that rely on our current rulesets. This transition gives them time to make the needed decisions on their before we completely switch over to using DuckDuckGo's Smarter Encryption, and sunset our current rulesets in HTTPS Everywhere
 * …
 
 ## Links for Further Context
