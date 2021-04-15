@@ -129,7 +129,7 @@ RuleSet.prototype = {
   isEquivalentTo: function(ruleset) {
     if(this.name != ruleset.name ||
        this.note != ruleset.note ||
-       this.state != ruleset.state ||
+       this.active != ruleset.active ||
        this.default_state != ruleset.default_state) {
       return false;
     }
