@@ -96,7 +96,8 @@ function initializeStoredGlobals() {
   });
 }
 
-let upgradeToSecureAvailable;
+/** @type {boolean} */
+let upgradeToSecureAvailable = false;
 
 function getUpgradeToSecureAvailable() {
   if (typeof browser !== 'undefined') {
@@ -276,7 +277,7 @@ BrowserSession.prototype = {
 
     // sort by ruleset names alphabetically, case-insensitive
     if (this.getTab(tabId, "applied_rulesets", null)) {
-      let rulesets = this.getTab(tabId, "applied_rulesets");
+      let rulesets = this.getTab(tabId, "applied_rulesets", null);
       let insertIndex = 0;
 
       const ruleset_name = ruleset.name.toLowerCase();
@@ -407,7 +408,7 @@ function onBeforeRequest(details) {
     return redirectOnCancel(shouldCancel, details.url);
   }
 
-  if (browserSession.getRequest(details.requestId, "redirect_count") >= 8) {
+  if (browserSession.getRequest(details.requestId, "redirect_count", 0) >= 8) {
     util.log(util.NOTE, "Redirect counter hit for " + uri.href);
     urlBlacklist.add(uri.href);
     rules.settings.domainBlacklist.add(uri.hostname);
