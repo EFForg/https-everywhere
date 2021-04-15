@@ -10,12 +10,12 @@ With larger ruleset lists to be signed on the DuckDuckGo Update channel, a bette
 
 ## Decision Drivers
 
-* Bloom filters are able to ingest greater data sets at less memory times
+* Bloom filters are able to ingest greater data sets at less memory expense
 * Rust is already incorporated in HTTPS Everywhere and is a memory safe language
 
 ## Decision Outcome
 
-Create a Async Rust script that ingests, compares to majestic million, and forms rulesets for HTTPS Everywhere from the Smarter Encryption ruleset.
+Created an async Rust script that ingests DuckDuckGo's Smarter Encryption list, compares to the Majestic Million list, and forms a bloom file and associated metadata.
 
 ### Consequences and Concerns
 

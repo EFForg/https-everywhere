@@ -31,4 +31,3 @@ We chose to add the DuckDuckGo Smarter Encryption update channel, because it no 
 
 * https://spreadprivacy.com/duckduckgo-smarter-encryption/
 * https://www.eff.org/deeplinks/2020/11/10-years-https-everywhere
-* [Bloom Filter for Rule Signing]()
