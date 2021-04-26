@@ -39,12 +39,15 @@ function replaceLink(explainer) {
 
 }
 
+const WEB_ARCHIVE_ARCHIVED_PREFIX = "https://web.archive.org/web/";
+
 function displayURL() {
   const searchParams = new URLSearchParams(window.location.search);
   const originURL = searchParams.get('originURL');
   const originURLLink = document.getElementById('url-value');
   const openURLButton = document.getElementById('open-url-button');
   const openHttpOnce = document.getElementById('http-once-button');
+  const openWebArchive = document.getElementById('open-web-archive');
   const copyButton = document.getElementById('copy-url');
   const url = new URL(originURL);
 
@@ -119,6 +122,13 @@ function displayURL() {
       window.location = originURL;
     });
 
+    return false;
+  });
+
+  openWebArchive.addEventListener("click", function() {
+    if (confirm(chrome.i18n.getMessage("open_web_archive") + '?')) {
+      window.location = WEB_ARCHIVE_ARCHIVED_PREFIX + originURL;
+    }
     return false;
   });
 }
