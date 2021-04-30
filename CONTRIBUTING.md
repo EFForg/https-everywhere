@@ -1,5 +1,11 @@
 # Table of Contents
 
+## General Info
+
+**On May 31st, 2021 we will end manual additions to the rulesets.** Please see [this explanation on the future of HTTPSE Rulesets.](https://github.com/EFForg/https-everywhere/blob/master/docs/adrs/duckduckgo-smarter-encryption.md)
+
+We will continue accept requests on rulesets already in our list that are causing significant breakage for users through the summer. However, in autumn, we will begin the plan to ultimately move our crowdsourced rulesets out of the extension in favor ofg the Smarter Encryption Ruleset.
+
 - [Table of Contents](#table-of-contents)
 - [Welcome](#welcome)
   - [HTTPS Everywhere Source Code Layout](#https-everywhere-source-code-layout)
@@ -139,10 +145,6 @@ To submit changes, open a pull request from our [GitHub repository](https://gith
 HTTPS Everywhere is maintained by a limited set of staff and volunteers.  Please be mindful that we may take a while before we're able to review your contributions.
 
 ## Contributing Rulesets
-
-### General Info
-
-**On May 31st, 2021 we will end manual additions to the rulesets.** Please see [this explanation on the future of HTTPSE Rulesets.](https://github.com/EFForg/https-everywhere/blob/master/docs/adrs/duckduckgo-smarter-encryption.md)
 
 Thanks for your interest in contributing to the HTTPS Everywhere `rulesets`! There's just a few things you should know before jumping in. First some terminology, which will help you understand how exactly `rulesets` are structured and what each one contains:
 
