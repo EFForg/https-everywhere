@@ -31,15 +31,15 @@ const log = (level, filename, message) => {
 
 const supportedCDNsRegexs = [
   { // Cloudfront.net
-    fromRe: /^\^http(?:s\?)?:\/\/((([\\a-z0-9äö_-]+)\.)*([\\a-z0-9äö-]+))\/$/,
+    fromRe: /^\^http(?:s\?)?:\/\/((([\\a-z0-9_-]+)\.)*([\\a-z0-9-]+))\/$/,
     toRe: /^https:\/\/\w+\.cloudfront\.net\/$/
   },
   { // 2o7.net
-    fromRe: /^\^http(?:s\?)?:\/\/((([\\a-z0-9äö_-]+)\.)*([\\a-z0-9äö-]+))\/$/,
+    fromRe: /^\^http(?:s\?)?:\/\/((([\\a-z0-9_-]+)\.)*([\\a-z0-9-]+))\/$/,
     toRe: /^https:\/\/[\w-]+\.1[12]2\.2o7\.net\/$/
   },
   { // amazonaws.com
-    fromRe: /^\^http(?:s\?)?:\/\/((([\\a-z0-9äö_-]+)\.)*([\\a-z0-9äö-]+))\/$/,
+    fromRe: /^\^http(?:s\?)?:\/\/((([\\a-z0-9_-]+)\.)*([\\a-z0-9-]+))\/$/,
     toRe: /^https:\/\/s3\.amazonaws\.com\//
   }
 ]

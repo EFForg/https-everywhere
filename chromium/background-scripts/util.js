@@ -62,10 +62,15 @@ function loadExtensionFile(url, returnType) {
 
 /**
  * Remove tailing dots from hostname, e.g. "www.example.com."
+ * Preserve port numbers if they are used
  */
-function getNormalisedHostname(hostname) {
+function getNormalisedHostname(host) {
+  let [ hostname, port ] = host.split(":");
   while (hostname && hostname[hostname.length - 1] === '.' && hostname !== '.') {
     hostname = hostname.slice(0, -1);
+  }
+  if (port) {
+    return `${hostname}:${port}`;
   }
   return hostname;
 }
@@ -143,6 +148,19 @@ function ArrayBufferToString(ab) {
   return string;
 }
 
+/**
+ * Convert a string to an ArrayBuffer
+ *
+ * @param string: a string to convert
+ */
+function StringToArrayBuffer(str) {
+  var byteArray = new Uint8Array(str.length);
+  for (var i = 0; i < str.length; i++) {
+    byteArray[i] = str.charCodeAt(i);
+  }
+  return byteArray;
+}
+
 
 Object.assign(exports, {
   VERB,
@@ -158,7 +176,8 @@ Object.assign(exports, {
   setDefaultLogLevel,
   getDefaultLogLevel,
   loadExtensionFile,
-  ArrayBufferToString
+  ArrayBufferToString,
+  StringToArrayBuffer
 });
 
 })(typeof exports == 'undefined' ? require.scopes.util = {} : exports);

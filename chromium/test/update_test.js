@@ -40,9 +40,9 @@ describe('update.js', function() {
           resolve();
         }));
 
-        if(apply_promises.length == update_channels.length) {
-          Promise.all(apply_promises).then(() => done());
-        }
+
+        Promise.all(apply_promises).then(() => done());
+
       }});
 
     });

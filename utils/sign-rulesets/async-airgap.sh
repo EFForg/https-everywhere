@@ -11,9 +11,9 @@ fi
 echo metahash for confirmation only $(echo -n $2 | sha256sum | cut -c1-6) ...
 read -p "(press enter to continue)"
 
-SIGNED_SHA256SUM=`mktemp /tmp/ruleset-signature.sha256.XXXXXXXX`
+SIGNED_SHA256SUM=`mktemp /tmp/signature.sha256.XXXXXXXX`
 trap 'rm $SIGNED_SHA256SUM' EXIT
-SIGNED_SHA256SUM_BASE64_QR=`mktemp /tmp/ruleset-signature.sha256.base64.XXXXXXXX.png`
+SIGNED_SHA256SUM_BASE64_QR=`mktemp /tmp/signature.sha256.base64.XXXXXXXX.png`
 trap 'rm $SIGNED_SHA256SUM_BASE64_QR' EXIT
 
 echo $2 | xxd -r -p | openssl pkeyutl -sign -inkey $1 -pkeyopt digest:sha256 -pkeyopt rsa_padding_mode:pss -pkeyopt rsa_pss_saltlen:32 -out $SIGNED_SHA256SUM

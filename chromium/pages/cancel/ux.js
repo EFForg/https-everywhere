@@ -45,13 +45,14 @@ function displayURL() {
   const originURLLink = document.getElementById('url-value');
   const openURLButton = document.getElementById('open-url-button');
   const openHttpOnce = document.getElementById('http-once-button');
+  const copyButton = document.getElementById('copy-url');
   const url = new URL(originURL);
 
   originURLLink.innerText = originURL;
   originURLLink.href = originURL;
 
   openURLButton.addEventListener("click", function() {
-    if (confirm(chrome.i18n.getMessage("chrome_disable_on_this_site") + '?')) {
+    if (confirm(chrome.i18n.getMessage("cancel_open_page") + '?')) {
       sendMessage("disable_on_site", url.host, () => {
         window.location = originURL;
       });
@@ -60,8 +61,63 @@ function displayURL() {
     return false;
   });
 
+  // Copy URL Feature on EASE
+
+  function copyLinkAlternate() {
+    let isSuccessful = false;
+
+    const sel = window.getSelection();
+
+    try {
+      sel.removeAllRanges();
+
+      const range = document.createRange();
+      range.selectNode(originURLLink);
+
+      sel.addRange(range);
+
+      isSuccessful = document.execCommand("copy");
+
+      sel.removeAllRanges();
+
+      return isSuccessful;
+    } catch (err) {
+      console.error(err);
+
+      sel.removeAllRanges();
+
+      return false;
+    }
+  }
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(originURL);
+      return true;
+    } catch (err) {
+      return copyLinkAlternate();
+    }
+  }
+
+  let restoreTimeout = null;
+
+  copyButton.addEventListener("click", async () => {
+    if (await copyLink()) {
+      copyButton.innerText = chrome.i18n.getMessage("cancel_copied_url");
+
+      if (restoreTimeout !== null) {
+        clearTimeout(restoreTimeout);
+      }
+
+      restoreTimeout = setTimeout(() => {
+        copyButton.innerText = chrome.i18n.getMessage("cancel_copy_url");
+        restoreTimeout = null;
+      }, 1500);
+    }
+  });
+
   openHttpOnce.addEventListener("click", function() {
-    if (confirm(chrome.i18n.getMessage("chrome_disable_on_this_site") + '?')) {
+    if (confirm(chrome.i18n.getMessage("cancel_http_once") + '?')) {
       sendMessage("disable_on_site_once", url.host, () => {
         window.location = originURL;
       });

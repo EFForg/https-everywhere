@@ -13,6 +13,7 @@ const rules = require('./rules'),
 
 
 let all_rules = new rules.RuleSets();
+let blooms = [];
 
 async function initialize() {
   await wasm.initialize();
@@ -22,6 +23,7 @@ async function initialize() {
   await getUpgradeToSecureAvailable();
   await update.initialize(store, initializeAllRules);
   await all_rules.loadFromBrowserStorage(store, update.applyStoredRulesets);
+  await update.applyStoredBlooms(blooms);
   await incognito.onIncognitoDestruction(destroy_caches);
 }
 initialize();
@@ -30,6 +32,8 @@ async function initializeAllRules() {
   const r = new rules.RuleSets();
   await r.loadFromBrowserStorage(store, update.applyStoredRulesets);
   Object.assign(all_rules, r);
+  blooms.length = 0;
+  await update.applyStoredBlooms(blooms);
 }
 
 /**
@@ -92,7 +96,8 @@ function initializeStoredGlobals() {
   });
 }
 
-let upgradeToSecureAvailable;
+/** @type {boolean} */
+let upgradeToSecureAvailable = false;
 
 function getUpgradeToSecureAvailable() {
   if (typeof browser !== 'undefined') {
@@ -181,14 +186,18 @@ function updateState () {
     title: 'HTTPS Everywhere' + ((iconState === 'active') ? '' : ' (' + iconState + ')')
   });
 
-  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-    if (!tabs || tabs.length === 0) {
+  const chromeUrl = 'chrome://';
+
+  chrome.tabs.query({ active: true, currentWindow: true, status: 'complete' }, function(tabs) {
+    if (!tabs || tabs.length === 0 || tabs[0].url.startsWith(chromeUrl) ) {
       return;
     }
-    const tabUrl = new URL(tabs[0].url);
-    const hostname = util.getNormalisedHostname(tabUrl.hostname);
 
-    if (isExtensionDisabledOnSite(hostname) || iconState == "disabled") {
+    // tabUrl.host instead of hostname should be used to show the "disabled" status properly (#19293)
+    const tabUrl = new URL(tabs[0].url);
+    const host = util.getNormalisedHostname(tabUrl.host);
+
+    if (isExtensionDisabledOnSite(host) || iconState == "disabled") {
       if ('setIcon' in chrome.browserAction) {
         chrome.browserAction.setIcon({
           path: {
@@ -268,7 +277,7 @@ BrowserSession.prototype = {
 
     // sort by ruleset names alphabetically, case-insensitive
     if (this.getTab(tabId, "applied_rulesets", null)) {
-      let rulesets = this.getTab(tabId, "applied_rulesets");
+      let rulesets = this.getTab(tabId, "applied_rulesets", null);
       let insertIndex = 0;
 
       const ruleset_name = ruleset.name.toLowerCase();
@@ -399,7 +408,7 @@ function onBeforeRequest(details) {
     return redirectOnCancel(shouldCancel, details.url);
   }
 
-  if (browserSession.getRequest(details.requestId, "redirect_count") >= 8) {
+  if (browserSession.getRequest(details.requestId, "redirect_count", 0) >= 8) {
     util.log(util.NOTE, "Redirect counter hit for " + uri.href);
     urlBlacklist.add(uri.href);
     rules.settings.domainBlacklist.add(uri.hostname);
@@ -418,6 +427,15 @@ function onBeforeRequest(details) {
       browserSession.putTabAppliedRulesets(details.tabId, details.type, ruleset);
       if (ruleset.active && !newuristr) {
         newuristr = ruleset.apply(uri.href);
+      }
+    }
+  }
+
+  if (newuristr == null && blooms.length > 0 && uri.protocol === 'http:') {
+    for(let bloom of blooms) {
+      if(bloom.check(uri.hostname)) {
+        newuristr = uri.href.replace(/^http:/, "https:");
+        break;
       }
     }
   }
@@ -686,8 +704,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     let last_updated_promises = [];
     for(let update_channel of update_channels) {
       last_updated_promises.push(new Promise(resolve => {
-        store.local.get({['rulesets-timestamp: ' + update_channel.name]: 0}, item => {
-          resolve([update_channel.name, item['rulesets-timestamp: ' + update_channel.name]]);
+        store.local.get({['uc-timestamp: ' + update_channel.name]: 0}, item => {
+          resolve([update_channel.name, item['uc-timestamp: ' + update_channel.name]]);
         });
       }));
     }
@@ -796,8 +814,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
         });
       return true;
     },
-    get_ruleset_timestamps: () => {
-      update.getRulesetTimestamps().then(timestamps => sendResponse(timestamps));
+    get_update_channel_timestamps: () => {
+      update.getUpdateChannelTimestamps().then(timestamps => sendResponse(timestamps));
       return true;
     },
     get_pinned_update_channels: () => {
@@ -843,9 +861,16 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
           return (update_channel.name != message.object);
         })}, () => {
           store.local.remove([
-            'rulesets-timestamp: ' + message.object,
-            'rulesets-stored-timestamp: ' + message.object,
-            'rulesets: ' + message.object
+            'uc-timestamp: ' + message.object,
+            'uc-stored-timestamp: ' + message.object,
+            'rulesets: ' + message.object,
+            'bloom: ' + message.object,
+            'bloom_bitmap_bits: ' + message.object,
+            'bloom_k_num: ' + message.object,
+            'bloom_sip_keys_0_0: ' + message.object,
+            'bloom_sip_keys_0_1: ' + message.object,
+            'bloom_sip_keys_1_0: ' + message.object,
+            'bloom_sip_keys_1_1: ' + message.object,
           ], () => {
             initializeAllRules();
             sendResponse(true);
@@ -946,6 +971,7 @@ function destroy_caches() {
 
 Object.assign(exports, {
   all_rules,
+  blooms,
   urlBlacklist
 });
 

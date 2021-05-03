@@ -24,10 +24,10 @@ if ! [ -d test/rules ] ; then
   exit 1
 fi
 if [ $# -gt 0 ] ; then
-  exec python3.6 test/rules/src/https_everywhere_checker/check_rules.py \
+  exec python3 test/rules/src/https_everywhere_checker/check_rules.py \
     test/rules/coverage.checker.config "$@"
 fi
-if ! python3.6 test/rules/src/https_everywhere_checker/check_rules.py \
+if ! python3 test/rules/src/https_everywhere_checker/check_rules.py \
       test/rules/coverage.checker.config; then
   echo '
 Ruleset test coverage was insufficient.

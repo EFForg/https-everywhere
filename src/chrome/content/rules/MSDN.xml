@@ -1,7 +1,5 @@
 
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://public.create.msdn.com/assets/ (200) => https://www.create.msdn.com/assets/ (403)
 
 	For other Microsoft coverage, see Microsoft.xml.
 
@@ -21,18 +19,13 @@ Non-2xx HTTP code: http://public.create.msdn.com/assets/ (200) => https://www.cr
 		- media.ch9.ms			(CN: *.sharepointonline.com; 400)
 		- files.channel9.msdn.com	(400; CN: *.vo.msecnd.net)
 
-
-	Partially covered msdn.com subdomains:
-
 		- public.create
+		- profile.create
 
 
 	Fully covered msdn.com subdomains:
-
-		- i1.blogs
+		- www
 		- channel9
-
-		- profile.create
 
 
 	Insecure cookies are set for these hosts:
@@ -53,37 +46,16 @@ Non-2xx HTTP code: http://public.create.msdn.com/assets/ (200) => https://www.cr
 	* Secured by us
 
 -->
-<ruleset name="MSDN.com (partial)" default_off="failed ruleset test">
+
+<ruleset name="MSDN.com (partial)">
 
 	<!--	Direct rewrites:
 				-->
+	<target host="msdn.com" />
+	<target host="www.msdn.com" />
 	<target host="channel9.msdn.com" />
 
-	<target host="profile.create.msdn.com" />
 	<!--target host="www.create.msdn.com" /-->
-
-	<!--	Complications:
-				-->
-	<target host="i1.blogs.msdn.com" />
-	<target host="public.create.msdn.com" />
-
-		<!--	https://trac.torproject.org/projects/tor/ticket/8778
-										-->
-		<!--exclusion pattern="^http://blogs\.msdn\.com/" /-->
-
-		<!--	403:
-				-->
-		<!--exclusion pattern="^http://www\.create\.msdn\.com/$" /-->
-
-		<exclusion pattern="^http://public\.create\.msdn\.com/(?!assets/)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://public.create.msdn.com/Feeds/CcoFeeds.svc/CmsFeed" />
-
-			<!--	-ve:
-					-->
-			<test url="http://public.create.msdn.com/assets/" />
 
 
 	<!--	Not secured by server:
@@ -99,18 +71,6 @@ Non-2xx HTTP code: http://public.create.msdn.com/assets/ (200) => https://www.cr
 					-->
 	<securecookie host=".+" name=".+"/>
 
-
-	<!--	i1: Akamai
-				-->
-	<rule from="^http://i1\.blogs\.msdn\.com/"
-		to="https://blogs.msdn.com/" />
-
-	<!--	Cert doesn't match public
-						-->
-	<rule from="^http://public\.create\.msdn\.com/"
-		to="https://www.create.msdn.com/" />
-
-	<rule from="^http:"
-		to="https:" />
+	<rule from="^http:" to="https:" />
 
 </ruleset>

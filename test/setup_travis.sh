@@ -3,27 +3,28 @@ set -x
 toplevel=$(git rev-parse --show-toplevel)
 
 function setup_chrome {
-    # Install the latest version of the chromedriver
-    version=$(wget https://chromedriver.storage.googleapis.com/LATEST_RELEASE -q -O -)
+    # install the appropriate chromedriver version (for chrome stable & beta)
+    chrome_version=$("${BROWSER}" --product-version | cut -d . -f 1-3)
+    chromedriver_version_url=https://chromedriver.storage.googleapis.com/LATEST_RELEASE_"${chrome_version}"
+    chromedriver_version=$(wget "${chromedriver_version_url}" -q -O -)
+    chromedriver_url=https://chromedriver.storage.googleapis.com/"${chromedriver_version}"/chromedriver_linux64.zip
 
-    # Mismatch on Chromedriver Latest and Chrome Beta, hardcode for Chrome Beta
-    if [ "$1" == "chrome beta" ]; then
-      url="https://chromedriver.storage.googleapis.com/83.0.4103.14/chromedriver_linux64.zip"
-    elif [ "$1" == "chrome stable" ]; then
-      url="https://chromedriver.storage.googleapis.com/${version}/chromedriver_linux64.zip"
-    fi
+    echo "Setting up chromedriver ${chromedriver_version} for ${1} ${chrome_version}"
 
-    wget -O /tmp/chromedriver.zip ${url}
+    wget -O /tmp/chromedriver.zip ${chromedriver_url}
     sudo unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
     sudo chmod a+x /usr/local/bin/chromedriver
 }
 
 function setup_firefox {
-    #version=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep tag_name | cut -d '"' -f 4)
-    # hard-code latest version, since apparently the above `curl` is fucking up in travis
-    version="v0.23.0"
-    url="https://github.com/mozilla/geckodriver/releases/download/${version}/geckodriver-${version}-linux64.tar.gz"
-    wget -O /tmp/geckodriver.tar.gz ${url}
+    # install the latest version of geckodriver
+    firefox_version=$("${BROWSER}" -version)
+    geckodriver_version=$(curl -sI https://github.com/mozilla/geckodriver/releases/latest | grep -i "^Location: " | sed 's/.*\///' | tr -d '\r')
+    geckodriver_url="https://github.com/mozilla/geckodriver/releases/download/${geckodriver_version}/geckodriver-${geckodriver_version}-linux64.tar.gz"
+
+    echo "Setting up geckodriver ${geckodriver_version} for ${firefox_version}"
+
+    wget -O /tmp/geckodriver.tar.gz ${geckodriver_url}
     sudo tar -xvf /tmp/geckodriver.tar.gz -C /usr/local/bin/
     sudo chmod a+x /usr/local/bin/geckodriver
 }

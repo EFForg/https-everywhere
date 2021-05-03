@@ -1,0 +1,1 @@
+../sign-rulesets/async-airgap.sh

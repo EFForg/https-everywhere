@@ -1,8 +1,16 @@
+
 <!--
+The following targets have been disabled at 2020-09-25 16:20:22:
+
+Fetch error: http://origin-www.latimes.com/ => https://origin-www.latimes.com/: (6, 'Could not resolve host: origin-www.latimes.com')
+Fetch error: http://circulars.latimes.com/ => https://circulars.latimes.com/: (28, 'Connection timed out after 20001 milliseconds')
+
 	lat.ms is handled in Bit.ly_vanity_domains.xml.
 
 	For other Tribune coverage, see Tribune.xml.
 
+  Timeout:
+    secure.latimes.com
 
 	CDN buckets:
 
@@ -20,7 +28,7 @@
 
 
 	Problematic subdomains:
-
+    May 7, 2020: Doesn't seem to be in active use, but will keep in the target list
 		- circulars	(pages redirect to http; mismatched, CN: www.flyertown.ca)
 
 -->
@@ -28,36 +36,23 @@
 
 	<target host="latimes.com" />
 	<target host="www.latimes.com" />
-	<target host="origin-www.latimes.com" />
+	<!-- target host="origin-www.latimes.com" /-->
 	<target host="membership.latimes.com" />
 	<target host="myaccount2.latimes.com" />
-	<target host="secure.latimes.com" />
-	<target host="circulars.latimes.com" />
+	<!-- target host="circulars.latimes.com" /-->
 		<!--
+      May 7, 2020 - Doesn't seem to be in use as much, they have converted to
+      another insecure CDN ca-times.brightspotcdn.com
 			Not on secure, redirects to another domain. e.g.
 
+      outdated reference
 				latimes.com/media/photo/2009-11/50719492.jpg
 
 			redirects to
 
 				latimes.image2.trb.com/lanews/media/photo/2009-11/50719492.jpg
 									-->
-		<exclusion pattern="^http://(?:www\.)?latimes\.com/media/photo/" />
+  <securecookie host=".+" name=".+" />
 
-
-	<!--	Tracking cookies:
-					-->
-	<securecookie host="^\.latimes\.com$" name="^(?:gpv_p\w|metrics_id|s_\w+|tribanalyticscookie)$" />
-	<securecookie host="^.+\.latimes\.com$" name=".+" />
-
-
-	<rule from="^http://(?:(?:origin-)?www\.)?latimes\.com/(favicon\.ico|hive/|images/|includes/|media/|stylesheets/)"
-		to="https://secure.latimes.com/$1" />
-
-	<rule from="^http://(membership|myaccount2|secure)\.latimes\.com/"
-		to="https://$1.latimes.com/" />
-
-	<rule from="^http://circulars\.latimes\.com/(assets/|dist_stage/|favicon\.ico|images/)"
-		to="https://www.flyertown.ca/$1" />
-
+  <rule from="^http:" to="https:" />
 </ruleset>

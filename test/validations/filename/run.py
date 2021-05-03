@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 #
 # Validates and provides a generator for ruleset filenames
 #
@@ -24,7 +24,7 @@ def validate_filenames():
 
     for fi in filenames:
         basename = fi.split(os.path.sep)[-1]
-        if basename == '00README' or basename == 'make-trivial-rule' or basename == 'default.rulesets':
+        if basename == '00README' or basename == 'make-trivial-rule' or basename == 'default.rulesets' or basename == 'default.rulesets.json':
             continue
 
         if " " in fi:

@@ -35,14 +35,15 @@ if type apt-get>/dev/null 2>&1;  then
   BROWSERS="firefox chromium-browser"
   CHROMEDRIVER="chromium-chromedriver"
   if [[ "$(lsb_release -is)" == "Debian" ]]; then
-    # Iceweasel is the rebranded Firefox that Debian ships, and Chromium
-    # takes the name of 'chromium' instead of 'chromium-browser' in
+    # Chromium takes the name of 'chromium' instead of 'chromium-browser' in
     # Debian 7 (wheezy) and later.
-    BROWSERS="iceweasel chromium"
-    CHROMEDRIVER="chromedriver"
+    BROWSERS="firefox-esr chromium"
+    CHROMEDRIVER="chromium-driver"
   fi
   $SUDO_SHIM apt-get install -y libxml2-dev libxml2-utils libxslt1-dev \
-    python3.6-dev $BROWSERS zip sqlite3 python3-pip libcurl4-openssl-dev xvfb \
+    python3-dev $BROWSERS zip sqlite3 python3-pip libcurl4-openssl-dev xvfb \
+    nodejs \
+    npm \
     libssl-dev git curl $CHROMEDRIVER
   if ! type geckodriver >/dev/null 2>&1;  then
     curl -LO "https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux$ARCH.tar.gz"
@@ -61,6 +62,7 @@ elif type brew >/dev/null 2>&1; then
   brew list python &>/dev/null || brew install python
   brew cask install chromedriver
   brew install libxml2 gnu-sed
+  brew install node
   if ! echo $PATH | grep -ql /usr/local/bin ; then
     echo '/usr/local/bin not found in $PATH, please add it.'
   fi
@@ -86,12 +88,18 @@ elif type dnf >/dev/null 2>&1; then
     $SUDO_SHIM chown root /usr/bin/geckodriver
     $SUDO_SHIM chmod 755 /usr/bin/geckodriver
   fi
+
   # This is needed for Firefox on some systems. See here for more information:
   # https://github.com/EFForg/https-everywhere/pull/5584#issuecomment-238655443
   if [ ! -f /var/lib/dbus/machine-id ]; then
     $SUDO_SHIM sh -c 'dbus-uuidgen > /var/lib/dbus/machine-id'
   fi
   export PYCURL_SSL_LIBRARY=openssl
+
+  #Node
+  curl -sL https://rpm.nodesource.com/setup_12.x | $SUDO_SHIM bash -
+  $SUDO_SHIM yum install -y nodejs
+  $SUDO_SHIM yum install gcc-c++ make
 else
     echo \
     "Your distro isn't supported by this script yet!"\
@@ -111,6 +119,9 @@ cd -
 cd test/chromium
 pip3 install --user -r requirements.txt
 cd -
+
+# Install Node Package for CRX Verification
+$SUDO_SHIM npm -g i crx3-utils
 
 # Install git hook to run tests before pushing.
 ln -sf ../../test.sh .git/hooks/pre-push
