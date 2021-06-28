@@ -139,6 +139,10 @@ python3 -c "import json; m=json.loads(open('pkg/crx-eff/manifest.json').read());
 # Remove the 'update_url' manifest key from the xpi version of the extension delivered to AMO
 python3 -c "import json; m=json.loads(open('pkg/xpi-amo/manifest.json').read()); del m['applications']['gecko']['update_url']; m['applications']['gecko']['id'] = 'https-everywhere@eff.org'; open('pkg/xpi-amo/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
 
+# Remove the incognito key in AMO packages: #16394
+python3 -c "import json; m=json.loads(open('pkg/xpi-amo/manifest.json').read()); del m['incognito']; open('pkg/xpi-amo/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+python3 -c "import json; m=json.loads(open('pkg/xpi-eff/manifest.json').read()); del m['incognito']; open('pkg/xpi-eff/manifest.json','w').write(json.dumps(m,indent=4,sort_keys=True))"
+
 # If the --remove-extension-update flag is set, ensure the extension is unable to update
 if $REMOVE_EXTENSION_UPDATE; then
   echo "Flag --remove-extension-update specified.  Removing the XPI extensions' ability to update."
