@@ -12,8 +12,6 @@ const rules = require('./rules'),
   ipUtils = require('./ip_utils'),
   ssl_codes = require('./ssl_codes');
 
-  console.log(ssl_codes);
-
 let all_rules = new rules.RuleSets();
 let blooms = [];
 
