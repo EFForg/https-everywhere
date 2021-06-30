@@ -579,7 +579,6 @@ function onErrorOccurred(details) {
   if (httpNowhereOn &&
     details.type == "main_frame" &&
     browserSession.getRequest(details.requestId, "simple_http_nowhere_redirect", false) &&
-    session.getRequest(details.requestId, "simple_http_nowhere_redirect", false) &&
     // Enumerate errors that are likely due to HTTPS misconfigurations
     ssl_codes.error_list.some(message => details.error.includes(message))
   ) {

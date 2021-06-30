@@ -45,4 +45,4 @@ const error_list = [
 
 Object.assign(exports, { error_list });
 
-})(typeof exports !== 'undefined' ? exports : require.scopes.ssl_codes = {}); 
+})(typeof exports !== 'undefined' ? exports : require.scopes.ssl_codes = {});
