@@ -58,7 +58,7 @@ if sys.argv[1] == "Firefox":
     try:
         if len(sys.argv) == 4:
             binary = FirefoxBinary(sys.argv[3])
-            driver = webdriver.Firefox(fp, firefox_binary=binary, log_path=os.devnull)
+            driver = webdriver.Firefox(fp, firefox_binary=binary, service_log_path=os.devnull)
         else:
             driver = webdriver.Firefox(fp, log_path=os.devnull)
     except WebDriverException as e:
