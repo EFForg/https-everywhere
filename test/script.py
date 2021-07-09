@@ -52,6 +52,9 @@ if sys.argv[1] == "Chrome":
             sys.exit(2)
         else:
             raise e
+    
+    # Allow the extension time to load
+    time.sleep(1)
 
 if sys.argv[1] == "Firefox":
     fp = webdriver.FirefoxProfile(sys.argv[2])
