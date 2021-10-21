@@ -4,7 +4,7 @@
 
 **On May 31st, 2021 we will end manual additions to the rulesets.** Please see [this explanation on the future of HTTPSE Rulesets.](https://github.com/EFForg/https-everywhere/blob/master/docs/adrs/duckduckgo-smarter-encryption.md)
 
-We will continue accept requests on rulesets already in our list that are causing significant breakage for users through the summer. However, in autumn, we will begin the plan to ultimately move our crowdsourced rulesets out of the extension in favor ofg the Smarter Encryption Ruleset.
+We will continue accept requests on rulesets already in our list that are causing significant breakage for users through the summer. However, in autumn, we will begin the plan to ultimately move our crowdsourced rulesets out of the extension in favor of the Smarter Encryption Ruleset.
 
 - [Table of Contents](#table-of-contents)
 - [Welcome](#welcome)
