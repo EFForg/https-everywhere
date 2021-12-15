@@ -8,7 +8,7 @@ const util = require("./util");
 function initialize() {
   return new Promise((resolve, reject) => {
     // Asynchronously fetch all data from storage.sync.
-    chrome.storage.sync.get(null, (items) => {
+    chrome.storage.sync.get(null, () => {
       // Pass any observed errors down the promise chain.
       if (chrome.runtime.lastError) {
         setStorage(chrome.storage.local);
@@ -17,7 +17,7 @@ function initialize() {
         setStorage(chrome.storage.sync);
       }
       // Pass the data retrieved from storage down the promise chain.
-      resolve(items);
+      resolve();
     });
   });
 }
