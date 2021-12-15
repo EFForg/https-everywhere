@@ -666,11 +666,11 @@ RuleSets.prototype = {
     // cookies.  XXX This is not a very satisfactory heuristic.  Sometimes we
     // would want to secure the cookie anyway, because the URLs that loop are
     // not authenticated or not important.  Also by the time the loop has been
-    // observed and the domain blacklisted, a cookie might already have been
+    // observed and the domain blocked, a cookie might already have been
     // flagged as secure.
 
     if (settings.domainBlacklist.has(hostname)) {
-      util.log(util.INFO, "cookies for " + hostname + "blacklisted");
+      util.log(util.INFO, "cookies for " + hostname + "blocked");
       return false;
     }
 

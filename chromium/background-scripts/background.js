@@ -412,7 +412,7 @@ function onBeforeRequest(details) {
     util.log(util.NOTE, "Redirect counter hit for " + uri.href);
     urlBlacklist.add(uri.href);
     rules.settings.domainBlacklist.add(uri.hostname);
-    util.log(util.WARN, "Domain blacklisted " + uri.hostname);
+    util.log(util.WARN, "Domain blocked " + uri.hostname);
     return redirectOnCancel(shouldCancel, details.url);
   }
 

@@ -6,22 +6,23 @@ const rules = require('./rules');
 const util = require("./util");
 
 function initialize() {
-  return new Promise(resolve => {
-    if (chrome.storage.sync) {
-      chrome.storage.sync.set({"sync-set-test": true}, () => {
-        if(chrome.runtime.lastError) {
-          setStorage(chrome.storage.local);
-        } else {
-          setStorage(chrome.storage.sync);
-        }
-        resolve();
-      });
-    } else {
-      setStorage(chrome.storage.local);
-      resolve();
-    }
+  return new Promise((resolve, reject) => {
+    // Asynchronously fetch all data from storage.sync.
+    chrome.storage.sync.get(null, (items) => {
+      // Pass any observed errors down the promise chain.
+      if (chrome.runtime.lastError) {
+        setStorage(chrome.storage.local);
+        return reject(chrome.runtime.lastError);
+      } else {
+        setStorage(chrome.storage.sync);
+      }
+      // Pass the data retrieved from storage down the promise chain.
+      resolve(items);
+    });
   });
 }
+
+
 
 /* Storage promise setters and getters */
 
