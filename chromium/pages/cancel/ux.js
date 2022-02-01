@@ -52,11 +52,9 @@ function displayURL() {
   originURLLink.href = originURL;
 
   openURLButton.addEventListener("click", function() {
-    if (confirm(chrome.i18n.getMessage("cancel_open_page") + '?')) {
-      sendMessage("disable_on_site", url.host, () => {
-        window.location = originURL;
-      });
-    }
+    sendMessage("disable_on_site", url.host, () => {
+      window.location = originURL;
+    });
 
     return false;
   });
@@ -117,11 +115,9 @@ function displayURL() {
   });
 
   openHttpOnce.addEventListener("click", function() {
-    if (confirm(chrome.i18n.getMessage("cancel_http_once") + '?')) {
-      sendMessage("disable_on_site_once", url.host, () => {
-        window.location = originURL;
-      });
-    }
+    sendMessage("disable_on_site_once", url.host, () => {
+      window.location = originURL;
+    });
 
     return false;
   });
