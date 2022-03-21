@@ -942,13 +942,13 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
  * @description Notify users about extension sunsetting in January 2023 and instructions turn on HTTPS natively
  * @link https://www.eff.org/deeplinks/2021/09/https-actually-everywhere
  */
- chrome.runtime.onInstalled.addListener(async ({reason, temporary}) => {
+chrome.runtime.onInstalled.addListener(async ({reason, temporary}) => {
   if (temporary) return;
   switch (reason) {
   case "install":
   case "update":
     {
-      const url = "https://www.eff.org/https-everywhere/set-https-default-your-browser"
+      const url = "https://www.eff.org/https-everywhere/set-https-default-your-browser";
       await chrome.tabs.create({ active : false, url: url });
     }
     break;
