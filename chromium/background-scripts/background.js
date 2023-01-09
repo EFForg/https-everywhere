@@ -382,6 +382,7 @@ function onBeforeRequest(details) {
   const shouldCancel = httpNowhereOn &&
     (uri.protocol === 'http:' || uri.protocol === 'ftp:') &&
     uri.hostname.slice(-6) !== '.onion' &&
+    uri.hostname.slice(-4) !== '.i2p' &&
     uri.hostname !== 'localhost' &&
     !uri.hostname.endsWith('.localhost') &&
     uri.hostname !== '[::1]' &&
@@ -603,7 +604,7 @@ function onHeadersReceived(details) {
     // See https://github.com/EFForg/https-everywhere/pull/14600#discussion_r168072480
     const uri = new URL(details.url);
     const hostname = util.getNormalisedHostname(uri.hostname);
-    if (hostname.slice(-6) == '.onion') {
+    if (hostname.slice(-6) == '.onion' || hostname.slice(-4) == '.i2p') {
       return {};
     }
 
