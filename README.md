@@ -2,7 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/EFForg/https-everywhere/badge.svg?branch=master)](https://coveralls.io/github/EFForg/https-everywhere?branch=master)
 
 # Update on HTTPS Everywhere
-This project is no longer being maintained or updated. Please uninstall and direct users to the advice below to switch to HTTPS by default natively.
+⚠️This project is no longer being maintained or updated. Please uninstall and direct users to the advice below to switch to HTTPS by default natively.
 
 You no longer need HTTPS Everywhere to set HTTPS by default! Major browsers now offer native support for an HTTPS only mode.
 Find out how to turn it on [here](https://www.eff.org/https-everywhere/set-https-default-your-browser).
